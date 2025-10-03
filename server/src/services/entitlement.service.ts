@@ -1,6 +1,5 @@
 import { User } from "../models/User.js";
 import { Subscription } from "../models/Subscription.js";
-import { Purchase } from "../models/Purchase.js";
 
 export interface EntitlementCheck {
   hasAccess: boolean;

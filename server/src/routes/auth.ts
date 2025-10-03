@@ -6,9 +6,8 @@ import { VerificationToken } from "../models/VerificationToken.js";
 import { jwtService } from "../services/jwt.service.js";
 import { emailService } from "../services/email.service.js";
 import { secureCookieService } from "../services/secure-cookie.service.js";
-import { inputValidationService } from "../services/input-validation.service.js";
 import { env } from "../config/env.js";
-import { authenticate, optionalAuth } from "../middlewares/auth.middleware.js";
+import { authenticate } from "../middlewares/auth.middleware.js";
 import crypto from "crypto";
 
 // Validation schemas
@@ -603,7 +602,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
       }
 
       // Verify refresh token
-      const { userId, sessionId } = jwtService.verifyRefreshToken(refreshToken);
+      const { userId } = jwtService.verifyRefreshToken(refreshToken);
 
       // Find session
       const session = await Session.findActiveByRefreshToken(refreshToken);

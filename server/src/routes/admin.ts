@@ -52,7 +52,7 @@ export default async function adminRoutes(fastify: FastifyInstance) {
       },
     },
     async (request, reply) => {
-      const { limit, offset, search, role } = request.query as any;
+      const { limit, offset } = request.query as any;
 
       // TODO: Implement real user fetching
       reply.send({
@@ -142,7 +142,7 @@ export default async function adminRoutes(fastify: FastifyInstance) {
       },
     },
     async (request, reply) => {
-      const { limit, offset, framework, level } = request.query as any;
+      const { limit, offset } = request.query as any;
 
       // TODO: Implement real question fetching
       reply.send({

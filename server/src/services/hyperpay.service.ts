@@ -3,7 +3,6 @@ import { Purchase, IPurchase } from "../models/Purchase.js";
 import { Subscription } from "../models/Subscription.js";
 import { entitlementService } from "./entitlement.service.js";
 import { pricingService } from "./pricing.service.js";
-import { currencyService } from "./currency.service.js";
 import { Plan } from "@shared/types/pricing";
 import { User } from "../models/User.js";
 
@@ -338,7 +337,7 @@ export class HyperPayService {
           }
           break;
 
-        case "payment.refunded":
+        case "payment.refunded": {
           await purchase.processRefund(entity);
           console.log(`HyperPay purchase ${purchase._id} refunded via webhook.`);
 
@@ -353,6 +352,7 @@ export class HyperPayService {
             console.log(`Subscription ${subscription._id} cancelled due to refund.`);
           }
           break;
+        }
 
         default:
           console.log(`Unhandled HyperPay webhook event: ${event}`);

@@ -1,4 +1,5 @@
 import { env } from "../config/env.js";
+import crypto from "crypto";
 
 export interface SecureCookieOptions {
   httpOnly: boolean;
@@ -86,7 +87,6 @@ export class SecureCookieService {
    * Generate CSRF token
    */
   generateCSRFToken(): string {
-    const crypto = require("crypto");
     return crypto.randomBytes(32).toString("hex");
   }
 

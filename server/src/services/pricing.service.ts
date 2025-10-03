@@ -113,7 +113,6 @@ export class PricingService {
       }
 
       const monthlyPricing = await currencyService.getPricingInfo(pricing.monthly, currency);
-      const yearlyPricing = await currencyService.getPricingInfo(pricing.yearly, currency);
 
       plans.push({
         planId,

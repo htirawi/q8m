@@ -1,6 +1,5 @@
 import Fastify from "fastify";
 import { config } from "dotenv";
-import { join } from "path";
 import crypto from "crypto";
 
 // Load environment variables
@@ -30,7 +29,6 @@ import seoRoutes from "./routes/seo";
 // Import middleware
 import { errorHandler } from "./middlewares/error.middleware";
 import { requestLogger } from "./middlewares/logger.middleware";
-import { authMiddleware } from "./middlewares/auth.middleware";
 
 // Import database
 import { connectDatabase } from "./config/database";
@@ -213,7 +211,7 @@ async function registerPlugins() {
 // Register routes
 async function registerRoutes() {
   // Health check
-  fastify.get("/health", async (request, reply) => {
+  fastify.get("/health", async () => {
     return {
       status: "ok",
       timestamp: new Date().toISOString(),

@@ -4,7 +4,7 @@
  * Comprehensive tests for payment processing, webhooks, and entitlements
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { FastifyInstance } from "fastify";
 import { buildApp } from "../app.js";
 import { mockPaymentService } from "../services/mock-payment.service.js";

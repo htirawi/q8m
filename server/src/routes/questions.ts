@@ -131,8 +131,6 @@ export default async function questionRoutes(fastify: FastifyInstance) {
       },
     },
     async (request, reply) => {
-      const { framework } = request.params as { framework: string };
-
       // TODO: Implement real category fetching
       const categories = ["Components", "Services", "Routing", "Forms", "Testing"];
 
@@ -152,8 +150,6 @@ export default async function questionRoutes(fastify: FastifyInstance) {
       },
     },
     async (request, reply) => {
-      const { framework } = request.params as { framework: string };
-
       // TODO: Implement real statistics
       reply.send({
         total: 100,
@@ -192,11 +188,6 @@ export default async function questionRoutes(fastify: FastifyInstance) {
       },
     },
     async (request, reply) => {
-      const { questionId, answer, timeSpent } = request.body as {
-        questionId: string;
-        answer: string | string[];
-        timeSpent?: number;
-      };
 
       // TODO: Implement answer submission and scoring
       reply.send({

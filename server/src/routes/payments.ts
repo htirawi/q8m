@@ -276,20 +276,21 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
     async (request, reply) => {
       try {
         const { gateway } = request.params as { gateway: "paypal" | "aps" | "hyperpay" };
-        const { paymentId, payerId, token, PayerID } = request.body as z.infer<
+        const { paymentId, payerId, PayerID } = request.body as z.infer<
           typeof paymentCallbackSchema
         >;
 
         let result;
 
         switch (gateway) {
-          case "paypal":
+          case "paypal": {
             const paypalPayerId = payerId || PayerID;
             if (!paypalPayerId) {
               throw new Error("PayPal payer ID is required");
             }
             result = await paypalService.executePayment(paymentId, paypalPayerId);
             break;
+          }
 
           case "aps":
             result = await apsService.verifyPayment(paymentId);

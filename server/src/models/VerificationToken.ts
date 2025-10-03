@@ -1,4 +1,5 @@
 import mongoose, { Document, Schema } from "mongoose";
+import crypto from "crypto";
 
 export interface IVerificationToken extends Document {
   userId: mongoose.Types.ObjectId;
@@ -95,7 +96,7 @@ verificationTokenSchema.statics.createToken = async function (
   expirationHours: number = 24
 ) {
   // Generate secure random token
-  const token = require("crypto").randomBytes(32).toString("hex");
+  const token = crypto.randomBytes(32).toString("hex");
 
   // Calculate expiration time
   const expiresAt = new Date(Date.now() + expirationHours * 60 * 60 * 1000);

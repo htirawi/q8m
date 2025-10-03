@@ -212,8 +212,7 @@ export class MockPaymentService {
    */
   public async processRefund(
     paymentId: string,
-    amount: number,
-    reason: string = "requested_by_customer"
+    _amount: number,
   ): Promise<{ success: boolean; refundId?: string; error?: string }> {
     if (!this.isEnabled) {
       throw new Error("Mock payment service not enabled");

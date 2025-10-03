@@ -130,7 +130,7 @@ export class SignedUrlService {
         resource,
         error: isValid ? undefined : "Invalid signature",
       };
-    } catch (error) {
+    } catch {
       return {
         isValid: false,
         isExpired: false,
