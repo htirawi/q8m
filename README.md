@@ -2,6 +2,8 @@
 
 A professional, multi-framework interview preparation application built with Vue 3, TypeScript, and Tailwind CSS. Practice with **500+ curated questions** across Angular, React, Next.js, Redux, and more.
 
+> **⚠️ Important**: This is a Vue 3 project only. React/Next.js artifacts are forbidden and guarded in CI.
+
 ## 🚀 Features
 
 - **Multi-Framework Support**: Practice questions for Angular, React, Next.js, Redux, and Random topics

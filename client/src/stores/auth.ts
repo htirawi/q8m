@@ -1,24 +1,7 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 import type { User } from "@shared/types/auth";
-
-interface LoginCredentials {
-  email: string;
-  password: string;
-}
-
-interface RegisterData {
-  name: string;
-  email: string;
-  password: string;
-  acceptTerms: boolean;
-}
-
-interface AuthTokens {
-  accessToken: string;
-  refreshToken: string;
-  expiresIn: number;
-}
+import type { AuthTokens, LoginFormData, RegisterFormData } from "@/types/domain/auth";
 
 export const useAuthStore = defineStore("auth", () => {
   const user = ref<User | null>(null);
@@ -69,7 +52,7 @@ export const useAuthStore = defineStore("auth", () => {
   }
 
   // API calls
-  async function login(credentials: LoginCredentials): Promise<boolean> {
+  async function login(credentials: LoginFormData): Promise<boolean> {
     setLoading(true);
     setError(null);
 
@@ -108,7 +91,7 @@ export const useAuthStore = defineStore("auth", () => {
     }
   }
 
-  async function register(userData: RegisterData): Promise<boolean> {
+  async function register(userData: RegisterFormData): Promise<boolean> {
     setLoading(true);
     setError(null);
 
