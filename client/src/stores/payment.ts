@@ -1,144 +1,20 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 import { useErrorHandler } from "@/composables/useErrorHandler";
-
-export interface PricingInfo {
-  currency: string;
-  amount: number;
-  formatted: string;
-  exchangeRate?: number;
-  isEstimated: boolean;
-}
-
-export interface PlanPricing {
-  planId: string;
-  name: string;
-  description: string;
-  features: string[];
-  usdPrice: number;
-  pricing: Record<string, PricingInfo>;
-  popular?: boolean;
-  recommended?: boolean;
-}
-
-export interface Purchase {
-  id: string;
-  orderId: string;
-  paymentId: string;
-  paymentGateway: string;
-  amount: {
-    currency: string;
-    value: string;
-  };
-  status: string;
-  items: Array<{
-    type: string;
-    name: string;
-    price: {
-      currency: string;
-      value: string;
-    };
-  }>;
-  customer: {
-    email: string;
-    name: string;
-  };
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface Subscription {
-  id: string;
-  planType: string;
-  status: string;
-  currentPeriodStart: string;
-  currentPeriodEnd: string;
-  cancelAtPeriodEnd: boolean;
-  cancelledAt?: string;
-  billingCycle: string;
-  price: {
-    currency: string;
-    amount: string;
-  };
-  entitlements: string[];
-  isActive: boolean;
-  daysRemaining: number;
-  isInTrial: boolean;
-}
-
-export interface PaymentRequest {
-  planType: "INTERMEDIATE" | "SENIOR" | "BUNDLE";
-  currency: "USD" | "JOD" | "SAR";
-  billingCycle: "monthly" | "yearly";
-  billingAddress?: {
-    street: string;
-    city: string;
-    state: string;
-    postalCode: string;
-    country: string;
-  };
-}
-
-export interface PaymentResponse {
-  success: boolean;
-  paymentGateway: string;
-  paymentId: string;
-  checkoutUrl: string;
-  orderId: string;
-  amount: number;
-  currency: string;
-  planType: string;
-  billingCycle: string;
-  isEstimated: boolean;
-}
-
-export interface CurrencyRates {
-  USD: number;
-  JOD: number;
-  SAR: number;
-  lastUpdated: string;
-}
-
-export interface UserEntitlements {
-  userId: string;
-  entitlements: string[];
-  activeSubscription: {
-    planType: string;
-    status: string;
-    expiresAt: string;
-    isInTrial: boolean;
-  } | null;
-  isActive: boolean;
-  lastChecked: string;
-}
-
-export interface EntitlementCheck {
-  hasAccess: boolean;
-  reason?: string;
-  upgradeRequired?: string;
-  subscriptionExpired?: boolean;
-  trialExpired?: boolean;
-}
-
-export interface ContentAccess {
-  hasAccess: boolean;
-  reason?: string;
-  upgradeRequired?: string;
-}
-
-export interface SignedDownloadUrl {
-  downloadUrl: string;
-  expiresAt: string;
-  filePath: string;
-  category: string;
-  requiredLevel: string;
-}
-
-export interface ContentCategory {
-  category: string;
-  level: string;
-  description: string;
-}
+import type { 
+  PricingInfo, 
+  PlanPricing, 
+  Purchase, 
+  Subscription, 
+  PaymentRequest, 
+  PaymentResponse, 
+  CurrencyRates, 
+  UserEntitlements, 
+  EntitlementCheck, 
+  ContentAccess, 
+  SignedDownloadUrl, 
+  ContentCategory 
+} from "@/types/domain/payment";
 
 export const usePaymentStore = defineStore("payment", () => {
   // State

@@ -48,7 +48,11 @@
     "type-check": "cd client && pnpm type-check",
     "prepare": "husky install",
     "validate": "cd client && pnpm validate",
-    "pre-push": "node scripts/pre-push-validation.js"
+    "pre-push": "node scripts/pre-push-validation.js",
+    "guard:react": "node scripts/guard-react.cjs",
+    "guard:data": "node scripts/guard-data.cjs",
+    "guard:types:inline": "node scripts/guard-inline-types.cjs",
+    "guard:all": "npm run guard:react && npm run guard:data && npm run guard:types:inline"
   },
   "dependencies": {},
   "devDependencies": {

@@ -4,11 +4,13 @@ A professional, multi-framework interview preparation platform built with Vue 3,
 
 > **🎯 Mission**: Empower developers to master technical interviews through comprehensive practice, real-time feedback, and personalized learning paths.
 
+> **⚠️ Important**: This is a Vue 3 project only. React/Next.js artifacts are forbidden and guarded in CI.
+
 ## 🚀 Features
 
-- **Multi-Framework Support**: Practice questions for Angular (227), React (80), Next.js (50), Redux (100), and Random topics (52)
-- **Interactive Quiz System**: Dynamic quiz interface with multiple question types (multiple choice, fill-in-blank, true/false, multiple checkbox)
-- **Enhanced Question Cards**: Rich markdown rendering with syntax highlighting and comparison tables
+- **Multi-Framework Support**: Practice questions for Angular, React, Next.js, Redux, and Random topics
+- **Interactive Quiz System**: Dynamic quiz interface with multiple question types
+- **Enhanced Question Cards**: Rich markdown rendering with syntax highlighting
 - **Study Features**: Bookmarks, notes, progress tracking, and study timer
 - **Study Analytics**: Comprehensive performance tracking and analytics dashboard
 - **Offline Support**: Progressive Web App with offline capabilities
@@ -19,16 +21,22 @@ A professional, multi-framework interview preparation platform built with Vue 3,
 - **Code Quality**: Comprehensive pre-push validation system
 - **Architecture**: Clean separation of concerns with Vue 3 Composition API and Pinia
 - **Path Aliases**: Modern import organization with TypeScript path mapping
+- **Bilingual Support**: English and Arabic language support
+- **Payment Integration**: Secure payment processing with multiple providers
+- **Accessibility**: WCAG AA compliant with screen reader support
 
 ## 🛠️ Tech Stack
 
 - **Frontend**: Vue 3, TypeScript, Tailwind CSS
 - **State Management**: Pinia
 - **Build Tool**: Vite
-- **Testing**: Vitest, Vue Test Utils
+- **Testing**: Vitest, Vue Test Utils, Playwright
 - **Code Quality**: ESLint, Prettier, Husky, Pre-push validation
 - **Architecture**: Composition API, Composables, Services
-- **Deployment**: Vercel, Netlify ready
+- **Routing**: Vue Router
+- **Internationalization**: Vue-i18n
+- **Security**: CSRF protection, secure cookies, input validation
+- **Deployment**: Vercel, Netlify ready, GitHub Pages
 - **Backend**: Node.js, Express, TypeScript
 
 ## 📁 Project Structure
@@ -38,6 +46,7 @@ client/                 # Vue 3 Frontend Application
 ├── src/
 │   ├── components/     # Vue components
 │   │   ├── ui/         # Reusable UI components
+│   │   ├── layout/     # Layout components (AppLayout, etc.)
 │   │   ├── auth/       # Authentication components
 │   │   ├── payment/    # Payment components
 │   │   └── content/    # Content components
@@ -50,6 +59,7 @@ client/                 # Vue 3 Frontend Application
 │   │   ├── ui/         # UI component types
 │   │   └── core/       # Core utility types
 │   ├── router/         # Vue Router configuration
+│   ├── locales/        # Internationalization files
 │   ├── styles/         # Global styles
 │   └── tests/          # Test files
 ├── public/             # Static assets
@@ -88,136 +98,69 @@ scripts/                # Build and deployment scripts
 
 ## 🚀 Quick Start
 
-1. **Install dependencies**:
+### Prerequisites
 
+- Node.js 18+ 
+- pnpm 8+
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/htirawi/q8m.git
+   cd q8m
+   ```
+
+2. **Install dependencies**
    ```bash
    pnpm install
    ```
 
-2. **Start development server**:
-
+3. **Set up environment variables**
    ```bash
-   pnpm dev
+   cp .env.example .env
+   # Edit .env with your configuration
    ```
 
-3. **Build for production**:
+4. **Start development servers**
    ```bash
-   pnpm build
+   # Start client (Vue 3)
+   cd client && pnpm dev
+   
+   # Start server (Node.js)
+   cd server && pnpm dev
    ```
 
-## 🎯 Usage
-
-### **Study Mode**
-
-1. **Select Framework**: Choose from Angular (227), React (80), Next.js (50), Redux (100), or Random topics (52)
-2. **Practice Questions**: Navigate through questions with keyboard shortcuts
-3. **Track Progress**: Bookmark questions and add personal notes
-4. **Study Modes**: Sequential, random, or bookmarked-only practice
-
-### **Interactive Quiz Mode**
-
-1. **Choose Quiz Type**: Select framework and difficulty level
-2. **Multiple Question Types**:
-   - Multiple Choice (single answer)
-   - Multiple Checkbox (multiple answers)
-   - Fill in the Blank
-   - True/False
-3. **Real-time Feedback**: Immediate scoring and progress tracking
-4. **Performance Analytics**: Detailed breakdown of performance by question type
-5. **Study Recommendations**: Personalized suggestions for improvement
-
-## 📚 Question Content
-
-### **Angular (227 Questions)**
-
-- Core concepts, components, services, routing
-- Forms (template-driven and reactive)
-- Component communication and lifecycle hooks
-- Authentication & authorization with JWT
-- Angular 16-19 features (Signals, Control Flow, SSR improvements)
-- Performance optimization and testing
-
-### **React (80 Questions)**
-
-- Hooks, state management, and lifecycle
-- Server Components and Concurrent Features
-- Error boundaries and context API
-- Performance optimization and testing
-- Advanced patterns and best practices
-
-### **Next.js (50 Questions)**
-
-- App Router vs Pages Router
-- SSG, SSR, ISR, and CSR strategies
-- Image optimization and performance
-- API routes and middleware
-- Deployment and production optimization
-
-### **Redux (100 Questions)**
-
-- State management patterns
-- Redux Toolkit and modern practices
-- Middleware and async operations
-- Testing and debugging
-
-### **Random Topics (52 Questions)**
-
-- Git workflows and advanced commands
-- CSS units, Grid, Flexbox, and animations
-- SASS features and best practices
-- TypeScript advanced features
-- Web APIs and modern JavaScript
-- Build tools (Webpack, Vite, ESBuild)
-- Docker and containerization
-
-## ⌨️ Keyboard Shortcuts
-
-- `←` `→` Navigate between questions
-- `A` Toggle answer visibility
-- `B` Bookmark/unbookmark question
+5. **Open your browser**
+   - Client: http://localhost:5173
+   - Server: http://localhost:3000
 
 ## 🧪 Testing
 
+### Unit Tests
 ```bash
-# Run tests
+cd client
 pnpm test
+```
 
-# Run tests with UI
-pnpm test:ui
+### E2E Tests
+```bash
+cd client
+pnpm test:e2e
+```
 
-# Run tests with coverage
+### Coverage Report
+```bash
+cd client
 pnpm test:coverage
 ```
 
 ## 🔧 Development
 
-### **Code Quality & Validation**
-
-This project includes a comprehensive pre-push validation system that ensures code quality before changes reach the repository.
-
-#### **Pre-Push Validation Script**
-
-```bash
-# Run comprehensive validation (automatically runs on git push)
-pnpm pre-push
-
-# Individual validation checks
-pnpm check:any          # Find any types in source code
-pnpm check:unused       # Find unused variables
-pnpm check:console      # Find console.log statements
-```
-
-#### **Standard Development Commands**
-
+### Code Quality
 ```bash
 # Lint code
 pnpm lint
-
-# Lint with strict rules (zero warnings)
-pnpm lint:strict
-
-# Fix linting issues
-pnpm lint:fix
 
 # Format code
 pnpm format
@@ -225,7 +168,7 @@ pnpm format
 # Type check
 pnpm type-check
 
-# Validate everything
+# Run all quality checks
 pnpm validate
 ```
 
@@ -261,6 +204,13 @@ The validation system automatically checks:
 - ✅ **Data File Management**: Ensures proper data file organization
 - ✅ **Type Organization**: Enforces proper TypeScript type structure
 
+### Pre-commit Hooks
+The project uses Husky for pre-commit hooks:
+- ESLint checks
+- Prettier formatting
+- TypeScript type checking
+- Test execution
+
 ### **Architecture Improvements**
 
 The codebase has been refactored with modern Vue 3 best practices:
@@ -273,6 +223,30 @@ The codebase has been refactored with modern Vue 3 best practices:
 - **Performance**: Lazy loading, code splitting, and optimized bundles
 - **Offline Support**: Service worker integration for offline functionality
 
+## 🚀 Deployment
+
+### Production Build
+```bash
+cd client
+pnpm build
+```
+
+### Deploy to Vercel
+```bash
+# Install Vercel CLI
+npm i -g vercel
+
+# Deploy
+vercel --prod
+```
+
+### Deploy to GitHub Pages
+```bash
+# Build and deploy
+pnpm build
+# Follow GitHub Pages setup instructions
+```
+
 ## 📚 Documentation
 
 - **[📖 Complete Documentation](./docs/README.md)** - Comprehensive documentation index
@@ -282,6 +256,42 @@ The codebase has been refactored with modern Vue 3 best practices:
 - [Deployment](./docs/deployment/DEPLOYMENT.md) - Deployment guides
 - [Project Structure](./docs/development/PROJECT-STRUCTURE.md) - Detailed project organization
 - [Types Guidelines](./docs/types-guidelines.md) - TypeScript organization best practices
+
+## 🔒 Security
+
+- **Authentication**: JWT with secure httpOnly cookies
+- **CSRF Protection**: Token-based CSRF protection
+- **Input Validation**: Zod schema validation
+- **XSS Prevention**: Input sanitization
+- **Secure Headers**: CSP, HSTS, and other security headers
+- **Payment Security**: PCI-compliant payment processing
+
+## 🌐 Internationalization
+
+The platform supports multiple languages:
+- English (en)
+- Arabic (ar)
+
+To add a new language:
+1. Create a new locale file in `client/src/locales/`
+2. Add the language to the i18n configuration
+3. Update the language selector component
+
+## ♿ Accessibility
+
+- **WCAG AA Compliance**: Meets accessibility standards
+- **Screen Reader Support**: Proper ARIA labels and roles
+- **Keyboard Navigation**: Full keyboard accessibility
+- **Focus Management**: Proper focus indicators
+- **Color Contrast**: Meets contrast requirements
+
+## 📊 Performance
+
+- **Core Web Vitals**: Optimized for LCP, FID, and CLS
+- **Code Splitting**: Dynamic imports for route-based splitting
+- **Image Optimization**: WebP support and lazy loading
+- **Caching**: Service worker for offline functionality
+- **Bundle Analysis**: Regular bundle size monitoring
 
 ## 🆕 Recent Updates
 

@@ -1,131 +1,142 @@
-# Documentation
+# Documentation Index
 
-Welcome to the Frontend Interview Prep documentation! This folder contains comprehensive guides, technical documentation, and project information organized by category.
+Welcome to the Vue 3 Quiz Platform documentation. This index provides an overview of all available documentation and guides.
 
-## 📁 Documentation Structure
+## 📚 Getting Started
 
-### 🚀 Getting Started
+- [README](../README.md) - Project overview and quick start guide
+- [CONTRIBUTING](../CONTRIBUTING.md) - Guidelines for contributors
+- [Environment Variables](../ENVIRONMENT_VARIABLES.md) - Configuration guide
 
-Essential guides for new users and contributors:
+## 🏗️ Architecture & Design
 
-- **[README](./getting-started/README.md)** - Main project overview
-- **[Start Here](./getting-started/START-HERE.md)** - Quick start guide
-- **[Enhanced README](./getting-started/README-ENHANCED.md)** - Detailed project information
-- **[Guides](./getting-started/guides/)** - Step-by-step tutorials
-  - Add 100 Questions Guide
-  - Angular Interview Prep Complete
-  - Angular Questions (8-15, 81-100)
-  - Angular Questions Batch Plan
+- [Architecture Overview](development/ARCHITECTURE.md) - System architecture and design principles
+- [Project Structure](development/PROJECT-STRUCTURE.md) - Codebase organization
+- [Features Overview](development/FEATURES.md) - Feature documentation
 
-### 🛠️ Development
+### Architecture Decision Records (ADRs)
 
-Technical documentation for developers:
+- [ADR Template](decisions/0000-template.md) - Template for new ADRs
+- [ADR-0001: Vue 3 Composition API](decisions/0001-vue3-composition-api.md) - Decision to use Composition API with script setup
+- [ADR-0002: HttpOnly Cookies](decisions/0002-httponly-cookies.md) - Decision to use HttpOnly cookies for authentication
+- [ADR-0003: Pinia State Management](decisions/0003-pinia-state-management.md) - Decision to use Pinia for state management
 
-- **[Architecture](./development/ARCHITECTURE.md)** - System architecture and design patterns
-- **[Project Structure](./development/PROJECT-STRUCTURE.md)** - Detailed project organization
-- **[Features](./development/FEATURES.md)** - Comprehensive feature documentation
+## 🔒 Security & Compliance
 
-### 🚀 Deployment
+- [Security Guidelines](security/SECURITY.md) - Security best practices and guidelines
+- [Payment Security](PAYMENT_SYSTEM.md) - Payment processing security measures
+- [Production Guidelines](PRODUCTION_GUIDELINES.md) - Production deployment security
 
-Deployment guides and production setup:
+## 🚀 Deployment & Operations
 
-- **[Deployment](./deployment/DEPLOYMENT.md)** - Main deployment guide
-- **[Deploy Now](./deployment/DEPLOY-NOW.md)** - Quick deployment instructions
-- **[Pre-Push Validation](./deployment/PRE-PUSH-VALIDATION.md)** - Pre-deployment checks
-- **[Final Checklist](./deployment/FINAL-CHECKLIST.md)** - Pre-release checklist
+- [Deployment Guide](deployment/DEPLOYMENT.md) - Production deployment instructions
+- [Deploy Now](deployment/DEPLOY-NOW.md) - Quick deployment guide
+- [Pre-push Validation](deployment/PRE-PUSH-VALIDATION.md) - Quality gates and validation
+- [Final Checklist](deployment/FINAL-CHECKLIST.md) - Pre-deployment checklist
 
-### 🎨 Design
+## 🎨 Design & UX
 
-UI/UX design decisions and enhancements:
+- [UI/UX Design](design/UI-UX-REDESIGN.md) - Design system and user experience
+- [Multi-Framework UX](design/MULTI-FRAMEWORK-UX-DESIGN.md) - Cross-framework design considerations
+- [Senior Enhancements](design/SENIOR-ENHANCEMENTS.md) - Advanced UI/UX features
 
-- **[UI/UX Redesign](./design/UI-UX-REDESIGN.md)** - Design system and UI improvements
-- **[Multi-Framework UX Design](./design/MULTI-FRAMEWORK-UX-DESIGN.md)** - Cross-framework design patterns
-- **[Senior Enhancements](./design/SENIOR-ENHANCEMENTS.md)** - Advanced features and improvements
+## 📊 Project Management
 
-### 📊 Project Management
+- [Project Status](project-management/status/) - Current project status and milestones
+- [Contributors](project-management/CONTRIBUTORS.md) - Team and contributor information
+- [GitHub Setup](project-management/GITHUB-SETUP.md) - GitHub repository configuration
 
-Project management, status tracking, and maintenance:
+## 🛠️ Development Tools
 
-- **[GitHub Setup](./project-management/GITHUB-SETUP.md)** - Repository configuration
-- **[GitHub About Setup](./project-management/GITHUB-ABOUT-SETUP.md)** - GitHub profile configuration
-- **[Contributors](./project-management/CONTRIBUTORS.md)** - Contributor guidelines
-- **[Status](./project-management/status/)** - Project status and completion tracking
-- **[Management](./project-management/management/)** - Project management tools and guides
+- [Scripts Documentation](scripts/README.md) - Available scripts and tools
+- [Internal Tools](scripts/internal/README.md) - Internal development tools
+- [Quick Reference](scripts/quick-reference.md) - Common commands and shortcuts
 
-### 📝 Changelog
+## 📈 Changelog & Updates
 
-Version history and updates:
+- [Changelog](changelog/CHANGELOG.md) - Version history and changes
+- [What's New](changelog/WHATS-NEW.md) - Latest features and improvements
+- [Upgrade Guide](changelog/UPGRADE-GUIDE.md) - Migration and upgrade instructions
+- [Summary](changelog/SUMMARY.md) - Release summaries
 
-- **[Changelog](./changelog/CHANGELOG.md)** - Version history
-- **[What's New](./changelog/WHATS-NEW.md)** - Latest updates and features
-- **[Upgrade Guide](./changelog/UPGRADE-GUIDE.md)** - Migration instructions
-- **[Summary](./changelog/SUMMARY.md)** - Project summary
+## 🧪 Testing & Quality
 
-### 🔧 Scripts
+- [Testing Guidelines](../CONTRIBUTING.md#testing-guidelines) - Testing best practices
+- [Quality Gates](../.github/workflows/ci.yml) - CI/CD quality checks
+- [Code Standards](../CONTRIBUTING.md#coding-standards) - Coding guidelines
 
-Complete documentation for all project scripts:
+## 🌐 Internationalization
 
-- **[Scripts Overview](./scripts/README.md)** - Complete scripts documentation
-- **[Tools Scripts](./scripts/tools.md)** - Development and deployment tools
-- **[Internal Scripts](./scripts/internal.md)** - Question management scripts
-- **[Quick Reference](./scripts/quick-reference.md)** - Quick script lookup guide
+- [i18n Implementation](i18n/README.md) - Internationalization setup and usage
+- [Locale Files](../client/src/locales/) - Translation files
+- [RTL Support](i18n/rtl-support.md) - Right-to-left language support
 
-## 🎯 Quick Navigation
+## ♿ Accessibility
 
-### For New Users
+- [Accessibility Guidelines](accessibility/README.md) - A11y best practices
+- [WCAG Compliance](accessibility/wcag-compliance.md) - Accessibility standards
+- [Screen Reader Support](accessibility/screen-reader.md) - Screen reader compatibility
 
-1. Start with [Getting Started](./getting-started/START-HERE.md)
-2. Read the [Main README](./getting-started/README.md)
-3. Explore [Features](./development/FEATURES.md)
+## 📱 Progressive Web App
 
-### For Developers
+- [PWA Configuration](pwa/README.md) - Progressive Web App setup
+- [Service Worker](pwa/service-worker.md) - Offline functionality
+- [Manifest](pwa/manifest.md) - App manifest configuration
 
-1. Review [Architecture](./development/ARCHITECTURE.md)
-2. Understand [Project Structure](./development/PROJECT-STRUCTURE.md)
-3. Check [Pre-Push Validation](./deployment/PRE-PUSH-VALIDATION.md)
+## 🔧 API Documentation
 
-### For Contributors
+- [API Reference](api/README.md) - REST API documentation
+- [Authentication](api/authentication.md) - Auth endpoints and flows
+- [Payment API](api/payment.md) - Payment processing endpoints
+- [Quiz API](api/quiz.md) - Quiz and question endpoints
 
-1. Read [Contributors Guide](./project-management/CONTRIBUTORS.md)
-2. Follow [GitHub Setup](./project-management/GITHUB-SETUP.md)
-3. Review [Project Status](./project-management/status/)
+## 📊 Performance
 
-### For Deployment
+- [Performance Guidelines](performance/README.md) - Performance best practices
+- [Core Web Vitals](performance/core-web-vitals.md) - Performance metrics
+- [Bundle Optimization](performance/bundle-optimization.md) - Code splitting and optimization
 
-1. Follow [Deployment Guide](./deployment/DEPLOYMENT.md)
-2. Use [Deploy Now](./deployment/DEPLOY-NOW.md) for quick setup
-3. Complete [Final Checklist](./deployment/FINAL-CHECKLIST.md)
+## 🐛 Troubleshooting
 
-### For Scripts
+- [Common Issues](troubleshooting/README.md) - Frequently encountered problems
+- [Debug Guide](troubleshooting/debugging.md) - Debugging techniques
+- [Performance Issues](troubleshooting/performance.md) - Performance troubleshooting
 
-1. Start with [Scripts Overview](./scripts/README.md)
-2. Use [Quick Reference](./scripts/quick-reference.md) for quick lookups
-3. Check [Tools Scripts](./scripts/tools.md) for development tools
-4. Review [Internal Scripts](./scripts/internal.md) for question management
+## 📞 Support
 
-## 📚 Documentation Standards
+- [Getting Help](support/README.md) - How to get support
+- [FAQ](support/faq.md) - Frequently asked questions
+- [Community](support/community.md) - Community resources
 
-- **Markdown Format**: All documentation uses Markdown for consistency
-- **Clear Structure**: Each document has a clear purpose and audience
-- **Cross-References**: Documents link to related information
-- **Regular Updates**: Documentation is maintained alongside code changes
+## 🔗 External Resources
 
-## 🤝 Contributing to Documentation
-
-1. **Identify the Right Category**: Place new docs in the appropriate folder
-2. **Follow Naming Conventions**: Use descriptive, consistent filenames
-3. **Update This Index**: Add new documents to this README
-4. **Cross-Reference**: Link related documents together
-5. **Keep It Current**: Update docs when making code changes
-
-## 📞 Need Help?
-
-- **General Questions**: Check [Getting Started](./getting-started/)
-- **Technical Issues**: Review [Development](./development/) docs
-- **Deployment Problems**: See [Deployment](./deployment/) guides
-- **Script Usage**: Look in [Scripts](./scripts/) documentation
-- **Project Questions**: Look in [Project Management](./project-management/)
+- [Vue 3 Documentation](https://vuejs.org/)
+- [Pinia Documentation](https://pinia.vuejs.org/)
+- [Vite Documentation](https://vitejs.dev/)
+- [Tailwind CSS Documentation](https://tailwindcss.com/)
+- [TypeScript Documentation](https://www.typescriptlang.org/)
 
 ---
 
-_This documentation is maintained alongside the codebase. Please keep it updated and accurate._
+## 📝 Contributing to Documentation
+
+To contribute to this documentation:
+
+1. Follow the [Contributing Guidelines](../CONTRIBUTING.md)
+2. Use clear, concise language
+3. Include code examples where helpful
+4. Keep documentation up to date with code changes
+5. Test all examples and links
+
+## 📋 Documentation Standards
+
+- Use Markdown format
+- Include table of contents for long documents
+- Provide code examples with syntax highlighting
+- Link to related documentation
+- Keep language simple and accessible
+- Update this index when adding new documentation
+
+---
+
+*Last updated: $(date)*
