@@ -5,6 +5,8 @@ import { Session } from "../models/Session.js";
 import { VerificationToken } from "../models/VerificationToken.js";
 import { jwtService } from "../services/jwt.service.js";
 import { emailService } from "../services/email.service.js";
+import { secureCookieService } from "../services/secure-cookie.service.js";
+import { inputValidationService } from "../services/input-validation.service.js";
 import { env } from "../config/env.js";
 import { authenticate, optionalAuth } from "../middlewares/auth.middleware.js";
 import crypto from "crypto";
@@ -183,6 +185,14 @@ export default async function authRoutes(fastify: FastifyInstance) {
 
         const tokenPair = jwtService.generateTokenPair(user, session._id.toString());
 
+        // Set secure httpOnly cookies
+        secureCookieService.setAccessTokenCookie(reply, tokenPair.accessToken);
+        secureCookieService.setRefreshTokenCookie(reply, tokenPair.refreshToken);
+
+        // Generate CSRF token
+        const csrfToken = secureCookieService.generateCSRFToken();
+        secureCookieService.setCSRFTokenCookie(reply, csrfToken);
+
         reply.send({
           message: "Login successful",
           user: {
@@ -193,7 +203,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
             entitlements: user.entitlements,
             isEmailVerified: user.isEmailVerified,
           },
-          tokens: tokenPair,
+          csrfToken, // Send CSRF token in response body for client
         });
       } catch (error: any) {
         request.log.error("Login error:", error);
@@ -534,6 +544,9 @@ export default async function authRoutes(fastify: FastifyInstance) {
         if (session) {
           await session.revoke("user_logout");
         }
+
+        // Clear authentication cookies
+        secureCookieService.clearAuthCookies(reply);
 
         reply.send({
           message: "Logged out successfully",

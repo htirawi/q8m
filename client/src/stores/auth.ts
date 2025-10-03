@@ -59,9 +59,10 @@ export const useAuthStore = defineStore("auth", () => {
   function setTokens(newTokens: AuthTokens | null) {
     tokens.value = newTokens;
     if (newTokens) {
-      localStorage.setItem("accessToken", newTokens.accessToken);
-      localStorage.setItem("refreshToken", newTokens.refreshToken);
+      // Tokens are now handled by httpOnly cookies
+      // No need to store in localStorage
     } else {
+      // Clear any existing tokens
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
     }
@@ -78,6 +79,7 @@ export const useAuthStore = defineStore("auth", () => {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include", // Include cookies in request
         body: JSON.stringify(credentials),
       });
 
@@ -88,7 +90,15 @@ export const useAuthStore = defineStore("auth", () => {
       }
 
       setUser(data.user);
-      setTokens(data.tokens);
+      
+      // Tokens are now handled by httpOnly cookies
+      // We still need to set a dummy token object for compatibility
+      setTokens({
+        accessToken: "cookie-based", // Placeholder since token is in cookie
+        refreshToken: "cookie-based", // Placeholder since token is in cookie
+        expiresIn: 15 * 60, // 15 minutes
+      });
+      
       return true;
     } catch (err: any) {
       setError(err.message || "Login failed");
@@ -134,8 +144,9 @@ export const useAuthStore = defineStore("auth", () => {
     try {
       const response = await fetch("/api/auth/logout", {
         method: "POST",
+        credentials: "include", // Include cookies in request
         headers: {
-          Authorization: `Bearer ${tokens.value?.accessToken}`,
+          "Content-Type": "application/json",
         },
       });
 
@@ -182,19 +193,13 @@ export const useAuthStore = defineStore("auth", () => {
   }
 
   async function refreshToken(): Promise<boolean> {
-    if (!tokens.value?.refreshToken) {
-      return false;
-    }
-
     try {
       const response = await fetch("/api/auth/refresh", {
         method: "POST",
+        credentials: "include", // Include cookies in request
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          refreshToken: tokens.value.refreshToken,
-        }),
       });
 
       const data = await response.json();
@@ -203,10 +208,12 @@ export const useAuthStore = defineStore("auth", () => {
         throw new Error(data.message || "Token refresh failed");
       }
 
+      // Tokens are now handled by httpOnly cookies
+      // We still need to set a dummy token object for compatibility
       setTokens({
-        ...tokens.value,
-        accessToken: data.accessToken,
-        expiresIn: data.expiresIn,
+        accessToken: "cookie-based", // Placeholder since token is in cookie
+        refreshToken: "cookie-based", // Placeholder since token is in cookie
+        expiresIn: 15 * 60, // 15 minutes
       });
 
       return true;
