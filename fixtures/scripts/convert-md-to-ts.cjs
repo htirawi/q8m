@@ -84,8 +84,19 @@ export interface QA {
 export const ${framework.toUpperCase()}_QUESTIONS: QA[] = [\n`;
 
   questions.forEach((q, index) => {
-    const questionEscaped = q.question.replace(/`/g, '\\`').replace(/\$/g, '\\$');
-    const answerEscaped = q.answer.replace(/`/g, '\\`').replace(/\$/g, '\\$');
+    // Properly escape all special characters for template literals
+    const escapeTemplateLiteral = (str) => {
+      return str
+        .replace(/\\/g, "\\\\")  // Escape backslashes first
+        .replace(/`/g, "\\`")   // Escape backticks
+        .replace(/\$/g, "\\$")  // Escape dollar signs
+        .replace(/\n/g, "\\n")  // Escape newlines
+        .replace(/\r/g, "\\r")  // Escape carriage returns
+        .replace(/\t/g, "\\t"); // Escape tabs
+    };
+
+    const questionEscaped = escapeTemplateLiteral(q.question);
+    const answerEscaped = escapeTemplateLiteral(q.answer);
     
     ts += `  {\n`;
     ts += `    id: ${q.id},\n`;
