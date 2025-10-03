@@ -1,28 +1,31 @@
 {
-  "name": "quiz-platform-server",
+  "name": "q8m-server",
   "private": true,
-  "version": "1.0.0",
+  "version": "2.0.0",
   "type": "module",
-  "description": "Fastify backend server for Quiz Platform with MongoDB and authentication",
+  "description": "q8m Server - Node.js backend API for Quiz 8 Mastery platform with authentication, payments, and analytics",
   "author": "Hussein Tirawi",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/htirawi/quiz-platform.git"
+    "url": "https://github.com/htirawi/q8m.git"
   },
   "bugs": {
-    "url": "https://github.com/htirawi/quiz-platform/issues"
+    "url": "https://github.com/htirawi/q8m/issues"
   },
-  "homepage": "https://github.com/htirawi/quiz-platform#readme",
+  "homepage": "https://github.com/htirawi/q8m#readme",
   "keywords": [
-    "fastify",
+    "q8m",
+    "nodejs",
+    "express",
     "typescript",
     "mongodb",
     "authentication",
     "payments",
     "api",
     "quiz",
-    "backend"
+    "backend",
+    "interview"
   ],
   "scripts": {
     "dev": "tsx watch src/app.ts",

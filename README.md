@@ -1,6 +1,8 @@
-# Frontend Interview Prep
+# q8m - Quiz 8 Mastery
 
-A professional, multi-framework interview preparation application built with React, TypeScript, and Tailwind CSS. Practice with **500+ curated questions** across Angular, React, Next.js, Redux, and Random topics.
+A professional, multi-framework interview preparation platform built with Vue 3, TypeScript, and Tailwind CSS. Master technical interviews with **500+ curated questions** across Angular, React, Next.js, Redux, and advanced topics.
+
+> **🎯 Mission**: Empower developers to master technical interviews through comprehensive practice, real-time feedback, and personalized learning paths.
 
 ## 🚀 Features
 
@@ -15,76 +17,73 @@ A professional, multi-framework interview preparation application built with Rea
 - **PWA Support**: Install as a Progressive Web App
 - **Keyboard Shortcuts**: Navigate efficiently with keyboard controls
 - **Code Quality**: Comprehensive pre-push validation system
-- **Architecture**: Clean separation of concerns with custom hooks and services
+- **Architecture**: Clean separation of concerns with Vue 3 Composition API and Pinia
 - **Path Aliases**: Modern import organization with TypeScript path mapping
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: React 19, TypeScript, Tailwind CSS
+- **Frontend**: Vue 3, TypeScript, Tailwind CSS
+- **State Management**: Pinia
 - **Build Tool**: Vite
-- **Testing**: Vitest, Testing Library
+- **Testing**: Vitest, Vue Test Utils
 - **Code Quality**: ESLint, Prettier, Husky, Pre-push validation
-- **Architecture**: Custom hooks, services, context API
+- **Architecture**: Composition API, Composables, Services
 - **Deployment**: Vercel, Netlify ready
+- **Backend**: Node.js, Express, TypeScript
 
 ## 📁 Project Structure
 
 ```
-src/
-├── components/          # Reusable UI components
-│   ├── common/          # Shared components (LazyLoader, MarkdownRenderer, etc.)
-│   ├── features/        # Feature-specific components (StudyAnalytics, StatsPanel)
-│   ├── forms/           # Form components (SearchBar, FilterPanel, QuestionRating)
-│   ├── interactive-quiz/ # Interactive quiz system components
-│   ├── layout/          # Layout components (Sidebar, etc.)
-│   ├── navigation/      # Navigation components (FrameworkSelector, etc.)
-│   ├── quiz/            # Quiz components (QuizTimer, QuizProgress, etc.)
-│   ├── study/           # Study mode components
-│   └── tables/          # Table components (ComparisonTable, RegularTable)
-├── pages/              # Main application pages
-│   ├── ModeSelection.tsx
-│   ├── FrameworkSelection.tsx
-│   ├── InterviewPage.tsx
-│   ├── InteractiveQuizPage.tsx
-│   └── QuizSelection.tsx
-├── data/               # Question data and framework definitions
-│   ├── angular-enhanced.ts    # 227 Angular questions
-│   ├── react-enhanced.ts      # 80 React questions
-│   ├── nextjs-enhanced.ts     # 50 Next.js questions
-│   ├── random-enhanced.ts     # 52 Random topic questions
-│   ├── redux.ts               # 100 Redux questions
-│   └── interactive-quiz.ts    # Interactive quiz data
-├── services/           # Business logic services
-│   ├── InteractiveQuizService.ts
-│   ├── QuestionService.ts
-│   ├── QuizService.ts
-│   └── PerformanceService.ts
-├── hooks/              # Custom React hooks
-│   ├── useFrameworkManager.ts
-│   ├── useStudyAnalytics.ts
-│   └── useKeyboardShortcuts.ts
-├── contexts/           # React context providers
-│   ├── ThemeContext.tsx
-│   └── SidebarContext.tsx
-├── types/              # TypeScript type definitions
-│   ├── interactive-quiz.ts
-│   ├── quiz-results.ts
-│   ├── study-components.ts
-│   └── ui.ts
-├── core/               # Core functionality
-│   └── components/     # Core components (ErrorBoundary, etc.)
-├── shared/             # Shared utilities and components
-├── utils/              # Utility functions
-└── styles/             # Global styles and animations
+client/                 # Vue 3 Frontend Application
+├── src/
+│   ├── components/     # Vue components
+│   │   ├── ui/         # Reusable UI components
+│   │   ├── auth/       # Authentication components
+│   │   ├── payment/    # Payment components
+│   │   └── content/    # Content components
+│   ├── views/          # Page components
+│   ├── composables/    # Vue 3 composables
+│   ├── stores/         # Pinia stores
+│   ├── types/          # TypeScript type definitions
+│   │   ├── domain/     # Domain types (auth, payment)
+│   │   ├── dto/        # API contracts
+│   │   ├── ui/         # UI component types
+│   │   └── core/       # Core utility types
+│   ├── router/         # Vue Router configuration
+│   ├── styles/         # Global styles
+│   └── tests/          # Test files
+├── public/             # Static assets
+└── package.json        # Frontend dependencies
 
-docs/                   # Documentation
-├── guides/             # Setup and usage guides
-├── management/         # Project management docs
-└── status/             # Project status and completion docs
+server/                 # Node.js Backend API
+├── src/
+│   ├── routes/         # API routes
+│   ├── services/       # Business logic
+│   ├── models/         # Data models
+│   ├── middlewares/    # Express middlewares
+│   ├── config/         # Configuration
+│   └── utils/          # Utility functions
+└── package.json        # Backend dependencies
 
-scripts/                # Development and deployment scripts
-├── pre-push-validation.js  # Comprehensive validation script
-└── README.md               # Scripts documentation
+shared/                 # Shared code between client/server
+├── types/              # Shared TypeScript types
+├── schemas/            # Validation schemas
+└── constants/          # Shared constants
+
+docs/                   # Comprehensive documentation
+├── development/        # Development guides
+├── deployment/         # Deployment guides
+├── design/             # UI/UX documentation
+└── project-management/ # Project management docs
+
+fixtures/                # Development data and scripts
+├── questions/          # Question datasets
+└── scripts/            # Development tools
+
+scripts/                # Build and deployment scripts
+├── guard-react.cjs     # React detection guard
+├── guard-data.cjs      # Data file guard
+└── guard-inline-types.cjs # Inline types guard
 ```
 
 ## 🚀 Quick Start
@@ -230,6 +229,22 @@ pnpm type-check
 pnpm validate
 ```
 
+#### **CI Guards**
+
+```bash
+# Check for React artifacts (forbidden in Vue 3 project)
+npm run guard:react
+
+# Check for data files outside fixtures
+npm run guard:data
+
+# Check for inline type declarations
+npm run guard:types:inline
+
+# Run all guards
+npm run guard:all
+```
+
 ### **Pre-Push Validation Features**
 
 The validation system automatically checks:
@@ -242,31 +257,44 @@ The validation system automatically checks:
 - ✅ **Any Type Detection**: Finds `any` types (excluding example code)
 - ✅ **Unused Variables**: Identifies unused variables and imports
 - ✅ **Console Statements**: Detects `console.log` usage
+- ✅ **React Detection**: Prevents React artifacts in Vue 3 project
+- ✅ **Data File Management**: Ensures proper data file organization
+- ✅ **Type Organization**: Enforces proper TypeScript type structure
 
 ### **Architecture Improvements**
 
-The codebase has been refactored with modern React best practices:
+The codebase has been refactored with modern Vue 3 best practices:
 
-- **Path Aliases**: Clean imports using `@components`, `@services`, `@types`, etc.
-- **Custom Hooks**: `useFrameworkManager`, `useQuestionNavigation`, `useProgressManager`, `useStudyAnalytics`
-- **Services**: `FrameworkService`, `QuestionService`, `InteractiveQuizService` for business logic
-- **Context API**: `SidebarContext`, `ThemeContext` for state management
+- **Path Aliases**: Clean imports using `@/components`, `@/services`, `@/types`, etc.
+- **Composables**: `useFrameworkManager`, `useQuestionNavigation`, `useProgressManager`, `useStudyAnalytics`
+- **Pinia Stores**: Centralized state management with type safety
 - **Type Safety**: Comprehensive TypeScript types and interfaces
-- **Component Composition**: Reusable table components and utilities
+- **Component Composition**: Reusable components and utilities
 - **Performance**: Lazy loading, code splitting, and optimized bundles
 - **Offline Support**: Service worker integration for offline functionality
 
 ## 📚 Documentation
 
 - **[📖 Complete Documentation](./docs/README.md)** - Comprehensive documentation index
+- **[🚀 q8m Enhancement Plan](./docs/q8m-enhancement-plan.md)** - Detailed enhancement roadmap
 - [Architecture](./docs/development/ARCHITECTURE.md) - System design and architecture
 - [Features](./docs/development/FEATURES.md) - Detailed feature documentation
 - [Deployment](./docs/deployment/DEPLOYMENT.md) - Deployment guides
 - [Project Structure](./docs/development/PROJECT-STRUCTURE.md) - Detailed project organization
+- [Types Guidelines](./docs/types-guidelines.md) - TypeScript organization best practices
 
 ## 🆕 Recent Updates
 
-### **v2.1 - Production Ready & Modern Architecture**
+### **v2.0 - q8m Rebranding & Enhancement**
+
+- ✅ **Complete Rebranding**: Transformed to q8m - Quiz 8 Mastery
+- ✅ **Vue 3 Focus**: Confirmed Vue 3-only architecture with React guards
+- ✅ **TypeScript Organization**: Comprehensive type structure and CI guards
+- ✅ **Enhanced Documentation**: Complete enhancement plan and guidelines
+- ✅ **PWA Optimization**: Updated manifest and meta tags for q8m branding
+- ✅ **CI Guards**: Automated quality checks for React, data files, and types
+
+### **v1.0 - Production Ready & Modern Architecture**
 
 - ✅ **Path Aliases**: Modern import organization with TypeScript path mapping
 - ✅ **Console Log Cleanup**: Removed all console.log statements from production code
@@ -276,22 +304,6 @@ The codebase has been refactored with modern React best practices:
 - ✅ **Component Organization**: Clean folder structure with feature-based organization
 - ✅ **Type Safety**: Enhanced TypeScript types and interfaces
 - ✅ **Performance**: Lazy loading and code splitting optimizations
-
-### **v2.0 - Pre-Push Validation System**
-
-- ✅ **Comprehensive validation**: Pre-push hooks with TypeScript, ESLint, Prettier checks
-- ✅ **Code quality enforcement**: Automatic detection of `any` types and unused variables
-- ✅ **Architecture refactoring**: Custom hooks, services, and context API
-- ✅ **Enhanced question content**: 500+ questions across all frameworks
-- ✅ **Table components**: Beautiful comparison tables for difference questions
-- ✅ **Type safety**: Comprehensive TypeScript types and interfaces
-
-### **Question Additions**
-
-- **Angular**: Added 67 new questions (Forms, Component Communication, Auth, Angular 16-19)
-- **React**: Added 53 new questions (Advanced hooks, Server Components, Concurrent Features)
-- **Next.js**: Added 40 new questions (App Router, Performance, Deployment)
-- **Random**: Added 52 new questions (Git, CSS, SASS, TypeScript, Web APIs, Build Tools)
 
 ## 🤝 Contributing
 
@@ -346,4 +358,4 @@ MIT License - see [LICENSE](./LICENSE) for details.
 
 Built with ❤️ for the frontend developer community.
 
-_Last updated: January 2025 - Pre-Push Validation System v2.0_
+_Last updated: January 2025 - q8m Enhancement Plan v2.0_
