@@ -1,0 +1,76 @@
+name: Client CI
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'client/**'
+      - '.github/workflows/client-ci.yml'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'client/**'
+      - '.github/workflows/client-ci.yml'
+
+jobs:
+  client-ci:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v4
+      with:
+        version: 8
+        run_install: false
+        
+    - name: Get pnpm store directory
+      shell: bash
+      run: |
+        echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+        
+    - name: Setup pnpm cache
+      uses: actions/cache@v4
+      with:
+        path: ${{ env.STORE_PATH }}
+        key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+        restore-keys: |
+          ${{ runner.os }}-pnpm-store-
+          
+    - name: Install dependencies
+      working-directory: ./client
+      run: pnpm install --frozen-lockfile
+      
+    - name: Type check
+      working-directory: ./client
+      run: pnpm typecheck
+      
+    - name: Lint (new files only)
+      working-directory: ./client
+      run: |
+        # Only lint the new refactored files to avoid legacy code issues
+        pnpm eslint src/features/ src/layouts/ src/components/ui/ src/assets/styles/ src/i18n/ src/store/index.ts src/router/index.ts src/main.ts src/App.vue --ext .vue,.ts,.js --max-warnings 0
+      
+    - name: Build
+      working-directory: ./client
+      run: pnpm build
+      
+    - name: Test
+      working-directory: ./client
+      run: pnpm test:unit
+      
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: client-build
+        path: client/dist/
+        retention-days: 7

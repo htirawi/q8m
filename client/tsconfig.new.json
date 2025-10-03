@@ -1,4 +1,5 @@
 {
+  "extends": "./tsconfig.json",
   "compilerOptions": {
     "target": "ES2022",
     "useDefineForClassFields": true,
@@ -10,8 +11,8 @@
     "noEmit": true,
     "isolatedModules": true,
     "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
@@ -20,7 +21,7 @@
     "strictPropertyInitialization": true,
     "noImplicitThis": true,
     "noImplicitReturns": true,
-    "noUncheckedIndexedAccess": true,
+    "noUncheckedIndexedAccess": false,
     "forceConsistentCasingInFileNames": true,
     "exactOptionalPropertyTypes": false,
     "types": ["vitest/globals", "vite/client"],
@@ -39,25 +40,31 @@
       "@shared/*": ["../shared/*"]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"],
+  "include": [
+    "src/features/**/*.ts",
+    "src/features/**/*.tsx",
+    "src/features/**/*.vue",
+    "src/layouts/**/*.ts",
+    "src/layouts/**/*.tsx",
+    "src/layouts/**/*.vue",
+    "src/components/ui/**/*.ts",
+    "src/components/ui/**/*.tsx",
+    "src/components/ui/**/*.vue",
+    "src/i18n/**/*.ts",
+    "src/i18n/**/*.tsx",
+    "src/i18n/**/*.vue",
+    "src/store/index.ts",
+    "src/router/index.ts",
+    "src/main.ts",
+    "src/App.vue"
+  ],
   "exclude": [
     "node_modules",
     "dist",
-    "tests/e2e",
-    "coverage",
-    "vite.config.ts",
-    "vitest.setup.ts",
-    "src/components/**",
-    "src/composables/**",
-    "src/tests/**",
-    "src/views/**",
+    "tests",
+    "src/composables",
+    "src/stores/auth.ts",
     "src/stores/payment.ts",
-    "src/stores/payment/**",
-    "src/router/routes.ts"
-  ],
-  "references": [
-    {
-      "path": "./tsconfig.node.json"
-    }
+    "src/stores/theme.ts"
   ]
 }

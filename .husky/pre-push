@@ -1,4 +1,4 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-cd client && pnpm typecheck && pnpm lint && pnpm test:unit && pnpm build
+pnpm validate && pnpm build

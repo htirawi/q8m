@@ -139,7 +139,7 @@ const routes: RouteRecordRaw[] = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
-  scrollBehavior(to, from, savedPosition) {
+  scrollBehavior(_to, _from, savedPosition) {
     if (savedPosition) {
       return savedPosition
     }
@@ -148,7 +148,7 @@ const router = createRouter({
 })
 
 // Router guards
-router.beforeEach(async (to, from, next) => {
+router.beforeEach(async (to, _from, next) => {
   const authStore = useAuthStore()
 
   // Initialize auth state if not already done
@@ -196,8 +196,9 @@ router.afterEach((to) => {
   }
 
   // Track page view for analytics
-  if (import.meta.env.PROD && typeof window !== 'undefined' && window.gtag) {
-    window.gtag('config', 'GA_MEASUREMENT_ID', {
+  if (import.meta.env.PROD && typeof window !== 'undefined' && 'gtag' in window) {
+    const gtag = (window as { gtag: (command: string, targetId: string, config: Record<string, string>) => void }).gtag
+    gtag('config', 'GA_MEASUREMENT_ID', {
       page_path: to.fullPath
     })
   }

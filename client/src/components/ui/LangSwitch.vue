@@ -18,13 +18,13 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-const { locale, setLocale } = useI18n()
+const { locale } = useI18n()
 
 const currentLanguage = computed(() => locale.value)
 
 const toggleLanguage = () => {
   const newLocale = locale.value === 'en' ? 'ar' : 'en'
-  setLocale(newLocale)
+  locale.value = newLocale
   
   // Update HTML dir attribute for RTL support
   document.documentElement.dir = newLocale === 'ar' ? 'rtl' : 'ltr'

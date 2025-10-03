@@ -26,7 +26,7 @@ const userSchema = new Schema<IUser>(
     },
     password: {
       type: String,
-      required: function () {
+      required () {
         return !this.googleId && !this.facebookId;
       },
       minlength: [8, "Password must be at least 8 characters"],
@@ -178,7 +178,7 @@ const userSchema = new Schema<IUser>(
   {
     timestamps: true,
     toJSON: {
-      transform: function (doc, ret) {
+      transform (doc, ret) {
         ret.id = ret._id.toString();
         delete ret._id;
         delete ret.__v;

@@ -43,14 +43,12 @@
       </div>
       <div class="hero-visual">
         <div class="hero-image-container">
-          <img
-            src="/images/hero-dashboard.png"
-            alt="q8m Dashboard Preview"
-            class="hero-image"
-            width="600"
-            height="400"
-            loading="eager"
-          />
+          <div class="hero-placeholder">
+            <div class="placeholder-content">
+              <div class="placeholder-icon">📊</div>
+              <p class="placeholder-text">{{ $t('home.hero.placeholder') }}</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -118,8 +116,20 @@ import Button from '@/components/ui/Button.vue'
   @apply relative rounded-lg overflow-hidden shadow-2xl;
 }
 
-.hero-image {
-  @apply w-full h-auto object-cover;
+.hero-placeholder {
+  @apply w-full h-96 bg-gradient-to-br from-primary-100 to-blue-100 dark:from-gray-800 dark:to-gray-700 rounded-lg flex items-center justify-center;
+}
+
+.placeholder-content {
+  @apply text-center space-y-4;
+}
+
+.placeholder-icon {
+  @apply text-6xl;
+}
+
+.placeholder-text {
+  @apply text-lg text-gray-600 dark:text-gray-300 font-medium;
 }
 
 /* Focus styles */

@@ -33,7 +33,7 @@ const fxRateSchema = new Schema<IFxRate>(
       required: true,
       min: 0,
       validate: {
-        validator: function (v: number) {
+        validator (v: number) {
           return v > 0 && v < 1000; // Reasonable rate bounds
         },
         message: "Exchange rate must be between 0 and 1000",
@@ -67,7 +67,7 @@ const fxRateSchema = new Schema<IFxRate>(
   {
     timestamps: true,
     toJSON: {
-      transform: function (doc, ret) {
+      transform (doc, ret) {
         ret.id = ret._id.toString();
         delete ret._id;
         delete ret.__v;

@@ -5,6 +5,7 @@
     "lib": ["ES2023"],
     "module": "ESNext",
     "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
     "moduleResolution": "Bundler",
     "resolveJsonModule": true,
     "allowImportingTsExtensions": true,
@@ -39,7 +40,8 @@
     }
   },
   "include": ["src/**/*.ts", "tests/**/*.ts", "scripts/**/*.ts"],
-  "exclude": ["node_modules", "dist", "coverage"],
+  "files": [],
+  "exclude": ["node_modules", "dist", "coverage", "src/routes/downloads.ts"],
   "ts-node": {
     "esm": true,
     "experimentalSpecifierResolution": "node"

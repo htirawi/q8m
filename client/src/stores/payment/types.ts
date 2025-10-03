@@ -17,7 +17,7 @@ import type {
   EntitlementCheck, 
   ContentAccess, 
   SignedDownloadUrl, 
-  ContentCategory 
+  // ContentCategory 
 } from "@/types/domain/payment";
 
 /**
