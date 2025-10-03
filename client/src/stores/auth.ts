@@ -20,12 +20,6 @@ interface AuthTokens {
   expiresIn: number;
 }
 
-interface AuthResponse {
-  user: User;
-  tokens: AuthTokens;
-  message: string;
-}
-
 export const useAuthStore = defineStore("auth", () => {
   const user = ref<User | null>(null);
   const isAuthenticated = ref(false);

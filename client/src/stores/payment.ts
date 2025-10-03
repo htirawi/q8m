@@ -1,8 +1,6 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
-import type { User } from "@/types/auth";
 import { useErrorHandler } from "@/composables/useErrorHandler";
-import { useToast } from "@/composables/useToast";
 
 export interface PricingInfo {
   currency: string;
@@ -157,7 +155,6 @@ export const usePaymentStore = defineStore("payment", () => {
 
   // Error handling and notifications
   const errorHandler = useErrorHandler();
-  const toast = useToast();
 
   // Getters
   const isSubscribed = computed(() => {

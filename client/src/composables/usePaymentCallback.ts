@@ -87,7 +87,7 @@ export function usePaymentCallback() {
       }
 
       // Prepare callback payload based on gateway
-      let callbackPayload: any = {
+      const callbackPayload: any = {
         paymentId: data.paymentId,
       };
 
