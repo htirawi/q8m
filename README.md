@@ -2,13 +2,14 @@
 
 **Professional Vue 3 interview preparation platform with comprehensive question banks and advanced analytics**
 
+منصة تحضير مهنية للمقابلات التقنية مبنية بـ Vue 3، تقدم بنوك أسئلة شاملة وأدوات تحليل متقدمة
+
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/htirawi/q8m/actions)
 [![Test Coverage](https://img.shields.io/badge/coverage-95%25-brightgreen.svg)](https://github.com/htirawi/q8m/actions)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Last Commit](https://img.shields.io/github/last-commit/htirawi/q8m.svg)](https://github.com/htirawi/q8m/commits/main)
 [![Issues](https://img.shields.io/github/issues/htirawi/q8m.svg)](https://github.com/htirawi/q8m/issues)
 [![PRs](https://img.shields.io/github/issues-pr/htirawi/q8m.svg)](https://github.com/htirawi/q8m/pulls)
-[![Deploy](https://img.shields.io/badge/deploy-production-green.svg)](https://q8m.vercel.app)
 
 ## Overview
 
@@ -22,7 +23,7 @@ q8m is a bilingual (English/Arabic) interview preparation platform built with Vu
 
 - **Multi-Framework Support**: 500+ questions across Angular, Vue.js, Next.js, Redux
 - **Bilingual Interface**: Full English/Arabic support with RTL layout
-- **Tiered Access**: Junior (free), Intermediate ($29), Senior ($49), Bundle ($69)
+- **Tiered Access**: Junior (free), Intermediate ($5), Senior ($5), Bundle ($8)
 - **Localized Pricing**: Dynamic currency conversion (JOD/SAR/USD) with daily FX rates
 - **Secure Payments**: PayPal + APS/HyperPay integration with webhooks
 - **Mobile-First Design**: Responsive PWA with offline capabilities
@@ -58,7 +59,8 @@ q8m is a bilingual (English/Arabic) interview preparation platform built with Vu
 ┌─────────────────────────────────────────────────────────────────┐
 │                    EXTERNAL SERVICES                           │
 ├─────────────────────────────────────────────────────────────────┤
-│  MongoDB Atlas │ PayPal │ APS Gateway │ Google OAuth │ FX API  │
+│  MongoDB Atlas │ PayPal │ APS Gateway │ HyperPay │ Google OAuth │
+│  Facebook OAuth │ FX API │ Email Service │ Webhooks           │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
@@ -88,7 +90,7 @@ q8m is a bilingual (English/Arabic) interview preparation platform built with Vu
 ## Project Structure
 
 ```
-quiz-platform/
+q8m/
 ├── client/                          # Vue 3 Frontend
 │   ├── src/
 │   │   ├── components/              # Reusable UI components
@@ -112,7 +114,7 @@ quiz-platform/
 │   │   ├── routes/                  # API route handlers
 │   │   ├── services/                # Business logic services
 │   │   ├── schemas/                 # Zod validation schemas
-│   │   ├── middlewares/             # Express middlewares
+│   │   ├── middlewares/             # Fastify plugins/hooks
 │   │   ├── models/                  # MongoDB models
 │   │   └── utils/                   # Utility functions
 │   ├── package.json                 # Server dependencies
@@ -139,7 +141,6 @@ quiz-platform/
 - **Node.js**: >= 18.0.0
 - **PNPM**: >= 8.0.0 (recommended) or NPM
 - **MongoDB**: Atlas cluster or local MongoDB instance
-- **Redis**: For caching and sessions (optional)
 
 ### Quick Start
 
@@ -183,39 +184,51 @@ cd server && pnpm dev       # Starts server on :3000
 
 ### Client Variables
 
-| Variable | Description | Required | Default | Example |
-|----------|-------------|----------|---------|---------|
-| `VITE_API_BASE_URL` | Backend API base URL | Yes | - | `http://localhost:3000/api` |
-| `VITE_GOOGLE_CLIENT_ID` | Google OAuth client ID | Yes | - | `123456789.apps.googleusercontent.com` |
-| `VITE_FACEBOOK_APP_ID` | Facebook app ID | Yes | - | `123456789012345` |
-| `VITE_PAYPAL_CLIENT_ID` | PayPal client ID | Yes | - | `AeA1QIZXiflr1_-L...` |
-| `VITE_APS_MERCHANT_ID` | APS merchant ID | Yes | - | `YOUR_MERCHANT_ID` |
-| `VITE_APS_ENVIRONMENT` | APS environment | Yes | - | `sandbox` or `production` |
-| `VITE_DEFAULT_CURRENCY` | Default currency | No | `USD` | `USD`, `JOD`, `SAR` |
-| `VITE_DEFAULT_LOCALE` | Default locale | No | `en` | `en`, `ar` |
+| Variable | Required? | Example | Used in |
+|----------|-----------|---------|---------|
+| `VITE_APP_URL` | Yes | `http://localhost:5173` | <!-- TODO: add link when file exists --> |
+| `VITE_I18N_DEFAULT_LANG` | No | `en` | <!-- TODO: add link when file exists --> |
+| `VITE_DEFAULT_CURRENCY` | No | `USD` | <!-- TODO: add link when file exists --> |
+| `VITE_API_BASE_URL` | Yes | `http://localhost:3000/api` | <!-- TODO: add link when file exists --> |
+| `VITE_GOOGLE_CLIENT_ID` | Yes | `123456789.apps.googleusercontent.com` | <!-- TODO: add link when file exists --> |
+| `VITE_FACEBOOK_APP_ID` | Yes | `123456789012345` | <!-- TODO: add link when file exists --> |
+| `VITE_PAYPAL_CLIENT_ID` | Yes | `AeA1QIZXiflr1_-L...` | <!-- TODO: add link when file exists --> |
+| `VITE_APS_MERCHANT_ID` | Yes | `YOUR_MERCHANT_ID` | <!-- TODO: add link when file exists --> |
+| `VITE_APS_ENVIRONMENT` | Yes | `sandbox` or `production` | <!-- TODO: add link when file exists --> |
 
 ### Server Variables
 
-| Variable | Description | Required | Default | Example |
-|----------|-------------|----------|---------|---------|
-| `NODE_ENV` | Node environment | Yes | - | `development`, `production` |
-| `PORT` | Server port | No | `3000` | `3000` |
-| `MONGODB_URI` | MongoDB connection string | Yes | - | `mongodb://localhost:27017/q8m` |
-| `JWT_SECRET` | JWT signing secret | Yes | - | `your_secret_key_32_chars_min` |
-| `GOOGLE_CLIENT_ID` | Google OAuth client ID | Yes | - | `123456789.apps.googleusercontent.com` |
-| `GOOGLE_CLIENT_SECRET` | Google OAuth client secret | Yes | - | `GOCSPX-...` |
-| `FACEBOOK_APP_ID` | Facebook app ID | Yes | - | `123456789012345` |
-| `FACEBOOK_APP_SECRET` | Facebook app secret | Yes | - | `abcdef...` |
-| `PAYPAL_CLIENT_ID` | PayPal client ID | Yes | - | `AeA1QIZXiflr1_-L...` |
-| `PAYPAL_CLIENT_SECRET` | PayPal client secret | Yes | - | `EP...` |
-| `PAYPAL_ENVIRONMENT` | PayPal environment | Yes | - | `sandbox`, `live` |
-| `APS_MERCHANT_ID` | APS merchant ID | Yes | - | `YOUR_MERCHANT_ID` |
-| `APS_ACCESS_CODE` | APS access code | Yes | - | `ACCESS_CODE` |
-| `APS_SECRET_KEY` | APS secret key | Yes | - | `SECRET_KEY` |
-| `APS_ENVIRONMENT` | APS environment | Yes | - | `sandbox`, `production` |
-| `FX_API_KEY` | Currency exchange API key | Yes | - | `your_api_key` |
-| `FX_API_URL` | Currency exchange API URL | No | `https://api.exchangerate-api.com/v4/latest` | API URL |
-| `FX_CACHE_TTL` | FX cache TTL in ms | No | `86400000` | `86400000` (24h) |
+| Variable | Required? | Example | Used in |
+|----------|-----------|---------|---------|
+| `APP_URL` | Yes | `http://localhost:3000` | [server/src/config/env.ts](server/src/config/env.ts) |
+| `MONGODB_URI` | Yes | `mongodb://localhost:27017/q8m` | [server/src/config/env.ts](server/src/config/env.ts) |
+| `MONGODB_DB_NAME` | Yes | `q8m` | [server/src/config/env.ts](server/src/config/env.ts) |
+| `AUTH_SESSION_SECRET` | Yes | `your_secret_key_32_chars_min` | [server/src/config/env.ts](server/src/config/env.ts) |
+| `EMAIL_FROM` | Yes | `noreply@q8m.com` | [server/src/config/env.ts](server/src/config/env.ts) |
+| `EMAIL_PROVIDER_API_KEY` | Yes | `your_email_api_key` | [server/src/config/env.ts](server/src/config/env.ts) |
+| `TURNSTILE_SITE_KEY` | Yes | `your_turnstile_site_key` | [server/src/config/env.ts](server/src/config/env.ts) |
+| `TURNSTILE_SECRET_KEY` | Yes | `your_turnstile_secret_key` | [server/src/config/env.ts](server/src/config/env.ts) |
+| `GOOGLE_CLIENT_ID` | Yes | `123456789.apps.googleusercontent.com` | [server/src/config/env.ts](server/src/config/env.ts) |
+| `GOOGLE_CLIENT_SECRET` | Yes | `GOCSPX-...` | [server/src/config/env.ts](server/src/config/env.ts) |
+| `FACEBOOK_CLIENT_ID` | Yes | `123456789012345` | [server/src/config/env.ts](server/src/config/env.ts) |
+| `FACEBOOK_CLIENT_SECRET` | Yes | `abcdef...` | [server/src/config/env.ts](server/src/config/env.ts) |
+| `PAYPAL_ENV` | Yes | `sandbox` or `live` | [server/src/config/env.ts](server/src/config/env.ts) |
+| `PAYPAL_CLIENT_ID` | Yes | `AeA1QIZXiflr1_-L...` | [server/src/config/env.ts](server/src/config/env.ts) |
+| `PAYPAL_CLIENT_SECRET` | Yes | `EP...` | [server/src/config/env.ts](server/src/config/env.ts) |
+| `PAYPAL_WEBHOOK_ID` | Yes | `WEBHOOK_ID` | [server/src/config/env.ts](server/src/config/env.ts) |
+| `APS_MERCHANT_ID` | Yes | `YOUR_MERCHANT_ID` | [server/src/config/env.ts](server/src/config/env.ts) |
+| `APS_ACCESS_CODE` | Yes | `ACCESS_CODE` | [server/src/config/env.ts](server/src/config/env.ts) |
+| `APS_HASH_KEY` | Yes | `SECRET_KEY` | [server/src/config/env.ts](server/src/config/env.ts) |
+| `APS_ENV` | Yes | `sandbox` or `production` | [server/src/config/env.ts](server/src/config/env.ts) |
+| `APS_CURRENCY` | Yes | `USD`, `JOD`, `SAR` | [server/src/config/env.ts](server/src/config/env.ts) |
+| `APS_RETURN_URL` | Yes | `http://localhost:5173/payment/success` | [server/src/config/env.ts](server/src/config/env.ts) |
+| `APS_WEBHOOK_SECRET` | Yes | `webhook_secret` | [server/src/config/env.ts](server/src/config/env.ts) |
+| `HYPERPAY_API_KEY` | No | `your_hyperpay_api_key` | [server/src/config/env.ts](server/src/config/env.ts) |
+| `HYPERPAY_MERCHANT_ID` | No | `your_hyperpay_merchant_id` | [server/src/config/env.ts](server/src/config/env.ts) |
+| `HYPERPAY_WEBHOOK_SECRET` | No | `your_hyperpay_webhook_secret` | [server/src/config/env.ts](server/src/config/env.ts) |
+| `FX_API_BASE` | Yes | `https://api.exchangerate-api.com/v4/latest` | [server/src/config/env.ts](server/src/config/env.ts) |
+| `FX_API_KEY` | Yes | `your_fx_api_key` | [server/src/config/env.ts](server/src/config/env.ts) |
+| `FX_CACHE_TTL_HOURS` | No | `24` | [server/src/config/env.ts](server/src/config/env.ts) |
 
 ## Usage
 
@@ -232,15 +245,16 @@ cd server && pnpm dev       # Starts server on :3000
 - **Manual Override**: Users can switch between USD/JOD/SAR
 - **Real-Time Rates**: Daily FX rate updates with price snapshots
 - **Localized Display**: Prices shown in user's preferred currency
+- **Settlement Notes**: Shows "Estimated X / Billed in Y" if settlement differs
 
 ### Access Tiers
 
 | Tier | Price | Features | Questions |
 |------|-------|----------|-----------|
 | **Junior** | Free | Basic questions, progress tracking | 100+ |
-| **Intermediate** | $29 | Advanced questions, analytics, bookmarks | 300+ |
-| **Senior** | $49 | Expert questions, mock interviews, custom plans | 500+ |
-| **Bundle** | $69 | Everything + lifetime access, mentorship | Unlimited |
+| **Intermediate** | $5 | Advanced questions, analytics, bookmarks | 300+ |
+| **Senior** | $5 | Expert questions, mock interviews, custom plans | 500+ |
+| **Bundle** | $8 | Everything + lifetime access, mentorship | Unlimited |
 
 ### Demo Flows
 
@@ -251,7 +265,7 @@ cd server && pnpm dev       # Starts server on :3000
 
 2. **Payment Flow**
    - PayPal checkout with redirect
-   - APS/HyperPay integration
+   - APS/HyperPay integration (Jordan/MENA region)
    - Webhook confirmation
    - Entitlement activation
 
@@ -268,7 +282,8 @@ cd server && pnpm dev       # Starts server on :3000
 - **Rate Limiting**: API endpoint protection
 - **Server-Side Gating**: Entitlement validation
 - **PCI Compliance**: Payment data never stored locally
-- **JWT Security**: HttpOnly cookies with secure flags
+- **Session Security**: HttpOnly, Secure cookies (SameSite=Lax) stored in MongoDB
+- **Webhook Security**: Idempotency and signature verification
 
 ### Accessibility (WCAG AA)
 
@@ -277,13 +292,14 @@ cd server && pnpm dev       # Starts server on :3000
 - **Focus Management**: Visible focus indicators
 - **Color Contrast**: Meets WCAG AA requirements
 - **RTL Support**: Proper Arabic text direction
+- **ARIA Live Regions**: Dynamic error announcements
 
 ### SEO
 
-- **Multi-Language**: `/en` and `/ar` routes
-- **Meta Tags**: hreflang, canonical, sitemap, robots.txt
-- **Schema Markup**: Product/Offer structured data
-- **Multi-Currency**: Currency-specific pricing markup
+- **Multi-Language**: `/en` and `/ar` routes with hreflang
+- **Meta Tags**: Canonical URLs, sitemap, robots.txt
+- **Schema Markup**: Product/Offer structured data with multi-currency pricing
+- **Performance**: Optimized Core Web Vitals
 
 ### Performance
 
@@ -291,6 +307,7 @@ cd server && pnpm dev       # Starts server on :3000
 - **Code Splitting**: Route-based dynamic imports
 - **Image Optimization**: WebP support with lazy loading
 - **Caching**: Service worker for offline functionality
+- **Font Strategy**: Preconnect to font providers
 - **Bundle Analysis**: Regular size monitoring
 
 ## Testing & CI
@@ -322,6 +339,7 @@ pnpm test:e2e --grep "payment flow"
 
 - **PayPal Sandbox**: Use sandbox credentials for testing
 - **APS Testing**: Test environment with mock responses
+- **HyperPay Testing**: Sandbox environment for Jordan/MENA
 - **Webhook Testing**: Use ngrok for local webhook testing
 
 ### CI Pipeline
@@ -331,6 +349,8 @@ pnpm test:e2e --grep "payment flow"
 - **Unit Tests**: Vitest with coverage reporting
 - **E2E Tests**: Playwright cross-browser testing
 - **Security**: Dependency vulnerability scanning
+- **Visual Regression**: <!-- TODO: workflow path -->
+- **Lighthouse/Axe**: <!-- TODO: workflow path -->
 
 ## Contributing
 
@@ -425,7 +445,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - **دعم متعدد الأطر**: 500+ سؤال عبر Angular و Vue.js و Next.js و Redux
 - **واجهة ثنائية اللغة**: دعم كامل للإنجليزية والعربية مع تخطيط RTL
-- **وصول متدرج**: مبتدئ (مجاني)، متوسط (29$)، متقدم (49$)، حزمة (69$)
+- **وصول متدرج**: مبتدئ (مجاني)، متوسط (5$)، متقدم (5$)، حزمة (8$)
 - **أسعار محلية**: تحويل عملة ديناميكي (JOD/SAR/USD) مع أسعار صرف يومية
 - **مدفوعات آمنة**: تكامل PayPal + APS/HyperPay مع webhooks
 - **تصميم محمول أولاً**: PWA متجاوب مع قدرات غير متصلة
@@ -450,3 +470,7 @@ cd server && pnpm dev       # يبدأ الخادم على :3000
 ---
 
 **Built with ❤️ for the frontend developer community by [Hussein Tirawi](https://github.com/htirawi)**
+
+## Topics
+
+vue3, vite, fastify, mongodb, paypal, aps, hyperpay, payments, i18n, rtl, a11y, seo, multicurrency, pricing, education, tiers, entitlements, jordan, mena, typescript, pwa, interview-preparation, quiz-platform, frontend-development, technical-interviews
