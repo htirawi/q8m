@@ -36,20 +36,22 @@
   "scripts": {
     "dev": "cd client && pnpm dev",
     "dev:server": "cd server && pnpm dev",
-    "build": "cd client && pnpm build && cd ../server && pnpm build",
+    "build": "pnpm -r build",
     "preview": "cd client && pnpm preview",
-    "lint": "cd client && pnpm lint:new && cd ../server && pnpm lint",
-    "lint:fix": "cd client && pnpm lint:fix && cd ../server && pnpm lint",
-    "format": "cd client && pnpm format && cd ../server && pnpm format",
-    "format:check": "cd client && pnpm format:check && cd ../server && pnpm format:check",
-    "test": "echo 'Tests disabled for legacy code - will be re-enabled after refactoring'",
+    "lint": "pnpm -r lint",
+    "lint:fix": "pnpm -r lint:fix",
+    "format": "pnpm -r format",
+    "format:check": "pnpm -r format:check",
+    "test": "pnpm -r test",
+    "test:unit": "pnpm -r test:unit",
     "test:ui": "cd client && pnpm test:ui",
-    "test:coverage": "cd client && pnpm test:coverage && cd ../server && pnpm test:coverage",
+    "test:coverage": "pnpm -r test:coverage",
     "test:watch": "cd client && pnpm test:watch",
-    "type-check": "cd client && pnpm typecheck && cd ../server && pnpm type-check",
+    "typecheck": "pnpm -r typecheck",
+    "type-check": "pnpm -r type-check",
     "prepare": "husky install",
-    "validate": "pnpm lint && pnpm type-check && pnpm test",
-    "pre-push": "pnpm validate && pnpm build",
+    "validate": "pnpm typecheck && pnpm lint && pnpm test:unit",
+    "pre-push": "pnpm typecheck && pnpm lint && pnpm test:unit && pnpm build",
     "guard:react": "node scripts/guard-react.cjs",
     "guard:data": "node scripts/guard-data.cjs",
     "guard:types:inline": "node scripts/guard-inline-types.cjs",
@@ -65,8 +67,14 @@
     "prettier-plugin-tailwindcss": "^0.5.14"
   },
   "lint-staged": {
-    "*.{json,md,yml,yaml,js,ts,vue}": [
+    "*.{json,md,yml,yaml}": [
       "prettier --write"
+    ],
+    "client/**/*.{ts,vue,js}": [
+      "cd client && eslint --fix"
+    ],
+    "server/**/*.{ts,js}": [
+      "cd server && eslint --fix"
     ]
   },
   "engines": {

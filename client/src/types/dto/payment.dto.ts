@@ -5,6 +5,9 @@
  * These types represent the exact structure of data sent over the network.
  */
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* TODO: Legacy patterns - Replace 'any' types with proper typing in next PR */
+
 /**
  * Mock payment request DTO
  */

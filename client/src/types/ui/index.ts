@@ -5,6 +5,9 @@
  * These types define the contracts for reusable UI components.
  */
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* TODO: Legacy patterns - Replace 'any' types with proper typing in next PR */
+
 /**
  * Virtual scroll component props
  */

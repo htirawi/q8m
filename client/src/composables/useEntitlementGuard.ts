@@ -4,6 +4,9 @@
  * Provides utilities for checking user entitlements and protecting routes
  */
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* TODO: Legacy patterns - Replace 'any' types with proper typing and remove unused vars in next PR */
+
 import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";

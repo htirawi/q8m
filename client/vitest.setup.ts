@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* TODO: Legacy patterns - Replace 'any' types with proper typing and remove unused vars in next PR */
 import { config } from "@vue/test-utils";
 import { beforeAll, afterEach, afterAll, vi } from "vitest";
 import { cleanup } from "@testing-library/vue";

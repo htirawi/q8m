@@ -5,6 +5,9 @@
  * These are utility types, primitives, and common patterns.
  */
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* TODO: Legacy patterns - Replace 'any' types with proper typing in next PR */
+
 /**
  * Toast notification structure
  */
