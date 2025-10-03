@@ -1,28 +1,30 @@
 {
-  "name": "quiz-platform-client",
+  "name": "q8m-client",
   "private": true,
-  "version": "1.0.0",
+  "version": "2.0.0",
   "type": "module",
-  "description": "Vue 3 Quiz Platform - Bilingual frontend with monetization",
+  "description": "q8m Client - Vue 3 frontend for Quiz 8 Mastery interview preparation platform",
   "author": "Hussein Tirawi",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/htirawi/quiz-platform.git"
+    "url": "https://github.com/htirawi/q8m.git"
   },
   "bugs": {
-    "url": "https://github.com/htirawi/quiz-platform/issues"
+    "url": "https://github.com/htirawi/q8m/issues"
   },
-  "homepage": "https://github.com/htirawi/quiz-platform#readme",
+  "homepage": "https://github.com/htirawi/q8m#readme",
   "keywords": [
+    "q8m",
     "vue3",
     "typescript",
     "quiz",
     "interview",
     "preparation",
-    "bilingual",
-    "monetization",
-    "payments"
+    "pinia",
+    "vite",
+    "pwa",
+    "frontend"
   ],
   "scripts": {
     "dev": "vite",
