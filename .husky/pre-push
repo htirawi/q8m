@@ -1,5 +1,4 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-echo "🔍 Running pre-push validation..."
-npm run pre-push
+cd client && pnpm typecheck && pnpm lint && pnpm test:unit && pnpm build

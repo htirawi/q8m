@@ -1,0 +1,150 @@
+{
+  "common": {
+    "appName": "q8m",
+    "currency": "$",
+    "perMonth": "/month"
+  },
+  "navigation": {
+    "home": "Home",
+    "pricing": "Pricing",
+    "quiz": "Quiz",
+    "account": "Account",
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "about": "About",
+    "contact": "Contact",
+    "help": "Help",
+    "privacy": "Privacy",
+    "terms": "Terms"
+  },
+  "home": {
+    "hero": {
+      "title": "Master Frontend Development Interviews",
+      "description": "Prepare for your next frontend developer interview with 500+ curated questions covering Vue.js, React, Angular, and more. Interactive learning with real-time feedback.",
+      "cta": "Get Started Free",
+      "pricing": "View Pricing",
+      "stats": {
+        "questions": "Questions",
+        "frameworks": "Frameworks",
+        "success": "Success Rate"
+      }
+    },
+    "features": {
+      "title": "Why Choose q8m?",
+      "description": "Comprehensive interview preparation designed by industry experts",
+      "comprehensive": {
+        "title": "Comprehensive Coverage",
+        "description": "500+ questions covering all major frontend frameworks and technologies"
+      },
+      "interactive": {
+        "title": "Interactive Learning",
+        "description": "Real-time feedback and explanations to help you understand concepts deeply"
+      },
+      "analytics": {
+        "title": "Progress Analytics",
+        "description": "Track your progress and identify areas for improvement"
+      },
+      "community": {
+        "title": "Expert Community",
+        "description": "Learn from industry experts and connect with fellow developers"
+      },
+      "secure": {
+        "title": "Secure & Reliable",
+        "description": "Your data is protected with enterprise-grade security"
+      },
+      "mobile": {
+        "title": "Mobile Optimized",
+        "description": "Practice anywhere with our mobile-first design"
+      }
+    },
+    "pricing": {
+      "title": "Simple, Transparent Pricing",
+      "description": "Choose the plan that fits your learning goals",
+      "choosePlan": "Choose Plan",
+      "note": "All plans include access to our community and basic support",
+      "viewAllPlans": "View All Plans",
+      "plans": {
+        "free": {
+          "title": "Free",
+          "features": {
+            "basic": "Basic questions",
+            "limited": "Limited attempts",
+            "community": "Community access"
+          }
+        },
+        "pro": {
+          "title": "Pro",
+          "features": {
+            "unlimited": "Unlimited questions",
+            "analytics": "Progress analytics",
+            "priority": "Priority support",
+            "advanced": "Advanced topics"
+          }
+        },
+        "enterprise": {
+          "title": "Enterprise",
+          "features": {
+            "everything": "Everything in Pro",
+            "custom": "Custom questions",
+            "support": "24/7 support",
+            "team": "Team management"
+          }
+        }
+      }
+    },
+    "cta": {
+      "title": "Ready to Ace Your Next Interview?",
+      "description": "Join thousands of developers who have successfully landed their dream jobs",
+      "getStarted": "Get Started Free",
+      "learnMore": "Learn More",
+      "trust": "Trusted by developers worldwide",
+      "secure": "Secure",
+      "instant": "Instant Access",
+      "support": "24/7 Support"
+    },
+    "demo": {
+      "title": "Design System Showcase",
+      "description": "Experience our carefully crafted UI components",
+      "components": "Components",
+      "buttons": "Buttons",
+      "small": "Small",
+      "medium": "Medium",
+      "large": "Large",
+      "secondary": "Secondary",
+      "outline": "Outline",
+      "form": "Form Elements",
+      "email": "Email Address",
+      "emailPlaceholder": "Enter your email",
+      "framework": "Framework",
+      "frameworkHelp": "Select your preferred framework",
+      "selectFramework": "Choose framework",
+      "submit": "Submit",
+      "cancel": "Cancel",
+      "states": "States",
+      "loading": "Loading...",
+      "empty": "No data available",
+      "error": "Something went wrong"
+    }
+  },
+  "footer": {
+    "company": "Company",
+    "legal": "Legal",
+    "social": "Social",
+    "copyright": "© {year} q8m. All rights reserved."
+  },
+  "a11y": {
+    "skipToMain": "Skip to main content",
+    "mainNavigation": "Main navigation",
+    "goToHome": "Go to home page",
+    "mainContent": "Main content",
+    "footer": "Footer",
+    "followOnTwitter": "Follow us on Twitter",
+    "followOnLinkedIn": "Follow us on LinkedIn",
+    "followOnGitHub": "Follow us on GitHub",
+    "logout": "Logout",
+    "switchLanguage": "Switch language",
+    "closeModal": "Close modal",
+    "dismissNotification": "Dismiss notification"
+  }
+}

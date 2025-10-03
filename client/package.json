@@ -36,14 +36,16 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "vitest run",
+    "test:unit": "vitest run",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
+    "typecheck": "vue-tsc --noEmit",
     "type-check": "vue-tsc --noEmit",
     "prepare": "husky install",
-    "validate": "pnpm lint && pnpm type-check && pnpm test",
-    "pre-push": "node scripts/pre-push-validation.js"
+    "validate": "pnpm lint && pnpm typecheck && pnpm test:unit",
+    "pre-push": "pnpm typecheck && pnpm lint && pnpm test:unit && pnpm build"
   },
   "dependencies": {
     "@headlessui/vue": "^1.7.0",

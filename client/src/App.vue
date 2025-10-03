@@ -1,13 +1,13 @@
 <template>
   <div id="app">
-    <AppLayout />
+    <RouterView />
   </div>
 </template>
 
 <script setup lang="ts">
-import AppLayout from "./components/layout/AppLayout.vue";
+// App.vue is kept minimal - all providers are in main.ts
 </script>
 
 <style>
-/* Global styles will be imported from main.css */
+/* Global styles are imported in main.ts */
 </style>
