@@ -57,11 +57,11 @@ Thumbs.db
 .DS_Store?
 
 # Development artifacts
-# Questions folder - contains CSV files and templates for development
-questions/
+# Fixtures folder - contains development data and scripts (excluded from production builds)
+fixtures/
 backups/
 
-# Internal development scripts and tools
+# Internal development scripts and tools (moved to fixtures)
 scripts/internal/
 scripts/backups/
 scripts/tools/

@@ -25,12 +25,12 @@ class CSVInspector {
     console.log(`📁 File path: ${path.resolve(csvFile)}`);
 
     try {
-      // Check file size
+      // Read file content first to avoid race condition
+      const content = fs.readFileSync(csvFile, "utf8");
+      
+      // Get file stats after reading content to ensure consistency
       const stats = fs.statSync(csvFile);
       console.log(`📊 File size: ${(stats.size / 1024).toFixed(2)} KB`);
-
-      // Read file content
-      const content = fs.readFileSync(csvFile, "utf8");
       console.log(`📄 File encoding: UTF-8`);
 
       // Check for BOM (Byte Order Mark)

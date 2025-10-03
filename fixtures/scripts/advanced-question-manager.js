@@ -260,22 +260,31 @@ class AdvancedQuestionManager {
   formatQuestion(question, startId) {
     const id = startId + question.id;
 
-    // Escape the answer properly
-    const escapedAnswer = question.answer
-      .replace(/\\/g, "\\\\")
-      .replace(/"/g, '\\"')
-      .replace(/\n/g, "\\n")
-      .replace(/\r/g, "\\r")
-      .replace(/\t/g, "\\t");
+    // Properly escape all special characters for all string fields
+    const escapeString = (str) => {
+      return str
+        .replace(/\\/g, "\\\\")  // Escape backslashes first
+        .replace(/"/g, '\\"')     // Escape quotes
+        .replace(/\n/g, "\\n")    // Escape newlines
+        .replace(/\r/g, "\\r")    // Escape carriage returns
+        .replace(/\t/g, "\\t")    // Escape tabs
+        .replace(/\$/g, "\\$")    // Escape dollar signs (for template literals)
+        .replace(/`/g, "\\`");    // Escape backticks
+    };
+
+    const escapedQuestion = escapeString(question.question);
+    const escapedAnswer = escapeString(question.answer);
+    const escapedCategory = escapeString(question.category);
+    const escapedDifficulty = escapeString(question.difficulty);
 
     return `  {
     id: ${id},
-    question: "${question.question.replace(/"/g, '\\"')}",
+    question: "${escapedQuestion}",
     answer:
       "${escapedAnswer}",
-    category: "${question.category}",
-    difficulty: "${question.difficulty}",
-    tags: [${question.tags.map((tag) => `"${tag}"`).join(", ")}],
+    category: "${escapedCategory}",
+    difficulty: "${escapedDifficulty}",
+    tags: [${question.tags.map((tag) => `"${escapeString(tag)}"`).join(", ")}],
   },`;
   }
 
