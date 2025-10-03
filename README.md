@@ -372,10 +372,10 @@ pnpm test
 
 ### Near-Term Milestones
 
-- **Q1 2024**: Auth polish, email verification improvements
-- **Q2 2024**: APS/HyperPay production deployment
-- **Q3 2024**: Admin console for content management
-- **Q4 2024**: Advanced analytics dashboard
+- **Q1 2025**: Auth polish, email verification improvements
+- **Q2 2025**: APS/HyperPay production deployment
+- **Q3 2025**: Admin console for content management
+- **Q4 2025**: Advanced analytics dashboard
 
 ### Changelog
 
