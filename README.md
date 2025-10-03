@@ -449,4 +449,4 @@ cd server && pnpm dev       # يبدأ الخادم على :3000
 
 ---
 
-**Built with ❤️ by [Hussein Tirawi](https://github.com/htirawi)**
+**Built with ❤️ for the frontend developer community by [Hussein Tirawi](https://github.com/htirawi)**
