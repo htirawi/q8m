@@ -589,7 +589,14 @@ export default async function authRoutes(fastify: FastifyInstance) {
   );
 
   // Refresh token
-  fastify.post("/refresh", async (request, reply) => {
+  fastify.post("/refresh", {
+    config: {
+      rateLimit: {
+        max: 10, // Allow only 10 refresh attempts per window
+        timeWindow: 900000, // 15 minutes
+      }
+    }
+  }, async (request, reply) => {
     try {
       const { refreshToken } = request.body as { refreshToken: string };
 
@@ -598,6 +605,15 @@ export default async function authRoutes(fastify: FastifyInstance) {
           code: 401,
           error: "Unauthorized",
           message: "Refresh token is required",
+        });
+      }
+
+      // Validate refresh token format to prevent security bypass
+      if (typeof refreshToken !== 'string' || refreshToken.length < 32 || !/^[a-zA-Z0-9]+$/.test(refreshToken)) {
+        return reply.status(401).send({
+          code: 401,
+          error: "Unauthorized",
+          message: "Invalid refresh token format",
         });
       }
 

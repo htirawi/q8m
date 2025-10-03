@@ -231,13 +231,18 @@ export class HyperPayService {
       throw new Error("HyperPay service not configured");
     }
 
+    // Validate paymentId to prevent SSRF
+    if (!paymentId || !/^[a-zA-Z0-9_-]+$/.test(paymentId)) {
+      throw new Error("Invalid payment ID format");
+    }
+
     const purchase = await Purchase.findByPaymentId(paymentId);
     if (!purchase) {
       return { success: false, status: "not_found", error: "Purchase record not found" };
     }
 
     try {
-      const response = await fetch(`${this.baseUrl}/v1/payments/${paymentId}`, {
+      const response = await fetch(`${this.baseUrl}/v1/payments/${encodeURIComponent(paymentId)}`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${this.apiKey}`,
@@ -497,8 +502,13 @@ export class HyperPayService {
       throw new Error("HyperPay service not configured");
     }
 
+    // Validate paymentId to prevent SSRF
+    if (!paymentId || !/^[a-zA-Z0-9_-]+$/.test(paymentId)) {
+      throw new Error("Invalid payment ID format");
+    }
+
     try {
-      const response = await fetch(`${this.baseUrl}/v1/payments/${paymentId}`, {
+      const response = await fetch(`${this.baseUrl}/v1/payments/${encodeURIComponent(paymentId)}`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${this.apiKey}`,
