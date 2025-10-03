@@ -1,29 +1,37 @@
 {
-  "name": "frontend-interview-prep",
+  "name": "q8m",
   "private": true,
-  "version": "1.0.0",
+  "version": "2.0.0",
   "type": "module",
-  "description": "Professional Vue 3 quiz platform with monetization and bilingual support",
+  "description": "q8m - Quiz 8 Mastery: Professional Vue 3 interview preparation platform with comprehensive question banks and advanced analytics",
   "author": "Hussein Tirawi",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/htirawi/frontend-interview-prep.git"
+    "url": "https://github.com/htirawi/q8m.git"
   },
   "bugs": {
-    "url": "https://github.com/htirawi/frontend-interview-prep/issues"
+    "url": "https://github.com/htirawi/q8m/issues"
   },
-  "homepage": "https://github.com/htirawi/frontend-interview-prep#readme",
+  "homepage": "https://github.com/htirawi/q8m#readme",
   "keywords": [
-    "vue3",
+    "q8m",
     "quiz",
+    "mastery",
     "interview",
     "preparation",
-    "bilingual",
-    "monetization",
-    "payments",
+    "vue3",
     "typescript",
-    "pwa"
+    "pinia",
+    "vite",
+    "pwa",
+    "angular",
+    "react",
+    "nextjs",
+    "redux",
+    "frontend",
+    "developer",
+    "technical-interview"
   ],
   "scripts": {
     "dev": "cd client && pnpm dev",

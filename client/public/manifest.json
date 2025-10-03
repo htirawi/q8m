@@ -1,16 +1,16 @@
 {
-  "name": "Vue 3 Quiz Platform",
-  "short_name": "Quiz Platform",
-  "description": "Interactive quiz platform for learning Vue 3, React, Angular, and more",
+  "name": "q8m - Quiz 8 Mastery",
+  "short_name": "q8m",
+  "description": "Master technical interviews with q8m - Quiz 8 Mastery. Practice with 500+ curated questions across Angular, React, Next.js, Redux, and advanced topics.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#3b82f6",
+  "theme_color": "#7c3aed",
   "orientation": "portrait-primary",
   "scope": "/",
   "lang": "en",
   "dir": "ltr",
-  "categories": ["education", "productivity", "utilities"],
+  "categories": ["education", "productivity", "utilities", "developer"],
   "icons": [
     {
       "src": "/icons/icon-72x72.png",
@@ -65,7 +65,7 @@
     {
       "name": "Start Quiz",
       "short_name": "Quiz",
-      "description": "Start a new quiz",
+      "description": "Start a new technical interview quiz",
       "url": "/quizzes",
       "icons": [
         {
@@ -75,13 +75,25 @@
       ]
     },
     {
-      "name": "Pricing",
-      "short_name": "Pricing",
-      "description": "View pricing plans",
-      "url": "/pricing",
+      "name": "Study Mode",
+      "short_name": "Study",
+      "description": "Practice with study mode",
+      "url": "/study",
       "icons": [
         {
-          "src": "/icons/shortcut-pricing.png",
+          "src": "/icons/shortcut-study.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Analytics",
+      "short_name": "Stats",
+      "description": "View your progress analytics",
+      "url": "/analytics",
+      "icons": [
+        {
+          "src": "/icons/shortcut-analytics.png",
           "sizes": "96x96"
         }
       ]
@@ -93,14 +105,14 @@
       "sizes": "1280x720",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "Quiz Platform Dashboard"
+      "label": "q8m Dashboard - Master Technical Interviews"
     },
     {
       "src": "/screenshots/mobile-1.png",
       "sizes": "390x844",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "Mobile Quiz Interface"
+      "label": "q8m Mobile Interface"
     }
   ],
   "prefer_related_applications": false,
