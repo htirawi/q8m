@@ -158,6 +158,7 @@ pnpm run bootstrap
 # Set up environment variables
 cp client/.env.example client/.env
 cp server/.env.example server/.env
+# Configure your actual values in the .env files
 
 # Seed database with sample data
 cd server && pnpm run db:seed
@@ -182,53 +183,64 @@ cd server && pnpm dev       # Starts server on :3000
 
 ## Environment Variables
 
-### Client Variables
+q8m uses comprehensive environment configuration templates for both client and server. Copy the example files and configure with your actual values:
 
-| Variable | Required? | Example | Used in |
-|----------|-----------|---------|---------|
-| `VITE_APP_URL` | Yes | `http://localhost:5173` | <!-- TODO: add link when file exists --> |
-| `VITE_I18N_DEFAULT_LANG` | No | `en` | <!-- TODO: add link when file exists --> |
-| `VITE_DEFAULT_CURRENCY` | No | `USD` | <!-- TODO: add link when file exists --> |
-| `VITE_API_BASE_URL` | Yes | `http://localhost:3000/api` | <!-- TODO: add link when file exists --> |
-| `VITE_GOOGLE_CLIENT_ID` | Yes | `123456789.apps.googleusercontent.com` | <!-- TODO: add link when file exists --> |
-| `VITE_FACEBOOK_APP_ID` | Yes | `123456789012345` | <!-- TODO: add link when file exists --> |
-| `VITE_PAYPAL_CLIENT_ID` | Yes | `AeA1QIZXiflr1_-L...` | <!-- TODO: add link when file exists --> |
-| `VITE_APS_MERCHANT_ID` | Yes | `YOUR_MERCHANT_ID` | <!-- TODO: add link when file exists --> |
-| `VITE_APS_ENVIRONMENT` | Yes | `sandbox` or `production` | <!-- TODO: add link when file exists --> |
+### Quick Setup
 
-### Server Variables
+```bash
+# Copy environment templates
+cp client/.env.example client/.env
+cp server/.env.example server/.env
 
-| Variable | Required? | Example | Used in |
-|----------|-----------|---------|---------|
-| `APP_URL` | Yes | `http://localhost:3000` | [server/src/config/env.ts](server/src/config/env.ts) |
-| `MONGODB_URI` | Yes | `mongodb://localhost:27017/q8m` | [server/src/config/env.ts](server/src/config/env.ts) |
-| `MONGODB_DB_NAME` | Yes | `q8m` | [server/src/config/env.ts](server/src/config/env.ts) |
-| `AUTH_SESSION_SECRET` | Yes | `your_secret_key_32_chars_min` | [server/src/config/env.ts](server/src/config/env.ts) |
-| `EMAIL_FROM` | Yes | `noreply@q8m.com` | [server/src/config/env.ts](server/src/config/env.ts) |
-| `EMAIL_PROVIDER_API_KEY` | Yes | `your_email_api_key` | [server/src/config/env.ts](server/src/config/env.ts) |
-| `TURNSTILE_SITE_KEY` | Yes | `your_turnstile_site_key` | [server/src/config/env.ts](server/src/config/env.ts) |
-| `TURNSTILE_SECRET_KEY` | Yes | `your_turnstile_secret_key` | [server/src/config/env.ts](server/src/config/env.ts) |
-| `GOOGLE_CLIENT_ID` | Yes | `123456789.apps.googleusercontent.com` | [server/src/config/env.ts](server/src/config/env.ts) |
-| `GOOGLE_CLIENT_SECRET` | Yes | `GOCSPX-...` | [server/src/config/env.ts](server/src/config/env.ts) |
-| `FACEBOOK_CLIENT_ID` | Yes | `123456789012345` | [server/src/config/env.ts](server/src/config/env.ts) |
-| `FACEBOOK_CLIENT_SECRET` | Yes | `abcdef...` | [server/src/config/env.ts](server/src/config/env.ts) |
-| `PAYPAL_ENV` | Yes | `sandbox` or `live` | [server/src/config/env.ts](server/src/config/env.ts) |
-| `PAYPAL_CLIENT_ID` | Yes | `AeA1QIZXiflr1_-L...` | [server/src/config/env.ts](server/src/config/env.ts) |
-| `PAYPAL_CLIENT_SECRET` | Yes | `EP...` | [server/src/config/env.ts](server/src/config/env.ts) |
-| `PAYPAL_WEBHOOK_ID` | Yes | `WEBHOOK_ID` | [server/src/config/env.ts](server/src/config/env.ts) |
-| `APS_MERCHANT_ID` | Yes | `YOUR_MERCHANT_ID` | [server/src/config/env.ts](server/src/config/env.ts) |
-| `APS_ACCESS_CODE` | Yes | `ACCESS_CODE` | [server/src/config/env.ts](server/src/config/env.ts) |
-| `APS_HASH_KEY` | Yes | `SECRET_KEY` | [server/src/config/env.ts](server/src/config/env.ts) |
-| `APS_ENV` | Yes | `sandbox` or `production` | [server/src/config/env.ts](server/src/config/env.ts) |
-| `APS_CURRENCY` | Yes | `USD`, `JOD`, `SAR` | [server/src/config/env.ts](server/src/config/env.ts) |
-| `APS_RETURN_URL` | Yes | `http://localhost:5173/payment/success` | [server/src/config/env.ts](server/src/config/env.ts) |
-| `APS_WEBHOOK_SECRET` | Yes | `webhook_secret` | [server/src/config/env.ts](server/src/config/env.ts) |
-| `HYPERPAY_API_KEY` | No | `your_hyperpay_api_key` | [server/src/config/env.ts](server/src/config/env.ts) |
-| `HYPERPAY_MERCHANT_ID` | No | `your_hyperpay_merchant_id` | [server/src/config/env.ts](server/src/config/env.ts) |
-| `HYPERPAY_WEBHOOK_SECRET` | No | `your_hyperpay_webhook_secret` | [server/src/config/env.ts](server/src/config/env.ts) |
-| `FX_API_BASE` | Yes | `https://api.exchangerate-api.com/v4/latest` | [server/src/config/env.ts](server/src/config/env.ts) |
-| `FX_API_KEY` | Yes | `your_fx_api_key` | [server/src/config/env.ts](server/src/config/env.ts) |
-| `FX_CACHE_TTL_HOURS` | No | `24` | [server/src/config/env.ts](server/src/config/env.ts) |
+# Generate secure secrets
+openssl rand -base64 32 | tr -d "=+/" | cut -c1-32  # For JWT_SECRET
+openssl rand -hex 32                                # For CSRF_SECRET
+```
+
+### Configuration Files
+
+- **[client/.env.example](client/.env.example)** - 25 VITE_ prefixed variables for Vue 3 frontend
+- **[server/.env.example](server/.env.example)** - 104 environment variables for Fastify backend
+
+### Key Variables
+
+**Client (Vue 3):**
+- `VITE_CLIENT_URL` - Application URL (Required)
+- `VITE_API_BASE_URL` - API endpoint (Required)
+- `VITE_GOOGLE_CLIENT_ID` - Google OAuth (Required)
+- `VITE_PAYPAL_CLIENT_ID` - PayPal integration (Required)
+- `VITE_APS_MERCHANT_ID` - APS payment gateway (Required)
+
+**Server (Fastify):**
+- `NODE_ENV` - Environment (development|staging|production)
+- `MONGODB_URI` - Database connection (Required)
+- `JWT_SECRET` - Authentication secret (Required, 32+ chars)
+- `GOOGLE_CLIENT_ID` - Google OAuth (Required)
+- `PAYPAL_CLIENT_ID` - PayPal integration (Required)
+- `SMTP_HOST` - Email service (Required)
+
+### Provider Setup
+
+**Payment Gateways:**
+- **PayPal**: [Developer Console](https://developer.paypal.com/)
+- **APS**: [Amazon Payment Services](https://paymentservices.amazon.com/)
+- **HyperPay**: [HyperPay Portal](https://hyperpay.com/)
+
+**OAuth Providers:**
+- **Google**: [Google Cloud Console](https://console.developers.google.com/)
+- **Facebook**: [Facebook Developers](https://developers.facebook.com/)
+
+**Email Service:**
+- **Gmail**: Use App Passwords (not regular password)
+- **SendGrid**: API key-based authentication
+- **Mailgun**: SMTP or API key
+
+**Currency Exchange:**
+- **ExchangeRate-API**: [Free tier available](https://exchangerate-api.com/)
+- **Fixer.io**: [Paid service](https://fixer.io/)
+- **CurrencyLayer**: [Free tier available](https://currencylayer.com/)
+
+> **Security Note**: Never commit actual `.env` files with real secrets. Only `.env.example` templates are tracked in git.
 
 ## Usage
 
