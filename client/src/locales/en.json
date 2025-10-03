@@ -606,5 +606,25 @@
     "title": "Quiz Platform - Professional Interview Preparation",
     "description": "Master frontend development with 500+ curated interview questions. Practice with Angular, React, Next.js, and Redux in English and Arabic.",
     "keywords": "interview, preparation, questions, angular, react, nextjs, redux, typescript, javascript, frontend, developer"
+  },
+  "a11y": {
+    "skipToMain": "Skip to main content",
+    "mainNavigation": "Main navigation",
+    "mainContent": "Main content",
+    "footer": "Footer",
+    "goToHome": "Go to home page",
+    "logout": "Logout",
+    "followOnTwitter": "Follow us on Twitter",
+    "followOnLinkedIn": "Follow us on LinkedIn",
+    "followOnGitHub": "Follow us on GitHub"
+  },
+  "footer": {
+    "company": "Company",
+    "legal": "Legal",
+    "social": "Social",
+    "copyright": "© {year} Quiz Platform. All rights reserved."
+  },
+  "common": {
+    "appName": "Quiz Platform"
   }
 }

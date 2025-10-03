@@ -1,0 +1,356 @@
+<template>
+  <div class="app-layout">
+    <!-- Skip Links for Accessibility -->
+    <a 
+      href="#main-content" 
+      class="skip-link"
+      @click="skipToMain"
+    >
+      {{ $t("a11y.skipToMain") }}
+    </a>
+
+    <!-- Header -->
+    <header 
+      class="app-header" 
+      role="banner"
+      :aria-label="$t('a11y.mainNavigation')"
+    >
+      <nav class="header-nav" role="navigation" aria-label="Main navigation">
+        <div class="nav-container">
+          <!-- Logo -->
+          <div class="nav-brand">
+            <RouterLink 
+              to="/" 
+              class="brand-link"
+              :aria-label="$t('a11y.goToHome')"
+            >
+              <img 
+                src="/logo.svg" 
+                alt="Quiz Platform Logo" 
+                class="brand-logo"
+              />
+              <span class="brand-text">{{ $t("common.appName") }}</span>
+            </RouterLink>
+          </div>
+
+          <!-- Main Navigation -->
+          <div class="nav-menu" role="menubar">
+            <RouterLink 
+              to="/" 
+              class="nav-link"
+              :class="{ 'nav-link--active': $route.name === 'home' }"
+              role="menuitem"
+            >
+              {{ $t("navigation.home") }}
+            </RouterLink>
+            <RouterLink 
+              to="/pricing" 
+              class="nav-link"
+              :class="{ 'nav-link--active': $route.name === 'pricing' }"
+              role="menuitem"
+            >
+              {{ $t("navigation.pricing") }}
+            </RouterLink>
+            <RouterLink 
+              v-if="authStore.isAuthenticated"
+              to="/quiz" 
+              class="nav-link"
+              :class="{ 'nav-link--active': $route.name === 'quiz' }"
+              role="menuitem"
+            >
+              {{ $t("navigation.quiz") }}
+            </RouterLink>
+          </div>
+
+          <!-- User Menu -->
+          <div class="nav-user" role="menubar">
+            <template v-if="authStore.isAuthenticated">
+              <RouterLink 
+                to="/account" 
+                class="nav-link"
+                :class="{ 'nav-link--active': $route.name === 'account' }"
+                role="menuitem"
+              >
+                {{ $t("navigation.account") }}
+              </RouterLink>
+              <button 
+                @click="handleLogout"
+                class="nav-link nav-link--button"
+                role="menuitem"
+                :aria-label="$t('a11y.logout')"
+              >
+                {{ $t("navigation.logout") }}
+              </button>
+            </template>
+            <template v-else>
+              <RouterLink 
+                to="/login" 
+                class="nav-link"
+                role="menuitem"
+              >
+                {{ $t("navigation.login") }}
+              </RouterLink>
+              <RouterLink 
+                to="/register" 
+                class="nav-link nav-link--primary"
+                role="menuitem"
+              >
+                {{ $t("navigation.register") }}
+              </RouterLink>
+            </template>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main 
+      id="main-content" 
+      class="app-main" 
+      role="main"
+      :aria-label="$t('a11y.mainContent')"
+    >
+      <RouterView />
+    </main>
+
+    <!-- Footer -->
+    <footer 
+      class="app-footer" 
+      role="contentinfo"
+      :aria-label="$t('a11y.footer')"
+    >
+      <div class="footer-container">
+        <div class="footer-content">
+          <div class="footer-section">
+            <h3 class="footer-title">{{ $t("footer.company") }}</h3>
+            <ul class="footer-links" role="list">
+              <li><RouterLink to="/about" class="footer-link">{{ $t("navigation.about") }}</RouterLink></li>
+              <li><RouterLink to="/contact" class="footer-link">{{ $t("navigation.contact") }}</RouterLink></li>
+              <li><RouterLink to="/help" class="footer-link">{{ $t("navigation.help") }}</RouterLink></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h3 class="footer-title">{{ $t("footer.legal") }}</h3>
+            <ul class="footer-links" role="list">
+              <li><RouterLink to="/privacy" class="footer-link">{{ $t("navigation.privacy") }}</RouterLink></li>
+              <li><RouterLink to="/terms" class="footer-link">{{ $t("navigation.terms") }}</RouterLink></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h3 class="footer-title">{{ $t("footer.social") }}</h3>
+            <ul class="footer-links" role="list">
+              <li><a href="#" class="footer-link" :aria-label="$t('a11y.followOnTwitter')">Twitter</a></li>
+              <li><a href="#" class="footer-link" :aria-label="$t('a11y.followOnLinkedIn')">LinkedIn</a></li>
+              <li><a href="#" class="footer-link" :aria-label="$t('a11y.followOnGitHub')">GitHub</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p class="footer-copyright">
+            {{ $t("footer.copyright", { year: new Date().getFullYear() }) }}
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Toast Container -->
+    <ToastContainer />
+
+    <!-- Performance Monitor (Development Only) -->
+    <PerformanceMonitor v-if="showPerformanceMonitor" />
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import { useAuthStore } from "@/stores/auth";
+import { useThemeStore } from "@/stores/theme";
+import { useSEO } from "@/composables/useSEO";
+import { usePWA } from "@/composables/usePWA";
+import ToastContainer from "@/components/ui/ToastContainer.vue";
+import PerformanceMonitor from "@/components/ui/PerformanceMonitor.vue";
+
+// Stores
+const authStore = useAuthStore();
+const themeStore = useThemeStore();
+
+// Router
+const router = useRouter();
+
+// Composables
+const seo = useSEO();
+const pwa = usePWA();
+
+// State
+const showPerformanceMonitor = ref(import.meta.env.DEV);
+
+// Methods
+const skipToMain = (event: Event) => {
+  event.preventDefault();
+  const mainContent = document.getElementById("main-content");
+  if (mainContent) {
+    mainContent.focus();
+    mainContent.scrollIntoView({ behavior: "smooth" });
+  }
+};
+
+const handleLogout = async () => {
+  await authStore.logout();
+  router.push("/");
+};
+
+// Initialize app
+onMounted(async () => {
+  // Initialize theme
+  themeStore.initializeTheme();
+
+  // Initialize PWA
+  await pwa.initialize();
+
+  // Try to restore authentication state
+  await authStore.initializeAuth();
+
+  // Set up default SEO
+  seo.updateSEO({
+    title: "Vue 3 Quiz Platform",
+    description: "Master Vue 3, React, Angular, and more with our comprehensive quiz platform. Interactive learning, real-time feedback, and expert-level content.",
+    structuredData: seo.generateOrganizationStructuredData(),
+  });
+
+  // Preconnect to external domains for performance
+  pwa.preconnectToDomain("https://fonts.googleapis.com");
+  pwa.preconnectToDomain("https://fonts.gstatic.com");
+
+  // Preload critical resources
+  pwa.preloadResource("/manifest.json", "manifest");
+});
+</script>
+
+<style scoped>
+.app-layout {
+  @apply min-h-screen bg-gray-50 dark:bg-gray-900;
+}
+
+/* Skip Links */
+.skip-link {
+  @apply absolute -top-10 left-4 z-50 bg-primary-600 text-white px-4 py-2 rounded-md transition-all duration-200;
+}
+
+.skip-link:focus {
+  @apply top-4;
+}
+
+/* Header */
+.app-header {
+  @apply bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700;
+}
+
+.header-nav {
+  @apply w-full;
+}
+
+.nav-container {
+  @apply container mx-auto px-4 py-4 flex items-center justify-between;
+}
+
+.nav-brand {
+  @apply flex items-center;
+}
+
+.brand-link {
+  @apply flex items-center space-x-2 text-gray-900 dark:text-white hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200;
+}
+
+.brand-logo {
+  @apply h-8 w-8;
+}
+
+.brand-text {
+  @apply text-xl font-bold;
+}
+
+.nav-menu {
+  @apply hidden md:flex items-center space-x-6;
+}
+
+.nav-user {
+  @apply flex items-center space-x-4;
+}
+
+.nav-link {
+  @apply text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200 px-3 py-2 rounded-md;
+}
+
+.nav-link--active {
+  @apply text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20;
+}
+
+.nav-link--primary {
+  @apply bg-primary-600 text-white hover:bg-primary-700;
+}
+
+.nav-link--button {
+  @apply bg-transparent border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700;
+}
+
+/* Main Content */
+.app-main {
+  @apply flex-1;
+}
+
+/* Footer */
+.app-footer {
+  @apply bg-gray-800 text-gray-300 mt-auto;
+}
+
+.footer-container {
+  @apply container mx-auto px-4 py-8;
+}
+
+.footer-content {
+  @apply grid grid-cols-1 md:grid-cols-3 gap-8 mb-8;
+}
+
+.footer-section {
+  @apply space-y-4;
+}
+
+.footer-title {
+  @apply text-white font-semibold text-lg;
+}
+
+.footer-links {
+  @apply space-y-2;
+}
+
+.footer-link {
+  @apply text-gray-300 hover:text-white transition-colors duration-200;
+}
+
+.footer-bottom {
+  @apply border-t border-gray-700 pt-4 text-center;
+}
+
+.footer-copyright {
+  @apply text-gray-400 text-sm;
+}
+
+/* Focus Styles */
+.nav-link:focus,
+.brand-link:focus,
+.footer-link:focus {
+  @apply outline-none ring-2 ring-primary-500 ring-offset-2 dark:ring-offset-gray-800;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .nav-menu {
+    @apply flex flex-col space-y-2 space-x-0;
+  }
+  
+  .nav-user {
+    @apply flex-col space-y-2 space-x-0;
+  }
+}
+</style>
