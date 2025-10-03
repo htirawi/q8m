@@ -96,15 +96,6 @@
     "vue-eslint-parser": "^10.2.0",
     "vue-tsc": "^2.0.0"
   },
-  "lint-staged": {
-    "*.{vue,ts,tsx}": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "*.{json,md,yml,yaml}": [
-      "prettier --write"
-    ]
-  },
   "engines": {
     "node": ">=18.0.0",
     "pnpm": ">=8.0.0"

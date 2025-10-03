@@ -60,18 +60,12 @@
     "@commitlint/cli": "^18.6.1",
     "@commitlint/config-conventional": "^18.6.3",
     "husky": "^8.0.3",
-    "lint-staged": "^15.5.2"
+    "lint-staged": "^15.5.2",
+    "prettier": "^3.3.3",
+    "prettier-plugin-tailwindcss": "^0.5.14"
   },
   "lint-staged": {
-    "client/**/*.{vue,ts,tsx}": [
-      "cd client && pnpm lint:new",
-      "prettier --write"
-    ],
-    "server/**/*.{ts,js}": [
-      "cd server && pnpm lint",
-      "prettier --write"
-    ],
-    "*.{json,md,yml,yaml}": [
+    "*.{json,md,yml,yaml,js,ts,vue}": [
       "prettier --write"
     ]
   },
