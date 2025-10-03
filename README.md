@@ -12,15 +12,15 @@
 
 ## Overview
 
-q8m is a bilingual (English/Arabic) interview preparation platform built with Vue 3, featuring comprehensive question banks across Angular, React, Next.js, and Redux frameworks. The platform offers tiered access with server-side entitlements, localized pricing in JOD/SAR/USD, and secure payment processing through PayPal and APS gateways.
+q8m is a bilingual (English/Arabic) interview preparation platform built with Vue 3, featuring comprehensive question banks across Angular, Vue.js, Next.js, and Redux frameworks. The platform offers tiered access with server-side entitlements, localized pricing in JOD/SAR/USD, and secure payment processing through PayPal and APS gateways.
 
 ### العربية | Arabic
 
-منصة تحضير مهنية للمقابلات التقنية مبنية بـ Vue 3، تقدم بنوك أسئلة شاملة عبر أطر Angular و React و Next.js و Redux. المنصة توفر وصول متدرج مع صلاحيات من جانب الخادم، وأسعار محلية بالدينار الأردني والريال السعودي والدولار الأمريكي، ومعالجة دفع آمنة عبر PayPal و APS.
+منصة تحضير مهنية للمقابلات التقنية مبنية بـ Vue 3، تقدم بنوك أسئلة شاملة عبر أطر Angular و Vue.js و Next.js و Redux. المنصة توفر وصول متدرج مع صلاحيات من جانب الخادم، وأسعار محلية بالدينار الأردني والريال السعودي والدولار الأمريكي، ومعالجة دفع آمنة عبر PayPal و APS.
 
 ## Key Features
 
-- **Multi-Framework Support**: 500+ questions across Angular, React, Next.js, Redux
+- **Multi-Framework Support**: 500+ questions across Angular, Vue.js, Next.js, Redux
 - **Bilingual Interface**: Full English/Arabic support with RTL layout
 - **Tiered Access**: Junior (free), Intermediate ($29), Senior ($49), Bundle ($69)
 - **Localized Pricing**: Dynamic currency conversion (JOD/SAR/USD) with daily FX rates
@@ -423,7 +423,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ### الميزات الأساسية
 
-- **دعم متعدد الأطر**: 500+ سؤال عبر Angular و React و Next.js و Redux
+- **دعم متعدد الأطر**: 500+ سؤال عبر Angular و Vue.js و Next.js و Redux
 - **واجهة ثنائية اللغة**: دعم كامل للإنجليزية والعربية مع تخطيط RTL
 - **وصول متدرج**: مبتدئ (مجاني)، متوسط (29$)، متقدم (49$)، حزمة (69$)
 - **أسعار محلية**: تحويل عملة ديناميكي (JOD/SAR/USD) مع أسعار صرف يومية
