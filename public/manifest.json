@@ -1,0 +1,12 @@
+{
+  "name": "Angular Senior Interview Prep",
+  "short_name": "Angular Prep",
+  "description": "Master 100 essential Angular interview questions for senior positions",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "orientation": "portrait-primary",
+  "icons": [],
+  "categories": ["education", "productivity"]
+}

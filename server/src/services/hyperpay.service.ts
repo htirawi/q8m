@@ -1,0 +1,523 @@
+import { env } from "../config/env.js";
+import { Purchase, IPurchase } from "../models/Purchase.js";
+import { Subscription } from "../models/Subscription.js";
+import { entitlementService } from "./entitlement.service.js";
+import { pricingService } from "./pricing.service.js";
+import { currencyService } from "./currency.service.js";
+import { Plan } from "@shared/types/pricing";
+import { User } from "../models/User.js";
+
+interface HyperPayPaymentRequest {
+  planType: Plan;
+  currency: "USD" | "JOD" | "SAR";
+  amount: number;
+  billingCycle: "monthly" | "yearly";
+  userId: string;
+  returnUrl: string;
+  cancelUrl: string;
+  ipAddress?: string;
+  userAgent?: string;
+  customerEmail: string;
+  customerName: string;
+}
+
+interface HyperPayPaymentResponse {
+  success: boolean;
+  checkoutUrl?: string;
+  paymentId: string;
+  purchaseId: string;
+  error?: string;
+}
+
+interface HyperPayWebhookData {
+  id: string;
+  entity: {
+    id: string;
+    status: string;
+    amount: number;
+    currency: string;
+    notes: {
+      planType?: string;
+      billingCycle?: string;
+      userId?: string;
+    };
+    payment_id: string;
+    created_at: number;
+    updated_at: number;
+  };
+  event: string;
+}
+
+export class HyperPayService {
+  private static instance: HyperPayService;
+  private apiKey: string;
+  private merchantId: string;
+  private webhookSecret: string;
+  private baseUrl: string;
+  private isConfigured: boolean = false;
+
+  private constructor() {
+    this.apiKey = env.HYPERPAY_API_KEY || "";
+    this.merchantId = env.HYPERPAY_MERCHANT_ID || "";
+    this.webhookSecret = env.HYPERPAY_WEBHOOK_SECRET || "";
+    this.baseUrl =
+      env.NODE_ENV === "production"
+        ? "https://api.hyperpay.com"
+        : "https://api-sandbox.hyperpay.com";
+
+    if (this.apiKey && this.merchantId) {
+      this.isConfigured = true;
+    } else {
+      console.warn("HyperPay service not fully configured. Missing API_KEY or MERCHANT_ID.");
+    }
+  }
+
+  public static getInstance(): HyperPayService {
+    if (!HyperPayService.instance) {
+      HyperPayService.instance = new HyperPayService();
+    }
+    return HyperPayService.instance;
+  }
+
+  public isServiceConfigured(): boolean {
+    return this.isConfigured;
+  }
+
+  public getConfigurationStatus(): { isConfigured: boolean; environment: string } {
+    return {
+      isConfigured: this.isConfigured,
+      environment: env.NODE_ENV === "production" ? "production" : "sandbox",
+    };
+  }
+
+  /**
+   * Initiates a HyperPay payment.
+   * @param request HyperPay payment request details.
+   * @returns Checkout URL or payment form data.
+   */
+  public async createPayment(request: HyperPayPaymentRequest): Promise<HyperPayPaymentResponse> {
+    if (!this.isConfigured) {
+      throw new Error("HyperPay service not configured");
+    }
+
+    const pricingPlan = await pricingService.getPricingForPlan(request.planType, request.currency);
+    if (!pricingPlan) {
+      throw new Error(
+        `Pricing plan ${request.planType} not found for currency ${request.currency}`
+      );
+    }
+
+    const amountDetails =
+      request.billingCycle === "monthly"
+        ? pricingPlan.pricing[request.currency]
+        : pricingPlan.pricing[`${request.currency}_YEARLY`];
+
+    if (!amountDetails || amountDetails.amount === 0) {
+      throw new Error(
+        `Invalid amount for plan ${request.planType} and billing cycle ${request.billingCycle}`
+      );
+    }
+
+    const finalAmount = amountDetails.amount;
+    const finalCurrency = amountDetails.currency;
+
+    const orderId = `HP-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
+
+    // Create purchase record first
+    const purchase = new Purchase({
+      userId: request.userId,
+      planType: request.planType,
+      gateway: "hyperpay",
+      amount: finalAmount,
+      currency: finalCurrency,
+      billingCycle: request.billingCycle,
+      gatewayPaymentId: orderId, // Use our internal order ID as gatewayPaymentId initially
+      metadata: {
+        originalCurrency: request.currency,
+        originalAmount: request.amount.toString(),
+        exchangeRate:
+          request.currency !== finalCurrency
+            ? (finalAmount / request.amount).toString()
+            : undefined,
+        country: "N/A", // HyperPay might provide this
+        ipAddress: request.ipAddress,
+        userAgent: request.userAgent,
+        priceSnapshot: {
+          planType: request.planType,
+          monthlyPriceUSD: this.getPlanBasePrice(request.planType, "monthly"),
+          yearlyPriceUSD: this.getPlanBasePrice(request.planType, "yearly"),
+          displayCurrency: finalCurrency,
+          displayAmount: finalAmount,
+          rateUsed: amountDetails.rateUsed,
+          settlementCurrency: amountDetails.settlementCurrency || amountDetails.currency,
+        },
+      },
+    });
+    await purchase.save();
+
+    try {
+      // Create HyperPay payment intent
+      const paymentData = {
+        amount: Math.round(finalAmount * 100), // Convert to cents
+        currency: finalCurrency,
+        description: `${request.planType} Plan - ${request.billingCycle}`,
+        customer: {
+          email: request.customerEmail,
+          name: request.customerName,
+        },
+        notes: {
+          planType: request.planType,
+          billingCycle: request.billingCycle,
+          userId: request.userId,
+          purchaseId: purchase._id.toString(),
+        },
+        return_url: request.returnUrl,
+        cancel_url: request.cancelUrl,
+        webhook_url: `${env.SERVER_URL || "http://localhost:3000"}/api/payments/webhooks/hyperpay`,
+      };
+
+      const response = await fetch(`${this.baseUrl}/v1/payments`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${this.apiKey}`,
+          "Content-Type": "application/json",
+          "X-Merchant-ID": this.merchantId,
+        },
+        body: JSON.stringify(paymentData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("HyperPay payment creation failed:", errorData);
+        await purchase.markAsFailed(`HyperPay creation failed: ${JSON.stringify(errorData)}`);
+        throw new Error(
+          `HyperPay payment creation failed: ${errorData.message || response.statusText}`
+        );
+      }
+
+      const hyperPayResponse = await response.json();
+
+      if (!hyperPayResponse.success || !hyperPayResponse.data?.checkout_url) {
+        throw new Error(
+          `HyperPay payment creation failed: ${hyperPayResponse.message || "Invalid response"}`
+        );
+      }
+
+      // Update purchase with HyperPay payment ID
+      purchase.gatewayPaymentId = hyperPayResponse.data.id;
+      await purchase.save();
+
+      return {
+        success: true,
+        checkoutUrl: hyperPayResponse.data.checkout_url,
+        paymentId: hyperPayResponse.data.id,
+        purchaseId: purchase._id.toString(),
+      };
+    } catch (error) {
+      console.error("HyperPay payment creation error:", error);
+      await purchase.markAsFailed(
+        `HyperPay creation error: ${error instanceof Error ? error.message : "Unknown error"}`
+      );
+      throw error;
+    }
+  }
+
+  /**
+   * Verify HyperPay payment status
+   */
+  public async verifyPayment(
+    paymentId: string
+  ): Promise<{ success: boolean; status: string; purchaseId?: string; error?: string }> {
+    if (!this.isConfigured) {
+      throw new Error("HyperPay service not configured");
+    }
+
+    const purchase = await Purchase.findByPaymentId(paymentId);
+    if (!purchase) {
+      return { success: false, status: "not_found", error: "Purchase record not found" };
+    }
+
+    try {
+      const response = await fetch(`${this.baseUrl}/v1/payments/${paymentId}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${this.apiKey}`,
+          "X-Merchant-ID": this.merchantId,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          `HyperPay status check failed: ${errorData.message || response.statusText}`
+        );
+      }
+
+      const paymentData = await response.json();
+
+      if (!paymentData.success || !paymentData.data?.status) {
+        return { success: false, status: "error", error: "Invalid response from HyperPay" };
+      }
+
+      const status = paymentData.data.status;
+      let purchaseStatus = "pending";
+
+      switch (status) {
+        case "captured":
+        case "authorized":
+          purchaseStatus = "completed";
+          break;
+        case "failed":
+        case "declined":
+          purchaseStatus = "failed";
+          break;
+        default:
+          purchaseStatus = "pending";
+      }
+
+      if (purchaseStatus === "completed" && purchase.status === "pending") {
+        await purchase.markAsCompleted(paymentData.data);
+        await this.createSubscription(purchase);
+      } else if (purchaseStatus === "failed" && purchase.status === "pending") {
+        await purchase.markAsFailed(`Payment failed with status: ${status}`);
+      }
+
+      return {
+        success: true,
+        status: purchaseStatus,
+        purchaseId: purchase._id.toString(),
+      };
+    } catch (error) {
+      console.error("HyperPay payment verification error:", error);
+      return {
+        success: false,
+        status: "error",
+        error: error instanceof Error ? error.message : "Unknown error",
+      };
+    }
+  }
+
+  /**
+   * Handle HyperPay webhook notifications
+   */
+  public async handleWebhook(
+    webhookData: HyperPayWebhookData
+  ): Promise<{ success: boolean; error?: string }> {
+    if (!this.isConfigured) {
+      console.warn("HyperPay webhook handler not configured.");
+      return { success: false, error: "Service not configured" };
+    }
+
+    try {
+      const { entity, event } = webhookData;
+
+      console.log(`Received HyperPay webhook event: ${event} for payment ${entity.id}`);
+
+      // Find the purchase record
+      const purchase = await Purchase.findByPaymentId(entity.id);
+      if (!purchase) {
+        console.error(`HyperPay webhook: Purchase not found for payment ID ${entity.id}`);
+        return { success: false, error: "Purchase not found" };
+      }
+
+      switch (event) {
+        case "payment.authorized":
+        case "payment.captured":
+          if (purchase.status === "pending") {
+            await purchase.markAsCompleted(entity);
+            await this.createSubscription(purchase);
+            console.log(`HyperPay purchase ${purchase._id} completed via webhook.`);
+          }
+          break;
+
+        case "payment.failed":
+        case "payment.declined":
+          if (purchase.status === "pending") {
+            await purchase.markAsFailed(`Payment ${event}: ${entity.status}`);
+            console.log(`HyperPay purchase ${purchase._id} marked as failed via webhook.`);
+          }
+          break;
+
+        case "payment.refunded":
+          await purchase.processRefund(entity);
+          console.log(`HyperPay purchase ${purchase._id} refunded via webhook.`);
+
+          // Optionally cancel associated subscription
+          const subscription = await Subscription.findOne({ purchaseId: purchase._id });
+          if (subscription && subscription.status === "active") {
+            await subscription.cancel("refunded");
+            await entitlementService.revokeUserEntitlements(
+              subscription.userId.toString(),
+              "refunded"
+            );
+            console.log(`Subscription ${subscription._id} cancelled due to refund.`);
+          }
+          break;
+
+        default:
+          console.log(`Unhandled HyperPay webhook event: ${event}`);
+          break;
+      }
+
+      return { success: true };
+    } catch (error) {
+      console.error("HyperPay webhook processing error:", error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Unknown error",
+      };
+    }
+  }
+
+  /**
+   * Process a refund
+   */
+  public async processRefund(
+    paymentId: string,
+    amount: number,
+    reason: string = "requested_by_customer"
+  ): Promise<{ success: boolean; refundId?: string; error?: string }> {
+    if (!this.isConfigured) {
+      throw new Error("HyperPay service not configured");
+    }
+
+    try {
+      const refundData = {
+        amount: Math.round(amount * 100), // Convert to cents
+        reason,
+        notes: {
+          refund_reason: reason,
+          refunded_at: new Date().toISOString(),
+        },
+      };
+
+      const response = await fetch(`${this.baseUrl}/v1/payments/${paymentId}/refund`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${this.apiKey}`,
+          "Content-Type": "application/json",
+          "X-Merchant-ID": this.merchantId,
+        },
+        body: JSON.stringify(refundData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(`HyperPay refund failed: ${errorData.message || response.statusText}`);
+      }
+
+      const refundResponse = await response.json();
+
+      if (!refundResponse.success || !refundResponse.data?.id) {
+        throw new Error(`HyperPay refund failed: ${refundResponse.message || "Invalid response"}`);
+      }
+
+      return {
+        success: true,
+        refundId: refundResponse.data.id,
+      };
+    } catch (error) {
+      console.error("HyperPay refund error:", error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Unknown error",
+      };
+    }
+  }
+
+  /**
+   * Create subscription after successful payment
+   */
+  private async createSubscription(purchase: IPurchase): Promise<void> {
+    const user = await User.findById(purchase.userId);
+    if (!user) {
+      console.error(`User ${purchase.userId} not found for subscription creation.`);
+      return;
+    }
+
+    // Check for existing active subscription and cancel it if necessary
+    const existingSubscription = await Subscription.findActiveForUser(user._id.toString());
+    if (existingSubscription) {
+      await existingSubscription.cancel("new_subscription_purchased");
+      await entitlementService.revokeUserEntitlements(
+        user._id.toString(),
+        "new_subscription_purchased"
+      );
+      console.log(
+        `Cancelled existing subscription ${existingSubscription._id} for user ${user._id}`
+      );
+    }
+
+    const subscription = new Subscription({
+      userId: purchase.userId,
+      purchaseId: purchase._id,
+      planType: purchase.planType,
+      status: "active",
+      billingCycle: purchase.billingCycle,
+      currentPeriodStart: new Date(),
+      currentPeriodEnd:
+        purchase.billingCycle === "monthly"
+          ? new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days
+          : new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // 365 days
+      metadata: {
+        gateway: "hyperpay",
+        originalPurchaseCurrency: purchase.metadata?.originalCurrency,
+        fxRateUsed: purchase.metadata?.exchangeRate
+          ? parseFloat(purchase.metadata.exchangeRate)
+          : undefined,
+      },
+    });
+    await subscription.save();
+    console.log(`Subscription ${subscription._id} created for user ${user._id}`);
+
+    // Update user entitlements
+    await entitlementService.updateUserEntitlements(user._id.toString(), purchase.planType);
+  }
+
+  /**
+   * Get plan base price in USD
+   */
+  private getPlanBasePrice(planType: Plan, cycle: "monthly" | "yearly"): number {
+    const basePricing = {
+      JUNIOR: { monthly: 0, yearly: 0 },
+      INTERMEDIATE: { monthly: 19.99, yearly: 199.99 },
+      SENIOR: { monthly: 39.99, yearly: 399.99 },
+      BUNDLE: { monthly: 49.99, yearly: 499.99 },
+    };
+    return basePricing[planType][cycle];
+  }
+
+  /**
+   * Get payment status from HyperPay
+   */
+  public async getPaymentStatus(
+    paymentId: string
+  ): Promise<{ status: string; details: any } | null> {
+    if (!this.isConfigured) {
+      throw new Error("HyperPay service not configured");
+    }
+
+    try {
+      const response = await fetch(`${this.baseUrl}/v1/payments/${paymentId}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${this.apiKey}`,
+          "X-Merchant-ID": this.merchantId,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to get payment status: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      return data.success ? { status: data.data.status, details: data.data } : null;
+    } catch (error) {
+      console.error("Error getting HyperPay payment status:", error);
+      throw error;
+    }
+  }
+}
+
+// Export singleton instance
+export const hyperpayService = HyperPayService.getInstance();

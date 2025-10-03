@@ -1,0 +1,145 @@
+# Dependencies
+node_modules/
+.pnp/
+.pnp.js
+
+# TypeScript build cache
+*.tsbuildinfo
+
+# Testing
+coverage/
+.nyc_output/
+src/__tests__/
+test-results/
+*.lcov
+
+# CI/CD - Exclude test workflows from builds
+.github/workflows/test.yml
+.github/workflows/lint.yml
+
+# Production builds
+dist/
+build/
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+
+# OS files
+Thumbs.db
+.DS_Store
+.DS_Store?
+
+# Development artifacts
+# Questions folder - contains CSV files and templates for development
+questions/
+backups/
+
+# Internal development scripts and tools
+scripts/internal/
+scripts/backups/
+scripts/tools/
+
+# Documentation files in root (keep only README.md and LICENSE)
+*.md
+!README.md
+!LICENSE
+
+# Backup and temporary files
+*-backup.*
+*-original.*
+*-current-backup.*
+*-enhanced-part2.*
+*-recovered.*
+*-fixed.*
+*-template.*
+
+# CSV and data files used for development
+*.csv
+sample-questions.json
+
+# Deployment platforms
+.vercel
+.netlify
+
+# IDE and editor files
+*.swp
+*.swo
+*~
+
+# Security
+*.pem
+*.key
+*.crt
+
+# Performance monitoring data
+monitoring-data/
+logs/
+
+# Cache directories
+.cache/
+.parcel-cache/
+.next/
+.nuxt/
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+
+# ESLint cache
+.eslintcache
+
+# Optional npm cache directory
+.npm
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# dotenv environment variables file
+.env.test
+
+# Stores VSCode versions used for testing VSCode extensions
+.vscode-test
+
+# Temporary folders
+tmp/
+temp/
+

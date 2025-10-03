@@ -1,0 +1,610 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "submit": "Submit",
+    "retry": "Retry",
+    "refresh": "Refresh",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "clear": "Clear",
+    "reset": "Reset",
+    "continue": "Continue",
+    "finish": "Finish",
+    "start": "Start",
+    "stop": "Stop",
+    "pause": "Pause",
+    "resume": "Resume",
+    "yes": "Yes",
+    "no": "No",
+    "ok": "OK",
+    "learnMore": "Learn More",
+    "readMore": "Read More",
+    "showMore": "Show More",
+    "showLess": "Show Less",
+    "viewAll": "View All",
+    "selectAll": "Select All",
+    "deselectAll": "Deselect All",
+    "technicalDetails": "Technical Details",
+    "reportError": "Report Error",
+    "goHome": "Go Home"
+  },
+  "navigation": {
+    "home": "Home",
+    "pricing": "Pricing",
+    "quiz": "Quiz",
+    "account": "Account",
+    "admin": "Admin",
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "profile": "Profile",
+    "settings": "Settings",
+    "help": "Help",
+    "support": "Support",
+    "contact": "Contact",
+    "about": "About",
+    "privacy": "Privacy",
+    "terms": "Terms"
+  },
+  "auth": {
+    "login": {
+      "title": "Welcome Back",
+      "subtitle": "Sign in to your account to continue",
+      "email": "Email Address",
+      "password": "Password",
+      "rememberMe": "Remember me",
+      "forgotPassword": "Forgot your password?",
+      "signIn": "Sign In",
+      "signInWith": "Sign in with",
+      "noAccount": "Don't have an account?",
+      "signUp": "Sign up",
+      "errors": {
+        "invalidCredentials": "Invalid email or password",
+        "accountLocked": "Account is temporarily locked",
+        "emailNotVerified": "Please verify your email address",
+        "required": "This field is required",
+        "invalidEmail": "Please enter a valid email address",
+        "passwordTooShort": "Password must be at least 8 characters"
+      }
+    },
+    "register": {
+      "title": "Create Account",
+      "subtitle": "Join thousands of developers improving their skills",
+      "name": "Full Name",
+      "email": "Email Address",
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "acceptTerms": "I accept the Terms of Service and Privacy Policy",
+      "createAccount": "Create Account",
+      "haveAccount": "Already have an account?",
+      "signIn": "Sign in",
+      "errors": {
+        "nameRequired": "Name is required",
+        "emailRequired": "Email is required",
+        "passwordRequired": "Password is required",
+        "confirmPasswordRequired": "Please confirm your password",
+        "passwordsDontMatch": "Passwords don't match",
+        "emailAlreadyExists": "Email already exists",
+        "termsRequired": "You must accept the terms",
+        "invalidEmail": "Please enter a valid email address",
+        "passwordTooShort": "Password must be at least 8 characters",
+        "passwordTooWeak": "Password is too weak"
+      }
+    },
+    "forgotPassword": {
+      "title": "Reset Password",
+      "subtitle": "Enter your email address and we'll send you a reset link",
+      "email": "Email Address",
+      "sendResetLink": "Send Reset Link",
+      "backToLogin": "Back to Login",
+      "checkEmail": "Check your email for reset instructions"
+    },
+    "resetPassword": {
+      "title": "Set New Password",
+      "subtitle": "Enter your new password",
+      "password": "New Password",
+      "confirmPassword": "Confirm New Password",
+      "updatePassword": "Update Password",
+      "success": "Password updated successfully"
+    }
+  },
+  "pricing": {
+    "title": "Choose Your Plan",
+    "subtitle": "Select the perfect plan for your interview preparation journey",
+    "junior": {
+      "name": "Junior",
+      "price": "Free",
+      "description": "Perfect for beginners",
+      "features": [
+        "100+ Basic Questions",
+        "Multiple Choice Quizzes",
+        "Progress Tracking",
+        "Mobile Access"
+      ],
+      "cta": "Get Started Free"
+    },
+    "intermediate": {
+      "name": "Intermediate",
+      "price": "$29",
+      "description": "For serious learners",
+      "features": [
+        "300+ Advanced Questions",
+        "All Question Types",
+        "Detailed Explanations",
+        "Performance Analytics",
+        "Bookmarks & Notes",
+        "Priority Support"
+      ],
+      "cta": "Upgrade Now",
+      "popular": "Most Popular"
+    },
+    "senior": {
+      "name": "Senior",
+      "price": "$49",
+      "description": "For experienced developers",
+      "features": [
+        "500+ Expert Questions",
+        "System Design Questions",
+        "Mock Interviews",
+        "Advanced Analytics",
+        "Custom Study Plans",
+        "Expert Reviews",
+        "Priority Support"
+      ],
+      "cta": "Upgrade Now"
+    },
+    "bundle": {
+      "name": "Bundle",
+      "price": "$69",
+      "description": "Complete package",
+      "features": [
+        "Everything in Intermediate & Senior",
+        "Lifetime Access",
+        "All Future Updates",
+        "Personal Mentor",
+        "Interview Coaching",
+        "Resume Review",
+        "Premium Support"
+      ],
+      "cta": "Get Bundle",
+      "bestValue": "Best Value"
+    },
+    "currency": {
+      "switch": "Switch Currency",
+      "estimated": "Estimated",
+      "billed": "Billed in",
+      "conversion": "Prices converted for display only"
+    },
+    "guarantee": "30-day money-back guarantee",
+    "faq": "Frequently Asked Questions"
+  },
+  "quiz": {
+    "selectFramework": "Select Framework",
+    "selectLevel": "Select Level",
+    "frameworks": {
+      "angular": "Angular",
+      "react": "React",
+      "nextjs": "Next.js",
+      "redux": "Redux"
+    },
+    "levels": {
+      "junior": "Junior",
+      "intermediate": "Intermediate",
+      "senior": "Senior"
+    },
+    "start": "Start Quiz",
+    "question": "Question",
+    "of": "of",
+    "timeRemaining": "Time Remaining",
+    "submitAnswer": "Submit Answer",
+    "nextQuestion": "Next Question",
+    "previousQuestion": "Previous Question",
+    "finishQuiz": "Finish Quiz",
+    "results": "Results",
+    "score": "Score",
+    "correct": "Correct",
+    "incorrect": "Incorrect",
+    "skipped": "Skipped",
+    "timeSpent": "Time Spent",
+    "retakeQuiz": "Retake Quiz",
+    "backToSelection": "Back to Selection",
+    "shareResults": "Share Results"
+  },
+  "account": {
+    "title": "Account Settings",
+    "profile": "Profile",
+    "subscription": "Subscription",
+    "billing": "Billing",
+    "security": "Security",
+    "notifications": "Notifications",
+    "preferences": "Preferences",
+    "name": "Name",
+    "email": "Email",
+    "avatar": "Avatar",
+    "changePassword": "Change Password",
+    "currentPassword": "Current Password",
+    "newPassword": "New Password",
+    "confirmNewPassword": "Confirm New Password",
+    "updateProfile": "Update Profile",
+    "updatePassword": "Update Password",
+    "deleteAccount": "Delete Account",
+    "subscriptionStatus": "Subscription Status",
+    "currentPlan": "Current Plan",
+    "nextBilling": "Next Billing",
+    "upgrade": "Upgrade",
+    "downgrade": "Downgrade",
+    "cancel": "Cancel Subscription"
+  },
+  "errors": {
+    "notFound": {
+      "title": "Page Not Found",
+      "message": "The page you're looking for doesn't exist.",
+      "goHome": "Go Home"
+    },
+    "unauthorized": {
+      "title": "Unauthorized",
+      "message": "You don't have permission to access this page.",
+      "goBack": "Go Back"
+    },
+    "serverError": {
+      "title": "Server Error",
+      "message": "Something went wrong on our end. Please try again later.",
+      "retry": "Try Again"
+    },
+    "networkError": {
+      "title": "Network Error",
+      "message": "Please check your internet connection and try again.",
+      "retry": "Try Again"
+    }
+  },
+  "currency": {
+    "selectCurrency": "Select Currency",
+    "usd": "US Dollar",
+    "jod": "Jordanian Dinar",
+    "sar": "Saudi Riyal"
+  },
+  "pricing": {
+    "title": "Choose Your Plan",
+    "subtitle": "Unlock your potential with our comprehensive quiz platform",
+    "monthly": "Monthly",
+    "yearly": "Yearly",
+    "savePercent": "Save {percent}%",
+    "popular": "Popular",
+    "recommended": "Recommended",
+    "estimatedPrice": "Estimated price",
+    "getStarted": "Get Started Free",
+    "choosePlan": "Choose Plan",
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "question1": "Can I change my plan anytime?",
+      "answer1": "Yes, you can upgrade or downgrade your plan at any time. Changes take effect immediately.",
+      "question2": "What payment methods do you accept?",
+      "answer2": "We accept PayPal, credit cards, and local payment methods for Middle Eastern countries.",
+      "question3": "Is there a free trial?",
+      "answer3": "Yes, all paid plans come with a 7-day free trial. No credit card required.",
+      "question4": "Can I cancel my subscription?",
+      "answer4": "Yes, you can cancel your subscription at any time. You'll retain access until the end of your billing period."
+    },
+    "cta": {
+      "title": "Still have questions?",
+      "subtitle": "Our support team is here to help you choose the right plan",
+      "contact": "Contact Support"
+    }
+  },
+  "checkout": {
+    "title": "Complete Your Purchase",
+    "subtitle": "Secure checkout powered by industry-leading payment processors",
+    "orderSummary": "Order Summary",
+    "estimatedPrice": "Estimated price based on current exchange rates",
+    "monthly": "Monthly",
+    "yearly": "Yearly",
+    "savePercent": "Save {percent}% with yearly billing",
+    "billingInformation": "Billing Information",
+    "fullName": "Full Name",
+    "namePlaceholder": "Enter your full name",
+    "email": "Email Address",
+    "emailPlaceholder": "Enter your email address",
+    "streetAddress": "Street Address",
+    "streetPlaceholder": "Enter your street address",
+    "city": "City",
+    "cityPlaceholder": "Enter your city",
+    "state": "State/Province",
+    "statePlaceholder": "Enter your state or province",
+    "postalCode": "Postal Code",
+    "postalCodePlaceholder": "Enter your postal code",
+    "country": "Country",
+    "selectCountry": "Select your country",
+    "paymentMethod": "Payment Method",
+    "paypalDescription": "Pay with PayPal or credit card",
+    "apsDescription": "Pay with local payment methods",
+    "agreeToTerms": "I agree to the",
+    "termsOfService": "Terms of Service",
+    "and": "and",
+    "privacyPolicy": "Privacy Policy",
+    "completePurchase": "Complete Purchase",
+    "processing": "Processing...",
+    "processingDescription": "Please wait while we redirect you to the secure payment gateway...",
+    "securityNote": "Your payment information is secure and encrypted",
+    "errors": {
+      "nameRequired": "Full name is required",
+      "emailRequired": "Email address is required",
+      "emailInvalid": "Please enter a valid email address",
+      "streetRequired": "Street address is required",
+      "cityRequired": "City is required",
+      "stateRequired": "State/Province is required",
+      "postalCodeRequired": "Postal code is required",
+      "countryRequired": "Country is required"
+    }
+  },
+  "subscription": {
+    "title": "Subscription Management",
+    "subtitle": "Manage your subscription, billing, and access to premium features",
+    "currentPlan": "Current Plan",
+    "status": {
+      "label": "Status",
+      "active": "Active",
+      "cancelled": "Cancelled",
+      "expired": "Expired",
+      "trial": "Trial",
+      "pending": "Pending"
+    },
+    "billing": {
+      "monthly": "per month",
+      "yearly": "per year"
+    },
+    "features": {
+      "title": "Plan Features",
+      "junior": {
+        "basic": "Basic quiz access",
+        "community": "Community support",
+        "limited": "Limited daily questions"
+      },
+      "intermediate": {
+        "advanced": "Advanced analytics",
+        "priority": "Priority email support",
+        "unlimited": "Unlimited daily questions",
+        "guides": "Downloadable study guides"
+      },
+      "senior": {
+        "premium": "Premium analytics",
+        "support": "24/7 chat support",
+        "unlimited": "Unlimited daily questions",
+        "guides": "Downloadable study guides",
+        "interviews": "Mock interview simulations"
+      },
+      "bundle": {
+        "all": "Access to all quizzes",
+        "exclusive": "Exclusive content updates",
+        "mentorship": "Personalized mentorship session",
+        "early": "Early access to new features"
+      }
+    },
+    "nextBilling": "Next Billing",
+    "trialRemaining": "Trial Remaining",
+    "cancelSubscription": "Cancel Subscription",
+    "upgradePlan": "Upgrade Plan",
+    "downgradePlan": "Downgrade Plan",
+    "startQuizzes": "Start Quizzes",
+    "billingHistory": "Billing History",
+    "paymentMethod": "Payment Method",
+    "noHistory": "No billing history available",
+    "purchaseStatus": {
+      "completed": "Completed",
+      "failed": "Failed",
+      "pending": "Pending",
+      "refunded": "Refunded"
+    },
+    "cancelConfirm": "Cancel Subscription",
+    "cancelMessage": "Are you sure you want to cancel your subscription? You'll lose access to premium features at the end of your current billing period.",
+    "cancelReason": "Cancellation Reason",
+    "selectReason": "Select a reason...",
+    "confirmCancel": "Yes, Cancel Subscription",
+    "cancelReasons": {
+      "tooExpensive": "Too expensive",
+      "notUsing": "Not using the service",
+      "foundAlternative": "Found an alternative",
+      "technicalIssues": "Technical issues",
+      "other": "Other"
+    },
+    "noSubscription": {
+      "title": "No Active Subscription",
+      "message": "You don't have an active subscription. Choose a plan to unlock premium features and access to all quizzes.",
+      "choosePlan": "Choose a Plan"
+    }
+  },
+  "payment": {
+    "success": {
+      "title": "Payment Successful!",
+      "message": "Thank you for your purchase. Your subscription is now active.",
+      "orderDetails": "Order Details",
+      "orderId": "Order ID",
+      "plan": "Plan",
+      "amount": "Amount",
+      "billing": "Billing Cycle",
+      "date": "Purchase Date",
+      "nextSteps": "What's Next?",
+      "step1": {
+        "title": "Check Your Email",
+        "description": "We've sent you a confirmation email with your receipt and subscription details."
+      },
+      "step2": {
+        "title": "Access Premium Content",
+        "description": "You can now access all premium quizzes and features included in your plan."
+      },
+      "step3": {
+        "title": "Start Learning",
+        "description": "Begin practicing with our comprehensive quiz collection tailored to your level."
+      },
+      "goToDashboard": "Go to Dashboard",
+      "startQuizzes": "Start Quizzes",
+      "support": {
+        "text": "Need help? Contact our support team at",
+        "email": "support@quizplatform.com"
+      }
+    },
+    "error": {
+      "title": "Payment Failed",
+      "message": "We encountered an issue processing your payment. Please try again or contact support.",
+      "details": "Error Details",
+      "errorCode": "Error Code",
+      "orderId": "Order ID",
+      "plan": "Plan",
+      "timestamp": "Time",
+      "retryPayment": "Try Again",
+      "backToPricing": "Back to Pricing",
+      "messages": {
+        "declined": "Your payment was declined. Please check your card details or try a different payment method.",
+        "insufficientFunds": "Insufficient funds. Please check your account balance or try a different payment method.",
+        "cardExpired": "Your card has expired. Please use a different payment method.",
+        "invalidCard": "Invalid card details. Please check your card information and try again.",
+        "networkError": "Network error occurred. Please check your connection and try again.",
+        "timeout": "Payment timed out. Please try again.",
+        "cancelled": "Payment was cancelled. You can try again anytime.",
+        "default": "An unexpected error occurred. Please try again or contact support."
+      },
+      "solutions": {
+        "title": "Common Solutions",
+        "card": {
+          "title": "Check Your Card",
+          "description": "Verify your card details, expiration date, and billing address."
+        },
+        "billing": {
+          "title": "Verify Billing Address",
+          "description": "Ensure your billing address matches the one on file with your bank."
+        },
+        "network": {
+          "title": "Check Your Connection",
+          "description": "Make sure you have a stable internet connection and try again."
+        }
+      },
+      "support": {
+        "title": "Still Need Help?",
+        "description": "Our support team is available 24/7 to help resolve payment issues.",
+        "email": "Email Support",
+        "chat": "Live Chat"
+      }
+    }
+  },
+  "errors": {
+    "generic": "An unexpected error occurred. Please try again.",
+    "payment": {
+      "failed": "Payment processing failed. Please try again or contact support.",
+      "cancelled": "Payment was cancelled. You can try again anytime.",
+      "invalid": "Invalid payment information. Please check your details.",
+      "expired": "Payment session has expired. Please start over.",
+      "declined": "Payment was declined by your bank. Please try a different payment method.",
+      "insufficientFunds": "Insufficient funds. Please try a different payment method.",
+      "gatewayError": "Payment gateway is temporarily unavailable. Please try again later.",
+      "networkError": "Network error during payment. Please check your connection and try again."
+    },
+    "auth": {
+      "required": "Please log in to access this feature.",
+      "invalidToken": "Your session has expired. Please log in again.",
+      "tokenExpired": "Your session has expired. Please log in again.",
+      "invalidCredentials": "Invalid email or password.",
+      "accountLocked": "Your account is temporarily locked. Please contact support.",
+      "emailNotVerified": "Please verify your email address before continuing."
+    },
+    "network": {
+      "generic": "Network error. Please check your connection and try again.",
+      "timeout": "Request timed out. Please try again.",
+      "offline": "You appear to be offline. Please check your connection.",
+      "serverError": "Server error. Please try again later."
+    },
+    "validation": {
+      "generic": "Please check your input and try again.",
+      "required": "This field is required.",
+      "invalidFormat": "Please enter a valid format.",
+      "tooShort": "Input is too short.",
+      "tooLong": "Input is too long."
+    },
+    "entitlement": {
+      "insufficient": "You don't have access to this content. Please upgrade your plan.",
+      "expired": "Your subscription has expired. Please renew to continue.",
+      "notFound": "Entitlement not found. Please contact support."
+    },
+    "currency": {
+      "notSupported": "This currency is not supported.",
+      "rateError": "Unable to get current exchange rates. Please try again."
+    },
+    "permission": {
+      "denied": "You don't have permission to perform this action."
+    },
+    "resource": {
+      "notFound": "The requested resource was not found."
+    },
+    "rateLimit": {
+      "exceeded": "Too many requests. Please wait a moment and try again."
+    }
+  },
+  "toasts": {
+    "payment": {
+      "success": {
+        "title": "Payment Successful",
+        "message": "Your payment of {amount} {currency} has been processed successfully."
+      },
+      "error": {
+        "title": "Payment Failed",
+        "message": "Your payment could not be processed.",
+        "generic": "Please try again or contact support if the problem persists."
+      }
+    },
+    "subscription": {
+      "updated": {
+        "title": "Subscription Updated",
+        "message": "Your subscription has been updated to {plan}."
+      },
+      "cancelled": {
+        "title": "Subscription Cancelled",
+        "message": "Your subscription has been cancelled. You'll retain access until the end of your billing period."
+      }
+    },
+    "auth": {
+      "success": {
+        "title": "Success",
+        "message": "You have been {action} successfully."
+      },
+      "error": {
+        "title": "Authentication Error",
+        "message": "There was a problem with your authentication.",
+        "generic": "Please try again or contact support if the problem persists."
+      }
+    },
+    "network": {
+      "error": {
+        "title": "Connection Error",
+        "message": "Please check your internet connection and try again."
+      }
+    },
+    "currency": {
+      "updated": {
+        "title": "Currency Updated",
+        "message": "Display currency has been changed to {currency}."
+      }
+    },
+    "entitlement": {
+      "upgraded": {
+        "title": "Access Upgraded",
+        "message": "You now have {level} level access to all premium content."
+      }
+    }
+  },
+  "meta": {
+    "title": "Quiz Platform - Professional Interview Preparation",
+    "description": "Master frontend development with 500+ curated interview questions. Practice with Angular, React, Next.js, and Redux in English and Arabic.",
+    "keywords": "interview, preparation, questions, angular, react, nextjs, redux, typescript, javascript, frontend, developer"
+  }
+}
