@@ -64,20 +64,20 @@ export default async function authRoutes(fastify: FastifyInstance) {
   });
 
   // Register new user
-  fastify.post(
-    "/register",
-    {
-      config: {
-        rateLimit: {
-          max: parseInt(env.RATE_LIMIT_USER_MAX),
-          timeWindow: env.RATE_LIMIT_USER_WINDOW,
-          keyGenerator: (request) => `auth:signup:${request.ip}`,
+  fastify.register(async function (fastify) {
+    await fastify.register(rateLimit, {
+      max: parseInt(env.RATE_LIMIT_USER_MAX),
+      timeWindow: env.RATE_LIMIT_USER_WINDOW,
+      keyGenerator: (request) => `auth:signup:${request.ip}`,
+    });
+
+    fastify.post(
+      "/register",
+      {
+        schema: {
+          body: registerSchema,
         },
       },
-      schema: {
-        body: registerSchema,
-      },
-    },
     async (request, reply) => {
       try {
         const { email, name, password } = request.body as z.infer<typeof registerSchema>;
@@ -132,24 +132,24 @@ export default async function authRoutes(fastify: FastifyInstance) {
           message: errorMessage,
         });
       }
-    }
-  );
+    });
+  });
 
   // Login user
-  fastify.post(
-    "/login",
-    {
-      config: {
-        rateLimit: {
-          max: parseInt(env.RATE_LIMIT_USER_MAX),
-          timeWindow: env.RATE_LIMIT_USER_WINDOW,
-          keyGenerator: (request) => `auth:login:${request.ip}`,
+  fastify.register(async function (fastify) {
+    await fastify.register(rateLimit, {
+      max: parseInt(env.RATE_LIMIT_USER_MAX),
+      timeWindow: env.RATE_LIMIT_USER_WINDOW,
+      keyGenerator: (request) => `auth:login:${request.ip}`,
+    });
+
+    fastify.post(
+      "/login",
+      {
+        schema: {
+          body: loginSchema,
         },
       },
-      schema: {
-        body: loginSchema,
-      },
-    },
     async (request, reply) => {
       try {
         const { email, password } = request.body as z.infer<typeof loginSchema>;
@@ -243,24 +243,24 @@ export default async function authRoutes(fastify: FastifyInstance) {
           message: errorMessage,
         });
       }
-    }
-  );
+    });
+  });
 
   // Verify email
-  fastify.post(
-    "/verify-email",
-    {
-      config: {
-        rateLimit: {
-          max: parseInt(env.RATE_LIMIT_USER_MAX),
-          timeWindow: env.RATE_LIMIT_USER_WINDOW,
-          keyGenerator: (request) => `auth:verify-email:${request.ip}`,
+  fastify.register(async function (fastify) {
+    await fastify.register(rateLimit, {
+      max: parseInt(env.RATE_LIMIT_USER_MAX),
+      timeWindow: env.RATE_LIMIT_USER_WINDOW,
+      keyGenerator: (request) => `auth:verify-email:${request.ip}`,
+    });
+
+    fastify.post(
+      "/verify-email",
+      {
+        schema: {
+          body: verifyEmailSchema,
         },
       },
-      schema: {
-        body: verifyEmailSchema,
-      },
-    },
     async (request, reply) => {
       try {
         const { token } = request.body as z.infer<typeof verifyEmailSchema>;
@@ -308,24 +308,24 @@ export default async function authRoutes(fastify: FastifyInstance) {
           message: errorMessage,
         });
       }
-    }
-  );
+    });
+  });
 
   // Resend verification email
-  fastify.post(
-    "/resend-verification",
-    {
-      config: {
-        rateLimit: {
-          max: parseInt(env.RATE_LIMIT_USER_MAX),
-          timeWindow: env.RATE_LIMIT_USER_WINDOW,
-          keyGenerator: (request) => `auth:resend-code:${request.ip}`,
+  fastify.register(async function (fastify) {
+    await fastify.register(rateLimit, {
+      max: parseInt(env.RATE_LIMIT_USER_MAX),
+      timeWindow: env.RATE_LIMIT_USER_WINDOW,
+      keyGenerator: (request) => `auth:resend-code:${request.ip}`,
+    });
+
+    fastify.post(
+      "/resend-verification",
+      {
+        schema: {
+          body: resendVerificationSchema,
         },
       },
-      schema: {
-        body: resendVerificationSchema,
-      },
-    },
     async (request, reply) => {
       try {
         const { email } = request.body as z.infer<typeof resendVerificationSchema>;
@@ -370,24 +370,24 @@ export default async function authRoutes(fastify: FastifyInstance) {
           message: "Failed to resend verification email",
         });
       }
-    }
-  );
+    });
+  });
 
   // Forgot password
-  fastify.post(
-    "/forgot-password",
-    {
-      config: {
-        rateLimit: {
-          max: parseInt(env.RATE_LIMIT_USER_MAX),
-          timeWindow: env.RATE_LIMIT_USER_WINDOW,
-          keyGenerator: (request) => `auth:forgot-password:${request.ip}`,
+  fastify.register(async function (fastify) {
+    await fastify.register(rateLimit, {
+      max: parseInt(env.RATE_LIMIT_USER_MAX),
+      timeWindow: env.RATE_LIMIT_USER_WINDOW,
+      keyGenerator: (request) => `auth:forgot-password:${request.ip}`,
+    });
+
+    fastify.post(
+      "/forgot-password",
+      {
+        schema: {
+          body: forgotPasswordSchema,
         },
       },
-      schema: {
-        body: forgotPasswordSchema,
-      },
-    },
     async (request, reply) => {
       try {
         const { email } = request.body as z.infer<typeof forgotPasswordSchema>;
@@ -423,24 +423,24 @@ export default async function authRoutes(fastify: FastifyInstance) {
           message: "Failed to process password reset request",
         });
       }
-    }
-  );
+    });
+  });
 
   // Reset password
-  fastify.post(
-    "/reset-password",
-    {
-      config: {
-        rateLimit: {
-          max: parseInt(env.RATE_LIMIT_USER_MAX),
-          timeWindow: env.RATE_LIMIT_USER_WINDOW,
-          keyGenerator: (request) => `auth:reset-password:${request.ip}`,
+  fastify.register(async function (fastify) {
+    await fastify.register(rateLimit, {
+      max: parseInt(env.RATE_LIMIT_USER_MAX),
+      timeWindow: env.RATE_LIMIT_USER_WINDOW,
+      keyGenerator: (request) => `auth:reset-password:${request.ip}`,
+    });
+
+    fastify.post(
+      "/reset-password",
+      {
+        schema: {
+          body: resetPasswordSchema,
         },
       },
-      schema: {
-        body: resetPasswordSchema,
-      },
-    },
     async (request, reply) => {
       try {
         const { token, password } = request.body as z.infer<typeof resetPasswordSchema>;
@@ -536,22 +536,22 @@ export default async function authRoutes(fastify: FastifyInstance) {
           message: "Failed to change password",
         });
       }
-    }
-  );
+    });
+  });
 
   // Get current user
-  fastify.get(
-    "/me",
-    {
-      config: {
-        rateLimit: {
-          max: parseInt(env.RATE_LIMIT_IP_MAX),
-          timeWindow: env.RATE_LIMIT_IP_WINDOW,
-          keyGenerator: (request) => `auth:me:${request.ip}`,
-        },
+  fastify.register(async function (fastify) {
+    await fastify.register(rateLimit, {
+      max: parseInt(env.RATE_LIMIT_IP_MAX),
+      timeWindow: env.RATE_LIMIT_IP_WINDOW,
+      keyGenerator: (request) => `auth:me:${request.ip}`,
+    });
+
+    fastify.get(
+      "/me",
+      {
+        preHandler: authenticate,
       },
-      preHandler: authenticate,
-    },
     async (request, reply) => {
       try {
         const user = request.authUser;
@@ -575,22 +575,22 @@ export default async function authRoutes(fastify: FastifyInstance) {
           message: "Failed to get user information",
         });
       }
-    }
-  );
+    });
+  });
 
   // Logout
-  fastify.post(
-    "/logout",
-    {
-      config: {
-        rateLimit: {
-          max: parseInt(env.RATE_LIMIT_IP_MAX),
-          timeWindow: env.RATE_LIMIT_IP_WINDOW,
-          keyGenerator: (request) => `auth:logout:${request.ip}`,
-        },
+  fastify.register(async function (fastify) {
+    await fastify.register(rateLimit, {
+      max: parseInt(env.RATE_LIMIT_IP_MAX),
+      timeWindow: env.RATE_LIMIT_IP_WINDOW,
+      keyGenerator: (request) => `auth:logout:${request.ip}`,
+    });
+
+    fastify.post(
+      "/logout",
+      {
+        preHandler: authenticate,
       },
-      preHandler: authenticate,
-    },
     async (request, reply) => {
       try {
         const sessionId = (request as unknown).sessionId;
@@ -618,22 +618,22 @@ export default async function authRoutes(fastify: FastifyInstance) {
           message: "Failed to logout",
         });
       }
-    }
-  );
+    });
+  });
 
   // Logout from all devices
-  fastify.post(
-    "/logout-all",
-    {
-      config: {
-        rateLimit: {
-          max: parseInt(env.RATE_LIMIT_IP_MAX),
-          timeWindow: env.RATE_LIMIT_IP_WINDOW,
-          keyGenerator: (request) => `auth:logout-all:${request.ip}`,
-        },
+  fastify.register(async function (fastify) {
+    await fastify.register(rateLimit, {
+      max: parseInt(env.RATE_LIMIT_IP_MAX),
+      timeWindow: env.RATE_LIMIT_IP_WINDOW,
+      keyGenerator: (request) => `auth:logout-all:${request.ip}`,
+    });
+
+    fastify.post(
+      "/logout-all",
+      {
+        preHandler: authenticate,
       },
-      preHandler: authenticate,
-    },
     async (request, reply) => {
       try {
         const user = request.authUser;
@@ -661,29 +661,29 @@ export default async function authRoutes(fastify: FastifyInstance) {
           message: "Failed to logout from all devices",
         });
       }
-    }
-  );
+    });
+  });
 
   // Refresh token
-  fastify.post(
-    "/refresh",
-    {
-      config: {
-        rateLimit: {
-          max: parseInt(env.RATE_LIMIT_IP_MAX),
-          timeWindow: env.RATE_LIMIT_IP_WINDOW,
-          keyGenerator: (request) => `auth:refresh:${request.ip}`,
+  fastify.register(async function (fastify) {
+    await fastify.register(rateLimit, {
+      max: parseInt(env.RATE_LIMIT_IP_MAX),
+      timeWindow: env.RATE_LIMIT_IP_WINDOW,
+      keyGenerator: (request) => `auth:refresh:${request.ip}`,
+    });
+
+    fastify.post(
+      "/refresh",
+      {
+        schema: {
+          body: z.object({
+            refreshToken: z
+              .string()
+              .min(32, "Refresh token must be at least 32 characters")
+              .max(256, "Refresh token too long"),
+          }),
         },
       },
-      schema: {
-        body: z.object({
-          refreshToken: z
-            .string()
-            .min(32, "Refresh token must be at least 32 characters")
-            .max(256, "Refresh token too long"),
-        }),
-      },
-    },
     async (request, reply) => {
       try {
         const { refreshToken } = request.body as { refreshToken: string };
@@ -741,6 +741,6 @@ export default async function authRoutes(fastify: FastifyInstance) {
           message: errorMessage,
         });
       }
-    }
-  );
+    });
+  });
 }
