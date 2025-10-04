@@ -95,6 +95,7 @@ const changePasswordSchema = z.object({
     .max(128, "New password cannot exceed 128 characters"),
 });
 
+// Auth routes with explicit inline per-route rate limits for CodeQL visibility
 export default async function authRoutes(fastify: FastifyInstance) {
   // Register new user
   fastify.post(
