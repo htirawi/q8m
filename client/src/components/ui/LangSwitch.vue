@@ -23,7 +23,7 @@
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
-import { DEFAULT_LOCALE, SUPPORTED_LOCALES, type SupportedLocale } from "@/router";
+import { DEFAULT_LOCALE, type SupportedLocale } from "@/router";
 
 const { locale } = useI18n();
 const route = useRoute();

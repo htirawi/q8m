@@ -5,7 +5,7 @@ import App from "./App.vue";
 import router from "./router";
 import pinia from "./store";
 import i18n from "./i18n";
-import { DEFAULT_LOCALE, SUPPORTED_LOCALES, type SupportedLocale } from "./router";
+import { DEFAULT_LOCALE, type SupportedLocale } from "./router";
 
 // Styles
 import "./styles/main.css";

@@ -26,18 +26,6 @@ const createLocalizedRoute = (
   },
 });
 
-// Helper function to create non-localized routes (for redirects, etc.)
-const createRoute = (
-  path: string,
-  component: () => Promise<any>,
-  meta: any,
-  name?: string
-): RouteRecordRaw => ({
-  path,
-  name,
-  component,
-  meta,
-});
 
 // Route definitions with lazy loading and chunk names
 const routes: RouteRecordRaw[] = [
@@ -262,17 +250,6 @@ const router = createRouter({
   },
 });
 
-// Helper function to detect locale from URL
-const detectLocale = (path: string): SupportedLocale => {
-  const segments = path.split("/").filter(Boolean);
-  const firstSegment = segments[0];
-
-  if (firstSegment && SUPPORTED_LOCALES.includes(firstSegment as SupportedLocale)) {
-    return firstSegment as SupportedLocale;
-  }
-
-  return DEFAULT_LOCALE;
-};
 
 // Helper function to get locale from route params
 const getLocaleFromRoute = (to: any): SupportedLocale => {
@@ -280,7 +257,7 @@ const getLocaleFromRoute = (to: any): SupportedLocale => {
 };
 
 // Router guards
-router.beforeEach(async (to, from, next) => {
+router.beforeEach(async (to, _from, next) => {
   const authStore = useAuthStore();
 
   // Initialize auth state if not already done

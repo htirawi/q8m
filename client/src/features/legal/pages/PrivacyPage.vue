@@ -218,10 +218,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 
-const { t, locale } = useI18n();
+useI18n();
 
 // Last updated date
 const lastUpdated = "January 15, 2024";
