@@ -129,8 +129,8 @@ const handleleave = () => {
 };
 
 // Keyboard trap
-let focusableElements: HTMLElement[] = [];firstFocusableElement
-let lastFocusableElement: HTMLElement | null = null;lastFocusableElement
+let focusableElements: HTMLElement[] = [];
+let lastFocusableElement: HTMLElement | null = null;
 
 const trapfocus = (event: KeyboardEvent) => {
   if (!props.isOpen) return;

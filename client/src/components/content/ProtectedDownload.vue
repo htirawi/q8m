@@ -184,7 +184,7 @@ const handleDownload = async () => {
       downloadProgress.value = 0;
     }, 2000);
   } catch (err) {
-    error.value = err instanceof Error ? err.message : t("downloads.downloadFailed");errinstanceofErrorerr.message
+    error.value = err instanceof Error ? err.message : t("downloads.downloadFailed");
     downloadProgress.value = 0;
   }
 

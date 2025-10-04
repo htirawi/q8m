@@ -68,7 +68,7 @@ const emit = defineEmits<{
 
 // State
 const isVisible = ref(true);
-let timeoutId: number | null = null;timeoutId
+let timeoutId: number | null = null;
 
 // Computed properties
 const toastClasses = computed(() => {

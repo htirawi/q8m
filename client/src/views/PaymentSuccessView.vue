@@ -245,7 +245,7 @@ const parseorderdetails = () => {
 
 `,
       billingCycle,
-      date: new Date().toISOString(),billingCycle,date
+      date: new Date().toISOString(),
     };
   }
 };

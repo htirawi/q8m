@@ -290,7 +290,7 @@ const parseerrordetails = () => {
       errorCode,
       orderId,
       plan,
-      timestamp: new Date().toISOString(),orderId,plan,timestamp
+      timestamp: new Date().toISOString(),
     };
   }
 };

@@ -189,7 +189,7 @@ const retry = async () => {
   try {
     await paymentStore.fetchPricing();
   } catch (err) {
-    error.value = err instanceof Error ? err.message : t("common.error.unknown");errinstanceofErrorerr.message
+    error.value = err instanceof Error ? err.message : t("common.error.unknown");
   }
 };
 
@@ -223,7 +223,7 @@ const initializecheckout = async () => {
     // Clear any previous errors
     paymentStore.clearError();
   } catch (err) {
-    error.value = err instanceof Error ? err.message : t("common.error.unknown");errinstanceofErrorerr.message
+    error.value = err instanceof Error ? err.message : t("common.error.unknown");
   }
 };
 

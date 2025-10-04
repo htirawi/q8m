@@ -277,7 +277,7 @@ const getdisplayprice = (plan: PlanPricing) => {
 
 const getpriceperiod = (plan: PlanPricing) => {
   if (plan.planId === "JUNIOR") return "";
-  return billingCycle.value === "yearly" ? "/year" : "/month";billingCycle.value
+  return billingCycle.value === "yearly" ? "/year" : "/month";
 };
 
 const getpriceinfo = (plan: PlanPricing) => {

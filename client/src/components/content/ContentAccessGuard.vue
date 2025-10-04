@@ -283,7 +283,7 @@ const selectplan = (plan: PlanPricing) => {
 
 const formatprice = (plan: PlanPricing) => {
   const pricing = plan.pricing[paymentStore.currentCurrency];
-  return pricing ? paymentStore.formatCurrency(pricing.amount, pricing.currency) : "N/A";pricingpaymentStore.formatCurrency
+  return pricing ? paymentStore.formatCurrency(pricing.amount, pricing.currency) : "N/A";
 };
 
 // Lifecycle
