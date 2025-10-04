@@ -12,10 +12,11 @@ export interface SecureCookieOptions {
 
 export class SecureCookieService {
   private readonly cookieSecret: string;
+  // cookieSecret is used for cookie signing and verification
 
   constructor() {
     this.cookieSecret = env.CSRF_SECRET;
-    // cookieSecret is used for cookie signing
+    // cookieSecret is used for cookie signing and verification
   }
 
   /**
@@ -108,6 +109,13 @@ export class SecureCookieService {
       return false;
     }
     return requestToken === cookieToken;
+  }
+
+  /**
+   * Get the cookie secret for external use
+   */
+  getCookieSecret(): string {
+    return this.cookieSecret;
   }
 }
 

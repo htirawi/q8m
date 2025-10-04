@@ -28,7 +28,7 @@ export interface ISubscription extends Document {
   updatedAt: Date;
 }
 
-const subscriptionSchema = new Schema<ISubscription>(
+const subscriptionSchema = new Schema(
   {
     userId: {
       type: Schema.Types.ObjectId,
@@ -135,20 +135,20 @@ subscriptionSchema.index({ cancelAtPeriodEnd: 1, currentPeriodEnd: 1 });
 // Virtual for subscription validity
 subscriptionSchema.virtual("isActive").get(function () {
   const now = new Date();
-  return this.status === "active" && this.currentPeriodStart <= now && this.currentPeriodEnd > now;
+  return (this as any).status === "active" && (this as any).currentPeriodStart <= now && (this as any).currentPeriodEnd > now;
 });
 
 // Virtual for days remaining
 subscriptionSchema.virtual("daysRemaining").get(function () {
   const now = new Date();
-  const diffTime = this.currentPeriodEnd.getTime() - now.getTime();
+  const diffTime = (this as any).currentPeriodEnd.getTime() - now.getTime();
   return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 });
 
 // Virtual for is in trial
 subscriptionSchema.virtual("isInTrial").get(function () {
   const now = new Date();
-  return this.trialStart && this.trialEnd && this.trialStart <= now && this.trialEnd > now;
+  return (this as any).trialStart && (this as any).trialEnd && (this as any).trialStart <= now && (this as any).trialEnd > now;
 });
 
 // Instance method to activate subscription
@@ -299,19 +299,19 @@ subscriptionSchema.statics.getRevenueByPlan = function (startDate?: Date, endDat
 
 // Pre-save middleware to set entitlements based on plan type
 subscriptionSchema.pre("save", function (next) {
-  if (this.isModified("planType")) {
-    switch (this.planType) {
+  if ((this as any).isModified("planType")) {
+    switch ((this as any).planType) {
       case "INTERMEDIATE":
-        this.entitlements = ["JUNIOR", "INTERMEDIATE"];
+        (this as any).entitlements = ["JUNIOR", "INTERMEDIATE"];
         break;
       case "SENIOR":
-        this.entitlements = ["JUNIOR", "SENIOR"];
+        (this as any).entitlements = ["JUNIOR", "SENIOR"];
         break;
       case "BUNDLE":
-        this.entitlements = ["JUNIOR", "INTERMEDIATE", "SENIOR", "BUNDLE"];
+        (this as any).entitlements = ["JUNIOR", "INTERMEDIATE", "SENIOR", "BUNDLE"];
         break;
       default:
-        this.entitlements = ["JUNIOR"];
+        (this as any).entitlements = ["JUNIOR"];
     }
   }
   next();

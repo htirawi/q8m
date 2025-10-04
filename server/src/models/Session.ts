@@ -18,7 +18,7 @@ export interface ISession extends Document {
     timezone?: string;
   };
   isActive: boolean;
-  lastUsed: Date;
+  lastUsed: any; // Mongoose Date type
   isRevoked: boolean;
   revokedAt?: Date;
   revokedReason?:
@@ -31,7 +31,7 @@ export interface ISession extends Document {
   refresh(): Promise<void>;
 }
 
-const sessionSchema = new Schema<ISession>(
+const sessionSchema = new Schema(
   {
     userId: {
       type: Schema.Types.ObjectId,

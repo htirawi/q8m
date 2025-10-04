@@ -11,10 +11,10 @@ export interface IUser extends Document {
   emailVerificationToken?: string;
   emailVerificationExpires?: any; // Mongoose Date type
   passwordResetToken?: string;
-  passwordResetExpires?: Date;
+  passwordResetExpires?: any; // Mongoose Date type
   lastLogin?: Date;
   loginAttempts: number;
-  lockUntil?: Date;
+  lockUntil?: any; // Mongoose Date type
   googleId?: string;
   facebookId?: string;
   avatar?: string;
@@ -50,7 +50,7 @@ export interface IUser extends Document {
   generateAuthTokens(): { accessToken: string; refreshToken: string };
 }
 
-const userSchema = new Schema<IUser>(
+const userSchema = new Schema(
   {
     email: {
       type: String,

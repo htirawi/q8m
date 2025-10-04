@@ -15,7 +15,7 @@ export interface IFxRate extends Document {
   createdAt: Date;
 }
 
-const fxRateSchema = new Schema<IFxRate>(
+const fxRateSchema = new Schema(
   {
     baseCurrency: {
       type: String,
@@ -84,17 +84,17 @@ fxRateSchema.index({ fetchedAt: -1 });
 
 // Virtual for currency pair
 fxRateSchema.virtual("currencyPair").get(function () {
-  return `${this.baseCurrency}/${this.targetCurrency}`;
+  return `${(this as any).baseCurrency}/${(this as any).targetCurrency}`;
 });
 
 // Virtual for is expired
 fxRateSchema.virtual("isExpired").get(function () {
-  return new Date() > this.expiresAt;
+  return new Date() > (this as any).expiresAt;
 });
 
 // Virtual for age in hours
 fxRateSchema.virtual("ageInHours").get(function () {
-  return Math.floor((Date.now() - this.fetchedAt.getTime()) / (1000 * 60 * 60));
+  return Math.floor((Date.now() - (this as any).fetchedAt.getTime()) / (1000 * 60 * 60));
 });
 
 // Instance method to check if rate is fresh (less than 24 hours old)

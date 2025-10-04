@@ -94,7 +94,7 @@ export class CurrencyService {
       return {
         rate: fxRate.rate,
         source: "cache",
-        ageInHours: fxRate.ageInHours || 0,
+        ageInHours: ((fxRate as any).ageInHours ?? 0) as number,
       };
     }
 
@@ -105,7 +105,7 @@ export class CurrencyService {
       return {
         rate: fxRate.rate,
         source: "cache",
-        ageInHours: fxRate.ageInHours || 0,
+        ageInHours: ((fxRate as any).ageInHours ?? 0) as number,
       };
     }
 
@@ -122,6 +122,9 @@ export class CurrencyService {
 
       // Use fallback rate
       const fallbackRate = this.fallbackRates[targetCurrency];
+      if (!fallbackRate) {
+        throw new Error(`No fallback rate available for ${targetCurrency}`);
+      }
       await FxRate.createFallbackRate(targetCurrency, fallbackRate, "API unavailable");
 
       return {

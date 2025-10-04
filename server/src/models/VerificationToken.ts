@@ -12,7 +12,7 @@ export interface IVerificationToken extends Document {
   userAgent?: string;
 }
 
-const verificationTokenSchema = new Schema<IVerificationToken>(
+const verificationTokenSchema = new Schema(
   {
     userId: {
       type: Schema.Types.ObjectId,
@@ -77,7 +77,7 @@ verificationTokenSchema.index({ used: 1, createdAt: -1 });
 
 // Virtual for token validity
 verificationTokenSchema.virtual("isValid").get(function () {
-  return !this.used && (this.expiresAt as any) > new Date();
+  return !(this as any).used && (this as any).expiresAt > new Date();
 });
 
 // Instance method to mark token as used
