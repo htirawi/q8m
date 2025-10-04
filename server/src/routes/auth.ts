@@ -563,6 +563,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
     fastify.post(
       "/change-password",
       {
+        ...buildRateLimitOptions("auth:change-password", { max: 10, timeWindow: "15m" }),
         preHandler: authenticate,
         schema: {
           body: changePasswordSchema,
@@ -623,6 +624,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
     fastify.get(
       "/me",
       {
+        ...buildRateLimitOptions("auth:me", { max: 100, timeWindow: "15m" }),
         preHandler: authenticate,
       },
       async (request, reply) => {
@@ -666,6 +668,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
     fastify.post(
       "/logout",
       {
+        ...buildRateLimitOptions("auth:logout", { max: 20, timeWindow: "15m" }),
         preHandler: authenticate,
       },
       async (request, reply) => {
@@ -713,6 +716,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
     fastify.post(
       "/logout-all",
       {
+        ...buildRateLimitOptions("auth:logout-all", { max: 10, timeWindow: "15m" }),
         preHandler: authenticate,
       },
       async (request, reply) => {

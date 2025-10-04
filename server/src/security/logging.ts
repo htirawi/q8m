@@ -70,7 +70,7 @@ export function maskEmail(email: string): string {
   if (!domain) return maskSensitive(email, 2);
 
   const maskedLocal = maskSensitive(localPart, 2);
-  const maskedDomain = maskSensitive(domain!, 3);
+  const maskedDomain = maskSensitive(domain, 3);
 
   return `${maskedLocal}@${maskedDomain}`;
 }

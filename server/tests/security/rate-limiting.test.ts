@@ -3,13 +3,10 @@
  */
 
 import { test, expect, describe } from "vitest";
-import Fastify from "fastify";
 import { buildRateLimitOptions } from "../../src/security/rateLimit.js";
 
 describe("Rate Limiting Integration", () => {
   test("auth routes should have rate limiting applied", async () => {
-    const fastify = Fastify({ logger: false });
-
     // Test that buildRateLimitOptions creates valid configuration
     const loginOptions = buildRateLimitOptions("auth:login", { max: 20, timeWindow: "15m" });
 

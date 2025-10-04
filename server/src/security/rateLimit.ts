@@ -158,7 +158,8 @@ export function buildRateLimitOptions(
       timeWindow: timeWindow ?? process.env.RATE_LIMIT_USER_WINDOW ?? "15m",
       hook: "onRequest",
       addHeaders: process.env.RATE_LIMIT_HEADERS === "standard",
-      keyGenerator: (req) => (keyMode === "ip" ? makeIpKey(req) : comboKey(req, routeId)),
+      keyGenerator: (req: FastifyRequest) =>
+        keyMode === "ip" ? makeIpKey(req) : comboKey(req, routeId),
       errorResponseBuilder: (_request: FastifyRequest, context: { ttl: number; max: number }) => {
         const retryAfter = Math.round(context.ttl / 1000);
         return {
