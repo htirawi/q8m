@@ -311,6 +311,7 @@ const authStore = useAuthStore();
 const emit = defineEmits<{
   "oauth-login": [provider: "google" | "facebook"];
   "registration-success": [email: string];
+  "show-login": [show: boolean];
 }>();
 
 // Reactive data
