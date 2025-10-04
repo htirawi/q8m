@@ -41,7 +41,7 @@
     "test:watch": "vitest",
     "test:integration": "vitest run tests/integration",
     "type-check": "echo 'TypeScript checking disabled for legacy server code'",
-    "prepare": "husky install",
+    "prepare": "echo 'Husky installed at root level'",
     "validate": "pnpm lint && pnpm type-check && pnpm test",
     "db:migrate": "tsx scripts/migrate.ts",
     "db:seed": "tsx scripts/seed.ts",

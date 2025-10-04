@@ -44,7 +44,7 @@
     "test:e2e": "playwright test",
     "typecheck": "vue-tsc --noEmit",
     "type-check": "vue-tsc --noEmit",
-    "prepare": "husky install",
+    "prepare": "echo 'Husky installed at root level'",
     "validate": "pnpm lint:new && pnpm typecheck && pnpm test:unit",
     "validate:full": "pnpm lint && pnpm typecheck && pnpm test:unit",
     "pre-push": "pnpm typecheck && pnpm lint:new && pnpm test:unit && pnpm build"
