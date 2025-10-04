@@ -59,7 +59,8 @@ declare module "mongoose" {
     resetLoginAttempts?(): Promise<void>;
   }
   
-  interface Model<T, TQueryHelpers = {}, TMethods = {}, TVirtuals = {}, TSchema = any> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  interface Model<T, TQueryHelpers = Record<string, any>, TMethods = Record<string, any>, TVirtuals = Record<string, any>, TSchema = any> {
     findByEmailWithPassword?(email: string): Promise<any>;
     createToken?(userId: string, type: string, hours: number): Promise<any>;
     verifyToken?(token: string, type: string): Promise<any>;
@@ -78,6 +79,7 @@ declare module "mongoose" {
 }
 
 // Temporary fixes for legacy service methods
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface LegacyUserMethods {
   comparePassword?(password: string): Promise<boolean>;
   incLoginAttempts?(): Promise<void>;
@@ -95,6 +97,7 @@ interface LegacyUserMethods {
   stats?: any;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface LegacySessionMethods {
   revoke?(reason: string): Promise<void>;
   refresh?(): Promise<void>;
@@ -106,6 +109,7 @@ interface LegacySessionMethods {
   accessToken?: string;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface LegacyPurchaseMethods {
   markAsCompleted?(): Promise<void>;
   markAsFailed?(): Promise<void>;
@@ -113,6 +117,7 @@ interface LegacyPurchaseMethods {
   findByPaymentId?(paymentId: string): Promise<any>;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface LegacySubscriptionMethods {
   cancel?(): Promise<void>;
   findActiveForUser?(userId: string): Promise<any>;
@@ -120,11 +125,13 @@ interface LegacySubscriptionMethods {
   getSubscriptionStats?(): Promise<any>;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface LegacyVerificationTokenMethods {
   createToken?(userId: string, type: string, hours: number): Promise<any>;
   verifyToken?(token: string, type: string): Promise<any>;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface LegacyFxRateMethods {
   getFreshRate?(from: string, to: string): Promise<any>;
   getLatestRate?(from: string, to: string): Promise<any>;
