@@ -11,18 +11,6 @@ import { authenticate } from "../middlewares/auth.middleware.js";
 import { comboKey, ipKey } from "../security/rateLimit.js";
 import * as crypto from "crypto";
 
-// Extend Fastify route options to include rateLimit
-declare module "fastify" {
-  interface RouteShorthandOptions {
-    rateLimit?: {
-      max: number;
-      timeWindow: string;
-      hook: string;
-      keyGenerator: (req: FastifyRequest) => string;
-    };
-  }
-}
-
 // Type definitions for request bodies
 interface RegisterBody {
   email: string;
@@ -132,7 +120,8 @@ export default async function authRoutes(fastify: FastifyInstance) {
         schema: {
           body: registerSchema,
         },
-      },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } as any,
       async (request, reply) => {
         try {
           const { email, name, password } = request.body as RegisterBody;
@@ -219,7 +208,8 @@ export default async function authRoutes(fastify: FastifyInstance) {
         schema: {
           body: loginSchema,
         },
-      },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } as any,
       async (request, reply) => {
         try {
           const { email, password } = request.body as LoginBody;
@@ -347,7 +337,8 @@ export default async function authRoutes(fastify: FastifyInstance) {
         schema: {
           body: verifyEmailSchema,
         },
-      },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } as any,
       async (request, reply) => {
         try {
           const { token } = request.body as VerifyEmailBody;
@@ -427,7 +418,8 @@ export default async function authRoutes(fastify: FastifyInstance) {
         schema: {
           body: resendVerificationSchema,
         },
-      },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } as any,
       async (request, reply) => {
         try {
           const { email } = request.body as ResendVerificationBody;
@@ -503,7 +495,8 @@ export default async function authRoutes(fastify: FastifyInstance) {
         schema: {
           body: forgotPasswordSchema,
         },
-      },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } as any,
       async (request, reply) => {
         try {
           const { email } = request.body as ForgotPasswordBody;
@@ -571,7 +564,8 @@ export default async function authRoutes(fastify: FastifyInstance) {
         schema: {
           body: resetPasswordSchema,
         },
-      },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } as any,
       async (request, reply) => {
         try {
           const { token, password } = request.body as ResetPasswordBody;
@@ -643,7 +637,8 @@ export default async function authRoutes(fastify: FastifyInstance) {
         schema: {
           body: changePasswordSchema,
         },
-      },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } as any,
       async (request, reply) => {
         try {
           const { currentPassword, newPassword } = request.body as ChangePasswordBody;
@@ -884,7 +879,8 @@ export default async function authRoutes(fastify: FastifyInstance) {
               .max(256, "Refresh token too long"),
           }),
         },
-      },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } as any,
       async (request, reply) => {
         try {
           const { refreshToken } = request.body as RefreshTokenBody;
