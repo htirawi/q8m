@@ -35,10 +35,11 @@ export function useLocale() {
     targetLocale: SupportedLocale,
     params: any = {}
   ) => {
-    return router.resolve({
+    const { href } = router.resolve({
       name: routeName,
       params: { locale: targetLocale, ...params },
-    }).href;
+    });
+    return href;
   };
 
   // Switch to a specific locale while staying on the same page
@@ -46,7 +47,7 @@ export function useLocale() {
     if (targetLocale === currentLocale.value) return;
 
     const newPath = getLocalizedUrl(targetLocale);
-    const query = route.query;
+    const { query } = route;
 
     await router.push({
       path: newPath,

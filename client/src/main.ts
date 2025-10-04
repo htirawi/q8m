@@ -26,8 +26,9 @@ app.use(head);
 
 // Standalone locale initialization function (doesn't use Vue composables)
 function initializeLocaleFromUrl() {
-  const currentRoute = router.currentRoute.value;
-  const urlLocale = (currentRoute.params.locale as SupportedLocale) || DEFAULT_LOCALE;
+  const { currentRoute } = router;
+  const { params } = currentRoute.value;
+  const urlLocale = (params.locale as SupportedLocale) || DEFAULT_LOCALE;
 
   console.log("Initializing locale:", urlLocale);
   console.log("Current i18n locale:", i18n.global.locale.value);
@@ -40,24 +41,26 @@ function initializeLocaleFromUrl() {
   }
 
   // Update HTML attributes
-  document.documentElement.dir = urlLocale === "ar" ? "rtl" : "ltr";
-  document.documentElement.lang = urlLocale;
+  const { documentElement } = document;
+  documentElement.dir = urlLocale === "ar" ? "rtl" : "ltr";
+  documentElement.lang = urlLocale;
   console.log("HTML attributes set:", {
-    dir: document.documentElement.dir,
-    lang: document.documentElement.lang,
+    dir: documentElement.dir,
+    lang: documentElement.lang,
   });
 }
 
 // Initialize locale after router is ready
 router.isReady().then(() => {
   console.log("Router is ready");
-  console.log("Current route:", router.currentRoute.value.path);
-  console.log("Route params:", router.currentRoute.value.params);
+  const { path, params } = router.currentRoute.value;
+  console.log("Current route:", path);
+  console.log("Route params:", params);
   console.log("Current i18n locale:", i18n.global.locale.value);
 
   // Set default locale if not in URL
-  if (!router.currentRoute.value.params.locale) {
-    const currentPath = router.currentRoute.value.path;
+  if (!params.locale) {
+    const currentPath = path;
     console.log("No locale in URL, current path:", currentPath);
     if (currentPath === "/" || (!currentPath.startsWith("/en") && !currentPath.startsWith("/ar"))) {
       console.log("Redirecting to default locale:", DEFAULT_LOCALE);
