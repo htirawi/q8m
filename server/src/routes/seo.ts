@@ -1,5 +1,6 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
 import { z } from "zod";
+import { zodToJsonSchema } from "zod-to-json-schema";
 
 interface SitemapRoute {
   url: string;
@@ -148,13 +149,13 @@ Crawl-delay: 1`;
     "/api/seo/structured-data/:type",
     {
       schema: {
-        params: z.object({
+        params: zodToJsonSchema(z.object({
           type: z.enum(["organization", "quiz", "pricing"]),
-        }),
-        querystring: z.object({
+        })),
+        querystring: zodToJsonSchema(z.object({
           locale: z.string().optional(),
           id: z.string().optional(),
-        }),
+        })),
       },
     },
     async (

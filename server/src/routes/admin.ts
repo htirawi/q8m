@@ -1,5 +1,6 @@
 import type { FastifyInstance } from "fastify";
 import { z } from "zod";
+import { zodToJsonSchema } from "zod-to-json-schema";
 import { sanitizeForDisplay } from "../security/escape.js";
 import { safeUpdateFields, adminFieldValidators, isPlainObject } from "../security/safe-object.js";
 
@@ -79,14 +80,15 @@ export default async function adminRoutes(fastify: FastifyInstance) {
   fastify.get(
     "/users",
     {
-      preHandler: [fastify.requireRole("admin")],
       schema: {
-        querystring: z.object({
-          limit: z.string().transform(Number).optional().default("20"),
-          offset: z.string().transform(Number).optional().default("0"),
-          search: z.string().optional(),
-          role: z.enum(["user", "admin"]).optional(),
-        }),
+        querystring: zodToJsonSchema(
+          z.object({
+            limit: z.string().transform(Number).optional().default("20"),
+            offset: z.string().transform(Number).optional().default("0"),
+            search: z.string().optional(),
+            role: z.enum(["user", "admin"]).optional(),
+          })
+        ),
       },
     },
     async (request, reply) => {
@@ -116,11 +118,12 @@ export default async function adminRoutes(fastify: FastifyInstance) {
   fastify.get(
     "/users/:userId",
     {
-      preHandler: [fastify.requireRole("admin")],
       schema: {
-        params: z.object({
-          userId: z.string(),
-        }),
+        params: zodToJsonSchema(
+          z.object({
+            userId: z.string(),
+          })
+        ),
       },
     },
     async (request, reply) => {
@@ -143,14 +146,17 @@ export default async function adminRoutes(fastify: FastifyInstance) {
   fastify.patch(
     "/users/:userId/role",
     {
-      preHandler: [fastify.requireRole("admin")],
       schema: {
-        params: z.object({
-          userId: z.string(),
-        }),
-        body: z.object({
-          role: z.enum(["user", "admin"]),
-        }),
+        params: zodToJsonSchema(
+          z.object({
+            userId: z.string(),
+          })
+        ),
+        body: zodToJsonSchema(
+          z.object({
+            role: z.enum(["user", "admin"]),
+          })
+        ),
       },
     },
     async (request, reply) => {
@@ -170,18 +176,23 @@ export default async function adminRoutes(fastify: FastifyInstance) {
   fastify.patch(
     "/users/:userId",
     {
-      preHandler: [fastify.requireRole("admin")],
       schema: {
-        params: z.object({
-          userId: z.string(),
-        }),
-        body: z.object({
-          displayName: z.string().max(120).optional(),
-          role: z.enum(["user", "admin", "manager", "viewer"]).optional(),
-          isActive: z.boolean().optional(),
-          isEmailVerified: z.boolean().optional(),
-          entitlements: z.array(z.enum(["JUNIOR", "INTERMEDIATE", "SENIOR", "BUNDLE"])).optional(),
-        }),
+        params: zodToJsonSchema(
+          z.object({
+            userId: z.string(),
+          })
+        ),
+        body: zodToJsonSchema(
+          z.object({
+            displayName: z.string().max(120).optional(),
+            role: z.enum(["user", "admin", "manager", "viewer"]).optional(),
+            isActive: z.boolean().optional(),
+            isEmailVerified: z.boolean().optional(),
+            entitlements: z
+              .array(z.enum(["JUNIOR", "INTERMEDIATE", "SENIOR", "BUNDLE"]))
+              .optional(),
+          })
+        ),
       },
     },
     async (request, reply) => {
@@ -222,14 +233,15 @@ export default async function adminRoutes(fastify: FastifyInstance) {
   fastify.get(
     "/questions",
     {
-      preHandler: [fastify.requireRole("admin")],
       schema: {
-        querystring: z.object({
-          limit: z.string().transform(Number).optional().default("20"),
-          offset: z.string().transform(Number).optional().default("0"),
-          framework: z.enum(["angular", "react", "nextjs", "redux"]).optional(),
-          level: z.enum(["junior", "intermediate", "senior"]).optional(),
-        }),
+        querystring: zodToJsonSchema(
+          z.object({
+            limit: z.string().transform(Number).optional().default("20"),
+            offset: z.string().transform(Number).optional().default("0"),
+            framework: z.enum(["angular", "react", "nextjs", "redux"]).optional(),
+            level: z.enum(["junior", "intermediate", "senior"]).optional(),
+          })
+        ),
       },
     },
     async (request, reply) => {
@@ -250,82 +262,17 @@ export default async function adminRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/questions",
     {
-      preHandler: [fastify.requireRole("admin")],
       schema: {
-        body: z.object({
-          framework: z.enum(["angular", "react", "nextjs", "redux"]),
-          level: z.enum(["junior", "intermediate", "senior"]),
-          type: z.enum(["multiple-choice", "fill-blank", "true-false", "multiple-checkbox"]),
-          category: z.string().optional(),
-          difficulty: z.enum(["easy", "medium", "hard"]),
-          tags: z.array(z.string()),
-          points: z.number().positive(),
-          content: z.object({
-            en: z.object({
-              question: z.string(),
-              options: z
-                .array(
-                  z.object({
-                    id: z.string(),
-                    text: z.string(),
-                    isCorrect: z.boolean(),
-                  })
-                )
-                .optional(),
-              explanation: z.string(),
-            }),
-            ar: z.object({
-              question: z.string(),
-              options: z
-                .array(
-                  z.object({
-                    id: z.string(),
-                    text: z.string(),
-                    isCorrect: z.boolean(),
-                  })
-                )
-                .optional(),
-              explanation: z.string(),
-            }),
-          }),
-        }),
-      },
-    },
-    async (request, reply) => {
-      const questionData = request.body as unknown;
-
-      // TODO: Implement question creation
-      reply.status(201).send({
-        id: "new-question-id",
-        ...(questionData as Record<string, unknown>),
-        isActive: true,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      });
-    }
-  );
-
-  // Update question
-  fastify.patch(
-    "/questions/:questionId",
-    {
-      preHandler: [fastify.requireRole("admin")],
-      schema: {
-        params: z.object({
-          questionId: z.string(),
-        }),
-        body: z.object({
-          framework: z.enum(["angular", "react", "nextjs", "redux"]).optional(),
-          level: z.enum(["junior", "intermediate", "senior"]).optional(),
-          type: z
-            .enum(["multiple-choice", "fill-blank", "true-false", "multiple-checkbox"])
-            .optional(),
-          category: z.string().optional(),
-          difficulty: z.enum(["easy", "medium", "hard"]).optional(),
-          tags: z.array(z.string()).optional(),
-          points: z.number().positive().optional(),
-          content: z
-            .object({
+        body: zodToJsonSchema(
+          z.object({
+            framework: z.enum(["angular", "react", "nextjs", "redux"]),
+            level: z.enum(["junior", "intermediate", "senior"]),
+            type: z.enum(["multiple-choice", "fill-blank", "true-false", "multiple-checkbox"]),
+            category: z.string().optional(),
+            difficulty: z.enum(["easy", "medium", "hard"]),
+            tags: z.array(z.string()),
+            points: z.number().positive(),
+            content: z.object({
               en: z.object({
                 question: z.string(),
                 options: z
@@ -352,9 +299,78 @@ export default async function adminRoutes(fastify: FastifyInstance) {
                   .optional(),
                 explanation: z.string(),
               }),
-            })
-            .optional(),
-        }),
+            }),
+          })
+        ),
+      },
+    },
+    async (request, reply) => {
+      const questionData = request.body as unknown;
+
+      // TODO: Implement question creation
+      reply.status(201).send({
+        id: "new-question-id",
+        ...(questionData as Record<string, unknown>),
+        isActive: true,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+    }
+  );
+
+  // Update question
+  fastify.patch(
+    "/questions/:questionId",
+    {
+      schema: {
+        params: zodToJsonSchema(
+          z.object({
+            questionId: z.string(),
+          })
+        ),
+        body: zodToJsonSchema(
+          z.object({
+            framework: z.enum(["angular", "react", "nextjs", "redux"]).optional(),
+            level: z.enum(["junior", "intermediate", "senior"]).optional(),
+            type: z
+              .enum(["multiple-choice", "fill-blank", "true-false", "multiple-checkbox"])
+              .optional(),
+            category: z.string().optional(),
+            difficulty: z.enum(["easy", "medium", "hard"]).optional(),
+            tags: z.array(z.string()).optional(),
+            points: z.number().positive().optional(),
+            content: z
+              .object({
+                en: z.object({
+                  question: z.string(),
+                  options: z
+                    .array(
+                      z.object({
+                        id: z.string(),
+                        text: z.string(),
+                        isCorrect: z.boolean(),
+                      })
+                    )
+                    .optional(),
+                  explanation: z.string(),
+                }),
+                ar: z.object({
+                  question: z.string(),
+                  options: z
+                    .array(
+                      z.object({
+                        id: z.string(),
+                        text: z.string(),
+                        isCorrect: z.boolean(),
+                      })
+                    )
+                    .optional(),
+                  explanation: z.string(),
+                }),
+              })
+              .optional(),
+          })
+        ),
       },
     },
     async (request, reply) => {
@@ -425,11 +441,12 @@ export default async function adminRoutes(fastify: FastifyInstance) {
   fastify.delete(
     "/questions/:questionId",
     {
-      preHandler: [fastify.requireRole("admin")],
       schema: {
-        params: z.object({
-          questionId: z.string(),
-        }),
+        params: zodToJsonSchema(
+          z.object({
+            questionId: z.string(),
+          })
+        ),
       },
     },
     async (request, reply) => {
@@ -447,11 +464,12 @@ export default async function adminRoutes(fastify: FastifyInstance) {
   fastify.get(
     "/analytics/payments",
     {
-      preHandler: [fastify.requireRole("admin")],
       schema: {
-        querystring: z.object({
-          period: z.enum(["day", "week", "month", "year"]).optional().default("month"),
-        }),
+        querystring: zodToJsonSchema(
+          z.object({
+            period: z.enum(["day", "week", "month", "year"]).optional().default("month"),
+          })
+        ),
       },
     },
     async (request, reply) => {
@@ -482,11 +500,12 @@ export default async function adminRoutes(fastify: FastifyInstance) {
   fastify.get(
     "/analytics/users",
     {
-      preHandler: [fastify.requireRole("admin")],
       schema: {
-        querystring: z.object({
-          period: z.enum(["day", "week", "month", "year"]).optional().default("month"),
-        }),
+        querystring: zodToJsonSchema(
+          z.object({
+            period: z.enum(["day", "week", "month", "year"]).optional().default("month"),
+          })
+        ),
       },
     },
     async (request, reply) => {

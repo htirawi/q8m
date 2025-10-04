@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema } from "mongoose";
-import * as bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 export interface IUser extends Document {
   email: string;
@@ -49,7 +49,6 @@ const userSchema = new Schema(
     email: {
       type: String,
       required: [true, "Email is required"],
-      unique: true,
       lowercase: true,
       trim: true,
       match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, "Please enter a valid email"],
@@ -112,12 +111,10 @@ const userSchema = new Schema(
     // OAuth fields
     googleId: {
       type: String,
-      unique: true,
       sparse: true,
     },
     facebookId: {
       type: String,
-      unique: true,
       sparse: true,
     },
     avatar: {
@@ -232,13 +229,13 @@ const userSchema = new Schema(
 );
 
 // Indexes for performance
-userSchema.index({ email: 1 });
-userSchema.index({ googleId: 1 });
-userSchema.index({ facebookId: 1 });
-userSchema.index({ role: 1 });
-userSchema.index({ entitlements: 1 });
-userSchema.index({ isActive: 1 });
-userSchema.index({ createdAt: -1 });
+userSchema.index({ email: 1 }, { unique: true, name: "uniq_email" });
+userSchema.index({ googleId: 1 }, { unique: true, sparse: true, name: "uniq_google_id" });
+userSchema.index({ facebookId: 1 }, { unique: true, sparse: true, name: "uniq_facebook_id" });
+userSchema.index({ role: 1 }, { name: "idx_role" });
+userSchema.index({ entitlements: 1 }, { name: "idx_entitlements" });
+userSchema.index({ isActive: 1 }, { name: "idx_is_active" });
+userSchema.index({ createdAt: -1 }, { name: "idx_created_at" });
 
 // Virtual for account lock status
 userSchema.virtual("isLocked").get(function () {

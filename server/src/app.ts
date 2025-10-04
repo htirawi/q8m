@@ -29,7 +29,8 @@ import seoRoutes from "./routes/seo";
 // Import middleware
 import { errorHandler } from "./middlewares/error.middleware";
 import { requestLogger } from "./middlewares/logger.middleware";
-import authPlugin from "./middlewares/auth.middleware";
+import authPlugin, { createAuthMiddleware, AuthOptions } from "./middlewares/auth.middleware";
+import type { FastifyRequest, FastifyReply } from "fastify";
 
 // Import security plugins
 import rateLimitPlugin from "./security/rateLimit";
@@ -38,17 +39,15 @@ import rateLimitPlugin from "./security/rateLimit";
 import { connectDatabase } from "./config/database";
 
 // Import environment validation
-import { envSchema } from "./config/env";
-
-// Validate environment variables
-const env = envSchema.parse(process.env);
+import { env } from "./config/env";
+import { features } from "./config/appConfig";
 
 // Create Fastify instance
 const fastify = Fastify({
   logger: {
-    level: env.LOG_LEVEL,
+    level: process.env.LOG_LEVEL || "info",
     transport:
-      env.NODE_ENV === "development"
+      process.env.NODE_ENV === "development"
         ? {
             target: "pino-pretty",
             options: {
@@ -69,7 +68,7 @@ const fastify = Fastify({
       remove: true,
     },
   },
-  trustProxy: env.RATE_LIMIT_TRUST_PROXY === "true",
+  trustProxy: process.env.RATE_LIMIT_TRUST_PROXY === "true",
   requestIdHeader: "x-request-id",
   requestIdLogLabel: "reqId",
   genReqId: () => crypto.randomUUID(),
@@ -104,8 +103,8 @@ fastify.addHook("onSend", async (request, reply, payload) => {
 async function registerPlugins() {
   // CORS
   await fastify.register(cors, {
-    origin: env.CORS_ORIGIN?.split(",") || true,
-    credentials: env.CORS_CREDENTIALS === "true",
+    origin: process.env.CORS_ORIGIN?.split(",") || true,
+    credentials: process.env.CORS_CREDENTIALS === "true",
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
   });
@@ -138,7 +137,7 @@ async function registerPlugins() {
     secret: env.JWT_SECRET,
     parseOptions: {
       httpOnly: true,
-      secure: env.NODE_ENV === "production",
+      secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     },
@@ -148,10 +147,10 @@ async function registerPlugins() {
   await fastify.register(jwt, {
     secret: env.JWT_SECRET,
     sign: {
-      expiresIn: env.JWT_EXPIRES_IN || "15m",
+      expiresIn: process.env.JWT_EXPIRES_IN || "15m",
     },
     verify: {
-      maxAge: env.JWT_EXPIRES_IN || "15m",
+      maxAge: process.env.JWT_EXPIRES_IN || "15m",
     },
   });
 
@@ -160,8 +159,8 @@ async function registerPlugins() {
     name: "googleOAuth2",
     credentials: {
       client: {
-        id: env.GOOGLE_CLIENT_ID,
-        secret: env.GOOGLE_CLIENT_SECRET,
+        id: process.env.GOOGLE_CLIENT_ID!,
+        secret: process.env.GOOGLE_CLIENT_SECRET!,
       },
       auth: {
         authorizeHost: "https://accounts.google.com",
@@ -171,7 +170,7 @@ async function registerPlugins() {
       },
     },
     startRedirectPath: "/auth/google",
-    callbackUri: `${env.API_BASE_URL}/auth/google/callback`,
+    callbackUri: `${process.env.API_BASE_URL}/auth/google/callback`,
     scope: ["profile", "email"],
   });
 
@@ -179,8 +178,8 @@ async function registerPlugins() {
     name: "facebookOAuth2",
     credentials: {
       client: {
-        id: env.FACEBOOK_APP_ID,
-        secret: env.FACEBOOK_APP_SECRET,
+        id: process.env.FACEBOOK_APP_ID!,
+        secret: process.env.FACEBOOK_APP_SECRET!,
       },
       auth: {
         authorizeHost: "https://www.facebook.com",
@@ -190,25 +189,62 @@ async function registerPlugins() {
       },
     },
     startRedirectPath: "/auth/facebook",
-    callbackUri: `${env.API_BASE_URL}/auth/facebook/callback`,
+    callbackUri: `${process.env.API_BASE_URL}/auth/facebook/callback`,
     scope: ["email", "public_profile"],
   });
 
   // Multipart (for file uploads)
   await fastify.register(multipart, {
     limits: {
-      fileSize: parseInt(env.MAX_FILE_SIZE || "10485760"), // 10MB
+      fileSize: parseInt(process.env.MAX_FILE_SIZE || "10485760"), // 10MB
     },
   });
 
-  // Rate limiting security plugin
-  await fastify.register(rateLimitPlugin);
-
-  // Auth plugin
+  // Auth plugin (must be registered before routes)
   await fastify.register(authPlugin);
 
+  // Register auth decorators directly
+  fastify.decorate("authenticate", (options?: AuthOptions) => {
+    return createAuthMiddleware(options);
+  });
+
+  fastify.decorate("requireRole", (roles: string | string[]) => {
+    const roleArray = Array.isArray(roles) ? roles : [roles];
+    return createAuthMiddleware({ requiredRole: roleArray });
+  });
+
+  fastify.decorate("loginFailurePenaltyPreHandler", (_routeId: string) => {
+    return async (_req: FastifyRequest, _reply: FastifyReply) => {
+      /* no-op by default; your rate-limit penalty logic can go here */
+    };
+  });
+
+  // Rate limiting security plugin (must be registered before routes)
+  await fastify.register(rateLimitPlugin);
+
+  // Log one-time payment provider warnings
+  if (!features.paypal) {
+    fastify.log.warn({ event: "paypal_config_missing" }, "PayPal credentials not configured");
+  }
+  if (!features.aps) {
+    fastify.log.warn({ event: "aps_config_missing" }, "APS credentials not configured");
+  }
+  if (!features.hyperpay) {
+    fastify.log.warn({ event: "hyperpay_config_missing" }, "HyperPay credentials not configured");
+  }
+
+  // Verify that decorators are available
+  fastify.log.info(
+    {
+      authenticate: typeof fastify.authenticate,
+      requireRole: typeof fastify.requireRole,
+      loginFailurePenaltyPreHandler: typeof fastify.loginFailurePenaltyPreHandler,
+    },
+    "Auth decorators installed"
+  );
+
   // Swagger documentation
-  if (env.NODE_ENV === "development") {
+  if (process.env.NODE_ENV === "development") {
     await fastify.register(swagger, {
       swagger: {
         info: {
@@ -251,7 +287,7 @@ async function registerRoutes() {
       status: "ok",
       timestamp: new Date().toISOString(),
       uptime: process.uptime(),
-      environment: env.NODE_ENV,
+      environment: process.env.NODE_ENV,
       version: process.env.npm_package_version || "1.0.0",
     };
   });
@@ -280,13 +316,13 @@ async function start() {
     await registerRoutes();
 
     // Start server
-    const port = parseInt(env.PORT || "3000");
-    const host = env.HOST || "0.0.0.0";
+    const port = parseInt(process.env.PORT || "3000");
+    const host = process.env.HOST || "0.0.0.0";
 
     await fastify.listen({ port, host });
 
     (fastify.log as any).info(`Server listening on http://${host}:${port}`);
-    (fastify.log as any).info(`Environment: ${env.NODE_ENV}`);
+    (fastify.log as any).info(`Environment: ${process.env.NODE_ENV}`);
     (fastify.log as any).info(`API Documentation: http://${host}:${port}/docs`);
 
     // Graceful shutdown

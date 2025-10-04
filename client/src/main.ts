@@ -7,6 +7,7 @@ import pinia from "./store";
 import i18n from "./i18n";
 
 // Styles
+import "./styles/main.css";
 import "./assets/styles/tokens.css";
 import "./assets/styles/globals.css";
 

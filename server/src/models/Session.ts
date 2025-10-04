@@ -37,23 +37,18 @@ const sessionSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "User",
       required: true,
-      index: true,
     },
     refreshToken: {
       type: String,
       required: true,
-      unique: true,
-      index: true,
     },
     accessToken: {
       type: String,
       required: true,
-      index: true,
     },
     expiresAt: {
       type: Schema.Types.Date,
       required: true,
-      index: true,
     },
     userAgent: {
       type: String,
@@ -115,22 +110,17 @@ const sessionSchema = new Schema(
 );
 
 // Indexes for performance and cleanup
-sessionSchema.index({ userId: 1, isActive: 1 });
-sessionSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 }); // TTL index
-sessionSchema.index({ refreshToken: 1 });
-sessionSchema.index({ accessToken: 1 });
-sessionSchema.index({ isActive: 1, isRevoked: 1 });
-sessionSchema.index({ lastUsed: -1 });
+sessionSchema.index({ userId: 1, isActive: 1 }, { name: "idx_user_active" });
+sessionSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0, name: "ttl_expires_at" }); // TTL index
+sessionSchema.index({ refreshToken: 1 }, { unique: true, name: "uniq_refresh_token" });
+sessionSchema.index({ accessToken: 1 }, { name: "idx_access_token" });
+sessionSchema.index({ isActive: 1, isRevoked: 1 }, { name: "idx_active_revoked" });
+sessionSchema.index({ lastUsed: -1 }, { name: "idx_last_used" });
 
 // Virtual for session validity
 sessionSchema.virtual("isValid").get(function () {
   return this.isActive && !this.isRevoked && (this.expiresAt as any) > new Date();
 });
-
-// Instance method to check if session is valid
-sessionSchema.methods.isValid = function (): boolean {
-  return this.isActive && !this.isRevoked && (this.expiresAt as any) > new Date();
-};
 
 // Instance method to refresh session
 sessionSchema.methods.refresh = async function () {

@@ -4,7 +4,6 @@
       <div class="footer-cta-content">
         <h2 id="cta-title" class="footer-cta-title">
           {{ $t("home.cta.title") }}
-
         </h2>
         <p class="footer-cta-description">
           {{ $t("home.cta.description") }}
@@ -13,27 +12,20 @@
           <Button variant="primary" size="lg" :to="{ name: 'register' }" class="cta-primary">
             {{ $t("home.cta.getStarted") }}
           </Button>
-          <Button variant="secondary" size="lg" :to="{ name: 'pricing' }" class="cta-secondary">
+          <Button variant="secondary" size="lg" :to="{ name: 'subscribe' }" class="cta-secondary">
             {{ $t("home.cta.learnMore") }}
-
           </Button>
         </div>
         <div class="footer-cta-trust">
-          <p class="trust-text">{{ $t("home.cta.trust") }}
-
-</p>
+          <p class="trust-text">{{ $t("home.cta.trust") }}</p>
           <div class="trust-badges">
             <div class="trust-badge">
               <ShieldCheckIcon class="trust-icon" aria-hidden="true" />
-              <span>{{ $t("home.cta.secure") }}
-
-</span>
+              <span>{{ $t("home.cta.secure") }} </span>
             </div>
             <div class="trust-badge">
               <ClockIcon class="trust-icon" aria-hidden="true" />
-              <span>{{ $t("home.cta.instant") }}
-
-</span>
+              <span>{{ $t("home.cta.instant") }} </span>
             </div>
             <div class="trust-badge">
               <UserGroupIcon class="trust-icon" aria-hidden="true" />
@@ -49,7 +41,6 @@
 <script setup lang="ts">
 import Button from "@/components/ui/Button.vue";
 import { ShieldCheckIcon, ClockIcon, UserGroupIcon } from "@heroicons/vue/24/outline";
-
 </script>
 
 <style scoped>

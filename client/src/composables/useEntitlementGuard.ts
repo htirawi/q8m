@@ -72,7 +72,7 @@ export function useEntitlementGuard(options: EntitlementGuardOptions = {}) {
             // Show upgrade modal instead of redirecting
             return false;
           } else {
-            await router.push("/pricing");
+            await router.push("/subscribe");
           }
           return false;
         }
@@ -92,7 +92,7 @@ export function useEntitlementGuard(options: EntitlementGuardOptions = {}) {
             // Show upgrade modal instead of redirecting
             return false;
           } else {
-            await router.push("/pricing");
+            await router.push("/subscribe");
           }
           return false;
         }
@@ -155,7 +155,7 @@ export function useEntitlementGuard(options: EntitlementGuardOptions = {}) {
   // Redirect to pricing with upgrade context
   const redirectToPricing = (upgradeLevel?: string) => {
     const query = upgradeLevel ? { upgrade: upgradeLevel } : {};
-    router.push({ path: "/pricing", query });
+    router.push({ path: "/subscribe", query });
   };
 
   // Redirect to checkout for specific plan

@@ -55,12 +55,12 @@ export const routes: RouteRecordRaw[] = [
   },
   // Pricing routes
   {
-    path: "/pricing",
-    name: "pricing",
+    path: "/subscribe",
+    name: "subscribe",
     component: () => import("@/features/pricing/views/PricingView.vue"),
     meta: {
-      title: "Pricing - Quiz Platform",
-      description: "Choose the perfect plan for your interview preparation journey",
+      title: "Subscribe - Quiz Platform",
+      description: "Choose the perfect plan for your frontend interview preparation journey",
     },
   },
   // Payment routes

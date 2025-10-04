@@ -1,5 +1,6 @@
 import { FastifyInstance } from "fastify";
 import { z } from "zod";
+import { zodToJsonSchema } from "zod-to-json-schema";
 import { authenticate, optionalAuth } from "../middlewares/auth.middleware.js";
 import { paypalService } from "../services/paypal.service.js";
 import { apsService } from "../services/aps.service.js";
@@ -9,6 +10,7 @@ import { currencyService } from "../services/currency.service.js";
 import { Purchase } from "../models/Purchase.js";
 import { Subscription } from "../models/Subscription.js";
 import { safeLogFields } from "../security/logging.js";
+import { features } from "../config/appConfig.js";
 
 // Validation schemas
 const createPaymentSchema = z.object({
@@ -45,15 +47,6 @@ const paymentCallbackSchema = z.object({
   payerId: z.string().optional(), // PayPal specific
   token: z.string().optional(), // PayPal specific
   PayerID: z.string().optional(), // PayPal specific (alternative naming)
-});
-
-const webhookSchema = z.object({
-  event_type: z.string().optional(),
-  event: z.string().optional(),
-  resource: z.any().optional(),
-  data: z.any().optional(),
-  signature: z.string().optional(),
-  timestamp: z.string().optional(),
 });
 
 export default async function paymentRoutes(fastify: FastifyInstance) {
@@ -102,9 +95,11 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
     {
       preHandler: [optionalAuth],
       schema: {
-        params: z.object({
-          currency: z.enum(["USD", "JOD", "SAR"]),
-        }),
+        params: zodToJsonSchema(
+          z.object({
+            currency: z.enum(["USD", "JOD", "SAR"]),
+          })
+        ),
       },
     },
     async (request, reply) => {
@@ -140,7 +135,7 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
     {
       preHandler: [authenticate],
       schema: {
-        body: createPaymentSchema,
+        body: zodToJsonSchema(createPaymentSchema),
       },
     },
     async (request, reply) => {
@@ -220,22 +215,43 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
         // Create payment based on selected gateway
         switch (paymentGateway) {
           case "paypal":
-            if (!paypalService.isServiceConfigured()) {
-              throw new Error("PayPal service not configured");
+            if (!features.paypal) {
+              return reply.status(503).send({
+                success: false,
+                error: "PayPal provider not configured",
+              });
             }
             paymentResponse = await paypalService.createPayment(paymentRequest);
+            if ("ok" in paymentResponse && !paymentResponse.ok) {
+              return reply.status(503).send({
+                success: false,
+                error: "PayPal service not configured",
+              });
+            }
             break;
 
           case "aps":
-            if (!apsService.isServiceConfigured()) {
-              throw new Error("APS service not configured");
+            if (!features.aps) {
+              return reply.status(503).send({
+                success: false,
+                error: "APS provider not configured",
+              });
             }
             paymentResponse = await apsService.createPayment(paymentRequest);
+            if ("ok" in paymentResponse && !paymentResponse.ok) {
+              return reply.status(503).send({
+                success: false,
+                error: "APS service not configured",
+              });
+            }
             break;
 
           case "hyperpay":
-            if (!hyperpayService.isServiceConfigured()) {
-              throw new Error("HyperPay service not configured");
+            if (!features.hyperpay) {
+              return reply.status(503).send({
+                success: false,
+                error: "HyperPay provider not configured",
+              });
             }
             paymentResponse = await hyperpayService.createPayment({
               planType: paymentRequest.planType,
@@ -250,6 +266,12 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
               customerEmail: paymentRequest.userEmail,
               customerName: paymentRequest.userName,
             });
+            if ("ok" in paymentResponse && !paymentResponse.ok) {
+              return reply.status(503).send({
+                success: false,
+                error: "HyperPay service not configured",
+              });
+            }
             break;
 
           default:
@@ -287,10 +309,12 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
     "/callback/:gateway",
     {
       schema: {
-        params: z.object({
-          gateway: z.enum(["paypal", "aps", "hyperpay"]),
-        }),
-        body: paymentCallbackSchema,
+        params: zodToJsonSchema(
+          z.object({
+            gateway: z.enum(["paypal", "aps", "hyperpay"]),
+          })
+        ),
+        body: zodToJsonSchema(paymentCallbackSchema),
       },
     },
     async (request, reply) => {
@@ -309,22 +333,40 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
               throw new Error("PayPal payer ID is required");
             }
             result = await paypalService.executePayment(paymentId, paypalPayerId);
+            if ("ok" in result && !result.ok) {
+              return reply.status(503).send({
+                success: false,
+                error: "PayPal service not configured",
+              });
+            }
             break;
           }
 
           case "aps":
             result = await apsService.verifyPayment(paymentId);
+            if ("ok" in result && !result.ok) {
+              return reply.status(503).send({
+                success: false,
+                error: "APS service not configured",
+              });
+            }
             break;
 
           case "hyperpay":
             result = await hyperpayService.verifyPayment(paymentId);
+            if ("ok" in result && !result.ok) {
+              return reply.status(503).send({
+                success: false,
+                error: "HyperPay service not configured",
+              });
+            }
             break;
 
           default:
             throw new Error(`Unsupported payment gateway: ${gateway}`);
         }
 
-        if (result.success) {
+        if ("success" in result && result.success) {
           reply.send({
             success: true,
             message: "Payment completed successfully",
@@ -333,7 +375,8 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
         } else {
           reply.status(400).send({
             success: false,
-            error: result.error || "Payment failed",
+            error:
+              "success" in result ? result.error || "Payment failed" : "Service not configured",
           });
         }
       } catch (error: unknown) {
@@ -358,10 +401,12 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
     {
       preHandler: [authenticate],
       schema: {
-        querystring: z.object({
-          limit: z.string().transform(Number).optional().default("10"),
-          skip: z.string().transform(Number).optional().default("0"),
-        }),
+        querystring: zodToJsonSchema(
+          z.object({
+            limit: z.string().transform(Number).optional().default("10"),
+            skip: z.string().transform(Number).optional().default("0"),
+          })
+        ),
       },
     },
     async (request, reply) => {
@@ -443,9 +488,11 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
     {
       preHandler: [authenticate],
       schema: {
-        body: z.object({
-          reason: z.string().optional().default("user_request"),
-        }),
+        body: zodToJsonSchema(
+          z.object({
+            reason: z.string().optional().default("user_request"),
+          })
+        ),
       },
     },
     async (request, reply) => {
@@ -487,119 +534,113 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
   );
 
   // PayPal webhook
-  fastify.post(
-    "/webhooks/paypal",
-    {
-      schema: {
-        body: webhookSchema,
-      },
-    },
-    async (request, reply) => {
-      try {
-        const webhookData = request.body as unknown;
-        const signature = request.headers["x-paypal-signature"] as string;
+  fastify.post("/webhooks/paypal", async (request, reply) => {
+    try {
+      const webhookData = request.body as unknown;
+      const signature = request.headers["x-paypal-signature"] as string;
 
-        const result = await paypalService.handleWebhook(webhookData as any, signature);
-
-        if (result.success) {
-          reply.send({ success: true });
-        } else {
-          reply.status(400).send({
-            success: false,
-            error: result.error,
-          });
-        }
-      } catch (error: unknown) {
-        (request.log as any).error(
-          safeLogFields({
-            event: "paypal_webhook_error",
-            error: error instanceof Error ? error.message : "Unknown error",
-            stack: error instanceof Error ? error.stack : undefined,
-          })
-        );
-        reply.status(500).send({
+      const result = await paypalService.handleWebhook(webhookData as any, signature);
+      if ("ok" in result && !result.ok) {
+        return reply.status(503).send({
           success: false,
-          error: "Webhook processing failed",
+          error: "PayPal service not configured",
         });
       }
+
+      if ("success" in result && result.success) {
+        reply.send({ success: true });
+      } else {
+        reply.status(400).send({
+          success: false,
+          error: "success" in result ? result.error : "Service not configured",
+        });
+      }
+    } catch (error: unknown) {
+      (request.log as any).error(
+        safeLogFields({
+          event: "paypal_webhook_error",
+          error: error instanceof Error ? error.message : "Unknown error",
+          stack: error instanceof Error ? error.stack : undefined,
+        })
+      );
+      reply.status(500).send({
+        success: false,
+        error: "Webhook processing failed",
+      });
     }
-  );
+  });
 
   // APS webhook
-  fastify.post(
-    "/webhooks/aps",
-    {
-      schema: {
-        body: webhookSchema,
-      },
-    },
-    async (request, reply) => {
-      try {
-        const webhookData = request.body as unknown;
+  fastify.post("/webhooks/aps", async (request, reply) => {
+    try {
+      const webhookData = request.body as unknown;
 
-        const result = await apsService.handleWebhook(webhookData as any);
-
-        if (result.success) {
-          reply.send({ success: true });
-        } else {
-          reply.status(400).send({
-            success: false,
-            error: result.error,
-          });
-        }
-      } catch (error: unknown) {
-        (request.log as any).error(
-          safeLogFields({
-            event: "aps_webhook_error",
-            error: error instanceof Error ? error.message : "Unknown error",
-            stack: error instanceof Error ? error.stack : undefined,
-          })
-        );
-        reply.status(500).send({
+      const result = await apsService.handleWebhook(webhookData as any);
+      if ("ok" in result && !result.ok) {
+        return reply.status(503).send({
           success: false,
-          error: "Webhook processing failed",
+          error: "APS service not configured",
         });
       }
+
+      if ("success" in result && result.success) {
+        reply.send({ success: true });
+      } else {
+        reply.status(400).send({
+          success: false,
+          error: "success" in result ? result.error : "Service not configured",
+        });
+      }
+    } catch (error: unknown) {
+      (request.log as any).error(
+        safeLogFields({
+          event: "aps_webhook_error",
+          error: error instanceof Error ? error.message : "Unknown error",
+          stack: error instanceof Error ? error.stack : undefined,
+        })
+      );
+      reply.status(500).send({
+        success: false,
+        error: "Webhook processing failed",
+      });
     }
-  );
+  });
 
   // HyperPay webhook
-  fastify.post(
-    "/webhooks/hyperpay",
-    {
-      schema: {
-        body: webhookSchema,
-      },
-    },
-    async (request, reply) => {
-      try {
-        const webhookData = request.body as unknown;
+  fastify.post("/webhooks/hyperpay", async (request, reply) => {
+    try {
+      const webhookData = request.body as unknown;
 
-        const result = await hyperpayService.handleWebhook(webhookData as any);
-
-        if (result.success) {
-          reply.send({ success: true });
-        } else {
-          reply.status(400).send({
-            success: false,
-            error: result.error,
-          });
-        }
-      } catch (error: unknown) {
-        (request.log as any).error(
-          safeLogFields({
-            event: "hyperpay_webhook_error",
-            error: error instanceof Error ? error.message : "Unknown error",
-            stack: error instanceof Error ? error.stack : undefined,
-          })
-        );
-        reply.status(500).send({
+      const result = await hyperpayService.handleWebhook(webhookData as any);
+      if ("ok" in result && !result.ok) {
+        return reply.status(503).send({
           success: false,
-          error: "Webhook processing failed",
+          error: "HyperPay service not configured",
         });
       }
+
+      if ("success" in result && result.success) {
+        reply.send({ success: true });
+      } else {
+        reply.status(400).send({
+          success: false,
+          error: "success" in result ? result.error : "Service not configured",
+        });
+      }
+    } catch (error: unknown) {
+      (request.log as any).error(
+        safeLogFields({
+          event: "hyperpay_webhook_error",
+          error: error instanceof Error ? error.message : "Unknown error",
+          stack: error instanceof Error ? error.stack : undefined,
+        })
+      );
+      reply.status(500).send({
+        success: false,
+        error: "Webhook processing failed",
+      });
     }
-  );
+  });
 
   // Get payment gateway status
   fastify.get("/gateways/status", async (request, reply) => {
@@ -662,13 +703,17 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
     {
       preHandler: [authenticate],
       schema: {
-        params: z.object({
-          purchaseId: z.string(),
-        }),
-        body: z.object({
-          amount: z.number().optional(),
-          reason: z.string().default("requested_by_customer"),
-        }),
+        params: zodToJsonSchema(
+          z.object({
+            purchaseId: z.string(),
+          })
+        ),
+        body: zodToJsonSchema(
+          z.object({
+            amount: z.number().optional(),
+            reason: z.string().default("requested_by_customer"),
+          })
+        ),
       },
     },
     async (request, reply) => {
@@ -724,7 +769,7 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
             throw new Error(`Refund not supported for gateway: ${purchase.gateway}`);
         }
 
-        if (result.success) {
+        if ("success" in result && result.success) {
           reply.send({
             success: true,
             message: "Refund processed successfully",
@@ -733,7 +778,7 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
         } else {
           reply.status(400).send({
             success: false,
-            error: result.error || "Refund failed",
+            error: "success" in result ? result.error || "Refund failed" : "Service not configured",
           });
         }
       } catch (error: unknown) {

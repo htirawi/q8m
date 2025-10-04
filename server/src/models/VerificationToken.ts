@@ -18,29 +18,23 @@ const verificationTokenSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "User",
       required: true,
-      index: true,
     },
     token: {
       type: String,
       required: true,
-      unique: true,
-      index: true,
     },
     type: {
       type: String,
       enum: ["email_verification", "password_reset", "two_factor"],
       required: true,
-      index: true,
     },
     expiresAt: {
       type: Schema.Types.Date,
       required: true,
-      index: true,
     },
     used: {
       type: Boolean,
       default: false,
-      index: true,
     },
     usedAt: Schema.Types.Date,
     ipAddress: {
@@ -70,10 +64,11 @@ const verificationTokenSchema = new Schema(
 );
 
 // Indexes for performance and cleanup
-verificationTokenSchema.index({ userId: 1, type: 1, used: 1 });
-verificationTokenSchema.index({ token: 1, type: 1 });
-verificationTokenSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 }); // TTL index
-verificationTokenSchema.index({ used: 1, createdAt: -1 });
+verificationTokenSchema.index({ userId: 1, type: 1, used: 1 }, { name: "idx_user_type_used" });
+verificationTokenSchema.index({ token: 1 }, { unique: true, name: "uniq_token" });
+verificationTokenSchema.index({ token: 1, type: 1 }, { name: "idx_token_type" });
+verificationTokenSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0, name: "ttl_expires_at" }); // TTL index
+verificationTokenSchema.index({ used: 1, createdAt: -1 }, { name: "idx_used_created" });
 
 // Virtual for token validity
 verificationTokenSchema.virtual("isValid").get(function () {

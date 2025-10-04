@@ -271,7 +271,7 @@
 
         <button
           type="button"
-          @click="$emit('show-login')"
+          @click="$emit('show-login', true)"
           class="font-medium text-primary-600 hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300"
         >
           {{ $t("auth.register.signIn") }}
@@ -288,7 +288,7 @@ import { useI18n } from "vue-i18n";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/vue/24/outline";
 import { useAuthStore } from "@/stores/auth";
 
-interface registerformdata {
+interface RegisterFormData {
   name: string;
   email: string;
   password: string;
@@ -296,7 +296,7 @@ interface registerformdata {
   acceptTerms: boolean;
 }
 
-interface formerrors {
+interface FormErrors {
   name?: string;
   email?: string;
   password?: string;
@@ -308,9 +308,10 @@ const { t } = useI18n();
 const authStore = useAuthStore();
 
 // Emits
-defineEmits<{
+const emit = defineEmits<{
   "oauth-login": [provider: "google" | "facebook"];
   "registration-success": [email: string];
+  "show-login": [show: boolean];
 }>();
 
 // Reactive data
@@ -423,6 +424,7 @@ async function handleSubmit(): Promise<void> {
     name: formData.name.trim(),
     email: formData.email,
     password: formData.password,
+    confirmPassword: formData.confirmPassword,
     acceptTerms: formData.acceptTerms,
   });
 
@@ -439,12 +441,6 @@ async function handleSubmit(): Promise<void> {
     errors.value = {};
   }
 }
-
-// Fix emit usage
-const emit = defineEmits<{
-  "oauth-login": [provider: "google" | "facebook"];
-  "registration-success": [email: string];
-}>();
 
 </script>
 

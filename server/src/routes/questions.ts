@@ -1,5 +1,6 @@
 import type { FastifyInstance } from "fastify";
 import { z } from "zod";
+import { zodToJsonSchema } from "zod-to-json-schema";
 import { authenticate } from "../middlewares/auth.middleware.js";
 
 const getQuestionsSchema = z.object({
@@ -57,7 +58,7 @@ export default async function questionRoutes(fastify: FastifyInstance) {
     "/",
     {
       schema: {
-        querystring: getQuestionsSchema,
+        querystring: zodToJsonSchema(getQuestionsSchema),
       },
     },
     async (request, reply) => {
@@ -98,9 +99,11 @@ export default async function questionRoutes(fastify: FastifyInstance) {
     "/:questionId",
     {
       schema: {
-        params: z.object({
-          questionId: z.string(),
-        }),
+        params: zodToJsonSchema(
+          z.object({
+            questionId: z.string(),
+          })
+        ),
       },
     },
     async (request, reply) => {
@@ -126,9 +129,11 @@ export default async function questionRoutes(fastify: FastifyInstance) {
     "/categories/:framework",
     {
       schema: {
-        params: z.object({
-          framework: z.enum(["angular", "react", "nextjs", "redux"]),
-        }),
+        params: zodToJsonSchema(
+          z.object({
+            framework: z.enum(["angular", "react", "nextjs", "redux"]),
+          })
+        ),
       },
     },
     async (_request, reply) => {
@@ -145,9 +150,11 @@ export default async function questionRoutes(fastify: FastifyInstance) {
     {
       preHandler: [authenticate],
       schema: {
-        params: z.object({
-          framework: z.enum(["angular", "react", "nextjs", "redux"]),
-        }),
+        params: zodToJsonSchema(
+          z.object({
+            framework: z.enum(["angular", "react", "nextjs", "redux"]),
+          })
+        ),
       },
     },
     async (_request, reply) => {
@@ -181,11 +188,13 @@ export default async function questionRoutes(fastify: FastifyInstance) {
     {
       preHandler: [authenticate],
       schema: {
-        body: z.object({
-          questionId: z.string(),
-          answer: z.union([z.string(), z.array(z.string())]),
-          timeSpent: z.number().optional(),
-        }),
+        body: zodToJsonSchema(
+          z.object({
+            questionId: z.string(),
+            answer: z.union([z.string(), z.array(z.string())]),
+            timeSpent: z.number().optional(),
+          })
+        ),
       },
     },
     async (_request, reply) => {

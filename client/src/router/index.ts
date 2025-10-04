@@ -20,16 +20,16 @@ const routes: RouteRecordRaw[] = [
     },
   },
   {
-    path: "/pricing",
-    name: "pricing",
+    path: "/subscribe",
+    name: "subscribe",
     component: () =>
       import(
-        /* webpackChunkName: "pricing" */
+        /* webpackChunkName: "subscribe" */
         "@/features/pricing/pages/PricingPage.vue"
       ),
     meta: {
-      title: "Pricing - q8m",
-      description: "Choose the perfect plan for your interview preparation journey",
+      title: "Subscribe - q8m",
+      description: "Choose the perfect plan for your frontend interview preparation journey",
       layout: "default",
     },
   },

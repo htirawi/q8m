@@ -40,7 +40,7 @@
       <nav class="breadcrumb" aria-label="Breadcrumb">
         <ol class="breadcrumb-list">
           <li class="breadcrumb-item">
-            <router-link to="/pricing" class="breadcrumb-link">
+            <router-link to="/subscribe" class="breadcrumb-link">
               {{ $t("pricing.title") }}
             </router-link>
           </li>
@@ -160,7 +160,7 @@ const selectedPlan = computed(() => {
 
 // Methods
 const goToPricing = () => {
-  router.push("/pricing");
+  router.push("/subscribe");
 };
 
 const retry = async () => {

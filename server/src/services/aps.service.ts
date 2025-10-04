@@ -1,4 +1,4 @@
-import { env } from "../config/env.js";
+import { features } from "../config/appConfig.js";
 import { Purchase } from "../models/Purchase.js";
 import { Subscription } from "../models/Subscription.js";
 import { User } from "../models/User.js";
@@ -49,6 +49,7 @@ export interface APSWebhookData {
 export class APSService {
   private static instance: APSService;
   private isConfigured: boolean = false;
+  private hasLoggedWarning: boolean = false;
   private baseUrl!: string;
   private apiKey!: string;
   private merchantId!: string;
@@ -66,27 +67,33 @@ export class APSService {
   }
 
   private configureAPS(): void {
-    if (!env.APS_API_KEY || !env.APS_MERCHANT_ID) {
-      console.warn("APS credentials not configured");
+    if (!features.aps) {
+      if (!this.hasLoggedWarning) {
+        console.warn("APS credentials not configured");
+        this.hasLoggedWarning = true;
+      }
       return;
     }
 
-    this.apiKey = env.APS_API_KEY;
-    this.merchantId = env.APS_MERCHANT_ID;
-    this.webhookSecret = env.APS_WEBHOOK_SECRET || "";
+    this.apiKey = process.env.APS_ACCESS_KEY!;
+    this.merchantId = process.env.APS_MERCHANT_IDENTIFIER!;
+    this.webhookSecret = process.env.APS_WEBHOOK_SECRET || "";
     this.baseUrl =
-      env.NODE_ENV === "production" ? "https://api.aps.com.sa" : "https://api-sandbox.aps.com.sa";
+      process.env.NODE_ENV === "production"
+        ? "https://api.aps.com.sa"
+        : "https://api-sandbox.aps.com.sa";
 
     this.isConfigured = true;
-    console.warn("APS service configured successfully");
   }
 
   /**
    * Create APS payment
    */
-  async createPayment(request: APSPaymentRequest): Promise<APSPaymentResponse> {
+  async createPayment(
+    request: APSPaymentRequest
+  ): Promise<APSPaymentResponse | { ok: false; code: "NOT_CONFIGURED" }> {
     if (!this.isConfigured) {
-      throw new Error("APS service not configured");
+      return { ok: false, code: "NOT_CONFIGURED" };
     }
 
     try {
@@ -154,7 +161,7 @@ export class APSService {
         customer_name: request.userName,
         return_url: request.returnUrl,
         cancel_url: request.cancelUrl,
-        webhook_url: `${env.API_BASE_URL}/api/payments/aps/webhook`,
+        webhook_url: `${process.env.API_BASE_URL}/api/payments/aps/webhook`,
         metadata: {
           user_id: request.userId,
           plan_type: request.planType,
@@ -207,9 +214,12 @@ export class APSService {
    */
   async verifyPayment(
     paymentId: string
-  ): Promise<{ success: boolean; status: string; purchaseId?: string; error?: string }> {
+  ): Promise<
+    | { success: boolean; status: string; purchaseId?: string; error?: string }
+    | { ok: false; code: "NOT_CONFIGURED" }
+  > {
     if (!this.isConfigured) {
-      throw new Error("APS service not configured");
+      return { ok: false, code: "NOT_CONFIGURED" };
     }
 
     // Validate paymentId to prevent SSRF
@@ -324,9 +334,11 @@ export class APSService {
   /**
    * Handle APS webhook
    */
-  async handleWebhook(webhookData: APSWebhookData): Promise<{ success: boolean; error?: string }> {
+  async handleWebhook(
+    webhookData: APSWebhookData
+  ): Promise<{ success: boolean; error?: string } | { ok: false; code: "NOT_CONFIGURED" }> {
     if (!this.isConfigured) {
-      return { success: false, error: "APS service not configured" };
+      return { ok: false, code: "NOT_CONFIGURED" };
     }
 
     try {
@@ -443,9 +455,11 @@ export class APSService {
     paymentId: string,
     amount: number,
     reason: string = "requested_by_customer"
-  ): Promise<{ success: boolean; refundId?: string; error?: string }> {
+  ): Promise<
+    { success: boolean; refundId?: string; error?: string } | { ok: false; code: "NOT_CONFIGURED" }
+  > {
     if (!this.isConfigured) {
-      throw new Error("APS service not configured");
+      return { ok: false, code: "NOT_CONFIGURED" };
     }
 
     try {
@@ -521,7 +535,7 @@ export class APSService {
   } {
     return {
       configured: this.isConfigured,
-      mode: env.NODE_ENV === "production" ? "live" : "sandbox",
+      mode: process.env.NODE_ENV === "production" ? "live" : "sandbox",
       merchantId: this.isConfigured ? this.merchantId : null,
       supportedCurrencies: this.getSupportedCurrencies(),
     };
