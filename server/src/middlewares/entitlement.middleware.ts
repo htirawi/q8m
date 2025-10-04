@@ -114,6 +114,7 @@ export const requireBundle = createEntitlementMiddleware({
  * Optional entitlement middleware - doesn't block access but provides entitlement info
  */
 export const optionalEntitlement = async (request: FastifyRequest, _reply: FastifyReply) => { // eslint-disable-line @typescript-eslint/no-unused-vars
+   
   try {
     if (request.user) {
       const userEntitlements = await entitlementService.getUserEntitlements(request.user.id);
@@ -231,6 +232,7 @@ export const requireAdminWithEntitlements = async (
  */
 export const entitlementBasedRateLimit = (baseLimit: number = 100) => {
   return async (request: FastifyRequest, _reply: FastifyReply) => { // eslint-disable-line @typescript-eslint/no-unused-vars
+     
     try {
       if (!request.user) {
         // Apply base limit for unauthenticated users

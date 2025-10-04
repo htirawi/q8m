@@ -49,12 +49,12 @@ export function createAuthMiddleware(options: AuthOptions = {}) {
         payload = jwtService.verifyAccessToken(token);
       } catch (error: any) {
         if (error.message === "Access token expired" && !options.allowExpiredTokens) {
-        return reply.status(401).send({
-          code: 401,
-          error: "Unauthorized",
-          message: "Access token expired",
-          errorCode: "TOKEN_EXPIRED",
-        });
+          return reply.status(401).send({
+            code: 401,
+            error: "Unauthorized",
+            message: "Access token expired",
+            errorCode: "TOKEN_EXPIRED",
+          });
         } else if (error.message === "Access token expired" && options.allowExpiredTokens) {
           // Allow expired tokens but decode without verification
           payload = jwtService.decodeToken(token);
@@ -154,6 +154,7 @@ export function createAuthMiddleware(options: AuthOptions = {}) {
  * Optional authentication middleware - doesn't fail if no token
  */
 export const optionalAuth = async (request: FastifyRequest, _reply: FastifyReply) => { // eslint-disable-line @typescript-eslint/no-unused-vars
+   
   try {
     const authHeader = request.headers.authorization;
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -196,6 +197,7 @@ export const optionalAuth = async (request: FastifyRequest, _reply: FastifyReply
  * Rate limiting middleware for auth endpoints
  */
 export const authRateLimit = async (request: FastifyRequest, _reply: FastifyReply) => { // eslint-disable-line @typescript-eslint/no-unused-vars
+   
   const ip = request.ip;
   // TODO: Implement Redis-based rate limiting using key: `auth:${ip}`
 

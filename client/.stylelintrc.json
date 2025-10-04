@@ -1,0 +1,26 @@
+{
+  "extends": ["stylelint-config-standard"],
+  "rules": {
+    "selector-class-pattern": null,
+    "custom-property-pattern": null,
+    "keyframes-name-pattern": null,
+    "function-name-case": null,
+    "value-keyword-case": null,
+    "declaration-block-no-redundant-longhand-properties": null,
+    "shorthand-property-no-redundant-values": null,
+    "color-function-notation": null,
+    "alpha-value-notation": null,
+    "hue-degree-notation": null,
+    "property-no-vendor-prefix": null,
+    "value-no-vendor-prefix": null,
+    "selector-no-vendor-prefix": null,
+    "media-feature-name-no-vendor-prefix": null,
+    "at-rule-no-vendor-prefix": null,
+    "no-descending-specificity": null,
+    "no-invalid-double-slash-comments": null,
+    "media-feature-name-value-no-unknown": null,
+    "property-no-deprecated": null,
+    "no-duplicate-selectors": null
+  },
+  "ignoreFiles": ["dist/**/*", "node_modules/**/*", "**/*.vue"]
+}

@@ -7,7 +7,9 @@
       :aria-expanded="isOpen"
       :aria-label="$t('currency.selectCurrency')"
     >
-      <span class="currency-flag">{{ getCurrencyFlag(currentCurrency) }}</span>
+      <span class="currency-flag">{{ getCurrencyFlag(currentCurrency) }}
+
+</span>
       <span class="currency-code">{{ currentCurrency }}</span>
       <ChevronDownIcon class="currency-chevron" :class="{ 'rotate-180': isOpen }" />
     </button>
@@ -22,10 +24,16 @@
             class="currency-option"
             :class="{ 'currency-option--selected': currency.code === currentCurrency }"
           >
-            <span class="currency-flag">{{ currency.flag }}</span>
+            <span class="currency-flag">{{ currency.flag }}
+
+</span>
             <div class="currency-info">
-              <span class="currency-name">{{ currency.name }}</span>
-              <span class="currency-code">{{ currency.code }}</span>
+              <span class="currency-name">{{ currency.name }}
+
+</span>
+              <span class="currency-code">{{ currency.code }}
+
+</span>
             </div>
             <CheckIcon v-if="currency.code === currentCurrency" class="currency-check" />
           </button>
@@ -81,7 +89,7 @@ const getCurrencyFlag = (currency: string) => {
   return currencyMap[currency] || "💱";
 };
 
-const selectCurrency = async (currency: "USD" | "JOD" | "SAR") => {
+const selectcurrency = async (currency: "USD" | "JOD" | "SAR") => {
   if (currency === currentCurrency.value) {
     isOpen.value = false;
     return;
@@ -208,7 +216,7 @@ onUnmounted(() => {
 }
 
 /* Mobile responsiveness */
-@media (max-width: 640px) {
+@media (width <= 640px) {
   .currency-dropdown {
     @apply w-56;
   }

@@ -71,6 +71,12 @@ jobs:
           # Only lint the new refactored files to avoid legacy code issues
           pnpm eslint src/features/ src/layouts/ src/components/ui/ src/i18n/ src/store/index.ts src/router/index.ts src/main.ts src/App.vue --ext .vue,.ts,.js --max-warnings 0
 
+      - name: Lint CSS
+        run: |
+          cd client
+          # Lint CSS files using the configured stylelint command
+          pnpm lint:css
+
       - name: Build
         run: cd client && pnpm build
 

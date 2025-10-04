@@ -15,7 +15,7 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 
-interface Props {
+interface props {
   src: string;
   alt: string;
   width?: number;
@@ -35,7 +35,7 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const emit = defineEmits<{
-  load: [event: Event];
+  load: [];
   error: [event: Event];
 }>();
 
@@ -60,33 +60,33 @@ const srcset = computed(() => {
 
   const widths = [320, 640, 768, 1024, 1280, 1536];
   return widths
-    .filter(w => w <= (props.width || 0) * 2)
-    .map(w => `${optimizedSrc.value}?w=${w}&q=${props.quality} ${w}w`)
+    .filter((w) => w <= (props.width || 0) * 2)
+    .map((w) => `${optimizedSrc.value}?w=${w}&q=${props.quality} ${w}w`)
     .join(", ");
 });
 
 const imageClasses = computed(() => {
   const baseClasses = ["transition-opacity duration-300"];
-  
+
   if (props.class) {
     baseClasses.push(props.class);
   }
-  
+
   if (props.lazy && !isLoaded.value) {
     baseClasses.push("opacity-0");
   } else {
     baseClasses.push("opacity-100");
   }
-  
+
   return baseClasses.join(" ");
 });
 
-const handleLoad = (event: Event) => {
+const handleload = (event: Event) => {
   isLoaded.value = true;
   emit("load", event);
 };
 
-const handleError = (event: Event) => {
+const handleerror = (event: Event) => {
   hasError.value = true;
   emit("error", event);
 };

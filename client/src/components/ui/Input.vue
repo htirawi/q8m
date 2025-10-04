@@ -21,80 +21,81 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed } from "vue";
 
-export interface InputProps {
-  id?: string
-  type?: 'text' | 'email' | 'password' | 'number' | 'tel' | 'url' | 'search'
-  modelValue?: string | number
-  placeholder?: string
-  disabled?: boolean
-  readonly?: boolean
-  required?: boolean
-  error?: string
-  ariaLabel?: string
-  ariaDescribedby?: string
+export interface inputprops {
+  id?: string;
+  type?: "text" | "email" | "password" | "number" | "tel" | "url" | "search";
+  modelValue?: string | number;
+  placeholder?: string;
+  disabled?: boolean;
+  readonly?: boolean;
+  required?: boolean;
+  error?: string;
+  ariaLabel?: string;
+  ariaDescribedby?: string;
 }
 
 const props = withDefaults(defineProps<InputProps>(), {
-  type: 'text',
+  type: "text",
   disabled: false,
   readonly: false,
-  required: false
-})
+  required: false,
+});
 
 const emit = defineEmits<{
-  'update:modelValue': [value: string | number]
-  input: [event: Event]
-  blur: [event: FocusEvent]
-  focus: [event: FocusEvent]
-}>()
+  "update:modelValue": [value: string | number];
+  input: [];
+  blur: [];
+  focus: [event: FocusEvent];
+}>();
 
 // Computed properties
-const hasError = computed(() => !!props.error)
+const hasError = computed(() => !!props.error);
 
 const inputClasses = computed(() => {
   const baseClasses = [
-    'block w-full rounded-md border px-3 py-2 text-sm transition-colors duration-200',
-    'focus:outline-none focus:ring-2 focus:ring-offset-2',
-    'disabled:bg-gray-50 disabled:text-gray-500 disabled:cursor-not-allowed',
-    'readonly:bg-gray-50 readonly:cursor-default',
-    'min-h-[44px]' // WCAG AA minimum touch target
-  ]
+    "block w-full rounded-md border px-3 py-2 text-sm transition-colors duration-200",
+    "focus:outline-none focus:ring-2 focus:ring-offset-2",
+    "disabled:bg-gray-50 disabled:text-gray-500 disabled:cursor-not-allowed",
+    "readonly:bg-gray-50 readonly:cursor-default",
+    "min-h-[44px]", // WCAG AA minimum touch target
+  ];
 
   if (hasError.value) {
     baseClasses.push(
-      'border-red-300 text-red-900 placeholder-red-300',
-      'focus:border-red-500 focus:ring-red-500',
-      'dark:border-red-600 dark:text-red-100 dark:placeholder-red-400'
-    )
+      "border-red-300 text-red-900 placeholder-red-300",
+      "focus:border-red-500 focus:ring-red-500",
+      "dark:border-red-600 dark:text-red-100 dark:placeholder-red-400"
+    );
   } else {
     baseClasses.push(
-      'border-gray-300 text-gray-900 placeholder-gray-400',
-      'focus:border-primary-500 focus:ring-primary-500',
-      'dark:border-gray-600 dark:text-gray-100 dark:placeholder-gray-500',
-      'dark:bg-gray-800'
-    )
+      "border-gray-300 text-gray-900 placeholder-gray-400",
+      "focus:border-primary-500 focus:ring-primary-500",
+      "dark:border-gray-600 dark:text-gray-100 dark:placeholder-gray-500",
+      "dark:bg-gray-800"
+    );
   }
 
-  return baseClasses.join(' ')
-})
+  return baseClasses.join(" ");
+});
 
 // Event handlers
 const handleInput = (event: Event) => {
-  const target = event.target as HTMLInputElement
-  const value = props.type === 'number' ? Number(target.value) : target.value
-  emit('update:modelValue', value)
-  emit('input', event)
-}
+  const target = event.target as HTMLInputElement;
+  const value = props.type === "number" ? Number(target.value) : target.value;valueprops.typeNumber
+  emit("update:modelValue", value);
+  emit("input", event);
+};
 
-const handleBlur = (event: FocusEvent) => {
-  emit('blur', event)
-}
+const handleblur = (event: FocusEvent) => {
+  emit("blur", event);
+};
 
-const handleFocus = (event: FocusEvent) => {
-  emit('focus', event)
-}
+const handlefocus = (event: FocusEvent) => {
+  emit("focus", event);
+};
+
 </script>
 
 <style scoped>

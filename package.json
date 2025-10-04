@@ -39,6 +39,7 @@
     "build": "pnpm -r build",
     "preview": "cd client && pnpm preview",
     "lint": "pnpm -r lint",
+    "lint:css": "cd client && pnpm lint:css",
     "lint:fix": "pnpm -r lint:fix",
     "format": "pnpm -r format",
     "format:check": "pnpm -r format:check",
