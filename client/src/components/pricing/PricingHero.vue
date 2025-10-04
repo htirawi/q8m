@@ -80,7 +80,7 @@ defineOptions({
 }
 
 .pricing-hero-trust {
-  @apply mt-12;
+  @apply mt-12 rounded-lg border border-gray-200 bg-gray-50 p-6;
 }
 
 .pricing-hero-trust-text {
@@ -96,7 +96,7 @@ defineOptions({
 }
 
 .pricing-hero-trust-logo {
-  @apply h-8 w-auto opacity-60 grayscale transition-all duration-200 hover:opacity-100 hover:grayscale-0;
+  @apply h-12 w-auto opacity-80 grayscale transition-all duration-200 hover:opacity-100 hover:grayscale-0;
 }
 
 /* RTL Support */

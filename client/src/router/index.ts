@@ -1,139 +1,243 @@
 import { createRouter, createWebHistory } from "vue-router";
 import type { RouteRecordRaw } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
+import i18n from "@/i18n";
+
+// Supported locales
+export const SUPPORTED_LOCALES = ["en", "ar"] as const;
+export type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
+
+// Default locale
+export const DEFAULT_LOCALE: SupportedLocale = "en";
+
+// Helper function to create localized routes
+const createLocalizedRoute = (
+  path: string,
+  component: () => Promise<any>,
+  meta: any,
+  name?: string
+): RouteRecordRaw => ({
+  path: `/:locale${path}`,
+  name: name ? `${name}` : undefined,
+  component,
+  meta: {
+    ...meta,
+    locale: true,
+  },
+});
+
+// Helper function to create non-localized routes (for redirects, etc.)
+const createRoute = (
+  path: string,
+  component: () => Promise<any>,
+  meta: any,
+  name?: string
+): RouteRecordRaw => ({
+  path,
+  name,
+  component,
+  meta,
+});
 
 // Route definitions with lazy loading and chunk names
 const routes: RouteRecordRaw[] = [
+  // Redirect root to default locale
   {
     path: "/",
-    name: "home",
-    component: () =>
+    redirect: () => `/${DEFAULT_LOCALE}`,
+  },
+
+  // Redirect old non-localized routes to default locale
+  {
+    path: "/subscribe",
+    redirect: () => `/${DEFAULT_LOCALE}/subscribe`,
+  },
+  {
+    path: "/login",
+    redirect: () => `/${DEFAULT_LOCALE}/login`,
+  },
+  {
+    path: "/register",
+    redirect: () => `/${DEFAULT_LOCALE}/register`,
+  },
+  {
+    path: "/quiz",
+    redirect: () => `/${DEFAULT_LOCALE}/quiz`,
+  },
+  {
+    path: "/account",
+    redirect: () => `/${DEFAULT_LOCALE}/account`,
+  },
+  {
+    path: "/admin",
+    redirect: () => `/${DEFAULT_LOCALE}/admin`,
+  },
+
+  // Localized routes
+  createLocalizedRoute(
+    "",
+    () =>
       import(
         /* webpackChunkName: "home" */
         "@/features/home/pages/HomePage.vue"
       ),
-    meta: {
+    {
       title: "q8m - Master Frontend Development Interviews",
       description:
         "Master frontend development with 500+ curated interview questions. Interactive learning, real-time feedback, and expert-level content.",
       layout: "default",
     },
-  },
-  {
-    path: "/subscribe",
-    name: "subscribe",
-    component: () =>
+    "home"
+  ),
+  createLocalizedRoute(
+    "/subscribe",
+    () =>
       import(
         /* webpackChunkName: "subscribe" */
         "@/features/pricing/pages/PricingPage.vue"
       ),
-    meta: {
+    {
       title: "Subscribe - q8m",
       description: "Choose the perfect plan for your frontend interview preparation journey",
       layout: "default",
     },
-  },
-  {
-    path: "/login",
-    name: "login",
-    component: () =>
+    "subscribe"
+  ),
+  createLocalizedRoute(
+    "/login",
+    () =>
       import(
         /* webpackChunkName: "auth" */
         "@/features/auth/pages/LoginPage.vue"
       ),
-    meta: {
+    {
       title: "Login - q8m",
       requiresGuest: true,
       layout: "auth",
     },
-  },
-  {
-    path: "/register",
-    name: "register",
-    component: () =>
+    "login"
+  ),
+  createLocalizedRoute(
+    "/register",
+    () =>
       import(
         /* webpackChunkName: "auth" */
         "@/features/auth/pages/RegisterPage.vue"
       ),
-    meta: {
+    {
       title: "Register - q8m",
       requiresGuest: true,
       layout: "auth",
     },
-  },
-  {
-    path: "/quiz",
-    name: "quiz",
-    component: () =>
+    "register"
+  ),
+  createLocalizedRoute(
+    "/quiz",
+    () =>
       import(
         /* webpackChunkName: "quiz" */
         "@/features/quiz/pages/QuizSelectionPage.vue"
       ),
-    meta: {
+    {
       title: "Quiz Selection - q8m",
       requiresAuth: true,
       layout: "default",
     },
-  },
-  {
-    path: "/quiz/:framework/:level",
-    name: "quiz-take",
-    component: () =>
+    "quiz"
+  ),
+  createLocalizedRoute(
+    "/quiz/:framework/:level",
+    () =>
       import(
         /* webpackChunkName: "quiz" */
         "@/features/quiz/pages/QuizPage.vue"
       ),
-    meta: {
+    {
       title: "Quiz - q8m",
       requiresAuth: true,
       layout: "quiz",
     },
-  },
-  {
-    path: "/account",
-    name: "account",
-    component: () =>
+    "quiz-take"
+  ),
+  createLocalizedRoute(
+    "/account",
+    () =>
       import(
         /* webpackChunkName: "account" */
         "@/features/account/pages/AccountPage.vue"
       ),
-    meta: {
+    {
       title: "Account - q8m",
       requiresAuth: true,
       layout: "default",
     },
-  },
-  {
-    path: "/admin",
-    name: "admin",
-    component: () =>
+    "account"
+  ),
+  createLocalizedRoute(
+    "/admin",
+    () =>
       import(
         /* webpackChunkName: "admin" */
         "@/features/admin/pages/AdminDashboardPage.vue"
       ),
-    meta: {
+    {
       title: "Admin Dashboard - q8m",
       requiresAuth: true,
       requiresRole: "admin",
       layout: "default",
     },
-  },
-  {
-    path: "/unauthorized",
-    name: "unauthorized",
-    component: () =>
+    "admin"
+  ),
+  createLocalizedRoute(
+    "/unauthorized",
+    () =>
       import(
         /* webpackChunkName: "error" */
         "@/features/errors/pages/UnauthorizedPage.vue"
       ),
-    meta: {
+    {
       title: "Unauthorized - q8m",
       layout: "default",
     },
+    "unauthorized"
+  ),
+
+  // Legal pages
+  createLocalizedRoute(
+    "/privacy",
+    () =>
+      import(
+        /* webpackChunkName: "legal" */
+        "@/features/legal/pages/PrivacyPage.vue"
+      ),
+    {
+      title: "Privacy Policy - q8m",
+      description: "Privacy Policy - q8m",
+      layout: "default",
+    },
+    "privacy"
+  ),
+
+  // Catch-all for localized routes (404)
+  {
+    path: "/:locale/:pathMatch(.*)*",
+    name: "not-found",
+    component: () =>
+      import(
+        /* webpackChunkName: "error" */
+        "@/features/errors/pages/NotFoundPage.vue"
+      ),
+    meta: {
+      title: "Page Not Found - q8m",
+      layout: "default",
+      locale: true,
+    },
   },
+
+  // Catch-all for non-localized routes
   {
     path: "/:pathMatch(.*)*",
-    name: "not-found",
+    name: "not-found-root",
     component: () =>
       import(
         /* webpackChunkName: "error" */
@@ -158,8 +262,25 @@ const router = createRouter({
   },
 });
 
+// Helper function to detect locale from URL
+const detectLocale = (path: string): SupportedLocale => {
+  const segments = path.split("/").filter(Boolean);
+  const firstSegment = segments[0];
+
+  if (firstSegment && SUPPORTED_LOCALES.includes(firstSegment as SupportedLocale)) {
+    return firstSegment as SupportedLocale;
+  }
+
+  return DEFAULT_LOCALE;
+};
+
+// Helper function to get locale from route params
+const getLocaleFromRoute = (to: any): SupportedLocale => {
+  return to.params.locale || DEFAULT_LOCALE;
+};
+
 // Router guards
-router.beforeEach(async (to, _from, next) => {
+router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore();
 
   // Initialize auth state if not already done
@@ -167,25 +288,80 @@ router.beforeEach(async (to, _from, next) => {
     await authStore.initializeAuth();
   }
 
-  // Check if route requires authentication
-  if (to.meta.requiresAuth && !authStore.isAuthenticated) {
-    next({
-      name: "login",
-      query: { redirect: to.fullPath },
+  // Handle locale detection and validation
+  const locale = getLocaleFromRoute(to);
+
+  // Validate locale
+  if (!SUPPORTED_LOCALES.includes(locale as SupportedLocale)) {
+    // Redirect to default locale if invalid locale
+    const pathWithoutLocale = to.path.replace(/^\/[a-z]{2}(\/|$)/, "/");
+    next(`/${DEFAULT_LOCALE}${pathWithoutLocale === "/" ? "" : pathWithoutLocale}`);
+    return;
+  }
+
+  // Set locale in i18n immediately
+  if (typeof window !== "undefined") {
+    console.log("Setting locale to:", locale);
+    console.log("Current i18n locale:", i18n.global.locale.value);
+
+    // Force locale change
+    i18n.global.locale.value = locale;
+    console.log("New i18n locale:", i18n.global.locale.value);
+
+    // Update HTML attributes for RTL support
+    document.documentElement.dir = locale === "ar" ? "rtl" : "ltr";
+    document.documentElement.lang = locale;
+    console.log("HTML attributes updated:", {
+      dir: document.documentElement.dir,
+      lang: document.documentElement.lang,
     });
-    return;
+
+    // Force a re-render by updating the i18n instance
+    console.log("i18n messages available:", Object.keys(i18n.global.messages.value));
+    console.log("Arabic messages available:", !!i18n.global.messages.value.ar);
+
+    // Test Arabic translation
+    if (locale === "ar") {
+      const testTranslation = i18n.global.t("home.hero.title");
+      console.log("Test Arabic translation:", testTranslation);
+
+      // Force a re-render by triggering a reactive update
+      setTimeout(() => {
+        console.log("Delayed test - i18n locale:", i18n.global.locale.value);
+        console.log("Delayed test - translation:", i18n.global.t("home.hero.title"));
+      }, 100);
+    }
   }
 
-  // Check if route requires guest (not authenticated)
-  if (to.meta.requiresGuest && authStore.isAuthenticated) {
-    next({ name: "home" });
-    return;
-  }
+  // Handle authentication for localized routes
+  if (to.meta.locale) {
+    // Check if route requires authentication
+    if (to.meta.requiresAuth && !authStore.isAuthenticated) {
+      next({
+        name: "login",
+        params: { locale },
+        query: { redirect: to.fullPath },
+      });
+      return;
+    }
 
-  // Check if route requires specific role
-  if (to.meta.requiresRole && !authStore.hasRole(to.meta.requiresRole as string)) {
-    next({ name: "unauthorized" });
-    return;
+    // Check if route requires guest (not authenticated)
+    if (to.meta.requiresGuest && authStore.isAuthenticated) {
+      next({
+        name: "home",
+        params: { locale },
+      });
+      return;
+    }
+
+    // Check if route requires specific role
+    if (to.meta.requiresRole && !authStore.hasRole(to.meta.requiresRole as string)) {
+      next({
+        name: "unauthorized",
+        params: { locale },
+      });
+      return;
+    }
   }
 
   // Update page title
@@ -208,9 +384,9 @@ router.afterEach((to) => {
 
   // Track page view for analytics
   if (import.meta.env.PROD && typeof window !== "undefined" && "gtag" in window) {
-    const {gtag} = (window as {
-        gtag: (command: string, targetId: string, config: Record<string, string>) => void;
-      });
+    const { gtag } = window as {
+      gtag: (command: string, targetId: string, config: Record<string, string>) => void;
+    };
     gtag("config", "GA_MEASUREMENT_ID", {
       page_path: to.fullPath,
     });

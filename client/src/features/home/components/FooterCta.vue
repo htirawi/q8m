@@ -9,10 +9,10 @@
           {{ $t("home.cta.description") }}
         </p>
         <div class="footer-cta-actions">
-          <Button variant="primary" size="lg" :to="{ name: 'register' }" class="cta-primary">
+          <Button variant="primary" size="lg" :to="{ name: 'subscribe' }" class="cta-primary">
             {{ $t("home.cta.getStarted") }}
           </Button>
-          <Button variant="secondary" size="lg" :to="{ name: 'subscribe' }" class="cta-secondary">
+          <Button variant="secondary" size="lg" :to="{ name: 'register' }" class="cta-secondary">
             {{ $t("home.cta.learnMore") }}
           </Button>
         </div>
@@ -45,55 +45,73 @@ import { ShieldCheckIcon, ClockIcon, UserGroupIcon } from "@heroicons/vue/24/out
 
 <style scoped>
 .footer-cta-section {
-  @apply bg-primary-600 py-16 dark:bg-primary-700 md:py-24;
+  @apply bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 py-20 dark:from-primary-700 dark:via-primary-800 dark:to-primary-900 md:py-32;
+  position: relative;
+  overflow: hidden;
+}
+
+.footer-cta-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    radial-gradient(circle at 30% 70%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 70% 30%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+  pointer-events: none;
 }
 
 .footer-cta-container {
   @apply container mx-auto px-4;
+  position: relative;
+  z-index: 1;
 }
 
 .footer-cta-content {
-  @apply mx-auto max-w-4xl text-center;
+  @apply mx-auto max-w-5xl text-center;
 }
 
 .footer-cta-title {
-  @apply mb-6 text-3xl font-bold text-white md:text-4xl;
+  @apply mb-8 text-4xl font-bold text-white md:text-5xl lg:text-6xl;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .footer-cta-description {
-  @apply mb-8 text-lg leading-relaxed text-primary-100 md:text-xl;
+  @apply mb-12 text-xl leading-relaxed text-primary-100 md:text-2xl;
 }
 
 .footer-cta-actions {
-  @apply mb-12 flex flex-col justify-center gap-4 sm:flex-row;
+  @apply mb-16 flex flex-col justify-center gap-6 sm:flex-row;
 }
 
 .cta-primary {
-  @apply min-h-[44px] px-8;
+  @apply min-h-[56px] px-10 text-lg font-semibold shadow-xl transition-all duration-300 hover:shadow-2xl;
 }
 
 .cta-secondary {
-  @apply min-h-[44px] bg-white px-8 text-primary-600 hover:bg-primary-50;
+  @apply min-h-[56px] bg-white px-10 text-lg font-semibold text-primary-600 shadow-xl transition-all duration-300 hover:bg-primary-50 hover:shadow-2xl;
 }
 
 .footer-cta-trust {
-  @apply space-y-6;
+  @apply space-y-8;
 }
 
 .trust-text {
-  @apply text-sm font-medium uppercase tracking-wide text-primary-200;
+  @apply text-sm font-semibold uppercase tracking-wider text-primary-200;
 }
 
 .trust-badges {
-  @apply flex flex-wrap justify-center gap-8;
+  @apply flex flex-wrap justify-center gap-12;
 }
 
 .trust-badge {
-  @apply flex items-center space-x-2 text-primary-100;
+  @apply flex items-center space-x-3 text-primary-100 transition-all duration-300 hover:scale-105 hover:text-white;
 }
 
 .trust-icon {
-  @apply h-5 w-5;
+  @apply h-6 w-6;
 }
 
 /* Focus styles */
@@ -105,11 +123,48 @@ import { ShieldCheckIcon, ClockIcon, UserGroupIcon } from "@heroicons/vue/24/out
 /* Responsive adjustments */
 @media (width <= 768px) {
   .trust-badges {
-    @apply gap-6;
+    @apply gap-8;
   }
 
   .trust-badge {
     @apply text-sm;
   }
+
+  .footer-cta-title {
+    @apply text-3xl;
+  }
+
+  .footer-cta-description {
+    @apply text-lg;
+  }
+}
+
+/* Animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.footer-cta-content > * {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.footer-cta-content > *:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.footer-cta-content > *:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.footer-cta-content > *:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.footer-cta-content > *:nth-child(4) {
+  animation-delay: 0.4s;
 }
 </style>

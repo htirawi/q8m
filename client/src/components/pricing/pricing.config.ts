@@ -246,26 +246,32 @@ export const faqs: FAQ[] = [
   },
 ];
 
+// Import SVG logos as modules
+import ppLogo from "@/assets/images/logos/pp.svg";
+import hpLogo from "@/assets/images/logos/hp.svg";
+import apsLogo from "@/assets/images/logos/aps.svg";
+import sslLogo from "@/assets/images/logos/ssl.svg";
+
 // Trust badges/logos
 export const trustBadges = [
   {
     name: "PayPal",
-    logo: "/images/logos/paypal.svg",
+    logo: ppLogo,
     altKey: "pricing.trust.paypal",
   },
   {
     name: "HyperPay",
-    logo: "/images/logos/hyperpay.svg",
+    logo: hpLogo,
     altKey: "pricing.trust.hyperpay",
   },
   {
     name: "APS",
-    logo: "/images/logos/aps.svg",
+    logo: apsLogo,
     altKey: "pricing.trust.aps",
   },
   {
     name: "SSL",
-    logo: "/images/logos/ssl.svg",
+    logo: sslLogo,
     altKey: "pricing.trust.ssl",
   },
 ];
