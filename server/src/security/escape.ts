@@ -91,5 +91,5 @@ export function sanitizeRedirectUrl(url: string, allowedHosts: string[] = []): s
 export function sanitizeForDisplay(input: unknown): string {
   const s = String(input ?? "");
   // Remove control characters and limit length
-  return s.replace(/[\x00-\x1F\x7F-\x9F]/g, "").slice(0, 1000);
+  return s.replace(/[\p{Cc}\p{Cf}]/gu, "").slice(0, 1000);
 }
