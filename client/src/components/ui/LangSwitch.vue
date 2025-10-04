@@ -6,9 +6,7 @@
       :aria-label="$t('a11y.switchLanguage')"
       @click="toggleLanguage"
     >
-      <span class="lang-switch-text">{{ currentLanguage.toUpperCase() }}
-
-</span>
+      <span class="lang-switch-text">{{ currentLanguage.toUpperCase() }} </span>
       <svg class="lang-switch-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path
           stroke-linecap="round"
@@ -24,19 +22,32 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
+import { useRoute, useRouter } from "vue-router";
+import { DEFAULT_LOCALE, type SupportedLocale } from "@/router";
 
 const { locale } = useI18n();
+const route = useRoute();
+const router = useRouter();
 
 const currentLanguage = computed(() => locale.value);
 
-const toggleLanguage = () => {
-  const newLocale = locale.value === "en" ? "ar" : "en";
-  locale.value = newLocale;
-  // Update HTML dir attribute for RTL support
-  document.documentElement.dir = newLocale === "ar" ? "rtl" : "ltr";
-  document.documentElement.lang = newLocale;
-};
+const toggleLanguage = async () => {
+  const currentLocale = (route.params.locale as SupportedLocale) || DEFAULT_LOCALE;
+  const newLocale: SupportedLocale = currentLocale === "en" ? "ar" : "en";
 
+  // Build the new path with the new locale
+  const pathWithoutLocale = route.path.replace(/^\/[a-z]{2}(\/|$)/, "/");
+  const newPath = `/${newLocale}${pathWithoutLocale === "/" ? "" : pathWithoutLocale}`;
+
+  // Preserve query parameters
+  const query = route.query;
+
+  // Navigate to the new locale URL
+  await router.push({
+    path: newPath,
+    query,
+  });
+};
 </script>
 
 <style scoped>

@@ -20,14 +20,44 @@
   },
   "home": {
     "hero": {
+      "badge": "🚀 Professional Interview Prep",
       "title": "Master Frontend Development Interviews",
       "description": "Prepare for your next frontend developer interview with 500+ curated questions covering Vue.js, React, Angular, and more. Interactive learning with real-time feedback.",
-      "cta": "Get Started Free",
-      "pricing": "View Pricing",
+      "cta": "Start Your Journey",
+      "register": "Sign Up Free",
       "stats": {
         "questions": "Questions",
         "frameworks": "Frameworks",
         "success": "Success Rate"
+      },
+      "techStack": {
+        "react": "React",
+        "vue": "Vue.js",
+        "angular": "Angular",
+        "nextjs": "Next.js",
+        "typescript": "TypeScript",
+        "nuxt": "Nuxt.js",
+        "svelte": "Svelte",
+        "sveltekit": "SvelteKit",
+        "javascript": "JavaScript",
+        "nodejs": "Node.js",
+        "express": "Express.js",
+        "nestjs": "NestJS"
+      },
+      "dashboard": {
+        "title": "q8m Dashboard",
+        "quiz1": {
+          "title": "React Fundamentals",
+          "details": "25 questions • 15 min"
+        },
+        "quiz2": {
+          "title": "Vue.js Advanced",
+          "details": "30 questions • 20 min"
+        },
+        "quiz3": {
+          "title": "TypeScript Mastery",
+          "details": "40 questions • 25 min"
+        }
       }
     },
     "features": {
@@ -58,39 +88,69 @@
         "description": "Practice anywhere with our mobile-first design"
       }
     },
-    "pricing": {
-      "title": "Simple, Transparent Pricing",
-      "description": "Choose the plan that fits your learning goals",
-      "choosePlan": "Choose Plan",
-      "note": "All plans include access to our community and basic support",
-      "viewAllPlans": "View All Plans",
-      "plans": {
-        "free": {
-          "title": "Free",
+    "banner": {
+      "title": "Ready to land your dream job?",
+      "description": "Unlock your dream job with a 5-minute evaluator for a personalized learning plan!"
+    },
+    "testimonials": {
+      "title": "Success Stories from Our Community",
+      "description": "Join thousands of developers who have successfully landed their dream jobs",
+      "sarah": {
+        "text": "q8m completely transformed my interview preparation. The structured approach and real-time feedback helped me land my dream job at Google. I couldn't have done it without this platform!",
+        "name": "Sarah Chen",
+        "role": "Senior Frontend Developer",
+        "company": "Google"
+      },
+      "michael": {
+        "text": "After months of struggling with random LeetCode problems, q8m showed me the patterns. Within 2 weeks, I was solving problems I couldn't even approach before. Highly recommended!",
+        "name": "Michael Rodriguez",
+        "role": "Lead Developer",
+        "company": "Microsoft"
+      },
+      "emma": {
+        "text": "The interactive learning experience and comprehensive coverage of frontend technologies made all the difference. I went from failing interviews to getting multiple offers!",
+        "name": "Emma Thompson",
+        "role": "Frontend Engineer",
+        "company": "Meta"
+      }
+    },
+    "learningPath": {
+      "title": "Your Path to Interview Success",
+      "description": "Follow our proven 3-step process to master frontend interviews",
+      "steps": {
+        "assess": {
+          "title": "Assess Your Skills",
+          "description": "Take our comprehensive assessment to identify your strengths and areas for improvement",
           "features": {
-            "basic": "Basic questions",
-            "limited": "Limited attempts",
-            "community": "Community access"
+            "skill": "Skill level evaluation",
+            "gap": "Identify knowledge gaps",
+            "plan": "Personalized learning plan"
           }
         },
-        "pro": {
-          "title": "Pro",
+        "learn": {
+          "title": "Learn & Practice",
+          "description": "Master key patterns and practice with our interactive learning platform",
           "features": {
-            "unlimited": "Unlimited questions",
-            "analytics": "Progress analytics",
-            "priority": "Priority support",
-            "advanced": "Advanced topics"
+            "patterns": "Learn interview patterns",
+            "practice": "Interactive practice sessions",
+            "feedback": "Real-time feedback"
           }
         },
-        "enterprise": {
-          "title": "Enterprise",
+        "master": {
+          "title": "Master & Succeed",
+          "description": "Build confidence and ace your interviews with expert guidance",
           "features": {
-            "everything": "Everything in Pro",
-            "custom": "Custom questions",
-            "support": "24/7 support",
-            "team": "Team management"
+            "interview": "Mock interview practice",
+            "confidence": "Build interview confidence",
+            "job": "Land your dream job"
           }
         }
+      },
+      "successRate": "Success Rate",
+      "stats": {
+        "questions": "Questions",
+        "frameworks": "Frameworks",
+        "companies": "Companies"
       }
     },
     "cta": {
@@ -106,6 +166,21 @@
     "demo": {
       "title": "Design System Showcase",
       "description": "Experience our carefully crafted UI components",
+      "badge": "Enterprise Design System",
+      "stats": {
+        "components": "Components",
+        "accessible": "Accessible",
+        "loadTime": "Load Time"
+      },
+      "cards": {
+        "button": "Button Component",
+        "form": "Form Component",
+        "state": "State Component"
+      },
+      "showcase": {
+        "title": "Interactive Components",
+        "subtitle": "Experience our carefully crafted UI elements with real-time interactions"
+      },
       "components": "Components",
       "buttons": "Buttons",
       "small": "Small",
@@ -117,10 +192,13 @@
       "email": "Email Address",
       "emailPlaceholder": "Enter your email",
       "framework": "Framework",
-      "frameworkHelp": "Select your preferred framework",
+      "frameworkHelp": "Select one or more frameworks you work with",
       "selectFramework": "Choose framework",
       "submit": "Submit",
       "cancel": "Cancel",
+      "validation": {
+        "email": "Invalid email format"
+      },
       "states": "States",
       "loading": "Loading...",
       "empty": "No data available",
@@ -135,10 +213,21 @@
   },
   "auth": {
     "register": {
-      "title": "Create your account",
-      "subtitle": "Join thousands of developers preparing for their next interview",
+      "title": "Your new job is waiting",
+      "subtitle": "83% of people that complete the program get a job offer.",
       "createAccount": "Create Account",
       "creating": "Creating Account...",
+      "continue": "Continue",
+      "processing": "Processing...",
+      "back": "Back",
+      "completeProfile": "Complete your profile",
+      "continueWithGoogle": "Continue with Google",
+      "continueWithFacebook": "Continue with Facebook",
+      "or": "or",
+      "getStarted": "Get started with your free account",
+      "secure": "Secure & Encrypted",
+      "trusted": "Trusted by 10k+ developers",
+      "fast": "Quick Setup",
       "agreeToTerms": "I agree to the",
       "termsOfService": "Terms of Service",
       "and": "and",
@@ -151,9 +240,9 @@
     },
     "fields": {
       "name": "Full Name",
-      "namePlaceholder": "Enter your full name",
+      "namePlaceholder": "Enter your first and last name",
       "email": "Email Address",
-      "emailPlaceholder": "Enter your email address",
+      "emailPlaceholder": "job@example.com",
       "password": "Password",
       "passwordPlaceholder": "Enter your password",
       "confirmPassword": "Confirm Password",
@@ -172,6 +261,95 @@
       "passwordStrength": {
         "weak": "Weak password",
         "strong": "Strong password"
+      }
+    }
+  },
+  "legal": {
+    "breadcrumb": {
+      "home": "Home",
+      "privacy": "Privacy Policy"
+    },
+    "privacy": {
+      "title": "Privacy Policy",
+      "subtitle": "Your privacy is important to us. This policy explains how we collect, use, and protect your information.",
+      "lastUpdated": "Last updated",
+      "toc": {
+        "title": "Table of Contents",
+        "introduction": "Introduction",
+        "informationCollection": "Information We Collect",
+        "informationUsage": "How We Use Information",
+        "informationSharing": "Information Sharing",
+        "dataSecurity": "Data Security",
+        "yourRights": "Your Rights",
+        "cookies": "Cookies",
+        "contact": "Contact Us"
+      },
+      "introduction": {
+        "title": "Introduction",
+        "content": "q8m (\"we,\" \"our,\" or \"us\") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our platform for frontend development interview preparation."
+      },
+      "informationCollection": {
+        "title": "Information We Collect",
+        "personal": {
+          "title": "Personal Information",
+          "content": "We collect information you provide directly to us, such as when you create an account, take quizzes, or contact us for support:",
+          "name": "Full name",
+          "email": "Email address",
+          "profile": "Profile information and preferences"
+        },
+        "usage": {
+          "title": "Usage Information",
+          "content": "We automatically collect certain information about your use of our platform:",
+          "logs": "Usage logs and analytics data",
+          "device": "Device information and browser details",
+          "cookies": "Cookies and similar tracking technologies"
+        }
+      },
+      "informationUsage": {
+        "title": "How We Use Your Information",
+        "content": "We use the information we collect to provide, maintain, and improve our services:",
+        "service": "Provide and maintain our quiz platform",
+        "communication": "Send you updates, notifications, and support communications",
+        "improvement": "Analyze usage patterns to improve our services",
+        "security": "Ensure the security and integrity of our platform"
+      },
+      "informationSharing": {
+        "title": "Information Sharing",
+        "content": "We do not sell, trade, or otherwise transfer your personal information to third parties without your consent, except in the following limited circumstances:",
+        "noSell": "We never sell your personal information to third parties."
+      },
+      "dataSecurity": {
+        "title": "Data Security",
+        "content": "We implement appropriate technical and organizational measures to protect your personal information:",
+        "encryption": "Data encryption in transit and at rest",
+        "access": "Limited access controls and authentication",
+        "monitoring": "Regular security monitoring and updates"
+      },
+      "yourRights": {
+        "title": "Your Rights",
+        "content": "You have certain rights regarding your personal information:",
+        "access": "Access and receive a copy of your personal data",
+        "correction": "Request correction of inaccurate or incomplete data",
+        "deletion": "Request deletion of your personal data",
+        "portability": "Request data portability to another service"
+      },
+      "cookies": {
+        "title": "Cookies and Tracking Technologies",
+        "content": "We use cookies and similar technologies to enhance your experience:",
+        "essential": "Essential cookies for platform functionality",
+        "analytics": "Analytics cookies to understand usage patterns",
+        "preferences": "Preference cookies to remember your settings"
+      },
+      "contact": {
+        "title": "Contact Us",
+        "content": "If you have any questions about this Privacy Policy or our data practices, please contact us:",
+        "email": "Email"
+      },
+      "cta": {
+        "title": "Ready to Start Learning?",
+        "subtitle": "Join thousands of developers who have mastered frontend interviews with q8m.",
+        "getStarted": "Get Started Free",
+        "contact": "Contact Support"
       }
     }
   },

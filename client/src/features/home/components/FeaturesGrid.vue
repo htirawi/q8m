@@ -4,7 +4,6 @@
       <div class="features-header">
         <h2 id="features-title" class="features-title">
           {{ $t("home.features.title") }}
-
         </h2>
         <p class="features-description">
           {{ $t("home.features.description") }}
@@ -27,12 +26,10 @@
             </div>
             <h3 :id="`feature-${feature.id}-title`" class="feature-title">
               {{ $t(feature.titleKey) }}
-
             </h3>
           </template>
           <p class="feature-description">
             {{ $t(feature.descriptionKey) }}
-
           </p>
         </Card>
       </div>
@@ -95,7 +92,7 @@ const features = computed(() => [
 
 <style scoped>
 .features-section {
-  @apply bg-white py-16 dark:bg-gray-900 md:py-24;
+  @apply bg-gradient-to-b from-white to-slate-50 py-20 dark:from-slate-900 dark:to-slate-800 md:py-32;
 }
 
 .features-container {
@@ -103,15 +100,26 @@ const features = computed(() => [
 }
 
 .features-header {
-  @apply mb-16 text-center;
+  @apply mb-20 text-center;
 }
 
 .features-title {
-  @apply mb-4 text-3xl font-bold text-gray-900 dark:text-white md:text-4xl;
+  @apply mb-6 text-4xl font-bold text-slate-900 dark:text-white md:text-5xl;
+  background: linear-gradient(135deg, #1e293b 0%, #3b82f6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.dark .features-title {
+  background: linear-gradient(135deg, #f8fafc 0%, #3b82f6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .features-description {
-  @apply mx-auto max-w-3xl text-lg text-gray-600 dark:text-gray-300;
+  @apply mx-auto max-w-3xl text-xl text-slate-600 dark:text-slate-300;
 }
 
 .features-grid {
@@ -119,24 +127,34 @@ const features = computed(() => [
 }
 
 .feature-card {
-  @apply h-full transition-transform duration-200 hover:scale-105;
+  @apply h-full transition-all duration-300 hover:scale-105 hover:shadow-xl;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.9) 100%);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: 16px;
+  padding: 2rem;
+}
+
+.dark .feature-card {
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(51, 65, 85, 0.9) 100%);
+  border: 1px solid rgba(71, 85, 105, 0.8);
 }
 
 .feature-icon {
-  @apply mb-4;
+  @apply mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary-100 dark:bg-primary-900/30;
 }
 
 .feature-title {
-  @apply mb-3 text-xl font-semibold text-gray-900 dark:text-white;
+  @apply mb-4 text-2xl font-bold text-slate-900 dark:text-white;
 }
 
 .feature-description {
-  @apply leading-relaxed text-gray-600 dark:text-gray-300;
+  @apply leading-relaxed text-slate-600 dark:text-slate-300;
 }
 
 /* Focus styles */
 .feature-card:focus-within {
-  @apply outline-none ring-2 ring-primary-500 ring-offset-2 dark:ring-offset-gray-800;
+  @apply outline-none ring-2 ring-primary-500 ring-offset-2 dark:ring-offset-slate-800;
 }
 
 /* Responsive adjustments */
@@ -148,5 +166,48 @@ const features = computed(() => [
   .feature-card {
     @apply hover:scale-100;
   }
+
+  .features-title {
+    @apply text-3xl;
+  }
+
+  .features-description {
+    @apply text-lg;
+  }
+}
+
+/* Animation */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.feature-card {
+  animation: slideInUp 0.6s ease-out forwards;
+}
+
+.feature-card:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.feature-card:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.feature-card:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.feature-card:nth-child(4) {
+  animation-delay: 0.4s;
+}
+.feature-card:nth-child(5) {
+  animation-delay: 0.5s;
+}
+.feature-card:nth-child(6) {
+  animation-delay: 0.6s;
 }
 </style>

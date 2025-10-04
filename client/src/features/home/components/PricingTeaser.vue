@@ -113,7 +113,7 @@ const plans = computed(() => [
 
 <style scoped>
 .pricing-teaser-section {
-  @apply bg-gray-50 py-16 dark:bg-gray-800 md:py-24;
+  @apply bg-gradient-to-b from-slate-50 to-white py-20 dark:from-slate-800 dark:to-slate-900 md:py-32;
 }
 
 .pricing-teaser-container {
@@ -121,35 +121,62 @@ const plans = computed(() => [
 }
 
 .pricing-teaser-header {
-  @apply mb-16 text-center;
+  @apply mb-20 text-center;
 }
 
 .pricing-teaser-title {
-  @apply mb-4 text-3xl font-bold text-gray-900 dark:text-white md:text-4xl;
+  @apply mb-6 text-4xl font-bold text-slate-900 dark:text-white md:text-5xl;
+  background: linear-gradient(135deg, #1e293b 0%, #3b82f6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.dark .pricing-teaser-title {
+  background: linear-gradient(135deg, #f8fafc 0%, #3b82f6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .pricing-teaser-description {
-  @apply mx-auto max-w-3xl text-lg text-gray-600 dark:text-gray-300;
+  @apply mx-auto max-w-3xl text-xl text-slate-600 dark:text-slate-300;
 }
 
 .pricing-teaser-grid {
-  @apply mb-12 grid grid-cols-1 gap-8 md:grid-cols-3;
+  @apply mb-16 grid grid-cols-1 gap-8 md:grid-cols-3;
 }
 
 .pricing-card {
-  @apply relative h-full transition-transform duration-200 hover:scale-105;
+  @apply relative h-full transition-all duration-300 hover:scale-105 hover:shadow-xl;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.9) 100%);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: 20px;
+  padding: 2rem;
+}
+
+.dark .pricing-card {
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(51, 65, 85, 0.9) 100%);
+  border: 1px solid rgba(71, 85, 105, 0.8);
 }
 
 .pricing-card--featured {
-  @apply scale-105 ring-2 ring-primary-500;
+  @apply scale-105 shadow-2xl ring-2 ring-primary-500;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(99, 102, 241, 0.05) 100%);
+  border: 2px solid rgba(59, 130, 246, 0.3);
+}
+
+.dark .pricing-card--featured {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(99, 102, 241, 0.1) 100%);
 }
 
 .pricing-card-header {
-  @apply mb-6 text-center;
+  @apply mb-8 text-center;
 }
 
 .plan-title {
-  @apply mb-4 text-xl font-semibold text-gray-900 dark:text-white;
+  @apply mb-6 text-2xl font-bold text-slate-900 dark:text-white;
 }
 
 .plan-price {
@@ -157,15 +184,15 @@ const plans = computed(() => [
 }
 
 .plan-currency {
-  @apply text-lg text-gray-600 dark:text-gray-400;
+  @apply text-xl text-slate-600 dark:text-slate-400;
 }
 
 .plan-amount {
-  @apply text-4xl font-bold text-primary-600 dark:text-primary-400;
+  @apply text-5xl font-bold text-primary-600 dark:text-primary-400;
 }
 
 .plan-period {
-  @apply text-sm text-gray-600 dark:text-gray-400;
+  @apply text-lg text-slate-600 dark:text-slate-400;
 }
 
 .plan-features {
@@ -173,7 +200,7 @@ const plans = computed(() => [
 }
 
 .feature-list {
-  @apply space-y-3;
+  @apply space-y-4;
 }
 
 .feature-item {
@@ -181,33 +208,33 @@ const plans = computed(() => [
 }
 
 .feature-check {
-  @apply h-5 w-5 flex-shrink-0 text-green-500;
+  @apply h-6 w-6 flex-shrink-0 text-green-500;
 }
 
 .plan-cta {
-  @apply min-h-[44px] w-full;
+  @apply min-h-[52px] w-full text-lg font-semibold;
 }
 
 .pricing-teaser-footer {
-  @apply space-y-6 text-center;
+  @apply space-y-8 text-center;
 }
 
 .pricing-note {
-  @apply text-gray-600 dark:text-gray-300;
+  @apply text-lg text-slate-600 dark:text-slate-300;
 }
 
 .pricing-link {
-  @apply min-h-[44px] px-8;
+  @apply min-h-[52px] px-8 text-lg font-semibold;
 }
 
 /* Focus styles */
 .pricing-card:focus-within {
-  @apply outline-none ring-2 ring-primary-500 ring-offset-2 dark:ring-offset-gray-800;
+  @apply outline-none ring-2 ring-primary-500 ring-offset-2 dark:ring-offset-slate-800;
 }
 
 .plan-cta:focus,
 .pricing-link:focus {
-  @apply outline-none ring-2 ring-primary-500 ring-offset-2 dark:ring-offset-gray-800;
+  @apply outline-none ring-2 ring-primary-500 ring-offset-2 dark:ring-offset-slate-800;
 }
 
 /* Responsive adjustments */
@@ -223,5 +250,39 @@ const plans = computed(() => [
   .pricing-card--featured {
     @apply scale-100;
   }
+
+  .pricing-teaser-title {
+    @apply text-3xl;
+  }
+
+  .pricing-teaser-description {
+    @apply text-lg;
+  }
+}
+
+/* Animation */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.pricing-card {
+  animation: slideInUp 0.6s ease-out forwards;
+}
+
+.pricing-card:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.pricing-card:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.pricing-card:nth-child(3) {
+  animation-delay: 0.3s;
 }
 </style>
