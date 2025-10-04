@@ -8,7 +8,7 @@ import { emailService } from "../services/email.service.js";
 import { secureCookieService } from "../services/secure-cookie.service.js";
 import { env } from "../config/env.js";
 import { authenticate } from "../middlewares/auth.middleware.js";
-import rateLimit from "@fastify/rate-limit";
+import { createRateLimitMiddleware } from "../middlewares/auth-rate-limit.middleware.js";
 import crypto from "crypto";
 
 // Validation schemas
@@ -22,9 +22,6 @@ const registerSchema = z.object({
     .string()
     .min(8, "Password must be at least 8 characters")
     .max(128, "Password cannot exceed 128 characters"),
-  acceptTerms: z
-    .boolean()
-    .refine((val) => val === true, "You must accept the terms and conditions"),
 });
 
 const loginSchema = z.object({
@@ -32,24 +29,24 @@ const loginSchema = z.object({
   password: z.string().min(1, "Password is required"),
 });
 
+const verifyEmailSchema = z.object({
+  token: z.string().min(32, "Invalid verification token"),
+});
+
+const resendVerificationSchema = z.object({
+  email: z.string().email("Invalid email format"),
+});
+
 const forgotPasswordSchema = z.object({
   email: z.string().email("Invalid email format"),
 });
 
 const resetPasswordSchema = z.object({
-  token: z.string().min(1, "Reset token is required"),
+  token: z.string().min(32, "Invalid reset token"),
   password: z
     .string()
     .min(8, "Password must be at least 8 characters")
     .max(128, "Password cannot exceed 128 characters"),
-});
-
-const verifyEmailSchema = z.object({
-  token: z.string().min(1, "Verification token is required"),
-});
-
-const resendVerificationSchema = z.object({
-  email: z.string().email("Invalid email format"),
 });
 
 const changePasswordSchema = z.object({
@@ -61,55 +58,6 @@ const changePasswordSchema = z.object({
 });
 
 export default async function authRoutes(fastify: FastifyInstance) {
-  // Register rate limiting plugins for specific auth endpoints
-  await fastify.register(rateLimit, {
-    keyGenerator: (request) => `login:${request.ip}`,
-    max: 10,
-    timeWindow: "15 minutes",
-    errorResponseBuilder: (_request, context) => ({
-      code: 429,
-      error: "Too Many Requests",
-      message: `Login rate limit exceeded. Retry in ${Math.round(context.ttl / 1000)} seconds`,
-      retryAfter: Math.round(context.ttl / 1000),
-    }),
-  });
-
-  await fastify.register(rateLimit, {
-    keyGenerator: (request) => `verify-email:${request.ip}`,
-    max: 5,
-    timeWindow: "15 minutes",
-    errorResponseBuilder: (_request, context) => ({
-      code: 429,
-      error: "Too Many Requests",
-      message: `Email verification rate limit exceeded. Retry in ${Math.round(context.ttl / 1000)} seconds`,
-      retryAfter: Math.round(context.ttl / 1000),
-    }),
-  });
-
-  await fastify.register(rateLimit, {
-    keyGenerator: (request) => `password-reset:${request.ip}`,
-    max: 3,
-    timeWindow: "15 minutes",
-    errorResponseBuilder: (_request, context) => ({
-      code: 429,
-      error: "Too Many Requests",
-      message: `Password reset rate limit exceeded. Retry in ${Math.round(context.ttl / 1000)} seconds`,
-      retryAfter: Math.round(context.ttl / 1000),
-    }),
-  });
-
-  await fastify.register(rateLimit, {
-    keyGenerator: (request) => `token-refresh:${request.ip}`,
-    max: 10,
-    timeWindow: "15 minutes",
-    errorResponseBuilder: (_request, context) => ({
-      code: 429,
-      error: "Too Many Requests",
-      message: `Token refresh rate limit exceeded. Retry in ${Math.round(context.ttl / 1000)} seconds`,
-      retryAfter: Math.round(context.ttl / 1000),
-    }),
-  });
-
   // Register new user
   fastify.post(
     "/register",
@@ -123,29 +71,28 @@ export default async function authRoutes(fastify: FastifyInstance) {
         const { email, name, password } = request.body as z.infer<typeof registerSchema>;
 
         // Check if user already exists
-        const existingUser = await User.findOne({ email: email.toLowerCase() });
+        const existingUser = await User.findOne({ email });
         if (existingUser) {
-          return reply.status(409).send({
-            code: 409,
-            error: "Conflict",
+          return reply.status(400).send({
+            code: 400,
+            error: "Bad Request",
             message: "User with this email already exists",
           });
         }
 
         // Create new user
         const user = new User({
-          email: email.toLowerCase(),
+          email,
           name,
           password,
-          entitlements: ["JUNIOR"], // Free tier by default
-          isEmailVerified: false,
+          entitlements: ["JUNIOR"], // Default entitlement
         });
 
         await user.save();
 
-        // Generate email verification token
+        // Generate verification token
         const verificationToken = await (VerificationToken as any).createToken(
-          (user as any)._id,
+          (user as any)._id.toString(),
           "email_verification",
           24 // 24 hours
         );
@@ -155,7 +102,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
         await emailService.sendEmailVerification(user.email, user.name, verificationUrl);
 
         reply.status(201).send({
-          message: "User registered successfully. Please check your email to verify your account.",
+          message: "User registered successfully. Please check your email for verification.",
           user: {
             id: (user as any)._id.toString(),
             email: user.email,
@@ -168,7 +115,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
         reply.status(500).send({
           code: 500,
           error: "Internal Server Error",
-          message: "Registration failed",
+          message: "Failed to register user",
         });
       }
     }
@@ -178,6 +125,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/login",
     {
+      preHandler: createRateLimitMiddleware("login"),
       schema: {
         body: loginSchema,
       },
@@ -187,7 +135,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
         const { email, password } = request.body as z.infer<typeof loginSchema>;
 
         // Find user with password
-        const user = await (User as any).findByEmailWithPassword(email.toLowerCase());
+        const user = await (User as any).findByEmailWithPassword(email);
         if (!user) {
           return reply.status(401).send({
             code: 401,
@@ -228,19 +176,29 @@ export default async function authRoutes(fastify: FastifyInstance) {
           expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
           userAgent: request.headers["user-agent"],
           ipAddress: request.ip,
+          isActive: true,
+          lastUsed: new Date(),
         });
 
         await session.save();
 
-        const tokenPair = jwtService.generateTokenPair(user, session._id.toString());
+        // Generate JWT tokens
+        const tokenPair = jwtService.generateTokenPair(user, (session as any)._id.toString());
 
-        // Set secure httpOnly cookies
-        secureCookieService.setAccessTokenCookie(reply, tokenPair.accessToken);
-        secureCookieService.setRefreshTokenCookie(reply, tokenPair.refreshToken);
+        // Set secure cookies
+        secureCookieService.setSecureCookie(reply, "accessToken", tokenPair.accessToken, {
+          maxAge: 15 * 60 * 1000, // 15 minutes
+          httpOnly: true,
+          secure: env.NODE_ENV === "production",
+          sameSite: "strict",
+        });
 
-        // Generate CSRF token
-        const csrfToken = secureCookieService.generateCSRFToken();
-        secureCookieService.setCSRFTokenCookie(reply, csrfToken);
+        secureCookieService.setSecureCookie(reply, "refreshToken", tokenPair.refreshToken, {
+          maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+          httpOnly: true,
+          secure: env.NODE_ENV === "production",
+          sameSite: "strict",
+        });
 
         reply.send({
           message: "Login successful",
@@ -249,17 +207,18 @@ export default async function authRoutes(fastify: FastifyInstance) {
             email: user.email,
             name: user.name,
             role: user.role,
-            entitlements: (user as any).entitlements,
+            entitlements: user.entitlements,
             isEmailVerified: user.isEmailVerified,
           },
-          csrfToken, // Send CSRF token in response body for client
+          accessToken: tokenPair.accessToken,
+          refreshToken: tokenPair.refreshToken,
         });
       } catch (error: any) {
         request.log.error("Login error:", error);
         reply.status(500).send({
           code: 500,
           error: "Internal Server Error",
-          message: "Login failed",
+          message: "Failed to login",
         });
       }
     }
@@ -269,6 +228,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/verify-email",
     {
+      preHandler: createRateLimitMiddleware("verifyEmail"),
       schema: {
         body: verifyEmailSchema,
       },
@@ -284,17 +244,15 @@ export default async function authRoutes(fastify: FastifyInstance) {
         const user = await User.findById(verificationToken.userId);
 
         if (!user) {
-          return reply.status(404).send({
-            code: 404,
-            error: "Not Found",
-            message: "User not found",
+          return reply.status(400).send({
+            code: 400,
+            error: "Bad Request",
+            message: "Invalid verification token",
           });
         }
 
         // Mark email as verified
         user.isEmailVerified = true;
-        user.emailVerificationToken = undefined;
-        user.emailVerificationExpires = undefined;
         await user.save();
 
         // Mark token as used
@@ -317,7 +275,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
         reply.status(400).send({
           code: 400,
           error: "Bad Request",
-          message: error.message || "Email verification failed",
+          message: error.message || "Invalid verification token",
         });
       }
     }
@@ -327,12 +285,6 @@ export default async function authRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/resend-verification",
     {
-      config: {
-        rateLimit: {
-          max: 3, // Allow only 3 resend attempts per window
-          timeWindow: 900000, // 15 minutes
-        },
-      },
       schema: {
         body: resendVerificationSchema,
       },
@@ -341,7 +293,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
       try {
         const { email } = request.body as z.infer<typeof resendVerificationSchema>;
 
-        const user = await User.findOne({ email: email.toLowerCase() });
+        const user = await User.findOne({ email });
         if (!user) {
           return reply.status(404).send({
             code: 404,
@@ -360,7 +312,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
 
         // Generate new verification token
         const verificationToken = await (VerificationToken as any).createToken(
-          (user as any)._id,
+          (user as any)._id.toString(),
           "email_verification",
           24 // 24 hours
         );
@@ -387,12 +339,6 @@ export default async function authRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/forgot-password",
     {
-      config: {
-        rateLimit: {
-          max: 3, // Allow only 3 forgot password attempts per window
-          timeWindow: 900000, // 15 minutes
-        },
-      },
       schema: {
         body: forgotPasswordSchema,
       },
@@ -401,7 +347,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
       try {
         const { email } = request.body as z.infer<typeof forgotPasswordSchema>;
 
-        const user = await User.findOne({ email: email.toLowerCase() });
+        const user = await User.findOne({ email });
         if (!user) {
           // Don't reveal if user exists or not
           return reply.send({
@@ -411,7 +357,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
 
         // Generate password reset token
         const resetToken = await (VerificationToken as any).createToken(
-          (user as any)._id,
+          (user as any)._id.toString(),
           "password_reset",
           1 // 1 hour
         );
@@ -428,7 +374,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
         reply.status(500).send({
           code: 500,
           error: "Internal Server Error",
-          message: "Failed to send password reset email",
+          message: "Failed to process password reset request",
         });
       }
     }
@@ -438,6 +384,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/reset-password",
     {
+      preHandler: createRateLimitMiddleware("passwordReset"),
       schema: {
         body: resetPasswordSchema,
       },
@@ -450,22 +397,25 @@ export default async function authRoutes(fastify: FastifyInstance) {
         const user = await User.findById(resetToken.userId);
 
         if (!user) {
-          return reply.status(404).send({
-            code: 404,
-            error: "Not Found",
-            message: "User not found",
+          return reply.status(400).send({
+            code: 400,
+            error: "Bad Request",
+            message: "Invalid reset token",
           });
         }
 
         // Update password
-        (user as any).password = password;
+        user.password = password;
         await user.save();
 
         // Mark token as used
         await resetToken.markAsUsed(request.ip, request.headers["user-agent"]);
 
-        // Revoke all existing sessions
-        await (Session as any).revokeAllForUser((user as any)._id.toString(), "password_change");
+        // Invalidate all existing sessions
+        await Session.updateMany(
+          { userId: (user as any)._id },
+          { isRevoked: true, revokedAt: new Date(), revokedReason: "password_change" }
+        );
 
         reply.send({
           message: "Password reset successfully",
@@ -475,7 +425,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
         reply.status(400).send({
           code: 400,
           error: "Bad Request",
-          message: error.message || "Password reset failed",
+          message: error.message || "Invalid reset token",
         });
       }
     }
@@ -485,35 +435,18 @@ export default async function authRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/change-password",
     {
-      config: {
-        rateLimit: {
-          max: 5, // Allow only 5 password change attempts per window
-          timeWindow: 900000, // 15 minutes
-        },
-      },
-      preHandler: [authenticate],
+      preHandler: authenticate,
       schema: {
         body: changePasswordSchema,
       },
     },
     async (request, reply) => {
       try {
-        const { currentPassword, newPassword } = request.body as z.infer<
-          typeof changePasswordSchema
-        >;
-        const userId = request.authUser!.id;
-
-        const user = await User.findById(userId).select("+password");
-        if (!user) {
-          return reply.status(404).send({
-            code: 404,
-            error: "Not Found",
-            message: "User not found",
-          });
-        }
+        const { currentPassword, newPassword } = request.body as z.infer<typeof changePasswordSchema>;
+        const user = request.authUser;
 
         // Verify current password
-        const isCurrentPasswordValid = await user.comparePassword(currentPassword);
+        const isCurrentPasswordValid = await (user as any).comparePassword(currentPassword);
         if (!isCurrentPasswordValid) {
           return reply.status(400).send({
             code: 400,
@@ -524,23 +457,13 @@ export default async function authRoutes(fastify: FastifyInstance) {
 
         // Update password
         (user as any).password = newPassword;
-        await user.save();
+        await (user as any).save();
 
-        // Revoke all existing sessions except current one
+        // Invalidate all existing sessions except current one
         await Session.updateMany(
-          { userId: (user as any)._id, _id: { $ne: request.sessionId } },
-          {
-            $set: {
-              isActive: false,
-              isRevoked: true,
-              revokedAt: new Date(),
-              revokedReason: "password_change",
-            },
-          }
+          { userId: (user as any)._id, _id: { $ne: (request as any).sessionId } },
+          { isRevoked: true, revokedAt: new Date(), revokedReason: "password_change" }
         );
-
-        // Send password change notification
-        await emailService.sendPasswordChangeNotification(user.email, user.name);
 
         reply.send({
           message: "Password changed successfully",
@@ -560,38 +483,20 @@ export default async function authRoutes(fastify: FastifyInstance) {
   fastify.get(
     "/me",
     {
-      config: {
-        rateLimit: {
-          max: 30, // Allow 30 requests per window for user profile
-          timeWindow: 900000, // 15 minutes
-        },
-      },
-      preHandler: [authenticate],
+      preHandler: authenticate,
     },
     async (request, reply) => {
       try {
-        const userId = request.authUser!.id;
-        const user = await User.findById(userId);
-
-        if (!user) {
-          return reply.status(404).send({
-            code: 404,
-            error: "Not Found",
-            message: "User not found",
-          });
-        }
-
+        const user = request.authUser;
         reply.send({
           user: {
             id: (user as any)._id.toString(),
-            email: user.email,
-            name: user.name,
-            role: user.role,
-            entitlements: (user as any).entitlements,
-            isEmailVerified: user.isEmailVerified,
-            preferences: (user as any).preferences,
-            stats: (user as any).stats,
-            createdAt: user.createdAt,
+            email: user!.email,
+            name: user!.name,
+            role: user!.role,
+            entitlements: user!.entitlements,
+            isEmailVerified: user!.isEmailVerified,
+            lastLogin: (user as any).lastLogin,
           },
         });
       } catch (error: any) {
@@ -609,35 +514,22 @@ export default async function authRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/logout",
     {
-      config: {
-        rateLimit: {
-          max: 10, // Allow only 10 logout attempts per window
-          timeWindow: 900000, // 15 minutes
-        },
-      },
-      preHandler: [authenticate],
+      preHandler: authenticate,
     },
     async (request, reply) => {
       try {
-        const sessionId = request.sessionId;
-
-        // Validate sessionId to prevent security bypass
-        if (!sessionId || typeof sessionId !== "string" || !/^[a-fA-F0-9]{24}$/.test(sessionId)) {
-          return reply.status(401).send({
-            code: 401,
-            error: "Unauthorized",
-            message: "Invalid session",
+        const sessionId = (request as any).sessionId;
+        if (sessionId) {
+          await Session.findByIdAndUpdate(sessionId, {
+            isRevoked: true,
+            revokedAt: new Date(),
+            revokedReason: "user_logout",
           });
         }
 
-        // Revoke current session
-        const session = await Session.findById(sessionId);
-        if (session) {
-          await (session as any).revoke("user_logout");
-        }
-
-        // Clear authentication cookies
-        secureCookieService.clearAuthCookies(reply);
+        // Clear cookies
+        reply.clearCookie("accessToken");
+        reply.clearCookie("refreshToken");
 
         reply.send({
           message: "Logged out successfully",
@@ -647,7 +539,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
         reply.status(500).send({
           code: 500,
           error: "Internal Server Error",
-          message: "Logout failed",
+          message: "Failed to logout",
         });
       }
     }
@@ -657,29 +549,22 @@ export default async function authRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/logout-all",
     {
-      config: {
-        rateLimit: {
-          max: 5, // Allow only 5 logout-all attempts per window
-          timeWindow: 900000, // 15 minutes
-        },
-      },
-      preHandler: [authenticate],
+      preHandler: authenticate,
     },
     async (request, reply) => {
       try {
-        const userId = (request.authUser as any)?.id;
+        const user = request.authUser;
+        const currentSessionId = (request as any).sessionId;
 
-        // Validate userId to prevent security bypass
-        if (!userId || typeof userId !== "string" || !/^[a-fA-F0-9]{24}$/.test(userId)) {
-          return reply.status(401).send({
-            code: 401,
-            error: "Unauthorized",
-            message: "Invalid user",
-          });
-        }
+        // Revoke all sessions except current one
+        await Session.updateMany(
+          { userId: (user as any)._id, _id: { $ne: currentSessionId } },
+          { isRevoked: true, revokedAt: new Date(), revokedReason: "user_logout" }
+        );
 
-        // Revoke all sessions for user
-        await (Session as any).revokeAllForUser(userId, "user_logout");
+        // Clear cookies
+        reply.clearCookie("accessToken");
+        reply.clearCookie("refreshToken");
 
         reply.send({
           message: "Logged out from all devices successfully",
@@ -689,7 +574,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
         reply.status(500).send({
           code: 500,
           error: "Internal Server Error",
-          message: "Logout from all devices failed",
+          message: "Failed to logout from all devices",
         });
       }
     }
@@ -699,6 +584,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/refresh",
     {
+      preHandler: createRateLimitMiddleware("tokenRefresh"),
       schema: {
         body: z.object({
           refreshToken: z
@@ -712,54 +598,11 @@ export default async function authRoutes(fastify: FastifyInstance) {
       try {
         const { refreshToken } = request.body as { refreshToken: string };
 
-        // Strict server-side validation to prevent any bypass attempts
-        // Validate token format before any processing
-        const isValidToken = (token: unknown): token is string => {
-          if (typeof token !== "string") return false;
-          if (token.length < 32 || token.length > 256) return false;
-          if (!/^[a-zA-Z0-9]+$/.test(token)) return false;
-          if (
-            token.includes(" ") ||
-            token.includes("\n") ||
-            token.includes("\r") ||
-            token.includes("\t")
-          )
-            return false;
-          if (
-            token.includes("null") ||
-            token.includes("undefined") ||
-            token.includes("false") ||
-            token.includes("true")
-          )
-            return false;
-          if (token.includes("0") || token.includes("1")) return false;
-          return true;
-        };
-
-        if (!isValidToken(refreshToken)) {
-          request.log.warn({
-            message: "Invalid refresh token format attempt",
-            tokenLength: (refreshToken as any)?.length,
-            tokenType: typeof refreshToken,
-            hasWhitespace:
-              (refreshToken as any)?.includes(" ") ||
-              (refreshToken as any)?.includes("\n") ||
-              (refreshToken as any)?.includes("\r") ||
-              (refreshToken as any)?.includes("\t"),
-          });
-          return reply.status(401).send({
-            code: 401,
-            error: "Unauthorized",
-            message: "Invalid refresh token format",
-          });
-        }
-
         // Verify refresh token
-        const { userId } = jwtService.verifyRefreshToken(refreshToken) as any;
+        const decoded = jwtService.verifyRefreshToken(refreshToken);
+        const session = await Session.findById(decoded.sessionId);
 
-        // Find session
-        const session = await (Session as any).findActiveByRefreshToken(refreshToken);
-        if (!session) {
+        if (!session || !session.isValid()) {
           return reply.status(401).send({
             code: 401,
             error: "Unauthorized",
@@ -767,25 +610,33 @@ export default async function authRoutes(fastify: FastifyInstance) {
           });
         }
 
-        // Get user
-        const user = await User.findById(userId);
-        if (!user || !user.isActive) {
+        // Update session
+        session.lastUsed = new Date();
+        await session.save();
+
+        // Generate new access token
+        const user = await User.findById(session.userId);
+        if (!user) {
           return reply.status(401).send({
             code: 401,
             error: "Unauthorized",
-            message: "User not found or inactive",
+            message: "User not found",
           });
         }
 
-        // Generate new access token
-        const newAccessToken = jwtService.refreshAccessToken(refreshToken, user as any);
+        const newAccessToken = jwtService.generateTokenPair(user, (session as any)._id.toString()).accessToken;
 
-        // Update session
-        await (session as any).refresh();
+        // Set new access token cookie
+        secureCookieService.setSecureCookie(reply, "accessToken", newAccessToken, {
+          maxAge: 15 * 60 * 1000, // 15 minutes
+          httpOnly: true,
+          secure: env.NODE_ENV === "production",
+          sameSite: "strict",
+        });
 
         reply.send({
+          message: "Token refreshed successfully",
           accessToken: newAccessToken,
-          expiresIn: 15 * 60, // 15 minutes
         });
       } catch (error: any) {
         request.log.error("Refresh token error:", error);
