@@ -1,6 +1,5 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
 import { env } from "../config/env.js";
-import rateLimit from "@fastify/rate-limit";
 import type { FastifyRateLimitOptions } from "@fastify/rate-limit";
 import redis from "@fastify/redis";
 import * as crypto from "crypto";
@@ -362,30 +361,8 @@ export async function rateLimitPlugin(fastify: FastifyInstance) {
     }
   }
 
-  // Register global rate limiting with loose defaults
-  await fastify.register(rateLimit, {
-    global: true,
-    max: parseInt(env.RATE_LIMIT_GLOBAL_MAX),
-    timeWindow: env.RATE_LIMIT_GLOBAL_WINDOW,
-    keyGenerator: (request: FastifyRequest) => ipKey(request),
-    errorResponseBuilder: (_request: FastifyRequest, context: { ttl: number; max: number }) => {
-      const retryAfter = Math.round(context.ttl / 1000);
-
-      return {
-        code: 429,
-        error: "Too Many Requests",
-        message: `Global rate limit exceeded. Retry in ${retryAfter} seconds`,
-        retryAfter,
-      };
-    },
-    onExceeding: (request: FastifyRequest) => {
-      const ipHash = ipKey(request).substring(0, 8);
-      (request.log as any).warn({
-        message: "Global rate limit exceeded",
-        ipHash,
-      });
-    },
-  });
+  // Note: Global rate-limit registration is handled centrally in app.ts with { global: false }.
+  // This security plugin focuses on Redis wiring and helper decorators only.
 
   // Decorate Fastify with rate limiting helpers
   fastify.decorate("ipKey", ipKey);
