@@ -8,7 +8,7 @@ import { emailService } from "../services/email.service.js";
 import { secureCookieService } from "../services/secure-cookie.service.js";
 import { env } from "../config/env.js";
 import { authenticate } from "../middlewares/auth.middleware.js";
-import { createRateLimitMiddleware } from "../middlewares/auth-rate-limit.middleware.js";
+import rateLimit from "@fastify/rate-limit";
 import crypto from "crypto";
 
 // Validation schemas
@@ -58,11 +58,21 @@ const changePasswordSchema = z.object({
 });
 
 export default async function authRoutes(fastify: FastifyInstance) {
+  // Register rate limiting plugin
+  await fastify.register(rateLimit, {
+    global: false, // We'll apply it per route
+  });
+
   // Register new user
   fastify.post(
     "/register",
     {
-      preHandler: createRateLimitMiddleware("verifyEmail"), // Use same rate limit as email verification
+      config: {
+        rateLimit: {
+          max: 5,
+          timeWindow: "15 minutes",
+        },
+      },
       schema: {
         body: registerSchema,
       },
@@ -126,7 +136,12 @@ export default async function authRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/login",
     {
-      preHandler: createRateLimitMiddleware("login"),
+      config: {
+        rateLimit: {
+          max: 10,
+          timeWindow: "15 minutes",
+        },
+      },
       schema: {
         body: loginSchema,
       },
@@ -229,7 +244,12 @@ export default async function authRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/verify-email",
     {
-      preHandler: createRateLimitMiddleware("verifyEmail"),
+      config: {
+        rateLimit: {
+          max: 5,
+          timeWindow: "15 minutes",
+        },
+      },
       schema: {
         body: verifyEmailSchema,
       },
@@ -286,7 +306,12 @@ export default async function authRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/resend-verification",
     {
-      preHandler: createRateLimitMiddleware("verifyEmail"), // Use same rate limit as email verification
+      config: {
+        rateLimit: {
+          max: 5,
+          timeWindow: "15 minutes",
+        },
+      },
       schema: {
         body: resendVerificationSchema,
       },
@@ -341,6 +366,12 @@ export default async function authRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/forgot-password",
     {
+      config: {
+        rateLimit: {
+          max: 3,
+          timeWindow: "15 minutes",
+        },
+      },
       schema: {
         body: forgotPasswordSchema,
       },
@@ -386,7 +417,12 @@ export default async function authRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/reset-password",
     {
-      preHandler: createRateLimitMiddleware("passwordReset"),
+      config: {
+        rateLimit: {
+          max: 3,
+          timeWindow: "15 minutes",
+        },
+      },
       schema: {
         body: resetPasswordSchema,
       },
@@ -485,7 +521,13 @@ export default async function authRoutes(fastify: FastifyInstance) {
   fastify.get(
     "/me",
     {
-      preHandler: [authenticate, createRateLimitMiddleware("login")], // Add rate limiting to authenticated route
+      config: {
+        rateLimit: {
+          max: 10,
+          timeWindow: "15 minutes",
+        },
+      },
+      preHandler: authenticate,
     },
     async (request, reply) => {
       try {
@@ -516,7 +558,13 @@ export default async function authRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/logout",
     {
-      preHandler: [authenticate, createRateLimitMiddleware("login")], // Add rate limiting to authenticated route
+      config: {
+        rateLimit: {
+          max: 10,
+          timeWindow: "15 minutes",
+        },
+      },
+      preHandler: authenticate,
     },
     async (request, reply) => {
       try {
@@ -551,7 +599,13 @@ export default async function authRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/logout-all",
     {
-      preHandler: [authenticate, createRateLimitMiddleware("login")], // Add rate limiting to authenticated route
+      config: {
+        rateLimit: {
+          max: 10,
+          timeWindow: "15 minutes",
+        },
+      },
+      preHandler: authenticate,
     },
     async (request, reply) => {
       try {
@@ -586,7 +640,12 @@ export default async function authRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/refresh",
     {
-      preHandler: createRateLimitMiddleware("tokenRefresh"),
+      config: {
+        rateLimit: {
+          max: 10,
+          timeWindow: "15 minutes",
+        },
+      },
       schema: {
         body: z.object({
           refreshToken: z
