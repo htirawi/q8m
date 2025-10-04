@@ -49,17 +49,6 @@ const paymentCallbackSchema = z.object({
   PayerID: z.string().optional(), // PayPal specific (alternative naming)
 });
 
-const webhookSchema = z
-  .object({
-    event_type: z.string().optional(),
-    event: z.string().optional(),
-    resource: z.any().optional(),
-    data: z.any().optional(),
-    signature: z.string().optional(),
-    timestamp: z.string().optional(),
-  })
-  .passthrough(); // Allow additional fields
-
 export default async function paymentRoutes(fastify: FastifyInstance) {
   // Get pricing information
   fastify.get(
