@@ -214,7 +214,7 @@ export class MockPaymentService {
    */
   public async processRefund(
     paymentId: string,
-    _amount: number // eslint-disable-line @typescript-eslint/no-unused-vars
+    _amount: number
   ): Promise<{ success: boolean; refundId?: string; error?: string }> {
     if (!this.isEnabled) {
       throw new Error("Mock payment service not enabled");

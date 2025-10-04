@@ -8,7 +8,7 @@ export default async function adminRoutes(fastify: FastifyInstance) {
     {
       preHandler: [fastify.requireRole("admin")],
     },
-    async (request, reply) => {
+    async (_request, reply) => {
       // TODO: Implement admin dashboard stats
       reply.send({
         totalUsers: 1250,
@@ -44,8 +44,8 @@ export default async function adminRoutes(fastify: FastifyInstance) {
       preHandler: [fastify.requireRole("admin")],
       schema: {
         querystring: z.object({
-          limit: z.string().transform(Number).optional().default(20),
-          offset: z.string().transform(Number).optional().default(0),
+          limit: z.string().transform(Number).optional().default("20"),
+          offset: z.string().transform(Number).optional().default("0"),
           search: z.string().optional(),
           role: z.enum(["user", "admin"]).optional(),
         }),
@@ -134,8 +134,8 @@ export default async function adminRoutes(fastify: FastifyInstance) {
       preHandler: [fastify.requireRole("admin")],
       schema: {
         querystring: z.object({
-          limit: z.string().transform(Number).optional().default(20),
-          offset: z.string().transform(Number).optional().default(0),
+          limit: z.string().transform(Number).optional().default("20"),
+          offset: z.string().transform(Number).optional().default("0"),
           framework: z.enum(["angular", "react", "nextjs", "redux"]).optional(),
           level: z.enum(["junior", "intermediate", "senior"]).optional(),
         }),

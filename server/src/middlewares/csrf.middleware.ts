@@ -32,7 +32,11 @@ export function csrfMiddleware() {
     const cookieToken = request.cookies?.csrfToken;
 
     // Verify CSRF token
-    if (!secureCookieService.verifyCSRFToken(csrfToken, cookieToken)) {
+    if (
+      !csrfToken ||
+      !cookieToken ||
+      !secureCookieService.verifyCSRFToken(csrfToken, cookieToken)
+    ) {
       return reply.status(403).send({
         code: 403,
         error: "Forbidden",

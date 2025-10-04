@@ -24,7 +24,7 @@
     "noImplicitReturns": true,
     "noUncheckedIndexedAccess": true,
     "forceConsistentCasingInFileNames": true,
-    "exactOptionalPropertyTypes": true,
+    "exactOptionalPropertyTypes": false,
     "types": ["node", "vitest/globals"],
     "baseUrl": ".",
     "paths": {

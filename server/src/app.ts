@@ -23,12 +23,13 @@ import paymentRoutes from "./routes/payments";
 import questionRoutes from "./routes/questions";
 import adminRoutes from "./routes/admin";
 import entitlementRoutes from "./routes/entitlements";
-import downloadRoutes from "./routes/downloads";
+// import downloadRoutes from "./routes/downloads"; // TODO: Fix broken downloads route
 import seoRoutes from "./routes/seo";
 
 // Import middleware
 import { errorHandler } from "./middlewares/error.middleware";
 import { requestLogger } from "./middlewares/logger.middleware";
+import authPlugin from "./middlewares/auth.middleware";
 
 // Import database
 import { connectDatabase } from "./config/database";
@@ -62,10 +63,29 @@ const fastify = Fastify({
 });
 
 // Register error handler
-fastify.setErrorHandler(errorHandler);
+fastify.setErrorHandler((error, request, reply) => {
+  return errorHandler(error, request, reply);
+});
 
 // Register request logger
 fastify.addHook("onRequest", requestLogger);
+
+// Register response logger
+fastify.addHook("onSend", async (request, reply, payload) => {
+  const startTime = (request as any).startTime;
+  if (startTime) {
+    const responseTime = Date.now() - startTime;
+    request.log.info({
+      type: "response",
+      method: request.method,
+      url: request.url,
+      statusCode: reply.statusCode,
+      responseTime: `${responseTime}ms`,
+      contentLength: reply.getHeader("content-length"),
+    });
+  }
+  return payload;
+});
 
 // Register plugins
 async function registerPlugins() {
@@ -96,7 +116,7 @@ async function registerPlugins() {
   await fastify.register(rateLimit, {
     max: parseInt(env.RATE_LIMIT_MAX_REQUESTS || "100"),
     timeWindow: env.RATE_LIMIT_WINDOW_MS || "900000", // 15 minutes
-    errorResponseBuilder: (request, context) => ({
+    errorResponseBuilder: (_request, context) => ({
       code: 429,
       error: "Too Many Requests",
       message: `Rate limit exceeded, retry in ${Math.round(context.ttl / 1000)} seconds`,
@@ -172,6 +192,9 @@ async function registerPlugins() {
     },
   });
 
+  // Auth plugin
+  await fastify.register(authPlugin);
+
   // Swagger documentation
   if (env.NODE_ENV === "development") {
     await fastify.register(swagger, {
@@ -228,7 +251,7 @@ async function registerRoutes() {
   await fastify.register(questionRoutes, { prefix: "/api/questions" });
   await fastify.register(adminRoutes, { prefix: "/api/admin" });
   await fastify.register(entitlementRoutes, { prefix: "/api/entitlements" });
-  await fastify.register(downloadRoutes, { prefix: "/api/downloads" });
+  // await fastify.register(downloadRoutes, { prefix: "/api/downloads" }); // TODO: Fix broken downloads route
   await fastify.register(seoRoutes);
 }
 
@@ -271,12 +294,12 @@ async function start() {
 
 // Handle uncaught exceptions
 process.on("uncaughtException", (error) => {
-  fastify.log.error("Uncaught Exception:", error);
+  fastify.log.error(error);
   process.exit(1);
 });
 
-process.on("unhandledRejection", (reason, promise) => {
-  fastify.log.error("Unhandled Rejection at:", promise, "reason:", reason);
+process.on("unhandledRejection", (reason, _promise) => {
+  fastify.log.error(reason);
   process.exit(1);
 });
 

@@ -1,13 +1,14 @@
 import type { FastifyInstance } from "fastify";
 import { z } from "zod";
+import { authenticate } from "../middlewares/auth.middleware.js";
 
 const getQuestionsSchema = z.object({
   framework: z.enum(["angular", "react", "nextjs", "redux"]),
   level: z.enum(["junior", "intermediate", "senior"]).optional(),
   category: z.string().optional(),
   difficulty: z.enum(["easy", "medium", "hard"]).optional(),
-  limit: z.string().transform(Number).optional().default(10),
-  offset: z.string().transform(Number).optional().default(0),
+  limit: z.string().transform(Number).optional().default("10"),
+  offset: z.string().transform(Number).optional().default("0"),
 });
 
 const mockQuestions = [
@@ -130,7 +131,7 @@ export default async function questionRoutes(fastify: FastifyInstance) {
         }),
       },
     },
-    async (request, reply) => {
+    async (_request, reply) => {
       // TODO: Implement real category fetching
       const categories = ["Components", "Services", "Routing", "Forms", "Testing"];
 
@@ -142,14 +143,14 @@ export default async function questionRoutes(fastify: FastifyInstance) {
   fastify.get(
     "/stats/:framework",
     {
-      preHandler: [fastify.authenticate],
+      preHandler: [authenticate],
       schema: {
         params: z.object({
           framework: z.enum(["angular", "react", "nextjs", "redux"]),
         }),
       },
     },
-    async (request, reply) => {
+    async (_request, reply) => {
       // TODO: Implement real statistics
       reply.send({
         total: 100,
@@ -178,7 +179,7 @@ export default async function questionRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/submit",
     {
-      preHandler: [fastify.authenticate],
+      preHandler: [authenticate],
       schema: {
         body: z.object({
           questionId: z.string(),
@@ -187,7 +188,7 @@ export default async function questionRoutes(fastify: FastifyInstance) {
         }),
       },
     },
-    async (request, reply) => {
+    async (_request, reply) => {
       // TODO: Implement answer submission and scoring
       reply.send({
         correct: true,
@@ -201,9 +202,9 @@ export default async function questionRoutes(fastify: FastifyInstance) {
   fastify.get(
     "/history",
     {
-      preHandler: [fastify.authenticate],
+      preHandler: [authenticate],
     },
-    async (request, reply) => {
+    async (_request, reply) => {
       // TODO: Implement quiz history
       reply.send({
         quizzes: [

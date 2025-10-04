@@ -1,4 +1,4 @@
-import { FastifyRequest, FastifyReply } from "fastify";
+import { FastifyRequest, FastifyReply, FastifyInstance } from "fastify";
 import { jwtService } from "../services/jwt.service.js";
 import { User } from "../models/User.js";
 import { Session } from "../models/Session.js";
@@ -15,6 +15,15 @@ declare module "fastify" {
       isEmailVerified: boolean;
     };
     sessionId?: string;
+  }
+
+  interface FastifyInstance {
+    authenticate: (
+      options?: AuthOptions
+    ) => (request: FastifyRequest, reply: FastifyReply) => Promise<void>;
+    requireRole: (
+      roles: string | string[]
+    ) => (request: FastifyRequest, reply: FastifyReply) => Promise<void>;
   }
 }
 
@@ -241,3 +250,13 @@ export const requireBundle = createAuthMiddleware({
 
 // Export default authentication middleware
 export const authenticate = createAuthMiddleware();
+
+// Fastify plugin registration
+export default async function authPlugin(fastify: FastifyInstance) {
+  // Register authentication methods on fastify instance
+  fastify.decorate("authenticate", createAuthMiddleware);
+  fastify.decorate("requireRole", (roles: string | string[]) => {
+    const roleArray = Array.isArray(roles) ? roles : [roles];
+    return createAuthMiddleware({ requiredRole: roleArray });
+  });
+}

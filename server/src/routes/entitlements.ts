@@ -21,7 +21,7 @@ export default async function entitlementRoutes(fastify: FastifyInstance) {
     },
     async (request, reply) => {
       try {
-        const userId = request.user!.id;
+        const userId = request.authUser!.id;
         const userEntitlements = await entitlementService.getUserEntitlements(userId);
 
         reply.send({
@@ -49,7 +49,7 @@ export default async function entitlementRoutes(fastify: FastifyInstance) {
     },
     async (request, reply) => {
       try {
-        const userId = request.user!.id;
+        const userId = request.authUser!.id;
         const { requiredEntitlement } = request.body as z.infer<typeof checkEntitlementSchema>;
 
         const entitlementCheck = await entitlementService.checkEntitlement(
@@ -86,7 +86,7 @@ export default async function entitlementRoutes(fastify: FastifyInstance) {
     },
     async (request, reply) => {
       try {
-        const userId = request.user!.id;
+        const userId = request.authUser!.id;
         const { contentLevel } = request.body as z.infer<typeof checkContentAccessSchema>;
 
         const contentCheck = await entitlementService.checkContentAccess(userId, contentLevel);
@@ -120,7 +120,7 @@ export default async function entitlementRoutes(fastify: FastifyInstance) {
     },
     async (request, reply) => {
       try {
-        const userId = request.user!.id;
+        const userId = request.authUser!.id;
         const { requiredEntitlements } = request.body as { requiredEntitlements: string[] };
 
         const entitlementChecks = await entitlementService.checkMultipleEntitlements(
@@ -173,14 +173,14 @@ export default async function entitlementRoutes(fastify: FastifyInstance) {
       preHandler: [authenticate],
       schema: {
         querystring: z.object({
-          days: z.string().transform(Number).optional().default(7),
+          days: z.string().transform(Number).optional().default("7"),
         }),
       },
     },
     async (request, reply) => {
       try {
         // Check if user is admin
-        if (request.user!.role !== "admin") {
+        if (request.authUser!.role !== "admin") {
           return reply.status(403).send({
             success: false,
             error: "Admin access required",
@@ -214,7 +214,7 @@ export default async function entitlementRoutes(fastify: FastifyInstance) {
     async (request, reply) => {
       try {
         // Check if user is admin
-        if (request.user!.role !== "admin") {
+        if (request.authUser!.role !== "admin") {
           return reply.status(403).send({
             success: false,
             error: "Admin access required",
@@ -246,7 +246,7 @@ export default async function entitlementRoutes(fastify: FastifyInstance) {
     async (request, reply) => {
       try {
         // Check if user is admin
-        if (request.user!.role !== "admin") {
+        if (request.authUser!.role !== "admin") {
           return reply.status(403).send({
             success: false,
             error: "Admin access required",
@@ -283,7 +283,7 @@ export default async function entitlementRoutes(fastify: FastifyInstance) {
     async (request, reply) => {
       try {
         // Check if user is admin
-        if (request.user!.role !== "admin") {
+        if (request.authUser!.role !== "admin") {
           return reply.status(403).send({
             success: false,
             error: "Admin access required",
@@ -316,7 +316,7 @@ export default async function entitlementRoutes(fastify: FastifyInstance) {
     async (request, reply) => {
       try {
         // Check if user is admin
-        if (request.user!.role !== "admin") {
+        if (request.authUser!.role !== "admin") {
           return reply.status(403).send({
             success: false,
             error: "Admin access required",

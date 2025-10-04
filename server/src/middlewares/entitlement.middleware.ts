@@ -25,7 +25,7 @@ export const createEntitlementMiddleware = (options: EntitlementOptions) => {
   return async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       // Check if user is authenticated
-      if (!request.user) {
+      if (!request.authUser) {
         return reply.status(401).send({
           code: 401,
           error: "Unauthorized",
@@ -35,7 +35,7 @@ export const createEntitlementMiddleware = (options: EntitlementOptions) => {
 
       // Check entitlement
       const entitlementCheck = await entitlementService.checkEntitlement(
-        request.user.id,
+        request.authUser.id,
         options.requiredEntitlement
       );
 
@@ -79,7 +79,7 @@ export const createEntitlementMiddleware = (options: EntitlementOptions) => {
 
       // Access granted, continue to route handler
     } catch (error) {
-      request.log.error("Entitlement middleware error:", error);
+      request.log.error(error);
       return reply.status(500).send({
         code: 500,
         error: "Internal Server Error",
@@ -113,11 +113,10 @@ export const requireBundle = createEntitlementMiddleware({
 /**
  * Optional entitlement middleware - doesn't block access but provides entitlement info
  */
-export const optionalEntitlement = async (request: FastifyRequest, _reply: FastifyReply) => { // eslint-disable-line @typescript-eslint/no-unused-vars
-   
+export const optionalEntitlement = async (request: FastifyRequest, _reply: FastifyReply) => {
   try {
-    if (request.user) {
-      const userEntitlements = await entitlementService.getUserEntitlements(request.user.id);
+    if (request.authUser) {
+      const userEntitlements = await entitlementService.getUserEntitlements(request.authUser.id);
 
       // Attach entitlement info to request without blocking access
       request.entitlementCheck = {
@@ -125,7 +124,7 @@ export const optionalEntitlement = async (request: FastifyRequest, _reply: Fasti
       };
     }
   } catch (error) {
-    request.log.debug("Optional entitlement check failed:", error);
+    request.log.debug(error);
     // Don't fail for optional checks
   }
 };
@@ -138,7 +137,7 @@ export const requireContentAccess = (
 ) => {
   return async (request: FastifyRequest, reply: FastifyReply) => {
     try {
-      if (!request.user) {
+      if (!request.authUser) {
         return reply.status(401).send({
           code: 401,
           error: "Unauthorized",
@@ -147,7 +146,7 @@ export const requireContentAccess = (
       }
 
       const accessCheck = await entitlementService.checkContentAccess(
-        request.user.id,
+        request.authUser.id,
         contentLevel
       );
 
@@ -164,7 +163,7 @@ export const requireContentAccess = (
       // Attach access check to request
       request.entitlementCheck = accessCheck;
     } catch (error) {
-      request.log.error("Content access middleware error:", error);
+      request.log.error(error);
       return reply.status(500).send({
         code: 500,
         error: "Internal Server Error",
@@ -193,7 +192,7 @@ export const requireAdminWithEntitlements = async (
   reply: FastifyReply
 ) => {
   try {
-    if (!request.user) {
+    if (!request.authUser) {
       return reply.status(401).send({
         code: 401,
         error: "Unauthorized",
@@ -201,7 +200,7 @@ export const requireAdminWithEntitlements = async (
       });
     }
 
-    if (request.user.role !== "admin") {
+    if (request.authUser.role !== "admin") {
       return reply.status(403).send({
         code: 403,
         error: "Forbidden",
@@ -210,15 +209,15 @@ export const requireAdminWithEntitlements = async (
     }
 
     // Log admin access with entitlement info
-    const userEntitlements = await entitlementService.getUserEntitlements(request.user.id);
+    const userEntitlements = await entitlementService.getUserEntitlements(request.authUser.id);
     request.log.info({
       adminAccess: true,
-      userId: request.user.id,
+      userId: request.authUser.id,
       entitlements: userEntitlements.entitlements,
       activeSubscription: userEntitlements.activeSubscription,
     });
   } catch (error) {
-    request.log.error("Admin entitlement middleware error:", error);
+    request.log.error(error);
     return reply.status(500).send({
       code: 500,
       error: "Internal Server Error",
@@ -231,15 +230,14 @@ export const requireAdminWithEntitlements = async (
  * Rate limiting based on entitlements
  */
 export const entitlementBasedRateLimit = (baseLimit: number = 100) => {
-  return async (request: FastifyRequest, _reply: FastifyReply) => { // eslint-disable-line @typescript-eslint/no-unused-vars
-     
+  return async (request: FastifyRequest, _reply: FastifyReply) => {
     try {
-      if (!request.user) {
+      if (!request.authUser) {
         // Apply base limit for unauthenticated users
         return;
       }
 
-      const userEntitlements = await entitlementService.getUserEntitlements(request.user.id);
+      const userEntitlements = await entitlementService.getUserEntitlements(request.authUser.id);
 
       // Calculate rate limit multiplier based on entitlements
       let multiplier = 1;
@@ -255,14 +253,14 @@ export const entitlementBasedRateLimit = (baseLimit: number = 100) => {
       // This would integrate with your rate limiting system
       // For now, we just log the calculated limit
       request.log.debug({
-        userId: request.user.id,
+        userId: request.authUser.id,
         baseLimit,
         multiplier,
         calculatedLimit: baseLimit * multiplier,
         entitlements: userEntitlements.entitlements,
       });
     } catch (error) {
-      request.log.debug("Entitlement-based rate limit check failed:", error);
+      request.log.debug(error);
       // Don't fail for rate limit checks
     }
   };

@@ -245,7 +245,10 @@ export default async function authRoutes(fastify: FastifyInstance) {
       try {
         const { token } = request.body as z.infer<typeof verifyEmailSchema>;
 
-        const verificationToken = await (VerificationToken as any).verifyToken(token, "email_verification");
+        const verificationToken = await (VerificationToken as any).verifyToken(
+          token,
+          "email_verification"
+        );
         const user = await User.findById(verificationToken.userId);
 
         if (!user) {
@@ -472,7 +475,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
         const { currentPassword, newPassword } = request.body as z.infer<
           typeof changePasswordSchema
         >;
-        const userId = request.user!.id;
+        const userId = request.authUser!.id;
 
         const user = await User.findById(userId).select("+password");
         if (!user) {
@@ -541,7 +544,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
     },
     async (request, reply) => {
       try {
-        const userId = request.user!.id;
+        const userId = request.authUser!.id;
         const user = await User.findById(userId);
 
         if (!user) {
@@ -678,7 +681,10 @@ export default async function authRoutes(fastify: FastifyInstance) {
       },
       schema: {
         body: z.object({
-          refreshToken: z.string().min(32, "Refresh token must be at least 32 characters").max(256, "Refresh token too long"),
+          refreshToken: z
+            .string()
+            .min(32, "Refresh token must be at least 32 characters")
+            .max(256, "Refresh token too long"),
         }),
       },
     },
@@ -692,14 +698,27 @@ export default async function authRoutes(fastify: FastifyInstance) {
           if (typeof token !== "string") return false;
           if (token.length < 32 || token.length > 256) return false;
           if (!/^[a-zA-Z0-9]+$/.test(token)) return false;
-          if (token.includes(" ") || token.includes("\n") || token.includes("\r") || token.includes("\t")) return false;
-          if (token.includes("null") || token.includes("undefined") || token.includes("false") || token.includes("true")) return false;
+          if (
+            token.includes(" ") ||
+            token.includes("\n") ||
+            token.includes("\r") ||
+            token.includes("\t")
+          )
+            return false;
+          if (
+            token.includes("null") ||
+            token.includes("undefined") ||
+            token.includes("false") ||
+            token.includes("true")
+          )
+            return false;
           if (token.includes("0") || token.includes("1")) return false;
           return true;
         };
 
         if (!isValidToken(refreshToken)) {
-          request.log.warn("Invalid refresh token format attempt", {
+          request.log.warn({
+            message: "Invalid refresh token format attempt",
             tokenLength: (refreshToken as any)?.length,
             tokenType: typeof refreshToken,
             hasWhitespace:

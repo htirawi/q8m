@@ -135,7 +135,7 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
         const { planType, currency, billingCycle, billingAddress } = request.body as z.infer<
           typeof createPaymentSchema
         >;
-        const user = request.user!;
+        const user = request.authUser!;
 
         // Get pricing for the plan
         const planPricing = await pricingService.getPlanPricing(planType, currency);
@@ -333,15 +333,15 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
       preHandler: [authenticate],
       schema: {
         querystring: z.object({
-          limit: z.string().transform(Number).optional().default(10),
-          skip: z.string().transform(Number).optional().default(0),
+          limit: z.string().transform(Number).optional().default("10"),
+          skip: z.string().transform(Number).optional().default("0"),
         }),
       },
     },
     async (request, reply) => {
       try {
         const { limit, skip } = request.query as { limit: number; skip: number };
-        const userId = request.user!.id;
+        const userId = request.authUser!.id;
 
         const purchases = await Purchase.getUserPurchases(userId, limit, skip);
 
@@ -372,7 +372,7 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
     },
     async (request, reply) => {
       try {
-        const userId = request.user!.id;
+        const userId = request.authUser!.id;
 
         const subscription = await Subscription.findActiveForUser(userId);
 
@@ -410,7 +410,7 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
     },
     async (request, reply) => {
       try {
-        const userId = request.user!.id;
+        const userId = request.authUser!.id;
         const { reason } = request.body as { reason: string };
 
         const subscription = await Subscription.findActiveForUser(userId);
@@ -608,7 +608,10 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
         }
 
         // Check if user owns this purchase or is admin
-        if (purchase.userId.toString() !== request.user!.id && request.user!.role !== "admin") {
+        if (
+          purchase.userId.toString() !== request.authUser!.id &&
+          request.authUser!.role !== "admin"
+        ) {
           return reply.status(403).send({
             success: false,
             error: "Access denied",

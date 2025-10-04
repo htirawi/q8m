@@ -39,7 +39,7 @@ export class JWTService {
       userId: user.id,
       email: user.email,
       role: user.role,
-      entitlements: user.entitlements,
+      entitlements: (user as any).entitlements || [],
       sessionId,
     };
 
@@ -97,6 +97,10 @@ export class JWTService {
         audience: "quiz-platform-client",
       }) as { userId: string; sessionId: string };
 
+      if (!decoded || !decoded.userId || !decoded.sessionId) {
+        throw new Error("Invalid token payload");
+      }
+
       return decoded;
     } catch (error) {
       if (error instanceof jwt.TokenExpiredError) {
@@ -152,7 +156,7 @@ export class JWTService {
       userId: user.id,
       email: user.email,
       role: user.role,
-      entitlements: user.entitlements,
+      entitlements: (user as any).entitlements || [],
       sessionId,
     };
 

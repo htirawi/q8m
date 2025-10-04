@@ -37,23 +37,26 @@ export default [
       ...prettier.rules,
       ...typescript.configs.recommended.rules,
 
-      // TypeScript specific rules - relaxed for legacy code
-      "@typescript-eslint/no-unused-vars": "warn",
-      "@typescript-eslint/no-explicit-any": "off",
+      // TypeScript specific rules
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        { argsIgnorePattern: "^_", caughtErrorsIgnorePattern: "^_", ignoreRestSiblings: false },
+      ],
+      "@typescript-eslint/no-explicit-any": "warn",
       "@typescript-eslint/explicit-function-return-type": "off",
       "@typescript-eslint/explicit-module-boundary-types": "off",
       "@typescript-eslint/no-require-imports": "warn",
       "no-case-declarations": "warn",
 
-      // Best practices - relaxed for legacy code
-      "prefer-const": "warn",
-      "no-var": "warn",
-      "object-shorthand": "warn",
-      "prefer-template": "warn",
-      "no-console": "off",
-      "no-debugger": "warn",
-      "no-alert": "warn",
-      "no-dupe-keys": "warn",
+      // Best practices
+      "prefer-const": "error",
+      "no-var": "error",
+      "object-shorthand": "error",
+      "prefer-template": "error",
+      "no-console": ["warn", { allow: ["warn", "error"] }],
+      "no-debugger": "error",
+      "no-alert": "error",
+      "no-dupe-keys": "error",
     },
   },
 ];
