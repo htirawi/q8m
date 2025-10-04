@@ -3,6 +3,7 @@ import { Purchase } from "../models/Purchase.js";
 import { Subscription } from "../models/Subscription.js";
 import { User } from "../models/User.js";
 import { currencyService } from "./currency.service.js";
+import { logPaymentEvent } from "../security/logging.js";
 import crypto from "crypto";
 
 export interface APSPaymentRequest {
@@ -347,7 +348,10 @@ export class APSService {
           await this.handlePaymentRefunded(webhookData.data);
           break;
         default:
-          console.warn(`Unhandled APS webhook event: ${webhookData.event}`);
+          logPaymentEvent(console, "aps_webhook_unhandled", {
+            event: webhookData.event,
+            service: "aps",
+          });
       }
 
       return { success: true };

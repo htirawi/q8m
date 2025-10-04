@@ -1,5 +1,41 @@
 import type { FastifyInstance } from "fastify";
 import { z } from "zod";
+import { sanitizeForDisplay } from "../security/escape.js";
+
+/**
+ * Sanitize update data to prevent XSS attacks
+ */
+function sanitizeUpdateData(data: unknown): Record<string, unknown> {
+  if (!data || typeof data !== "object") {
+    return {};
+  }
+
+  const sanitized: Record<string, unknown> = {};
+  const obj = data as Record<string, unknown>;
+
+  for (const [key, value] of Object.entries(obj)) {
+    if (typeof value === "string") {
+      // For question content, we might need to allow some HTML, but escape dangerous tags
+      if (key.includes("content") || key.includes("question") || key.includes("explanation")) {
+        sanitized[key] = sanitizeForDisplay(value);
+      } else {
+        sanitized[key] = sanitizeForDisplay(value);
+      }
+    } else if (typeof value === "number" || typeof value === "boolean") {
+      sanitized[key] = value;
+    } else if (Array.isArray(value)) {
+      sanitized[key] = value.map((item) =>
+        typeof item === "string" ? sanitizeForDisplay(item) : item
+      );
+    } else if (value && typeof value === "object") {
+      sanitized[key] = sanitizeUpdateData(value);
+    } else {
+      sanitized[key] = value;
+    }
+  }
+
+  return sanitized;
+}
 
 export default async function adminRoutes(fastify: FastifyInstance) {
   // Get admin dashboard stats
@@ -10,6 +46,7 @@ export default async function adminRoutes(fastify: FastifyInstance) {
     },
     async (_request, reply) => {
       // TODO: Implement admin dashboard stats
+      reply.type("application/json; charset=utf-8");
       reply.send({
         totalUsers: 1250,
         activeUsers: 890,
@@ -52,9 +89,10 @@ export default async function adminRoutes(fastify: FastifyInstance) {
       },
     },
     async (request, reply) => {
-      const { limit, offset } = request.query as unknown;
+      const { limit, offset } = request.query as { limit: number; offset: number };
 
       // TODO: Implement real user fetching
+      reply.type("application/json; charset=utf-8");
       reply.send({
         users: [
           {
@@ -142,9 +180,10 @@ export default async function adminRoutes(fastify: FastifyInstance) {
       },
     },
     async (request, reply) => {
-      const { limit, offset } = request.query as unknown;
+      const { limit, offset } = request.query as { limit: number; offset: number };
 
       // TODO: Implement real question fetching
+      reply.type("application/json; charset=utf-8");
       reply.send({
         questions: [],
         total: 0,
@@ -205,7 +244,7 @@ export default async function adminRoutes(fastify: FastifyInstance) {
       // TODO: Implement question creation
       reply.status(201).send({
         id: "new-question-id",
-        ...questionData,
+        ...(questionData as Record<string, unknown>),
         isActive: true,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -229,9 +268,13 @@ export default async function adminRoutes(fastify: FastifyInstance) {
       const updateData = request.body as unknown;
 
       // TODO: Implement question update
+      // Sanitize updateData to prevent XSS
+      const sanitizedData = sanitizeUpdateData(updateData);
+
+      reply.type("application/json; charset=utf-8");
       reply.send({
-        id: questionId,
-        ...updateData,
+        id: sanitizeForDisplay(questionId),
+        ...(sanitizedData as Record<string, unknown>),
         updatedAt: new Date(),
       });
     }

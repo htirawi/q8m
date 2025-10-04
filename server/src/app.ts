@@ -58,6 +58,16 @@ const fastify = Fastify({
             },
           }
         : undefined,
+    redact: {
+      paths: [
+        "req.headers.authorization",
+        "body.password",
+        "body.token",
+        "body.card",
+        "query.token",
+      ],
+      remove: true,
+    },
   },
   trustProxy: env.RATE_LIMIT_TRUST_PROXY === "true",
   requestIdHeader: "x-request-id",
@@ -103,15 +113,17 @@ async function registerPlugins() {
   // Security headers
   await fastify.register(helmet, {
     contentSecurityPolicy: {
+      useDefaults: true,
       directives: {
-        defaultSrc: ["'self'"],
-        styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
-        fontSrc: ["'self'", "https://fonts.gstatic.com"],
-        imgSrc: ["'self'", "data:", "https:"],
-        scriptSrc: ["'self'"],
-        connectSrc: ["'self'"],
+        "default-src": ["'self'"],
+        "script-src": ["'self'"],
+        "style-src": ["'self'", "'unsafe-inline'"],
+        "img-src": ["'self'", "data:"],
+        "connect-src": ["'self'"],
+        "frame-ancestors": ["'none'"],
       },
     },
+    xssFilter: true,
     crossOriginEmbedderPolicy: false,
   });
 

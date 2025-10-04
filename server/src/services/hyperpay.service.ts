@@ -5,6 +5,7 @@ import { entitlementService } from "./entitlement.service.js";
 import { pricingService } from "./pricing.service.js";
 import { Plan } from "@shared/types/pricing";
 import { User } from "../models/User.js";
+import { logPaymentEvent } from "../security/logging.js";
 
 interface HyperPayPaymentRequest {
   planType: Plan;
@@ -317,12 +318,19 @@ export class HyperPayService {
     try {
       const { entity, event } = webhookData;
 
-      console.warn(`Received HyperPay webhook event: ${event} for payment ${entity.id}`);
+      logPaymentEvent(console, "hyperpay_webhook_received", {
+        event,
+        paymentId: entity.id,
+        service: "hyperpay",
+      });
 
       // Find the purchase record
       const purchase = await Purchase.findByPaymentId(entity.id);
       if (!purchase) {
-        console.error(`HyperPay webhook: Purchase not found for payment ID ${entity.id}`);
+        logPaymentEvent(console, "hyperpay_webhook_purchase_not_found", {
+          paymentId: entity.id,
+          service: "hyperpay",
+        });
         return { success: false, error: "Purchase not found" };
       }
 
@@ -356,7 +364,11 @@ export class HyperPayService {
               subscription.userId.toString(),
               "refunded"
             );
-            console.warn(`Subscription ${subscription._id} cancelled due to refund.`);
+            logPaymentEvent(console, "hyperpay_subscription_cancelled", {
+              subscriptionId: subscription._id,
+              reason: "refunded",
+              service: "hyperpay",
+            });
           }
           break;
         }

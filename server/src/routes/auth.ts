@@ -8,8 +8,47 @@ import { emailService } from "../services/email.service.js";
 import { secureCookieService } from "../services/secure-cookie.service.js";
 import { env } from "../config/env.js";
 import { authenticate } from "../middlewares/auth.middleware.js";
+import { buildRateLimitOptions } from "../security/rateLimit.js";
 import rateLimit from "@fastify/rate-limit";
-import crypto from "crypto";
+import * as crypto from "crypto";
+
+// Type definitions for request bodies
+interface RegisterBody {
+  email: string;
+  name: string;
+  password: string;
+}
+
+interface LoginBody {
+  email: string;
+  password: string;
+}
+
+interface VerifyEmailBody {
+  token: string;
+}
+
+interface ResendVerificationBody {
+  email: string;
+}
+
+interface ForgotPasswordBody {
+  email: string;
+}
+
+interface ResetPasswordBody {
+  token: string;
+  password: string;
+}
+
+interface ChangePasswordBody {
+  currentPassword: string;
+  newPassword: string;
+}
+
+interface RefreshTokenBody {
+  refreshToken: string;
+}
 
 // Validation schemas
 const registerSchema = z.object({
@@ -74,65 +113,70 @@ export default async function authRoutes(fastify: FastifyInstance) {
     fastify.post(
       "/register",
       {
+        ...buildRateLimitOptions("auth:signup", { max: 20, timeWindow: "15m" }),
         schema: {
           body: registerSchema,
         },
       },
-    async (request, reply) => {
-      try {
-        const { email, name, password } = request.body as z.infer<typeof registerSchema>;
+      async (request, reply) => {
+        try {
+          const { email, name, password } = request.body as RegisterBody;
 
-        // Check if user already exists
-        const existingUser = await User.findOne({ email });
-        if (existingUser) {
-          return reply.status(400).send({
-            code: 400,
-            error: "Bad Request",
-            message: "User with this email already exists",
+          // Check if user already exists
+          const existingUser = await User.findOne({ email });
+          if (existingUser) {
+            return reply.status(400).send({
+              code: 400,
+              error: "Bad Request",
+              message: "User with this email already exists",
+            });
+          }
+
+          // Create new user
+          const user = new User({
+            email,
+            name,
+            password,
+            entitlements: ["JUNIOR"], // Default entitlement
+          });
+
+          await user.save();
+
+          // Generate verification token
+          const verificationToken = await (VerificationToken as any).createToken(
+            (user as any)._id.toString(),
+            "email_verification",
+            24 // 24 hours
+          );
+
+          // Send verification email
+          const verificationUrl = `${env.CLIENT_URL}/verify-email?token=${verificationToken.token}`;
+          await emailService.sendEmailVerification(user.email, user.name, verificationUrl);
+
+          reply.status(201).send({
+            message: "User registered successfully. Please check your email for verification.",
+            user: {
+              id: (user as any)._id.toString(),
+              email: user.email,
+              name: user.name,
+              isEmailVerified: user.isEmailVerified,
+            },
+          });
+        } catch (error: unknown) {
+          // Error handling
+          (request.log as any).error({
+            error: error instanceof Error ? error.message : "Failed to register user",
+            message: "Registration error",
+          });
+          const errorMessage = error instanceof Error ? error.message : "Failed to register user";
+          reply.status(500).send({
+            code: 500,
+            error: "Internal Server Error",
+            message: errorMessage,
           });
         }
-
-        // Create new user
-        const user = new User({
-          email,
-          name,
-          password,
-          entitlements: ["JUNIOR"], // Default entitlement
-        });
-
-        await user.save();
-
-        // Generate verification token
-        const verificationToken = await (VerificationToken as unknown).createToken(
-          (user as unknown)._id.toString(),
-          "email_verification",
-          24 // 24 hours
-        );
-
-        // Send verification email
-        const verificationUrl = `${env.CLIENT_URL}/verify-email?token=${verificationToken.token}`;
-        await emailService.sendEmailVerification(user.email, user.name, verificationUrl);
-
-        reply.status(201).send({
-          message: "User registered successfully. Please check your email for verification.",
-          user: {
-            id: (user as unknown)._id.toString(),
-            email: user.email,
-            name: user.name,
-            isEmailVerified: user.isEmailVerified,
-          },
-        });
-      } catch (error: unknown) {
-        // Error handling
-        request.log.error("Registration error:", error);
-        const errorMessage = error instanceof Error ? error.message : "Failed to register user";
-        reply.status(500).send({
-          code: 500,
-          error: "Internal Server Error",
-          message: errorMessage,
-        });
       }
-    });
+    );
   });
 
   // Login user
@@ -146,104 +190,113 @@ export default async function authRoutes(fastify: FastifyInstance) {
     fastify.post(
       "/login",
       {
+        ...buildRateLimitOptions("auth:login", { max: 20, timeWindow: "15m" }),
+        preHandler: [fastify.loginFailurePenaltyPreHandler("auth:login")],
         schema: {
           body: loginSchema,
         },
       },
-    async (request, reply) => {
-      try {
-        const { email, password } = request.body as z.infer<typeof loginSchema>;
+      async (request, reply) => {
+        try {
+          const { email, password } = request.body as LoginBody;
 
-        // Find user with password
-        const user = await (User as unknown).findByEmailWithPassword(email);
-        if (!user) {
-          return reply.status(401).send({
-            code: 401,
-            error: "Unauthorized",
-            message: "Invalid email or password",
+          // Find user with password
+          const user = await (User as any).findByEmailWithPassword(email);
+          if (!user) {
+            return reply.status(401).send({
+              code: 401,
+              error: "Unauthorized",
+              message: "Invalid email or password",
+            });
+          }
+
+          // Check if account is locked
+          if (user.isLocked) {
+            return reply.status(423).send({
+              code: 423,
+              error: "Locked",
+              message: "Account is temporarily locked due to too many failed login attempts",
+            });
+          }
+
+          // Verify password
+          const isPasswordValid = await user.comparePassword(password);
+          if (!isPasswordValid) {
+            // Increment login attempts
+            await user.incLoginAttempts();
+            return reply.status(401).send({
+              code: 401,
+              error: "Unauthorized",
+              message: "Invalid email or password",
+            });
+          }
+
+          // Reset login attempts on successful login
+          await user.resetLoginAttempts();
+
+          // Reset login failure counter for rate limiting
+          await fastify.resetLoginFailureCounter(request);
+
+          // Generate tokens
+          const session = new Session({
+            userId: (user as any)._id,
+            refreshToken: crypto.randomBytes(32).toString("hex"),
+            accessToken: crypto.randomBytes(32).toString("hex"),
+            expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+            userAgent: request.headers["user-agent"],
+            ipAddress: request.ip,
+            isActive: true,
+            lastUsed: new Date(),
+          });
+
+          await session.save();
+
+          // Generate JWT tokens
+          const tokenPair = jwtService.generateTokenPair(user, (session as any)._id.toString());
+
+          // Set secure cookies
+          secureCookieService.setSecureCookie(reply, "accessToken", tokenPair.accessToken, {
+            maxAge: 15 * 60 * 1000, // 15 minutes
+            httpOnly: true,
+            secure: env.NODE_ENV === "production",
+            sameSite: "strict",
+          });
+
+          secureCookieService.setSecureCookie(reply, "refreshToken", tokenPair.refreshToken, {
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+            httpOnly: true,
+            secure: env.NODE_ENV === "production",
+            sameSite: "strict",
+          });
+
+          reply.send({
+            message: "Login successful",
+            user: {
+              id: (user as any)._id.toString(),
+              email: user.email,
+              name: user.name,
+              role: user.role,
+              entitlements: user.entitlements,
+              isEmailVerified: user.isEmailVerified,
+            },
+            accessToken: tokenPair.accessToken,
+            refreshToken: tokenPair.refreshToken,
+          });
+        } catch (error: unknown) {
+          // Error handling
+          (request.log as any).error({
+            error: error instanceof Error ? error.message : "Failed to login",
+            message: "Login error",
+          });
+          const errorMessage = error instanceof Error ? error.message : "Failed to login";
+          reply.status(500).send({
+            code: 500,
+            error: "Internal Server Error",
+            message: errorMessage,
           });
         }
-
-        // Check if account is locked
-        if (user.isLocked) {
-          return reply.status(423).send({
-            code: 423,
-            error: "Locked",
-            message: "Account is temporarily locked due to too many failed login attempts",
-          });
-        }
-
-        // Verify password
-        const isPasswordValid = await user.comparePassword(password);
-        if (!isPasswordValid) {
-          // Increment login attempts
-          await user.incLoginAttempts();
-          return reply.status(401).send({
-            code: 401,
-            error: "Unauthorized",
-            message: "Invalid email or password",
-          });
-        }
-
-        // Reset login attempts on successful login
-        await user.resetLoginAttempts();
-
-        // Generate tokens
-        const session = new Session({
-          userId: (user as unknown)._id,
-          refreshToken: crypto.randomBytes(32).toString("hex"),
-          accessToken: crypto.randomBytes(32).toString("hex"),
-          expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
-          userAgent: request.headers["user-agent"],
-          ipAddress: request.ip,
-          isActive: true,
-          lastUsed: new Date(),
-        });
-
-        await session.save();
-
-        // Generate JWT tokens
-        const tokenPair = jwtService.generateTokenPair(user, (session as unknown)._id.toString());
-
-        // Set secure cookies
-        secureCookieService.setSecureCookie(reply, "accessToken", tokenPair.accessToken, {
-          maxAge: 15 * 60 * 1000, // 15 minutes
-          httpOnly: true,
-          secure: env.NODE_ENV === "production",
-          sameSite: "strict",
-        });
-
-        secureCookieService.setSecureCookie(reply, "refreshToken", tokenPair.refreshToken, {
-          maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-          httpOnly: true,
-          secure: env.NODE_ENV === "production",
-          sameSite: "strict",
-        });
-
-        reply.send({
-          message: "Login successful",
-          user: {
-            id: (user as unknown)._id.toString(),
-            email: user.email,
-            name: user.name,
-            role: user.role,
-            entitlements: user.entitlements,
-            isEmailVerified: user.isEmailVerified,
-          },
-          accessToken: tokenPair.accessToken,
-          refreshToken: tokenPair.refreshToken,
-        });
-      } catch (error: unknown) {
-        // Error handling
-        request.log.error("Login error:", error);
-        const errorMessage = error instanceof Error ? error.message : "Failed to login";
-        reply.status(500).send({
-          code: 500,
-          error: "Internal Server Error",
-          message: errorMessage,
-        });
       }
-    });
+    );
   });
 
   // Verify email
@@ -257,58 +310,64 @@ export default async function authRoutes(fastify: FastifyInstance) {
     fastify.post(
       "/verify-email",
       {
+        ...buildRateLimitOptions("auth:verify", { max: 15, timeWindow: "15m" }),
         schema: {
           body: verifyEmailSchema,
         },
       },
-    async (request, reply) => {
-      try {
-        const { token } = request.body as z.infer<typeof verifyEmailSchema>;
+      async (request, reply) => {
+        try {
+          const { token } = request.body as VerifyEmailBody;
 
-        const verificationToken = await (VerificationToken as unknown).verifyToken(
-          token,
-          "email_verification"
-        );
-        const user = await User.findById(verificationToken.userId);
+          const verificationToken = await (VerificationToken as any).verifyToken(
+            token,
+            "email_verification"
+          );
+          const user = await User.findById(verificationToken.userId);
 
-        if (!user) {
-          return reply.status(400).send({
+          if (!user) {
+            return reply.status(400).send({
+              code: 400,
+              error: "Bad Request",
+              message: "Invalid verification token",
+            });
+          }
+
+          // Mark email as verified
+          user.isEmailVerified = true;
+          await user.save();
+
+          // Mark token as used
+          await verificationToken.markAsUsed(request.ip, request.headers["user-agent"]);
+
+          // Send welcome email
+          await emailService.sendWelcomeEmail(user.email, user.name);
+
+          reply.send({
+            message: "Email verified successfully",
+            user: {
+              id: (user as any)._id.toString(),
+              email: user.email,
+              name: user.name,
+              isEmailVerified: user.isEmailVerified,
+            },
+          });
+        } catch (error: unknown) {
+          // Error handling
+          (request.log as any).error({
+            error: error instanceof Error ? error.message : "Invalid verification token",
+            message: "Email verification error",
+          });
+          const errorMessage =
+            error instanceof Error ? error.message : "Invalid verification token";
+          reply.status(400).send({
             code: 400,
             error: "Bad Request",
-            message: "Invalid verification token",
+            message: errorMessage,
           });
         }
-
-        // Mark email as verified
-        user.isEmailVerified = true;
-        await user.save();
-
-        // Mark token as used
-        await verificationToken.markAsUsed(request.ip, request.headers["user-agent"]);
-
-        // Send welcome email
-        await emailService.sendWelcomeEmail(user.email, user.name);
-
-        reply.send({
-          message: "Email verified successfully",
-          user: {
-            id: (user as unknown)._id.toString(),
-            email: user.email,
-            name: user.name,
-            isEmailVerified: user.isEmailVerified,
-          },
-        });
-      } catch (error: unknown) {
-        // Error handling
-        request.log.error("Email verification error:", error);
-        const errorMessage = error instanceof Error ? error.message : "Invalid verification token";
-        reply.status(400).send({
-          code: 400,
-          error: "Bad Request",
-          message: errorMessage,
-        });
       }
-    });
+    );
   });
 
   // Resend verification email
@@ -322,55 +381,60 @@ export default async function authRoutes(fastify: FastifyInstance) {
     fastify.post(
       "/resend-verification",
       {
+        ...buildRateLimitOptions("auth:resend", { max: 5, timeWindow: "15m" }),
         schema: {
           body: resendVerificationSchema,
         },
       },
-    async (request, reply) => {
-      try {
-        const { email } = request.body as z.infer<typeof resendVerificationSchema>;
+      async (request, reply) => {
+        try {
+          const { email } = request.body as ResendVerificationBody;
 
-        const user = await User.findOne({ email });
-        if (!user) {
-          return reply.status(404).send({
-            code: 404,
-            error: "Not Found",
-            message: "User not found",
+          const user = await User.findOne({ email });
+          if (!user) {
+            return reply.status(404).send({
+              code: 404,
+              error: "Not Found",
+              message: "User not found",
+            });
+          }
+
+          if (user.isEmailVerified) {
+            return reply.status(400).send({
+              code: 400,
+              error: "Bad Request",
+              message: "Email is already verified",
+            });
+          }
+
+          // Generate new verification token
+          const verificationToken = await (VerificationToken as any).createToken(
+            (user as any)._id.toString(),
+            "email_verification",
+            24 // 24 hours
+          );
+
+          // Send verification email
+          const verificationUrl = `${env.CLIENT_URL}/verify-email?token=${verificationToken.token}`;
+          await emailService.sendEmailVerification(user.email, user.name, verificationUrl);
+
+          reply.send({
+            message: "Verification email sent successfully",
+          });
+        } catch (error: unknown) {
+          // Error handling
+          (request.log as any).error({
+            error: error instanceof Error ? error.message : "Failed to resend verification email",
+            message: "Resend verification error",
+          });
+          reply.status(500).send({
+            code: 500,
+            error: "Internal Server Error",
+            message: "Failed to resend verification email",
           });
         }
-
-        if (user.isEmailVerified) {
-          return reply.status(400).send({
-            code: 400,
-            error: "Bad Request",
-            message: "Email is already verified",
-          });
-        }
-
-        // Generate new verification token
-        const verificationToken = await (VerificationToken as unknown).createToken(
-          (user as unknown)._id.toString(),
-          "email_verification",
-          24 // 24 hours
-        );
-
-        // Send verification email
-        const verificationUrl = `${env.CLIENT_URL}/verify-email?token=${verificationToken.token}`;
-        await emailService.sendEmailVerification(user.email, user.name, verificationUrl);
-
-        reply.send({
-          message: "Verification email sent successfully",
-        });
-      } catch (error: unknown) {
-        // Error handling
-        request.log.error("Resend verification error:", error);
-        reply.status(500).send({
-          code: 500,
-          error: "Internal Server Error",
-          message: "Failed to resend verification email",
-        });
       }
-    });
+    );
   });
 
   // Forgot password
@@ -384,46 +448,52 @@ export default async function authRoutes(fastify: FastifyInstance) {
     fastify.post(
       "/forgot-password",
       {
+        ...buildRateLimitOptions("auth:forgot", { max: 10, timeWindow: "15m" }),
         schema: {
           body: forgotPasswordSchema,
         },
       },
-    async (request, reply) => {
-      try {
-        const { email } = request.body as z.infer<typeof forgotPasswordSchema>;
+      async (request, reply) => {
+        try {
+          const { email } = request.body as ForgotPasswordBody;
 
-        const user = await User.findOne({ email });
-        if (!user) {
-          // Don't reveal if user exists or not
-          return reply.send({
+          const user = await User.findOne({ email });
+          if (!user) {
+            // Don't reveal if user exists or not
+            return reply.send({
+              message: "If an account with that email exists, a password reset link has been sent",
+            });
+          }
+
+          // Generate password reset token
+          const resetToken = await (VerificationToken as any).createToken(
+            (user as any)._id.toString(),
+            "password_reset",
+            1 // 1 hour
+          );
+
+          // Send password reset email
+          const resetUrl = `${env.CLIENT_URL}/reset-password?token=${resetToken.token}`;
+          await emailService.sendPasswordReset(user.email, user.name, resetUrl);
+
+          reply.send({
             message: "If an account with that email exists, a password reset link has been sent",
           });
+        } catch (error: unknown) {
+          // Error handling
+          (request.log as any).error({
+            error:
+              error instanceof Error ? error.message : "Failed to process password reset request",
+            message: "Forgot password error",
+          });
+          reply.status(500).send({
+            code: 500,
+            error: "Internal Server Error",
+            message: "Failed to process password reset request",
+          });
         }
-
-        // Generate password reset token
-        const resetToken = await (VerificationToken as unknown).createToken(
-          (user as unknown)._id.toString(),
-          "password_reset",
-          1 // 1 hour
-        );
-
-        // Send password reset email
-        const resetUrl = `${env.CLIENT_URL}/reset-password?token=${resetToken.token}`;
-        await emailService.sendPasswordReset(user.email, user.name, resetUrl);
-
-        reply.send({
-          message: "If an account with that email exists, a password reset link has been sent",
-        });
-      } catch (error: unknown) {
-        // Error handling
-        request.log.error("Forgot password error:", error);
-        reply.status(500).send({
-          code: 500,
-          error: "Internal Server Error",
-          message: "Failed to process password reset request",
-        });
       }
-    });
+    );
   });
 
   // Reset password
@@ -437,106 +507,109 @@ export default async function authRoutes(fastify: FastifyInstance) {
     fastify.post(
       "/reset-password",
       {
+        ...buildRateLimitOptions("auth:reset", { max: 10, timeWindow: "15m" }),
         schema: {
           body: resetPasswordSchema,
         },
       },
-    async (request, reply) => {
-      try {
-        const { token, password } = request.body as z.infer<typeof resetPasswordSchema>;
+      async (request, reply) => {
+        try {
+          const { token, password } = request.body as ResetPasswordBody;
 
-        const resetToken = await (VerificationToken as unknown).verifyToken(
-          token,
-          "password_reset"
-        );
-        const user = await User.findById(resetToken.userId);
+          const resetToken = await (VerificationToken as any).verifyToken(token, "password_reset");
+          const user = await User.findById(resetToken.userId);
 
-        if (!user) {
-          return reply.status(400).send({
+          if (!user) {
+            return reply.status(400).send({
+              code: 400,
+              error: "Bad Request",
+              message: "Invalid reset token",
+            });
+          }
+
+          // Update password
+          user.password = password;
+          await user.save();
+
+          // Mark token as used
+          await resetToken.markAsUsed(request.ip, request.headers["user-agent"]);
+
+          // Invalidate all existing sessions
+          await Session.updateMany(
+            { userId: (user as any)._id },
+            { isRevoked: true, revokedAt: new Date(), revokedReason: "password_change" }
+          );
+
+          reply.send({
+            message: "Password reset successfully",
+          });
+        } catch (error: unknown) {
+          // Error handling
+          (request.log as any).error({
+            error: error instanceof Error ? error.message : "Invalid reset token",
+            message: "Reset password error",
+          });
+          const errorMessage = error instanceof Error ? error.message : "Invalid reset token";
+          reply.status(400).send({
             code: 400,
             error: "Bad Request",
-            message: "Invalid reset token",
+            message: errorMessage,
           });
         }
-
-        // Update password
-        user.password = password;
-        await user.save();
-
-        // Mark token as used
-        await resetToken.markAsUsed(request.ip, request.headers["user-agent"]);
-
-        // Invalidate all existing sessions
-        await Session.updateMany(
-          { userId: (user as unknown)._id },
-          { isRevoked: true, revokedAt: new Date(), revokedReason: "password_change" }
-        );
-
-        reply.send({
-          message: "Password reset successfully",
-        });
-      } catch (error: unknown) {
-        // Error handling
-        request.log.error("Reset password error:", error);
-        const errorMessage = error instanceof Error ? error.message : "Invalid reset token";
-        reply.status(400).send({
-          code: 400,
-          error: "Bad Request",
-          message: errorMessage,
-        });
       }
-    }
-  );
+    );
 
-  // Change password (authenticated)
-  fastify.post(
-    "/change-password",
-    {
-      preHandler: authenticate,
-      schema: {
-        body: changePasswordSchema,
+    // Change password (authenticated)
+    fastify.post(
+      "/change-password",
+      {
+        preHandler: authenticate,
+        schema: {
+          body: changePasswordSchema,
+        },
       },
-    },
-    async (request, reply) => {
-      try {
-        const { currentPassword, newPassword } = request.body as z.infer<
-          typeof changePasswordSchema
-        >;
-        const user = request.authUser;
+      async (request, reply) => {
+        try {
+          const { currentPassword, newPassword } = request.body as ChangePasswordBody;
+          const user = request.authUser;
 
-        // Verify current password
-        const isCurrentPasswordValid = await (user as unknown).comparePassword(currentPassword);
-        if (!isCurrentPasswordValid) {
-          return reply.status(400).send({
-            code: 400,
-            error: "Bad Request",
-            message: "Current password is incorrect",
+          // Verify current password
+          const isCurrentPasswordValid = await (user as any).comparePassword(currentPassword);
+          if (!isCurrentPasswordValid) {
+            return reply.status(400).send({
+              code: 400,
+              error: "Bad Request",
+              message: "Current password is incorrect",
+            });
+          }
+
+          // Update password
+          (user as any).password = newPassword;
+          await (user as any).save();
+
+          // Invalidate all existing sessions except current one
+          await Session.updateMany(
+            { userId: (user as any)._id, _id: { $ne: (request as any).sessionId } },
+            { isRevoked: true, revokedAt: new Date(), revokedReason: "password_change" }
+          );
+
+          reply.send({
+            message: "Password changed successfully",
+          });
+        } catch (error: unknown) {
+          // Error handling
+          (request.log as any).error({
+            error: error instanceof Error ? error.message : "Failed to change password",
+            message: "Change password error",
+          });
+          reply.status(500).send({
+            code: 500,
+            error: "Internal Server Error",
+            message: "Failed to change password",
           });
         }
-
-        // Update password
-        (user as unknown).password = newPassword;
-        await (user as unknown).save();
-
-        // Invalidate all existing sessions except current one
-        await Session.updateMany(
-          { userId: (user as unknown)._id, _id: { $ne: (request as unknown).sessionId } },
-          { isRevoked: true, revokedAt: new Date(), revokedReason: "password_change" }
-        );
-
-        reply.send({
-          message: "Password changed successfully",
-        });
-      } catch (error: unknown) {
-        // Error handling
-        request.log.error("Change password error:", error);
-        reply.status(500).send({
-          code: 500,
-          error: "Internal Server Error",
-          message: "Failed to change password",
-        });
       }
-    });
+    );
   });
 
   // Get current user
@@ -552,30 +625,34 @@ export default async function authRoutes(fastify: FastifyInstance) {
       {
         preHandler: authenticate,
       },
-    async (request, reply) => {
-      try {
-        const user = request.authUser;
-        reply.send({
-          user: {
-            id: (user as unknown)._id.toString(),
-            email: user!.email,
-            name: user!.name,
-            role: user!.role,
-            entitlements: user!.entitlements,
-            isEmailVerified: user!.isEmailVerified,
-            lastLogin: (user as unknown).lastLogin,
-          },
-        });
-      } catch (error: unknown) {
-        // Error handling
-        request.log.error("Get user error:", error);
-        reply.status(500).send({
-          code: 500,
-          error: "Internal Server Error",
-          message: "Failed to get user information",
-        });
+      async (request, reply) => {
+        try {
+          const user = request.authUser;
+          reply.send({
+            user: {
+              id: (user as any)._id.toString(),
+              email: user!.email,
+              name: user!.name,
+              role: user!.role,
+              entitlements: user!.entitlements,
+              isEmailVerified: user!.isEmailVerified,
+              lastLogin: (user as any).lastLogin,
+            },
+          });
+        } catch (error: unknown) {
+          // Error handling
+          (request.log as any).error({
+            error: error instanceof Error ? error.message : "Failed to get user information",
+            message: "Get user error",
+          });
+          reply.status(500).send({
+            code: 500,
+            error: "Internal Server Error",
+            message: "Failed to get user information",
+          });
+        }
       }
-    });
+    );
   });
 
   // Logout
@@ -591,34 +668,38 @@ export default async function authRoutes(fastify: FastifyInstance) {
       {
         preHandler: authenticate,
       },
-    async (request, reply) => {
-      try {
-        const sessionId = (request as unknown).sessionId;
-        if (sessionId) {
-          await Session.findByIdAndUpdate(sessionId, {
-            isRevoked: true,
-            revokedAt: new Date(),
-            revokedReason: "user_logout",
+      async (request, reply) => {
+        try {
+          const sessionId = (request as any).sessionId;
+          if (sessionId) {
+            await Session.findByIdAndUpdate(sessionId, {
+              isRevoked: true,
+              revokedAt: new Date(),
+              revokedReason: "user_logout",
+            });
+          }
+
+          // Clear cookies
+          (reply as any).clearCookie("accessToken");
+          (reply as any).clearCookie("refreshToken");
+
+          reply.send({
+            message: "Logged out successfully",
+          });
+        } catch (error: unknown) {
+          // Error handling
+          (request.log as any).error({
+            error: error instanceof Error ? error.message : "Failed to logout",
+            message: "Logout error",
+          });
+          reply.status(500).send({
+            code: 500,
+            error: "Internal Server Error",
+            message: "Failed to logout",
           });
         }
-
-        // Clear cookies
-        reply.clearCookie("accessToken");
-        reply.clearCookie("refreshToken");
-
-        reply.send({
-          message: "Logged out successfully",
-        });
-      } catch (error: unknown) {
-        // Error handling
-        request.log.error("Logout error:", error);
-        reply.status(500).send({
-          code: 500,
-          error: "Internal Server Error",
-          message: "Failed to logout",
-        });
       }
-    });
+    );
   });
 
   // Logout from all devices
@@ -634,34 +715,38 @@ export default async function authRoutes(fastify: FastifyInstance) {
       {
         preHandler: authenticate,
       },
-    async (request, reply) => {
-      try {
-        const user = request.authUser;
-        const currentSessionId = (request as unknown).sessionId;
+      async (request, reply) => {
+        try {
+          const user = request.authUser;
+          const currentSessionId = (request as any).sessionId;
 
-        // Revoke all sessions except current one
-        await Session.updateMany(
-          { userId: (user as unknown)._id, _id: { $ne: currentSessionId } },
-          { isRevoked: true, revokedAt: new Date(), revokedReason: "user_logout" }
-        );
+          // Revoke all sessions except current one
+          await Session.updateMany(
+            { userId: (user as any)._id, _id: { $ne: currentSessionId } },
+            { isRevoked: true, revokedAt: new Date(), revokedReason: "user_logout" }
+          );
 
-        // Clear cookies
-        reply.clearCookie("accessToken");
-        reply.clearCookie("refreshToken");
+          // Clear cookies
+          (reply as any).clearCookie("accessToken");
+          (reply as any).clearCookie("refreshToken");
 
-        reply.send({
-          message: "Logged out from all devices successfully",
-        });
-      } catch (error: unknown) {
-        // Error handling
-        request.log.error("Logout all error:", error);
-        reply.status(500).send({
-          code: 500,
-          error: "Internal Server Error",
-          message: "Failed to logout from all devices",
-        });
+          reply.send({
+            message: "Logged out from all devices successfully",
+          });
+        } catch (error: unknown) {
+          // Error handling
+          (request.log as any).error({
+            error: error instanceof Error ? error.message : "Failed to logout from all devices",
+            message: "Logout all error",
+          });
+          reply.status(500).send({
+            code: 500,
+            error: "Internal Server Error",
+            message: "Failed to logout from all devices",
+          });
+        }
       }
-    });
+    );
   });
 
   // Refresh token
@@ -675,6 +760,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
     fastify.post(
       "/refresh",
       {
+        ...buildRateLimitOptions("auth:refresh", { keyMode: "ip", max: 100, timeWindow: "15m" }),
         schema: {
           body: z.object({
             refreshToken: z
@@ -684,63 +770,67 @@ export default async function authRoutes(fastify: FastifyInstance) {
           }),
         },
       },
-    async (request, reply) => {
-      try {
-        const { refreshToken } = request.body as { refreshToken: string };
+      async (request, reply) => {
+        try {
+          const { refreshToken } = request.body as RefreshTokenBody;
 
-        // Verify refresh token
-        const decoded = jwtService.verifyRefreshToken(refreshToken);
-        const session = await Session.findById(decoded.sessionId);
+          // Verify refresh token
+          const decoded = jwtService.verifyRefreshToken(refreshToken);
+          const session = await Session.findById(decoded.sessionId);
 
-        if (!session || !session.isValid()) {
-          return reply.status(401).send({
+          if (!session || !session.isValid()) {
+            return reply.status(401).send({
+              code: 401,
+              error: "Unauthorized",
+              message: "Invalid refresh token",
+            });
+          }
+
+          // Update session
+          session.lastUsed = new Date();
+          await session.save();
+
+          // Generate new access token
+          const user = await User.findById(session.userId);
+          if (!user) {
+            return reply.status(401).send({
+              code: 401,
+              error: "Unauthorized",
+              message: "User not found",
+            });
+          }
+
+          const newAccessToken = jwtService.generateTokenPair(
+            user,
+            (session as any)._id.toString()
+          ).accessToken;
+
+          // Set new access token cookie
+          secureCookieService.setSecureCookie(reply, "accessToken", newAccessToken, {
+            maxAge: 15 * 60 * 1000, // 15 minutes
+            httpOnly: true,
+            secure: env.NODE_ENV === "production",
+            sameSite: "strict",
+          });
+
+          reply.send({
+            message: "Token refreshed successfully",
+            accessToken: newAccessToken,
+          });
+        } catch (error: unknown) {
+          // Error handling
+          (request.log as any).error({
+            error: error instanceof Error ? error.message : "Invalid refresh token",
+            message: "Refresh token error",
+          });
+          const errorMessage = error instanceof Error ? error.message : "Invalid refresh token";
+          reply.status(401).send({
             code: 401,
             error: "Unauthorized",
-            message: "Invalid refresh token",
+            message: errorMessage,
           });
         }
-
-        // Update session
-        session.lastUsed = new Date();
-        await session.save();
-
-        // Generate new access token
-        const user = await User.findById(session.userId);
-        if (!user) {
-          return reply.status(401).send({
-            code: 401,
-            error: "Unauthorized",
-            message: "User not found",
-          });
-        }
-
-        const newAccessToken = jwtService.generateTokenPair(
-          user,
-          (session as unknown)._id.toString()
-        ).accessToken;
-
-        // Set new access token cookie
-        secureCookieService.setSecureCookie(reply, "accessToken", newAccessToken, {
-          maxAge: 15 * 60 * 1000, // 15 minutes
-          httpOnly: true,
-          secure: env.NODE_ENV === "production",
-          sameSite: "strict",
-        });
-
-        reply.send({
-          message: "Token refreshed successfully",
-          accessToken: newAccessToken,
-        });
-      } catch (error: unknown) {
-        // Error handling
-        request.log.error("Refresh token error:", error);
-        const errorMessage = error instanceof Error ? error.message : "Invalid refresh token";
-        reply.status(401).send({
-          code: 401,
-          error: "Unauthorized",
-          message: errorMessage,
-        });
       }
-    });
+    );
   });
 }

@@ -1,8 +1,9 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
 import { env } from "../config/env.js";
 import rateLimit from "@fastify/rate-limit";
+import type { FastifyRateLimitOptions } from "@fastify/rate-limit";
 import redis from "@fastify/redis";
-import crypto from "crypto";
+import * as crypto from "crypto";
 
 // Types for rate limiting configuration
 interface RateLimitOptions {
@@ -26,16 +27,16 @@ const HMAC_KEY = crypto.createHash("sha256").update(env.HMAC_RATE_KEY_SECRET).di
 function makeIpKey(request: FastifyRequest): string {
   const forwarded = request.headers["x-forwarded-for"];
   const realIp = request.headers["x-real-ip"];
-  
+
   if (forwarded && typeof forwarded === "string") {
     // Take the first IP in the chain
-    return forwarded.split(",")[0].trim();
+    return forwarded.split(",")[0]?.trim() || request.ip;
   }
-  
+
   if (realIp && typeof realIp === "string") {
     return realIp;
   }
-  
+
   return request.ip;
 }
 
@@ -44,7 +45,7 @@ function makeIpKey(request: FastifyRequest): string {
  */
 function makeUserKey(request: FastifyRequest): string {
   let email = "";
-  
+
   // Try to extract email from body
   if (request.body && typeof request.body === "object") {
     const body = request.body as Record<string, unknown>;
@@ -52,7 +53,7 @@ function makeUserKey(request: FastifyRequest): string {
       email = body.email.toLowerCase().trim();
     }
   }
-  
+
   // Try to extract email from query
   if (request.query && typeof request.query === "object") {
     const query = request.query as Record<string, unknown>;
@@ -60,7 +61,7 @@ function makeUserKey(request: FastifyRequest): string {
       email = query.email.toLowerCase().trim();
     }
   }
-  
+
   // Try to extract email from params
   if (request.params && typeof request.params === "object") {
     const params = request.params as Record<string, unknown>;
@@ -68,11 +69,11 @@ function makeUserKey(request: FastifyRequest): string {
       email = params.email.toLowerCase().trim();
     }
   }
-  
+
   if (!email) {
     return "";
   }
-  
+
   // Hash the email using HMAC to prevent PII leakage
   return crypto.createHmac("sha256", HMAC_KEY).update(email).digest("hex").substring(0, 16);
 }
@@ -83,7 +84,7 @@ function makeUserKey(request: FastifyRequest): string {
 function comboKey(request: FastifyRequest, routeId: string): string {
   const ipKey = makeIpKey(request);
   const userKey = makeUserKey(request);
-  
+
   // Hash the combination to avoid PII leakage
   const combined = `${routeId}:${ipKey}:${userKey}`;
   return crypto.createHash("sha256").update(combined).digest("hex").substring(0, 16);
@@ -96,16 +97,17 @@ function rateLimitFor(routeId: string, options: RateLimitOptions = {}) {
   const max = options.max ?? parseInt(env.RATE_LIMIT_USER_MAX);
   const timeWindow = options.timeWindow ?? env.RATE_LIMIT_USER_WINDOW;
   const keyMode = options.keyMode ?? "combo";
-  
-  const keyGenerator = keyMode === "ip" 
-    ? (request: FastifyRequest) => `${routeId}:${makeIpKey(request)}`
-    : (request: FastifyRequest) => comboKey(request, routeId);
-  
+
+  const keyGenerator =
+    keyMode === "ip"
+      ? (request: FastifyRequest) => `${routeId}:${makeIpKey(request)}`
+      : (request: FastifyRequest) => comboKey(request, routeId);
+
   return {
     keyGenerator,
     max,
     timeWindow,
-    errorResponseBuilder: (request: FastifyRequest, context: { ttl: number; max: number }) => {
+    errorResponseBuilder: (_request: FastifyRequest, context: { ttl: number; max: number }) => {
       const retryAfter = Math.round(context.ttl / 1000);
       return {
         code: 429,
@@ -116,7 +118,7 @@ function rateLimitFor(routeId: string, options: RateLimitOptions = {}) {
     },
     onExceeding: (request: FastifyRequest) => {
       const keyHash = keyGenerator(request).substring(0, 8);
-      request.log.warn({
+      (request.log as any).warn({
         message: "Rate limit exceeded",
         routeId,
         keyHash,
@@ -125,12 +127,48 @@ function rateLimitFor(routeId: string, options: RateLimitOptions = {}) {
     },
     onExceeded: (request: FastifyRequest) => {
       const keyHash = keyGenerator(request).substring(0, 8);
-      request.log.warn({
+      (request.log as any).warn({
         message: "Rate limit exceeded - request blocked",
         routeId,
         keyHash,
         ip: makeIpKey(request).substring(0, 8),
       });
+    },
+  };
+}
+
+/**
+ * Build rate limit options for route-level configuration (CodeQL compliance)
+ * @param routeId - Unique route identifier
+ * @param opts - Rate limit options
+ * @returns Fastify route options with rateLimit key
+ */
+export function buildRateLimitOptions(
+  routeId: string,
+  opts: Partial<FastifyRateLimitOptions> & {
+    keyMode?: "combo" | "ip";
+    max?: number;
+    timeWindow?: string;
+  } = {}
+): { rateLimit: FastifyRateLimitOptions } {
+  const { keyMode = "combo", max, timeWindow, ...rest } = opts;
+  return {
+    rateLimit: {
+      max: max ?? Number(process.env.RATE_LIMIT_USER_MAX ?? 20),
+      timeWindow: timeWindow ?? process.env.RATE_LIMIT_USER_WINDOW ?? "15m",
+      hook: "onRequest",
+      addHeaders: process.env.RATE_LIMIT_HEADERS === "standard",
+      keyGenerator: (req) => (keyMode === "ip" ? makeIpKey(req) : comboKey(req, routeId)),
+      errorResponseBuilder: (_request: FastifyRequest, context: { ttl: number; max: number }) => {
+        const retryAfter = Math.round(context.ttl / 1000);
+        return {
+          code: 429,
+          error: "Too Many Requests",
+          message: `Rate limit exceeded for ${routeId}. Retry in ${retryAfter} seconds`,
+          retryAfter,
+        };
+      },
+      ...rest,
     },
   };
 }
@@ -149,19 +187,21 @@ async function getRedisClient(fastify: FastifyInstance): Promise<any | null> {
 /**
  * Progressive login failure penalty system
  */
-function loginFailurePenaltyPreHandler(routeId: string) {
+function loginFailurePenaltyPreHandler(_routeId: string) {
   return async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       const redisClient = await getRedisClient(request.server);
       const ipKey = makeIpKey(request);
       const userKey = makeUserKey(request);
       const failureKey = `login_failures:${crypto.createHash("sha256").update(`${ipKey}:${userKey}`).digest("hex").substring(0, 16)}`;
-      
+
       if (redisClient) {
         // Use Redis for distributed rate limiting
         const failureData = await redisClient.get(failureKey);
-        let failures: LoginFailureData = failureData ? JSON.parse(failureData) : { count: 0, lastAttempt: 0 };
-        
+        let failures: LoginFailureData = failureData
+          ? JSON.parse(failureData)
+          : { count: 0, lastAttempt: 0 };
+
         // Check if currently blocked
         if (failures.blockUntil && Date.now() < failures.blockUntil) {
           const retryAfter = Math.round((failures.blockUntil - Date.now()) / 1000);
@@ -174,21 +214,25 @@ function loginFailurePenaltyPreHandler(routeId: string) {
           });
           return;
         }
-        
+
         // Check if we need to apply progressive penalty
         const baseBlockMs = parseInt(env.LOGIN_FAIL_BASE_BLOCK_MS);
         const maxBlockMs = parseInt(env.LOGIN_FAIL_MAX_BLOCK_MS);
         const timeSinceLastAttempt = Date.now() - failures.lastAttempt;
-        
+
         // If last attempt was recent (within 5 minutes), apply progressive penalty
         if (timeSinceLastAttempt < 5 * 60 * 1000 && failures.count > 0) {
           const penaltyMs = Math.min(baseBlockMs * Math.pow(2, failures.count - 1), maxBlockMs);
           failures.blockUntil = Date.now() + penaltyMs;
           failures.count += 1;
           failures.lastAttempt = Date.now();
-          
-          await redisClient.setex(failureKey, Math.ceil(penaltyMs / 1000), JSON.stringify(failures));
-          
+
+          await redisClient.setex(
+            failureKey,
+            Math.ceil(penaltyMs / 1000),
+            JSON.stringify(failures)
+          );
+
           const retryAfter = Math.round(penaltyMs / 1000);
           reply.header("Retry-After", retryAfter);
           reply.status(429).send({
@@ -199,10 +243,11 @@ function loginFailurePenaltyPreHandler(routeId: string) {
           });
           return;
         }
-        
+
         // Reset if enough time has passed
         if (timeSinceLastAttempt >= 5 * 60 * 1000) {
           failures = { count: 0, lastAttempt: 0 };
+          await redisClient.setex(failureKey, 300, JSON.stringify(failures)); // Store reset state
         }
       } else {
         // Fallback to in-memory storage (single instance only)
@@ -210,10 +255,10 @@ function loginFailurePenaltyPreHandler(routeId: string) {
         if (!(global as any).__rateLimitMemory) {
           (global as any).__rateLimitMemory = new Map();
         }
-        
+
         const memory = (global as any).__rateLimitMemory;
         let failures: LoginFailureData = memory.get(memoryKey) || { count: 0, lastAttempt: 0 };
-        
+
         // Check if currently blocked
         if (failures.blockUntil && Date.now() < failures.blockUntil) {
           const retryAfter = Math.round((failures.blockUntil - Date.now()) / 1000);
@@ -226,20 +271,20 @@ function loginFailurePenaltyPreHandler(routeId: string) {
           });
           return;
         }
-        
+
         // Apply progressive penalty logic (same as Redis version)
         const baseBlockMs = parseInt(env.LOGIN_FAIL_BASE_BLOCK_MS);
         const maxBlockMs = parseInt(env.LOGIN_FAIL_MAX_BLOCK_MS);
         const timeSinceLastAttempt = Date.now() - failures.lastAttempt;
-        
+
         if (timeSinceLastAttempt < 5 * 60 * 1000 && failures.count > 0) {
           const penaltyMs = Math.min(baseBlockMs * Math.pow(2, failures.count - 1), maxBlockMs);
           failures.blockUntil = Date.now() + penaltyMs;
           failures.count += 1;
           failures.lastAttempt = Date.now();
-          
+
           memory.set(memoryKey, failures);
-          
+
           const retryAfter = Math.round(penaltyMs / 1000);
           reply.header("Retry-After", retryAfter);
           reply.status(429).send({
@@ -250,7 +295,7 @@ function loginFailurePenaltyPreHandler(routeId: string) {
           });
           return;
         }
-        
+
         // Reset if enough time has passed
         if (timeSinceLastAttempt >= 5 * 60 * 1000) {
           failures = { count: 0, lastAttempt: 0 };
@@ -259,7 +304,10 @@ function loginFailurePenaltyPreHandler(routeId: string) {
       }
     } catch (error) {
       // If penalty system fails, log error but don't block the request
-      request.log.error("Login failure penalty system error:", error);
+      (request.log as any).error({
+        message: "Login failure penalty system error",
+        error: error instanceof Error ? error.message : "Unknown error",
+      });
     }
   };
 }
@@ -273,7 +321,7 @@ async function resetLoginFailureCounter(request: FastifyRequest): Promise<void> 
     const ipKey = makeIpKey(request);
     const userKey = makeUserKey(request);
     const failureKey = `login_failures:${crypto.createHash("sha256").update(`${ipKey}:${userKey}`).digest("hex").substring(0, 16)}`;
-    
+
     if (redisClient) {
       await redisClient.del(failureKey);
     } else {
@@ -285,7 +333,10 @@ async function resetLoginFailureCounter(request: FastifyRequest): Promise<void> 
     }
   } catch (error) {
     // Log error but don't fail the request
-    request.log.error("Failed to reset login failure counter:", error);
+    (request.log as any).error({
+      message: "Failed to reset login failure counter",
+      error: error instanceof Error ? error.message : "Unknown error",
+    });
   }
 }
 
@@ -300,28 +351,26 @@ export async function rateLimitPlugin(fastify: FastifyInstance) {
         url: env.RATE_LIMIT_REDIS_URL,
         lazyConnect: true,
       });
-      fastify.log.info("Redis connected for rate limiting");
+      (fastify.log as any).info({
+        message: "Redis connected for rate limiting",
+      });
     } catch (error) {
-      fastify.log.warn("Failed to connect to Redis, using in-memory fallback:", error);
+      (fastify.log as any).warn({
+        message: "Failed to connect to Redis, using in-memory fallback",
+        error: error instanceof Error ? error.message : "Unknown error",
+      });
     }
   }
-  
+
   // Register global rate limiting with loose defaults
   await fastify.register(rateLimit, {
     global: true,
     max: parseInt(env.RATE_LIMIT_GLOBAL_MAX),
     timeWindow: env.RATE_LIMIT_GLOBAL_WINDOW,
     keyGenerator: (request: FastifyRequest) => makeIpKey(request),
-    errorResponseBuilder: (request: FastifyRequest, context: { ttl: number; max: number }, reply: FastifyReply) => {
+    errorResponseBuilder: (_request: FastifyRequest, context: { ttl: number; max: number }) => {
       const retryAfter = Math.round(context.ttl / 1000);
-      
-      // Add standard rate limit headers if enabled
-      if (env.RATE_LIMIT_HEADERS === "standard") {
-        reply.header("RateLimit-Limit", context.max.toString());
-        reply.header("RateLimit-Remaining", "0");
-        reply.header("RateLimit-Reset", new Date(Date.now() + context.ttl).toISOString());
-      }
-      
+
       return {
         code: 429,
         error: "Too Many Requests",
@@ -331,18 +380,19 @@ export async function rateLimitPlugin(fastify: FastifyInstance) {
     },
     onExceeding: (request: FastifyRequest) => {
       const ipHash = makeIpKey(request).substring(0, 8);
-      request.log.warn({
+      (request.log as any).warn({
         message: "Global rate limit exceeded",
         ipHash,
       });
     },
   });
-  
+
   // Decorate Fastify with rate limiting helpers
   fastify.decorate("makeIpKey", makeIpKey);
   fastify.decorate("makeUserKey", makeUserKey);
   fastify.decorate("comboKey", comboKey);
   fastify.decorate("rateLimitFor", rateLimitFor);
+  fastify.decorate("buildRateLimitOptions", buildRateLimitOptions);
   fastify.decorate("loginFailurePenaltyPreHandler", loginFailurePenaltyPreHandler);
   fastify.decorate("resetLoginFailureCounter", resetLoginFailureCounter);
 }
@@ -354,7 +404,17 @@ declare module "fastify" {
     makeUserKey(request: FastifyRequest): string;
     comboKey(request: FastifyRequest, routeId: string): string;
     rateLimitFor(routeId: string, options?: RateLimitOptions): any;
-    loginFailurePenaltyPreHandler(routeId: string): (request: FastifyRequest, reply: FastifyReply) => Promise<void>;
+    buildRateLimitOptions(
+      routeId: string,
+      opts?: Partial<FastifyRateLimitOptions> & {
+        keyMode?: "combo" | "ip";
+        max?: number;
+        timeWindow?: string;
+      }
+    ): { rateLimit: FastifyRateLimitOptions };
+    loginFailurePenaltyPreHandler(
+      routeId: string
+    ): (request: FastifyRequest, reply: FastifyReply) => Promise<void>;
     resetLoginFailureCounter(request: FastifyRequest): Promise<void>;
   }
 }

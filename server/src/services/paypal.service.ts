@@ -4,6 +4,7 @@ import { Purchase } from "../models/Purchase.js";
 import { Subscription } from "../models/Subscription.js";
 import { User } from "../models/User.js";
 import { currencyService } from "./currency.service.js";
+import { logPaymentEvent } from "../security/logging.js";
 import crypto from "crypto";
 
 export interface PayPalPaymentRequest {
@@ -223,35 +224,39 @@ export class PayPalService {
       };
 
       return new Promise((resolve) => {
-        paypal.payment.execute(paymentId, executeRequest, async (error: unknown, payment: unknown) => {
-          if (error) {
-            console.error("PayPal payment execution error:", error);
-            await purchase.markAsFailed(`Execution failed: ${error.message}`);
-            resolve({ success: false, error: error.message });
-            return;
-          }
-
-          try {
-            // Check if payment was successful
-            if (payment.state !== "approved") {
-              await purchase.markAsFailed(`Payment state: ${payment.state}`);
-              resolve({ success: false, error: `Payment not approved. State: ${payment.state}` });
+        paypal.payment.execute(
+          paymentId,
+          executeRequest,
+          async (error: unknown, payment: unknown) => {
+            if (error) {
+              console.error("PayPal payment execution error:", error);
+              await purchase.markAsFailed(`Execution failed: ${error.message}`);
+              resolve({ success: false, error: error.message });
               return;
             }
 
-            // Mark purchase as completed
-            purchase.gatewayResponse = payment;
-            await purchase.markAsCompleted(payment);
+            try {
+              // Check if payment was successful
+              if (payment.state !== "approved") {
+                await purchase.markAsFailed(`Payment state: ${payment.state}`);
+                resolve({ success: false, error: `Payment not approved. State: ${payment.state}` });
+                return;
+              }
 
-            // Create subscription
-            await this.createSubscription(purchase);
+              // Mark purchase as completed
+              purchase.gatewayResponse = payment;
+              await purchase.markAsCompleted(payment);
 
-            resolve({ success: true, purchaseId: purchase._id.toString() });
-          } catch (dbError) {
-            console.error("Database error during PayPal payment execution:", dbError);
-            resolve({ success: false, error: "Failed to process payment completion" });
+              // Create subscription
+              await this.createSubscription(purchase);
+
+              resolve({ success: true, purchaseId: purchase._id.toString() });
+            } catch (dbError) {
+              console.error("Database error during PayPal payment execution:", dbError);
+              resolve({ success: false, error: "Failed to process payment completion" });
+            }
           }
-        });
+        );
       });
     } catch (error) {
       console.error("PayPal payment execution error:", error);
@@ -335,7 +340,10 @@ export class PayPalService {
           await this.handlePaymentRefunded(webhookData.resource);
           break;
         default:
-          console.warn(`Unhandled PayPal webhook event: ${webhookData.event_type}`);
+          logPaymentEvent(console, "paypal_webhook_unhandled", {
+            eventType: webhookData.event_type,
+            service: "paypal",
+          });
       }
 
       return { success: true };
