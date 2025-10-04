@@ -343,7 +343,7 @@ async function resetLoginFailureCounter(request: FastifyRequest): Promise<void> 
  * Register the rate limiting security plugin
  */
 export async function rateLimitPlugin(fastify: FastifyInstance) {
-  console.log("🛡️ Registering rate limit plugin...");
+  console.warn("🛡️ Registering rate limit plugin...");
 
   // Register Redis if URL is provided
   if (env.RATE_LIMIT_REDIS_URL) {
@@ -375,7 +375,7 @@ export async function rateLimitPlugin(fastify: FastifyInstance) {
   fastify.decorate("loginFailurePenaltyPreHandler", loginFailurePenaltyPreHandler);
   fastify.decorate("resetLoginFailureCounter", resetLoginFailureCounter);
 
-  console.log("✅ Rate limit plugin registered successfully");
+  console.warn("✅ Rate limit plugin registered successfully");
 }
 
 // Extend FastifyInstance type to include our decorators
