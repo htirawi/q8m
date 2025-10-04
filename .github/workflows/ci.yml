@@ -86,6 +86,19 @@ jobs:
       - name: Run Build
         run: pnpm build
 
+      - name: Prepare artifacts for upload
+        if: failure()
+        run: |
+          echo "Preparing artifacts for upload..."
+          echo "Client dist contents:"
+          ls -la client/dist/ || echo "Client dist not found"
+          echo "Server dist contents:"
+          ls -la server/dist/ || echo "Server dist not found"
+
+          # Create server/dist if it doesn't exist (since server build is disabled)
+          mkdir -p server/dist
+          echo "Server build disabled for legacy code" > server/dist/build-status.txt
+
       - name: Upload logs on failure
         if: failure()
         uses: actions/upload-artifact@v4
@@ -94,4 +107,5 @@ jobs:
           path: |
             client/dist/
             server/dist/
+          if-no-files-found: ignore
           retention-days: 7
