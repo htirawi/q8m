@@ -531,6 +531,12 @@ export default async function authRoutes(fastify: FastifyInstance) {
   fastify.get(
     "/me",
     {
+      config: {
+        rateLimit: {
+          max: 30, // Allow 30 requests per window for user profile
+          timeWindow: 900000, // 15 minutes
+        },
+      },
       preHandler: [authenticate],
     },
     async (request, reply) => {
@@ -666,13 +672,13 @@ export default async function authRoutes(fastify: FastifyInstance) {
     {
       config: {
         rateLimit: {
-          max: 10, // Allow only 10 refresh attempts per window
+          max: 5, // Allow only 5 refresh attempts per window (reduced for security)
           timeWindow: 900000, // 15 minutes
         },
       },
       schema: {
         body: z.object({
-          refreshToken: z.string().min(32, "Refresh token must be at least 32 characters"),
+          refreshToken: z.string().min(32, "Refresh token must be at least 32 characters").max(256, "Refresh token too long"),
         }),
       },
     },
@@ -680,25 +686,19 @@ export default async function authRoutes(fastify: FastifyInstance) {
       try {
         const { refreshToken } = request.body as { refreshToken: string };
 
-        // Validate refresh token format to prevent security bypass
-        // Use strict validation to prevent any bypass attempts
-        if (
-          !refreshToken ||
-          typeof refreshToken !== "string" ||
-          refreshToken.length < 32 ||
-          refreshToken.length > 256 ||
-          !/^[a-zA-Z0-9]+$/.test(refreshToken) ||
-          refreshToken.includes(" ") ||
-          refreshToken.includes("\n") ||
-          refreshToken.includes("\r") ||
-          refreshToken.includes("\t") ||
-          refreshToken.includes("null") ||
-          refreshToken.includes("undefined") ||
-          refreshToken.includes("false") ||
-          refreshToken.includes("true") ||
-          refreshToken.includes("0") ||
-          refreshToken.includes("1")
-        ) {
+        // Strict server-side validation to prevent any bypass attempts
+        // Validate token format before any processing
+        const isValidToken = (token: unknown): token is string => {
+          if (typeof token !== "string") return false;
+          if (token.length < 32 || token.length > 256) return false;
+          if (!/^[a-zA-Z0-9]+$/.test(token)) return false;
+          if (token.includes(" ") || token.includes("\n") || token.includes("\r") || token.includes("\t")) return false;
+          if (token.includes("null") || token.includes("undefined") || token.includes("false") || token.includes("true")) return false;
+          if (token.includes("0") || token.includes("1")) return false;
+          return true;
+        };
+
+        if (!isValidToken(refreshToken)) {
           request.log.warn("Invalid refresh token format attempt", {
             tokenLength: refreshToken?.length,
             tokenType: typeof refreshToken,
