@@ -122,7 +122,6 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
         (request.log as any).error(
           safeLogFields({
             event: "get_pricing_currency_error",
-            currency,
             error: error instanceof Error ? error.message : "Unknown error",
             stack: error instanceof Error ? error.stack : undefined,
           })
@@ -271,8 +270,6 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
         (request.log as any).error(
           safeLogFields({
             event: "create_payment_error",
-            planType,
-            currency,
             error: error instanceof Error ? error.message : "Unknown error",
             stack: error instanceof Error ? error.stack : undefined,
           })
@@ -343,8 +340,6 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
         (request.log as any).error(
           safeLogFields({
             event: "payment_callback_error",
-            gateway,
-            paymentId,
             error: error instanceof Error ? error.message : "Unknown error",
             stack: error instanceof Error ? error.stack : undefined,
           })
@@ -479,7 +474,6 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
           safeLogFields({
             event: "cancel_subscription_error",
             userId: request.authUser!.id,
-            reason,
             error: error instanceof Error ? error.message : "Unknown error",
             stack: error instanceof Error ? error.stack : undefined,
           })
@@ -746,7 +740,6 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
         (request.log as any).error(
           safeLogFields({
             event: "process_refund_error",
-            purchaseId,
             userId: request.authUser!.id,
             error: error instanceof Error ? error.message : "Unknown error",
             stack: error instanceof Error ? error.stack : undefined,
