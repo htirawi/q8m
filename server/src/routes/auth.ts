@@ -64,6 +64,12 @@ export default async function authRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/register",
     {
+      config: {
+        rateLimit: {
+          max: 5, // Allow only 5 registration attempts per window
+          timeWindow: 900000, // 15 minutes
+        }
+      },
       schema: {
         body: registerSchema,
       },
@@ -128,6 +134,12 @@ export default async function authRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/login",
     {
+      config: {
+        rateLimit: {
+          max: 10, // Allow only 10 login attempts per window
+          timeWindow: 900000, // 15 minutes
+        }
+      },
       schema: {
         body: loginSchema,
       },
@@ -328,6 +340,12 @@ export default async function authRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/forgot-password",
     {
+      config: {
+        rateLimit: {
+          max: 3, // Allow only 3 forgot password attempts per window
+          timeWindow: 900000, // 15 minutes
+        }
+      },
       schema: {
         body: forgotPasswordSchema,
       },
@@ -595,7 +613,12 @@ export default async function authRoutes(fastify: FastifyInstance) {
         max: 10, // Allow only 10 refresh attempts per window
         timeWindow: 900000, // 15 minutes
       }
-    }
+    },
+    schema: {
+      body: z.object({
+        refreshToken: z.string().min(32, "Refresh token must be at least 32 characters"),
+      }),
+    },
   }, async (request, reply) => {
     try {
       const { refreshToken } = request.body as { refreshToken: string };
@@ -609,7 +632,14 @@ export default async function authRoutes(fastify: FastifyInstance) {
       }
 
       // Validate refresh token format to prevent security bypass
-      if (typeof refreshToken !== 'string' || refreshToken.length < 32 || !/^[a-zA-Z0-9]+$/.test(refreshToken)) {
+      if (typeof refreshToken !== 'string' || 
+          refreshToken.length < 32 || 
+          refreshToken.length > 256 || 
+          !/^[a-zA-Z0-9]+$/.test(refreshToken) ||
+          refreshToken.includes(' ') ||
+          refreshToken.includes('\n') ||
+          refreshToken.includes('\r') ||
+          refreshToken.includes('\t')) {
         return reply.status(401).send({
           code: 401,
           error: "Unauthorized",
