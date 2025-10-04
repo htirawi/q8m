@@ -8,6 +8,7 @@ import { pricingService } from "../services/pricing.service.js";
 import { currencyService } from "../services/currency.service.js";
 import { Purchase } from "../models/Purchase.js";
 import { Subscription } from "../models/Subscription.js";
+import { safeLogFields } from "../security/logging.js";
 
 // Validation schemas
 const createPaymentSchema = z.object({
@@ -80,7 +81,13 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
           pricing: filteredPricing,
         });
       } catch (error: unknown) {
-        (request.log as any).error("Get pricing error:", error);
+        (request.log as any).error(
+          safeLogFields({
+            event: "get_pricing_error",
+            error: error instanceof Error ? error.message : "Unknown error",
+            stack: error instanceof Error ? error.stack : undefined,
+          })
+        );
         reply.status(500).send({
           success: false,
           error: "Failed to get pricing information",
@@ -112,7 +119,14 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
           pricing,
         });
       } catch (error: unknown) {
-        (request.log as any).error("Get pricing for currency error:", error);
+        (request.log as any).error(
+          safeLogFields({
+            event: "get_pricing_currency_error",
+            currency,
+            error: error instanceof Error ? error.message : "Unknown error",
+            stack: error instanceof Error ? error.stack : undefined,
+          })
+        );
         reply.status(500).send({
           success: false,
           error: "Failed to get pricing information",
@@ -254,7 +268,15 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
           isEstimated: priceInfo.isEstimated,
         });
       } catch (error: unknown) {
-        (request.log as any).error("Create payment error:", error);
+        (request.log as any).error(
+          safeLogFields({
+            event: "create_payment_error",
+            planType,
+            currency,
+            error: error instanceof Error ? error.message : "Unknown error",
+            stack: error instanceof Error ? error.stack : undefined,
+          })
+        );
         reply.status(500).send({
           success: false,
           error: (error as any).message || "Failed to create payment",
@@ -318,7 +340,15 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
           });
         }
       } catch (error: unknown) {
-        (request.log as any).error("Payment callback error:", error);
+        (request.log as any).error(
+          safeLogFields({
+            event: "payment_callback_error",
+            gateway,
+            paymentId,
+            error: error instanceof Error ? error.message : "Unknown error",
+            stack: error instanceof Error ? error.stack : undefined,
+          })
+        );
         reply.status(500).send({
           success: false,
           error: (error as any).message || "Payment callback failed",
@@ -356,7 +386,14 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
           },
         });
       } catch (error: unknown) {
-        (request.log as any).error("Get purchase history error:", error);
+        (request.log as any).error(
+          safeLogFields({
+            event: "get_purchase_history_error",
+            userId: request.authUser!.id,
+            error: error instanceof Error ? error.message : "Unknown error",
+            stack: error instanceof Error ? error.stack : undefined,
+          })
+        );
         reply.status(500).send({
           success: false,
           error: "Failed to get purchase history",
@@ -389,7 +426,14 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
           subscription,
         });
       } catch (error: unknown) {
-        (request.log as any).error("Get subscription error:", error);
+        (request.log as any).error(
+          safeLogFields({
+            event: "get_subscription_error",
+            userId: request.authUser!.id,
+            error: error instanceof Error ? error.message : "Unknown error",
+            stack: error instanceof Error ? error.stack : undefined,
+          })
+        );
         reply.status(500).send({
           success: false,
           error: "Failed to get subscription information",
@@ -431,7 +475,15 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
           subscription,
         });
       } catch (error: unknown) {
-        (request.log as any).error("Cancel subscription error:", error);
+        (request.log as any).error(
+          safeLogFields({
+            event: "cancel_subscription_error",
+            userId: request.authUser!.id,
+            reason,
+            error: error instanceof Error ? error.message : "Unknown error",
+            stack: error instanceof Error ? error.stack : undefined,
+          })
+        );
         reply.status(500).send({
           success: false,
           error: "Failed to cancel subscription",
@@ -464,7 +516,13 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
           });
         }
       } catch (error: unknown) {
-        (request.log as any).error("PayPal webhook error:", error);
+        (request.log as any).error(
+          safeLogFields({
+            event: "paypal_webhook_error",
+            error: error instanceof Error ? error.message : "Unknown error",
+            stack: error instanceof Error ? error.stack : undefined,
+          })
+        );
         reply.status(500).send({
           success: false,
           error: "Webhook processing failed",
@@ -496,7 +554,13 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
           });
         }
       } catch (error: unknown) {
-        (request.log as any).error("APS webhook error:", error);
+        (request.log as any).error(
+          safeLogFields({
+            event: "aps_webhook_error",
+            error: error instanceof Error ? error.message : "Unknown error",
+            stack: error instanceof Error ? error.stack : undefined,
+          })
+        );
         reply.status(500).send({
           success: false,
           error: "Webhook processing failed",
@@ -528,7 +592,13 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
           });
         }
       } catch (error: unknown) {
-        (request.log as any).error("HyperPay webhook error:", error);
+        (request.log as any).error(
+          safeLogFields({
+            event: "hyperpay_webhook_error",
+            error: error instanceof Error ? error.message : "Unknown error",
+            stack: error instanceof Error ? error.stack : undefined,
+          })
+        );
         reply.status(500).send({
           success: false,
           error: "Webhook processing failed",
@@ -553,7 +623,13 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
         },
       });
     } catch (error: unknown) {
-      (request.log as any).error("Get gateway status error:", error);
+      (request.log as any).error(
+        safeLogFields({
+          event: "get_gateway_status_error",
+          error: error instanceof Error ? error.message : "Unknown error",
+          stack: error instanceof Error ? error.stack : undefined,
+        })
+      );
       reply.status(500).send({
         success: false,
         error: "Failed to get gateway status",
@@ -572,7 +648,13 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
         supportedCurrencies: ["USD", "JOD", "SAR"],
       });
     } catch (error: unknown) {
-      (request.log as any).error("Get currency rates error:", error);
+      (request.log as any).error(
+        safeLogFields({
+          event: "get_currency_rates_error",
+          error: error instanceof Error ? error.message : "Unknown error",
+          stack: error instanceof Error ? error.stack : undefined,
+        })
+      );
       reply.status(500).send({
         success: false,
         error: "Failed to get currency rates",
@@ -661,7 +743,15 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
           });
         }
       } catch (error: unknown) {
-        (request.log as any).error("Process refund error:", error);
+        (request.log as any).error(
+          safeLogFields({
+            event: "process_refund_error",
+            purchaseId,
+            userId: request.authUser!.id,
+            error: error instanceof Error ? error.message : "Unknown error",
+            stack: error instanceof Error ? error.stack : undefined,
+          })
+        );
         reply.status(500).send({
           success: false,
           error: (error as any).message || "Failed to process refund",

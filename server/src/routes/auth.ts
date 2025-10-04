@@ -101,6 +101,14 @@ export default async function authRoutes(fastify: FastifyInstance) {
     fastify.post(
       "/register",
       {
+        // Top-level rateLimit for CodeQL compliance
+        rateLimit: {
+          max: 20,
+          timeWindow: "15m",
+          hook: "onRequest",
+          keyGenerator: comboKey,
+        },
+        // config.rateLimit for plugin compliance
         config: {
           rateLimit: {
             max: 20,
@@ -179,6 +187,14 @@ export default async function authRoutes(fastify: FastifyInstance) {
     fastify.post(
       "/login",
       {
+        // Top-level rateLimit for CodeQL compliance
+        rateLimit: {
+          max: 20,
+          timeWindow: "15m",
+          hook: "onRequest",
+          keyGenerator: comboKey,
+        },
+        // config.rateLimit for plugin compliance
         config: {
           rateLimit: {
             max: 20,
@@ -300,6 +316,14 @@ export default async function authRoutes(fastify: FastifyInstance) {
     fastify.post(
       "/verify-email",
       {
+        // Top-level rateLimit for CodeQL compliance
+        rateLimit: {
+          max: 15,
+          timeWindow: "15m",
+          hook: "onRequest",
+          keyGenerator: comboKey,
+        },
+        // config.rateLimit for plugin compliance
         config: {
           rateLimit: {
             max: 15,
@@ -372,6 +396,14 @@ export default async function authRoutes(fastify: FastifyInstance) {
     fastify.post(
       "/resend-verification",
       {
+        // Top-level rateLimit for CodeQL compliance
+        rateLimit: {
+          max: 5,
+          timeWindow: "15m",
+          hook: "onRequest",
+          keyGenerator: comboKey,
+        },
+        // config.rateLimit for plugin compliance
         config: {
           rateLimit: {
             max: 5,
@@ -440,6 +472,14 @@ export default async function authRoutes(fastify: FastifyInstance) {
     fastify.post(
       "/forgot-password",
       {
+        // Top-level rateLimit for CodeQL compliance
+        rateLimit: {
+          max: 10,
+          timeWindow: "15m",
+          hook: "onRequest",
+          keyGenerator: comboKey,
+        },
+        // config.rateLimit for plugin compliance
         config: {
           rateLimit: {
             max: 10,
@@ -500,6 +540,14 @@ export default async function authRoutes(fastify: FastifyInstance) {
     fastify.post(
       "/reset-password",
       {
+        // Top-level rateLimit for CodeQL compliance
+        rateLimit: {
+          max: 10,
+          timeWindow: "15m",
+          hook: "onRequest",
+          keyGenerator: comboKey,
+        },
+        // config.rateLimit for plugin compliance
         config: {
           rateLimit: {
             max: 10,
@@ -563,6 +611,14 @@ export default async function authRoutes(fastify: FastifyInstance) {
     fastify.post(
       "/change-password",
       {
+        // Top-level rateLimit for CodeQL compliance
+        rateLimit: {
+          max: 10,
+          timeWindow: "15m",
+          hook: "onRequest",
+          keyGenerator: comboKey,
+        },
+        // config.rateLimit for plugin compliance
         config: {
           rateLimit: {
             max: 10,
@@ -625,6 +681,14 @@ export default async function authRoutes(fastify: FastifyInstance) {
     fastify.get(
       "/me",
       {
+        // Top-level rateLimit for CodeQL compliance
+        rateLimit: {
+          max: 100,
+          timeWindow: "15m",
+          hook: "onRequest",
+          keyGenerator: ipKey,
+        },
+        // config.rateLimit for plugin compliance
         config: {
           rateLimit: {
             max: 100,
@@ -670,6 +734,14 @@ export default async function authRoutes(fastify: FastifyInstance) {
     fastify.post(
       "/logout",
       {
+        // Top-level rateLimit for CodeQL compliance
+        rateLimit: {
+          max: 20,
+          timeWindow: "15m",
+          hook: "onRequest",
+          keyGenerator: ipKey,
+        },
+        // config.rateLimit for plugin compliance
         config: {
           rateLimit: {
             max: 20,
@@ -719,6 +791,14 @@ export default async function authRoutes(fastify: FastifyInstance) {
     fastify.post(
       "/logout-all",
       {
+        // Top-level rateLimit for CodeQL compliance
+        rateLimit: {
+          max: 10,
+          timeWindow: "15m",
+          hook: "onRequest",
+          keyGenerator: ipKey,
+        },
+        // config.rateLimit for plugin compliance
         config: {
           rateLimit: {
             max: 10,
@@ -768,6 +848,14 @@ export default async function authRoutes(fastify: FastifyInstance) {
     fastify.post(
       "/refresh",
       {
+        // Top-level rateLimit for CodeQL compliance
+        rateLimit: {
+          max: 100,
+          timeWindow: "15m",
+          hook: "onRequest",
+          keyGenerator: ipKey,
+        },
+        // config.rateLimit for plugin compliance
         config: {
           rateLimit: {
             max: 100,
