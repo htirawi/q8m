@@ -332,7 +332,7 @@ export class EntitlementService {
     try {
       const expiringSubscriptions = await Subscription.findExpiringSoon(days);
 
-      return expiringSubscriptions.map((sub) => ({
+      return expiringSubscriptions.map((sub: any) => ({
         userId: sub.userId.toString(),
         userEmail: sub.userId.email,
         subscription: sub,

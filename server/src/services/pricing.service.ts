@@ -106,8 +106,8 @@ export class PricingService {
             JOD: { currency: "JOD", amount: 0, formatted: "مجاني", isEstimated: false },
             SAR: { currency: "SAR", amount: 0, formatted: "مجاني", isEstimated: false },
           },
-          popular: planId === "INTERMEDIATE",
-          recommended: planId === "SENIOR",
+          popular: (planId as any) === "INTERMEDIATE",
+          recommended: (planId as any) === "SENIOR",
         });
         continue;
       }
@@ -116,9 +116,9 @@ export class PricingService {
 
       plans.push({
         planId,
-        name: this.getPlanName(planId),
-        description: this.planDescriptions[planId],
-        features: this.planFeatures[planId],
+        name: this.getPlanName(planId) || "",
+        description: this.planDescriptions[planId] || [],
+        features: this.planFeatures[planId] || [],
         usdPrice: pricing.monthly,
         pricing: {
           [currency]: monthlyPricing,
@@ -150,8 +150,8 @@ export class PricingService {
             JOD: { currency: "JOD", amount: 0, formatted: "مجاني", isEstimated: false },
             SAR: { currency: "SAR", amount: 0, formatted: "مجاني", isEstimated: false },
           },
-          popular: planId === "INTERMEDIATE",
-          recommended: planId === "SENIOR",
+          popular: (planId as any) === "INTERMEDIATE",
+          recommended: (planId as any) === "SENIOR",
         });
         continue;
       }
@@ -160,9 +160,9 @@ export class PricingService {
 
       plans.push({
         planId,
-        name: this.getPlanName(planId),
-        description: this.planDescriptions[planId],
-        features: this.planFeatures[planId],
+        name: this.getPlanName(planId) || "",
+        description: this.planDescriptions[planId] || [],
+        features: this.planFeatures[planId] || [],
         usdPrice: pricing.monthly,
         pricing: multiCurrencyPricing,
         popular: planId === "INTERMEDIATE",
@@ -185,9 +185,9 @@ export class PricingService {
 
       tiers.push({
         id: planId as "JUNIOR" | "INTERMEDIATE" | "SENIOR" | "BUNDLE",
-        name: this.getPlanName(planId),
-        description: this.planDescriptions[planId],
-        features: this.planFeatures[planId],
+        name: this.getPlanName(planId) || "",
+        description: this.planDescriptions[planId] || [],
+        features: this.planFeatures[planId] || [],
         monthlyPrice: monthlyPricing.amount,
         yearlyPrice: yearlyPricing.amount,
         isPopular: planId === "INTERMEDIATE",
@@ -220,9 +220,9 @@ export class PricingService {
     if (planId === "JUNIOR") {
       return {
         planId,
-        name: this.getPlanName(planId),
-        description: this.planDescriptions[planId],
-        features: this.planFeatures[planId],
+        name: this.getPlanName(planId) || "",
+        description: this.planDescriptions[planId] || [],
+        features: this.planFeatures[planId] || [],
         usdPrice: 0,
         pricing: {
           [currency]: {

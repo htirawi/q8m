@@ -44,11 +44,15 @@ export interface IPurchase extends Document {
     refundedAt: Date;
     gatewayRefundId?: string;
   };
+  planType?: "INTERMEDIATE" | "SENIOR" | "BUNDLE";
+  billingCycle?: "monthly" | "yearly";
   metadata?: {
     userAgent?: string;
     ipAddress?: string;
     referrer?: string;
     campaign?: string;
+    originalCurrency?: string;
+    exchangeRate?: string;
   };
   createdAt: Date;
   updatedAt: Date;
@@ -196,6 +200,14 @@ const purchaseSchema = new Schema<IPurchase>(
       refundedAt: Date,
       gatewayRefundId: String,
     },
+    planType: {
+      type: String,
+      enum: ["INTERMEDIATE", "SENIOR", "BUNDLE"],
+    },
+    billingCycle: {
+      type: String,
+      enum: ["monthly", "yearly"],
+    },
     metadata: {
       userAgent: {
         type: String,
@@ -210,12 +222,14 @@ const purchaseSchema = new Schema<IPurchase>(
       },
       referrer: String,
       campaign: String,
+      originalCurrency: String,
+      exchangeRate: String,
     },
   },
   {
     timestamps: true,
     toJSON: {
-      transform(doc, ret) {
+      transform(_doc, ret: any) {
         ret.id = ret._id.toString();
         delete ret._id;
         delete ret.__v;

@@ -122,7 +122,7 @@ export class PayPalService {
       };
 
       return new Promise((resolve, reject) => {
-        paypal.payment.create(paymentRequest, async (error, payment) => {
+        paypal.payment.create(paymentRequest, async (error: any, payment: any) => {
           if (error) {
             console.error("PayPal payment creation error:", error);
             reject(new Error(`PayPal payment creation failed: ${error.message}`));
@@ -223,7 +223,7 @@ export class PayPalService {
       };
 
       return new Promise((resolve) => {
-        paypal.payment.execute(paymentId, executeRequest, async (error, payment) => {
+        paypal.payment.execute(paymentId, executeRequest, async (error: any, payment: any) => {
           if (error) {
             console.error("PayPal payment execution error:", error);
             await purchase.markAsFailed(`Execution failed: ${error.message}`);
@@ -436,7 +436,7 @@ export class PayPalService {
     }
 
     return new Promise((resolve, reject) => {
-      paypal.payment.get(paymentId, (error, payment) => {
+      paypal.payment.get(paymentId, (error: any, payment: any) => {
         if (error) {
           reject(new Error(`Failed to get payment details: ${error.message}`));
           return;
@@ -464,7 +464,7 @@ export class PayPalService {
     return {
       configured: this.isConfigured,
       mode: env.NODE_ENV === "production" ? "live" : "sandbox",
-      clientId: this.isConfigured ? env.PAYPAL_CLIENT_ID : null,
+      clientId: this.isConfigured ? env.PAYPAL_CLIENT_ID || null : null,
     };
   }
 }

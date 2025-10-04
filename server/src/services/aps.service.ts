@@ -48,10 +48,10 @@ export interface APSWebhookData {
 export class APSService {
   private static instance: APSService;
   private isConfigured: boolean = false;
-  private baseUrl: string;
-  private apiKey: string;
-  private merchantId: string;
-  private webhookSecret: string;
+  private baseUrl!: string;
+  private apiKey!: string;
+  private merchantId!: string;
+  private webhookSecret!: string;
 
   private constructor() {
     this.configureAPS();

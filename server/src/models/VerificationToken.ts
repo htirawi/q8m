@@ -5,7 +5,7 @@ export interface IVerificationToken extends Document {
   userId: mongoose.Types.ObjectId;
   token: string;
   type: "email_verification" | "password_reset" | "two_factor";
-  expiresAt: Date;
+  expiresAt: any; // Mongoose Date type
   used: boolean;
   usedAt?: Date;
   ipAddress?: string;
@@ -33,7 +33,7 @@ const verificationTokenSchema = new Schema<IVerificationToken>(
       index: true,
     },
     expiresAt: {
-      type: Date,
+      type: Schema.Types.Date,
       required: true,
       index: true,
     },
@@ -42,7 +42,7 @@ const verificationTokenSchema = new Schema<IVerificationToken>(
       default: false,
       index: true,
     },
-    usedAt: Date,
+    usedAt: Schema.Types.Date,
     ipAddress: {
       type: String,
       match: [
@@ -58,7 +58,7 @@ const verificationTokenSchema = new Schema<IVerificationToken>(
   {
     timestamps: true,
     toJSON: {
-      transform(doc, ret) {
+      transform(_doc, ret: any) {
         ret.id = ret._id.toString();
         delete ret._id;
         delete ret.__v;
@@ -77,7 +77,7 @@ verificationTokenSchema.index({ used: 1, createdAt: -1 });
 
 // Virtual for token validity
 verificationTokenSchema.virtual("isValid").get(function () {
-  return !this.used && this.expiresAt > new Date();
+  return !this.used && (this.expiresAt as any) > new Date();
 });
 
 // Instance method to mark token as used

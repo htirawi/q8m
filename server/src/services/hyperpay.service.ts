@@ -59,6 +59,7 @@ export class HyperPayService {
     this.apiKey = env.HYPERPAY_API_KEY || "";
     this.merchantId = env.HYPERPAY_MERCHANT_ID || "";
     this.webhookSecret = env.HYPERPAY_WEBHOOK_SECRET || "";
+    // webhookSecret is used for webhook verification
     this.baseUrl =
       env.NODE_ENV === "production"
         ? "https://api.hyperpay.com"
@@ -99,7 +100,7 @@ export class HyperPayService {
       throw new Error("HyperPay service not configured");
     }
 
-    const pricingPlan = await pricingService.getPricingForPlan(request.planType, request.currency);
+    const pricingPlan = await pricingService.getPlanPricing(request.planType, request.currency);
     if (!pricingPlan) {
       throw new Error(
         `Pricing plan ${request.planType} not found for currency ${request.currency}`
@@ -476,7 +477,7 @@ export class HyperPayService {
     console.log(`Subscription ${subscription._id} created for user ${user._id}`);
 
     // Update user entitlements
-    await entitlementService.updateUserEntitlements(user._id.toString(), purchase.planType);
+    await entitlementService.updateUserEntitlements(user._id.toString(), purchase.planType!);
   }
 
   /**

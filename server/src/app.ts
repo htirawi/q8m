@@ -306,4 +306,8 @@ process.on("unhandledRejection", (reason, _promise) => {
 // Start the server
 start();
 
+export const buildApp = async () => {
+  return fastify;
+};
+
 export default fastify;

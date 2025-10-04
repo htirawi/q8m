@@ -18,6 +18,8 @@ export interface PricingInfo {
   formatted: string;
   exchangeRate?: number;
   isEstimated: boolean;
+  rateUsed?: number;
+  settlementCurrency?: string;
 }
 
 export class CurrencyService {
@@ -51,8 +53,8 @@ export class CurrencyService {
       convertedAmount: Math.round(amount * rate.rate * 100) / 100, // Round to 2 decimal places
       convertedCurrency: targetCurrency,
       exchangeRate: rate.rate,
-      rateSource: rate.source,
-      rateAge: rate.ageInHours,
+      rateSource: rate.source as "cache" | "api" | "fallback",
+      rateAge: rate.ageInHours ?? 0,
       timestamp: new Date(),
     };
   }
@@ -72,8 +74,8 @@ export class CurrencyService {
       convertedAmount: Math.round((amount / rate.rate) * 100) / 100,
       convertedCurrency: "USD",
       exchangeRate: rate.rate,
-      rateSource: rate.source,
-      rateAge: rate.ageInHours,
+      rateSource: rate.source as "cache" | "api" | "fallback",
+      rateAge: rate.ageInHours ?? 0,
       timestamp: new Date(),
     };
   }
@@ -92,7 +94,7 @@ export class CurrencyService {
       return {
         rate: fxRate.rate,
         source: "cache",
-        ageInHours: fxRate.ageInHours,
+        ageInHours: fxRate.ageInHours || 0,
       };
     }
 
@@ -103,7 +105,7 @@ export class CurrencyService {
       return {
         rate: fxRate.rate,
         source: "cache",
-        ageInHours: fxRate.ageInHours,
+        ageInHours: fxRate.ageInHours || 0,
       };
     }
 

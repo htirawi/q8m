@@ -207,9 +207,6 @@ importers:
       compression:
         specifier: ^1.7.4
         version: 1.8.1
-      crypto:
-        specifier: ^1.0.1
-        version: 1.0.1
       dotenv:
         specifier: ^16.3.0
         version: 16.6.1
@@ -274,6 +271,9 @@ importers:
       '@eslint/js':
         specifier: ^9.36.0
         version: 9.37.0
+      '@types/bcrypt':
+        specifier: ^6.0.0
+        version: 6.0.0
       '@types/bcryptjs':
         specifier: ^2.4.6
         version: 2.4.6
@@ -295,6 +295,9 @@ importers:
       '@types/nodemailer':
         specifier: ^6.4.14
         version: 6.4.20
+      '@types/paypal-rest-sdk':
+        specifier: ^1.7.9
+        version: 1.7.9
       '@types/uuid':
         specifier: ^9.0.7
         version: 9.0.8
@@ -2140,6 +2143,9 @@ packages:
   '@types/aria-query@5.0.4':
     resolution: {integrity: sha512-rfT93uj5s0PRL7EzccGMs3brplhcrghnDoV26NqKhCAS1hVo+WdNsPvE/yb6ilfr5hi2MEk6d5EWJTKdxg8jVw==}
 
+  '@types/bcrypt@6.0.0':
+    resolution: {integrity: sha512-/oJGukuH3D2+D+3H4JWLaAsJ/ji86dhRidzZ/Od7H/i8g+aCmvkeCc6Ni/f9uxGLSQVCRZkX2/lqEFG2BvWtlQ==}
+
   '@types/bcryptjs@2.4.6':
     resolution: {integrity: sha512-9xlo6R2qDs5uixm0bcIqCeMCE6HiQsIyel9KQySStiyqNl2tnj2mP3DX1Nf56MD6KMenNNlBBsy3LJ7gUEQPXQ==}
 
@@ -2196,6 +2202,9 @@ packages:
 
   '@types/normalize-package-data@2.4.4':
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
+
+  '@types/paypal-rest-sdk@1.7.9':
+    resolution: {integrity: sha512-Wu/F8HaC0UbAPGn983o6KLMsF5zxAzsLOj9dzOU9xRyqbsDuNBp1No1bM/9T3vdFiV5HdfwhXrhfhD1gRTycTg==}
 
   '@types/qs@6.14.0':
     resolution: {integrity: sha512-eOunJqu0K1923aExK6y8p6fsihYEn/BYuQ4g0CxAAgFc4b/ZLN4CrsRZ55srTdqoiLzU2B2evC+apEIxprEzkQ==}
@@ -2930,10 +2939,6 @@ packages:
   crypto-random-string@2.0.0:
     resolution: {integrity: sha512-v1plID3y9r/lPhviJ1wrXpLeyUIGAZ2SHNYTEapm7/8A9nLPoyvVp3RK/EPFqn5kEznyWgYZNsRtYYIWbuG8KA==}
     engines: {node: '>=8'}
-
-  crypto@1.0.1:
-    resolution: {integrity: sha512-VxBKmeNcqQdiUQUW2Tzq0t377b54N2bMtXO/qiLa+6eRRmmC4qT3D4OnTGoT/U6O9aklQ/jTwbOtRMTTY8G0Ig==}
-    deprecated: This package is no longer supported. It's now a built-in Node module. If you've depended on crypto, you should switch to the one that's built-in.
 
   css-functions-list@3.2.3:
     resolution: {integrity: sha512-IQOkD3hbR5KrN93MtcYuad6YPuTSUhntLHDuLEbFWE+ff2/XSZNdZG+LcbbIW5AXKg/WFIfYItIzVoHngHXZzA==}
@@ -8076,6 +8081,10 @@ snapshots:
 
   '@types/aria-query@5.0.4': {}
 
+  '@types/bcrypt@6.0.0':
+    dependencies:
+      '@types/node': 22.18.8
+
   '@types/bcryptjs@2.4.6': {}
 
   '@types/body-parser@1.19.6':
@@ -8142,6 +8151,10 @@ snapshots:
       - aws-crt
 
   '@types/normalize-package-data@2.4.4': {}
+
+  '@types/paypal-rest-sdk@1.7.9':
+    dependencies:
+      '@types/node': 22.18.8
 
   '@types/qs@6.14.0': {}
 
@@ -8997,8 +9010,6 @@ snapshots:
       which: 2.0.2
 
   crypto-random-string@2.0.0: {}
-
-  crypto@1.0.1: {}
 
   css-functions-list@3.2.3: {}
 

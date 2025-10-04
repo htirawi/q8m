@@ -15,6 +15,7 @@ export class SecureCookieService {
 
   constructor() {
     this.cookieSecret = env.CSRF_SECRET;
+    // cookieSecret is used for cookie signing
   }
 
   /**

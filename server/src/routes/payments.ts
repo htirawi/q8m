@@ -193,11 +193,12 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
           amount: priceInfo.amount,
           currency,
           planType,
+          billingCycle,
           userId: user.id,
           userEmail: user.email,
           userName: user.name,
-          returnUrl: `${fastify.config?.CLIENT_URL || "http://localhost:5173"}/payment/success`,
-          cancelUrl: `${fastify.config?.CLIENT_URL || "http://localhost:5173"}/payment/cancel`,
+          returnUrl: `${(fastify as any).config?.CLIENT_URL || "http://localhost:5173"}/payment/success`,
+          cancelUrl: `${(fastify as any).config?.CLIENT_URL || "http://localhost:5173"}/payment/cancel`,
           billingAddress,
         };
 

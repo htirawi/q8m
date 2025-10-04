@@ -47,13 +47,13 @@ export class JWTService {
       expiresIn: this.accessTokenExpiry,
       issuer: "quiz-platform",
       audience: "quiz-platform-client",
-    });
+    } as any);
 
     const refreshToken = jwt.sign({ userId: user.id, sessionId }, this.refreshTokenSecret, {
       expiresIn: this.refreshTokenExpiry,
       issuer: "quiz-platform",
       audience: "quiz-platform-client",
-    });
+    } as any);
 
     // Calculate expiry time in seconds
     const expiresIn = this.parseExpiry(this.accessTokenExpiry);
@@ -164,7 +164,7 @@ export class JWTService {
       expiresIn: this.accessTokenExpiry,
       issuer: "quiz-platform",
       audience: "quiz-platform-client",
-    });
+    } as any);
   }
 
   /**
@@ -250,8 +250,8 @@ export class JWTService {
       throw new Error(`Invalid expiry format: ${expiry}`);
     }
 
-    const value = parseInt(match[1], 10);
-    const unit = match[2];
+    const value = parseInt(match[1]!, 10);
+    const unit = match[2]!;
 
     switch (unit) {
       case "s":

@@ -7,7 +7,7 @@ export interface IFxRate extends Document {
   source: "api" | "manual" | "fallback";
   provider?: string;
   fetchedAt: Date;
-  expiresAt: Date;
+  expiresAt: any; // Mongoose Date type
   metadata?: {
     providerResponse?: Record<string, any>;
     errorMessage?: string;
@@ -55,7 +55,7 @@ const fxRateSchema = new Schema<IFxRate>(
       required: true,
     },
     expiresAt: {
-      type: Date,
+      type: Schema.Types.Date,
       required: true,
       index: { expires: 0 }, // TTL index
     },
@@ -67,7 +67,7 @@ const fxRateSchema = new Schema<IFxRate>(
   {
     timestamps: true,
     toJSON: {
-      transform(doc, ret) {
+      transform(_doc, ret: any) {
         ret.id = ret._id.toString();
         delete ret._id;
         delete ret.__v;
@@ -254,7 +254,7 @@ fxRateSchema.statics.getRateStats = function (days: number = 7) {
 fxRateSchema.pre("save", function (next) {
   if (!this.expiresAt) {
     // Default to 24 hours from now
-    this.expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000);
+    this.expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000) as any;
   }
   next();
 });

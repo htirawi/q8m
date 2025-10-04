@@ -98,12 +98,11 @@ const subscriptionSchema = new Schema<ISubscription>(
         },
       },
     },
-    entitlements: [
-      {
-        type: String,
-        enum: ["JUNIOR", "INTERMEDIATE", "SENIOR", "BUNDLE"],
-      },
-    ],
+    entitlements: {
+      type: [String],
+      enum: ["JUNIOR", "INTERMEDIATE", "SENIOR", "BUNDLE"],
+      required: true,
+    },
     metadata: {
       originalPurchaseCurrency: {
         type: String,
@@ -117,7 +116,7 @@ const subscriptionSchema = new Schema<ISubscription>(
   {
     timestamps: true,
     toJSON: {
-      transform(doc, ret) {
+      transform(_doc, ret: any) {
         ret.id = ret._id.toString();
         delete ret._id;
         delete ret.__v;
