@@ -29,8 +29,6 @@ import RegisterForm from "@/components/auth/RegisterForm.vue";
 import { useAuthStore } from "@/stores/auth";
 
 const router = useRouter();
-const { t } = useI18n();
-const authStore = useAuthStore();
 
 function handleOAuthLogin(provider: "google" | "facebook") {
   // TODO: Implement OAuth login

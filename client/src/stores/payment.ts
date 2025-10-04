@@ -4,7 +4,6 @@ import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 import { useErrorHandler } from "@/composables/useErrorHandler";
 import type {
-  PricingInfo,
   PlanPricing,
   Purchase,
   Subscription,

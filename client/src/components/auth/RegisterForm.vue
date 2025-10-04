@@ -271,7 +271,7 @@
 
         <button
           type="button"
-          @click="$emit('show-login')"
+          @click="$emit('show-login', true)"
           class="font-medium text-primary-600 hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300"
         >
           {{ $t("auth.register.signIn") }}
@@ -423,6 +423,7 @@ async function handleSubmit(): Promise<void> {
     name: formData.name.trim(),
     email: formData.email,
     password: formData.password,
+    confirmPassword: formData.confirmPassword,
     acceptTerms: formData.acceptTerms,
   });
 
