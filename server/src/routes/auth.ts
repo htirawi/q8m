@@ -62,6 +62,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/register",
     {
+      preHandler: createRateLimitMiddleware("verifyEmail"), // Use same rate limit as email verification
       schema: {
         body: registerSchema,
       },
@@ -285,6 +286,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/resend-verification",
     {
+      preHandler: createRateLimitMiddleware("verifyEmail"), // Use same rate limit as email verification
       schema: {
         body: resendVerificationSchema,
       },
@@ -483,7 +485,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
   fastify.get(
     "/me",
     {
-      preHandler: authenticate,
+      preHandler: [authenticate, createRateLimitMiddleware("login")], // Add rate limiting to authenticated route
     },
     async (request, reply) => {
       try {
@@ -514,7 +516,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/logout",
     {
-      preHandler: authenticate,
+      preHandler: [authenticate, createRateLimitMiddleware("login")], // Add rate limiting to authenticated route
     },
     async (request, reply) => {
       try {
@@ -549,7 +551,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/logout-all",
     {
-      preHandler: authenticate,
+      preHandler: [authenticate, createRateLimitMiddleware("login")], // Add rate limiting to authenticated route
     },
     async (request, reply) => {
       try {
