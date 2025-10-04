@@ -39,7 +39,7 @@
       "@shared/*": ["../shared/*"]
     }
   },
-  "include": ["src/**/*.ts", "tests/**/*.ts", "scripts/**/*.ts"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "tests/**/*.ts", "scripts/**/*.ts"],
   "files": [],
   "exclude": ["node_modules", "dist", "coverage", "src/routes/downloads.ts"],
   "ts-node": {
