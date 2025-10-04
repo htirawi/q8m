@@ -231,6 +231,12 @@ export default async function authRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/verify-email",
     {
+      config: {
+        rateLimit: {
+          max: 5, // Allow only 5 verification attempts per window
+          timeWindow: 900000, // 15 minutes
+        }
+      },
       schema: {
         body: verifyEmailSchema,
       },
@@ -286,6 +292,12 @@ export default async function authRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/resend-verification",
     {
+      config: {
+        rateLimit: {
+          max: 3, // Allow only 3 resend attempts per window
+          timeWindow: 900000, // 15 minutes
+        }
+      },
       schema: {
         body: resendVerificationSchema,
       },
@@ -391,6 +403,12 @@ export default async function authRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/reset-password",
     {
+      config: {
+        rateLimit: {
+          max: 5, // Allow only 5 reset attempts per window
+          timeWindow: 900000, // 15 minutes
+        }
+      },
       schema: {
         body: resetPasswordSchema,
       },
@@ -438,6 +456,12 @@ export default async function authRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/change-password",
     {
+      config: {
+        rateLimit: {
+          max: 5, // Allow only 5 password change attempts per window
+          timeWindow: 900000, // 15 minutes
+        }
+      },
       preHandler: [authenticate],
       schema: {
         body: changePasswordSchema,
@@ -550,6 +574,12 @@ export default async function authRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/logout",
     {
+      config: {
+        rateLimit: {
+          max: 10, // Allow only 10 logout attempts per window
+          timeWindow: 900000, // 15 minutes
+        }
+      },
       preHandler: [authenticate],
     },
     async (request, reply) => {
@@ -583,6 +613,12 @@ export default async function authRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/logout-all",
     {
+      config: {
+        rateLimit: {
+          max: 5, // Allow only 5 logout-all attempts per window
+          timeWindow: 900000, // 15 minutes
+        }
+      },
       preHandler: [authenticate],
     },
     async (request, reply) => {
@@ -632,14 +668,27 @@ export default async function authRoutes(fastify: FastifyInstance) {
       }
 
       // Validate refresh token format to prevent security bypass
-      if (typeof refreshToken !== 'string' || 
+      // Use strict validation to prevent any bypass attempts
+      if (!refreshToken || 
+          typeof refreshToken !== 'string' || 
           refreshToken.length < 32 || 
           refreshToken.length > 256 || 
           !/^[a-zA-Z0-9]+$/.test(refreshToken) ||
           refreshToken.includes(' ') ||
           refreshToken.includes('\n') ||
           refreshToken.includes('\r') ||
-          refreshToken.includes('\t')) {
+          refreshToken.includes('\t') ||
+          refreshToken.includes('null') ||
+          refreshToken.includes('undefined') ||
+          refreshToken.includes('false') ||
+          refreshToken.includes('true') ||
+          refreshToken.includes('0') ||
+          refreshToken.includes('1')) {
+        request.log.warn("Invalid refresh token format attempt", { 
+          tokenLength: refreshToken?.length,
+          tokenType: typeof refreshToken,
+          hasWhitespace: refreshToken?.includes(' ') || refreshToken?.includes('\n') || refreshToken?.includes('\r') || refreshToken?.includes('\t')
+        });
         return reply.status(401).send({
           code: 401,
           error: "Unauthorized",
