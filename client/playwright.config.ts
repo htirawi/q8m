@@ -1,4 +1,5 @@
 import { defineConfig, devices } from "@playwright/test";
+import { resolve } from "node:path";
 
 /**
  * @see https://playwright.dev/docs/test-configuration
@@ -80,10 +81,6 @@ export default defineConfig({
     timeout: 120 * 1000,
   },
 
-  /* Global setup and teardown */
-  globalSetup: require.resolve("./tests/e2e/global-setup.ts"),
-  globalTeardown: require.resolve("./tests/e2e/global-teardown.ts"),
-
   /* Test timeout */
   timeout: 30 * 1000,
   expect: {
@@ -100,7 +97,7 @@ export default defineConfig({
   /* Ignore patterns */
   testIgnore: ["**/node_modules/**", "**/dist/**"],
 
-  /* Global test configuration */
-  globalSetup: require.resolve("./tests/e2e/global-setup.ts"),
-  globalTeardown: require.resolve("./tests/e2e/global-teardown.ts"),
+  /* Global setup and teardown */
+  globalSetup: resolve("./tests/e2e/global-setup.ts"),
+  globalTeardown: resolve("./tests/e2e/global-teardown.ts"),
 });
