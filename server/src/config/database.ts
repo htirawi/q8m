@@ -24,11 +24,11 @@ export const connectDatabase = async (): Promise<void> => {
 
     await mongoose.connect(mongoUri, options);
 
-    console.log("✅ Connected to MongoDB");
+    console.warn("✅ Connected to MongoDB");
 
     // Handle connection events
     mongoose.connection.on("connected", () => {
-      console.log("MongoDB connected");
+      console.warn("MongoDB connected");
     });
 
     mongoose.connection.on("error", (error) => {
@@ -36,13 +36,13 @@ export const connectDatabase = async (): Promise<void> => {
     });
 
     mongoose.connection.on("disconnected", () => {
-      console.log("MongoDB disconnected");
+      console.warn("MongoDB disconnected");
     });
 
     // Graceful shutdown
     process.on("SIGINT", async () => {
       await mongoose.connection.close();
-      console.log("MongoDB connection closed through app termination");
+      console.warn("MongoDB connection closed through app termination");
       process.exit(0);
     });
   } catch (error) {
@@ -54,7 +54,7 @@ export const connectDatabase = async (): Promise<void> => {
 export const disconnectDatabase = async (): Promise<void> => {
   try {
     await mongoose.connection.close();
-    console.log("MongoDB connection closed");
+      console.warn("MongoDB connection closed");
   } catch (error) {
     console.error("Error closing MongoDB connection:", error);
   }

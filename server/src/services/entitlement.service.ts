@@ -184,7 +184,7 @@ export class EntitlementService {
       // Clear cache for this user
       this.cache.delete(userId);
 
-      console.log(`Updated entitlements for user ${user.email}: ${newEntitlements.join(", ")}`);
+      console.warn(`Updated entitlements for user ${user.email}: ${newEntitlements.join(", ")}`);
     } catch (error) {
       console.error("Error updating user entitlements:", error);
       throw error;
@@ -211,7 +211,7 @@ export class EntitlementService {
       // Clear cache for this user
       this.cache.delete(userId);
 
-      console.log(`Revoked entitlements for user ${user.email}. Reason: ${reason}`);
+      console.warn(`Revoked entitlements for user ${user.email}. Reason: ${reason}`);
     } catch (error) {
       console.error("Error revoking user entitlements:", error);
       throw error;
@@ -325,14 +325,14 @@ export class EntitlementService {
     Array<{
       userId: string;
       userEmail: string;
-      subscription: any;
+      subscription: unknown;
       daysRemaining: number;
     }>
   > {
     try {
       const expiringSubscriptions = await Subscription.findExpiringSoon(days);
 
-      return expiringSubscriptions.map((sub: any) => ({
+      return expiringSubscriptions.map((sub: unknown) => ({
         userId: sub.userId.toString(),
         userEmail: sub.userId.email,
         subscription: sub,
@@ -371,8 +371,8 @@ export class EntitlementService {
 
       // Get plan distribution
       const planDistribution: Record<string, number> = {};
-      subscriptionStats.forEach((stat: any) => {
-        const activeCount = stat.statuses.find((s: any) => s.status === "active")?.count || 0;
+      subscriptionStats.forEach((stat: unknown) => {
+        const activeCount = stat.statuses.find((s: unknown) => s.status === "active")?.count || 0;
         planDistribution[stat._id] = activeCount;
       });
 

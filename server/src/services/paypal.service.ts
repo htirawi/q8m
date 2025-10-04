@@ -25,7 +25,7 @@ export interface PayPalPaymentResponse {
 
 export interface PayPalWebhookData {
   event_type: string;
-  resource: any;
+  resource: unknown;
   id: string;
   create_time: string;
   event_version: string;
@@ -59,7 +59,7 @@ export class PayPalService {
     });
 
     this.isConfigured = true;
-    console.log("PayPal service configured successfully");
+    console.warn("PayPal service configured successfully");
   }
 
   /**
@@ -122,7 +122,7 @@ export class PayPalService {
       };
 
       return new Promise((resolve, reject) => {
-        paypal.payment.create(paymentRequest, async (error: any, payment: any) => {
+        paypal.payment.create(paymentRequest, async (error: unknown, payment: unknown) => {
           if (error) {
             console.error("PayPal payment creation error:", error);
             reject(new Error(`PayPal payment creation failed: ${error.message}`));
@@ -176,7 +176,7 @@ export class PayPalService {
 
             // Find approval URL
             const approvalUrl = payment.links?.find(
-              (link: any) => link.rel === "approval_url"
+              (link: unknown) => link.rel === "approval_url"
             )?.href;
 
             if (!approvalUrl) {
@@ -223,7 +223,7 @@ export class PayPalService {
       };
 
       return new Promise((resolve) => {
-        paypal.payment.execute(paymentId, executeRequest, async (error: any, payment: any) => {
+        paypal.payment.execute(paymentId, executeRequest, async (error: unknown, payment: unknown) => {
           if (error) {
             console.error("PayPal payment execution error:", error);
             await purchase.markAsFailed(`Execution failed: ${error.message}`);
@@ -262,7 +262,7 @@ export class PayPalService {
   /**
    * Create subscription after successful payment
    */
-  private async createSubscription(purchase: any): Promise<void> {
+  private async createSubscription(purchase: unknown): Promise<void> {
     try {
       const user = await User.findById(purchase.userId);
       if (!user) {
@@ -298,7 +298,7 @@ export class PayPalService {
       user.entitlements = subscription.entitlements;
       await user.save();
 
-      console.log(`Subscription created for user ${user.email}: ${subscription.planType}`);
+      console.warn(`Subscription created for user ${user.email}: ${subscription.planType}`);
     } catch (error) {
       console.error("Error creating subscription:", error);
       throw error;
@@ -335,7 +335,7 @@ export class PayPalService {
           await this.handlePaymentRefunded(webhookData.resource);
           break;
         default:
-          console.log(`Unhandled PayPal webhook event: ${webhookData.event_type}`);
+          console.warn(`Unhandled PayPal webhook event: ${webhookData.event_type}`);
       }
 
       return { success: true };
@@ -370,7 +370,7 @@ export class PayPalService {
   /**
    * Handle payment completed webhook
    */
-  private async handlePaymentCompleted(resource: any): Promise<void> {
+  private async handlePaymentCompleted(resource: unknown): Promise<void> {
     try {
       const paymentId = resource.parent_payment;
       const purchase = await Purchase.findByPaymentId(paymentId);
@@ -387,7 +387,7 @@ export class PayPalService {
   /**
    * Handle payment denied webhook
    */
-  private async handlePaymentDenied(resource: any): Promise<void> {
+  private async handlePaymentDenied(resource: unknown): Promise<void> {
     try {
       const paymentId = resource.parent_payment;
       const purchase = await Purchase.findByPaymentId(paymentId);
@@ -403,7 +403,7 @@ export class PayPalService {
   /**
    * Handle payment refunded webhook
    */
-  private async handlePaymentRefunded(resource: any): Promise<void> {
+  private async handlePaymentRefunded(resource: unknown): Promise<void> {
     try {
       const paymentId = resource.parent_payment;
       const purchase = await Purchase.findByPaymentId(paymentId);
@@ -430,13 +430,13 @@ export class PayPalService {
   /**
    * Get payment details
    */
-  async getPaymentDetails(paymentId: string): Promise<any> {
+  async getPaymentDetails(paymentId: string): Promise<unknown> {
     if (!this.isConfigured) {
       throw new Error("PayPal service not configured");
     }
 
     return new Promise((resolve, reject) => {
-      paypal.payment.get(paymentId, (error: any, payment: any) => {
+      paypal.payment.get(paymentId, (error: unknown, payment: unknown) => {
         if (error) {
           reject(new Error(`Failed to get payment details: ${error.message}`));
           return;

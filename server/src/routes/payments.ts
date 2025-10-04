@@ -79,7 +79,7 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
           currency,
           pricing: filteredPricing,
         });
-      } catch (error: any) {
+      } catch (error: unknown) {
         request.log.error("Get pricing error:", error);
         reply.status(500).send({
           success: false,
@@ -111,7 +111,7 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
           currency,
           pricing,
         });
-      } catch (error: any) {
+      } catch (error: unknown) {
         request.log.error("Get pricing for currency error:", error);
         reply.status(500).send({
           success: false,
@@ -197,8 +197,8 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
           userId: user.id,
           userEmail: user.email,
           userName: user.name,
-          returnUrl: `${(fastify as any).config?.CLIENT_URL || "http://localhost:5173"}/payment/success`,
-          cancelUrl: `${(fastify as any).config?.CLIENT_URL || "http://localhost:5173"}/payment/cancel`,
+          returnUrl: `${(fastify as unknown).config?.CLIENT_URL || "http://localhost:5173"}/payment/success`,
+          cancelUrl: `${(fastify as unknown).config?.CLIENT_URL || "http://localhost:5173"}/payment/cancel`,
           billingAddress,
         };
 
@@ -253,7 +253,7 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
           billingCycle,
           isEstimated: priceInfo.isEstimated,
         });
-      } catch (error: any) {
+      } catch (error: unknown) {
         request.log.error("Create payment error:", error);
         reply.status(500).send({
           success: false,
@@ -317,7 +317,7 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
             error: result.error || "Payment failed",
           });
         }
-      } catch (error: any) {
+      } catch (error: unknown) {
         request.log.error("Payment callback error:", error);
         reply.status(500).send({
           success: false,
@@ -355,7 +355,7 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
             hasMore: purchases.length === limit,
           },
         });
-      } catch (error: any) {
+      } catch (error: unknown) {
         request.log.error("Get purchase history error:", error);
         reply.status(500).send({
           success: false,
@@ -388,7 +388,7 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
           success: true,
           subscription,
         });
-      } catch (error: any) {
+      } catch (error: unknown) {
         request.log.error("Get subscription error:", error);
         reply.status(500).send({
           success: false,
@@ -430,7 +430,7 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
           message: "Subscription cancelled successfully",
           subscription,
         });
-      } catch (error: any) {
+      } catch (error: unknown) {
         request.log.error("Cancel subscription error:", error);
         reply.status(500).send({
           success: false,
@@ -450,7 +450,7 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
     },
     async (request, reply) => {
       try {
-        const webhookData = request.body as any;
+        const webhookData = request.body as unknown;
         const signature = request.headers["x-paypal-signature"] as string;
 
         const result = await paypalService.handleWebhook(webhookData, signature);
@@ -463,7 +463,7 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
             error: result.error,
           });
         }
-      } catch (error: any) {
+      } catch (error: unknown) {
         request.log.error("PayPal webhook error:", error);
         reply.status(500).send({
           success: false,
@@ -483,7 +483,7 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
     },
     async (request, reply) => {
       try {
-        const webhookData = request.body as any;
+        const webhookData = request.body as unknown;
 
         const result = await apsService.handleWebhook(webhookData);
 
@@ -495,7 +495,7 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
             error: result.error,
           });
         }
-      } catch (error: any) {
+      } catch (error: unknown) {
         request.log.error("APS webhook error:", error);
         reply.status(500).send({
           success: false,
@@ -515,7 +515,7 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
     },
     async (request, reply) => {
       try {
-        const webhookData = request.body as any;
+        const webhookData = request.body as unknown;
 
         const result = await hyperpayService.handleWebhook(webhookData);
 
@@ -527,7 +527,7 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
             error: result.error,
           });
         }
-      } catch (error: any) {
+      } catch (error: unknown) {
         request.log.error("HyperPay webhook error:", error);
         reply.status(500).send({
           success: false,
@@ -552,7 +552,7 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
           hyperpay: hyperpayStatus,
         },
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       request.log.error("Get gateway status error:", error);
       reply.status(500).send({
         success: false,
@@ -571,7 +571,7 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
         health,
         supportedCurrencies: ["USD", "JOD", "SAR"],
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       request.log.error("Get currency rates error:", error);
       reply.status(500).send({
         success: false,
@@ -660,7 +660,7 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
             error: result.error || "Refund failed",
           });
         }
-      } catch (error: any) {
+      } catch (error: unknown) {
         request.log.error("Process refund error:", error);
         reply.status(500).send({
           success: false,

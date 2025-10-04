@@ -1,4 +1,4 @@
-import { FastifyRequest, FastifyReply } from "fastify";
+import { FastifyRequest, FastifyReply, FastifyInstance } from "fastify";
 import rateLimit from "@fastify/rate-limit";
 
 /**
@@ -84,13 +84,13 @@ export const tokenRefreshRateLimit = async (request: FastifyRequest, _reply: Fas
 /**
  * Register rate limiting plugins for specific routes
  */
-export const registerRateLimitPlugins = async (fastify: any) => {
+export const registerRateLimitPlugins = async (fastify: FastifyInstance) => {
   // Rate limiting for email verification
   await fastify.register(rateLimit, {
     keyGenerator: (request: FastifyRequest) => `verify-email:${request.ip}`,
     max: 5,
     timeWindow: "15 minutes",
-    errorResponseBuilder: (_request: FastifyRequest, context: any) => ({
+    errorResponseBuilder: (_request: FastifyRequest, context: { after: string; max: number }) => ({
       code: 429,
       error: "Too Many Requests",
       message: `Email verification rate limit exceeded. Retry in ${Math.round(context.ttl / 1000)} seconds`,
@@ -103,7 +103,7 @@ export const registerRateLimitPlugins = async (fastify: any) => {
     keyGenerator: (request: FastifyRequest) => `password-reset:${request.ip}`,
     max: 3,
     timeWindow: "15 minutes",
-    errorResponseBuilder: (_request: FastifyRequest, context: any) => ({
+    errorResponseBuilder: (_request: FastifyRequest, context: { after: string; max: number }) => ({
       code: 429,
       error: "Too Many Requests",
       message: `Password reset rate limit exceeded. Retry in ${Math.round(context.ttl / 1000)} seconds`,
@@ -116,7 +116,7 @@ export const registerRateLimitPlugins = async (fastify: any) => {
     keyGenerator: (request: FastifyRequest) => `token-refresh:${request.ip}`,
     max: 10,
     timeWindow: "15 minutes",
-    errorResponseBuilder: (_request: FastifyRequest, context: any) => ({
+    errorResponseBuilder: (_request: FastifyRequest, context: { after: string; max: number }) => ({
       code: 429,
       error: "Too Many Requests",
       message: `Token refresh rate limit exceeded. Retry in ${Math.round(context.ttl / 1000)} seconds`,

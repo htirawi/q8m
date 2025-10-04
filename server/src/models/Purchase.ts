@@ -36,7 +36,7 @@ export interface IPurchase extends Document {
     expiryMonth?: number;
     expiryYear?: number;
   };
-  gatewayResponse?: Record<string, any>;
+  gatewayResponse?: Record<string, unknown>;
   refundDetails?: {
     amount: string;
     currency: string;
@@ -229,7 +229,7 @@ const purchaseSchema = new Schema<IPurchase>(
   {
     timestamps: true,
     toJSON: {
-      transform(_doc, ret: any) {
+      transform(_doc, ret: Record<string, unknown>) {
         ret.id = ret._id.toString();
         delete ret._id;
         delete ret.__v;
@@ -251,7 +251,7 @@ purchaseSchema.virtual("formattedAmount").get(function () {
 });
 
 // Instance method to mark as completed
-purchaseSchema.methods.markAsCompleted = function (gatewayResponse?: Record<string, any>) {
+purchaseSchema.methods.markAsCompleted = function (gatewayResponse?: Record<string, unknown>) {
   this.status = "completed";
   if (gatewayResponse) {
     this.gatewayResponse = gatewayResponse;
@@ -311,7 +311,7 @@ purchaseSchema.statics.getUserPurchases = function (
 
 // Static method to get revenue statistics
 purchaseSchema.statics.getRevenueStats = function (startDate?: Date, endDate?: Date) {
-  const match: any = { status: "completed" };
+  const match: unknown = { status: "completed" };
 
   if (startDate || endDate) {
     match.createdAt = {};

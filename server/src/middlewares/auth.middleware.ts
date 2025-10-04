@@ -56,7 +56,7 @@ export function createAuthMiddleware(options: AuthOptions = {}) {
       let payload;
       try {
         payload = jwtService.verifyAccessToken(token);
-      } catch (error: any) {
+      } catch (error: unknown) {
         if (error.message === "Access token expired" && !options.allowExpiredTokens) {
           return reply.status(401).send({
             code: 401,
@@ -84,7 +84,7 @@ export function createAuthMiddleware(options: AuthOptions = {}) {
       }
 
       // Check if session exists and is valid
-      const session = await (Session as any).findActiveByAccessToken(token);
+      const session = await (Session as unknown).findActiveByAccessToken(token);
       if (!session) {
         return reply.status(401).send({
           code: 401,
@@ -95,7 +95,7 @@ export function createAuthMiddleware(options: AuthOptions = {}) {
 
       // Fetch user from database
       const user = await User.findById(payload.userId).select("+isEmailVerified");
-      if (!user || !(user as any).isActive) {
+      if (!user || !(user as unknown).isActive) {
         return reply.status(401).send({
           code: 401,
           error: "Unauthorized",
@@ -124,7 +124,7 @@ export function createAuthMiddleware(options: AuthOptions = {}) {
       // Check entitlement requirements
       if (options.requiredEntitlements) {
         const hasRequiredEntitlements = options.requiredEntitlements.every((entitlement) =>
-          (user as any).entitlements.includes(entitlement)
+          (user as unknown).entitlements.includes(entitlement)
         );
         if (!hasRequiredEntitlements) {
           return reply.status(403).send({
@@ -140,16 +140,16 @@ export function createAuthMiddleware(options: AuthOptions = {}) {
 
       // Attach user and session info to request
       request.authUser = {
-        id: (user as any)._id.toString(),
+        id: (user as unknown)._id.toString(),
         email: user.email,
         name: user.name,
         role: user.role,
-        entitlements: (user as any).entitlements,
+        entitlements: (user as unknown).entitlements,
         isEmailVerified: user.isEmailVerified,
       };
       request.sessionId = session._id.toString();
     } catch (error) {
-      (request.log as any).error("Authentication error:", error);
+      (request.log as unknown).error("Authentication error:", error);
       return reply.status(500).send({
         code: 500,
         error: "Internal Server Error",
@@ -174,17 +174,17 @@ export const optionalAuth = async (request: FastifyRequest) => {
 
     try {
       const payload = jwtService.verifyAccessToken(token);
-      const session = await (Session as any).findActiveByAccessToken(token);
+      const session = await (Session as unknown).findActiveByAccessToken(token);
 
       if (session) {
         const user = await User.findById(payload.userId).select("+isEmailVerified");
-        if (user && (user as any).isActive) {
+        if (user && (user as unknown).isActive) {
           request.authUser = {
-            id: (user as any)._id.toString(),
+            id: (user as unknown)._id.toString(),
             email: user.email,
             name: user.name,
             role: user.role,
-            entitlements: (user as any).entitlements,
+            entitlements: (user as unknown).entitlements,
             isEmailVerified: user.isEmailVerified,
           };
           request.sessionId = session._id.toString();
@@ -193,10 +193,10 @@ export const optionalAuth = async (request: FastifyRequest) => {
       }
     } catch (error) {
       // Token invalid or expired, but we don't fail for optional auth
-      (request.log as any).debug("Optional auth failed:", error);
+      (request.log as unknown).debug("Optional auth failed:", error);
     }
   } catch (error) {
-    (request.log as any).error("Optional authentication error:", error);
+    (request.log as unknown).error("Optional authentication error:", error);
     // Don't fail for optional auth
   }
 };
@@ -210,7 +210,7 @@ export const authRateLimit = async (request: FastifyRequest) => {
 
   // This would integrate with Redis for actual rate limiting
   // For now, we'll just log the attempt
-  (request.log as any).info(`Auth attempt from IP: ${ip}`);
+  (request.log as unknown).info(`Auth attempt from IP: ${ip}`);
 };
 
 /**

@@ -52,7 +52,7 @@ export default async function adminRoutes(fastify: FastifyInstance) {
       },
     },
     async (request, reply) => {
-      const { limit, offset } = request.query as any;
+      const { limit, offset } = request.query as unknown;
 
       // TODO: Implement real user fetching
       reply.send({
@@ -142,7 +142,7 @@ export default async function adminRoutes(fastify: FastifyInstance) {
       },
     },
     async (request, reply) => {
-      const { limit, offset } = request.query as any;
+      const { limit, offset } = request.query as unknown;
 
       // TODO: Implement real question fetching
       reply.send({
@@ -200,7 +200,7 @@ export default async function adminRoutes(fastify: FastifyInstance) {
       },
     },
     async (request, reply) => {
-      const questionData = request.body as any;
+      const questionData = request.body as unknown;
 
       // TODO: Implement question creation
       reply.status(201).send({
@@ -226,7 +226,7 @@ export default async function adminRoutes(fastify: FastifyInstance) {
     },
     async (request, reply) => {
       const { questionId } = request.params as { questionId: string };
-      const updateData = request.body as any;
+      const updateData = request.body as unknown;
 
       // TODO: Implement question update
       reply.send({

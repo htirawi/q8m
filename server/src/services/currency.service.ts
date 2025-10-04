@@ -94,7 +94,7 @@ export class CurrencyService {
       return {
         rate: fxRate.rate,
         source: "cache",
-        ageInHours: ((fxRate as any).ageInHours ?? 0) as number,
+        ageInHours: ((fxRate as unknown).ageInHours ?? 0) as number,
       };
     }
 
@@ -105,7 +105,7 @@ export class CurrencyService {
       return {
         rate: fxRate.rate,
         source: "cache",
-        ageInHours: ((fxRate as any).ageInHours ?? 0) as number,
+        ageInHours: ((fxRate as unknown).ageInHours ?? 0) as number,
       };
     }
 
@@ -182,7 +182,7 @@ export class CurrencyService {
     rate: number,
     source: "api" | "manual" | "fallback",
     provider: string,
-    providerResponse?: any
+    providerResponse?: unknown
   ): Promise<void> {
     const now = new Date();
     const expiresAt = new Date(now.getTime() + 24 * 60 * 60 * 1000); // 24 hours

@@ -23,7 +23,7 @@ export class SecureCookieService {
    * Set a secure httpOnly cookie
    */
   setSecureCookie(
-    reply: any,
+    reply: unknown,
     name: string,
     value: string,
     options: Partial<SecureCookieOptions> = {}
@@ -51,7 +51,7 @@ export class SecureCookieService {
   /**
    * Set access token cookie
    */
-  setAccessTokenCookie(reply: any, token: string): void {
+  setAccessTokenCookie(reply: unknown, token: string): void {
     this.setSecureCookie(reply, "accessToken", token, {
       maxAge: 15 * 60 * 1000, // 15 minutes
     });
@@ -60,7 +60,7 @@ export class SecureCookieService {
   /**
    * Set refresh token cookie
    */
-  setRefreshTokenCookie(reply: any, token: string): void {
+  setRefreshTokenCookie(reply: unknown, token: string): void {
     this.setSecureCookie(reply, "refreshToken", token, {
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
@@ -69,7 +69,7 @@ export class SecureCookieService {
   /**
    * Clear authentication cookies
    */
-  clearAuthCookies(reply: any): void {
+  clearAuthCookies(reply: unknown): void {
     reply.clearCookie("accessToken", {
       httpOnly: true,
       secure: env.NODE_ENV === "production",
@@ -95,7 +95,7 @@ export class SecureCookieService {
   /**
    * Set CSRF token cookie
    */
-  setCSRFTokenCookie(reply: any, token: string): void {
+  setCSRFTokenCookie(reply: unknown, token: string): void {
     this.setSecureCookie(reply, "csrfToken", token, {
       maxAge: 60 * 60 * 1000, // 1 hour
     });

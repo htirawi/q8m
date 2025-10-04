@@ -169,7 +169,7 @@ Crawl-delay: 1`;
         const { locale = "en", id } = request.query;
         const baseUrl = process.env.CLIENT_URL || "https://quiz-platform.com";
 
-        let structuredData: any = {};
+        let structuredData: unknown = {};
 
         switch (type) {
           case "organization":

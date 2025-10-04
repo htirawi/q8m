@@ -34,12 +34,12 @@ interface MockPaymentResponse {
 interface MockWebhookData {
   id: string;
   event: string;
-  data: any;
+  data: unknown;
 }
 
 export class MockPaymentService {
   private static instance: MockPaymentService;
-  private mockPayments = new Map<string, any>();
+  private mockPayments = new Map<string, unknown>();
   private isEnabled = false;
 
   private constructor() {
@@ -193,7 +193,7 @@ export class MockPaymentService {
           break;
 
         default:
-          console.log(`Unhandled mock webhook event: ${event}`);
+          console.warn(`Unhandled mock webhook event: ${event}`);
           break;
       }
 
@@ -239,7 +239,7 @@ export class MockPaymentService {
   /**
    * Process mock payment completion
    */
-  private async processMockPaymentCompletion(mockPayment: any): Promise<void> {
+  private async processMockPaymentCompletion(mockPayment: unknown): Promise<void> {
     const purchase = await Purchase.findById(mockPayment.purchaseId);
     if (!purchase || purchase.status === "completed") {
       return;
@@ -256,7 +256,7 @@ export class MockPaymentService {
   /**
    * Process mock payment failure
    */
-  private async processMockPaymentFailure(mockPayment: any): Promise<void> {
+  private async processMockPaymentFailure(mockPayment: unknown): Promise<void> {
     const purchase = await Purchase.findById(mockPayment.purchaseId);
     if (!purchase || purchase.status !== "pending") {
       return;
@@ -268,7 +268,7 @@ export class MockPaymentService {
   /**
    * Process mock refund
    */
-  private async processMockRefund(mockPayment: any): Promise<void> {
+  private async processMockRefund(mockPayment: unknown): Promise<void> {
     const purchase = await Purchase.findById(mockPayment.purchaseId);
     if (!purchase) {
       return;
@@ -292,7 +292,7 @@ export class MockPaymentService {
   /**
    * Create mock subscription
    */
-  private async createMockSubscription(purchase: any): Promise<void> {
+  private async createMockSubscription(purchase: unknown): Promise<void> {
     const user = await User.findById(purchase.userId);
     if (!user) {
       console.error(`User ${purchase.userId} not found for mock subscription creation.`);
@@ -337,7 +337,7 @@ export class MockPaymentService {
    */
   public async getPaymentStatus(
     paymentId: string
-  ): Promise<{ status: string; details: any } | null> {
+  ): Promise<{ status: string; details: unknown } | null> {
     if (!this.isEnabled) {
       throw new Error("Mock payment service not enabled");
     }
@@ -386,7 +386,7 @@ export class MockPaymentService {
   /**
    * Get all mock payments (for testing)
    */
-  public getAllMockPayments(): any[] {
+  public getAllMockPayments(): unknown[] {
     return Array.from(this.mockPayments.values());
   }
 

@@ -317,7 +317,7 @@ export class HyperPayService {
     try {
       const { entity, event } = webhookData;
 
-      console.log(`Received HyperPay webhook event: ${event} for payment ${entity.id}`);
+      console.warn(`Received HyperPay webhook event: ${event} for payment ${entity.id}`);
 
       // Find the purchase record
       const purchase = await Purchase.findByPaymentId(entity.id);
@@ -332,7 +332,7 @@ export class HyperPayService {
           if (purchase.status === "pending") {
             await purchase.markAsCompleted(entity);
             await this.createSubscription(purchase);
-            console.log(`HyperPay purchase ${purchase._id} completed via webhook.`);
+            console.warn(`HyperPay purchase ${purchase._id} completed via webhook.`);
           }
           break;
 
@@ -340,13 +340,13 @@ export class HyperPayService {
         case "payment.declined":
           if (purchase.status === "pending") {
             await purchase.markAsFailed(`Payment ${event}: ${entity.status}`);
-            console.log(`HyperPay purchase ${purchase._id} marked as failed via webhook.`);
+            console.warn(`HyperPay purchase ${purchase._id} marked as failed via webhook.`);
           }
           break;
 
         case "payment.refunded": {
           await purchase.processRefund(entity);
-          console.log(`HyperPay purchase ${purchase._id} refunded via webhook.`);
+          console.warn(`HyperPay purchase ${purchase._id} refunded via webhook.`);
 
           // Optionally cancel associated subscription
           const subscription = await Subscription.findOne({ purchaseId: purchase._id });
@@ -356,13 +356,13 @@ export class HyperPayService {
               subscription.userId.toString(),
               "refunded"
             );
-            console.log(`Subscription ${subscription._id} cancelled due to refund.`);
+            console.warn(`Subscription ${subscription._id} cancelled due to refund.`);
           }
           break;
         }
 
         default:
-          console.log(`Unhandled HyperPay webhook event: ${event}`);
+          console.warn(`Unhandled HyperPay webhook event: ${event}`);
           break;
       }
 
@@ -450,7 +450,7 @@ export class HyperPayService {
         user._id.toString(),
         "new_subscription_purchased"
       );
-      console.log(
+      console.warn(
         `Cancelled existing subscription ${existingSubscription._id} for user ${user._id}`
       );
     }
@@ -475,7 +475,7 @@ export class HyperPayService {
       },
     });
     await subscription.save();
-    console.log(`Subscription ${subscription._id} created for user ${user._id}`);
+    console.warn(`Subscription ${subscription._id} created for user ${user._id}`);
 
     // Update user entitlements
     await entitlementService.updateUserEntitlements(user._id.toString(), purchase.planType!);
@@ -499,7 +499,7 @@ export class HyperPayService {
    */
   public async getPaymentStatus(
     paymentId: string
-  ): Promise<{ status: string; details: any } | null> {
+  ): Promise<{ status: string; details: unknown } | null> {
     if (!this.isConfigured) {
       throw new Error("HyperPay service not configured");
     }

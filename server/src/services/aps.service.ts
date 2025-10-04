@@ -77,7 +77,7 @@ export class APSService {
       env.NODE_ENV === "production" ? "https://api.aps.com.sa" : "https://api-sandbox.aps.com.sa";
 
     this.isConfigured = true;
-    console.log("APS service configured successfully");
+    console.warn("APS service configured successfully");
   }
 
   /**
@@ -277,7 +277,7 @@ export class APSService {
   /**
    * Create subscription after successful payment
    */
-  private async createSubscription(purchase: any): Promise<void> {
+  private async createSubscription(purchase: unknown): Promise<void> {
     try {
       const user = await User.findById(purchase.userId);
       if (!user) {
@@ -313,7 +313,7 @@ export class APSService {
       user.entitlements = subscription.entitlements;
       await user.save();
 
-      console.log(`Subscription created for user ${user.email}: ${subscription.planType}`);
+      console.warn(`Subscription created for user ${user.email}: ${subscription.planType}`);
     } catch (error) {
       console.error("Error creating subscription:", error);
       throw error;
@@ -347,7 +347,7 @@ export class APSService {
           await this.handlePaymentRefunded(webhookData.data);
           break;
         default:
-          console.log(`Unhandled APS webhook event: ${webhookData.event}`);
+          console.warn(`Unhandled APS webhook event: ${webhookData.event}`);
       }
 
       return { success: true };
@@ -378,7 +378,7 @@ export class APSService {
   /**
    * Handle payment completed webhook
    */
-  private async handlePaymentCompleted(data: any): Promise<void> {
+  private async handlePaymentCompleted(data: unknown): Promise<void> {
     try {
       const purchase = await Purchase.findByPaymentId(data.id);
 
@@ -394,7 +394,7 @@ export class APSService {
   /**
    * Handle payment failed webhook
    */
-  private async handlePaymentFailed(data: any): Promise<void> {
+  private async handlePaymentFailed(data: unknown): Promise<void> {
     try {
       const purchase = await Purchase.findByPaymentId(data.id);
 
@@ -409,7 +409,7 @@ export class APSService {
   /**
    * Handle payment refunded webhook
    */
-  private async handlePaymentRefunded(data: any): Promise<void> {
+  private async handlePaymentRefunded(data: unknown): Promise<void> {
     try {
       const purchase = await Purchase.findByPaymentId(data.id);
 

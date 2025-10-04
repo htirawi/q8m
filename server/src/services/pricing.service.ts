@@ -106,8 +106,8 @@ export class PricingService {
             JOD: { currency: "JOD", amount: 0, formatted: "مجاني", isEstimated: false },
             SAR: { currency: "SAR", amount: 0, formatted: "مجاني", isEstimated: false },
           },
-          popular: (planId as any) === "INTERMEDIATE",
-          recommended: (planId as any) === "SENIOR",
+          popular: (planId as unknown) === "INTERMEDIATE",
+          recommended: (planId as unknown) === "SENIOR",
         });
         continue;
       }
@@ -123,8 +123,8 @@ export class PricingService {
         pricing: {
           [currency]: monthlyPricing,
         },
-        popular: (planId as any) === "INTERMEDIATE",
-        recommended: (planId as any) === "SENIOR",
+        popular: (planId as unknown) === "INTERMEDIATE",
+        recommended: (planId as unknown) === "SENIOR",
       });
     }
 
@@ -150,8 +150,8 @@ export class PricingService {
             JOD: { currency: "JOD", amount: 0, formatted: "مجاني", isEstimated: false },
             SAR: { currency: "SAR", amount: 0, formatted: "مجاني", isEstimated: false },
           },
-          popular: (planId as any) === "INTERMEDIATE",
-          recommended: (planId as any) === "SENIOR",
+          popular: (planId as unknown) === "INTERMEDIATE",
+          recommended: (planId as unknown) === "SENIOR",
         });
         continue;
       }
@@ -165,8 +165,8 @@ export class PricingService {
         features: this.planFeatures[planId]!,
         usdPrice: pricing.monthly,
         pricing: multiCurrencyPricing,
-        popular: (planId as any) === "INTERMEDIATE",
-        recommended: (planId as any) === "SENIOR",
+        popular: (planId as unknown) === "INTERMEDIATE",
+        recommended: (planId as unknown) === "SENIOR",
       });
     }
 
@@ -232,8 +232,8 @@ export class PricingService {
             isEstimated: false,
           },
         },
-        popular: (planId as any) === "INTERMEDIATE",
-        recommended: (planId as any) === "SENIOR",
+        popular: (planId as unknown) === "INTERMEDIATE",
+        recommended: (planId as unknown) === "SENIOR",
       };
     }
 

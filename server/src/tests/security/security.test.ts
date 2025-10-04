@@ -316,7 +316,7 @@ describe("Security Tests", () => {
 
       for (const route of csrfRoutes) {
         const response = await app.inject({
-          method: route.method as any,
+          method: route.method as unknown,
           url: route.url,
           headers: {
             "X-Requested-With": "XMLHttpRequest", // Should be required for CSRF protection
@@ -324,7 +324,7 @@ describe("Security Tests", () => {
         });
 
         // Should require proper CSRF token
-        expect((response as any).statusCode).toBe(401);
+        expect((response as unknown).statusCode).toBe(401);
       }
     });
   });

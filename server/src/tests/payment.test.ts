@@ -15,7 +15,7 @@ import { Subscription } from "../models/Subscription.js";
 
 describe("Payment System", () => {
   let app: FastifyInstance;
-  let testUser: any;
+  let testUser: unknown;
   let authToken: string;
 
   beforeEach(async () => {

@@ -67,7 +67,7 @@ afterEach(async () => {
 });
 
 // Helper functions for tests
-export const createTestUser = async (overrides: any = {}) => {
+export const createTestUser = async (overrides: unknown = {}) => {
   const defaultUser = {
     email: "test@example.com",
     password: "TestPassword123!",
@@ -81,7 +81,7 @@ export const createTestUser = async (overrides: any = {}) => {
   return await User.create(defaultUser);
 };
 
-export const createTestPurchase = async (overrides: any = {}) => {
+export const createTestPurchase = async (overrides: unknown = {}) => {
   const defaultPurchase = {
     userId: overrides.userId || (await createTestUser())._id,
     planType: "INTERMEDIATE",
@@ -100,7 +100,7 @@ export const createTestPurchase = async (overrides: any = {}) => {
   return await Purchase.create(defaultPurchase);
 };
 
-export const createTestSubscription = async (overrides: any = {}) => {
+export const createTestSubscription = async (overrides: unknown = {}) => {
   const defaultSubscription = {
     userId: overrides.userId || (await createTestUser())._id,
     purchaseId: overrides.purchaseId || (await createTestPurchase())._id,
@@ -118,7 +118,7 @@ export const createTestSubscription = async (overrides: any = {}) => {
   return await Subscription.create(defaultSubscription);
 };
 
-export const createTestFxRate = async (overrides: any = {}) => {
+export const createTestFxRate = async (overrides: unknown = {}) => {
   const defaultFxRate = {
     baseCurrency: "USD",
     targetCurrency: "JOD",

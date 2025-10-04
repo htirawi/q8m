@@ -39,7 +39,7 @@ export class JWTService {
       userId: user.id,
       email: user.email,
       role: user.role,
-      entitlements: (user as any).entitlements || [],
+      entitlements: (user as unknown).entitlements || [],
       sessionId,
     };
 
@@ -47,13 +47,13 @@ export class JWTService {
       expiresIn: this.accessTokenExpiry,
       issuer: "quiz-platform",
       audience: "quiz-platform-client",
-    } as any);
+    } as unknown);
 
     const refreshToken = jwt.sign({ userId: user.id, sessionId }, this.refreshTokenSecret, {
       expiresIn: this.refreshTokenExpiry,
       issuer: "quiz-platform",
       audience: "quiz-platform-client",
-    } as any);
+    } as unknown);
 
     // Calculate expiry time in seconds
     const expiresIn = this.parseExpiry(this.accessTokenExpiry);
@@ -116,7 +116,7 @@ export class JWTService {
   /**
    * Decode token without verification (for debugging)
    */
-  decodeToken(token: string): any {
+  decodeToken(token: string): unknown {
     return jwt.decode(token);
   }
 
@@ -125,7 +125,7 @@ export class JWTService {
    */
   isTokenExpired(token: string): boolean {
     try {
-      const decoded = jwt.decode(token) as any;
+      const decoded = jwt.decode(token) as unknown;
       if (!decoded || !decoded.exp) return true;
       return Date.now() >= decoded.exp * 1000;
     } catch {
@@ -138,7 +138,7 @@ export class JWTService {
    */
   getTokenExpiry(token: string): Date | null {
     try {
-      const decoded = jwt.decode(token) as any;
+      const decoded = jwt.decode(token) as unknown;
       if (!decoded || !decoded.exp) return null;
       return new Date(decoded.exp * 1000);
     } catch {
@@ -156,7 +156,7 @@ export class JWTService {
       userId: user.id,
       email: user.email,
       role: user.role,
-      entitlements: (user as any).entitlements || [],
+      entitlements: (user as unknown).entitlements || [],
       sessionId,
     };
 
@@ -164,7 +164,7 @@ export class JWTService {
       expiresIn: this.accessTokenExpiry,
       issuer: "quiz-platform",
       audience: "quiz-platform-client",
-    } as any);
+    } as unknown);
   }
 
   /**

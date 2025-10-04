@@ -72,7 +72,7 @@ fastify.addHook("onRequest", requestLogger);
 
 // Register response logger
 fastify.addHook("onSend", async (request, reply, payload) => {
-  const startTime = (request as any).startTime;
+  const startTime = (request as { startTime?: number }).startTime;
   if (startTime) {
     const responseTime = Date.now() - startTime;
     request.log.info({

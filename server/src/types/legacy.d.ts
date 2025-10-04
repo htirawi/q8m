@@ -1,6 +1,20 @@
 // Legacy type declarations to reduce TypeScript errors
 // These are temporary fixes for legacy code that will be refactored
 
+import type { 
+  UserPreferences, 
+  UserStats, 
+  RefundData, 
+  SubscriptionData,
+  UserMethodResult,
+  TokenMethodResult,
+  SessionMethodResult,
+  PaymentMethodResult,
+  SubscriptionMethodResult,
+  FxRateMethodResult,
+  LoggerMethods
+} from './common.js';
+
 declare global {
   namespace NodeJS {
     interface ProcessEnv {
@@ -30,7 +44,7 @@ declare global {
 // Temporary type fixes for legacy Mongoose models
 declare module "mongoose" {
   interface Document {
-    _id: any;
+    _id: string;
     id: string;
     isActive?: boolean;
     entitlements?: string[];
@@ -41,8 +55,8 @@ declare module "mongoose" {
     passwordResetExpires?: Date;
     twoFactorSecret?: string;
     lockUntil?: Date;
-    preferences?: any;
-    stats?: any;
+    preferences?: UserPreferences;
+    stats?: UserStats;
     isRevoked?: boolean;
     expiresAt?: Date;
     lastUsed?: Date;
@@ -52,7 +66,7 @@ declare module "mongoose" {
     refresh?(): Promise<void>;
     markAsCompleted?(): Promise<void>;
     markAsFailed?(): Promise<void>;
-    processRefund?(data: any): Promise<void>;
+    processRefund?(data: RefundData): Promise<void>;
     cancel?(): Promise<void>;
     comparePassword?(password: string): Promise<boolean>;
     incLoginAttempts?(): Promise<void>;
@@ -63,27 +77,27 @@ declare module "mongoose" {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _T,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _TQueryHelpers = Record<string, any>,
+    _TQueryHelpers = Record<string, unknown>,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _TMethods = Record<string, any>,
+    _TMethods = Record<string, unknown>,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _TVirtuals = Record<string, any>,
+    _TVirtuals = Record<string, unknown>,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _TSchema = any,
+    _TSchema = unknown,
   > {
-    findByEmailWithPassword?(email: string): Promise<any>;
-    createToken?(userId: string, type: string, hours: number): Promise<any>;
-    verifyToken?(token: string, type: string): Promise<any>;
-    findActiveByAccessToken?(token: string): Promise<any>;
-    findActiveByRefreshToken?(token: string): Promise<any>;
-    revokeAllForUser?(userId: string, reason: string): Promise<any>;
-    findByPaymentId?(paymentId: string): Promise<any>;
-    findActiveForUser?(userId: string): Promise<any>;
-    findExpiringSoon?(): Promise<any>;
-    getSubscriptionStats?(): Promise<any>;
-    getFreshRate?(from: string, to: string): Promise<any>;
-    getLatestRate?(from: string, to: string): Promise<any>;
-    createFallbackRate?(from: string, to: string, rate: number): Promise<any>;
+    findByEmailWithPassword?(email: string): UserMethodResult;
+    createToken?(userId: string, type: string, hours: number): TokenMethodResult;
+    verifyToken?(token: string, type: string): TokenMethodResult;
+    findActiveByAccessToken?(token: string): SessionMethodResult;
+    findActiveByRefreshToken?(token: string): SessionMethodResult;
+    revokeAllForUser?(userId: string, reason: string): Promise<void>;
+    findByPaymentId?(paymentId: string): PaymentMethodResult;
+    findActiveForUser?(userId: string): SubscriptionMethodResult;
+    findExpiringSoon?(): Promise<SubscriptionData[]>;
+    getSubscriptionStats?(): Promise<{ active: number; expired: number; trial: number }>;
+    getFreshRate?(from: string, to: string): FxRateMethodResult;
+    getLatestRate?(from: string, to: string): FxRateMethodResult;
+    createFallbackRate?(from: string, to: string, rate: number): FxRateMethodResult;
     cleanupExpired?(): Promise<void>;
   }
 }
@@ -103,8 +117,8 @@ interface LegacyUserMethods {
   passwordResetExpires?: Date;
   twoFactorSecret?: string;
   lockUntil?: Date;
-  preferences?: any;
-  stats?: any;
+  preferences?: UserPreferences;
+  stats?: UserStats;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -123,29 +137,29 @@ interface LegacySessionMethods {
 interface LegacyPurchaseMethods {
   markAsCompleted?(): Promise<void>;
   markAsFailed?(): Promise<void>;
-  processRefund?(data: any): Promise<void>;
-  findByPaymentId?(paymentId: string): Promise<any>;
+  processRefund?(data: RefundData): Promise<void>;
+  findByPaymentId?(paymentId: string): PaymentMethodResult;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface LegacySubscriptionMethods {
   cancel?(): Promise<void>;
-  findActiveForUser?(userId: string): Promise<any>;
-  findExpiringSoon?(): Promise<any>;
-  getSubscriptionStats?(): Promise<any>;
+  findActiveForUser?(userId: string): SubscriptionMethodResult;
+  findExpiringSoon?(): Promise<SubscriptionData[]>;
+  getSubscriptionStats?(): Promise<{ active: number; expired: number; trial: number }>;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface LegacyVerificationTokenMethods {
-  createToken?(userId: string, type: string, hours: number): Promise<any>;
-  verifyToken?(token: string, type: string): Promise<any>;
+  createToken?(userId: string, type: string, hours: number): TokenMethodResult;
+  verifyToken?(token: string, type: string): TokenMethodResult;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface LegacyFxRateMethods {
-  getFreshRate?(from: string, to: string): Promise<any>;
-  getLatestRate?(from: string, to: string): Promise<any>;
-  createFallbackRate?(from: string, to: string, rate: number): Promise<any>;
+  getFreshRate?(from: string, to: string): FxRateMethodResult;
+  getLatestRate?(from: string, to: string): FxRateMethodResult;
+  createFallbackRate?(from: string, to: string, rate: number): FxRateMethodResult;
   cleanupExpired?(): Promise<void>;
 }
 
@@ -161,11 +175,9 @@ declare global {
   }
 
   // Fix for logger method signatures
-  interface FastifyBaseLogger {
-    warn(message: string, ...args: any[]): void;
-    error(message: string, ...args: any[]): void;
-    info(message: string, ...args: any[]): void;
-    debug(message: string, ...args: any[]): void;
+  interface FastifyBaseLogger extends LoggerMethods {
+    // Additional methods can be added here if needed
+    trace?: (message: string, ...args: unknown[]) => void;
   }
 }
 

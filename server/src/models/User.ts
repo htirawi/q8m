@@ -9,12 +9,12 @@ export interface IUser extends Document {
   entitlements: string[];
   isEmailVerified: boolean;
   emailVerificationToken?: string;
-  emailVerificationExpires?: any; // Mongoose Date type
+  emailVerificationExpires?: unknown; // Mongoose Date type
   passwordResetToken?: string;
-  passwordResetExpires?: any; // Mongoose Date type
+  passwordResetExpires?: unknown; // Mongoose Date type
   lastLogin?: Date;
   loginAttempts: number;
-  lockUntil?: any; // Mongoose Date type
+  lockUntil?: unknown; // Mongoose Date type
   googleId?: string;
   facebookId?: string;
   avatar?: string;
@@ -69,7 +69,7 @@ const userSchema = new Schema(
     },
     password: {
       type: String,
-      required(this: any) {
+      required(this: unknown) {
         return !this.googleId && !this.facebookId;
       },
       minlength: [8, "Password must be at least 8 characters"],
@@ -221,7 +221,7 @@ const userSchema = new Schema(
   {
     timestamps: true,
     toJSON: {
-      transform(_doc, ret: any) {
+      transform(_doc, ret: Record<string, unknown>) {
         ret.id = ret._id.toString();
         delete ret._id;
         delete ret.__v;
@@ -248,7 +248,7 @@ userSchema.index({ createdAt: -1 });
 
 // Virtual for account lock status
 userSchema.virtual("isLocked").get(function () {
-  return !!(this.lockUntil && (this.lockUntil as any) > Date.now());
+  return !!(this.lockUntil && (this.lockUntil as unknown) > Date.now());
 });
 
 // Pre-save middleware to hash password
@@ -314,7 +314,7 @@ userSchema.methods.incLoginAttempts = function () {
     });
   }
 
-  const updates: any = { $inc: { loginAttempts: 1 } };
+  const updates: unknown = { $inc: { loginAttempts: 1 } };
 
   // Lock account after 5 failed attempts for 2 hours
   if (this.loginAttempts + 1 >= 5 && !this.isLocked) {

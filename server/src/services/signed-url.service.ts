@@ -5,7 +5,7 @@ interface SignedUrlOptions {
   expiresIn?: number; // seconds, default 1 hour
   userId?: string;
   resource?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 interface SignedUrlData {

@@ -28,7 +28,7 @@ export default async function entitlementRoutes(fastify: FastifyInstance) {
           success: true,
           entitlements: userEntitlements,
         });
-      } catch (error: any) {
+      } catch (error: unknown) {
         request.log.error("Get user entitlements error:", error);
         reply.status(500).send({
           success: false,
@@ -65,7 +65,7 @@ export default async function entitlementRoutes(fastify: FastifyInstance) {
           subscriptionExpired: entitlementCheck.subscriptionExpired,
           trialExpired: entitlementCheck.trialExpired,
         });
-      } catch (error: any) {
+      } catch (error: unknown) {
         request.log.error("Check entitlement error:", error);
         reply.status(500).send({
           success: false,
@@ -97,7 +97,7 @@ export default async function entitlementRoutes(fastify: FastifyInstance) {
           reason: contentCheck.reason,
           upgradeRequired: contentCheck.upgradeRequired,
         });
-      } catch (error: any) {
+      } catch (error: unknown) {
         request.log.error("Check content access error:", error);
         reply.status(500).send({
           success: false,
@@ -132,7 +132,7 @@ export default async function entitlementRoutes(fastify: FastifyInstance) {
           success: true,
           checks: entitlementChecks,
         });
-      } catch (error: any) {
+      } catch (error: unknown) {
         request.log.error("Check multiple entitlements error:", error);
         reply.status(500).send({
           success: false,
@@ -156,7 +156,7 @@ export default async function entitlementRoutes(fastify: FastifyInstance) {
           success: true,
           hierarchy,
         });
-      } catch (error: any) {
+      } catch (error: unknown) {
         request.log.error("Get entitlement hierarchy error:", error);
         reply.status(500).send({
           success: false,
@@ -195,7 +195,7 @@ export default async function entitlementRoutes(fastify: FastifyInstance) {
           expiringSubscriptions,
           days,
         });
-      } catch (error: any) {
+      } catch (error: unknown) {
         request.log.error("Get expiring subscriptions error:", error);
         reply.status(500).send({
           success: false,
@@ -227,7 +227,7 @@ export default async function entitlementRoutes(fastify: FastifyInstance) {
           success: true,
           stats,
         });
-      } catch (error: any) {
+      } catch (error: unknown) {
         request.log.error("Get entitlement stats error:", error);
         reply.status(500).send({
           success: false,
@@ -259,7 +259,7 @@ export default async function entitlementRoutes(fastify: FastifyInstance) {
           success: true,
           message: "Entitlement cache cleared",
         });
-      } catch (error: any) {
+      } catch (error: unknown) {
         request.log.error("Clear entitlement cache error:", error);
         reply.status(500).send({
           success: false,
@@ -297,7 +297,7 @@ export default async function entitlementRoutes(fastify: FastifyInstance) {
           success: true,
           message: `Entitlement cache cleared for user ${userId}`,
         });
-      } catch (error: any) {
+      } catch (error: unknown) {
         request.log.error("Clear user entitlement cache error:", error);
         reply.status(500).send({
           success: false,
@@ -329,7 +329,7 @@ export default async function entitlementRoutes(fastify: FastifyInstance) {
           success: true,
           cacheStats,
         });
-      } catch (error: any) {
+      } catch (error: unknown) {
         request.log.error("Get cache stats error:", error);
         reply.status(500).send({
           success: false,
