@@ -41,8 +41,9 @@ export function createAuthMiddleware(options: AuthOptions = {}) {
   return async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       // Extract token from Authorization header
-      const authHeader = request.headers.authorization;
-      if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      const { headers } = request;
+      const authHeader = headers.authorization;
+      if (!authHeader?.startsWith("Bearer ")) {
         return reply.status(401).send({
           code: 401,
           error: "Unauthorized",
@@ -167,8 +168,9 @@ export function createAuthMiddleware(options: AuthOptions = {}) {
  */
 export const optionalAuth = async (request: FastifyRequest) => {
   try {
-    const authHeader = request.headers.authorization;
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    const { headers } = request;
+    const authHeader = headers.authorization;
+    if (!authHeader?.startsWith("Bearer ")) {
       // No token provided, continue without authentication
       return;
     }
@@ -208,12 +210,12 @@ export const optionalAuth = async (request: FastifyRequest) => {
  * Rate limiting middleware for auth endpoints
  */
 export const authRateLimit = async (request: FastifyRequest) => {
-  const ip = request.ip;
+  const { ip, log } = request;
   // TODO: Implement Redis-based rate limiting using key: `auth:${ip}`
 
   // This would integrate with Redis for actual rate limiting
   // For now, we'll just log the attempt
-  (request.log as any).info(`Auth attempt from IP: ${ip}`);
+  (log as any).info(`Auth attempt from IP: ${ip}`);
 };
 
 /**

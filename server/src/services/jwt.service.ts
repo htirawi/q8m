@@ -101,7 +101,7 @@ export class JWTService {
         audience: "quiz-platform-client",
       }) as { userId: string; sessionId: string };
 
-      if (!decoded || !decoded.userId || !decoded.sessionId) {
+      if (!decoded?.userId || !decoded?.sessionId) {
         throw new Error("Invalid token payload");
       }
 
@@ -130,7 +130,7 @@ export class JWTService {
   isTokenExpired(token: string): boolean {
     try {
       const decoded = jwt.decode(token) as any;
-      if (!decoded || !decoded.exp) return true;
+      if (!decoded?.exp) return true;
       return Date.now() >= decoded.exp * 1000;
     } catch {
       return true;
@@ -143,7 +143,7 @@ export class JWTService {
   getTokenExpiry(token: string): Date | null {
     try {
       const decoded = jwt.decode(token) as any;
-      if (!decoded || !decoded.exp) return null;
+      if (!decoded?.exp) return null;
       return new Date(decoded.exp * 1000);
     } catch {
       return null;

@@ -99,8 +99,8 @@ fxRateSchema.virtual("ageInHours").get(function () {
 
 // Instance method to check if rate is fresh (less than 24 hours old)
 fxRateSchema.methods.isFresh = function (maxAgeHours: number = 24): boolean {
-  const ageInHours = this.ageInHours;
-  return ageInHours < maxAgeHours && !this.isExpired;
+  const { ageInHours, isExpired } = this;
+  return ageInHours < maxAgeHours && !isExpired;
 };
 
 // Instance method to extend expiration

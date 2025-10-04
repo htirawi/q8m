@@ -147,7 +147,7 @@ describe("Payment System", () => {
       });
 
       const createData = JSON.parse(createResponse.body);
-      const paymentId = createData.paymentId;
+      const { paymentId } = createData;
 
       // Wait for auto-completion (mock payments auto-complete after 2 seconds)
       await new Promise((resolve) => setTimeout(resolve, 2500));
@@ -198,7 +198,7 @@ describe("Payment System", () => {
       });
 
       const createData = JSON.parse(createResponse.body);
-      const paymentId = createData.paymentId;
+      const { paymentId } = createData;
 
       // Send completion webhook
       const webhookResponse = await app.inject({
@@ -249,7 +249,7 @@ describe("Payment System", () => {
       });
 
       const createData = JSON.parse(createResponse.body);
-      const paymentId = createData.paymentId;
+      const { paymentId } = createData;
 
       // Send failure webhook
       const webhookResponse = await app.inject({

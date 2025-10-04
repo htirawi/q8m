@@ -24,19 +24,20 @@ const HMAC_KEY = crypto.createHash("sha256").update(env.HMAC_RATE_KEY_SECRET).di
  * Extract real IP address respecting trust proxy settings
  */
 export function ipKey(request: FastifyRequest): string {
-  const forwarded = request.headers["x-forwarded-for"];
-  const realIp = request.headers["x-real-ip"];
+  const { headers, ip } = request;
+  const forwarded = headers["x-forwarded-for"];
+  const realIp = headers["x-real-ip"];
 
   if (forwarded && typeof forwarded === "string") {
     // Take the first IP in the chain
-    return (forwarded.split(",")[0]?.trim() || request.ip) ?? "0.0.0.0";
+    return forwarded.split(",")[0]?.trim() ?? ip ?? "0.0.0.0";
   }
 
   if (realIp && typeof realIp === "string") {
     return realIp;
   }
 
-  return request.ip ?? "0.0.0.0";
+  return ip ?? "0.0.0.0";
 }
 
 /**
@@ -44,28 +45,29 @@ export function ipKey(request: FastifyRequest): string {
  */
 function makeUserKey(request: FastifyRequest): string {
   let email = "";
+  const { body, query, params } = request;
 
   // Try to extract email from body
-  if (request.body && typeof request.body === "object") {
-    const body = request.body as Record<string, unknown>;
-    if (typeof body.email === "string") {
-      email = body.email.toLowerCase().trim();
+  if (body && typeof body === "object") {
+    const bodyObj = body as Record<string, unknown>;
+    if (typeof bodyObj.email === "string") {
+      email = bodyObj.email.toLowerCase().trim();
     }
   }
 
   // Try to extract email from query
-  if (request.query && typeof request.query === "object") {
-    const query = request.query as Record<string, unknown>;
-    if (typeof query.email === "string") {
-      email = query.email.toLowerCase().trim();
+  if (query && typeof query === "object") {
+    const queryObj = query as Record<string, unknown>;
+    if (typeof queryObj.email === "string") {
+      email = queryObj.email.toLowerCase().trim();
     }
   }
 
   // Try to extract email from params
-  if (request.params && typeof request.params === "object") {
-    const params = request.params as Record<string, unknown>;
-    if (typeof params.email === "string") {
-      email = params.email.toLowerCase().trim();
+  if (params && typeof params === "object") {
+    const paramsObj = params as Record<string, unknown>;
+    if (typeof paramsObj.email === "string") {
+      email = paramsObj.email.toLowerCase().trim();
     }
   }
 

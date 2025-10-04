@@ -34,7 +34,8 @@ describe("Payments API", () => {
     });
 
     const loginBody = JSON.parse(loginResponse.body);
-    accessToken = loginBody.accessToken;
+    const { accessToken: token } = loginBody;
+    accessToken = token;
   });
 
   afterEach(async () => {

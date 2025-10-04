@@ -15,8 +15,9 @@ export default [
       "src/routes/downloads.ts", // TODO: Fix parsing error
     ],
   },
+  // TypeScript files only
   {
-    files: ["**/*.{js,ts}"],
+    files: ["**/*.ts"],
     languageOptions: {
       ecmaVersion: "latest",
       sourceType: "module",
@@ -27,6 +28,7 @@ export default [
       parserOptions: {
         ecmaVersion: "latest",
         sourceType: "module",
+        projectService: true,
       },
     },
     plugins: {
@@ -46,6 +48,7 @@ export default [
       "@typescript-eslint/explicit-function-return-type": "off",
       "@typescript-eslint/explicit-module-boundary-types": "off",
       "@typescript-eslint/no-require-imports": "warn",
+      "@typescript-eslint/prefer-optional-chain": "error",
       "no-case-declarations": "warn",
 
       // Best practices
@@ -53,6 +56,47 @@ export default [
       "no-var": "error",
       "object-shorthand": "error",
       "prefer-template": "error",
+      "prefer-destructuring": [
+        "error",
+        {
+          VariableDeclarator: { object: true, array: false },
+          AssignmentExpression: { object: true, array: false },
+        },
+        { enforceForRenamedProperties: false },
+      ],
+      "no-console": ["warn", { allow: ["warn", "error"] }],
+      "no-debugger": "error",
+      "no-alert": "error",
+      "no-dupe-keys": "error",
+    },
+  },
+  // JavaScript files only
+  {
+    files: ["**/*.js", "**/*.mjs", "**/*.cjs"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+      globals: {
+        ...globals.node,
+      },
+    },
+    rules: {
+      ...js.configs.recommended.rules,
+      ...prettier.rules,
+
+      // Best practices
+      "prefer-const": "error",
+      "no-var": "error",
+      "object-shorthand": "error",
+      "prefer-template": "error",
+      "prefer-destructuring": [
+        "error",
+        {
+          VariableDeclarator: { object: true, array: false },
+          AssignmentExpression: { object: true, array: false },
+        },
+        { enforceForRenamedProperties: false },
+      ],
       "no-console": ["warn", { allow: ["warn", "error"] }],
       "no-debugger": "error",
       "no-alert": "error",
