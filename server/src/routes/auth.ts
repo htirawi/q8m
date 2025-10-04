@@ -8,6 +8,7 @@ import { emailService } from "../services/email.service.js";
 import { secureCookieService } from "../services/secure-cookie.service.js";
 import { env } from "../config/env.js";
 import { authenticate } from "../middlewares/auth.middleware.js";
+import rateLimit from "@fastify/rate-limit";
 import crypto from "crypto";
 
 // Validation schemas
@@ -60,16 +61,59 @@ const changePasswordSchema = z.object({
 });
 
 export default async function authRoutes(fastify: FastifyInstance) {
+  // Register rate limiting plugins for specific auth endpoints
+  await fastify.register(rateLimit, {
+    keyGenerator: (request) => `login:${request.ip}`,
+    max: 10,
+    timeWindow: "15 minutes",
+    errorResponseBuilder: (_request, context) => ({
+      code: 429,
+      error: "Too Many Requests",
+      message: `Login rate limit exceeded. Retry in ${Math.round(context.ttl / 1000)} seconds`,
+      retryAfter: Math.round(context.ttl / 1000),
+    }),
+  });
+
+  await fastify.register(rateLimit, {
+    keyGenerator: (request) => `verify-email:${request.ip}`,
+    max: 5,
+    timeWindow: "15 minutes",
+    errorResponseBuilder: (_request, context) => ({
+      code: 429,
+      error: "Too Many Requests",
+      message: `Email verification rate limit exceeded. Retry in ${Math.round(context.ttl / 1000)} seconds`,
+      retryAfter: Math.round(context.ttl / 1000),
+    }),
+  });
+
+  await fastify.register(rateLimit, {
+    keyGenerator: (request) => `password-reset:${request.ip}`,
+    max: 3,
+    timeWindow: "15 minutes",
+    errorResponseBuilder: (_request, context) => ({
+      code: 429,
+      error: "Too Many Requests",
+      message: `Password reset rate limit exceeded. Retry in ${Math.round(context.ttl / 1000)} seconds`,
+      retryAfter: Math.round(context.ttl / 1000),
+    }),
+  });
+
+  await fastify.register(rateLimit, {
+    keyGenerator: (request) => `token-refresh:${request.ip}`,
+    max: 10,
+    timeWindow: "15 minutes",
+    errorResponseBuilder: (_request, context) => ({
+      code: 429,
+      error: "Too Many Requests",
+      message: `Token refresh rate limit exceeded. Retry in ${Math.round(context.ttl / 1000)} seconds`,
+      retryAfter: Math.round(context.ttl / 1000),
+    }),
+  });
+
   // Register new user
   fastify.post(
     "/register",
     {
-      config: {
-        rateLimit: {
-          max: 5, // Allow only 5 registration attempts per window
-          timeWindow: 900000, // 15 minutes
-        },
-      },
       schema: {
         body: registerSchema,
       },
@@ -134,12 +178,6 @@ export default async function authRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/login",
     {
-      config: {
-        rateLimit: {
-          max: 10, // Allow only 10 login attempts per window
-          timeWindow: 900000, // 15 minutes
-        },
-      },
       schema: {
         body: loginSchema,
       },
@@ -231,12 +269,6 @@ export default async function authRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/verify-email",
     {
-      config: {
-        rateLimit: {
-          max: 5, // Allow only 5 verification attempts per window
-          timeWindow: 900000, // 15 minutes
-        },
-      },
       schema: {
         body: verifyEmailSchema,
       },
@@ -406,12 +438,6 @@ export default async function authRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/reset-password",
     {
-      config: {
-        rateLimit: {
-          max: 5, // Allow only 5 reset attempts per window
-          timeWindow: 900000, // 15 minutes
-        },
-      },
       schema: {
         body: resetPasswordSchema,
       },
@@ -673,12 +699,6 @@ export default async function authRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/refresh",
     {
-      config: {
-        rateLimit: {
-          max: 5, // Allow only 5 refresh attempts per window (reduced for security)
-          timeWindow: 900000, // 15 minutes
-        },
-      },
       schema: {
         body: z.object({
           refreshToken: z
