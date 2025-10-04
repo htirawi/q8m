@@ -18,6 +18,8 @@ declare module "fastify" {
   }
 }
 
+// Note: Fastify JWT user property conflicts are handled via type assertions
+
 export interface AuthOptions {
   requireEmailVerification?: boolean;
   requiredRole?: string[];
@@ -75,7 +77,7 @@ export function createAuthMiddleware(options: AuthOptions = {}) {
       }
 
       // Check if session exists and is valid
-      const session = await Session.findActiveByAccessToken(token);
+      const session = await (Session as any).findActiveByAccessToken(token);
       if (!session) {
         return reply.status(401).send({
           code: 401,
@@ -86,7 +88,7 @@ export function createAuthMiddleware(options: AuthOptions = {}) {
 
       // Fetch user from database
       const user = await User.findById(payload.userId).select("+isEmailVerified");
-      if (!user || !user.isActive) {
+      if (!user || !(user as any).isActive) {
         return reply.status(401).send({
           code: 401,
           error: "Unauthorized",
@@ -115,7 +117,7 @@ export function createAuthMiddleware(options: AuthOptions = {}) {
       // Check entitlement requirements
       if (options.requiredEntitlements) {
         const hasRequiredEntitlements = options.requiredEntitlements.every((entitlement) =>
-          user.entitlements.includes(entitlement)
+          (user as any).entitlements.includes(entitlement)
         );
         if (!hasRequiredEntitlements) {
           return reply.status(403).send({
@@ -131,11 +133,11 @@ export function createAuthMiddleware(options: AuthOptions = {}) {
 
       // Attach user and session info to request
       request.user = {
-        id: user._id.toString(),
+        id: (user as any)._id.toString(),
         email: user.email,
         name: user.name,
         role: user.role,
-        entitlements: user.entitlements,
+        entitlements: (user as any).entitlements,
         isEmailVerified: user.isEmailVerified,
       };
       request.sessionId = session._id.toString();
@@ -153,7 +155,8 @@ export function createAuthMiddleware(options: AuthOptions = {}) {
 /**
  * Optional authentication middleware - doesn't fail if no token
  */
-export const optionalAuth = async (request: FastifyRequest, _reply: FastifyReply) => { // eslint-disable-line @typescript-eslint/no-unused-vars
+export const optionalAuth = async (request: FastifyRequest, _reply: FastifyReply) => {
+   
   try {
     const authHeader = request.headers.authorization;
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -165,17 +168,17 @@ export const optionalAuth = async (request: FastifyRequest, _reply: FastifyReply
 
     try {
       const payload = jwtService.verifyAccessToken(token);
-      const session = await Session.findActiveByAccessToken(token);
+      const session = await (Session as any).findActiveByAccessToken(token);
 
       if (session) {
         const user = await User.findById(payload.userId).select("+isEmailVerified");
-        if (user && user.isActive) {
+        if (user && (user as any).isActive) {
           request.user = {
-            id: user._id.toString(),
+            id: (user as any)._id.toString(),
             email: user.email,
             name: user.name,
             role: user.role,
-            entitlements: user.entitlements,
+            entitlements: (user as any).entitlements,
             isEmailVerified: user.isEmailVerified,
           };
           request.sessionId = session._id.toString();
@@ -195,7 +198,8 @@ export const optionalAuth = async (request: FastifyRequest, _reply: FastifyReply
 /**
  * Rate limiting middleware for auth endpoints
  */
-export const authRateLimit = async (request: FastifyRequest, _reply: FastifyReply) => { // eslint-disable-line @typescript-eslint/no-unused-vars
+export const authRateLimit = async (request: FastifyRequest, _reply: FastifyReply) => {
+   
   const ip = request.ip;
   // TODO: Implement Redis-based rate limiting using key: `auth:${ip}`
 

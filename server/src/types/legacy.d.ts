@@ -32,6 +32,48 @@ declare module "mongoose" {
   interface Document {
     _id: any;
     id: string;
+    isActive?: boolean;
+    entitlements?: string[];
+    password?: string;
+    emailVerificationToken?: string;
+    emailVerificationExpires?: Date;
+    passwordResetToken?: string;
+    passwordResetExpires?: Date;
+    twoFactorSecret?: string;
+    lockUntil?: Date;
+    preferences?: any;
+    stats?: any;
+    isRevoked?: boolean;
+    expiresAt?: Date;
+    lastUsed?: Date;
+    refreshToken?: string;
+    accessToken?: string;
+    revoke?(reason: string): Promise<void>;
+    refresh?(): Promise<void>;
+    markAsCompleted?(): Promise<void>;
+    markAsFailed?(): Promise<void>;
+    processRefund?(data: any): Promise<void>;
+    cancel?(): Promise<void>;
+    comparePassword?(password: string): Promise<boolean>;
+    incLoginAttempts?(): Promise<void>;
+    resetLoginAttempts?(): Promise<void>;
+  }
+  
+  interface Model<T, TQueryHelpers = {}, TMethods = {}, TVirtuals = {}, TSchema = any> {
+    findByEmailWithPassword?(email: string): Promise<any>;
+    createToken?(userId: string, type: string, hours: number): Promise<any>;
+    verifyToken?(token: string, type: string): Promise<any>;
+    findActiveByAccessToken?(token: string): Promise<any>;
+    findActiveByRefreshToken?(token: string): Promise<any>;
+    revokeAllForUser?(userId: string, reason: string): Promise<any>;
+    findByPaymentId?(paymentId: string): Promise<any>;
+    findActiveForUser?(userId: string): Promise<any>;
+    findExpiringSoon?(): Promise<any>;
+    getSubscriptionStats?(): Promise<any>;
+    getFreshRate?(from: string, to: string): Promise<any>;
+    getLatestRate?(from: string, to: string): Promise<any>;
+    createFallbackRate?(from: string, to: string, rate: number): Promise<any>;
+    cleanupExpired?(): Promise<void>;
   }
 }
 
@@ -88,6 +130,26 @@ interface LegacyFxRateMethods {
   getLatestRate?(from: string, to: string): Promise<any>;
   createFallbackRate?(from: string, to: string, rate: number): Promise<any>;
   cleanupExpired?(): Promise<void>;
+}
+
+// Type assertion helpers for legacy code
+declare global {
+  interface User {
+    id: string;
+    email: string;
+    name: string;
+    role: string;
+    entitlements: string[];
+    isEmailVerified: boolean;
+  }
+  
+  // Fix for logger method signatures
+  interface FastifyBaseLogger {
+    warn(message: string, data?: any): void;
+    error(message: string, error?: any): void;
+    info(message: string, data?: any): void;
+    debug(message: string, data?: any): void;
+  }
 }
 
 export {};

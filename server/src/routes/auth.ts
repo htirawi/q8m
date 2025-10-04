@@ -100,8 +100,8 @@ export default async function authRoutes(fastify: FastifyInstance) {
         await user.save();
 
         // Generate email verification token
-        const verificationToken = await VerificationToken.createToken(
-          user._id,
+        const verificationToken = await (VerificationToken as any).createToken(
+          (user as any)._id,
           "email_verification",
           24 // 24 hours
         );
@@ -113,7 +113,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
         reply.status(201).send({
           message: "User registered successfully. Please check your email to verify your account.",
           user: {
-            id: user._id.toString(),
+            id: (user as any)._id.toString(),
             email: user.email,
             name: user.name,
             isEmailVerified: user.isEmailVerified,
@@ -149,7 +149,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
         const { email, password } = request.body as z.infer<typeof loginSchema>;
 
         // Find user with password
-        const user = await User.findByEmailWithPassword(email.toLowerCase());
+        const user = await (User as any).findByEmailWithPassword(email.toLowerCase());
         if (!user) {
           return reply.status(401).send({
             code: 401,
@@ -184,7 +184,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
 
         // Generate tokens
         const session = new Session({
-          userId: user._id,
+          userId: (user as any)._id,
           refreshToken: crypto.randomBytes(32).toString("hex"),
           accessToken: crypto.randomBytes(32).toString("hex"),
           expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
@@ -207,11 +207,11 @@ export default async function authRoutes(fastify: FastifyInstance) {
         reply.send({
           message: "Login successful",
           user: {
-            id: user._id.toString(),
+            id: (user as any)._id.toString(),
             email: user.email,
             name: user.name,
             role: user.role,
-            entitlements: user.entitlements,
+            entitlements: (user as any).entitlements,
             isEmailVerified: user.isEmailVerified,
           },
           csrfToken, // Send CSRF token in response body for client
@@ -245,7 +245,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
       try {
         const { token } = request.body as z.infer<typeof verifyEmailSchema>;
 
-        const verificationToken = await VerificationToken.verifyToken(token, "email_verification");
+        const verificationToken = await (VerificationToken as any).verifyToken(token, "email_verification");
         const user = await User.findById(verificationToken.userId);
 
         if (!user) {
@@ -271,7 +271,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
         reply.send({
           message: "Email verified successfully",
           user: {
-            id: user._id.toString(),
+            id: (user as any)._id.toString(),
             email: user.email,
             name: user.name,
             isEmailVerified: user.isEmailVerified,
@@ -324,8 +324,8 @@ export default async function authRoutes(fastify: FastifyInstance) {
         }
 
         // Generate new verification token
-        const verificationToken = await VerificationToken.createToken(
-          user._id,
+        const verificationToken = await (VerificationToken as any).createToken(
+          (user as any)._id,
           "email_verification",
           24 // 24 hours
         );
@@ -375,8 +375,8 @@ export default async function authRoutes(fastify: FastifyInstance) {
         }
 
         // Generate password reset token
-        const resetToken = await VerificationToken.createToken(
-          user._id,
+        const resetToken = await (VerificationToken as any).createToken(
+          (user as any)._id,
           "password_reset",
           1 // 1 hour
         );
@@ -417,7 +417,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
       try {
         const { token, password } = request.body as z.infer<typeof resetPasswordSchema>;
 
-        const resetToken = await VerificationToken.verifyToken(token, "password_reset");
+        const resetToken = await (VerificationToken as any).verifyToken(token, "password_reset");
         const user = await User.findById(resetToken.userId);
 
         if (!user) {
@@ -429,14 +429,14 @@ export default async function authRoutes(fastify: FastifyInstance) {
         }
 
         // Update password
-        user.password = password;
+        (user as any).password = password;
         await user.save();
 
         // Mark token as used
         await resetToken.markAsUsed(request.ip, request.headers["user-agent"]);
 
         // Revoke all existing sessions
-        await Session.revokeAllForUser(user._id.toString(), "password_change");
+        await (Session as any).revokeAllForUser((user as any)._id.toString(), "password_change");
 
         reply.send({
           message: "Password reset successfully",
@@ -494,12 +494,12 @@ export default async function authRoutes(fastify: FastifyInstance) {
         }
 
         // Update password
-        user.password = newPassword;
+        (user as any).password = newPassword;
         await user.save();
 
         // Revoke all existing sessions except current one
         await Session.updateMany(
-          { userId: user._id, _id: { $ne: request.sessionId } },
+          { userId: (user as any)._id, _id: { $ne: request.sessionId } },
           {
             $set: {
               isActive: false,
@@ -554,14 +554,14 @@ export default async function authRoutes(fastify: FastifyInstance) {
 
         reply.send({
           user: {
-            id: user._id.toString(),
+            id: (user as any)._id.toString(),
             email: user.email,
             name: user.name,
             role: user.role,
-            entitlements: user.entitlements,
+            entitlements: (user as any).entitlements,
             isEmailVerified: user.isEmailVerified,
-            preferences: user.preferences,
-            stats: user.stats,
+            preferences: (user as any).preferences,
+            stats: (user as any).stats,
             createdAt: user.createdAt,
           },
         });
@@ -604,7 +604,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
         // Revoke current session
         const session = await Session.findById(sessionId);
         if (session) {
-          await session.revoke("user_logout");
+          await (session as any).revoke("user_logout");
         }
 
         // Clear authentication cookies
@@ -638,7 +638,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
     },
     async (request, reply) => {
       try {
-        const userId = request.user?.id;
+        const userId = (request.user as any)?.id;
 
         // Validate userId to prevent security bypass
         if (!userId || typeof userId !== "string" || !/^[a-fA-F0-9]{24}$/.test(userId)) {
@@ -650,7 +650,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
         }
 
         // Revoke all sessions for user
-        await Session.revokeAllForUser(userId, "user_logout");
+        await (Session as any).revokeAllForUser(userId, "user_logout");
 
         reply.send({
           message: "Logged out from all devices successfully",
@@ -700,13 +700,13 @@ export default async function authRoutes(fastify: FastifyInstance) {
 
         if (!isValidToken(refreshToken)) {
           request.log.warn("Invalid refresh token format attempt", {
-            tokenLength: refreshToken?.length,
+            tokenLength: (refreshToken as any)?.length,
             tokenType: typeof refreshToken,
             hasWhitespace:
-              refreshToken?.includes(" ") ||
-              refreshToken?.includes("\n") ||
-              refreshToken?.includes("\r") ||
-              refreshToken?.includes("\t"),
+              (refreshToken as any)?.includes(" ") ||
+              (refreshToken as any)?.includes("\n") ||
+              (refreshToken as any)?.includes("\r") ||
+              (refreshToken as any)?.includes("\t"),
           });
           return reply.status(401).send({
             code: 401,
@@ -716,10 +716,10 @@ export default async function authRoutes(fastify: FastifyInstance) {
         }
 
         // Verify refresh token
-        const { userId } = jwtService.verifyRefreshToken(refreshToken);
+        const { userId } = jwtService.verifyRefreshToken(refreshToken) as any;
 
         // Find session
-        const session = await Session.findActiveByRefreshToken(refreshToken);
+        const session = await (Session as any).findActiveByRefreshToken(refreshToken);
         if (!session) {
           return reply.status(401).send({
             code: 401,
@@ -739,10 +739,10 @@ export default async function authRoutes(fastify: FastifyInstance) {
         }
 
         // Generate new access token
-        const newAccessToken = jwtService.refreshAccessToken(refreshToken, user);
+        const newAccessToken = jwtService.refreshAccessToken(refreshToken, user as any);
 
         // Update session
-        await session.refresh();
+        await (session as any).refresh();
 
         reply.send({
           accessToken: newAccessToken,
