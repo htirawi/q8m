@@ -736,7 +736,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
           },
         },
         preHandler: authenticate,
-      } as any,
+      },
       async (request, reply) => {
         try {
           const sessionId = (request as any).sessionId;
@@ -791,7 +791,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
           },
         },
         preHandler: authenticate,
-      } as any,
+      },
       async (request, reply) => {
         try {
           const user = request.authUser;
@@ -853,7 +853,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
               .max(256, "Refresh token too long"),
           }),
         },
-      } as any,
+      },
       async (request, reply) => {
         try {
           const { refreshToken } = request.body as RefreshTokenBody;
