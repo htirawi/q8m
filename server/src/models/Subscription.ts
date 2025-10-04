@@ -117,7 +117,7 @@ const subscriptionSchema = new Schema(
     timestamps: true,
     toJSON: {
       transform(_doc, ret: Record<string, unknown>) {
-        ret.id = ret._id.toString();
+        ret.id = (ret._id as any).toString();
         delete ret._id;
         delete ret.__v;
         return ret;
@@ -135,20 +135,29 @@ subscriptionSchema.index({ cancelAtPeriodEnd: 1, currentPeriodEnd: 1 });
 // Virtual for subscription validity
 subscriptionSchema.virtual("isActive").get(function () {
   const now = new Date();
-  return (this as unknown).status === "active" && (this as unknown).currentPeriodStart <= now && (this as unknown).currentPeriodEnd > now;
+  return (
+    (this as any).status === "active" &&
+    (this as any).currentPeriodStart <= now &&
+    (this as any).currentPeriodEnd > now
+  );
 });
 
 // Virtual for days remaining
 subscriptionSchema.virtual("daysRemaining").get(function () {
   const now = new Date();
-  const diffTime = (this as unknown).currentPeriodEnd.getTime() - now.getTime();
+  const diffTime = (this as any).currentPeriodEnd.getTime() - now.getTime();
   return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 });
 
 // Virtual for is in trial
 subscriptionSchema.virtual("isInTrial").get(function () {
   const now = new Date();
-  return (this as unknown).trialStart && (this as unknown).trialEnd && (this as unknown).trialStart <= now && (this as unknown).trialEnd > now;
+  return (
+    (this as any).trialStart &&
+    (this as any).trialEnd &&
+    (this as any).trialStart <= now &&
+    (this as any).trialEnd > now
+  );
 });
 
 // Instance method to activate subscription
@@ -276,9 +285,9 @@ subscriptionSchema.statics.getRevenueByPlan = function (startDate?: Date, endDat
   const match: unknown = { status: "active" };
 
   if (startDate || endDate) {
-    match.currentPeriodStart = {};
-    if (startDate) match.currentPeriodStart.$gte = startDate;
-    if (endDate) match.currentPeriodStart.$lte = endDate;
+    (match as any).currentPeriodStart = {};
+    if (startDate) (match as any).currentPeriodStart.$gte = startDate;
+    if (endDate) (match as any).currentPeriodStart.$lte = endDate;
   }
 
   return this.aggregate([
@@ -299,19 +308,19 @@ subscriptionSchema.statics.getRevenueByPlan = function (startDate?: Date, endDat
 
 // Pre-save middleware to set entitlements based on plan type
 subscriptionSchema.pre("save", function (next) {
-  if ((this as unknown).isModified("planType")) {
-    switch ((this as unknown).planType) {
+  if ((this as any).isModified("planType")) {
+    switch ((this as any).planType) {
       case "INTERMEDIATE":
-        (this as unknown).entitlements = ["JUNIOR", "INTERMEDIATE"];
+        (this as any).entitlements = ["JUNIOR", "INTERMEDIATE"];
         break;
       case "SENIOR":
-        (this as unknown).entitlements = ["JUNIOR", "SENIOR"];
+        (this as any).entitlements = ["JUNIOR", "SENIOR"];
         break;
       case "BUNDLE":
-        (this as unknown).entitlements = ["JUNIOR", "INTERMEDIATE", "SENIOR", "BUNDLE"];
+        (this as any).entitlements = ["JUNIOR", "INTERMEDIATE", "SENIOR", "BUNDLE"];
         break;
       default:
-        (this as unknown).entitlements = ["JUNIOR"];
+        (this as any).entitlements = ["JUNIOR"];
     }
   }
   next();

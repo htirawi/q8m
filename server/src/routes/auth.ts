@@ -8,8 +8,7 @@ import { emailService } from "../services/email.service.js";
 import { secureCookieService } from "../services/secure-cookie.service.js";
 import { env } from "../config/env.js";
 import { authenticate } from "../middlewares/auth.middleware.js";
-import { buildRateLimitOptions } from "../security/rateLimit.js";
-import rateLimit from "@fastify/rate-limit";
+import { comboKey, ipKey } from "../security/rateLimit.js";
 import * as crypto from "crypto";
 
 // Type definitions for request bodies
@@ -97,23 +96,19 @@ const changePasswordSchema = z.object({
 });
 
 export default async function authRoutes(fastify: FastifyInstance) {
-  // Register rate limiting plugin with specific configurations
-  await fastify.register(rateLimit, {
-    global: false, // We'll apply it per route
-  });
-
   // Register new user
   fastify.register(async function (fastify) {
-    await fastify.register(rateLimit, {
-      max: parseInt(env.RATE_LIMIT_USER_MAX),
-      timeWindow: env.RATE_LIMIT_USER_WINDOW,
-      keyGenerator: (request) => `auth:signup:${request.ip}`,
-    });
-
     fastify.post(
       "/register",
       {
-        ...buildRateLimitOptions("auth:signup", { max: 20, timeWindow: "15m" }),
+        config: {
+          rateLimit: {
+            max: 20,
+            timeWindow: "15m",
+            hook: "onRequest",
+            keyGenerator: comboKey,
+          },
+        },
         schema: {
           body: registerSchema,
         },
@@ -181,16 +176,17 @@ export default async function authRoutes(fastify: FastifyInstance) {
 
   // Login user
   fastify.register(async function (fastify) {
-    await fastify.register(rateLimit, {
-      max: parseInt(env.RATE_LIMIT_USER_MAX),
-      timeWindow: env.RATE_LIMIT_USER_WINDOW,
-      keyGenerator: (request) => `auth:login:${request.ip}`,
-    });
-
     fastify.post(
       "/login",
       {
-        ...buildRateLimitOptions("auth:login", { max: 20, timeWindow: "15m" }),
+        config: {
+          rateLimit: {
+            max: 20,
+            timeWindow: "15m",
+            hook: "onRequest",
+            keyGenerator: comboKey,
+          },
+        },
         preHandler: [fastify.loginFailurePenaltyPreHandler("auth:login")],
         schema: {
           body: loginSchema,
@@ -301,16 +297,17 @@ export default async function authRoutes(fastify: FastifyInstance) {
 
   // Verify email
   fastify.register(async function (fastify) {
-    await fastify.register(rateLimit, {
-      max: parseInt(env.RATE_LIMIT_USER_MAX),
-      timeWindow: env.RATE_LIMIT_USER_WINDOW,
-      keyGenerator: (request) => `auth:verify-email:${request.ip}`,
-    });
-
     fastify.post(
       "/verify-email",
       {
-        ...buildRateLimitOptions("auth:verify", { max: 15, timeWindow: "15m" }),
+        config: {
+          rateLimit: {
+            max: 15,
+            timeWindow: "15m",
+            hook: "onRequest",
+            keyGenerator: comboKey,
+          },
+        },
         schema: {
           body: verifyEmailSchema,
         },
@@ -372,16 +369,17 @@ export default async function authRoutes(fastify: FastifyInstance) {
 
   // Resend verification email
   fastify.register(async function (fastify) {
-    await fastify.register(rateLimit, {
-      max: parseInt(env.RATE_LIMIT_USER_MAX),
-      timeWindow: env.RATE_LIMIT_USER_WINDOW,
-      keyGenerator: (request) => `auth:resend-code:${request.ip}`,
-    });
-
     fastify.post(
       "/resend-verification",
       {
-        ...buildRateLimitOptions("auth:resend", { max: 5, timeWindow: "15m" }),
+        config: {
+          rateLimit: {
+            max: 5,
+            timeWindow: "15m",
+            hook: "onRequest",
+            keyGenerator: comboKey,
+          },
+        },
         schema: {
           body: resendVerificationSchema,
         },
@@ -439,16 +437,17 @@ export default async function authRoutes(fastify: FastifyInstance) {
 
   // Forgot password
   fastify.register(async function (fastify) {
-    await fastify.register(rateLimit, {
-      max: parseInt(env.RATE_LIMIT_USER_MAX),
-      timeWindow: env.RATE_LIMIT_USER_WINDOW,
-      keyGenerator: (request) => `auth:forgot-password:${request.ip}`,
-    });
-
     fastify.post(
       "/forgot-password",
       {
-        ...buildRateLimitOptions("auth:forgot", { max: 10, timeWindow: "15m" }),
+        config: {
+          rateLimit: {
+            max: 10,
+            timeWindow: "15m",
+            hook: "onRequest",
+            keyGenerator: comboKey,
+          },
+        },
         schema: {
           body: forgotPasswordSchema,
         },
@@ -498,16 +497,17 @@ export default async function authRoutes(fastify: FastifyInstance) {
 
   // Reset password
   fastify.register(async function (fastify) {
-    await fastify.register(rateLimit, {
-      max: parseInt(env.RATE_LIMIT_USER_MAX),
-      timeWindow: env.RATE_LIMIT_USER_WINDOW,
-      keyGenerator: (request) => `auth:reset-password:${request.ip}`,
-    });
-
     fastify.post(
       "/reset-password",
       {
-        ...buildRateLimitOptions("auth:reset", { max: 10, timeWindow: "15m" }),
+        config: {
+          rateLimit: {
+            max: 10,
+            timeWindow: "15m",
+            hook: "onRequest",
+            keyGenerator: comboKey,
+          },
+        },
         schema: {
           body: resetPasswordSchema,
         },
@@ -563,7 +563,14 @@ export default async function authRoutes(fastify: FastifyInstance) {
     fastify.post(
       "/change-password",
       {
-        ...buildRateLimitOptions("auth:change-password", { max: 10, timeWindow: "15m" }),
+        config: {
+          rateLimit: {
+            max: 10,
+            timeWindow: "15m",
+            hook: "onRequest",
+            keyGenerator: comboKey,
+          },
+        },
         preHandler: authenticate,
         schema: {
           body: changePasswordSchema,
@@ -615,16 +622,17 @@ export default async function authRoutes(fastify: FastifyInstance) {
 
   // Get current user
   fastify.register(async function (fastify) {
-    await fastify.register(rateLimit, {
-      max: parseInt(env.RATE_LIMIT_IP_MAX),
-      timeWindow: env.RATE_LIMIT_IP_WINDOW,
-      keyGenerator: (request) => `auth:me:${request.ip}`,
-    });
-
     fastify.get(
       "/me",
       {
-        ...buildRateLimitOptions("auth:me", { max: 100, timeWindow: "15m" }),
+        config: {
+          rateLimit: {
+            max: 100,
+            timeWindow: "15m",
+            hook: "onRequest",
+            keyGenerator: ipKey,
+          },
+        },
         preHandler: authenticate,
       },
       async (request, reply) => {
@@ -659,16 +667,17 @@ export default async function authRoutes(fastify: FastifyInstance) {
 
   // Logout
   fastify.register(async function (fastify) {
-    await fastify.register(rateLimit, {
-      max: parseInt(env.RATE_LIMIT_IP_MAX),
-      timeWindow: env.RATE_LIMIT_IP_WINDOW,
-      keyGenerator: (request) => `auth:logout:${request.ip}`,
-    });
-
     fastify.post(
       "/logout",
       {
-        ...buildRateLimitOptions("auth:logout", { max: 20, timeWindow: "15m" }),
+        config: {
+          rateLimit: {
+            max: 20,
+            timeWindow: "15m",
+            hook: "onRequest",
+            keyGenerator: ipKey,
+          },
+        },
         preHandler: authenticate,
       },
       async (request, reply) => {
@@ -707,16 +716,17 @@ export default async function authRoutes(fastify: FastifyInstance) {
 
   // Logout from all devices
   fastify.register(async function (fastify) {
-    await fastify.register(rateLimit, {
-      max: parseInt(env.RATE_LIMIT_IP_MAX),
-      timeWindow: env.RATE_LIMIT_IP_WINDOW,
-      keyGenerator: (request) => `auth:logout-all:${request.ip}`,
-    });
-
     fastify.post(
       "/logout-all",
       {
-        ...buildRateLimitOptions("auth:logout-all", { max: 10, timeWindow: "15m" }),
+        config: {
+          rateLimit: {
+            max: 10,
+            timeWindow: "15m",
+            hook: "onRequest",
+            keyGenerator: ipKey,
+          },
+        },
         preHandler: authenticate,
       },
       async (request, reply) => {
@@ -755,16 +765,17 @@ export default async function authRoutes(fastify: FastifyInstance) {
 
   // Refresh token
   fastify.register(async function (fastify) {
-    await fastify.register(rateLimit, {
-      max: parseInt(env.RATE_LIMIT_IP_MAX),
-      timeWindow: env.RATE_LIMIT_IP_WINDOW,
-      keyGenerator: (request) => `auth:refresh:${request.ip}`,
-    });
-
     fastify.post(
       "/refresh",
       {
-        ...buildRateLimitOptions("auth:refresh", { keyMode: "ip", max: 100, timeWindow: "15m" }),
+        config: {
+          rateLimit: {
+            max: 100,
+            timeWindow: "15m",
+            hook: "onRequest",
+            keyGenerator: ipKey,
+          },
+        },
         schema: {
           body: z.object({
             refreshToken: z

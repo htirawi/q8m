@@ -94,7 +94,7 @@ export class CurrencyService {
       return {
         rate: fxRate.rate,
         source: "cache",
-        ageInHours: ((fxRate as unknown).ageInHours ?? 0) as number,
+        ageInHours: ((fxRate as any).ageInHours ?? 0) as number,
       };
     }
 
@@ -105,7 +105,7 @@ export class CurrencyService {
       return {
         rate: fxRate.rate,
         source: "cache",
-        ageInHours: ((fxRate as unknown).ageInHours ?? 0) as number,
+        ageInHours: ((fxRate as any).ageInHours ?? 0) as number,
       };
     }
 

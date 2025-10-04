@@ -332,11 +332,11 @@ export class EntitlementService {
     try {
       const expiringSubscriptions = await Subscription.findExpiringSoon(days);
 
-      return expiringSubscriptions.map((sub: unknown) => ({
-        userId: sub.userId.toString(),
-        userEmail: sub.userId.email,
+      return expiringSubscriptions.map((sub: any) => ({
+        userId: (sub as any).userId.toString(),
+        userEmail: (sub as any).userId.email,
         subscription: sub,
-        daysRemaining: sub.daysRemaining,
+        daysRemaining: (sub as any).daysRemaining,
       }));
     } catch (error) {
       console.error("Error fetching expiring subscriptions:", error);
@@ -372,8 +372,9 @@ export class EntitlementService {
       // Get plan distribution
       const planDistribution: Record<string, number> = {};
       subscriptionStats.forEach((stat: unknown) => {
-        const activeCount = stat.statuses.find((s: unknown) => s.status === "active")?.count || 0;
-        planDistribution[stat._id] = activeCount;
+        const activeCount =
+          (stat as any).statuses.find((s: any) => s.status === "active")?.count || 0;
+        planDistribution[(stat as any)._id] = activeCount;
       });
 
       // Get active and expiring subscriptions

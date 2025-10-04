@@ -1,13 +1,13 @@
 import mongoose, { Document, Schema } from "mongoose";
-import crypto from "crypto";
+import * as crypto from "crypto";
 
 export interface IVerificationToken extends Document {
   userId: mongoose.Types.ObjectId;
   token: string;
   type: "email_verification" | "password_reset" | "two_factor";
-  expiresAt: unknown; // Mongoose Date type
+  expiresAt: any; // Mongoose Date type
   used: boolean;
-  usedAt?: Date;
+  usedAt?: any;
   ipAddress?: string;
   userAgent?: string;
 }
@@ -59,7 +59,7 @@ const verificationTokenSchema = new Schema(
     timestamps: true,
     toJSON: {
       transform(_doc, ret: Record<string, unknown>) {
-        ret.id = ret._id.toString();
+        ret.id = (ret._id as any).toString();
         delete ret._id;
         delete ret.__v;
         delete ret.token; // Don't expose the actual token
@@ -77,7 +77,7 @@ verificationTokenSchema.index({ used: 1, createdAt: -1 });
 
 // Virtual for token validity
 verificationTokenSchema.virtual("isValid").get(function () {
-  return !(this as unknown).used && (this as unknown).expiresAt > new Date();
+  return !(this as any).used && (this as any).expiresAt > new Date();
 });
 
 // Instance method to mark token as used
@@ -159,7 +159,7 @@ verificationTokenSchema.statics.getActiveTokensForUser = function (
   };
 
   if (type) {
-    query.type = type;
+    (query as any).type = type;
   }
 
   return this.find(query).select("type expiresAt createdAt");

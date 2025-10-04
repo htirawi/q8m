@@ -9,12 +9,12 @@ export interface IUser extends Document {
   entitlements: string[];
   isEmailVerified: boolean;
   emailVerificationToken?: string;
-  emailVerificationExpires?: unknown; // Mongoose Date type
+  emailVerificationExpires?: any; // Mongoose Date type
   passwordResetToken?: string;
-  passwordResetExpires?: unknown; // Mongoose Date type
-  lastLogin?: Date;
+  passwordResetExpires?: any; // Mongoose Date type
+  lastLogin?: any;
   loginAttempts: number;
-  lockUntil?: unknown; // Mongoose Date type
+  lockUntil?: any; // Mongoose Date type
   googleId?: string;
   facebookId?: string;
   avatar?: string;
@@ -23,7 +23,7 @@ export interface IUser extends Document {
   website?: string;
   preferences: {
     language: "en" | "ar";
-    theme: "light" | "dark" | "system";
+    theme: any;
     notifications: {
       email: boolean;
       quizReminders: boolean;
@@ -35,13 +35,7 @@ export interface IUser extends Document {
     currentPeriodEnd?: Date;
     cancelAtPeriodEnd: boolean;
   };
-  stats: {
-    totalQuizzes: number;
-    totalQuestionsAnswered: number;
-    averageScore: number;
-    streak: number;
-    lastQuizDate?: Date;
-  };
+  stats: any;
   twoFactorEnabled: boolean;
   twoFactorSecret?: string;
   isActive: boolean;
@@ -69,7 +63,7 @@ const userSchema = new Schema(
     },
     password: {
       type: String,
-      required(this: unknown) {
+      required(this: any) {
         return !this.googleId && !this.facebookId;
       },
       minlength: [8, "Password must be at least 8 characters"],
@@ -222,7 +216,7 @@ const userSchema = new Schema(
     timestamps: true,
     toJSON: {
       transform(_doc, ret: Record<string, unknown>) {
-        ret.id = ret._id.toString();
+        ret.id = (ret._id as any).toString();
         delete ret._id;
         delete ret.__v;
         delete ret.password;
@@ -248,7 +242,7 @@ userSchema.index({ createdAt: -1 });
 
 // Virtual for account lock status
 userSchema.virtual("isLocked").get(function () {
-  return !!(this.lockUntil && (this.lockUntil as unknown) > Date.now());
+  return !!(this.lockUntil && (this.lockUntil as any) > Date.now());
 });
 
 // Pre-save middleware to hash password
@@ -318,7 +312,7 @@ userSchema.methods.incLoginAttempts = function () {
 
   // Lock account after 5 failed attempts for 2 hours
   if (this.loginAttempts + 1 >= 5 && !this.isLocked) {
-    updates.$set = { lockUntil: Date.now() + 2 * 60 * 60 * 1000 }; // 2 hours
+    (updates as any).$set = { lockUntil: Date.now() + 2 * 60 * 60 * 1000 }; // 2 hours
   }
 
   return this.updateOne(updates);

@@ -36,34 +36,42 @@ describe("Rate Limiting Security Plugin", () => {
 
     // Register the rate limiting plugin
     await fastify.register(rateLimitPlugin);
-    
+
     // Wait for plugin to be ready and decorators to be applied
     await fastify.ready();
-    
+
     // Add a test route for rate limiting
-    fastify.post("/test-auth", {
-      config: {
-        rateLimit: fastify.rateLimitFor("test:auth", {
-          max: 3,
-          timeWindow: "1m",
-        }),
+    fastify.post(
+      "/test-auth",
+      {
+        config: {
+          rateLimit: fastify.rateLimitFor("test:auth", {
+            max: 3,
+            timeWindow: "1m",
+          }),
+        },
       },
-    }, async (request, reply) => {
-      return { message: "success" };
-    });
+      async (_request: any, _reply: any) => {
+        return { message: "success" };
+      }
+    );
 
     // Add a test route for login failure penalty
-    fastify.post("/test-login", {
-      config: {
-        rateLimit: fastify.rateLimitFor("test:login", {
-          max: 5,
-          timeWindow: "1m",
-        }),
+    fastify.post(
+      "/test-login",
+      {
+        config: {
+          rateLimit: fastify.rateLimitFor("test:login", {
+            max: 5,
+            timeWindow: "1m",
+          }),
+        },
+        preHandler: [fastify.loginFailurePenaltyPreHandler("test:login")],
       },
-      preHandler: [fastify.loginFailurePenaltyPreHandler("test:login")],
-    }, async (request, reply) => {
-      return { message: "login success" };
-    });
+      async (_request: any, _reply: any) => {
+        return { message: "login success" };
+      }
+    );
 
     await fastify.ready();
   });
@@ -246,17 +254,21 @@ describe("Rate Limiting Security Plugin", () => {
 
     it("should use IP-only key when keyMode is ip", async () => {
       // Create a route with IP-only rate limiting
-      fastify.post("/test-ip", {
-        config: {
-          rateLimit: fastify.rateLimitFor("test:ip", {
-            max: 2,
-            timeWindow: "1m",
-            keyMode: "ip",
-          }),
+      fastify.post(
+        "/test-ip",
+        {
+          config: {
+            rateLimit: fastify.rateLimitFor("test:ip", {
+              max: 2,
+              timeWindow: "1m",
+              keyMode: "ip",
+            }),
+          },
         },
-      }, async (request, reply) => {
-        return { message: "ip success" };
-      });
+        async (_request: any, _reply: any) => {
+          return { message: "ip success" };
+        }
+      );
 
       await fastify.ready();
 
@@ -376,7 +388,7 @@ describe("Rate Limiting Security Plugin", () => {
   describe("Global Rate Limiting", () => {
     it("should apply global rate limits", async () => {
       // Create a route without specific rate limiting
-      fastify.post("/test-global", async (request, reply) => {
+      fastify.post("/test-global", async (_request: any, _reply: any) => {
         return { message: "global success" };
       });
 
@@ -479,7 +491,7 @@ describe("Rate Limiting Security Plugin", () => {
 
     it("should use constant-time operations for key generation", async () => {
       const startTime = Date.now();
-      
+
       // Generate keys for different inputs
       for (let i = 0; i < 100; i++) {
         await fastify.inject({
@@ -504,21 +516,25 @@ describe("Rate Limiting Security Plugin", () => {
       let middlewareOrder: string[] = [];
 
       // Add a preHandler to track order
-      fastify.addHook("preHandler", async (request, reply) => {
+      fastify.addHook("preHandler", async (_request: any, _reply: any) => {
         middlewareOrder.push("preHandler");
       });
 
-      fastify.post("/test-order", {
-        config: {
-          rateLimit: fastify.rateLimitFor("test:order", {
-            max: 1,
-            timeWindow: "1m",
-          }),
+      fastify.post(
+        "/test-order",
+        {
+          config: {
+            rateLimit: fastify.rateLimitFor("test:order", {
+              max: 1,
+              timeWindow: "1m",
+            }),
+          },
         },
-      }, async (request, reply) => {
-        middlewareOrder.push("handler");
-        return { message: "success" };
-      });
+        async (_request: any, _reply: any) => {
+          middlewareOrder.push("handler");
+          return { message: "success" };
+        }
+      );
 
       await fastify.ready();
 

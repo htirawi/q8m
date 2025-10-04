@@ -56,7 +56,11 @@
     "guard:react": "node scripts/guard-react.cjs",
     "guard:data": "node scripts/guard-data.cjs",
     "guard:types:inline": "node scripts/guard-inline-types.cjs",
-    "guard:all": "npm run guard:react && npm run guard:data && npm run guard:types:inline"
+    "guard:all": "npm run guard:react && npm run guard:data && npm run guard:types:inline",
+    "codeql:db": "codeql database create ./codeql-db --language=javascript --source-root . --command \"pnpm -w build || npm run build || true\"",
+    "codeql:analyze": "codeql database analyze ./codeql-db codeql/javascript-queries --format=sarifv2.1.0 --output ./codeql-results.sarif",
+    "codeql:clean": "rm -rf ./codeql-db ./codeql-results.sarif || true",
+    "codeql:run": "pnpm codeql:clean && pnpm codeql:db && pnpm codeql:analyze"
   },
   "dependencies": {},
   "devDependencies": {

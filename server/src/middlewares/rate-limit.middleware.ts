@@ -7,15 +7,15 @@ import rateLimit from "@fastify/rate-limit";
 export const authRateLimit = async (request: FastifyRequest, _reply: FastifyReply) => {
   const ip = request.ip;
   const userAgent = request.headers["user-agent"] || "unknown";
-  
+
   // Create a unique key for rate limiting
   const key = `auth:${ip}:${userAgent}`;
-  
+
   // This would integrate with Redis for actual rate limiting
   // For now, we'll use a simple in-memory approach
   const windowMs = 15 * 60 * 1000; // 15 minutes
   const maxRequests = 5;
-  
+
   // In a real implementation, this would use Redis
   // For now, we'll just log the attempt
   request.log.debug({
@@ -26,7 +26,7 @@ export const authRateLimit = async (request: FastifyRequest, _reply: FastifyRepl
     maxRequests,
     windowMs,
   });
-  
+
   // Return without error - let the global rate limiter handle it
   return;
 };
@@ -37,13 +37,13 @@ export const authRateLimit = async (request: FastifyRequest, _reply: FastifyRepl
 export const passwordResetRateLimit = async (request: FastifyRequest, _reply: FastifyReply) => {
   const ip = request.ip;
   const userAgent = request.headers["user-agent"] || "unknown";
-  
+
   // Create a unique key for rate limiting
   const key = `password-reset:${ip}:${userAgent}`;
-  
+
   const windowMs = 15 * 60 * 1000; // 15 minutes
   const maxRequests = 3; // More restrictive for password reset
-  
+
   request.log.debug({
     message: "Password reset rate limit check",
     ip,
@@ -52,7 +52,7 @@ export const passwordResetRateLimit = async (request: FastifyRequest, _reply: Fa
     maxRequests,
     windowMs,
   });
-  
+
   return;
 };
 
@@ -62,13 +62,13 @@ export const passwordResetRateLimit = async (request: FastifyRequest, _reply: Fa
 export const tokenRefreshRateLimit = async (request: FastifyRequest, _reply: FastifyReply) => {
   const ip = request.ip;
   const userAgent = request.headers["user-agent"] || "unknown";
-  
+
   // Create a unique key for rate limiting
   const key = `token-refresh:${ip}:${userAgent}`;
-  
+
   const windowMs = 15 * 60 * 1000; // 15 minutes
   const maxRequests = 10; // Allow more refresh attempts
-  
+
   request.log.debug({
     message: "Token refresh rate limit check",
     ip,
@@ -77,7 +77,7 @@ export const tokenRefreshRateLimit = async (request: FastifyRequest, _reply: Fas
     maxRequests,
     windowMs,
   });
-  
+
   return;
 };
 
@@ -90,7 +90,7 @@ export const registerRateLimitPlugins = async (fastify: FastifyInstance) => {
     keyGenerator: (request: FastifyRequest) => `verify-email:${request.ip}`,
     max: 5,
     timeWindow: "15 minutes",
-    errorResponseBuilder: (_request: FastifyRequest, context: { after: string; max: number }) => ({
+    errorResponseBuilder: (_request: FastifyRequest, context: { ttl: number; max: number }) => ({
       code: 429,
       error: "Too Many Requests",
       message: `Email verification rate limit exceeded. Retry in ${Math.round(context.ttl / 1000)} seconds`,
@@ -103,7 +103,7 @@ export const registerRateLimitPlugins = async (fastify: FastifyInstance) => {
     keyGenerator: (request: FastifyRequest) => `password-reset:${request.ip}`,
     max: 3,
     timeWindow: "15 minutes",
-    errorResponseBuilder: (_request: FastifyRequest, context: { after: string; max: number }) => ({
+    errorResponseBuilder: (_request: FastifyRequest, context: { ttl: number; max: number }) => ({
       code: 429,
       error: "Too Many Requests",
       message: `Password reset rate limit exceeded. Retry in ${Math.round(context.ttl / 1000)} seconds`,
@@ -116,7 +116,7 @@ export const registerRateLimitPlugins = async (fastify: FastifyInstance) => {
     keyGenerator: (request: FastifyRequest) => `token-refresh:${request.ip}`,
     max: 10,
     timeWindow: "15 minutes",
-    errorResponseBuilder: (_request: FastifyRequest, context: { after: string; max: number }) => ({
+    errorResponseBuilder: (_request: FastifyRequest, context: { ttl: number; max: number }) => ({
       code: 429,
       error: "Too Many Requests",
       message: `Token refresh rate limit exceeded. Retry in ${Math.round(context.ttl / 1000)} seconds`,

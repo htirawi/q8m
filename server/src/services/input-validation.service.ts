@@ -160,9 +160,9 @@ export class InputValidationService {
     }
 
     if (typeof input === "object" && input !== null) {
-      const sanitized: unknown = {};
+      const sanitized: any = {};
       for (const [key, value] of Object.entries(input)) {
-        sanitized[key] = this.sanitizeUserInput(value);
+        (sanitized as any)[key] = this.sanitizeUserInput(value);
       }
       return sanitized;
     }

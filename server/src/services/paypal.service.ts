@@ -5,7 +5,7 @@ import { Subscription } from "../models/Subscription.js";
 import { User } from "../models/User.js";
 import { currencyService } from "./currency.service.js";
 import { logPaymentEvent } from "../security/logging.js";
-import crypto from "crypto";
+import * as crypto from "crypto";
 
 export interface PayPalPaymentRequest {
   amount: number;
@@ -126,11 +126,11 @@ export class PayPalService {
         paypal.payment.create(paymentRequest, async (error: unknown, payment: unknown) => {
           if (error) {
             console.error("PayPal payment creation error:", error);
-            reject(new Error(`PayPal payment creation failed: ${error.message}`));
+            reject(new Error(`PayPal payment creation failed: ${(error as any).message}`));
             return;
           }
 
-          if (!payment || !payment.id) {
+          if (!payment || !(payment as any).id) {
             reject(new Error("Invalid PayPal payment response"));
             return;
           }
@@ -142,7 +142,7 @@ export class PayPalService {
             const purchase = new Purchase({
               userId: request.userId,
               orderId,
-              paymentId: payment.id,
+              paymentId: (payment as any).id,
               paymentGateway: "paypal",
               amount: {
                 currency: finalCurrency,
@@ -176,8 +176,8 @@ export class PayPalService {
             await purchase.save();
 
             // Find approval URL
-            const approvalUrl = payment.links?.find(
-              (link: unknown) => link.rel === "approval_url"
+            const approvalUrl = (payment as any).links?.find(
+              (link: any) => link.rel === "approval_url"
             )?.href;
 
             if (!approvalUrl) {
@@ -185,7 +185,7 @@ export class PayPalService {
             }
 
             resolve({
-              paymentId: payment.id,
+              paymentId: (payment as any).id,
               approvalUrl,
               orderId,
             });
@@ -230,16 +230,19 @@ export class PayPalService {
           async (error: unknown, payment: unknown) => {
             if (error) {
               console.error("PayPal payment execution error:", error);
-              await purchase.markAsFailed(`Execution failed: ${error.message}`);
-              resolve({ success: false, error: error.message });
+              await purchase.markAsFailed(`Execution failed: ${(error as any).message}`);
+              resolve({ success: false, error: (error as any).message });
               return;
             }
 
             try {
               // Check if payment was successful
-              if (payment.state !== "approved") {
-                await purchase.markAsFailed(`Payment state: ${payment.state}`);
-                resolve({ success: false, error: `Payment not approved. State: ${payment.state}` });
+              if ((payment as any).state !== "approved") {
+                await purchase.markAsFailed(`Payment state: ${(payment as any).state}`);
+                resolve({
+                  success: false,
+                  error: `Payment not approved. State: ${(payment as any).state}`,
+                });
                 return;
               }
 
@@ -269,7 +272,7 @@ export class PayPalService {
    */
   private async createSubscription(purchase: unknown): Promise<void> {
     try {
-      const user = await User.findById(purchase.userId);
+      const user = await User.findById((purchase as any).userId);
       if (!user) {
         throw new Error("User not found");
       }
@@ -281,18 +284,18 @@ export class PayPalService {
 
       // Create subscription
       const subscription = new Subscription({
-        userId: purchase.userId,
-        purchaseId: purchase._id,
-        planType: purchase.items[0].type,
+        userId: (purchase as any).userId,
+        purchaseId: (purchase as any)._id,
+        planType: (purchase as any).items[0].type,
         status: "active",
         currentPeriodStart: now,
         currentPeriodEnd: periodEnd,
         billingCycle,
-        price: purchase.amount,
+        price: (purchase as any).amount,
         metadata: {
-          originalPurchaseCurrency: purchase.metadata?.originalCurrency,
-          fxRateUsed: purchase.metadata?.exchangeRate
-            ? parseFloat(purchase.metadata.exchangeRate)
+          originalPurchaseCurrency: (purchase as any).metadata?.originalCurrency,
+          fxRateUsed: (purchase as any).metadata?.exchangeRate
+            ? parseFloat((purchase as any).metadata.exchangeRate)
             : undefined,
         },
       });
@@ -380,7 +383,7 @@ export class PayPalService {
    */
   private async handlePaymentCompleted(resource: unknown): Promise<void> {
     try {
-      const paymentId = resource.parent_payment;
+      const paymentId = (resource as any).parent_payment;
       const purchase = await Purchase.findByPaymentId(paymentId);
 
       if (purchase && purchase.status === "pending") {
@@ -397,7 +400,7 @@ export class PayPalService {
    */
   private async handlePaymentDenied(resource: unknown): Promise<void> {
     try {
-      const paymentId = resource.parent_payment;
+      const paymentId = (resource as any).parent_payment;
       const purchase = await Purchase.findByPaymentId(paymentId);
 
       if (purchase && purchase.status === "pending") {
@@ -413,15 +416,15 @@ export class PayPalService {
    */
   private async handlePaymentRefunded(resource: unknown): Promise<void> {
     try {
-      const paymentId = resource.parent_payment;
+      const paymentId = (resource as any).parent_payment;
       const purchase = await Purchase.findByPaymentId(paymentId);
 
       if (purchase) {
         await purchase.processRefund(
-          resource.amount.total,
-          resource.amount.currency,
+          (resource as any).amount.total,
+          (resource as any).amount.currency,
           "requested_by_customer",
-          resource.id
+          (resource as any).id
         );
 
         // Cancel associated subscription
@@ -446,7 +449,7 @@ export class PayPalService {
     return new Promise((resolve, reject) => {
       paypal.payment.get(paymentId, (error: unknown, payment: unknown) => {
         if (error) {
-          reject(new Error(`Failed to get payment details: ${error.message}`));
+          reject(new Error(`Failed to get payment details: ${(error as any).message}`));
           return;
         }
         resolve(payment);

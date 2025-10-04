@@ -11,11 +11,11 @@ describe("Rate Limiting Integration", () => {
     const loginOptions = buildRateLimitOptions("auth:login", { max: 20, timeWindow: "15m" });
 
     expect(loginOptions).toHaveProperty("rateLimit");
-    expect(loginOptions.rateLimit.max).toBe(20);
-    expect(loginOptions.rateLimit.timeWindow).toBe("15m");
-    expect(loginOptions.rateLimit.hook).toBe("onRequest");
-    expect(typeof loginOptions.rateLimit.keyGenerator).toBe("function");
-    expect(typeof loginOptions.rateLimit.errorResponseBuilder).toBe("function");
+    expect((loginOptions.rateLimit as any).max).toBe(20);
+    expect((loginOptions.rateLimit as any).timeWindow).toBe("15m");
+    expect((loginOptions.rateLimit as any).hook).toBe("onRequest");
+    expect(typeof (loginOptions.rateLimit as any).keyGenerator).toBe("function");
+    expect(typeof (loginOptions.rateLimit as any).errorResponseBuilder).toBe("function");
   });
 
   test("rate limit error response should include retry-after", () => {

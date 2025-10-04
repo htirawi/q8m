@@ -24,20 +24,20 @@ const HMAC_KEY = crypto.createHash("sha256").update(env.HMAC_RATE_KEY_SECRET).di
 /**
  * Extract real IP address respecting trust proxy settings
  */
-function makeIpKey(request: FastifyRequest): string {
+export function ipKey(request: FastifyRequest): string {
   const forwarded = request.headers["x-forwarded-for"];
   const realIp = request.headers["x-real-ip"];
 
   if (forwarded && typeof forwarded === "string") {
     // Take the first IP in the chain
-    return forwarded.split(",")[0]?.trim() || request.ip;
+    return (forwarded.split(",")[0]?.trim() || request.ip) ?? "0.0.0.0";
   }
 
   if (realIp && typeof realIp === "string") {
     return realIp;
   }
 
-  return request.ip;
+  return request.ip ?? "0.0.0.0";
 }
 
 /**
@@ -81,12 +81,12 @@ function makeUserKey(request: FastifyRequest): string {
 /**
  * Create a safe combination key from IP and user key
  */
-function comboKey(request: FastifyRequest, routeId: string): string {
-  const ipKey = makeIpKey(request);
+export function comboKey(request: FastifyRequest): string {
+  const ip = ipKey(request);
   const userKey = makeUserKey(request);
 
   // Hash the combination to avoid PII leakage
-  const combined = `${routeId}:${ipKey}:${userKey}`;
+  const combined = `${ip}:${userKey}`;
   return crypto.createHash("sha256").update(combined).digest("hex").substring(0, 16);
 }
 
@@ -100,8 +100,8 @@ function rateLimitFor(routeId: string, options: RateLimitOptions = {}) {
 
   const keyGenerator =
     keyMode === "ip"
-      ? (request: FastifyRequest) => `${routeId}:${makeIpKey(request)}`
-      : (request: FastifyRequest) => comboKey(request, routeId);
+      ? (request: FastifyRequest) => `${routeId}:${ipKey(request)}`
+      : (request: FastifyRequest) => comboKey(request);
 
   return {
     keyGenerator,
@@ -122,7 +122,7 @@ function rateLimitFor(routeId: string, options: RateLimitOptions = {}) {
         message: "Rate limit exceeded",
         routeId,
         keyHash,
-        ip: makeIpKey(request).substring(0, 8),
+        ip: ipKey(request).substring(0, 8),
       });
     },
     onExceeded: (request: FastifyRequest) => {
@@ -131,7 +131,7 @@ function rateLimitFor(routeId: string, options: RateLimitOptions = {}) {
         message: "Rate limit exceeded - request blocked",
         routeId,
         keyHash,
-        ip: makeIpKey(request).substring(0, 8),
+        ip: ipKey(request).substring(0, 8),
       });
     },
   };
@@ -158,8 +158,7 @@ export function buildRateLimitOptions(
       timeWindow: timeWindow ?? process.env.RATE_LIMIT_USER_WINDOW ?? "15m",
       hook: "onRequest",
       addHeaders: process.env.RATE_LIMIT_HEADERS === "standard",
-      keyGenerator: (req: FastifyRequest) =>
-        keyMode === "ip" ? makeIpKey(req) : comboKey(req, routeId),
+      keyGenerator: (req: FastifyRequest) => (keyMode === "ip" ? ipKey(req) : comboKey(req)),
       errorResponseBuilder: (_request: FastifyRequest, context: { ttl: number; max: number }) => {
         const retryAfter = Math.round(context.ttl / 1000);
         return {
@@ -192,9 +191,9 @@ function loginFailurePenaltyPreHandler(_routeId: string) {
   return async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       const redisClient = await getRedisClient(request.server);
-      const ipKey = makeIpKey(request);
+      const ip = ipKey(request);
       const userKey = makeUserKey(request);
-      const failureKey = `login_failures:${crypto.createHash("sha256").update(`${ipKey}:${userKey}`).digest("hex").substring(0, 16)}`;
+      const failureKey = `login_failures:${crypto.createHash("sha256").update(`${ip}:${userKey}`).digest("hex").substring(0, 16)}`;
 
       if (redisClient) {
         // Use Redis for distributed rate limiting
@@ -319,9 +318,9 @@ function loginFailurePenaltyPreHandler(_routeId: string) {
 async function resetLoginFailureCounter(request: FastifyRequest): Promise<void> {
   try {
     const redisClient = await getRedisClient(request.server);
-    const ipKey = makeIpKey(request);
+    const ip = ipKey(request);
     const userKey = makeUserKey(request);
-    const failureKey = `login_failures:${crypto.createHash("sha256").update(`${ipKey}:${userKey}`).digest("hex").substring(0, 16)}`;
+    const failureKey = `login_failures:${crypto.createHash("sha256").update(`${ip}:${userKey}`).digest("hex").substring(0, 16)}`;
 
     if (redisClient) {
       await redisClient.del(failureKey);
@@ -368,7 +367,7 @@ export async function rateLimitPlugin(fastify: FastifyInstance) {
     global: true,
     max: parseInt(env.RATE_LIMIT_GLOBAL_MAX),
     timeWindow: env.RATE_LIMIT_GLOBAL_WINDOW,
-    keyGenerator: (request: FastifyRequest) => makeIpKey(request),
+    keyGenerator: (request: FastifyRequest) => ipKey(request),
     errorResponseBuilder: (_request: FastifyRequest, context: { ttl: number; max: number }) => {
       const retryAfter = Math.round(context.ttl / 1000);
 
@@ -380,7 +379,7 @@ export async function rateLimitPlugin(fastify: FastifyInstance) {
       };
     },
     onExceeding: (request: FastifyRequest) => {
-      const ipHash = makeIpKey(request).substring(0, 8);
+      const ipHash = ipKey(request).substring(0, 8);
       (request.log as any).warn({
         message: "Global rate limit exceeded",
         ipHash,
@@ -389,7 +388,7 @@ export async function rateLimitPlugin(fastify: FastifyInstance) {
   });
 
   // Decorate Fastify with rate limiting helpers
-  fastify.decorate("makeIpKey", makeIpKey);
+  fastify.decorate("ipKey", ipKey);
   fastify.decorate("makeUserKey", makeUserKey);
   fastify.decorate("comboKey", comboKey);
   fastify.decorate("rateLimitFor", rateLimitFor);
@@ -401,9 +400,9 @@ export async function rateLimitPlugin(fastify: FastifyInstance) {
 // Extend FastifyInstance type to include our decorators
 declare module "fastify" {
   interface FastifyInstance {
-    makeIpKey(request: FastifyRequest): string;
+    ipKey(request: FastifyRequest): string;
     makeUserKey(request: FastifyRequest): string;
-    comboKey(request: FastifyRequest, routeId: string): string;
+    comboKey(request: FastifyRequest): string;
     rateLimitFor(routeId: string, options?: RateLimitOptions): any;
     buildRateLimitOptions(
       routeId: string,

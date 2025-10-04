@@ -1,6 +1,6 @@
 import Fastify from "fastify";
 import { config } from "dotenv";
-import crypto from "crypto";
+import * as crypto from "crypto";
 
 // Load environment variables
 config();
@@ -32,7 +32,7 @@ import { requestLogger } from "./middlewares/logger.middleware";
 import authPlugin from "./middlewares/auth.middleware";
 
 // Import security plugins
-// import rateLimitPlugin from "./security/rateLimit";
+import rateLimitPlugin from "./security/rateLimit";
 
 // Import database
 import { connectDatabase } from "./config/database";
@@ -88,7 +88,7 @@ fastify.addHook("onSend", async (request, reply, payload) => {
   const startTime = (request as { startTime?: number }).startTime;
   if (startTime) {
     const responseTime = Date.now() - startTime;
-    request.log.info({
+    (request.log as any).info({
       type: "response",
       method: request.method,
       url: request.url,
@@ -127,17 +127,10 @@ async function registerPlugins() {
     crossOriginEmbedderPolicy: false,
   });
 
-  // Global rate limiting
+  // Rate limiting plugin (per-route configuration)
   await fastify.register(rateLimit, {
-    global: true,
-    max: parseInt(env.RATE_LIMIT_GLOBAL_MAX),
-    timeWindow: env.RATE_LIMIT_GLOBAL_WINDOW,
-    errorResponseBuilder: (_request, context) => ({
-      code: 429,
-      error: "Too Many Requests",
-      message: `Global rate limit exceeded. Retry in ${Math.round(context.ttl / 1000)} seconds`,
-      retryAfter: Math.round(context.ttl / 1000),
-    }),
+    global: false,
+    hook: "onRequest",
   });
 
   // Cookies
@@ -207,6 +200,9 @@ async function registerPlugins() {
       fileSize: parseInt(env.MAX_FILE_SIZE || "10485760"), // 10MB
     },
   });
+
+  // Rate limiting security plugin
+  await fastify.register(rateLimitPlugin);
 
   // Auth plugin
   await fastify.register(authPlugin);
@@ -289,13 +285,13 @@ async function start() {
 
     await fastify.listen({ port, host });
 
-    fastify.log.info(`Server listening on http://${host}:${port}`);
-    fastify.log.info(`Environment: ${env.NODE_ENV}`);
-    fastify.log.info(`API Documentation: http://${host}:${port}/docs`);
+    (fastify.log as any).info(`Server listening on http://${host}:${port}`);
+    (fastify.log as any).info(`Environment: ${env.NODE_ENV}`);
+    (fastify.log as any).info(`API Documentation: http://${host}:${port}/docs`);
 
     // Graceful shutdown
     const gracefulShutdown = async (signal: string) => {
-      fastify.log.info(`Received ${signal}, shutting down gracefully...`);
+      (fastify.log as any).info(`Received ${signal}, shutting down gracefully...`);
       await fastify.close();
       process.exit(0);
     };
@@ -303,19 +299,19 @@ async function start() {
     process.on("SIGTERM", () => gracefulShutdown("SIGTERM"));
     process.on("SIGINT", () => gracefulShutdown("SIGINT"));
   } catch (error) {
-    fastify.log.error(error);
+    (fastify.log as any).error(error);
     process.exit(1);
   }
 }
 
 // Handle uncaught exceptions
 process.on("uncaughtException", (error) => {
-  fastify.log.error(error);
+  (fastify.log as any).error(error);
   process.exit(1);
 });
 
 process.on("unhandledRejection", (reason, _promise) => {
-  fastify.log.error(reason);
+  (fastify.log as any).error(reason);
   process.exit(1);
 });
 

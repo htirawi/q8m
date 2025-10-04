@@ -80,7 +80,7 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
           pricing: filteredPricing,
         });
       } catch (error: unknown) {
-        request.log.error("Get pricing error:", error);
+        (request.log as any).error("Get pricing error:", error);
         reply.status(500).send({
           success: false,
           error: "Failed to get pricing information",
@@ -112,7 +112,7 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
           pricing,
         });
       } catch (error: unknown) {
-        request.log.error("Get pricing for currency error:", error);
+        (request.log as any).error("Get pricing for currency error:", error);
         reply.status(500).send({
           success: false,
           error: "Failed to get pricing information",
@@ -197,8 +197,8 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
           userId: user.id,
           userEmail: user.email,
           userName: user.name,
-          returnUrl: `${(fastify as unknown).config?.CLIENT_URL || "http://localhost:5173"}/payment/success`,
-          cancelUrl: `${(fastify as unknown).config?.CLIENT_URL || "http://localhost:5173"}/payment/cancel`,
+          returnUrl: `${(fastify as any).config?.CLIENT_URL || "http://localhost:5173"}/payment/success`,
+          cancelUrl: `${(fastify as any).config?.CLIENT_URL || "http://localhost:5173"}/payment/cancel`,
           billingAddress,
         };
 
@@ -254,10 +254,10 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
           isEstimated: priceInfo.isEstimated,
         });
       } catch (error: unknown) {
-        request.log.error("Create payment error:", error);
+        (request.log as any).error("Create payment error:", error);
         reply.status(500).send({
           success: false,
-          error: error.message || "Failed to create payment",
+          error: (error as any).message || "Failed to create payment",
         });
       }
     }
@@ -318,10 +318,10 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
           });
         }
       } catch (error: unknown) {
-        request.log.error("Payment callback error:", error);
+        (request.log as any).error("Payment callback error:", error);
         reply.status(500).send({
           success: false,
-          error: error.message || "Payment callback failed",
+          error: (error as any).message || "Payment callback failed",
         });
       }
     }
@@ -356,7 +356,7 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
           },
         });
       } catch (error: unknown) {
-        request.log.error("Get purchase history error:", error);
+        (request.log as any).error("Get purchase history error:", error);
         reply.status(500).send({
           success: false,
           error: "Failed to get purchase history",
@@ -389,7 +389,7 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
           subscription,
         });
       } catch (error: unknown) {
-        request.log.error("Get subscription error:", error);
+        (request.log as any).error("Get subscription error:", error);
         reply.status(500).send({
           success: false,
           error: "Failed to get subscription information",
@@ -431,7 +431,7 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
           subscription,
         });
       } catch (error: unknown) {
-        request.log.error("Cancel subscription error:", error);
+        (request.log as any).error("Cancel subscription error:", error);
         reply.status(500).send({
           success: false,
           error: "Failed to cancel subscription",
@@ -453,7 +453,7 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
         const webhookData = request.body as unknown;
         const signature = request.headers["x-paypal-signature"] as string;
 
-        const result = await paypalService.handleWebhook(webhookData, signature);
+        const result = await paypalService.handleWebhook(webhookData as any, signature);
 
         if (result.success) {
           reply.send({ success: true });
@@ -464,7 +464,7 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
           });
         }
       } catch (error: unknown) {
-        request.log.error("PayPal webhook error:", error);
+        (request.log as any).error("PayPal webhook error:", error);
         reply.status(500).send({
           success: false,
           error: "Webhook processing failed",
@@ -485,7 +485,7 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
       try {
         const webhookData = request.body as unknown;
 
-        const result = await apsService.handleWebhook(webhookData);
+        const result = await apsService.handleWebhook(webhookData as any);
 
         if (result.success) {
           reply.send({ success: true });
@@ -496,7 +496,7 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
           });
         }
       } catch (error: unknown) {
-        request.log.error("APS webhook error:", error);
+        (request.log as any).error("APS webhook error:", error);
         reply.status(500).send({
           success: false,
           error: "Webhook processing failed",
@@ -517,7 +517,7 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
       try {
         const webhookData = request.body as unknown;
 
-        const result = await hyperpayService.handleWebhook(webhookData);
+        const result = await hyperpayService.handleWebhook(webhookData as any);
 
         if (result.success) {
           reply.send({ success: true });
@@ -528,7 +528,7 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
           });
         }
       } catch (error: unknown) {
-        request.log.error("HyperPay webhook error:", error);
+        (request.log as any).error("HyperPay webhook error:", error);
         reply.status(500).send({
           success: false,
           error: "Webhook processing failed",
@@ -553,7 +553,7 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
         },
       });
     } catch (error: unknown) {
-      request.log.error("Get gateway status error:", error);
+      (request.log as any).error("Get gateway status error:", error);
       reply.status(500).send({
         success: false,
         error: "Failed to get gateway status",
@@ -572,7 +572,7 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
         supportedCurrencies: ["USD", "JOD", "SAR"],
       });
     } catch (error: unknown) {
-      request.log.error("Get currency rates error:", error);
+      (request.log as any).error("Get currency rates error:", error);
       reply.status(500).send({
         success: false,
         error: "Failed to get currency rates",
@@ -661,10 +661,10 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
           });
         }
       } catch (error: unknown) {
-        request.log.error("Process refund error:", error);
+        (request.log as any).error("Process refund error:", error);
         reply.status(500).send({
           success: false,
-          error: error.message || "Failed to process refund",
+          error: (error as any).message || "Failed to process refund",
         });
       }
     }

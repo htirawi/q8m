@@ -3,8 +3,8 @@
  */
 
 import { test, expect } from "vitest";
-import { escapeHtml, sanitizeForDisplay, sanitizeRedirectUrl } from "../src/security/escape.js";
-import { sanitizeForLog, safeLogFields, maskEmail, shortHash } from "../src/security/logging.js";
+import { escapeHtml, sanitizeForDisplay, sanitizeRedirectUrl } from "../../src/security/escape";
+import { sanitizeForLog, safeLogFields, maskEmail, shortHash } from "../../src/security/logging";
 
 describe("XSS Prevention", () => {
   test("escapeHtml should escape dangerous characters", () => {
@@ -86,7 +86,7 @@ describe("Log Injection Prevention", () => {
     expect(safeFields.event).toBe("payment_completed");
     expect(safeFields.amount).toBe(100);
     expect(safeFields.description).toBe("Payment with newlines");
-    expect(safeFields.metadata.note).toBe("Special characters");
+    expect((safeFields as any).metadata.note).toBe("Special characters");
   });
 
   test("maskEmail should mask email addresses", () => {
@@ -176,8 +176,8 @@ describe("Admin Route XSS Protection", () => {
 
     const sanitized = sanitizeUpdateData(maliciousData);
 
-    expect(sanitized.content.en.question).not.toContain("<script>");
-    expect(sanitized.content.en.explanation).not.toContain("<img");
-    expect(sanitized.tags[0]).not.toContain("<script>");
+    expect((sanitized as any).content.en.question).not.toContain("<script>");
+    expect((sanitized as any).content.en.explanation).not.toContain("<img");
+    expect((sanitized as any).tags[0]).not.toContain("<script>");
   });
 });

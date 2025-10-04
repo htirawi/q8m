@@ -1,5 +1,5 @@
 import { env } from "../config/env.js";
-import crypto from "crypto";
+import * as crypto from "crypto";
 
 export interface SecureCookieOptions {
   httpOnly: boolean;
@@ -38,7 +38,7 @@ export class SecureCookieService {
 
     const cookieOptions = { ...defaultOptions, ...options };
 
-    reply.setCookie(name, value, {
+    (reply as any).setCookie(name, value, {
       httpOnly: cookieOptions.httpOnly,
       secure: cookieOptions.secure,
       sameSite: cookieOptions.sameSite,
@@ -70,14 +70,14 @@ export class SecureCookieService {
    * Clear authentication cookies
    */
   clearAuthCookies(reply: unknown): void {
-    reply.clearCookie("accessToken", {
+    (reply as any).clearCookie("accessToken", {
       httpOnly: true,
       secure: env.NODE_ENV === "production",
       sameSite: "strict",
       path: "/",
     });
 
-    reply.clearCookie("refreshToken", {
+    (reply as any).clearCookie("refreshToken", {
       httpOnly: true,
       secure: env.NODE_ENV === "production",
       sameSite: "strict",

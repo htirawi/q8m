@@ -4,7 +4,7 @@ export interface ISession extends Document {
   userId: mongoose.Types.ObjectId;
   refreshToken: string;
   accessToken: string;
-  expiresAt: Date; // Mongoose Date type
+  expiresAt: any; // Mongoose Date type
   userAgent?: string;
   ipAddress?: string;
   device?: {
@@ -18,9 +18,9 @@ export interface ISession extends Document {
     timezone?: string;
   };
   isActive: boolean;
-  lastUsed: Date; // Mongoose Date type
+  lastUsed: any;
   isRevoked: boolean;
-  revokedAt?: Date;
+  revokedAt?: any;
   revokedReason?:
     | "user_logout"
     | "password_change"
@@ -103,7 +103,7 @@ const sessionSchema = new Schema(
     timestamps: true,
     toJSON: {
       transform(_doc, ret: Record<string, unknown>) {
-        ret.id = ret._id.toString();
+        ret.id = (ret._id as any).toString();
         delete ret._id;
         delete ret.__v;
         delete ret.refreshToken; // Don't expose refresh token
@@ -124,12 +124,12 @@ sessionSchema.index({ lastUsed: -1 });
 
 // Virtual for session validity
 sessionSchema.virtual("isValid").get(function () {
-  return this.isActive && !this.isRevoked && (this.expiresAt as unknown) > new Date();
+  return this.isActive && !this.isRevoked && (this.expiresAt as any) > new Date();
 });
 
 // Instance method to check if session is valid
 sessionSchema.methods.isValid = function (): boolean {
-  return this.isActive && !this.isRevoked && (this.expiresAt as unknown) > new Date();
+  return this.isActive && !this.isRevoked && (this.expiresAt as any) > new Date();
 };
 
 // Instance method to refresh session
@@ -198,7 +198,7 @@ sessionSchema.statics.findActiveByAccessToken = function (accessToken: string) {
 // Pre-save middleware to update lastUsed
 sessionSchema.pre("save", function (next) {
   if (this.isModified() && !this.isNew) {
-    this.lastUsed = new Date() as unknown;
+    (this as any).lastUsed = new Date();
   }
   next();
 });

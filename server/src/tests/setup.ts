@@ -75,7 +75,7 @@ export const createTestUser = async (overrides: unknown = {}) => {
     isEmailVerified: true,
     isActive: true,
     entitlements: ["JUNIOR"],
-    ...overrides,
+    ...(overrides as any),
   };
 
   return await User.create(defaultUser);
@@ -83,7 +83,7 @@ export const createTestUser = async (overrides: unknown = {}) => {
 
 export const createTestPurchase = async (overrides: unknown = {}) => {
   const defaultPurchase = {
-    userId: overrides.userId || (await createTestUser())._id,
+    userId: (overrides as any).userId || (await createTestUser())._id,
     planType: "INTERMEDIATE",
     gateway: "mock",
     amount: 1999,
@@ -94,7 +94,7 @@ export const createTestPurchase = async (overrides: unknown = {}) => {
     metadata: {
       testMode: true,
     },
-    ...overrides,
+    ...(overrides as any),
   };
 
   return await Purchase.create(defaultPurchase);
@@ -102,8 +102,8 @@ export const createTestPurchase = async (overrides: unknown = {}) => {
 
 export const createTestSubscription = async (overrides: unknown = {}) => {
   const defaultSubscription = {
-    userId: overrides.userId || (await createTestUser())._id,
-    purchaseId: overrides.purchaseId || (await createTestPurchase())._id,
+    userId: (overrides as any).userId || (await createTestUser())._id,
+    purchaseId: (overrides as any).purchaseId || (await createTestPurchase())._id,
     planType: "INTERMEDIATE",
     status: "active",
     billingCycle: "monthly",
@@ -112,7 +112,7 @@ export const createTestSubscription = async (overrides: unknown = {}) => {
     metadata: {
       testMode: true,
     },
-    ...overrides,
+    ...(overrides as any),
   };
 
   return await Subscription.create(defaultSubscription);
@@ -126,7 +126,7 @@ export const createTestFxRate = async (overrides: unknown = {}) => {
     source: "test",
     timestamp: new Date(),
     expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours
-    ...overrides,
+    ...(overrides as any),
   };
 
   return await FxRate.create(defaultFxRate);

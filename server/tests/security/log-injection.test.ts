@@ -50,9 +50,9 @@ describe("Log Injection Prevention", () => {
         expect(data).toHaveProperty("event", "error");
         expect(data).toHaveProperty("timestamp");
         expect(data).toHaveProperty("error");
-        expect(data.error).toHaveProperty("name", "ValidationError");
-        expect(data.error).toHaveProperty("message", "Invalid input");
-        expect(data.error).toHaveProperty("stack");
+        expect((data as any).error).toHaveProperty("name", "ValidationError");
+        expect((data as any).error).toHaveProperty("message", "Invalid input");
+        expect((data as any).error).toHaveProperty("stack");
       },
     };
 

@@ -29,7 +29,7 @@ export default async function entitlementRoutes(fastify: FastifyInstance) {
           entitlements: userEntitlements,
         });
       } catch (error: unknown) {
-        request.log.error("Get user entitlements error:", error);
+        (request.log as any).error("Get user entitlements error:", error);
         reply.status(500).send({
           success: false,
           error: "Failed to get user entitlements",
@@ -66,7 +66,7 @@ export default async function entitlementRoutes(fastify: FastifyInstance) {
           trialExpired: entitlementCheck.trialExpired,
         });
       } catch (error: unknown) {
-        request.log.error("Check entitlement error:", error);
+        (request.log as any).error("Check entitlement error:", error);
         reply.status(500).send({
           success: false,
           error: "Failed to check entitlement",
@@ -98,7 +98,7 @@ export default async function entitlementRoutes(fastify: FastifyInstance) {
           upgradeRequired: contentCheck.upgradeRequired,
         });
       } catch (error: unknown) {
-        request.log.error("Check content access error:", error);
+        (request.log as any).error("Check content access error:", error);
         reply.status(500).send({
           success: false,
           error: "Failed to check content access",
@@ -133,7 +133,7 @@ export default async function entitlementRoutes(fastify: FastifyInstance) {
           checks: entitlementChecks,
         });
       } catch (error: unknown) {
-        request.log.error("Check multiple entitlements error:", error);
+        (request.log as any).error("Check multiple entitlements error:", error);
         reply.status(500).send({
           success: false,
           error: "Failed to check multiple entitlements",
@@ -157,7 +157,7 @@ export default async function entitlementRoutes(fastify: FastifyInstance) {
           hierarchy,
         });
       } catch (error: unknown) {
-        request.log.error("Get entitlement hierarchy error:", error);
+        (request.log as any).error("Get entitlement hierarchy error:", error);
         reply.status(500).send({
           success: false,
           error: "Failed to get entitlement hierarchy",
@@ -196,7 +196,7 @@ export default async function entitlementRoutes(fastify: FastifyInstance) {
           days,
         });
       } catch (error: unknown) {
-        request.log.error("Get expiring subscriptions error:", error);
+        (request.log as any).error("Get expiring subscriptions error:", error);
         reply.status(500).send({
           success: false,
           error: "Failed to get expiring subscriptions",
@@ -228,7 +228,7 @@ export default async function entitlementRoutes(fastify: FastifyInstance) {
           stats,
         });
       } catch (error: unknown) {
-        request.log.error("Get entitlement stats error:", error);
+        (request.log as any).error("Get entitlement stats error:", error);
         reply.status(500).send({
           success: false,
           error: "Failed to get entitlement statistics",
@@ -260,7 +260,7 @@ export default async function entitlementRoutes(fastify: FastifyInstance) {
           message: "Entitlement cache cleared",
         });
       } catch (error: unknown) {
-        request.log.error("Clear entitlement cache error:", error);
+        (request.log as any).error("Clear entitlement cache error:", error);
         reply.status(500).send({
           success: false,
           error: "Failed to clear entitlement cache",
@@ -298,7 +298,7 @@ export default async function entitlementRoutes(fastify: FastifyInstance) {
           message: `Entitlement cache cleared for user ${userId}`,
         });
       } catch (error: unknown) {
-        request.log.error("Clear user entitlement cache error:", error);
+        (request.log as any).error("Clear user entitlement cache error:", error);
         reply.status(500).send({
           success: false,
           error: "Failed to clear user entitlement cache",
@@ -330,7 +330,7 @@ export default async function entitlementRoutes(fastify: FastifyInstance) {
           cacheStats,
         });
       } catch (error: unknown) {
-        request.log.error("Get cache stats error:", error);
+        (request.log as any).error("Get cache stats error:", error);
         reply.status(500).send({
           success: false,
           error: "Failed to get cache statistics",

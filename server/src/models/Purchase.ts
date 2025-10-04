@@ -230,7 +230,7 @@ const purchaseSchema = new Schema<IPurchase>(
     timestamps: true,
     toJSON: {
       transform(_doc, ret: Record<string, unknown>) {
-        ret.id = ret._id.toString();
+        ret.id = (ret._id as any).toString();
         delete ret._id;
         delete ret.__v;
         return ret;
@@ -314,9 +314,9 @@ purchaseSchema.statics.getRevenueStats = function (startDate?: Date, endDate?: D
   const match: unknown = { status: "completed" };
 
   if (startDate || endDate) {
-    match.createdAt = {};
-    if (startDate) match.createdAt.$gte = startDate;
-    if (endDate) match.createdAt.$lte = endDate;
+    (match as any).createdAt = {};
+    if (startDate) (match as any).createdAt.$gte = startDate;
+    if (endDate) (match as any).createdAt.$lte = endDate;
   }
 
   return this.aggregate([

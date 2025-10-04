@@ -18,5 +18,5 @@ export const requestLogger = async (request: FastifyRequest, _reply: FastifyRepl
   });
 
   // Store start time on request for response logging
-  (request as { startTime: number }).startTime = startTime;
+  (request as any).startTime = startTime;
 };

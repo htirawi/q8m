@@ -4,7 +4,7 @@ import { Subscription } from "../models/Subscription.js";
 import { User } from "../models/User.js";
 import { currencyService } from "./currency.service.js";
 import { logPaymentEvent } from "../security/logging.js";
-import crypto from "crypto";
+import * as crypto from "crypto";
 
 export interface APSPaymentRequest {
   amount: number;
@@ -280,7 +280,7 @@ export class APSService {
    */
   private async createSubscription(purchase: unknown): Promise<void> {
     try {
-      const user = await User.findById(purchase.userId);
+      const user = await User.findById((purchase as any).userId);
       if (!user) {
         throw new Error("User not found");
       }
@@ -292,18 +292,18 @@ export class APSService {
 
       // Create subscription
       const subscription = new Subscription({
-        userId: purchase.userId,
-        purchaseId: purchase._id,
-        planType: purchase.items[0].type,
+        userId: (purchase as any).userId,
+        purchaseId: (purchase as any)._id,
+        planType: (purchase as any).items[0].type,
         status: "active",
         currentPeriodStart: now,
         currentPeriodEnd: periodEnd,
         billingCycle,
-        price: purchase.amount,
+        price: (purchase as any).amount,
         metadata: {
-          originalPurchaseCurrency: purchase.metadata?.originalCurrency,
-          fxRateUsed: purchase.metadata?.exchangeRate
-            ? parseFloat(purchase.metadata.exchangeRate)
+          originalPurchaseCurrency: (purchase as any).metadata?.originalCurrency,
+          fxRateUsed: (purchase as any).metadata?.exchangeRate
+            ? parseFloat((purchase as any).metadata.exchangeRate)
             : undefined,
         },
       });
@@ -384,7 +384,7 @@ export class APSService {
    */
   private async handlePaymentCompleted(data: unknown): Promise<void> {
     try {
-      const purchase = await Purchase.findByPaymentId(data.id);
+      const purchase = await Purchase.findByPaymentId((data as any).id);
 
       if (purchase && purchase.status === "pending") {
         await purchase.markAsCompleted(data);
@@ -400,10 +400,10 @@ export class APSService {
    */
   private async handlePaymentFailed(data: unknown): Promise<void> {
     try {
-      const purchase = await Purchase.findByPaymentId(data.id);
+      const purchase = await Purchase.findByPaymentId((data as any).id);
 
       if (purchase && purchase.status === "pending") {
-        await purchase.markAsFailed(`APS status: ${data.status}`);
+        await purchase.markAsFailed(`APS status: ${(data as any).status}`);
       }
     } catch (error) {
       console.error("Error handling payment failed webhook:", error);
@@ -415,14 +415,14 @@ export class APSService {
    */
   private async handlePaymentRefunded(data: unknown): Promise<void> {
     try {
-      const purchase = await Purchase.findByPaymentId(data.id);
+      const purchase = await Purchase.findByPaymentId((data as any).id);
 
       if (purchase) {
         await purchase.processRefund(
-          (data.amount / 100).toFixed(2), // Convert from cents
-          data.currency,
+          ((data as any).amount / 100).toFixed(2), // Convert from cents
+          (data as any).currency,
           "requested_by_customer",
-          data.id
+          (data as any).id
         );
 
         // Cancel associated subscription
