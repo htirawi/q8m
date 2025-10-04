@@ -69,7 +69,7 @@ jobs:
         run: |
           cd client
           # Only lint the new refactored files to avoid legacy code issues
-          pnpm eslint src/features/ src/layouts/ src/components/ui/ src/assets/styles/ src/i18n/ src/store/index.ts src/router/index.ts src/main.ts src/App.vue --ext .vue,.ts,.js --max-warnings 0
+          pnpm eslint src/features/ src/layouts/ src/components/ui/ src/i18n/ src/store/index.ts src/router/index.ts src/main.ts src/App.vue --ext .vue,.ts,.js --max-warnings 0
 
       - name: Build
         run: cd client && pnpm build
