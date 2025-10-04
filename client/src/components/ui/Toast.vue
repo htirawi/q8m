@@ -16,7 +16,6 @@
         <div class="toast-message">
           <slot>
             {{ message }}
-
           </slot>
         </div>
         <button
@@ -165,7 +164,7 @@ onUnmounted(() => {
 
 /* Focus styles */
 .toast-close:focus {
-  @apply outline-none ring-2 ring-primary-500 ring-offset-2 dark:ring-offset-gray-800;
+  @apply ring-primary-500 outline-none ring-2 ring-offset-2 dark:ring-offset-gray-800;
 }
 
 /* Transitions */

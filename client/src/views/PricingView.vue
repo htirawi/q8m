@@ -6,7 +6,6 @@
         <div class="mx-auto max-w-3xl text-center">
           <h1 class="mb-6 text-4xl font-bold text-gray-900 dark:text-white md:text-5xl">
             {{ $t("pricing.title") }}
-
           </h1>
           <p class="mb-8 text-xl text-gray-600 dark:text-gray-300">
             {{ $t("pricing.subtitle") }}
@@ -40,14 +39,12 @@
               :class="{ 'text-indigo-600 dark:text-indigo-400': billingCycle === 'yearly' }"
             >
               {{ $t("pricing.yearly") }}
-
             </span>
             <span
               v-if="billingCycle === 'yearly'"
               class="rounded-full bg-indigo-100 px-2 py-1 text-xs text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200"
             >
               {{ $t("pricing.savePercent", { percent: 17 }) }}
-
             </span>
           </div>
         </div>
@@ -88,32 +85,22 @@
             <!-- Popular/Recommended Badge -->
             <div v-if="plan.popular || plan.recommended" class="pricing-badge">
               {{ plan.popular ? $t("pricing.popular") : $t("pricing.recommended")$t }}
-
             </div>
 
             <!-- Plan Header -->
             <div class="pricing-header">
-              <h3 class="plan-name">{{ plan.name }}
-
-</h3>
-              <p class="plan-description">{{ plan.description }}
-
-</p>
+              <h3 class="plan-name">{{ plan.name }}</h3>
+              <p class="plan-description">{{ plan.description }}</p>
             </div>
 
             <!-- Plan Pricing -->
             <div class="pricing-section">
               <div class="price-container">
-                <span class="price-amount">{{ getDisplayPrice(plan) }}
-
-</span>
-                <span class="price-period">{{ getPricePeriod(plan) }}
-
-</span>
+                <span class="price-amount">{{ getDisplayPrice(plan) }} </span>
+                <span class="price-period">{{ getPricePeriod(plan) }} </span>
               </div>
               <p v-if="getPriceInfo(plan)?.isEstimated" class="price-note">
                 {{ $t("pricing.estimatedPrice") }}
-
               </p>
             </div>
 
@@ -123,7 +110,6 @@
                 <li v-for="feature in plan.features" :key="feature" class="feature-item">
                   <CheckIcon class="feature-icon" />
                   {{ feature }}
-
                 </li>
               </ul>
             </div>
@@ -136,7 +122,6 @@
                 class="btn btn-primary w-full"
               >
                 {{ $t("pricing.getStarted") }}
-
               </button>
               <button
                 v-else
@@ -145,7 +130,6 @@
                 :class="plan.popular || plan.recommended ? 'btn-primary' : 'btn-secondary'"
               >
                 {{ $t("pricing.choosePlan") }}
-
               </button>
             </div>
           </div>
@@ -176,9 +160,7 @@
               </button>
               <Transition name="faq-answer">
                 <div v-if="openFaqs.includes(index)" class="faq-answer">
-                  <p>{{ faq.answer }}
-
-</p>
+                  <p>{{ faq.answer }}</p>
                 </div>
               </Transition>
             </div>
@@ -193,15 +175,12 @@
         <div class="mx-auto max-w-2xl text-center">
           <h2 class="mb-6 text-3xl font-bold text-gray-900 dark:text-white">
             {{ $t("pricing.cta.title") }}
-
           </h2>
           <p class="mb-8 text-lg text-gray-600 dark:text-gray-300">
             {{ $t("pricing.cta.subtitle") }}
-
           </p>
           <button @click="contactSupport" class="btn btn-primary btn-lg">
             {{ $t("pricing.cta.contact") }}
-
           </button>
         </div>
       </div>
@@ -258,7 +237,8 @@ const faqs = computed(() => [
 
 // Methods
 const toggleBillingCycle = () => {
-  billingCycle.value = billingCycle.value === "monthly" ? "yearly" : "monthly";billingCycle.value
+  billingCycle.value = billingCycle.value === "monthly" ? "yearly" : "monthly";
+  billingCycle.value;
 };
 
 const getdisplayprice = (plan: PlanPricing) => {
@@ -326,9 +306,7 @@ const togglefaq = (index: number) => {
   const currentIndex = openFaqs.value.indexOf(index);
   if (currentIndex > -1) {
     openFaqs.value.splice(currentIndex, 1);
-  }
-
- else {
+  } else {
     openFaqs.value.push(index);
   }
 };

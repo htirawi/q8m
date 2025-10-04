@@ -47,25 +47,15 @@
     <!-- Download Info -->
     <div v-if="downloadInfo && hasAccess" class="download-info">
       <div class="info-item">
-        <span class="info-label">{{ $t("downloads.fileSize") }}
-
-</span>
-        <span class="info-value">{{ fileSize }}
-
-</span>
+        <span class="info-label">{{ $t("downloads.fileSize") }} </span>
+        <span class="info-value">{{ fileSize }} </span>
       </div>
       <div class="info-item">
-        <span class="info-label">{{ $t("downloads.format") }}
-
-</span>
-        <span class="info-value">{{ fileFormat }}
-
-</span>
+        <span class="info-label">{{ $t("downloads.format") }} </span>
+        <span class="info-value">{{ fileFormat }} </span>
       </div>
       <div class="info-item">
-        <span class="info-label">{{ $t("downloads.requiredLevel") }}
-
-</span>
+        <span class="info-label">{{ $t("downloads.requiredLevel") }} </span>
         <span class="info-value">{{ requiredLevel }}</span>
       </div>
     </div>
@@ -90,12 +80,9 @@
           />
         </svg>
       </div>
-      <p class="error-text">{{ error }}
-
-</p>
+      <p class="error-text">{{ error }}</p>
       <button @click="retryDownload" class="retry-btn">
         {{ $t("common.retry") }}
-
       </button>
     </div>
   </div>
@@ -186,9 +173,7 @@ const handleDownload = async () => {
   } catch (err) {
     error.value = err instanceof Error ? err.message : t("downloads.downloadFailed");
     downloadProgress.value = 0;
-  }
-
- finally {
+  } finally {
     isLoading.value = false;
   }
 };

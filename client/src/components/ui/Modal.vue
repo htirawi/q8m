@@ -16,7 +16,6 @@
             <slot name="header">
               <h2 :id="titleId" class="modal-title">
                 {{ title }}
-
               </h2>
             </slot>
             <button
@@ -40,7 +39,6 @@
           <div class="modal-content">
             <div v-if="description" :id="descriptionId" class="modal-description">
               {{ description }}
-
             </div>
             <slot />
           </div>
@@ -50,8 +48,8 @@
           </footer>
         </div>
       </div>
-    </Transition>
-  </Teleport>
+    </transition>
+  </teleport>
 </template>
 
 <script setup lang="ts">
@@ -141,9 +139,7 @@ const trapfocus = (event: KeyboardEvent) => {
         lastFocusableElement?.focus();
         event.preventDefault();
       }
-    }
-
- else {
+    } else {
       if (document.activeElement === lastFocusableElement) {
         firstFocusableElement?.focus();
         event.preventDefault();
@@ -228,7 +224,7 @@ watch(
 
 /* Focus styles */
 .modal-close:focus {
-  @apply outline-none ring-2 ring-primary-500 ring-offset-2 dark:ring-offset-gray-800;
+  @apply ring-primary-500 outline-none ring-2 ring-offset-2 dark:ring-offset-gray-800;
 }
 
 /* Transitions */
