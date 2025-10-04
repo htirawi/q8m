@@ -120,7 +120,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
         schema: {
           body: registerSchema,
         },
-      } as any,
+      },
       async (request, reply) => {
         try {
           const { email, name, password } = request.body as RegisterBody;
@@ -207,7 +207,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
         schema: {
           body: loginSchema,
         },
-      } as any,
+      },
       async (request, reply) => {
         try {
           const { email, password } = request.body as LoginBody;
@@ -335,7 +335,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
         schema: {
           body: verifyEmailSchema,
         },
-      } as any,
+      },
       async (request, reply) => {
         try {
           const { token } = request.body as VerifyEmailBody;
@@ -415,7 +415,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
         schema: {
           body: resendVerificationSchema,
         },
-      } as any,
+      },
       async (request, reply) => {
         try {
           const { email } = request.body as ResendVerificationBody;
@@ -491,7 +491,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
         schema: {
           body: forgotPasswordSchema,
         },
-      } as any,
+      },
       async (request, reply) => {
         try {
           const { email } = request.body as ForgotPasswordBody;
@@ -559,7 +559,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
         schema: {
           body: resetPasswordSchema,
         },
-      } as any,
+      },
       async (request, reply) => {
         try {
           const { token, password } = request.body as ResetPasswordBody;
@@ -631,7 +631,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
         schema: {
           body: changePasswordSchema,
         },
-      } as any,
+      },
       async (request, reply) => {
         try {
           const { currentPassword, newPassword } = request.body as ChangePasswordBody;
@@ -698,7 +698,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
           },
         },
         preHandler: authenticate,
-      } as any,
+      },
       async (request, reply) => {
         try {
           const user = request.authUser;
