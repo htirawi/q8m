@@ -365,8 +365,9 @@ pnpm test:e2e --grep "payment flow"
 
 ### CI Pipeline
 
-- **Linting**: ESLint + Prettier validation
+- **Linting**: ESLint + Prettier validation with destructuring rules
 - **Type Checking**: TypeScript strict mode
+- **Code Quality**: Enforced destructuring and optional chaining patterns
 - **Unit Tests**: Vitest with coverage reporting
 - **E2E Tests**: Playwright cross-browser testing
 - **Security**: Dependency vulnerability scanning
@@ -386,8 +387,11 @@ pnpm test:e2e --grep "payment flow"
 
 ### Code Style
 
-- **ESLint/Prettier**: Automated formatting
+- **ESLint/Prettier**: Automated formatting with strict rules
 - **TypeScript Strict**: No `any` types allowed
+- **Destructuring Patterns**: Object destructuring for parameters and local variables
+- **Optional Chaining**: Safe property access with `?.` and nullish coalescing `??`
+- **Vue 3 Reactivity**: Proper use of `toRefs()`/`storeToRefs()` to maintain reactivity
 - **Component Guidelines**: Small, focused, accessible components
 - **i18n Rules**: All user-facing text must be translatable
 
@@ -406,6 +410,7 @@ pnpm test
 ### Documentation
 
 - **[CONTRIBUTING.md](CONTRIBUTING.md)** - Detailed contribution guidelines
+- **[DESTRUCTURING_POLICY.md](DESTRUCTURING_POLICY.md)** - Destructuring and optional chaining guidelines
 - **[SECURITY.md](SECURITY.md)** - Security policy and reporting
 - **[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)** - Community guidelines
 
