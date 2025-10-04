@@ -120,7 +120,6 @@ export default async function authRoutes(fastify: FastifyInstance) {
         schema: {
           body: registerSchema,
         },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } as any,
       async (request, reply) => {
         try {
@@ -208,7 +207,6 @@ export default async function authRoutes(fastify: FastifyInstance) {
         schema: {
           body: loginSchema,
         },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } as any,
       async (request, reply) => {
         try {
@@ -337,7 +335,6 @@ export default async function authRoutes(fastify: FastifyInstance) {
         schema: {
           body: verifyEmailSchema,
         },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } as any,
       async (request, reply) => {
         try {
@@ -418,7 +415,6 @@ export default async function authRoutes(fastify: FastifyInstance) {
         schema: {
           body: resendVerificationSchema,
         },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } as any,
       async (request, reply) => {
         try {
@@ -495,7 +491,6 @@ export default async function authRoutes(fastify: FastifyInstance) {
         schema: {
           body: forgotPasswordSchema,
         },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } as any,
       async (request, reply) => {
         try {
@@ -564,7 +559,6 @@ export default async function authRoutes(fastify: FastifyInstance) {
         schema: {
           body: resetPasswordSchema,
         },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } as any,
       async (request, reply) => {
         try {
@@ -637,7 +631,6 @@ export default async function authRoutes(fastify: FastifyInstance) {
         schema: {
           body: changePasswordSchema,
         },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } as any,
       async (request, reply) => {
         try {
@@ -879,7 +872,6 @@ export default async function authRoutes(fastify: FastifyInstance) {
               .max(256, "Refresh token too long"),
           }),
         },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } as any,
       async (request, reply) => {
         try {
