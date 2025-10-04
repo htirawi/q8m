@@ -59,7 +59,6 @@ declare module "mongoose" {
     resetLoginAttempts?(): Promise<void>;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface Model<
     _T,
     _TQueryHelpers = Record<string, any>,

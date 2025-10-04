@@ -69,7 +69,7 @@ const userSchema = new Schema(
     },
     password: {
       type: String,
-      required: function (this: any) {
+      required(this: any) {
         return !this.googleId && !this.facebookId;
       },
       minlength: [8, "Password must be at least 8 characters"],

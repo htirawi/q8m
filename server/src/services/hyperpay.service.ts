@@ -51,7 +51,7 @@ export class HyperPayService {
   private static instance: HyperPayService;
   private apiKey: string;
   private merchantId: string;
-  // @ts-ignore - webhookSecret is used for webhook verification in production
+  // @ts-expect-error - webhookSecret is used for webhook verification in production
   private webhookSecret: string;
   private baseUrl: string;
   private isConfigured: boolean = false;
@@ -533,7 +533,7 @@ export class HyperPayService {
   /**
    * Verify webhook signature
    */
-  // @ts-ignore - verifyWebhookSignature is used for webhook verification in production
+  // @ts-expect-error - verifyWebhookSignature is used for webhook verification in production
   private verifyWebhookSignature(_payload: string, _signature: string): boolean {
     // In production, this would verify the webhook signature using this.webhookSecret
     // For now, we'll return true for development
