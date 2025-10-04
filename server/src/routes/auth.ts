@@ -97,8 +97,7 @@ const changePasswordSchema = z.object({
 
 export default async function authRoutes(fastify: FastifyInstance) {
   // Register new user
-  fastify.register(async function (fastify) {
-    fastify.post(
+  fastify.post(
       "/register",
       {
         // Top-level rateLimit for CodeQL compliance
@@ -180,11 +179,9 @@ export default async function authRoutes(fastify: FastifyInstance) {
         }
       }
     );
-  });
 
   // Login user
-  fastify.register(async function (fastify) {
-    fastify.post(
+  fastify.post(
       "/login",
       {
         // Top-level rateLimit for CodeQL compliance
@@ -309,11 +306,9 @@ export default async function authRoutes(fastify: FastifyInstance) {
         }
       }
     );
-  });
 
   // Verify email
-  fastify.register(async function (fastify) {
-    fastify.post(
+  fastify.post(
       "/verify-email",
       {
         // Top-level rateLimit for CodeQL compliance
@@ -389,11 +384,9 @@ export default async function authRoutes(fastify: FastifyInstance) {
         }
       }
     );
-  });
 
   // Resend verification email
-  fastify.register(async function (fastify) {
-    fastify.post(
+  fastify.post(
       "/resend-verification",
       {
         // Top-level rateLimit for CodeQL compliance
@@ -465,11 +458,9 @@ export default async function authRoutes(fastify: FastifyInstance) {
         }
       }
     );
-  });
 
   // Forgot password
-  fastify.register(async function (fastify) {
-    fastify.post(
+  fastify.post(
       "/forgot-password",
       {
         // Top-level rateLimit for CodeQL compliance
@@ -533,11 +524,9 @@ export default async function authRoutes(fastify: FastifyInstance) {
         }
       }
     );
-  });
 
   // Reset password
-  fastify.register(async function (fastify) {
-    fastify.post(
+  fastify.post(
       "/reset-password",
       {
         // Top-level rateLimit for CodeQL compliance
@@ -607,8 +596,8 @@ export default async function authRoutes(fastify: FastifyInstance) {
       }
     );
 
-    // Change password (authenticated)
-    fastify.post(
+  // Change password (authenticated)
+  fastify.post(
       "/change-password",
       {
         // Top-level rateLimit for CodeQL compliance
@@ -674,11 +663,9 @@ export default async function authRoutes(fastify: FastifyInstance) {
         }
       }
     );
-  });
 
   // Get current user
-  fastify.register(async function (fastify) {
-    fastify.get(
+  fastify.get(
       "/me",
       {
         // Top-level rateLimit for CodeQL compliance
@@ -727,11 +714,9 @@ export default async function authRoutes(fastify: FastifyInstance) {
         }
       }
     );
-  });
 
   // Logout
-  fastify.register(async function (fastify) {
-    fastify.post(
+  fastify.post(
       "/logout",
       {
         // Top-level rateLimit for CodeQL compliance
@@ -784,11 +769,9 @@ export default async function authRoutes(fastify: FastifyInstance) {
         }
       }
     );
-  });
 
   // Logout from all devices
-  fastify.register(async function (fastify) {
-    fastify.post(
+  fastify.post(
       "/logout-all",
       {
         // Top-level rateLimit for CodeQL compliance
@@ -841,11 +824,9 @@ export default async function authRoutes(fastify: FastifyInstance) {
         }
       }
     );
-  });
 
   // Refresh token
-  fastify.register(async function (fastify) {
-    fastify.post(
+  fastify.post(
       "/refresh",
       {
         // Top-level rateLimit for CodeQL compliance
@@ -935,5 +916,4 @@ export default async function authRoutes(fastify: FastifyInstance) {
         }
       }
     );
-  });
 }
