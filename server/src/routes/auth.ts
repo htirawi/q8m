@@ -58,7 +58,7 @@ const changePasswordSchema = z.object({
 });
 
 export default async function authRoutes(fastify: FastifyInstance) {
-  // Register rate limiting plugin
+  // Register rate limiting plugin with specific configurations
   await fastify.register(rateLimit, {
     global: false, // We'll apply it per route
   });
@@ -69,8 +69,9 @@ export default async function authRoutes(fastify: FastifyInstance) {
     {
       config: {
         rateLimit: {
-          max: 5,
-          timeWindow: "15 minutes",
+          max: parseInt(env.RATE_LIMIT_USER_MAX),
+          timeWindow: env.RATE_LIMIT_USER_WINDOW,
+          keyGenerator: (request) => `auth:signup:${request.ip}`,
         },
       },
       schema: {
@@ -124,10 +125,11 @@ export default async function authRoutes(fastify: FastifyInstance) {
       } catch (error: unknown) {
         // Error handling
         request.log.error("Registration error:", error);
+        const errorMessage = error instanceof Error ? error.message : "Failed to register user";
         reply.status(500).send({
           code: 500,
           error: "Internal Server Error",
-          message: error.message || "Failed to register user",
+          message: errorMessage,
         });
       }
     }
@@ -139,8 +141,9 @@ export default async function authRoutes(fastify: FastifyInstance) {
     {
       config: {
         rateLimit: {
-          max: 10,
-          timeWindow: "15 minutes",
+          max: parseInt(env.RATE_LIMIT_USER_MAX),
+          timeWindow: env.RATE_LIMIT_USER_WINDOW,
+          keyGenerator: (request) => `auth:login:${request.ip}`,
         },
       },
       schema: {
@@ -233,10 +236,11 @@ export default async function authRoutes(fastify: FastifyInstance) {
       } catch (error: unknown) {
         // Error handling
         request.log.error("Login error:", error);
+        const errorMessage = error instanceof Error ? error.message : "Failed to login";
         reply.status(500).send({
           code: 500,
           error: "Internal Server Error",
-          message: error.message || "Failed to login",
+          message: errorMessage,
         });
       }
     }
@@ -248,8 +252,9 @@ export default async function authRoutes(fastify: FastifyInstance) {
     {
       config: {
         rateLimit: {
-          max: 5,
-          timeWindow: "15 minutes",
+          max: parseInt(env.RATE_LIMIT_USER_MAX),
+          timeWindow: env.RATE_LIMIT_USER_WINDOW,
+          keyGenerator: (request) => `auth:verify-email:${request.ip}`,
         },
       },
       schema: {
@@ -296,10 +301,11 @@ export default async function authRoutes(fastify: FastifyInstance) {
       } catch (error: unknown) {
         // Error handling
         request.log.error("Email verification error:", error);
+        const errorMessage = error instanceof Error ? error.message : "Invalid verification token";
         reply.status(400).send({
           code: 400,
           error: "Bad Request",
-          message: error.message || "Invalid verification token",
+          message: errorMessage,
         });
       }
     }
@@ -311,8 +317,9 @@ export default async function authRoutes(fastify: FastifyInstance) {
     {
       config: {
         rateLimit: {
-          max: 5,
-          timeWindow: "15 minutes",
+          max: parseInt(env.RATE_LIMIT_USER_MAX),
+          timeWindow: env.RATE_LIMIT_USER_WINDOW,
+          keyGenerator: (request) => `auth:resend-code:${request.ip}`,
         },
       },
       schema: {
@@ -372,8 +379,9 @@ export default async function authRoutes(fastify: FastifyInstance) {
     {
       config: {
         rateLimit: {
-          max: 3,
-          timeWindow: "15 minutes",
+          max: parseInt(env.RATE_LIMIT_USER_MAX),
+          timeWindow: env.RATE_LIMIT_USER_WINDOW,
+          keyGenerator: (request) => `auth:forgot-password:${request.ip}`,
         },
       },
       schema: {
@@ -424,8 +432,9 @@ export default async function authRoutes(fastify: FastifyInstance) {
     {
       config: {
         rateLimit: {
-          max: 3,
-          timeWindow: "15 minutes",
+          max: parseInt(env.RATE_LIMIT_USER_MAX),
+          timeWindow: env.RATE_LIMIT_USER_WINDOW,
+          keyGenerator: (request) => `auth:reset-password:${request.ip}`,
         },
       },
       schema: {
@@ -436,7 +445,10 @@ export default async function authRoutes(fastify: FastifyInstance) {
       try {
         const { token, password } = request.body as z.infer<typeof resetPasswordSchema>;
 
-        const resetToken = await (VerificationToken as unknown).verifyToken(token, "password_reset");
+        const resetToken = await (VerificationToken as unknown).verifyToken(
+          token,
+          "password_reset"
+        );
         const user = await User.findById(resetToken.userId);
 
         if (!user) {
@@ -466,10 +478,11 @@ export default async function authRoutes(fastify: FastifyInstance) {
       } catch (error: unknown) {
         // Error handling
         request.log.error("Reset password error:", error);
+        const errorMessage = error instanceof Error ? error.message : "Invalid reset token";
         reply.status(400).send({
           code: 400,
           error: "Bad Request",
-          message: error.message || "Invalid reset token",
+          message: errorMessage,
         });
       }
     }
@@ -486,7 +499,9 @@ export default async function authRoutes(fastify: FastifyInstance) {
     },
     async (request, reply) => {
       try {
-        const { currentPassword, newPassword } = request.body as z.infer<typeof changePasswordSchema>;
+        const { currentPassword, newPassword } = request.body as z.infer<
+          typeof changePasswordSchema
+        >;
         const user = request.authUser;
 
         // Verify current password
@@ -530,8 +545,9 @@ export default async function authRoutes(fastify: FastifyInstance) {
     {
       config: {
         rateLimit: {
-          max: 10,
-          timeWindow: "15 minutes",
+          max: parseInt(env.RATE_LIMIT_IP_MAX),
+          timeWindow: env.RATE_LIMIT_IP_WINDOW,
+          keyGenerator: (request) => `auth:me:${request.ip}`,
         },
       },
       preHandler: authenticate,
@@ -568,8 +584,9 @@ export default async function authRoutes(fastify: FastifyInstance) {
     {
       config: {
         rateLimit: {
-          max: 10,
-          timeWindow: "15 minutes",
+          max: parseInt(env.RATE_LIMIT_IP_MAX),
+          timeWindow: env.RATE_LIMIT_IP_WINDOW,
+          keyGenerator: (request) => `auth:logout:${request.ip}`,
         },
       },
       preHandler: authenticate,
@@ -610,8 +627,9 @@ export default async function authRoutes(fastify: FastifyInstance) {
     {
       config: {
         rateLimit: {
-          max: 10,
-          timeWindow: "15 minutes",
+          max: parseInt(env.RATE_LIMIT_IP_MAX),
+          timeWindow: env.RATE_LIMIT_IP_WINDOW,
+          keyGenerator: (request) => `auth:logout-all:${request.ip}`,
         },
       },
       preHandler: authenticate,
@@ -652,8 +670,9 @@ export default async function authRoutes(fastify: FastifyInstance) {
     {
       config: {
         rateLimit: {
-          max: 10,
-          timeWindow: "15 minutes",
+          max: parseInt(env.RATE_LIMIT_IP_MAX),
+          timeWindow: env.RATE_LIMIT_IP_WINDOW,
+          keyGenerator: (request) => `auth:refresh:${request.ip}`,
         },
       },
       schema: {
@@ -695,7 +714,10 @@ export default async function authRoutes(fastify: FastifyInstance) {
           });
         }
 
-        const newAccessToken = jwtService.generateTokenPair(user, (session as unknown)._id.toString()).accessToken;
+        const newAccessToken = jwtService.generateTokenPair(
+          user,
+          (session as unknown)._id.toString()
+        ).accessToken;
 
         // Set new access token cookie
         secureCookieService.setSecureCookie(reply, "accessToken", newAccessToken, {
@@ -712,10 +734,11 @@ export default async function authRoutes(fastify: FastifyInstance) {
       } catch (error: unknown) {
         // Error handling
         request.log.error("Refresh token error:", error);
+        const errorMessage = error instanceof Error ? error.message : "Invalid refresh token";
         reply.status(401).send({
           code: 401,
           error: "Unauthorized",
-          message: error.message || "Invalid refresh token",
+          message: errorMessage,
         });
       }
     }

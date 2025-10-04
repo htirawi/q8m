@@ -17,7 +17,7 @@ import jwt from "@fastify/jwt";
 import oauth2 from "@fastify/oauth2";
 
 // Import routes
-import authRoutes from "./routes/auth";
+import authRoutes from "./routes/auth.js";
 import pricingRoutes from "./routes/pricing";
 import paymentRoutes from "./routes/payments";
 import questionRoutes from "./routes/questions";
@@ -30,6 +30,9 @@ import seoRoutes from "./routes/seo";
 import { errorHandler } from "./middlewares/error.middleware";
 import { requestLogger } from "./middlewares/logger.middleware";
 import authPlugin from "./middlewares/auth.middleware";
+
+// Import security plugins
+// import rateLimitPlugin from "./security/rateLimit";
 
 // Import database
 import { connectDatabase } from "./config/database";
@@ -56,7 +59,7 @@ const fastify = Fastify({
           }
         : undefined,
   },
-  trustProxy: true,
+  trustProxy: env.RATE_LIMIT_TRUST_PROXY === "true",
   requestIdHeader: "x-request-id",
   requestIdLogLabel: "reqId",
   genReqId: () => crypto.randomUUID(),
@@ -112,14 +115,15 @@ async function registerPlugins() {
     crossOriginEmbedderPolicy: false,
   });
 
-  // Rate limiting
+  // Global rate limiting
   await fastify.register(rateLimit, {
-    max: parseInt(env.RATE_LIMIT_MAX_REQUESTS || "100"),
-    timeWindow: env.RATE_LIMIT_WINDOW_MS || "900000", // 15 minutes
+    global: true,
+    max: parseInt(env.RATE_LIMIT_GLOBAL_MAX),
+    timeWindow: env.RATE_LIMIT_GLOBAL_WINDOW,
     errorResponseBuilder: (_request, context) => ({
       code: 429,
       error: "Too Many Requests",
-      message: `Rate limit exceeded, retry in ${Math.round(context.ttl / 1000)} seconds`,
+      message: `Global rate limit exceeded. Retry in ${Math.round(context.ttl / 1000)} seconds`,
       retryAfter: Math.round(context.ttl / 1000),
     }),
   });
