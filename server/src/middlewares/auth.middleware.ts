@@ -3,10 +3,10 @@ import { jwtService } from "../services/jwt.service.js";
 import { User } from "../models/User.js";
 import { Session } from "../models/Session.js";
 
-// Extend FastifyRequest to include user
+// Extend FastifyRequest to include custom user and session properties
 declare module "fastify" {
   interface FastifyRequest {
-    user?: {
+    authUser?: {
       id: string;
       email: string;
       name: string;
@@ -17,8 +17,6 @@ declare module "fastify" {
     sessionId?: string;
   }
 }
-
-// Note: Fastify JWT user property conflicts are handled via type assertions
 
 export interface AuthOptions {
   requireEmailVerification?: boolean;
@@ -132,7 +130,7 @@ export function createAuthMiddleware(options: AuthOptions = {}) {
       await session.refresh();
 
       // Attach user and session info to request
-      request.user = {
+      request.authUser = {
         id: (user as any)._id.toString(),
         email: user.email,
         name: user.name,
@@ -142,7 +140,7 @@ export function createAuthMiddleware(options: AuthOptions = {}) {
       };
       request.sessionId = session._id.toString();
     } catch (error) {
-      request.log.error("Authentication error:", error);
+      (request.log as any).error("Authentication error:", error);
       return reply.status(500).send({
         code: 500,
         error: "Internal Server Error",
@@ -155,8 +153,7 @@ export function createAuthMiddleware(options: AuthOptions = {}) {
 /**
  * Optional authentication middleware - doesn't fail if no token
  */
-export const optionalAuth = async (request: FastifyRequest, _reply: FastifyReply) => {
-   
+export const optionalAuth = async (request: FastifyRequest) => {
   try {
     const authHeader = request.headers.authorization;
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -173,7 +170,7 @@ export const optionalAuth = async (request: FastifyRequest, _reply: FastifyReply
       if (session) {
         const user = await User.findById(payload.userId).select("+isEmailVerified");
         if (user && (user as any).isActive) {
-          request.user = {
+          request.authUser = {
             id: (user as any)._id.toString(),
             email: user.email,
             name: user.name,
@@ -187,10 +184,10 @@ export const optionalAuth = async (request: FastifyRequest, _reply: FastifyReply
       }
     } catch (error) {
       // Token invalid or expired, but we don't fail for optional auth
-      request.log.debug("Optional auth failed:", error);
+      (request.log as any).debug("Optional auth failed:", error);
     }
   } catch (error) {
-    request.log.error("Optional authentication error:", error);
+    (request.log as any).error("Optional authentication error:", error);
     // Don't fail for optional auth
   }
 };
@@ -198,14 +195,13 @@ export const optionalAuth = async (request: FastifyRequest, _reply: FastifyReply
 /**
  * Rate limiting middleware for auth endpoints
  */
-export const authRateLimit = async (request: FastifyRequest, _reply: FastifyReply) => {
-   
+export const authRateLimit = async (request: FastifyRequest) => {
   const ip = request.ip;
   // TODO: Implement Redis-based rate limiting using key: `auth:${ip}`
 
   // This would integrate with Redis for actual rate limiting
   // For now, we'll just log the attempt
-  request.log.info(`Auth attempt from IP: ${ip}`);
+  (request.log as any).info(`Auth attempt from IP: ${ip}`);
 };
 
 /**

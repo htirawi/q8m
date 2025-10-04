@@ -58,9 +58,17 @@ declare module "mongoose" {
     incLoginAttempts?(): Promise<void>;
     resetLoginAttempts?(): Promise<void>;
   }
-  
+
+   
+   
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  interface Model<T, TQueryHelpers = Record<string, any>, TMethods = Record<string, any>, TVirtuals = Record<string, any>, TSchema = any> {
+  interface Model<
+    _T,
+    _TQueryHelpers = Record<string, any>,
+    _TMethods = Record<string, any>,
+    _TVirtuals = Record<string, any>,
+    _TSchema = any,
+  > {
     findByEmailWithPassword?(email: string): Promise<any>;
     createToken?(userId: string, type: string, hours: number): Promise<any>;
     verifyToken?(token: string, type: string): Promise<any>;
@@ -149,13 +157,13 @@ declare global {
     entitlements: string[];
     isEmailVerified: boolean;
   }
-  
+
   // Fix for logger method signatures
   interface FastifyBaseLogger {
-    warn(message: string, data?: any): void;
-    error(message: string, error?: any): void;
-    info(message: string, data?: any): void;
-    debug(message: string, data?: any): void;
+    warn(message: string, ...args: any[]): void;
+    error(message: string, ...args: any[]): void;
+    info(message: string, ...args: any[]): void;
+    debug(message: string, ...args: any[]): void;
   }
 }
 

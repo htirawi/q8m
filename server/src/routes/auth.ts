@@ -638,7 +638,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
     },
     async (request, reply) => {
       try {
-        const userId = (request.user as any)?.id;
+        const userId = (request.authUser as any)?.id;
 
         // Validate userId to prevent security bypass
         if (!userId || typeof userId !== "string" || !/^[a-fA-F0-9]{24}$/.test(userId)) {
