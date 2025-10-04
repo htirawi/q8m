@@ -584,7 +584,16 @@ export default async function authRoutes(fastify: FastifyInstance) {
     },
     async (request, reply) => {
       try {
-        const sessionId = request.sessionId!;
+        const sessionId = request.sessionId;
+        
+        // Validate sessionId to prevent security bypass
+        if (!sessionId || typeof sessionId !== "string" || !/^[a-fA-F0-9]{24}$/.test(sessionId)) {
+          return reply.status(401).send({
+            code: 401,
+            error: "Unauthorized",
+            message: "Invalid session",
+          });
+        }
 
         // Revoke current session
         const session = await Session.findById(sessionId);
@@ -623,7 +632,16 @@ export default async function authRoutes(fastify: FastifyInstance) {
     },
     async (request, reply) => {
       try {
-        const userId = request.user!.id;
+        const userId = request.user?.id;
+        
+        // Validate userId to prevent security bypass
+        if (!userId || typeof userId !== "string" || !/^[a-fA-F0-9]{24}$/.test(userId)) {
+          return reply.status(401).send({
+            code: 401,
+            error: "Unauthorized",
+            message: "Invalid user",
+          });
+        }
 
         // Revoke all sessions for user
         await Session.revokeAllForUser(userId, "user_logout");
@@ -673,7 +691,6 @@ export default async function authRoutes(fastify: FastifyInstance) {
         // Validate refresh token format to prevent security bypass
         // Use strict validation to prevent any bypass attempts
         if (
-          !refreshToken ||
           typeof refreshToken !== "string" ||
           refreshToken.length < 32 ||
           refreshToken.length > 256 ||
