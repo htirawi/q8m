@@ -84,7 +84,7 @@ export function useSEO(initialData: Partial<SEOData> = {}) {
 
   // Update meta tags
   const updateMetaTags = () => {
-    const head = document.head;
+    const {head} = document;
 
     // Remove existing meta tags
     const existingTags = head.querySelectorAll('[data-seo="true"]');

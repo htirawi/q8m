@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* TODO: Legacy patterns - Replace 'any' types with proper typing and remove unused vars in next PR */
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
@@ -35,32 +35,29 @@ export const usePaymentStore = defineStore("payment", () => {
 
   // Getters
   const isSubscribed = computed(() => {
-    return subscription.value?.isActive || false;
+    return subscription.value?.isActive ?? false;
   });
 
   const hasEntitlement = computed(() => {
     return (entitlement: string) => {
-      return subscription.value?.entitlements.includes(entitlement) || false;
+      return subscription.value?.entitlements?.includes(entitlement) ?? false;
     };
   });
 
   const currentPlan = computed(() => {
-    if (!subscription.value) return "JUNIOR";
-    return subscription.value.planType;
+    return subscription.value?.planType ?? "JUNIOR";
   });
 
   const subscriptionStatus = computed(() => {
-    if (!subscription.value) return "inactive";
-    return subscription.value.status;
+    return subscription.value?.status ?? "inactive";
   });
 
   const daysUntilExpiry = computed(() => {
-    if (!subscription.value) return 0;
-    return subscription.value.daysRemaining;
+    return subscription.value?.daysRemaining ?? 0;
   });
 
   const isTrialUser = computed(() => {
-    return subscription.value?.isInTrial || false;
+    return subscription.value?.isInTrial ?? false;
   });
 
   const needsUpgrade = computed(() => {

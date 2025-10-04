@@ -64,7 +64,7 @@ export function useEntitlementGuard(options: EntitlementGuardOptions = {}) {
 
         if (!entitlementCheck.hasAccess) {
           accessDenied.value = true;
-          upgradeRequired.value = entitlementCheck.upgradeRequired || null;
+          upgradeRequired.value = entitlementCheck.upgradeRequired ?? null;
 
           if (options.redirectTo) {
             await router.push(options.redirectTo);
@@ -84,7 +84,7 @@ export function useEntitlementGuard(options: EntitlementGuardOptions = {}) {
 
         if (!contentCheck.hasAccess) {
           accessDenied.value = true;
-          upgradeRequired.value = contentCheck.upgradeRequired || null;
+          upgradeRequired.value = contentCheck.upgradeRequired ?? null;
 
           if (options.redirectTo) {
             await router.push(options.redirectTo);

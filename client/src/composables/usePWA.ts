@@ -135,8 +135,7 @@ export function usePWA() {
 
   // Get device info
   const getDeviceInfo = () => {
-    const userAgent = navigator.userAgent;
-    const platform = navigator.platform;
+    const { userAgent, platform } = navigator;
 
     return {
       isIOS: /iPad|iPhone|iPod/.test(userAgent),

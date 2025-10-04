@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, toRefs } from "vue";
 
 export interface InputProps {
   id?: string;
@@ -50,8 +50,11 @@ const emit = defineEmits<{
   focus: [event: FocusEvent];
 }>();
 
+// Destructure props with proper reactivity
+const { error, type } = toRefs(props);
+
 // Computed properties
-const hasError = computed(() => !!props.error);
+const hasError = computed(() => !!error.value);
 
 const inputClasses = computed(() => {
   const baseClasses = [
@@ -83,7 +86,7 @@ const inputClasses = computed(() => {
 // Event handlers
 const handleInput = (event: Event) => {
   const target = event.target as HTMLInputElement;
-  const value = props.type === "number" ? Number(target.value) : target.value;
+  const value = type.value === "number" ? Number(target.value) : target.value;
   emit("update:modelValue", value);
   emit("input", event);
 };
@@ -95,7 +98,6 @@ const handleBlur = (event: FocusEvent) => {
 const handleFocus = (event: FocusEvent) => {
   emit("focus", event);
 };
-
 </script>
 
 <style scoped>
