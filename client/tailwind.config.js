@@ -158,10 +158,11 @@ export default {
     },
   },
   plugins: [
-    require("@tailwindcss/forms"),
-    require("@tailwindcss/typography"),
-    require("@tailwindcss/aspect-ratio"),
-    require("tailwindcss-rtl"),
-    require("@tailwindcss/container-queries"),
+    // TODO: Add Tailwind CSS plugins when needed:
+    // require("@tailwindcss/forms"),
+    // require("@tailwindcss/typography"),
+    // require("@tailwindcss/aspect-ratio"),
+    // require("tailwindcss-rtl"),
+    // require("@tailwindcss/container-queries"),
   ],
 };
