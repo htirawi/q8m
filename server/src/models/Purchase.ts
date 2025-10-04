@@ -64,25 +64,19 @@ const purchaseSchema = new Schema<IPurchase>(
       type: Schema.Types.ObjectId,
       ref: "User",
       required: true,
-      index: true,
     },
     orderId: {
       type: String,
       required: true,
-      unique: true,
-      index: true,
     },
     paymentId: {
       type: String,
       required: true,
-      unique: true,
-      index: true,
     },
     paymentGateway: {
       type: String,
       enum: ["paypal", "aps", "hyperpay"],
       required: true,
-      index: true,
     },
     amount: {
       currency: {
@@ -106,7 +100,6 @@ const purchaseSchema = new Schema<IPurchase>(
       type: String,
       enum: ["pending", "completed", "failed", "refunded", "cancelled"],
       default: "pending",
-      index: true,
     },
     items: [
       {
@@ -240,10 +233,12 @@ const purchaseSchema = new Schema<IPurchase>(
 );
 
 // Indexes for performance
-purchaseSchema.index({ userId: 1, createdAt: -1 });
-purchaseSchema.index({ status: 1, createdAt: -1 });
-purchaseSchema.index({ paymentGateway: 1, status: 1 });
-purchaseSchema.index({ "customer.email": 1 });
+purchaseSchema.index({ orderId: 1 }, { unique: true, name: "uniq_order_id" });
+purchaseSchema.index({ paymentId: 1 }, { unique: true, name: "uniq_payment_id" });
+purchaseSchema.index({ userId: 1, createdAt: -1 }, { name: "idx_user_created" });
+purchaseSchema.index({ status: 1, createdAt: -1 }, { name: "idx_status_created" });
+purchaseSchema.index({ paymentGateway: 1, status: 1 }, { name: "idx_gateway_status" });
+purchaseSchema.index({ "customer.email": 1 }, { name: "idx_customer_email" });
 
 // Virtual for formatted amount
 purchaseSchema.virtual("formattedAmount").get(function () {

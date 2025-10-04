@@ -209,7 +209,7 @@ export function usePaymentCallback() {
 
       // Redirect to pricing page
       await router.push({
-        path: "/pricing",
+        path: "/subscribe",
         query: {
           cancelled: "true",
         },

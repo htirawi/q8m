@@ -1,4 +1,4 @@
-import { env } from "../config/env.js";
+import { features } from "../config/appConfig.js";
 import { Purchase, IPurchase } from "../models/Purchase.js";
 import { Subscription } from "../models/Subscription.js";
 import { entitlementService } from "./entitlement.service.js";
@@ -56,30 +56,34 @@ export class HyperPayService {
   private webhookSecret: string;
   private baseUrl: string;
   private isConfigured: boolean = false;
+  private hasLoggedWarning: boolean = false;
 
   private constructor() {
-    this.apiKey = env.HYPERPAY_API_KEY || "";
-    this.merchantId = env.HYPERPAY_MERCHANT_ID || "";
-    this.webhookSecret = env.HYPERPAY_WEBHOOK_SECRET || "";
+    this.apiKey = process.env.HYPERPAY_API_KEY || "";
+    this.merchantId = process.env.HYPERPAY_MERCHANT_ID || "";
+    this.webhookSecret = process.env.HYPERPAY_WEBHOOK_SECRET || "";
     // webhookSecret is used for webhook verification in production
     this.baseUrl =
-      env.NODE_ENV === "production"
+      process.env.NODE_ENV === "production"
         ? "https://api.hyperpay.com"
         : "https://api-sandbox.hyperpay.com";
 
-    if (this.apiKey && this.merchantId) {
+    if (features.hyperpay) {
       this.isConfigured = true;
     } else {
-      console.warn(
-        safeLogFields({
-          event: "hyperpay_configuration_warning",
-          message: "HyperPay service not fully configured",
-          missing: {
-            apiKey: !this.apiKey,
-            merchantId: !this.merchantId,
-          },
-        })
-      );
+      if (!this.hasLoggedWarning) {
+        console.warn(
+          safeLogFields({
+            event: "hyperpay_configuration_warning",
+            message: "HyperPay service not fully configured",
+            missing: {
+              apiKey: !this.apiKey,
+              merchantId: !this.merchantId,
+            },
+          })
+        );
+        this.hasLoggedWarning = true;
+      }
     }
   }
 
@@ -97,7 +101,7 @@ export class HyperPayService {
   public getConfigurationStatus(): { isConfigured: boolean; environment: string } {
     return {
       isConfigured: this.isConfigured,
-      environment: env.NODE_ENV === "production" ? "production" : "sandbox",
+      environment: process.env.NODE_ENV === "production" ? "production" : "sandbox",
     };
   }
 
@@ -106,9 +110,11 @@ export class HyperPayService {
    * @param request HyperPay payment request details.
    * @returns Checkout URL or payment form data.
    */
-  public async createPayment(request: HyperPayPaymentRequest): Promise<HyperPayPaymentResponse> {
+  public async createPayment(
+    request: HyperPayPaymentRequest
+  ): Promise<HyperPayPaymentResponse | { ok: false; code: "NOT_CONFIGURED" }> {
     if (!this.isConfigured) {
-      throw new Error("HyperPay service not configured");
+      return { ok: false, code: "NOT_CONFIGURED" };
     }
 
     const pricingPlan = await pricingService.getPlanPricing(request.planType, request.currency);
@@ -184,7 +190,7 @@ export class HyperPayService {
         },
         return_url: request.returnUrl,
         cancel_url: request.cancelUrl,
-        webhook_url: `${env.SERVER_URL || "http://localhost:3000"}/api/payments/webhooks/hyperpay`,
+        webhook_url: `${process.env.SERVER_URL || "http://localhost:3000"}/api/payments/webhooks/hyperpay`,
       };
 
       const response = await fetch(`${this.baseUrl}/v1/payments`, {
@@ -250,9 +256,12 @@ export class HyperPayService {
    */
   public async verifyPayment(
     paymentId: string
-  ): Promise<{ success: boolean; status: string; purchaseId?: string; error?: string }> {
+  ): Promise<
+    | { success: boolean; status: string; purchaseId?: string; error?: string }
+    | { ok: false; code: "NOT_CONFIGURED" }
+  > {
     if (!this.isConfigured) {
-      throw new Error("HyperPay service not configured");
+      return { ok: false, code: "NOT_CONFIGURED" };
     }
 
     // Validate paymentId to prevent SSRF
@@ -336,7 +345,7 @@ export class HyperPayService {
    */
   public async handleWebhook(
     webhookData: HyperPayWebhookData
-  ): Promise<{ success: boolean; error?: string }> {
+  ): Promise<{ success: boolean; error?: string } | { ok: false; code: "NOT_CONFIGURED" }> {
     if (!this.isConfigured) {
       console.warn(
         safeLogFields({
@@ -344,7 +353,7 @@ export class HyperPayService {
           message: "HyperPay webhook handler not configured",
         })
       );
-      return { success: false, error: "Service not configured" };
+      return { ok: false, code: "NOT_CONFIGURED" };
     }
 
     try {
@@ -458,9 +467,11 @@ export class HyperPayService {
     paymentId: string,
     amount: number,
     reason: string = "requested_by_customer"
-  ): Promise<{ success: boolean; refundId?: string; error?: string }> {
+  ): Promise<
+    { success: boolean; refundId?: string; error?: string } | { ok: false; code: "NOT_CONFIGURED" }
+  > {
     if (!this.isConfigured) {
-      throw new Error("HyperPay service not configured");
+      return { ok: false, code: "NOT_CONFIGURED" };
     }
 
     try {
@@ -598,9 +609,9 @@ export class HyperPayService {
    */
   public async getPaymentStatus(
     paymentId: string
-  ): Promise<{ status: string; details: unknown } | null> {
+  ): Promise<{ status: string; details: unknown } | null | { ok: false; code: "NOT_CONFIGURED" }> {
     if (!this.isConfigured) {
-      throw new Error("HyperPay service not configured");
+      return { ok: false, code: "NOT_CONFIGURED" };
     }
 
     // Validate paymentId to prevent SSRF

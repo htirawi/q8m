@@ -4,7 +4,6 @@
       <div class="hero-content">
         <h1 id="hero-title" class="hero-title">
           {{ $t("home.hero.title") }}
-
         </h1>
         <p class="hero-description">
           {{ $t("home.hero.description") }}
@@ -13,29 +12,22 @@
           <Button variant="primary" size="lg" :to="{ name: 'register' }" class="hero-cta">
             {{ $t("home.hero.cta") }}
           </Button>
-          <Button variant="secondary" size="lg" :to="{ name: 'pricing' }" class="hero-secondary">
+          <Button variant="secondary" size="lg" :to="{ name: 'subscribe' }" class="hero-secondary">
             {{ $t("home.hero.pricing") }}
-
           </Button>
         </div>
         <div class="hero-stats">
           <div class="stat-item">
             <span class="stat-number">500+</span>
-            <span class="stat-label">{{ $t("home.hero.stats.questions") }}
-
-</span>
+            <span class="stat-label">{{ $t("home.hero.stats.questions") }} </span>
           </div>
           <div class="stat-item">
             <span class="stat-number">10+</span>
-            <span class="stat-label">{{ $t("home.hero.stats.frameworks") }}
-
-</span>
+            <span class="stat-label">{{ $t("home.hero.stats.frameworks") }} </span>
           </div>
           <div class="stat-item">
             <span class="stat-number">95%</span>
-            <span class="stat-label">{{ $t("home.hero.stats.success") }}
-
-</span>
+            <span class="stat-label">{{ $t("home.hero.stats.success") }} </span>
           </div>
         </div>
       </div>

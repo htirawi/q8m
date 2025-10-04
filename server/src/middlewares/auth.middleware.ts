@@ -256,10 +256,14 @@ export const authenticate = createAuthMiddleware();
 
 // Fastify plugin registration
 export default async function authPlugin(fastify: FastifyInstance) {
+  console.log("🔐 Registering auth plugin...");
+
   // Register authentication methods on fastify instance
   fastify.decorate("authenticate", createAuthMiddleware);
   fastify.decorate("requireRole", (roles: string | string[]) => {
     const roleArray = Array.isArray(roles) ? roles : [roles];
     return createAuthMiddleware({ requiredRole: roleArray });
   });
+
+  console.log("✅ Auth plugin registered successfully");
 }

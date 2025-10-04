@@ -1,5 +1,6 @@
 import type { FastifyInstance } from "fastify";
 import { z } from "zod";
+import { zodToJsonSchema } from "zod-to-json-schema";
 
 const pricingTiers = {
   JUNIOR: {
@@ -89,9 +90,9 @@ export default async function pricingRoutes(fastify: FastifyInstance) {
     "/:tierId",
     {
       schema: {
-        params: z.object({
+        params: zodToJsonSchema(z.object({
           tierId: z.enum(["junior", "intermediate", "senior", "bundle"]),
-        }),
+        })),
       },
     },
     async (request, reply) => {
@@ -130,11 +131,11 @@ export default async function pricingRoutes(fastify: FastifyInstance) {
     "/convert",
     {
       schema: {
-        body: z.object({
+        body: zodToJsonSchema(z.object({
           amount: z.number().positive(),
           fromCurrency: z.string().length(3),
           toCurrency: z.string().length(3),
-        }),
+        })),
       },
     },
     async (request, reply) => {

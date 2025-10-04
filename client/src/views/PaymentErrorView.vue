@@ -229,12 +229,12 @@ const retryPayment = () => {
   if (plan) {
     router.push(`/checkout?plan=${plan}`);
   } else {
-    router.push("/pricing");
+    router.push("/subscribe");
   }
 };
 
 const gotopricing = () => {
-  router.push("/pricing");
+  router.push("/subscribe");
 };
 
 const parseerrordetails = () => {

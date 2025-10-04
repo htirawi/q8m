@@ -133,6 +133,197 @@
     "social": "Social",
     "copyright": "© {year} q8m. All rights reserved."
   },
+  "auth": {
+    "register": {
+      "title": "Create your account",
+      "subtitle": "Join thousands of developers preparing for their next interview",
+      "createAccount": "Create Account",
+      "creating": "Creating Account...",
+      "agreeToTerms": "I agree to the",
+      "termsOfService": "Terms of Service",
+      "and": "and",
+      "privacyPolicy": "Privacy Policy",
+      "orContinueWith": "Or continue with",
+      "google": "Google",
+      "facebook": "Facebook",
+      "alreadyHaveAccount": "Already have an account?",
+      "signIn": "Sign in"
+    },
+    "fields": {
+      "name": "Full Name",
+      "namePlaceholder": "Enter your full name",
+      "email": "Email Address",
+      "emailPlaceholder": "Enter your email address",
+      "password": "Password",
+      "passwordPlaceholder": "Enter your password",
+      "confirmPassword": "Confirm Password",
+      "confirmPasswordPlaceholder": "Confirm your password"
+    },
+    "validation": {
+      "nameRequired": "Name is required",
+      "nameMinLength": "Name must be at least 2 characters",
+      "emailRequired": "Email is required",
+      "emailInvalid": "Please enter a valid email address",
+      "passwordRequired": "Password is required",
+      "passwordMinLength": "Password must be at least 8 characters",
+      "confirmPasswordRequired": "Please confirm your password",
+      "passwordsDoNotMatch": "Passwords do not match",
+      "acceptTermsRequired": "You must accept the terms and conditions",
+      "passwordStrength": {
+        "weak": "Weak password",
+        "strong": "Strong password"
+      }
+    }
+  },
+  "pricing": {
+    "hero": {
+      "title": "Master Frontend Development Interviews",
+      "subtitle": "Prepare for your next frontend developer interview with 500+ curated questions covering Vue.js, React, Angular, and more. Interactive learning with real-time feedback.",
+      "trustedBy": "Trusted by developers worldwide",
+      "valueProp1": "500+ Curated Questions",
+      "valueProp2": "Real-time Feedback",
+      "valueProp3": "Industry Expert Content"
+    },
+    "billing": {
+      "label": "Choose your billing cycle",
+      "monthly": "Monthly",
+      "yearly": "Yearly",
+      "savePercent": "Save {percent}%",
+      "month": "month",
+      "year": "year"
+    },
+    "plans": {
+      "title": "Choose Your Plan",
+      "junior": {
+        "title": "Junior",
+        "cta": "Get Started Free",
+        "features": {
+          "basic": "100+ Basic Questions",
+          "limited": "Limited AI Assistant Usage",
+          "community": "Community Support",
+          "mobile": "Mobile Access"
+        }
+      },
+      "intermediate": {
+        "title": "Intermediate",
+        "popular": "Most Popular",
+        "cta": "Upgrade Now",
+        "features": {
+          "advanced": "300+ Advanced Questions",
+          "allTypes": "All Question Types",
+          "explanations": "Detailed Explanations",
+          "analytics": "Performance Analytics",
+          "bookmarks": "Bookmarks & Notes",
+          "priority": "Priority Support"
+        }
+      },
+      "senior": {
+        "title": "Senior",
+        "cta": "Upgrade Now",
+        "features": {
+          "expert": "500+ Expert Questions",
+          "systemDesign": "System Design Questions",
+          "mockInterviews": "Mock Interviews",
+          "advancedAnalytics": "Advanced Analytics",
+          "customPlans": "Custom Study Plans",
+          "expertReviews": "Expert Reviews",
+          "priority": "Priority Support"
+        }
+      },
+      "bundle": {
+        "title": "Bundle",
+        "recommended": "Recommended",
+        "cta": "Get Bundle",
+        "features": {
+          "everything": "Everything in Senior",
+          "custom": "Custom Questions",
+          "support": "24/7 Support",
+          "team": "Team Management",
+          "lifetime": "Lifetime Updates",
+          "unlimitedAI": "Unlimited AI Assistant Usage"
+        }
+      }
+    },
+    "features": {
+      "title": "Why Choose q8m?",
+      "description": "Comprehensive interview preparation designed by industry experts",
+      "comprehensive": {
+        "title": "Comprehensive Coverage",
+        "description": "500+ questions covering all major frontend frameworks and technologies"
+      },
+      "interactive": {
+        "title": "Interactive Learning",
+        "description": "Real-time feedback and explanations to help you understand concepts deeply"
+      },
+      "analytics": {
+        "title": "Progress Analytics",
+        "description": "Track your progress and identify areas for improvement"
+      },
+      "community": {
+        "title": "Expert Community",
+        "description": "Learn from industry experts and connect with fellow developers"
+      },
+      "secure": {
+        "title": "Secure & Reliable",
+        "description": "Your data is protected with enterprise-grade security"
+      },
+      "mobile": {
+        "title": "Mobile Optimized",
+        "description": "Practice anywhere with our mobile-first design"
+      }
+    },
+    "comparison": {
+      "title": "Compare Plans",
+      "description": "See what's included in each plan",
+      "features": "Features",
+      "basicQuestions": "Basic Questions",
+      "advancedQuestions": "Advanced Questions",
+      "systemDesign": "System Design",
+      "mockInterviews": "Mock Interviews",
+      "analytics": "Analytics",
+      "prioritySupport": "Priority Support",
+      "unlimitedAI": "Unlimited AI Assistant",
+      "customContent": "Custom Content",
+      "teamManagement": "Team Management"
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "subtitle": "Everything you need to know about our pricing",
+      "question1": "Can I change my plan anytime?",
+      "answer1": "Yes, you can upgrade or downgrade your plan at any time. Changes take effect immediately.",
+      "question2": "What payment methods do you accept?",
+      "answer2": "We accept PayPal, credit cards, and local payment methods for Middle Eastern countries.",
+      "question3": "Is there a free trial?",
+      "answer3": "Yes, all paid plans come with a 7-day free trial. No credit card required.",
+      "question4": "Can I cancel my subscription?",
+      "answer4": "Yes, you can cancel your subscription at any time. You'll retain access until the end of your billing period.",
+      "question5": "Do you offer refunds?",
+      "answer5": "We offer a 7-day money-back guarantee for all paid plans. If you're not satisfied, contact our support team.",
+      "question6": "Is there a student discount?",
+      "answer6": "Yes, we offer special pricing for students. Contact our support team with your student ID for more information."
+    },
+    "guarantee": {
+      "title": "7-Day Money-Back Guarantee",
+      "description": "Not satisfied? Get a full refund within 7 days, no questions asked.",
+      "days": "{days}-day guarantee"
+    },
+    "finalCta": {
+      "title": "Ready to Ace Your Next Interview?",
+      "subtitle": "Join thousands of developers who have successfully landed their dream jobs",
+      "cta": "Get Started Free"
+    },
+    "sticky": {
+      "title": "Start your journey",
+      "price": "From ${price}",
+      "cta": "Get Started"
+    },
+    "trust": {
+      "paypal": "PayPal",
+      "hyperpay": "HyperPay",
+      "aps": "APS",
+      "ssl": "SSL Secured"
+    }
+  },
   "a11y": {
     "skipToMain": "Skip to main content",
     "mainNavigation": "Main navigation",

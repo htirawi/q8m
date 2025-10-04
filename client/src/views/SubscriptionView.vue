@@ -3,21 +3,15 @@
     <div class="subscription-container">
       <!-- Header -->
       <div class="subscription-header">
-        <h1 class="subscription-title">{{ $t("subscription.title") }}
-
-</h1>
-        <p class="subscription-subtitle">{{ $t("subscription.subtitle") }}
-
-</p>
+        <h1 class="subscription-title">{{ $t("subscription.title") }}</h1>
+        <p class="subscription-subtitle">{{ $t("subscription.subtitle") }}</p>
       </div>
 
       <!-- Loading State -->
       <div v-if="paymentStore.isLoading" class="loading-container">
         <div class="loading-spinner">
           <div class="h-12 w-12 animate-spin rounded-full border-b-2 border-indigo-600"></div>
-          <p class="mt-4 text-gray-600 dark:text-gray-300">{{ $t("common.loading") }}
-
-</p>
+          <p class="mt-4 text-gray-600 dark:text-gray-300">{{ $t("common.loading") }}</p>
         </div>
       </div>
 
@@ -42,15 +36,10 @@
               />
             </svg>
           </div>
-          <h2 class="no-subscription-title">{{ $t("subscription.noSubscription.title") }}
-
-</h2>
-          <p class="no-subscription-message">{{ $t("subscription.noSubscription.message") }}
-
-</p>
+          <h2 class="no-subscription-title">{{ $t("subscription.noSubscription.title") }}</h2>
+          <p class="no-subscription-message">{{ $t("subscription.noSubscription.message") }}</p>
           <button @click="goToPricing" class="btn-primary">
             {{ $t("subscription.noSubscription.choosePlan") }}
-
           </button>
         </div>
       </div>
@@ -61,34 +50,23 @@
         <div class="plan-card">
           <div class="plan-header">
             <div class="plan-info">
-              <h2 class="plan-name">{{ paymentStore.subscription.planType }}
-
-</h2>
+              <h2 class="plan-name">{{ paymentStore.subscription.planType }}</h2>
               <div class="plan-badge" :class="statusBadgeClass">
                 {{ $t(`subscription.status.${paymentStore.subscription.status}`) }}
-
               </div>
             </div>
             <div class="plan-price">
-              <span class="price-amount">{{ paymentStore.subscription.price.amount }}
-
-</span>
-              <span class="price-currency">{{ paymentStore.subscription.price.currency }}
-
-</span>
-              <span class="price-period">{{
-                $t(`subscription.billing.${paymentStore.subscription.billingCycle}`)
-              }}
-
-</span>
+              <span class="price-amount">{{ paymentStore.subscription.price.amount }} </span>
+              <span class="price-currency">{{ paymentStore.subscription.price.currency }} </span>
+              <span class="price-period"
+                >{{ $t(`subscription.billing.${paymentStore.subscription.billingCycle}`) }}
+              </span>
             </div>
           </div>
 
           <!-- Plan Features -->
           <div class="plan-features">
-            <h3 class="features-title">{{ $t("subscription.features.title") }}
-
-</h3>
+            <h3 class="features-title">{{ $t("subscription.features.title") }}</h3>
             <ul class="features-list">
               <li v-for="feature in planFeatures" :key="feature" class="feature-item">
                 <svg
@@ -104,18 +82,14 @@
                     d="M5 13l4 4L19 7"
                   />
                 </svg>
-                <span>{{ feature }}
-
-</span>
+                <span>{{ feature }} </span>
               </li>
             </ul>
           </div>
 
           <!-- Current Entitlements -->
           <div class="entitlements-section">
-            <h3 class="entitlements-title">{{ $t("subscription.entitlements.title") }}
-
-</h3>
+            <h3 class="entitlements-title">{{ $t("subscription.entitlements.title") }}</h3>
             <div class="entitlements-grid">
               <div
                 v-for="entitlement in currentEntitlements"
@@ -131,49 +105,36 @@
                     d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
                   />
                 </svg>
-                <span>{{ $t(`entitlements.${entitlement}`) }}
-
-</span>
+                <span>{{ $t(`entitlements.${entitlement}`) }} </span>
               </div>
             </div>
             <p class="entitlements-description">
               {{ $t("subscription.entitlements.description") }}
-
             </p>
           </div>
 
           <!-- Subscription Status -->
           <div class="subscription-status">
             <div class="status-item">
-              <span class="status-label">{{ $t("subscription.status.label") }}
-
-</span>
+              <span class="status-label">{{ $t("subscription.status.label") }} </span>
               <span class="status-value" :class="statusClass">
                 {{ $t(`subscription.status.${paymentStore.subscription.status}`) }}
-
               </span>
             </div>
 
             <div v-if="paymentStore.subscription.isActive" class="status-item">
-              <span class="status-label">{{ $t("subscription.nextBilling") }}
-
-</span>
-              <span class="status-value">{{ formattedNextBilling }}
-
-</span>
+              <span class="status-label">{{ $t("subscription.nextBilling") }} </span>
+              <span class="status-value">{{ formattedNextBilling }} </span>
             </div>
 
             <div v-if="paymentStore.subscription.isInTrial" class="status-item">
-              <span class="status-label">{{ $t("subscription.trialRemaining") }}
-
-</span>
+              <span class="status-label">{{ $t("subscription.trialRemaining") }} </span>
               <span class="status-value text-blue-600 dark:text-blue-400">
                 {{
                   $t("subscription.daysRemaining", {
                     days: paymentStore.subscription.daysRemaining,
                   })
                 }}
-
               </span>
             </div>
           </div>
@@ -183,7 +144,6 @@
         <div class="action-buttons">
           <button v-if="canUpgrade" @click="goToPricing" class="btn-primary">
             {{ $t("subscription.upgradePlan") }}
-
           </button>
 
           <button
@@ -192,21 +152,17 @@
             class="btn-danger"
           >
             {{ $t("subscription.cancelSubscription") }}
-
           </button>
 
           <button @click="goToQuizzes" class="btn-secondary">
             {{ $t("subscription.startQuizzes") }}
-
           </button>
         </div>
 
         <!-- Billing History -->
         <div class="billing-history">
           <div class="history-header">
-            <h3 class="history-title">{{ $t("subscription.billingHistory") }}
-
-</h3>
+            <h3 class="history-title">{{ $t("subscription.billingHistory") }}</h3>
             <button @click="refreshBillingHistory" class="refresh-button">
               <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -217,35 +173,25 @@
                 />
               </svg>
               {{ $t("common.refresh") }}
-
             </button>
           </div>
 
           <div v-if="paymentStore.purchases.length === 0" class="no-history">
-            <p class="no-history-text">{{ $t("subscription.noHistory") }}
-
-</p>
+            <p class="no-history-text">{{ $t("subscription.noHistory") }}</p>
           </div>
 
           <div v-else class="history-list">
             <div v-for="purchase in paymentStore.purchases" :key="purchase.id" class="history-item">
               <div class="history-info">
-                <h4 class="history-plan">{{ purchase.items[0]?.name || purchase.id }}
-
-</h4>
-                <p class="history-date">{{ formatDate(purchase.createdAt) }}
-
-</p>
+                <h4 class="history-plan">{{ purchase.items[0]?.name || purchase.id }}</h4>
+                <p class="history-date">{{ formatDate(purchase.createdAt) }}</p>
               </div>
               <div class="history-details">
                 <span class="history-amount"
                   >{{ purchase.amount.value }} {{ purchase.amount.currency }}
-
-</span
-                >
+                </span>
                 <span class="history-status" :class="getStatusClass(purchase.status)">
                   {{ $t(`subscription.purchaseStatus.${purchase.status}`) }}
-
                 </span>
               </div>
             </div>
@@ -257,9 +203,7 @@
       <div v-if="showCancelModal" class="modal-overlay" @click="showCancelModal = false">
         <div class="modal-content" @click.stop>
           <div class="modal-header">
-            <h3 class="modal-title">{{ $t("subscription.cancelConfirm") }}
-
-</h3>
+            <h3 class="modal-title">{{ $t("subscription.cancelConfirm") }}</h3>
             <button @click="showCancelModal = false" class="modal-close">
               <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -273,21 +217,14 @@
           </div>
 
           <div class="modal-body">
-            <p class="modal-message">{{ $t("subscription.cancelMessage") }}
-
-</p>
+            <p class="modal-message">{{ $t("subscription.cancelMessage") }}</p>
 
             <div class="cancel-reasons">
-              <label class="reason-label">{{ $t("subscription.cancelReason") }}
-
-</label>
+              <label class="reason-label">{{ $t("subscription.cancelReason") }} </label>
               <select v-model="cancelReason" class="reason-select">
-                <option value="">{{ $t("subscription.selectReason") }}
-
-</option>
+                <option value="">{{ $t("subscription.selectReason") }}</option>
                 <option v-for="(reason, key) in cancelReasons" :key="key" :value="key">
                   {{ reason }}
-
                 </option>
               </select>
             </div>
@@ -296,7 +233,6 @@
           <div class="modal-footer">
             <button @click="showCancelModal = false" class="btn-secondary">
               {{ $t("common.cancel") }}
-
             </button>
             <button
               @click="cancelSubscription"
@@ -306,11 +242,8 @@
               <span v-if="paymentStore.isLoading" class="flex items-center">
                 <div class="mr-2 h-4 w-4 animate-spin rounded-full border-b-2 border-white"></div>
                 {{ $t("common.processing") }}
-
               </span>
-              <span v-else>{{ $t("subscription.confirmCancel") }}
-
-</span>
+              <span v-else>{{ $t("subscription.confirmCancel") }} </span>
             </button>
           </div>
         </div>
@@ -438,7 +371,7 @@ const cancelReasons = computed(() => ({
 
 // Methods
 const goToPricing = () => {
-  router.push("/pricing");
+  router.push("/subscribe");
 };
 
 const gotoquizzes = () => {

@@ -1,5 +1,5 @@
 import paypal from "paypal-rest-sdk";
-import { env } from "../config/env.js";
+import { features } from "../config/appConfig.js";
 import { Purchase } from "../models/Purchase.js";
 import { Subscription } from "../models/Subscription.js";
 import { User } from "../models/User.js";
@@ -35,6 +35,7 @@ export interface PayPalWebhookData {
 export class PayPalService {
   private static instance: PayPalService;
   private isConfigured: boolean = false;
+  private hasLoggedWarning: boolean = false;
 
   private constructor() {
     this.configurePayPal();
@@ -48,27 +49,31 @@ export class PayPalService {
   }
 
   private configurePayPal(): void {
-    if (!env.PAYPAL_CLIENT_ID || !env.PAYPAL_CLIENT_SECRET) {
-      console.warn("PayPal credentials not configured");
+    if (!features.paypal) {
+      if (!this.hasLoggedWarning) {
+        console.warn("PayPal credentials not configured");
+        this.hasLoggedWarning = true;
+      }
       return;
     }
 
     paypal.configure({
-      mode: env.NODE_ENV === "production" ? "live" : "sandbox",
-      client_id: env.PAYPAL_CLIENT_ID,
-      client_secret: env.PAYPAL_CLIENT_SECRET,
+      mode: process.env.NODE_ENV === "production" ? "live" : "sandbox",
+      client_id: process.env.PAYPAL_CLIENT_ID!,
+      client_secret: process.env.PAYPAL_CLIENT_SECRET!,
     });
 
     this.isConfigured = true;
-    console.warn("PayPal service configured successfully");
   }
 
   /**
    * Create PayPal payment
    */
-  async createPayment(request: PayPalPaymentRequest): Promise<PayPalPaymentResponse> {
+  async createPayment(
+    request: PayPalPaymentRequest
+  ): Promise<PayPalPaymentResponse | { ok: false; code: "NOT_CONFIGURED" }> {
     if (!this.isConfigured) {
-      throw new Error("PayPal service not configured");
+      return { ok: false, code: "NOT_CONFIGURED" };
     }
 
     try {
@@ -207,9 +212,12 @@ export class PayPalService {
   async executePayment(
     paymentId: string,
     payerId: string
-  ): Promise<{ success: boolean; purchaseId?: string; error?: string }> {
+  ): Promise<
+    | { success: boolean; purchaseId?: string; error?: string }
+    | { ok: false; code: "NOT_CONFIGURED" }
+  > {
     if (!this.isConfigured) {
-      throw new Error("PayPal service not configured");
+      return { ok: false, code: "NOT_CONFIGURED" };
     }
 
     try {
@@ -319,9 +327,9 @@ export class PayPalService {
   async handleWebhook(
     webhookData: PayPalWebhookData,
     signature: string
-  ): Promise<{ success: boolean; error?: string }> {
+  ): Promise<{ success: boolean; error?: string } | { ok: false; code: "NOT_CONFIGURED" }> {
     if (!this.isConfigured) {
-      return { success: false, error: "PayPal service not configured" };
+      return { ok: false, code: "NOT_CONFIGURED" };
     }
 
     try {
@@ -367,7 +375,7 @@ export class PayPalService {
     // This is a simplified version - implement proper verification based on PayPal's documentation
     try {
       const expectedSignature = crypto
-        .createHmac("sha256", env.PAYPAL_WEBHOOK_SECRET || "")
+        .createHmac("sha256", process.env.PAYPAL_WEBHOOK_SECRET || "")
         .update(JSON.stringify(webhookData))
         .digest("hex");
 
@@ -441,9 +449,11 @@ export class PayPalService {
   /**
    * Get payment details
    */
-  async getPaymentDetails(paymentId: string): Promise<unknown> {
+  async getPaymentDetails(
+    paymentId: string
+  ): Promise<unknown | { ok: false; code: "NOT_CONFIGURED" }> {
     if (!this.isConfigured) {
-      throw new Error("PayPal service not configured");
+      return { ok: false, code: "NOT_CONFIGURED" };
     }
 
     return new Promise((resolve, reject) => {
@@ -474,8 +484,8 @@ export class PayPalService {
   } {
     return {
       configured: this.isConfigured,
-      mode: env.NODE_ENV === "production" ? "live" : "sandbox",
-      clientId: this.isConfigured ? env.PAYPAL_CLIENT_ID || null : null,
+      mode: process.env.NODE_ENV === "production" ? "live" : "sandbox",
+      clientId: this.isConfigured ? process.env.PAYPAL_CLIENT_ID || null : null,
     };
   }
 }

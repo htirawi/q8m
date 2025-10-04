@@ -1,5 +1,6 @@
 import { FastifyInstance } from "fastify";
 import { z } from "zod";
+import { zodToJsonSchema } from "zod-to-json-schema";
 import { authenticate } from "../middlewares/auth.middleware.js";
 import { entitlementService } from "../services/entitlement.service.js";
 
@@ -44,7 +45,7 @@ export default async function entitlementRoutes(fastify: FastifyInstance) {
     {
       preHandler: [authenticate],
       schema: {
-        body: checkEntitlementSchema,
+        body: zodToJsonSchema(checkEntitlementSchema),
       },
     },
     async (request, reply) => {
@@ -81,7 +82,7 @@ export default async function entitlementRoutes(fastify: FastifyInstance) {
     {
       preHandler: [authenticate],
       schema: {
-        body: checkContentAccessSchema,
+        body: zodToJsonSchema(checkContentAccessSchema),
       },
     },
     async (request, reply) => {
@@ -113,9 +114,11 @@ export default async function entitlementRoutes(fastify: FastifyInstance) {
     {
       preHandler: [authenticate],
       schema: {
-        body: z.object({
-          requiredEntitlements: z.array(z.enum(["JUNIOR", "INTERMEDIATE", "SENIOR", "BUNDLE"])),
-        }),
+        body: zodToJsonSchema(
+          z.object({
+            requiredEntitlements: z.array(z.enum(["JUNIOR", "INTERMEDIATE", "SENIOR", "BUNDLE"])),
+          })
+        ),
       },
     },
     async (request, reply) => {
@@ -172,9 +175,11 @@ export default async function entitlementRoutes(fastify: FastifyInstance) {
     {
       preHandler: [authenticate],
       schema: {
-        querystring: z.object({
-          days: z.string().transform(Number).optional().default("7"),
-        }),
+        querystring: zodToJsonSchema(
+          z.object({
+            days: z.string().transform(Number).optional().default("7"),
+          })
+        ),
       },
     },
     async (request, reply) => {
@@ -275,9 +280,11 @@ export default async function entitlementRoutes(fastify: FastifyInstance) {
     {
       preHandler: [authenticate],
       schema: {
-        params: z.object({
-          userId: z.string(),
-        }),
+        params: zodToJsonSchema(
+          z.object({
+            userId: z.string(),
+          })
+        ),
       },
     },
     async (request, reply) => {

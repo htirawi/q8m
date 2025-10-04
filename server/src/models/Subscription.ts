@@ -34,35 +34,29 @@ const subscriptionSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "User",
       required: true,
-      index: true,
     },
     purchaseId: {
       type: Schema.Types.ObjectId,
       ref: "Purchase",
       required: true,
-      index: true,
     },
     planType: {
       type: String,
       enum: ["INTERMEDIATE", "SENIOR", "BUNDLE"],
       required: true,
-      index: true,
     },
     status: {
       type: String,
       enum: ["active", "cancelled", "expired", "suspended", "pending"],
       default: "pending",
-      index: true,
     },
     currentPeriodStart: {
       type: Date,
       required: true,
-      index: true,
     },
     currentPeriodEnd: {
       type: Date,
       required: true,
-      index: true,
     },
     cancelAtPeriodEnd: {
       type: Boolean,
@@ -127,10 +121,14 @@ const subscriptionSchema = new Schema(
 );
 
 // Indexes for performance
-subscriptionSchema.index({ userId: 1, status: 1 });
-subscriptionSchema.index({ status: 1, currentPeriodEnd: 1 });
-subscriptionSchema.index({ planType: 1, status: 1 });
-subscriptionSchema.index({ cancelAtPeriodEnd: 1, currentPeriodEnd: 1 });
+subscriptionSchema.index({ userId: 1, status: 1 }, { name: "idx_user_status" });
+subscriptionSchema.index({ status: 1, currentPeriodEnd: 1 }, { name: "idx_status_period_end" });
+subscriptionSchema.index({ planType: 1, status: 1 }, { name: "idx_plan_status" });
+subscriptionSchema.index(
+  { cancelAtPeriodEnd: 1, currentPeriodEnd: 1 },
+  { name: "idx_cancel_period_end" }
+);
+subscriptionSchema.index({ purchaseId: 1 }, { unique: true, name: "uniq_purchase_id" });
 
 // Virtual for subscription validity
 subscriptionSchema.virtual("isActive").get(function () {

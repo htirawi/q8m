@@ -3,7 +3,6 @@
     <!-- Skip Links for Accessibility -->
     <a href="#main-content" class="skip-link" @click="skipToMain">
       {{ $t("a11y.skipToMain") }}
-
     </a>
 
     <!-- Header -->
@@ -29,9 +28,9 @@
               {{ $t("navigation.home") }}
             </RouterLink>
             <RouterLink
-              to="/pricing"
+              to="/subscribe"
               class="nav-link"
-              :class="{ 'nav-link--active': $route.name === 'pricing' }"
+              :class="{ 'nav-link--active': $route.name === 'subscribe' }"
               role="menuitem"
             >
               {{ $t("navigation.pricing") }}
@@ -57,7 +56,6 @@
                 role="menuitem"
               >
                 {{ $t("navigation.account") }}
-
               </RouterLink>
               <button
                 @click="handleLogout"
@@ -66,17 +64,14 @@
                 :aria-label="$t('a11y.logout')"
               >
                 {{ $t("navigation.logout") }}
-
               </button>
             </template>
             <template v-else>
               <RouterLink to="/login" class="nav-link" role="menuitem">
                 {{ $t("navigation.login") }}
-
               </RouterLink>
               <RouterLink to="/register" class="nav-link nav-link--primary" role="menuitem">
                 {{ $t("navigation.register") }}
-
               </RouterLink>
             </template>
           </div>
@@ -94,56 +89,40 @@
       <div class="footer-container">
         <div class="footer-content">
           <div class="footer-section">
-            <h3 class="footer-title">{{ $t("footer.company") }}
-
-</h3>
+            <h3 class="footer-title">{{ $t("footer.company") }}</h3>
             <ul class="footer-links" role="list">
               <li>
-                <RouterLink to="/about" class="footer-link">{{
-                  $t("navigation.about")
-                }}
-
-</RouterLink>
+                <RouterLink to="/about" class="footer-link"
+                  >{{ $t("navigation.about") }}
+                </RouterLink>
               </li>
               <li>
-                <RouterLink to="/contact" class="footer-link">{{
-                  $t("navigation.contact")
-                }}
-
-</RouterLink>
+                <RouterLink to="/contact" class="footer-link"
+                  >{{ $t("navigation.contact") }}
+                </RouterLink>
               </li>
               <li>
-                <RouterLink to="/help" class="footer-link">{{ $t("navigation.help") }}
-
-</RouterLink>
+                <RouterLink to="/help" class="footer-link">{{ $t("navigation.help") }} </RouterLink>
               </li>
             </ul>
           </div>
           <div class="footer-section">
-            <h3 class="footer-title">{{ $t("footer.legal") }}
-
-</h3>
+            <h3 class="footer-title">{{ $t("footer.legal") }}</h3>
             <ul class="footer-links" role="list">
               <li>
-                <RouterLink to="/privacy" class="footer-link">{{
-                  $t("navigation.privacy")
-                }}
-
-</RouterLink>
+                <RouterLink to="/privacy" class="footer-link"
+                  >{{ $t("navigation.privacy") }}
+                </RouterLink>
               </li>
               <li>
-                <RouterLink to="/terms" class="footer-link">{{
-                  $t("navigation.terms")
-                }}
-
-</RouterLink>
+                <RouterLink to="/terms" class="footer-link"
+                  >{{ $t("navigation.terms") }}
+                </RouterLink>
               </li>
             </ul>
           </div>
           <div class="footer-section">
-            <h3 class="footer-title">{{ $t("footer.social") }}
-
-</h3>
+            <h3 class="footer-title">{{ $t("footer.social") }}</h3>
             <ul class="footer-links" role="list">
               <li>
                 <a href="#" class="footer-link" :aria-label="$t('a11y.followOnTwitter')">Twitter</a>
@@ -162,7 +141,6 @@
         <div class="footer-bottom">
           <p class="footer-copyright">
             {{ $t("footer.copyright", { year: new Date().getFullYear() }) }}
-
           </p>
         </div>
       </div>

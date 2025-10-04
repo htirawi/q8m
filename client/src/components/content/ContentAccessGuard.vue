@@ -254,7 +254,7 @@ const availablePlans = computed(() => {
 // Methods
 const goToPricing = () => {
   const query = props.requiredContentLevel ? { upgrade: props.requiredContentLevel } : {};
-  router.push({ path: "/pricing", query });
+  router.push({ path: "/subscribe", query });
 };
 
 const selectplan = (plan: PlanPricing) => {

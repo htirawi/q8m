@@ -4,7 +4,6 @@
       <div class="pricing-teaser-header">
         <h2 id="pricing-title" class="pricing-teaser-title">
           {{ $t("home.pricing.title") }}
-
         </h2>
         <p class="pricing-teaser-description">
           {{ $t("home.pricing.description") }}
@@ -23,18 +22,11 @@
             <div class="pricing-card-header">
               <h3 :id="`plan-${plan.id}-title`" class="plan-title">
                 {{ $t(plan.titleKey) }}
-
               </h3>
               <div class="plan-price">
-                <span class="plan-currency">{{ $t("common.currency") }}
-
-</span>
-                <span class="plan-amount">{{ plan.price }}
-
-</span>
-                <span class="plan-period">{{ $t("common.perMonth") }}
-
-</span>
+                <span class="plan-currency">{{ $t("common.currency") }} </span>
+                <span class="plan-amount">{{ plan.price }} </span>
+                <span class="plan-period">{{ $t("common.perMonth") }} </span>
               </div>
             </div>
           </template>
@@ -52,12 +44,11 @@
             <Button
               :variant="plan.featured ? 'primary' : 'secondary'"
               size="lg"
-              :to="{ name: 'pricing' }"
+              :to="{ name: 'subscribe' }"
               class="plan-cta"
               :aria-describedby="`plan-${plan.id}-title`"
             >
               {{ $t("home.pricing.choosePlan") }}
-
             </Button>
           </template>
         </Card>
@@ -67,9 +58,8 @@
         <p class="pricing-note">
           {{ $t("home.pricing.note") }}
         </p>
-        <Button variant="outline" size="lg" :to="{ name: 'pricing' }" class="pricing-link">
+        <Button variant="outline" size="lg" :to="{ name: 'subscribe' }" class="pricing-link">
           {{ $t("home.pricing.viewAllPlans") }}
-
         </Button>
       </div>
     </div>
