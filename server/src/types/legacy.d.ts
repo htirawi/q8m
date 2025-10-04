@@ -60,10 +60,15 @@ declare module "mongoose" {
   }
 
   interface Model<
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _T,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _TQueryHelpers = Record<string, any>,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _TMethods = Record<string, any>,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _TVirtuals = Record<string, any>,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _TSchema = any,
   > {
     findByEmailWithPassword?(email: string): Promise<any>;
