@@ -222,7 +222,7 @@ export function usePerformance() {
       return null;
     }
 
-    const memory = (performance as any).memory;
+    const {memory} = (performance as any);
     return {
       usedJSHeapSize: memory.usedJSHeapSize,
       totalJSHeapSize: memory.totalJSHeapSize,

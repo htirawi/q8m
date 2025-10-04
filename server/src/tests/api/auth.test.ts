@@ -239,7 +239,8 @@ describe("Authentication API", () => {
       });
 
       const loginBody = JSON.parse(loginResponse.body);
-      refreshToken = loginBody.refreshToken;
+      const { refreshToken: token } = loginBody;
+      refreshToken = token;
     });
 
     it("should refresh access token with valid refresh token", async () => {
@@ -310,7 +311,8 @@ describe("Authentication API", () => {
       });
 
       const loginBody = JSON.parse(loginResponse.body);
-      accessToken = loginBody.accessToken;
+      const { accessToken: token } = loginBody;
+      accessToken = token;
     });
 
     it("should logout successfully with valid token", async () => {
@@ -382,7 +384,8 @@ describe("Authentication API", () => {
       });
 
       const loginBody = JSON.parse(loginResponse.body);
-      accessToken = loginBody.accessToken;
+      const { accessToken: token } = loginBody;
+      accessToken = token;
     });
 
     it("should return user profile with valid token", async () => {

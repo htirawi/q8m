@@ -201,10 +201,10 @@ export default async function authRoutes(fastify: FastifyInstance) {
           hook: "onRequest",
           keyGenerator: comboKey,
         },
-        },
-        schema: {
-          body: zodToJsonSchema(loginSchema),
-        },
+      },
+      schema: {
+        body: zodToJsonSchema(loginSchema),
+      },
     },
     async (request, reply) => {
       try {
@@ -739,7 +739,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
     },
     async (request, reply) => {
       try {
-        const sessionId = (request as any).sessionId;
+        const { sessionId } = request as any;
         if (sessionId) {
           await Session.findByIdAndUpdate(sessionId, {
             isRevoked: true,
@@ -864,7 +864,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
         const decoded = jwtService.verifyRefreshToken(refreshToken);
         const session = await Session.findById(decoded.sessionId);
 
-        if (!session || !session.isValid()) {
+        if (!session?.isValid()) {
           return reply.status(401).send({
             code: 401,
             error: "Unauthorized",

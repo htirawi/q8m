@@ -296,7 +296,8 @@ export class HyperPayService {
         return { success: false, status: "error", error: "Invalid response from HyperPay" };
       }
 
-      const status = paymentData.data.status;
+      const { data } = paymentData;
+      const { status } = data;
       let purchaseStatus = "pending";
 
       switch (status) {

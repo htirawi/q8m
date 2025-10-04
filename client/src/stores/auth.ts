@@ -16,16 +16,16 @@ export const useAuthStore = defineStore("auth", () => {
   // Computed properties
   const hasEntitlement = computed(() => {
     return (entitlement: string) => {
-      return user.value?.permissions.includes(entitlement) || false;
+      return user.value?.permissions?.includes(entitlement) ?? false;
     };
   });
 
   const isEmailVerified = computed(() => {
-    return user.value?.isEmailVerified || false;
+    return user.value?.isEmailVerified ?? false;
   });
 
   const userRole = computed(() => {
-    return user.value?.role || "user";
+    return user.value?.role ?? "user";
   });
 
   // Role checking helper
@@ -79,7 +79,7 @@ export const useAuthStore = defineStore("auth", () => {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Login failed");
+        throw new Error(data.message ?? "Login failed");
       }
 
       setUser(data.user);
@@ -94,7 +94,7 @@ export const useAuthStore = defineStore("auth", () => {
 
       return true;
     } catch (err: any) {
-      setError(err.message || "Login failed");
+      setError(err.message ?? "Login failed");
       return false;
     } finally {
       setLoading(false);
@@ -117,13 +117,13 @@ export const useAuthStore = defineStore("auth", () => {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Registration failed");
+        throw new Error(data.message ?? "Registration failed");
       }
 
       // Don't set user/tokens for registration - email verification required
       return true;
     } catch (err: any) {
-      setError(err.message || "Registration failed");
+      setError(err.message ?? "Registration failed");
       return false;
     } finally {
       setLoading(false);
@@ -152,7 +152,7 @@ export const useAuthStore = defineStore("auth", () => {
       // Still clear local state even if API call fails
       setUser(null);
       setTokens(null);
-      setError(err.message || "Logout failed");
+      setError(err.message ?? "Logout failed");
       return false;
     } finally {
       setLoading(false);
@@ -178,7 +178,7 @@ export const useAuthStore = defineStore("auth", () => {
     } catch (err: any) {
       setUser(null);
       setTokens(null);
-      setError(err.message || "Logout failed");
+      setError(err.message ?? "Logout failed");
       return false;
     } finally {
       setLoading(false);
@@ -198,7 +198,7 @@ export const useAuthStore = defineStore("auth", () => {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Token refresh failed");
+        throw new Error(data.message ?? "Token refresh failed");
       }
 
       // Tokens are now handled by httpOnly cookies
@@ -267,7 +267,7 @@ export const useAuthStore = defineStore("auth", () => {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Email verification failed");
+        throw new Error(data.message ?? "Email verification failed");
       }
 
       // Update user if logged in
@@ -277,7 +277,7 @@ export const useAuthStore = defineStore("auth", () => {
 
       return true;
     } catch (err: any) {
-      setError(err.message || "Email verification failed");
+      setError(err.message ?? "Email verification failed");
       return false;
     } finally {
       setLoading(false);
@@ -300,12 +300,12 @@ export const useAuthStore = defineStore("auth", () => {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Failed to resend verification email");
+        throw new Error(data.message ?? "Failed to resend verification email");
       }
 
       return true;
     } catch (err: any) {
-      setError(err.message || "Failed to resend verification email");
+      setError(err.message ?? "Failed to resend verification email");
       return false;
     } finally {
       setLoading(false);
@@ -328,12 +328,12 @@ export const useAuthStore = defineStore("auth", () => {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Failed to send password reset email");
+        throw new Error(data.message ?? "Failed to send password reset email");
       }
 
       return true;
     } catch (err: any) {
-      setError(err.message || "Failed to send password reset email");
+      setError(err.message ?? "Failed to send password reset email");
       return false;
     } finally {
       setLoading(false);
@@ -356,12 +356,12 @@ export const useAuthStore = defineStore("auth", () => {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Password reset failed");
+        throw new Error(data.message ?? "Password reset failed");
       }
 
       return true;
     } catch (err: any) {
-      setError(err.message || "Password reset failed");
+      setError(err.message ?? "Password reset failed");
       return false;
     } finally {
       setLoading(false);
@@ -388,12 +388,12 @@ export const useAuthStore = defineStore("auth", () => {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Password change failed");
+        throw new Error(data.message ?? "Password change failed");
       }
 
       return true;
     } catch (err: any) {
-      setError(err.message || "Password change failed");
+      setError(err.message ?? "Password change failed");
       return false;
     } finally {
       setLoading(false);

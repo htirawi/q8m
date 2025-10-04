@@ -90,7 +90,7 @@ export class CurrencyService {
     // Try to get fresh rate from cache first
     let fxRate = await FxRate.getFreshRate(baseCurrency, targetCurrency, 24);
 
-    if (fxRate && fxRate.isFresh()) {
+    if (fxRate?.isFresh()) {
       return {
         rate: fxRate.rate,
         source: "cache",

@@ -15,6 +15,7 @@ export default [
       "*.config.js",
       "*.config.ts",
       "tests/e2e/**",
+      "public/**/*.js",
     ],
   },
   // Vue files
@@ -47,9 +48,9 @@ export default [
       "vue/no-use-v-if-with-v-for": "error",
     },
   },
-  // TypeScript and JavaScript files
+  // TypeScript files only
   {
-    files: ["**/*.{js,ts}"],
+    files: ["**/*.ts", "**/*.tsx"],
     languageOptions: {
       ecmaVersion: "latest",
       sourceType: "module",
@@ -73,16 +74,63 @@ export default [
       ...typescript.configs.recommended.rules,
 
       // TypeScript specific rules
-      "@typescript-eslint/no-unused-vars": "error",
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        { argsIgnorePattern: "^_", caughtErrorsIgnorePattern: "^_" },
+      ],
       "@typescript-eslint/no-explicit-any": "warn",
       "@typescript-eslint/explicit-function-return-type": "off",
       "@typescript-eslint/explicit-module-boundary-types": "off",
+      "@typescript-eslint/prefer-optional-chain": "off", // Disabled due to project service issues
 
       // Best practices
       "prefer-const": "error",
       "no-var": "error",
       "object-shorthand": "error",
       "prefer-template": "error",
+      "prefer-destructuring": [
+        "error",
+        {
+          VariableDeclarator: { object: true, array: false },
+          AssignmentExpression: { object: true, array: false },
+        },
+        { enforceForRenamedProperties: false },
+      ],
+      "no-console": ["warn", { allow: ["warn", "error"] }],
+      "no-debugger": "error",
+      "no-alert": "warn",
+    },
+  },
+  // JavaScript files only
+  {
+    files: ["**/*.js", "**/*.mjs", "**/*.cjs"],
+    ignores: ["public/**/*.js"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+      globals: {
+        ...globals.browser,
+        ...globals.es2021,
+        ...globals.node,
+      },
+    },
+    rules: {
+      ...js.configs.recommended.rules,
+      ...prettier.rules,
+
+      // Best practices
+      "prefer-const": "error",
+      "no-var": "error",
+      "object-shorthand": "error",
+      "prefer-template": "error",
+      "prefer-destructuring": [
+        "error",
+        {
+          VariableDeclarator: { object: true, array: false },
+          AssignmentExpression: { object: true, array: false },
+        },
+        { enforceForRenamedProperties: false },
+      ],
       "no-console": ["warn", { allow: ["warn", "error"] }],
       "no-debugger": "error",
       "no-alert": "warn",

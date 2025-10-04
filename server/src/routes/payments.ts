@@ -58,7 +58,8 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
     },
     async (request, reply) => {
       try {
-        const { currency = "USD" } = request.query as { currency?: "USD" | "JOD" | "SAR" };
+        const { query } = request;
+        const { currency = "USD" } = query as { currency?: "USD" | "JOD" | "SAR" };
 
         const pricing = await pricingService.getAllPricing();
 
@@ -104,7 +105,8 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
     },
     async (request, reply) => {
       try {
-        const { currency } = request.params as { currency: "USD" | "JOD" | "SAR" };
+        const { params } = request;
+        const { currency } = params as { currency: "USD" | "JOD" | "SAR" };
 
         const pricing = await pricingService.getPricingForCurrency(currency);
 
@@ -140,10 +142,11 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
     },
     async (request, reply) => {
       try {
-        const { planType, currency, billingCycle, billingAddress } = request.body as z.infer<
+        const { body, authUser } = request;
+        const { planType, currency, billingCycle, billingAddress } = body as z.infer<
           typeof createPaymentSchema
         >;
-        const user = request.authUser!;
+        const user = authUser!;
 
         // Get pricing for the plan
         const planPricing = await pricingService.getPlanPricing(planType, currency);

@@ -208,11 +208,9 @@ router.afterEach((to) => {
 
   // Track page view for analytics
   if (import.meta.env.PROD && typeof window !== "undefined" && "gtag" in window) {
-    const gtag = (
-      window as {
+    const {gtag} = (window as {
         gtag: (command: string, targetId: string, config: Record<string, string>) => void;
-      }
-    ).gtag;
+      });
     gtag("config", "GA_MEASUREMENT_ID", {
       page_path: to.fullPath,
     });

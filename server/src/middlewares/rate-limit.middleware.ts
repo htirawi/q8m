@@ -5,8 +5,8 @@ import rateLimit from "@fastify/rate-limit";
  * Rate limiting middleware for authentication endpoints
  */
 export const authRateLimit = async (request: FastifyRequest, _reply: FastifyReply) => {
-  const ip = request.ip;
-  const userAgent = request.headers["user-agent"] || "unknown";
+  const { ip, headers, log } = request;
+  const userAgent = headers["user-agent"] ?? "unknown";
 
   // Create a unique key for rate limiting
   const key = `auth:${ip}:${userAgent}`;
@@ -18,7 +18,7 @@ export const authRateLimit = async (request: FastifyRequest, _reply: FastifyRepl
 
   // In a real implementation, this would use Redis
   // For now, we'll just log the attempt
-  request.log.debug({
+  log.debug({
     message: "Auth rate limit check",
     ip,
     userAgent,
@@ -35,8 +35,8 @@ export const authRateLimit = async (request: FastifyRequest, _reply: FastifyRepl
  * Rate limiting middleware for password reset endpoints
  */
 export const passwordResetRateLimit = async (request: FastifyRequest, _reply: FastifyReply) => {
-  const ip = request.ip;
-  const userAgent = request.headers["user-agent"] || "unknown";
+  const { ip, headers, log } = request;
+  const userAgent = headers["user-agent"] ?? "unknown";
 
   // Create a unique key for rate limiting
   const key = `password-reset:${ip}:${userAgent}`;
@@ -44,7 +44,7 @@ export const passwordResetRateLimit = async (request: FastifyRequest, _reply: Fa
   const windowMs = 15 * 60 * 1000; // 15 minutes
   const maxRequests = 3; // More restrictive for password reset
 
-  request.log.debug({
+  log.debug({
     message: "Password reset rate limit check",
     ip,
     userAgent,
@@ -60,8 +60,8 @@ export const passwordResetRateLimit = async (request: FastifyRequest, _reply: Fa
  * Rate limiting middleware for token refresh endpoints
  */
 export const tokenRefreshRateLimit = async (request: FastifyRequest, _reply: FastifyReply) => {
-  const ip = request.ip;
-  const userAgent = request.headers["user-agent"] || "unknown";
+  const { ip, headers, log } = request;
+  const userAgent = headers["user-agent"] ?? "unknown";
 
   // Create a unique key for rate limiting
   const key = `token-refresh:${ip}:${userAgent}`;
@@ -69,7 +69,7 @@ export const tokenRefreshRateLimit = async (request: FastifyRequest, _reply: Fas
   const windowMs = 15 * 60 * 1000; // 15 minutes
   const maxRequests = 10; // Allow more refresh attempts
 
-  request.log.debug({
+  log.debug({
     message: "Token refresh rate limit check",
     ip,
     userAgent,

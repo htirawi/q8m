@@ -84,13 +84,14 @@ fastify.addHook("onRequest", requestLogger);
 
 // Register response logger
 fastify.addHook("onSend", async (request, reply, payload) => {
-  const startTime = (request as { startTime?: number }).startTime;
+  const { startTime } = request as { startTime?: number };
   if (startTime) {
     const responseTime = Date.now() - startTime;
-    (request.log as any).info({
+    const { log, method, url } = request;
+    (log as any).info({
       type: "response",
-      method: request.method,
-      url: request.url,
+      method,
+      url,
       statusCode: reply.statusCode,
       responseTime: `${responseTime}ms`,
       contentLength: reply.getHeader("content-length"),

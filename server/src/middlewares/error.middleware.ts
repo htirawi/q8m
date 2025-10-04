@@ -2,7 +2,7 @@ import type { FastifyError, FastifyRequest, FastifyReply } from "fastify";
 import { ZodError } from "zod";
 
 export const errorHandler = (error: FastifyError, request: FastifyRequest, reply: FastifyReply) => {
-  const { log } = request;
+  const { log, method, url, headers, body } = request;
 
   // Log error
   (log as any).error({
@@ -12,10 +12,10 @@ export const errorHandler = (error: FastifyError, request: FastifyRequest, reply
       name: error.name,
     },
     request: {
-      method: request.method,
-      url: request.url,
-      headers: request.headers,
-      body: request.body,
+      method,
+      url,
+      headers,
+      body,
     },
   });
 

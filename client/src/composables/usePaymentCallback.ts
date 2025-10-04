@@ -42,7 +42,7 @@ export function usePaymentCallback() {
 
   // Extract callback data from URL parameters
   const extractCallbackData = (): PaymentCallbackData => {
-    const query = route.query;
+    const {query} = route;
 
     return {
       paymentId: query.paymentId as string,
@@ -64,7 +64,7 @@ export function usePaymentCallback() {
     if (data.gateway) return data.gateway;
 
     // Detect from URL path
-    const path = route.path;
+    const {path} = route;
     if (path.includes("/paypal")) return "paypal";
     if (path.includes("/aps")) return "aps";
     if (path.includes("/hyperpay")) return "hyperpay";
@@ -245,7 +245,7 @@ export function usePaymentCallback() {
 
   // Check if current route is a payment callback
   const isPaymentCallback = computed(() => {
-    const path = route.path;
+    const {path} = route;
     return (
       path.includes("/payment/success") ||
       path.includes("/payment/error") ||

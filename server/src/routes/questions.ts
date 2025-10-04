@@ -62,7 +62,8 @@ export default async function questionRoutes(fastify: FastifyInstance) {
       },
     },
     async (request, reply) => {
-      const { framework, level, category, difficulty, limit, offset } = request.query as z.infer<
+      const { query } = request;
+      const { framework, level, category, difficulty, limit, offset } = query as z.infer<
         typeof getQuestionsSchema
       >;
 
@@ -107,7 +108,8 @@ export default async function questionRoutes(fastify: FastifyInstance) {
       },
     },
     async (request, reply) => {
-      const { questionId } = request.params as { questionId: string };
+      const { params } = request;
+      const { questionId } = params as { questionId: string };
 
       // TODO: Implement real question fetching by ID
       const question = mockQuestions.find((q) => q.id === questionId);
