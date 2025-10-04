@@ -153,8 +153,9 @@ export function createAuthMiddleware(options: AuthOptions = {}) {
 /**
  * Optional authentication middleware - doesn't fail if no token
  */
-export const optionalAuth = async (request: FastifyRequest, _reply: FastifyReply) => { // eslint-disable-line @typescript-eslint/no-unused-vars
+export const optionalAuth = async (request: FastifyRequest, _reply: FastifyReply) => {
    
+
   try {
     const authHeader = request.headers.authorization;
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -196,8 +197,9 @@ export const optionalAuth = async (request: FastifyRequest, _reply: FastifyReply
 /**
  * Rate limiting middleware for auth endpoints
  */
-export const authRateLimit = async (request: FastifyRequest, _reply: FastifyReply) => { // eslint-disable-line @typescript-eslint/no-unused-vars
+export const authRateLimit = async (request: FastifyRequest, _reply: FastifyReply) => {
    
+
   const ip = request.ip;
   // TODO: Implement Redis-based rate limiting using key: `auth:${ip}`
 

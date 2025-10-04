@@ -23,7 +23,7 @@
 import { computed } from "vue";
 import type { RouteLocationRaw } from "vue-router";
 
-export interface buttonprops {
+export interface ButtonProps {
   variant?: "primary" | "secondary" | "outline" | "ghost" | "danger";
   size?: "sm" | "md" | "lg";
   disabled?: boolean;
@@ -47,8 +47,8 @@ const props = withDefaults(defineProps<ButtonProps>(), {
 });
 
 const emit = defineEmits<{
-  click: [];
-  focus: [];
+  click: [event: MouseEvent];
+  focus: [event: FocusEvent];
   blur: [event: FocusEvent];
 }>();
 
@@ -98,11 +98,11 @@ const handleClick = (event: MouseEvent) => {
   emit("click", event);
 };
 
-const handlefocus = (event: FocusEvent) => {
+const handleFocus = (event: FocusEvent) => {
   emit("focus", event);
 };
 
-const handleblur = (event: FocusEvent) => {
+const handleBlur = (event: FocusEvent) => {
   emit("blur", event);
 };
 </script>

@@ -39,13 +39,13 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
-export interface selectoption {
+export interface SelectOption {
   value: string | number;
   label: string;
   disabled?: boolean;
 }
 
-export interface selectprops {
+export interface SelectProps {
   id?: string;
   modelValue?: string | number;
   options: SelectOption[];
@@ -64,8 +64,8 @@ const props = withDefaults(defineProps<SelectProps>(), {
 
 const emit = defineEmits<{
   "update:modelValue": [value: string | number];
-  change: [];
-  blur: [];
+  change: [event: Event];
+  blur: [event: FocusEvent];
   focus: [event: FocusEvent];
 }>();
 
@@ -105,11 +105,11 @@ const handleChange = (event: Event) => {
   emit("change", event);
 };
 
-const handleblur = (event: FocusEvent) => {
+const handleBlur = (event: FocusEvent) => {
   emit("blur", event);
 };
 
-const handlefocus = (event: FocusEvent) => {
+const handleFocus = (event: FocusEvent) => {
   emit("focus", event);
 };
 

@@ -17,7 +17,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
-export interface cardprops {
+export interface CardProps {
   variant?: "default" | "elevated" | "outlined";
   padding?: "none" | "sm" | "md" | "lg";
   ariaLabelledby?: string;

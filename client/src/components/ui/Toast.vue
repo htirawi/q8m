@@ -44,7 +44,7 @@
 import { ref, computed, onMounted } from "vue";
 import type { Component } from "vue";
 
-export interface toastprops {
+export interface ToastProps {
   id?: string;
   type?: "success" | "error" | "warning" | "info";
   message?: string;
@@ -61,7 +61,7 @@ const props = withDefaults(defineProps<ToastProps>(), {
   persistent: false,
 });
 
-const emit = defineemits<{
+const emit = defineEmits<{
   dismiss: [];
   "update:isVisible": [value: boolean];
 }>();
@@ -95,7 +95,7 @@ const handleDismiss = () => {
   emit("update:isVisible", false);
 };
 
-const handleenter = () => {
+const handleEnter = () => {
   if (!props.persistent && props.duration > 0) {
     timeoutId = window.setTimeout(() => {
       handleDismiss();
@@ -103,7 +103,7 @@ const handleenter = () => {
   }
 };
 
-const handleleave = () => {
+const handleLeave = () => {
   if (timeoutId) {
     clearTimeout(timeoutId);
     timeoutId = null;

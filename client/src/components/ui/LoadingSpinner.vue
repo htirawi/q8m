@@ -22,7 +22,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
-export interface loadingspinnerprops {
+export interface LoadingSpinnerProps {
   size?: "sm" | "md" | "lg";
   color?: "primary" | "white" | "gray";
 }

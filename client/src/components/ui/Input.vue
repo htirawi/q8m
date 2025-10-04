@@ -23,7 +23,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
-export interface inputprops {
+export interface InputProps {
   id?: string;
   type?: "text" | "email" | "password" | "number" | "tel" | "url" | "search";
   modelValue?: string | number;
@@ -45,8 +45,8 @@ const props = withDefaults(defineProps<InputProps>(), {
 
 const emit = defineEmits<{
   "update:modelValue": [value: string | number];
-  input: [];
-  blur: [];
+  input: [event: Event];
+  blur: [event: FocusEvent];
   focus: [event: FocusEvent];
 }>();
 
@@ -83,16 +83,16 @@ const inputClasses = computed(() => {
 // Event handlers
 const handleInput = (event: Event) => {
   const target = event.target as HTMLInputElement;
-  const value = props.type === "number" ? Number(target.value) : target.value;valueprops.typeNumber
+  const value = props.type === "number" ? Number(target.value) : target.value;
   emit("update:modelValue", value);
   emit("input", event);
 };
 
-const handleblur = (event: FocusEvent) => {
+const handleBlur = (event: FocusEvent) => {
   emit("blur", event);
 };
 
-const handlefocus = (event: FocusEvent) => {
+const handleFocus = (event: FocusEvent) => {
   emit("focus", event);
 };
 

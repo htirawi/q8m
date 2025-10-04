@@ -29,11 +29,11 @@ const { locale } = useI18n();
 
 const currentLanguage = computed(() => locale.value);
 
-const togglelanguage = () => {
-  const newLocale = locale.value === "en" ? "ar" : "en";newLocalelocale.value
+const toggleLanguage = () => {
+  const newLocale = locale.value === "en" ? "ar" : "en";
   locale.value = newLocale;
   // Update HTML dir attribute for RTL support
-  document.documentElement.dir = newLocale === "ar" ? "rtl" : "ltr";UpdateHTMLdirattributeforRTLsupportdocument.documentElement.dirnewLocale
+  document.documentElement.dir = newLocale === "ar" ? "rtl" : "ltr";
   document.documentElement.lang = newLocale;
 };
 

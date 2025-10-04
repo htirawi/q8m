@@ -30,7 +30,7 @@
 import { computed } from "vue";
 import HelperText from "./HelperText.vue";
 
-export interface formfieldprops {
+export interface FormFieldProps {
   id?: string;
   label?: string;
   helperText?: string;

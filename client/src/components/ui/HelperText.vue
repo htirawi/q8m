@@ -10,7 +10,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
-export interface helpertextprops {
+export interface HelperTextProps {
   id?: string;
   text?: string;
   error?: string;

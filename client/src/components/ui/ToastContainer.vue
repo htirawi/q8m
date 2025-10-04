@@ -22,7 +22,7 @@ import { ref } from "vue";
 import Toast from "./Toast.vue";
 import type { Component } from "vue";
 
-export interface toastitem {
+export interface ToastItem {
   id: string;
   type: "success" | "error" | "warning" | "info";
   message: string;
@@ -41,14 +41,14 @@ const addToast = (toast: Omit<ToastItem, "id">) => {
   toasts.value.push({ ...toast, id });
 };
 
-const removetoast = (id: string) => {
+const removeToast = (id: string) => {
   const index = toasts.value.findIndex((toast) => toast.id === id);
   if (index > -1) {
     toasts.value.splice(index, 1);
   }
 };
 
-const cleartoasts = () => {
+const clearToasts = () => {
   toasts.value = [];
 };
 
