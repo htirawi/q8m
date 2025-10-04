@@ -1,9 +1,12 @@
 /**
  * UI Component Types
- * 
+ *
  * Types for component props and UI-related interfaces.
  * These types define the contracts for reusable UI components.
  */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* TODO: Legacy patterns - Replace 'any' types with proper typing in next PR */
 
 /**
  * Virtual scroll component props
@@ -178,13 +181,16 @@ export interface CheckoutSummaryProps {
     description: string;
     features: string[];
     usdPrice: number;
-    pricing: Record<string, {
-      currency: string;
-      amount: number;
-      formatted: string;
-      exchangeRate?: number;
-      isEstimated: boolean;
-    }>;
+    pricing: Record<
+      string,
+      {
+        currency: string;
+        amount: number;
+        formatted: string;
+        exchangeRate?: number;
+        isEstimated: boolean;
+      }
+    >;
     popular?: boolean;
     recommended?: boolean;
   };
@@ -227,13 +233,16 @@ export interface OrderSummaryProps {
     description: string;
     features: string[];
     usdPrice: number;
-    pricing: Record<string, {
-      currency: string;
-      amount: number;
-      formatted: string;
-      exchangeRate?: number;
-      isEstimated: boolean;
-    }>;
+    pricing: Record<
+      string,
+      {
+        currency: string;
+        amount: number;
+        formatted: string;
+        exchangeRate?: number;
+        isEstimated: boolean;
+      }
+    >;
     popular?: boolean;
     recommended?: boolean;
   };
@@ -250,13 +259,16 @@ export interface CheckoutFormProps {
     description: string;
     features: string[];
     usdPrice: number;
-    pricing: Record<string, {
-      currency: string;
-      amount: number;
-      formatted: string;
-      exchangeRate?: number;
-      isEstimated: boolean;
-    }>;
+    pricing: Record<
+      string,
+      {
+        currency: string;
+        amount: number;
+        formatted: string;
+        exchangeRate?: number;
+        isEstimated: boolean;
+      }
+    >;
     popular?: boolean;
     recommended?: boolean;
   };

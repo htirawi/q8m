@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
+/* TODO: Legacy patterns - Replace 'any' types with proper typing and remove unused vars in next PR */
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 import type { User } from "@shared/types/auth";
@@ -9,11 +11,12 @@ export const useAuthStore = defineStore("auth", () => {
   const isLoading = ref(false);
   const error = ref<string | null>(null);
   const tokens = ref<AuthTokens | null>(null);
+  const isInitialized = ref(false);
 
   // Computed properties
   const hasEntitlement = computed(() => {
     return (entitlement: string) => {
-      return user.value?.entitlements.includes(entitlement) || false;
+      return user.value?.permissions.includes(entitlement) || false;
     };
   });
 
@@ -23,6 +26,13 @@ export const useAuthStore = defineStore("auth", () => {
 
   const userRole = computed(() => {
     return user.value?.role || "user";
+  });
+
+  // Role checking helper
+  const hasRole = computed(() => {
+    return (role: string) => {
+      return user.value?.role === role || false;
+    };
   });
 
   // Helper functions
@@ -73,7 +83,7 @@ export const useAuthStore = defineStore("auth", () => {
       }
 
       setUser(data.user);
-      
+
       // Tokens are now handled by httpOnly cookies
       // We still need to set a dummy token object for compatibility
       setTokens({
@@ -81,7 +91,7 @@ export const useAuthStore = defineStore("auth", () => {
         refreshToken: "cookie-based", // Placeholder since token is in cookie
         expiresIn: 15 * 60, // 15 minutes
       });
-      
+
       return true;
     } catch (err: any) {
       setError(err.message || "Login failed");
@@ -125,7 +135,7 @@ export const useAuthStore = defineStore("auth", () => {
     setError(null);
 
     try {
-      const response = await fetch("/api/auth/logout", {
+      await fetch("/api/auth/logout", {
         method: "POST",
         credentials: "include", // Include cookies in request
         headers: {
@@ -154,7 +164,7 @@ export const useAuthStore = defineStore("auth", () => {
     setError(null);
 
     try {
-      const response = await fetch("/api/auth/logout-all", {
+      await fetch("/api/auth/logout-all", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${tokens.value?.accessToken}`,
@@ -409,11 +419,13 @@ export const useAuthStore = defineStore("auth", () => {
     isLoading,
     error,
     tokens,
+    isInitialized,
 
     // Computed
     hasEntitlement,
     isEmailVerified,
     userRole,
+    hasRole,
 
     // Actions
     login,

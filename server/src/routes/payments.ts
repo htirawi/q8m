@@ -8,6 +8,7 @@ import { pricingService } from "../services/pricing.service.js";
 import { currencyService } from "../services/currency.service.js";
 import { Purchase } from "../models/Purchase.js";
 import { Subscription } from "../models/Subscription.js";
+import { safeLogFields } from "../security/logging.js";
 
 // Validation schemas
 const createPaymentSchema = z.object({
@@ -79,8 +80,14 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
           currency,
           pricing: filteredPricing,
         });
-      } catch (error: any) {
-        request.log.error("Get pricing error:", error);
+      } catch (error: unknown) {
+        (request.log as any).error(
+          safeLogFields({
+            event: "get_pricing_error",
+            error: error instanceof Error ? error.message : "Unknown error",
+            stack: error instanceof Error ? error.stack : undefined,
+          })
+        );
         reply.status(500).send({
           success: false,
           error: "Failed to get pricing information",
@@ -111,8 +118,14 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
           currency,
           pricing,
         });
-      } catch (error: any) {
-        request.log.error("Get pricing for currency error:", error);
+      } catch (error: unknown) {
+        (request.log as any).error(
+          safeLogFields({
+            event: "get_pricing_currency_error",
+            error: error instanceof Error ? error.message : "Unknown error",
+            stack: error instanceof Error ? error.stack : undefined,
+          })
+        );
         reply.status(500).send({
           success: false,
           error: "Failed to get pricing information",
@@ -135,7 +148,7 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
         const { planType, currency, billingCycle, billingAddress } = request.body as z.infer<
           typeof createPaymentSchema
         >;
-        const user = request.user!;
+        const user = request.authUser!;
 
         // Get pricing for the plan
         const planPricing = await pricingService.getPlanPricing(planType, currency);
@@ -193,11 +206,12 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
           amount: priceInfo.amount,
           currency,
           planType,
+          billingCycle,
           userId: user.id,
           userEmail: user.email,
           userName: user.name,
-          returnUrl: `${fastify.config?.CLIENT_URL || "http://localhost:5173"}/payment/success`,
-          cancelUrl: `${fastify.config?.CLIENT_URL || "http://localhost:5173"}/payment/cancel`,
+          returnUrl: `${(fastify as any).config?.CLIENT_URL || "http://localhost:5173"}/payment/success`,
+          cancelUrl: `${(fastify as any).config?.CLIENT_URL || "http://localhost:5173"}/payment/cancel`,
           billingAddress,
         };
 
@@ -252,11 +266,17 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
           billingCycle,
           isEstimated: priceInfo.isEstimated,
         });
-      } catch (error: any) {
-        request.log.error("Create payment error:", error);
+      } catch (error: unknown) {
+        (request.log as any).error(
+          safeLogFields({
+            event: "create_payment_error",
+            error: error instanceof Error ? error.message : "Unknown error",
+            stack: error instanceof Error ? error.stack : undefined,
+          })
+        );
         reply.status(500).send({
           success: false,
-          error: error.message || "Failed to create payment",
+          error: (error as any).message || "Failed to create payment",
         });
       }
     }
@@ -276,20 +296,21 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
     async (request, reply) => {
       try {
         const { gateway } = request.params as { gateway: "paypal" | "aps" | "hyperpay" };
-        const { paymentId, payerId, token, PayerID } = request.body as z.infer<
+        const { paymentId, payerId, PayerID } = request.body as z.infer<
           typeof paymentCallbackSchema
         >;
 
         let result;
 
         switch (gateway) {
-          case "paypal":
+          case "paypal": {
             const paypalPayerId = payerId || PayerID;
             if (!paypalPayerId) {
               throw new Error("PayPal payer ID is required");
             }
             result = await paypalService.executePayment(paymentId, paypalPayerId);
             break;
+          }
 
           case "aps":
             result = await apsService.verifyPayment(paymentId);
@@ -315,11 +336,17 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
             error: result.error || "Payment failed",
           });
         }
-      } catch (error: any) {
-        request.log.error("Payment callback error:", error);
+      } catch (error: unknown) {
+        (request.log as any).error(
+          safeLogFields({
+            event: "payment_callback_error",
+            error: error instanceof Error ? error.message : "Unknown error",
+            stack: error instanceof Error ? error.stack : undefined,
+          })
+        );
         reply.status(500).send({
           success: false,
-          error: error.message || "Payment callback failed",
+          error: (error as any).message || "Payment callback failed",
         });
       }
     }
@@ -332,15 +359,15 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
       preHandler: [authenticate],
       schema: {
         querystring: z.object({
-          limit: z.string().transform(Number).optional().default(10),
-          skip: z.string().transform(Number).optional().default(0),
+          limit: z.string().transform(Number).optional().default("10"),
+          skip: z.string().transform(Number).optional().default("0"),
         }),
       },
     },
     async (request, reply) => {
       try {
         const { limit, skip } = request.query as { limit: number; skip: number };
-        const userId = request.user!.id;
+        const userId = request.authUser!.id;
 
         const purchases = await Purchase.getUserPurchases(userId, limit, skip);
 
@@ -353,8 +380,15 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
             hasMore: purchases.length === limit,
           },
         });
-      } catch (error: any) {
-        request.log.error("Get purchase history error:", error);
+      } catch (error: unknown) {
+        (request.log as any).error(
+          safeLogFields({
+            event: "get_purchase_history_error",
+            userId: request.authUser!.id,
+            error: error instanceof Error ? error.message : "Unknown error",
+            stack: error instanceof Error ? error.stack : undefined,
+          })
+        );
         reply.status(500).send({
           success: false,
           error: "Failed to get purchase history",
@@ -371,7 +405,7 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
     },
     async (request, reply) => {
       try {
-        const userId = request.user!.id;
+        const userId = request.authUser!.id;
 
         const subscription = await Subscription.findActiveForUser(userId);
 
@@ -386,8 +420,15 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
           success: true,
           subscription,
         });
-      } catch (error: any) {
-        request.log.error("Get subscription error:", error);
+      } catch (error: unknown) {
+        (request.log as any).error(
+          safeLogFields({
+            event: "get_subscription_error",
+            userId: request.authUser!.id,
+            error: error instanceof Error ? error.message : "Unknown error",
+            stack: error instanceof Error ? error.stack : undefined,
+          })
+        );
         reply.status(500).send({
           success: false,
           error: "Failed to get subscription information",
@@ -409,7 +450,7 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
     },
     async (request, reply) => {
       try {
-        const userId = request.user!.id;
+        const userId = request.authUser!.id;
         const { reason } = request.body as { reason: string };
 
         const subscription = await Subscription.findActiveForUser(userId);
@@ -428,8 +469,15 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
           message: "Subscription cancelled successfully",
           subscription,
         });
-      } catch (error: any) {
-        request.log.error("Cancel subscription error:", error);
+      } catch (error: unknown) {
+        (request.log as any).error(
+          safeLogFields({
+            event: "cancel_subscription_error",
+            userId: request.authUser!.id,
+            error: error instanceof Error ? error.message : "Unknown error",
+            stack: error instanceof Error ? error.stack : undefined,
+          })
+        );
         reply.status(500).send({
           success: false,
           error: "Failed to cancel subscription",
@@ -448,10 +496,10 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
     },
     async (request, reply) => {
       try {
-        const webhookData = request.body as any;
+        const webhookData = request.body as unknown;
         const signature = request.headers["x-paypal-signature"] as string;
 
-        const result = await paypalService.handleWebhook(webhookData, signature);
+        const result = await paypalService.handleWebhook(webhookData as any, signature);
 
         if (result.success) {
           reply.send({ success: true });
@@ -461,8 +509,14 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
             error: result.error,
           });
         }
-      } catch (error: any) {
-        request.log.error("PayPal webhook error:", error);
+      } catch (error: unknown) {
+        (request.log as any).error(
+          safeLogFields({
+            event: "paypal_webhook_error",
+            error: error instanceof Error ? error.message : "Unknown error",
+            stack: error instanceof Error ? error.stack : undefined,
+          })
+        );
         reply.status(500).send({
           success: false,
           error: "Webhook processing failed",
@@ -481,9 +535,9 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
     },
     async (request, reply) => {
       try {
-        const webhookData = request.body as any;
+        const webhookData = request.body as unknown;
 
-        const result = await apsService.handleWebhook(webhookData);
+        const result = await apsService.handleWebhook(webhookData as any);
 
         if (result.success) {
           reply.send({ success: true });
@@ -493,8 +547,14 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
             error: result.error,
           });
         }
-      } catch (error: any) {
-        request.log.error("APS webhook error:", error);
+      } catch (error: unknown) {
+        (request.log as any).error(
+          safeLogFields({
+            event: "aps_webhook_error",
+            error: error instanceof Error ? error.message : "Unknown error",
+            stack: error instanceof Error ? error.stack : undefined,
+          })
+        );
         reply.status(500).send({
           success: false,
           error: "Webhook processing failed",
@@ -513,9 +573,9 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
     },
     async (request, reply) => {
       try {
-        const webhookData = request.body as any;
+        const webhookData = request.body as unknown;
 
-        const result = await hyperpayService.handleWebhook(webhookData);
+        const result = await hyperpayService.handleWebhook(webhookData as any);
 
         if (result.success) {
           reply.send({ success: true });
@@ -525,8 +585,14 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
             error: result.error,
           });
         }
-      } catch (error: any) {
-        request.log.error("HyperPay webhook error:", error);
+      } catch (error: unknown) {
+        (request.log as any).error(
+          safeLogFields({
+            event: "hyperpay_webhook_error",
+            error: error instanceof Error ? error.message : "Unknown error",
+            stack: error instanceof Error ? error.stack : undefined,
+          })
+        );
         reply.status(500).send({
           success: false,
           error: "Webhook processing failed",
@@ -550,8 +616,14 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
           hyperpay: hyperpayStatus,
         },
       });
-    } catch (error: any) {
-      request.log.error("Get gateway status error:", error);
+    } catch (error: unknown) {
+      (request.log as any).error(
+        safeLogFields({
+          event: "get_gateway_status_error",
+          error: error instanceof Error ? error.message : "Unknown error",
+          stack: error instanceof Error ? error.stack : undefined,
+        })
+      );
       reply.status(500).send({
         success: false,
         error: "Failed to get gateway status",
@@ -569,8 +641,14 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
         health,
         supportedCurrencies: ["USD", "JOD", "SAR"],
       });
-    } catch (error: any) {
-      request.log.error("Get currency rates error:", error);
+    } catch (error: unknown) {
+      (request.log as any).error(
+        safeLogFields({
+          event: "get_currency_rates_error",
+          error: error instanceof Error ? error.message : "Unknown error",
+          stack: error instanceof Error ? error.stack : undefined,
+        })
+      );
       reply.status(500).send({
         success: false,
         error: "Failed to get currency rates",
@@ -607,7 +685,10 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
         }
 
         // Check if user owns this purchase or is admin
-        if (purchase.userId.toString() !== request.user!.id && request.user!.role !== "admin") {
+        if (
+          purchase.userId.toString() !== request.authUser!.id &&
+          request.authUser!.role !== "admin"
+        ) {
           return reply.status(403).send({
             success: false,
             error: "Access denied",
@@ -655,11 +736,18 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
             error: result.error || "Refund failed",
           });
         }
-      } catch (error: any) {
-        request.log.error("Process refund error:", error);
+      } catch (error: unknown) {
+        (request.log as any).error(
+          safeLogFields({
+            event: "process_refund_error",
+            userId: request.authUser!.id,
+            error: error instanceof Error ? error.message : "Unknown error",
+            stack: error instanceof Error ? error.stack : undefined,
+          })
+        );
         reply.status(500).send({
           success: false,
-          error: error.message || "Failed to process refund",
+          error: (error as any).message || "Failed to process refund",
         });
       }
     }

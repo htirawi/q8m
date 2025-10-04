@@ -84,7 +84,7 @@
           >
             <!-- Popular/Recommended Badge -->
             <div v-if="plan.popular || plan.recommended" class="pricing-badge">
-              {{ plan.popular ? $t("pricing.popular") : $t("pricing.recommended") }}
+              {{ plan.popular ? $t("pricing.popular") : $t("pricing.recommended")$t }}
             </div>
 
             <!-- Plan Header -->
@@ -96,8 +96,8 @@
             <!-- Plan Pricing -->
             <div class="pricing-section">
               <div class="price-container">
-                <span class="price-amount">{{ getDisplayPrice(plan) }}</span>
-                <span class="price-period">{{ getPricePeriod(plan) }}</span>
+                <span class="price-amount">{{ getDisplayPrice(plan) }} </span>
+                <span class="price-period">{{ getPricePeriod(plan) }} </span>
               </div>
               <p v-if="getPriceInfo(plan)?.isEstimated" class="price-note">
                 {{ $t("pricing.estimatedPrice") }}
@@ -238,9 +238,10 @@ const faqs = computed(() => [
 // Methods
 const toggleBillingCycle = () => {
   billingCycle.value = billingCycle.value === "monthly" ? "yearly" : "monthly";
+  billingCycle.value;
 };
 
-const getDisplayPrice = (plan: PlanPricing) => {
+const getdisplayprice = (plan: PlanPricing) => {
   const priceInfo = getPriceInfo(plan);
   if (!priceInfo) return "Free";
 
@@ -254,17 +255,17 @@ const getDisplayPrice = (plan: PlanPricing) => {
   return priceInfo.formatted;
 };
 
-const getPricePeriod = (plan: PlanPricing) => {
+const getpriceperiod = (plan: PlanPricing) => {
   if (plan.planId === "JUNIOR") return "";
   return billingCycle.value === "yearly" ? "/year" : "/month";
 };
 
-const getPriceInfo = (plan: PlanPricing) => {
+const getpriceinfo = (plan: PlanPricing) => {
   const currency = paymentStore.currentCurrency;
   return plan.pricing[currency];
 };
 
-const selectPlan = async (plan: PlanPricing) => {
+const selectplan = async (plan: PlanPricing) => {
   if (plan.planId === "JUNIOR") {
     await startFreePlan();
     return;
@@ -276,7 +277,7 @@ const selectPlan = async (plan: PlanPricing) => {
   }
 
   try {
-    const paymentRequest = {
+    const paymentrequest = {
       planType: plan.planId as "INTERMEDIATE" | "SENIOR" | "BUNDLE",
       currency: paymentStore.currentCurrency,
       billingCycle: billingCycle.value,
@@ -291,7 +292,7 @@ const selectPlan = async (plan: PlanPricing) => {
   }
 };
 
-const startFreePlan = async () => {
+const startfreeplan = async () => {
   if (!authStore.isAuthenticated) {
     router.push("/auth/register");
     return;
@@ -301,7 +302,7 @@ const startFreePlan = async () => {
   router.push("/dashboard");
 };
 
-const toggleFaq = (index: number) => {
+const togglefaq = (index: number) => {
   const currentIndex = openFaqs.value.indexOf(index);
   if (currentIndex > -1) {
     openFaqs.value.splice(currentIndex, 1);
@@ -310,7 +311,7 @@ const toggleFaq = (index: number) => {
   }
 };
 
-const contactSupport = () => {
+const contactsupport = () => {
   // In a real app, this might open a contact form or redirect to support
   console.log("Contact support");
 };
@@ -471,7 +472,7 @@ onMounted(async () => {
 }
 
 /* Mobile responsiveness */
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .pricing-card--popular {
     @apply scale-100;
   }

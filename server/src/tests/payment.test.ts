@@ -4,7 +4,7 @@
  * Comprehensive tests for payment processing, webhooks, and entitlements
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { FastifyInstance } from "fastify";
 import { buildApp } from "../app.js";
 import { mockPaymentService } from "../services/mock-payment.service.js";
@@ -15,7 +15,7 @@ import { Subscription } from "../models/Subscription.js";
 
 describe("Payment System", () => {
   let app: FastifyInstance;
-  let testUser: any;
+  let testUser: unknown;
   let authToken: string;
 
   beforeEach(async () => {
@@ -224,12 +224,12 @@ describe("Payment System", () => {
       expect(purchase?.status).toBe("completed");
 
       // Verify subscription was created
-      const subscription = await Subscription.findOne({ userId: testUser._id });
+      const subscription = await Subscription.findOne({ userId: (testUser as any)._id });
       expect(subscription).toBeDefined();
       expect(subscription?.status).toBe("active");
 
       // Verify entitlements were updated
-      const updatedUser = await User.findById(testUser._id);
+      const updatedUser = await User.findById((testUser as any)._id);
       expect(updatedUser?.entitlements).toContain("INTERMEDIATE");
     });
 
@@ -279,7 +279,7 @@ describe("Payment System", () => {
     beforeEach(async () => {
       // Create a completed purchase and subscription
       const purchase = await Purchase.create({
-        userId: testUser._id,
+        userId: (testUser as any)._id,
         planType: "INTERMEDIATE",
         gateway: "mock",
         amount: 1999,
@@ -293,7 +293,7 @@ describe("Payment System", () => {
       });
 
       await Subscription.create({
-        userId: testUser._id,
+        userId: (testUser as any)._id,
         purchaseId: purchase._id,
         planType: "INTERMEDIATE",
         status: "active",
@@ -302,7 +302,7 @@ describe("Payment System", () => {
         currentPeriodEnd: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
       });
 
-      await entitlementService.updateUserEntitlements(testUser._id, "INTERMEDIATE");
+      await entitlementService.updateUserEntitlements((testUser as any)._id, "INTERMEDIATE");
     });
 
     it("should get user subscription", async () => {
@@ -339,7 +339,7 @@ describe("Payment System", () => {
       expect(data.success).toBe(true);
 
       // Verify subscription was cancelled
-      const subscription = await Subscription.findOne({ userId: testUser._id });
+      const subscription = await Subscription.findOne({ userId: (testUser as any)._id });
       expect(subscription?.status).toBe("cancelled");
     });
 

@@ -1,20 +1,14 @@
 <template>
-  <div 
-    ref="containerRef" 
+  <div
+    ref="containerRef"
     class="virtual-scroll-container"
     :style="{ height: containerHeight + 'px' }"
     @scroll="handleScroll"
   >
-    <div 
-      class="virtual-scroll-spacer"
-      :style="{ height: totalHeight + 'px' }"
-    >
-      <div 
-        class="virtual-scroll-content"
-        :style="{ transform: `translateY(${offsetY}px)` }"
-      >
-        <slot 
-          v-for="(item, index) in visibleItems" 
+    <div class="virtual-scroll-spacer" :style="{ height: totalHeight + 'px' }">
+      <div class="virtual-scroll-content" :style="{ transform: `translateY(${offsetY}px)` }">
+        <slot
+          v-for="(item, index) in visibleItems"
           :key="getItemKey(item, startIndex + index)"
           :item="item"
           :index="startIndex + index"
@@ -27,7 +21,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, watch } from "vue";
 
-interface Props {
+interface props {
   items: any[];
   itemHeight: number;
   containerHeight: number;
@@ -100,6 +94,6 @@ defineExpose({
 }
 
 .virtual-scroll-content {
-  @apply absolute top-0 left-0 w-full;
+  @apply absolute left-0 top-0 w-full;
 }
 </style>

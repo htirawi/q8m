@@ -4,7 +4,7 @@
 
 منصة تحضير مهنية للمقابلات التقنية مبنية بـ Vue 3، تقدم بنوك أسئلة شاملة وأدوات تحليل متقدمة
 
-[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/htirawi/q8m/actions)
+[![CI](https://github.com/htirawi/q8m/actions/workflows/ci.yml/badge.svg)](https://github.com/htirawi/q8m/actions/workflows/ci.yml)
 [![Test Coverage](https://img.shields.io/badge/coverage-95%25-brightgreen.svg)](https://github.com/htirawi/q8m/actions)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Last Commit](https://img.shields.io/github/last-commit/htirawi/q8m.svg)](https://github.com/htirawi/q8m/commits/main)
@@ -33,6 +33,7 @@ q8m is a bilingual (English/Arabic) interview preparation platform built with Vu
 ## Screenshots
 
 <!-- TODO: Add actual screenshots -->
+
 ![Desktop Light Mode](docs/screenshots/desktop-light.png "q8m Desktop Interface - Light Mode")
 ![Desktop Dark Mode](docs/screenshots/desktop-dark.png "q8m Desktop Interface - Dark Mode")
 ![Mobile Interface](docs/screenshots/mobile.png "q8m Mobile Interface")
@@ -67,6 +68,7 @@ q8m is a bilingual (English/Arabic) interview preparation platform built with Vu
 ### Tech Stack
 
 **Frontend:**
+
 - Vue 3.4+ (Composition API)
 - TypeScript 5.6+ (strict mode)
 - Vite 5.4+ (build tool)
@@ -79,6 +81,7 @@ q8m is a bilingual (English/Arabic) interview preparation platform built with Vu
 - Playwright 1.40+ (E2E testing)
 
 **Backend:**
+
 - Fastify 4.24+ (web framework)
 - TypeScript 5.6+ (strict mode)
 - MongoDB Atlas + Mongoose 8.0+ (database)
@@ -170,16 +173,16 @@ cd server && pnpm dev       # Starts server on :3000
 
 ### Common Scripts
 
-| Command | Description | Location |
-|---------|-------------|----------|
-| `pnpm dev` | Start development server | Client |
-| `pnpm build` | Build for production | Client |
-| `pnpm preview` | Preview production build | Client |
-| `pnpm test` | Run unit tests | Client |
-| `pnpm test:e2e` | Run E2E tests | Client |
-| `pnpm lint` | Lint code | Both |
-| `pnpm type-check` | TypeScript type checking | Both |
-| `pnpm validate` | Run all validation checks | Both |
+| Command           | Description               | Location |
+| ----------------- | ------------------------- | -------- |
+| `pnpm dev`        | Start development server  | Client   |
+| `pnpm build`      | Build for production      | Client   |
+| `pnpm preview`    | Preview production build  | Client   |
+| `pnpm test`       | Run unit tests            | Client   |
+| `pnpm test:e2e`   | Run E2E tests             | Client   |
+| `pnpm lint`       | Lint code                 | Both     |
+| `pnpm type-check` | TypeScript type checking  | Both     |
+| `pnpm validate`   | Run all validation checks | Both     |
 
 ## Environment Variables
 
@@ -199,12 +202,13 @@ openssl rand -hex 32                                # For CSRF_SECRET
 
 ### Configuration Files
 
-- **[client/.env.example](client/.env.example)** - 25 VITE_ prefixed variables for Vue 3 frontend
+- **[client/.env.example](client/.env.example)** - 25 VITE\_ prefixed variables for Vue 3 frontend
 - **[server/.env.example](server/.env.example)** - 104 environment variables for Fastify backend
 
 ### Key Variables
 
 **Client (Vue 3):**
+
 - `VITE_CLIENT_URL` - Application URL (Required)
 - `VITE_API_BASE_URL` - API endpoint (Required)
 - `VITE_GOOGLE_CLIENT_ID` - Google OAuth (Required)
@@ -212,6 +216,7 @@ openssl rand -hex 32                                # For CSRF_SECRET
 - `VITE_APS_MERCHANT_ID` - APS payment gateway (Required)
 
 **Server (Fastify):**
+
 - `NODE_ENV` - Environment (development|staging|production)
 - `MONGODB_URI` - Database connection (Required)
 - `JWT_SECRET` - Authentication secret (Required, 32+ chars)
@@ -222,20 +227,24 @@ openssl rand -hex 32                                # For CSRF_SECRET
 ### Provider Setup
 
 **Payment Gateways:**
+
 - **PayPal**: [Developer Console](https://developer.paypal.com/)
 - **APS**: [Amazon Payment Services](https://paymentservices.amazon.com/)
 - **HyperPay**: [HyperPay Portal](https://hyperpay.com/)
 
 **OAuth Providers:**
+
 - **Google**: [Google Cloud Console](https://console.developers.google.com/)
 - **Facebook**: [Facebook Developers](https://developers.facebook.com/)
 
 **Email Service:**
+
 - **Gmail**: Use App Passwords (not regular password)
 - **SendGrid**: API key-based authentication
 - **Mailgun**: SMTP or API key
 
 **Currency Exchange:**
+
 - **ExchangeRate-API**: [Free tier available](https://exchangerate-api.com/)
 - **Fixer.io**: [Paid service](https://fixer.io/)
 - **CurrencyLayer**: [Free tier available](https://currencylayer.com/)
@@ -261,12 +270,12 @@ openssl rand -hex 32                                # For CSRF_SECRET
 
 ### Access Tiers
 
-| Tier | Price | Features | Questions |
-|------|-------|----------|-----------|
-| **Junior** | Free | Basic questions, progress tracking | 100+ |
-| **Intermediate** | $5 | Advanced questions, analytics, bookmarks | 300+ |
-| **Senior** | $5 | Expert questions, mock interviews, custom plans | 500+ |
-| **Bundle** | $8 | Everything + lifetime access, mentorship | Unlimited |
+| Tier             | Price | Features                                        | Questions |
+| ---------------- | ----- | ----------------------------------------------- | --------- |
+| **Junior**       | Free  | Basic questions, progress tracking              | 100+      |
+| **Intermediate** | $5    | Advanced questions, analytics, bookmarks        | 300+      |
+| **Senior**       | $5    | Expert questions, mock interviews, custom plans | 500+      |
+| **Bundle**       | $8    | Everything + lifetime access, mentorship        | Unlimited |
 
 ### Demo Flows
 
@@ -442,12 +451,14 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ### الاستخدام
 
 **اللغة والمحلية:**
+
 - **الإنجليزية**: الوصول عبر مسارات `/en` مع تخطيط من اليسار لليمين
 - **العربية**: الوصول عبر مسارات `/ar` مع تخطيط من اليمين لليسار
 - **تبديل اللغة**: متاح في شريط التنقل
 - **دعم RTL**: تبديل تلقائي لاتجاه التخطيط
 
 **العملة والأسعار:**
+
 - **الكشف التلقائي**: الموقع الجغرافي يحدد العملة الافتراضية
 - **التجاوز اليدوي**: يمكن للمستخدمين التبديل بين USD/JOD/SAR
 - **الأسعار الفورية**: تحديثات يومية لأسعار الصرف مع لقطات الأسعار

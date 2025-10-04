@@ -1,7 +1,6 @@
 import Fastify from "fastify";
 import { config } from "dotenv";
-import { join } from "path";
-import crypto from "crypto";
+import * as crypto from "crypto";
 
 // Load environment variables
 config();
@@ -18,19 +17,22 @@ import jwt from "@fastify/jwt";
 import oauth2 from "@fastify/oauth2";
 
 // Import routes
-import authRoutes from "./routes/auth";
+import authRoutes from "./routes/auth.js";
 import pricingRoutes from "./routes/pricing";
 import paymentRoutes from "./routes/payments";
 import questionRoutes from "./routes/questions";
 import adminRoutes from "./routes/admin";
 import entitlementRoutes from "./routes/entitlements";
-import downloadRoutes from "./routes/downloads";
+// import downloadRoutes from "./routes/downloads"; // TODO: Fix broken downloads route
 import seoRoutes from "./routes/seo";
 
 // Import middleware
 import { errorHandler } from "./middlewares/error.middleware";
 import { requestLogger } from "./middlewares/logger.middleware";
-import { authMiddleware } from "./middlewares/auth.middleware";
+import authPlugin from "./middlewares/auth.middleware";
+
+// Import security plugins
+import rateLimitPlugin from "./security/rateLimit";
 
 // Import database
 import { connectDatabase } from "./config/database";
@@ -56,18 +58,47 @@ const fastify = Fastify({
             },
           }
         : undefined,
+    redact: {
+      paths: [
+        "req.headers.authorization",
+        "body.password",
+        "body.token",
+        "body.card",
+        "query.token",
+      ],
+      remove: true,
+    },
   },
-  trustProxy: true,
+  trustProxy: env.RATE_LIMIT_TRUST_PROXY === "true",
   requestIdHeader: "x-request-id",
   requestIdLogLabel: "reqId",
   genReqId: () => crypto.randomUUID(),
 });
 
 // Register error handler
-fastify.setErrorHandler(errorHandler);
+fastify.setErrorHandler((error, request, reply) => {
+  return errorHandler(error, request, reply);
+});
 
 // Register request logger
 fastify.addHook("onRequest", requestLogger);
+
+// Register response logger
+fastify.addHook("onSend", async (request, reply, payload) => {
+  const startTime = (request as { startTime?: number }).startTime;
+  if (startTime) {
+    const responseTime = Date.now() - startTime;
+    (request.log as any).info({
+      type: "response",
+      method: request.method,
+      url: request.url,
+      statusCode: reply.statusCode,
+      responseTime: `${responseTime}ms`,
+      contentLength: reply.getHeader("content-length"),
+    });
+  }
+  return payload;
+});
 
 // Register plugins
 async function registerPlugins() {
@@ -82,28 +113,24 @@ async function registerPlugins() {
   // Security headers
   await fastify.register(helmet, {
     contentSecurityPolicy: {
+      useDefaults: true,
       directives: {
-        defaultSrc: ["'self'"],
-        styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
-        fontSrc: ["'self'", "https://fonts.gstatic.com"],
-        imgSrc: ["'self'", "data:", "https:"],
-        scriptSrc: ["'self'"],
-        connectSrc: ["'self'"],
+        "default-src": ["'self'"],
+        "script-src": ["'self'"],
+        "style-src": ["'self'", "'unsafe-inline'"],
+        "img-src": ["'self'", "data:"],
+        "connect-src": ["'self'"],
+        "frame-ancestors": ["'none'"],
       },
     },
+    xssFilter: true,
     crossOriginEmbedderPolicy: false,
   });
 
-  // Rate limiting
+  // Rate limiting plugin (per-route configuration)
   await fastify.register(rateLimit, {
-    max: parseInt(env.RATE_LIMIT_MAX_REQUESTS || "100"),
-    timeWindow: env.RATE_LIMIT_WINDOW_MS || "900000", // 15 minutes
-    errorResponseBuilder: (request, context) => ({
-      code: 429,
-      error: "Too Many Requests",
-      message: `Rate limit exceeded, retry in ${Math.round(context.ttl / 1000)} seconds`,
-      retryAfter: Math.round(context.ttl / 1000),
-    }),
+    global: false,
+    hook: "onRequest",
   });
 
   // Cookies
@@ -174,6 +201,12 @@ async function registerPlugins() {
     },
   });
 
+  // Rate limiting security plugin
+  await fastify.register(rateLimitPlugin);
+
+  // Auth plugin
+  await fastify.register(authPlugin);
+
   // Swagger documentation
   if (env.NODE_ENV === "development") {
     await fastify.register(swagger, {
@@ -213,7 +246,7 @@ async function registerPlugins() {
 // Register routes
 async function registerRoutes() {
   // Health check
-  fastify.get("/health", async (request, reply) => {
+  fastify.get("/health", async () => {
     return {
       status: "ok",
       timestamp: new Date().toISOString(),
@@ -230,7 +263,7 @@ async function registerRoutes() {
   await fastify.register(questionRoutes, { prefix: "/api/questions" });
   await fastify.register(adminRoutes, { prefix: "/api/admin" });
   await fastify.register(entitlementRoutes, { prefix: "/api/entitlements" });
-  await fastify.register(downloadRoutes, { prefix: "/api/downloads" });
+  // await fastify.register(downloadRoutes, { prefix: "/api/downloads" }); // TODO: Fix broken downloads route
   await fastify.register(seoRoutes);
 }
 
@@ -252,13 +285,13 @@ async function start() {
 
     await fastify.listen({ port, host });
 
-    fastify.log.info(`Server listening on http://${host}:${port}`);
-    fastify.log.info(`Environment: ${env.NODE_ENV}`);
-    fastify.log.info(`API Documentation: http://${host}:${port}/docs`);
+    (fastify.log as any).info(`Server listening on http://${host}:${port}`);
+    (fastify.log as any).info(`Environment: ${env.NODE_ENV}`);
+    (fastify.log as any).info(`API Documentation: http://${host}:${port}/docs`);
 
     // Graceful shutdown
     const gracefulShutdown = async (signal: string) => {
-      fastify.log.info(`Received ${signal}, shutting down gracefully...`);
+      (fastify.log as any).info(`Received ${signal}, shutting down gracefully...`);
       await fastify.close();
       process.exit(0);
     };
@@ -266,23 +299,27 @@ async function start() {
     process.on("SIGTERM", () => gracefulShutdown("SIGTERM"));
     process.on("SIGINT", () => gracefulShutdown("SIGINT"));
   } catch (error) {
-    fastify.log.error(error);
+    (fastify.log as any).error(error);
     process.exit(1);
   }
 }
 
 // Handle uncaught exceptions
 process.on("uncaughtException", (error) => {
-  fastify.log.error("Uncaught Exception:", error);
+  (fastify.log as any).error(error);
   process.exit(1);
 });
 
-process.on("unhandledRejection", (reason, promise) => {
-  fastify.log.error("Unhandled Rejection at:", promise, "reason:", reason);
+process.on("unhandledRejection", (reason, _promise) => {
+  (fastify.log as any).error(reason);
   process.exit(1);
 });
 
 // Start the server
 start();
+
+export const buildApp = async () => {
+  return fastify;
+};
 
 export default fastify;

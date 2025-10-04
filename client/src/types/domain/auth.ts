@@ -1,13 +1,19 @@
 /**
  * Auth Domain Types
- * 
+ *
  * Types related to authentication, user management, and authorization.
  * These types are shared across the application and should be imported
  * from this centralized location.
  */
 
 // Re-export shared auth types for convenience
-export type { User, AuthState, LoginCredentials, RegisterData, AuthResponse } from "@shared/types/auth";
+export type {
+  User,
+  AuthState,
+  LoginCredentials,
+  RegisterData,
+  AuthResponse,
+} from "@shared/types/auth";
 
 /**
  * Authentication tokens for client-side state management

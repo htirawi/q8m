@@ -71,7 +71,7 @@ const pricingTiers = {
 
 export default async function pricingRoutes(fastify: FastifyInstance) {
   // Get pricing tiers
-  fastify.get("/", async (request, reply) => {
+  fastify.get("/", async (_request, reply) => {
     reply.send({
       tiers: Object.values(pricingTiers),
       currency: "USD",
@@ -112,7 +112,7 @@ export default async function pricingRoutes(fastify: FastifyInstance) {
   );
 
   // Get currency conversion rates
-  fastify.get("/rates", async (request, reply) => {
+  fastify.get("/rates", async (_request, reply) => {
     // TODO: Implement real currency conversion
     reply.send({
       base: "USD",

@@ -64,6 +64,20 @@ const envSchema = z.object({
     .min(32, "SIGNED_URL_SECRET must be at least 32 characters")
     .optional(),
 
+  // Enhanced Rate Limiting Configuration
+  RATE_LIMIT_TRUST_PROXY: z.string().default("true"),
+  RATE_LIMIT_GLOBAL_WINDOW: z.string().default("15m"),
+  RATE_LIMIT_GLOBAL_MAX: z.string().default("300"),
+  RATE_LIMIT_IP_WINDOW: z.string().default("15m"),
+  RATE_LIMIT_IP_MAX: z.string().default("100"),
+  RATE_LIMIT_USER_WINDOW: z.string().default("15m"),
+  RATE_LIMIT_USER_MAX: z.string().default("20"),
+  RATE_LIMIT_HEADERS: z.string().default("standard"),
+  RATE_LIMIT_REDIS_URL: z.string().optional(),
+  LOGIN_FAIL_BASE_BLOCK_MS: z.string().default("60000"), // 1m
+  LOGIN_FAIL_MAX_BLOCK_MS: z.string().default("3600000"), // 60m
+  HMAC_RATE_KEY_SECRET: z.string().default("change-me"),
+
   // CORS Configuration
   CORS_ORIGIN: z.string().optional(),
   CORS_CREDENTIALS: z.string().default("true"),
@@ -104,5 +118,6 @@ const envSchema = z.object({
 });
 
 export const env = envSchema.parse(process.env);
+export { envSchema };
 
 export type Env = z.infer<typeof envSchema>;

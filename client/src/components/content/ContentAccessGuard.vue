@@ -77,10 +77,10 @@
               <div class="plan-header">
                 <h5 class="plan-name">{{ plan.name }}</h5>
                 <div class="plan-price">
-                  <span class="price-amount">{{ formatPrice(plan) }}</span>
-                  <span class="price-period">{{
-                    $t(`billing.${plan.billingCycle || "monthly"}`)
-                  }}</span>
+                  <span class="price-amount">{{ formatPrice(plan) }} </span>
+                  <span class="price-period"
+                    >{{ $t(`billing.${plan.billingCycle || "monthly"}`) }}
+                  </span>
                 </div>
               </div>
               <div class="plan-features">
@@ -99,7 +99,7 @@
                         d="M5 13l4 4L19 7"
                       />
                     </svg>
-                    <span>{{ feature }}</span>
+                    <span>{{ feature }} </span>
                   </li>
                 </ul>
               </div>
@@ -161,7 +161,7 @@ import { usePaymentStore } from "@/stores/payment";
 import { useEntitlementGuard, useContentAccess } from "@/composables/useEntitlementGuard";
 import type { PlanPricing } from "@/stores/payment";
 
-interface Props {
+interface props {
   requiredEntitlement?: string;
   requiredContentLevel?: string;
   category?: string;
@@ -257,11 +257,11 @@ const goToPricing = () => {
   router.push({ path: "/pricing", query });
 };
 
-const selectPlan = (plan: PlanPricing) => {
+const selectplan = (plan: PlanPricing) => {
   router.push({ path: "/checkout", query: { plan: plan.planId } });
 };
 
-const formatPrice = (plan: PlanPricing) => {
+const formatprice = (plan: PlanPricing) => {
   const pricing = plan.pricing[paymentStore.currentCurrency];
   return pricing ? paymentStore.formatCurrency(pricing.amount, pricing.currency) : "N/A";
 };

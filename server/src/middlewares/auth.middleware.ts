@@ -1,12 +1,12 @@
-import { FastifyRequest, FastifyReply } from "fastify";
+import { FastifyRequest, FastifyReply, FastifyInstance } from "fastify";
 import { jwtService } from "../services/jwt.service.js";
 import { User } from "../models/User.js";
 import { Session } from "../models/Session.js";
 
-// Extend FastifyRequest to include user
+// Extend FastifyRequest to include custom user and session properties
 declare module "fastify" {
   interface FastifyRequest {
-    user?: {
+    authUser?: {
       id: string;
       email: string;
       name: string;
@@ -15,6 +15,15 @@ declare module "fastify" {
       isEmailVerified: boolean;
     };
     sessionId?: string;
+  }
+
+  interface FastifyInstance {
+    authenticate: (
+      options?: AuthOptions
+    ) => (request: FastifyRequest, reply: FastifyReply) => Promise<void>;
+    requireRole: (
+      roles: string | string[]
+    ) => (request: FastifyRequest, reply: FastifyReply) => Promise<void>;
   }
 }
 
@@ -47,15 +56,18 @@ export function createAuthMiddleware(options: AuthOptions = {}) {
       let payload;
       try {
         payload = jwtService.verifyAccessToken(token);
-      } catch (error: any) {
-        if (error.message === "Access token expired" && !options.allowExpiredTokens) {
+      } catch (error: unknown) {
+        if ((error as any).message === "Access token expired" && !options.allowExpiredTokens) {
           return reply.status(401).send({
             code: 401,
             error: "Unauthorized",
             message: "Access token expired",
-            code: "TOKEN_EXPIRED",
+            errorCode: "TOKEN_EXPIRED",
           });
-        } else if (error.message === "Access token expired" && options.allowExpiredTokens) {
+        } else if (
+          (error as any).message === "Access token expired" &&
+          options.allowExpiredTokens
+        ) {
           // Allow expired tokens but decode without verification
           payload = jwtService.decodeToken(token);
           if (!payload) {
@@ -75,7 +87,7 @@ export function createAuthMiddleware(options: AuthOptions = {}) {
       }
 
       // Check if session exists and is valid
-      const session = await Session.findActiveByAccessToken(token);
+      const session = await (Session as any).findActiveByAccessToken(token);
       if (!session) {
         return reply.status(401).send({
           code: 401,
@@ -85,8 +97,8 @@ export function createAuthMiddleware(options: AuthOptions = {}) {
       }
 
       // Fetch user from database
-      const user = await User.findById(payload.userId).select("+isEmailVerified");
-      if (!user || !user.isActive) {
+      const user = await User.findById((payload as any).userId).select("+isEmailVerified");
+      if (!user || !(user as any).isActive) {
         return reply.status(401).send({
           code: 401,
           error: "Unauthorized",
@@ -115,7 +127,7 @@ export function createAuthMiddleware(options: AuthOptions = {}) {
       // Check entitlement requirements
       if (options.requiredEntitlements) {
         const hasRequiredEntitlements = options.requiredEntitlements.every((entitlement) =>
-          user.entitlements.includes(entitlement)
+          (user as any).entitlements.includes(entitlement)
         );
         if (!hasRequiredEntitlements) {
           return reply.status(403).send({
@@ -130,17 +142,17 @@ export function createAuthMiddleware(options: AuthOptions = {}) {
       await session.refresh();
 
       // Attach user and session info to request
-      request.user = {
-        id: user._id.toString(),
+      request.authUser = {
+        id: (user as any)._id.toString(),
         email: user.email,
         name: user.name,
         role: user.role,
-        entitlements: user.entitlements,
+        entitlements: (user as any).entitlements,
         isEmailVerified: user.isEmailVerified,
       };
       request.sessionId = session._id.toString();
     } catch (error) {
-      request.log.error("Authentication error:", error);
+      (request.log as any).error("Authentication error:", error);
       return reply.status(500).send({
         code: 500,
         error: "Internal Server Error",
@@ -153,7 +165,7 @@ export function createAuthMiddleware(options: AuthOptions = {}) {
 /**
  * Optional authentication middleware - doesn't fail if no token
  */
-export const optionalAuth = async (request: FastifyRequest, reply: FastifyReply) => {
+export const optionalAuth = async (request: FastifyRequest) => {
   try {
     const authHeader = request.headers.authorization;
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -165,17 +177,17 @@ export const optionalAuth = async (request: FastifyRequest, reply: FastifyReply)
 
     try {
       const payload = jwtService.verifyAccessToken(token);
-      const session = await Session.findActiveByAccessToken(token);
+      const session = await (Session as any).findActiveByAccessToken(token);
 
       if (session) {
         const user = await User.findById(payload.userId).select("+isEmailVerified");
-        if (user && user.isActive) {
-          request.user = {
-            id: user._id.toString(),
+        if (user && (user as any).isActive) {
+          request.authUser = {
+            id: (user as any)._id.toString(),
             email: user.email,
             name: user.name,
             role: user.role,
-            entitlements: user.entitlements,
+            entitlements: (user as any).entitlements,
             isEmailVerified: user.isEmailVerified,
           };
           request.sessionId = session._id.toString();
@@ -184,10 +196,10 @@ export const optionalAuth = async (request: FastifyRequest, reply: FastifyReply)
       }
     } catch (error) {
       // Token invalid or expired, but we don't fail for optional auth
-      request.log.debug("Optional auth failed:", error);
+      (request.log as any).debug("Optional auth failed:", error);
     }
   } catch (error) {
-    request.log.error("Optional authentication error:", error);
+    (request.log as any).error("Optional authentication error:", error);
     // Don't fail for optional auth
   }
 };
@@ -195,13 +207,13 @@ export const optionalAuth = async (request: FastifyRequest, reply: FastifyReply)
 /**
  * Rate limiting middleware for auth endpoints
  */
-export const authRateLimit = async (request: FastifyRequest, reply: FastifyReply) => {
+export const authRateLimit = async (request: FastifyRequest) => {
   const ip = request.ip;
-  const key = `auth:${ip}`;
+  // TODO: Implement Redis-based rate limiting using key: `auth:${ip}`
 
   // This would integrate with Redis for actual rate limiting
   // For now, we'll just log the attempt
-  request.log.info(`Auth attempt from IP: ${ip}`);
+  (request.log as any).info(`Auth attempt from IP: ${ip}`);
 };
 
 /**
@@ -241,3 +253,13 @@ export const requireBundle = createAuthMiddleware({
 
 // Export default authentication middleware
 export const authenticate = createAuthMiddleware();
+
+// Fastify plugin registration
+export default async function authPlugin(fastify: FastifyInstance) {
+  // Register authentication methods on fastify instance
+  fastify.decorate("authenticate", createAuthMiddleware);
+  fastify.decorate("requireRole", (roles: string | string[]) => {
+    const roleArray = Array.isArray(roles) ? roles : [roles];
+    return createAuthMiddleware({ requiredRole: roleArray });
+  });
+}

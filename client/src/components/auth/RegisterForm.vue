@@ -3,9 +3,11 @@
     <div class="form-header">
       <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100">
         {{ $t("auth.register.title") }}
+
       </h2>
       <p class="mt-2 text-gray-600 dark:text-gray-400">
         {{ $t("auth.register.subtitle") }}
+
       </p>
     </div>
 
@@ -25,7 +27,9 @@
           :class="{ 'border-error-500 focus:border-error-500 focus:ring-error-500': errors.name }"
           :placeholder="$t('auth.fields.namePlaceholder')"
         />
-        <p v-if="errors.name" class="form-error mt-1">{{ errors.name }}</p>
+        <p v-if="errors.name" class="form-error mt-1">{{ errors.name }}
+
+</p>
       </div>
 
       <!-- Email Field -->
@@ -43,7 +47,9 @@
           :class="{ 'border-error-500 focus:border-error-500 focus:ring-error-500': errors.email }"
           :placeholder="$t('auth.fields.emailPlaceholder')"
         />
-        <p v-if="errors.email" class="form-error mt-1">{{ errors.email }}</p>
+        <p v-if="errors.email" class="form-error mt-1">{{ errors.email }}
+
+</p>
       </div>
 
       <!-- Password Field -->
@@ -76,7 +82,9 @@
             <EyeSlashIcon v-else class="h-5 w-5 text-gray-400 hover:text-gray-600" />
           </button>
         </div>
-        <p v-if="errors.password" class="form-error mt-1">{{ errors.password }}</p>
+        <p v-if="errors.password" class="form-error mt-1">{{ errors.password }}
+
+</p>
 
         <!-- Password Strength Indicator -->
         <div v-if="formData.password" class="mt-2">
@@ -90,6 +98,7 @@
           </div>
           <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
             {{ getPasswordStrengthText() }}
+
           </p>
         </div>
       </div>
@@ -114,7 +123,9 @@
           }"
           :placeholder="$t('auth.fields.confirmPasswordPlaceholder')"
         />
-        <p v-if="errors.confirmPassword" class="form-error mt-1">{{ errors.confirmPassword }}</p>
+        <p v-if="errors.confirmPassword" class="form-error mt-1">{{ errors.confirmPassword }}
+
+</p>
       </div>
 
       <!-- Terms and Conditions -->
@@ -123,24 +134,28 @@
           <input
             v-model="formData.acceptTerms"
             type="checkbox"
-            class="text-primary-600 focus:ring-primary-500 mt-1 h-4 w-4 rounded border-gray-300"
+            class="mt-1 h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
           />
           <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">
             {{ $t("auth.register.agreeToTerms") }}
+
             <a
               href="/terms"
               target="_blank"
               class="text-primary-600 hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300"
             >
               {{ $t("auth.register.termsOfService") }}
+
             </a>
             {{ $t("auth.register.and") }}
+
             <a
               href="/privacy"
               target="_blank"
               class="text-primary-600 hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300"
             >
               {{ $t("auth.register.privacyPolicy") }}
+
             </a>
           </span>
         </label>
@@ -171,16 +186,20 @@
             ></path>
           </svg>
           {{ $t("auth.register.creating") }}
+
         </span>
-        <span v-else>{{ $t("auth.register.createAccount") }}</span>
+        <span v-else>{{ $t("auth.register.createAccount") }}
+
+</span>
       </button>
 
       <!-- Error Message -->
       <div
         v-if="error"
-        class="bg-error-50 border-error-200 text-error-700 dark:bg-error-900/20 dark:border-error-800 dark:text-error-400 rounded-lg border px-4 py-3"
+        class="rounded-lg border border-error-200 bg-error-50 px-4 py-3 text-error-700 dark:border-error-800 dark:bg-error-900/20 dark:text-error-400"
       >
         {{ error }}
+
       </div>
     </form>
 
@@ -193,6 +212,7 @@
         <div class="relative flex justify-center text-sm">
           <span class="bg-white px-2 text-gray-500 dark:bg-gray-900 dark:text-gray-400">
             {{ $t("auth.register.orContinueWith") }}
+
           </span>
         </div>
       </div>
@@ -225,6 +245,7 @@
           />
         </svg>
         {{ $t("auth.register.google") }}
+
       </button>
 
       <button
@@ -239,6 +260,7 @@
           />
         </svg>
         {{ $t("auth.register.facebook") }}
+
       </button>
     </div>
 
@@ -246,12 +268,14 @@
     <div class="mt-6 text-center">
       <p class="text-sm text-gray-600 dark:text-gray-400">
         {{ $t("auth.register.alreadyHaveAccount") }}
+
         <button
           type="button"
           @click="$emit('show-login')"
-          class="text-primary-600 hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300 font-medium"
+          class="font-medium text-primary-600 hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300"
         >
           {{ $t("auth.register.signIn") }}
+
         </button>
       </p>
     </div>
@@ -264,7 +288,7 @@ import { useI18n } from "vue-i18n";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/vue/24/outline";
 import { useAuthStore } from "@/stores/auth";
 
-interface RegisterFormData {
+interface registerformdata {
   name: string;
   email: string;
   password: string;
@@ -272,7 +296,7 @@ interface RegisterFormData {
   acceptTerms: boolean;
 }
 
-interface FormErrors {
+interface formerrors {
   name?: string;
   email?: string;
   password?: string;
@@ -285,7 +309,6 @@ const authStore = useAuthStore();
 
 // Emits
 defineEmits<{
-  "show-login": [];
   "oauth-login": [provider: "google" | "facebook"];
   "registration-success": [email: string];
 }>();
@@ -348,13 +371,8 @@ function getPasswordStrengthText(): string {
   const strength = calculatePasswordStrength(formData.password);
 
   switch (strength) {
-    case 0:
     case 1:
       return t("auth.validation.passwordStrength.weak");
-    case 2:
-      return t("auth.validation.passwordStrength.fair");
-    case 3:
-      return t("auth.validation.passwordStrength.good");
     case 4:
       return t("auth.validation.passwordStrength.strong");
     default:
@@ -424,10 +442,10 @@ async function handleSubmit(): Promise<void> {
 
 // Fix emit usage
 const emit = defineEmits<{
-  "show-login": [];
   "oauth-login": [provider: "google" | "facebook"];
   "registration-success": [email: string];
 }>();
+
 </script>
 
 <style scoped>
@@ -441,13 +459,13 @@ const emit = defineEmits<{
 
 /* Custom checkbox styles */
 input[type="checkbox"] {
-  @apply text-primary-600 focus:border-primary-300 focus:ring-primary-200 rounded border-gray-300 shadow-sm focus:ring focus:ring-opacity-50;
+  @apply rounded border-gray-300 text-primary-600 shadow-sm focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50;
 }
 
 /* Focus styles for better accessibility */
 input:focus,
 button:focus {
-  @apply ring-primary-500 outline-none ring-2 ring-offset-2;
+  @apply outline-none ring-2 ring-primary-500 ring-offset-2;
 }
 
 /* Loading state */

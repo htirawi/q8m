@@ -21,18 +21,22 @@ export function csrfMiddleware() {
       "/api/auth/verify-email",
     ];
 
-    if (publicPaths.some(path => request.url.startsWith(path))) {
+    if (publicPaths.some((path) => request.url.startsWith(path))) {
       return;
     }
 
     // Get CSRF token from header
     const csrfToken = request.headers["x-csrf-token"] as string;
-    
+
     // Get CSRF token from cookie
     const cookieToken = request.cookies?.csrfToken;
 
     // Verify CSRF token
-    if (!secureCookieService.verifyCSRFToken(csrfToken, cookieToken)) {
+    if (
+      !csrfToken ||
+      !cookieToken ||
+      !secureCookieService.verifyCSRFToken(csrfToken, cookieToken)
+    ) {
       return reply.status(403).send({
         code: 403,
         error: "Forbidden",
@@ -54,7 +58,7 @@ export function generateCSRFToken() {
 
     const csrfToken = secureCookieService.generateCSRFToken();
     secureCookieService.setCSRFTokenCookie(reply, csrfToken);
-    
+
     // Add CSRF token to response headers for client access
     reply.header("X-CSRF-Token", csrfToken);
   };

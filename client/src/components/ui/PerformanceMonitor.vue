@@ -16,6 +16,7 @@
             <div class="metric-label">LCP</div>
             <div class="metric-value">
               {{ formatMetric(metrics.lcp) }}
+
             </div>
             <div class="metric-threshold">2.5s</div>
           </div>
@@ -24,6 +25,7 @@
             <div class="metric-label">FID</div>
             <div class="metric-value">
               {{ formatMetric(metrics.fid) }}
+
             </div>
             <div class="metric-threshold">100ms</div>
           </div>
@@ -32,6 +34,7 @@
             <div class="metric-label">CLS</div>
             <div class="metric-value">
               {{ formatMetric(metrics.cls, 3) }}
+
             </div>
             <div class="metric-threshold">0.1</div>
           </div>
@@ -40,6 +43,7 @@
             <div class="metric-label">FCP</div>
             <div class="metric-value">
               {{ formatMetric(metrics.fcp) }}
+
             </div>
             <div class="metric-threshold">1.8s</div>
           </div>
@@ -48,6 +52,7 @@
             <div class="metric-label">TTFB</div>
             <div class="metric-value">
               {{ formatMetric(metrics.ttfb) }}
+
             </div>
             <div class="metric-threshold">600ms</div>
           </div>
@@ -60,19 +65,27 @@
         <div class="resource-stats">
           <div class="stat-item">
             <span class="stat-label">Total Resources:</span>
-            <span class="stat-value">{{ resourceTimings.length }}</span>
+            <span class="stat-value">{{ resourceTimings.length }}
+
+</span>
           </div>
           <div class="stat-item">
             <span class="stat-label">Total Size:</span>
-            <span class="stat-value">{{ formatBytes(totalSize) }}</span>
+            <span class="stat-value">{{ formatBytes(totalSize) }}
+
+</span>
           </div>
           <div class="stat-item">
             <span class="stat-label">Slow Resources:</span>
-            <span class="stat-value">{{ slowResources.length }}</span>
+            <span class="stat-value">{{ slowResources.length }}
+
+</span>
           </div>
           <div class="stat-item">
             <span class="stat-label">Large Resources:</span>
-            <span class="stat-value">{{ largeResources.length }}</span>
+            <span class="stat-value">{{ largeResources.length }}
+
+</span>
           </div>
         </div>
       </div>
@@ -86,8 +99,10 @@
             :key="index"
             class="recommendation-item"
           >
-            <ExclamationTriangleIcon class="text-warning-500 h-4 w-4" />
-            <span>{{ recommendation }}</span>
+            <ExclamationTriangleIcon class="h-4 w-4 text-warning-500" />
+            <span>{{ recommendation }}
+
+</span>
           </div>
         </div>
       </div>
@@ -98,11 +113,15 @@
         <div class="memory-stats">
           <div class="stat-item">
             <span class="stat-label">Used:</span>
-            <span class="stat-value">{{ formatBytes(memoryUsage.usedJSHeapSize) }}</span>
+            <span class="stat-value">{{ formatBytes(memoryUsage.usedJSHeapSize) }}
+
+</span>
           </div>
           <div class="stat-item">
             <span class="stat-label">Total:</span>
-            <span class="stat-value">{{ formatBytes(memoryUsage.totalJSHeapSize) }}</span>
+            <span class="stat-value">{{ formatBytes(memoryUsage.totalJSHeapSize) }}
+
+</span>
           </div>
           <div class="stat-item">
             <span class="stat-label">Limit:</span>
@@ -142,6 +161,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import { usePerformance } from "../composables/usePerformance";
+
 import {
   XMarkIcon,
   ExclamationTriangleIcon,
@@ -176,10 +196,9 @@ const memoryPercentage = computed(() => {
   return (memoryUsage.value.usedJSHeapSize / memoryUsage.value.jsHeapSizeLimit) * 100;
 });
 
-const getMetricClass = (metric: string) => {
+const getmetricclass = (metric: string) => {
   const value = metrics.value[metric as keyof typeof metrics.value];
   if (value === null) return "metric-unknown";
-
   const thresholds: Record<string, number> = {
     lcp: 2500,
     fid: 100,
@@ -218,16 +237,16 @@ const formatBytes = (bytes: number): string => {
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`;
 };
 
-const toggleMonitor = () => {
+const togglemonitor = () => {
   showMonitor.value = !showMonitor.value;
 };
 
-const refreshMetrics = () => {
+const refreshmetrics = () => {
   performance.analyzeResourceTimings();
 };
 
-const exportMetrics = () => {
-  const exportData = {
+const exportmetrics = () => {
+  const exportdata = {
     timestamp: new Date().toISOString(),
     metrics: metrics.value,
     resourceTimings: resourceTimings.value,
@@ -268,19 +287,19 @@ onUnmounted(() => {
 
 <style scoped>
 .performance-monitor {
-  @apply dark:bg-secondary-800 border-secondary-200 dark:border-secondary-700 fixed right-4 top-4 z-50 max-h-[80vh] w-96 max-w-full overflow-hidden rounded-lg border bg-white shadow-xl;
+  @apply fixed right-4 top-4 z-50 max-h-[80vh] w-96 max-w-full overflow-hidden rounded-lg border border-secondary-200 bg-white shadow-xl dark:border-secondary-700 dark:bg-secondary-800;
 }
 
 .monitor-header {
-  @apply border-secondary-200 dark:border-secondary-700 flex items-center justify-between border-b p-4;
+  @apply flex items-center justify-between border-b border-secondary-200 p-4 dark:border-secondary-700;
 }
 
 .monitor-header h3 {
-  @apply text-secondary-900 text-lg font-semibold dark:text-white;
+  @apply text-lg font-semibold text-secondary-900 dark:text-white;
 }
 
 .close-btn {
-  @apply text-secondary-400 hover:text-secondary-600 hover:bg-secondary-100 focus:ring-primary-500 dark:text-secondary-500 dark:hover:text-secondary-300 dark:hover:bg-secondary-700 rounded-md p-1 focus:outline-none focus:ring-2;
+  @apply rounded-md p-1 text-secondary-400 hover:bg-secondary-100 hover:text-secondary-600 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:text-secondary-500 dark:hover:bg-secondary-700 dark:hover:text-secondary-300;
 }
 
 .monitor-content {
@@ -292,7 +311,7 @@ onUnmounted(() => {
 }
 
 .metrics-section h4 {
-  @apply text-secondary-700 dark:text-secondary-300 mb-3 text-sm font-medium;
+  @apply mb-3 text-sm font-medium text-secondary-700 dark:text-secondary-300;
 }
 
 .metrics-grid {
@@ -304,31 +323,31 @@ onUnmounted(() => {
 }
 
 .metric-card.metric-good {
-  @apply bg-success-50 border-success-200 dark:bg-success-900/20 dark:border-success-800;
+  @apply border-success-200 bg-success-50 dark:border-success-800 dark:bg-success-900/20;
 }
 
 .metric-card.metric-warning {
-  @apply bg-warning-50 border-warning-200 dark:bg-warning-900/20 dark:border-warning-800;
+  @apply border-warning-200 bg-warning-50 dark:border-warning-800 dark:bg-warning-900/20;
 }
 
 .metric-card.metric-poor {
-  @apply bg-error-50 border-error-200 dark:bg-error-900/20 dark:border-error-800;
+  @apply border-error-200 bg-error-50 dark:border-error-800 dark:bg-error-900/20;
 }
 
 .metric-card.metric-unknown {
-  @apply bg-secondary-50 border-secondary-200 dark:bg-secondary-700 dark:border-secondary-600;
+  @apply border-secondary-200 bg-secondary-50 dark:border-secondary-600 dark:bg-secondary-700;
 }
 
 .metric-label {
-  @apply text-secondary-600 dark:text-secondary-400 text-xs font-medium uppercase tracking-wide;
+  @apply text-xs font-medium uppercase tracking-wide text-secondary-600 dark:text-secondary-400;
 }
 
 .metric-value {
-  @apply text-secondary-900 mt-1 text-lg font-bold dark:text-white;
+  @apply mt-1 text-lg font-bold text-secondary-900 dark:text-white;
 }
 
 .metric-threshold {
-  @apply text-secondary-500 dark:text-secondary-400 mt-1 text-xs;
+  @apply mt-1 text-xs text-secondary-500 dark:text-secondary-400;
 }
 
 .resource-stats {
@@ -336,15 +355,15 @@ onUnmounted(() => {
 }
 
 .stat-item {
-  @apply bg-secondary-50 dark:bg-secondary-700 flex items-center justify-between rounded p-2;
+  @apply flex items-center justify-between rounded bg-secondary-50 p-2 dark:bg-secondary-700;
 }
 
 .stat-label {
-  @apply text-secondary-600 dark:text-secondary-400 text-sm;
+  @apply text-sm text-secondary-600 dark:text-secondary-400;
 }
 
 .stat-value {
-  @apply text-secondary-900 text-sm font-medium dark:text-white;
+  @apply text-sm font-medium text-secondary-900 dark:text-white;
 }
 
 .recommendations {
@@ -352,11 +371,11 @@ onUnmounted(() => {
 }
 
 .recommendation-item {
-  @apply bg-warning-50 dark:bg-warning-900/20 border-warning-200 dark:border-warning-800 flex items-start space-x-2 rounded border p-2;
+  @apply flex items-start space-x-2 rounded border border-warning-200 bg-warning-50 p-2 dark:border-warning-800 dark:bg-warning-900/20;
 }
 
 .recommendation-item span {
-  @apply text-warning-800 dark:text-warning-200 text-sm;
+  @apply text-sm text-warning-800 dark:text-warning-200;
 }
 
 .memory-stats {
@@ -364,27 +383,27 @@ onUnmounted(() => {
 }
 
 .memory-bar {
-  @apply bg-secondary-200 dark:bg-secondary-700 h-2 w-full overflow-hidden rounded-full;
+  @apply h-2 w-full overflow-hidden rounded-full bg-secondary-200 dark:bg-secondary-700;
 }
 
 .memory-fill {
-  @apply bg-primary-500 h-full transition-all duration-300;
+  @apply h-full bg-primary-500 transition-all duration-300;
 }
 
 .monitor-actions {
-  @apply border-secondary-200 dark:border-secondary-700 flex space-x-2 border-t p-4;
+  @apply flex space-x-2 border-t border-secondary-200 p-4 dark:border-secondary-700;
 }
 
 .action-btn {
-  @apply text-primary-600 hover:text-primary-700 hover:bg-primary-50 focus:ring-primary-500 dark:text-primary-400 dark:hover:text-primary-300 dark:hover:bg-primary-900/20 flex items-center space-x-2 rounded-md px-3 py-2 text-sm font-medium transition-colors focus:outline-none focus:ring-2;
+  @apply flex items-center space-x-2 rounded-md px-3 py-2 text-sm font-medium text-primary-600 transition-colors hover:bg-primary-50 hover:text-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:text-primary-400 dark:hover:bg-primary-900/20 dark:hover:text-primary-300;
 }
 
 .monitor-toggle {
-  @apply bg-primary-600 hover:bg-primary-700 focus:ring-primary-500 fixed bottom-4 right-4 z-40 rounded-full p-3 text-white shadow-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2;
+  @apply fixed bottom-4 right-4 z-40 rounded-full bg-primary-600 p-3 text-white shadow-lg transition-colors hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
 }
 
 /* Mobile optimizations */
-@media (max-width: 640px) {
+@media (width <= 640px) {
   .performance-monitor {
     @apply left-2 right-2 top-2 w-auto;
   }

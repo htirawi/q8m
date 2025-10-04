@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any, no-console, no-undef */
+/* TODO: Legacy patterns - Replace 'any' types with proper typing and remove unused vars in next PR */
 import { ref, computed, onMounted, readonly } from "vue";
 
 interface PWAInstallPrompt {

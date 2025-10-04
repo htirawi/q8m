@@ -36,7 +36,7 @@ export interface IPurchase extends Document {
     expiryMonth?: number;
     expiryYear?: number;
   };
-  gatewayResponse?: Record<string, any>;
+  gatewayResponse?: Record<string, unknown>;
   refundDetails?: {
     amount: string;
     currency: string;
@@ -44,11 +44,15 @@ export interface IPurchase extends Document {
     refundedAt: Date;
     gatewayRefundId?: string;
   };
+  planType?: "INTERMEDIATE" | "SENIOR" | "BUNDLE";
+  billingCycle?: "monthly" | "yearly";
   metadata?: {
     userAgent?: string;
     ipAddress?: string;
     referrer?: string;
     campaign?: string;
+    originalCurrency?: string;
+    exchangeRate?: string;
   };
   createdAt: Date;
   updatedAt: Date;
@@ -91,7 +95,7 @@ const purchaseSchema = new Schema<IPurchase>(
         type: String,
         required: true,
         validate: {
-          validator: function (v: string) {
+          validator(v: string) {
             return /^\d+(\.\d{2})?$/.test(v);
           },
           message: "Amount must be a valid decimal number",
@@ -125,7 +129,7 @@ const purchaseSchema = new Schema<IPurchase>(
             type: String,
             required: true,
             validate: {
-              validator: function (v: string) {
+              validator(v: string) {
                 return /^\d+(\.\d{2})?$/.test(v);
               },
               message: "Price must be a valid decimal number",
@@ -196,6 +200,14 @@ const purchaseSchema = new Schema<IPurchase>(
       refundedAt: Date,
       gatewayRefundId: String,
     },
+    planType: {
+      type: String,
+      enum: ["INTERMEDIATE", "SENIOR", "BUNDLE"],
+    },
+    billingCycle: {
+      type: String,
+      enum: ["monthly", "yearly"],
+    },
     metadata: {
       userAgent: {
         type: String,
@@ -210,13 +222,15 @@ const purchaseSchema = new Schema<IPurchase>(
       },
       referrer: String,
       campaign: String,
+      originalCurrency: String,
+      exchangeRate: String,
     },
   },
   {
     timestamps: true,
     toJSON: {
-      transform: function (doc, ret) {
-        ret.id = ret._id.toString();
+      transform(_doc, ret: Record<string, unknown>) {
+        ret.id = (ret._id as any).toString();
         delete ret._id;
         delete ret.__v;
         return ret;
@@ -237,7 +251,7 @@ purchaseSchema.virtual("formattedAmount").get(function () {
 });
 
 // Instance method to mark as completed
-purchaseSchema.methods.markAsCompleted = function (gatewayResponse?: Record<string, any>) {
+purchaseSchema.methods.markAsCompleted = function (gatewayResponse?: Record<string, unknown>) {
   this.status = "completed";
   if (gatewayResponse) {
     this.gatewayResponse = gatewayResponse;
@@ -297,12 +311,12 @@ purchaseSchema.statics.getUserPurchases = function (
 
 // Static method to get revenue statistics
 purchaseSchema.statics.getRevenueStats = function (startDate?: Date, endDate?: Date) {
-  const match: any = { status: "completed" };
+  const match: unknown = { status: "completed" };
 
   if (startDate || endDate) {
-    match.createdAt = {};
-    if (startDate) match.createdAt.$gte = startDate;
-    if (endDate) match.createdAt.$lte = endDate;
+    (match as any).createdAt = {};
+    if (startDate) (match as any).createdAt.$gte = startDate;
+    if (endDate) (match as any).createdAt.$lte = endDate;
   }
 
   return this.aggregate([

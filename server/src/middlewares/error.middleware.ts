@@ -5,7 +5,7 @@ export const errorHandler = (error: FastifyError, request: FastifyRequest, reply
   const { log } = request;
 
   // Log error
-  log.error({
+  (log as any).error({
     error: {
       message: error.message,
       stack: error.stack,

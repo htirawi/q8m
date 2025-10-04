@@ -1,4 +1,5 @@
 import { env } from "../config/env.js";
+import * as crypto from "crypto";
 
 export interface SecureCookieOptions {
   httpOnly: boolean;
@@ -11,16 +12,18 @@ export interface SecureCookieOptions {
 
 export class SecureCookieService {
   private readonly cookieSecret: string;
+  // cookieSecret is used for cookie signing and verification
 
   constructor() {
     this.cookieSecret = env.CSRF_SECRET;
+    // cookieSecret is used for cookie signing and verification
   }
 
   /**
    * Set a secure httpOnly cookie
    */
   setSecureCookie(
-    reply: any,
+    reply: unknown,
     name: string,
     value: string,
     options: Partial<SecureCookieOptions> = {}
@@ -35,7 +38,7 @@ export class SecureCookieService {
 
     const cookieOptions = { ...defaultOptions, ...options };
 
-    reply.setCookie(name, value, {
+    (reply as any).setCookie(name, value, {
       httpOnly: cookieOptions.httpOnly,
       secure: cookieOptions.secure,
       sameSite: cookieOptions.sameSite,
@@ -48,7 +51,7 @@ export class SecureCookieService {
   /**
    * Set access token cookie
    */
-  setAccessTokenCookie(reply: any, token: string): void {
+  setAccessTokenCookie(reply: unknown, token: string): void {
     this.setSecureCookie(reply, "accessToken", token, {
       maxAge: 15 * 60 * 1000, // 15 minutes
     });
@@ -57,7 +60,7 @@ export class SecureCookieService {
   /**
    * Set refresh token cookie
    */
-  setRefreshTokenCookie(reply: any, token: string): void {
+  setRefreshTokenCookie(reply: unknown, token: string): void {
     this.setSecureCookie(reply, "refreshToken", token, {
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
@@ -66,15 +69,15 @@ export class SecureCookieService {
   /**
    * Clear authentication cookies
    */
-  clearAuthCookies(reply: any): void {
-    reply.clearCookie("accessToken", {
+  clearAuthCookies(reply: unknown): void {
+    (reply as any).clearCookie("accessToken", {
       httpOnly: true,
       secure: env.NODE_ENV === "production",
       sameSite: "strict",
       path: "/",
     });
 
-    reply.clearCookie("refreshToken", {
+    (reply as any).clearCookie("refreshToken", {
       httpOnly: true,
       secure: env.NODE_ENV === "production",
       sameSite: "strict",
@@ -86,14 +89,13 @@ export class SecureCookieService {
    * Generate CSRF token
    */
   generateCSRFToken(): string {
-    const crypto = require("crypto");
     return crypto.randomBytes(32).toString("hex");
   }
 
   /**
    * Set CSRF token cookie
    */
-  setCSRFTokenCookie(reply: any, token: string): void {
+  setCSRFTokenCookie(reply: unknown, token: string): void {
     this.setSecureCookie(reply, "csrfToken", token, {
       maxAge: 60 * 60 * 1000, // 1 hour
     });
@@ -107,6 +109,13 @@ export class SecureCookieService {
       return false;
     }
     return requestToken === cookieToken;
+  }
+
+  /**
+   * Get the cookie secret for external use
+   */
+  getCookieSecret(): string {
+    return this.cookieSecret;
   }
 }
 

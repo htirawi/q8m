@@ -20,11 +20,27 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: ["javascript", "typescript"]
+        language: ["javascript"]
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Install dependencies
+        run: pnpm i --frozen-lockfile || npm ci
+
+      - name: Build workspace
+        run: pnpm -w build || npm run build || true
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
@@ -39,3 +55,44 @@ jobs:
         uses: github/codeql-action/analyze@v3
         with:
           category: "/language:${{matrix.language}}"
+
+  analyze_ts:
+    name: Analyze Code Security (typescript)
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Install dependencies
+        run: pnpm i --frozen-lockfile || npm ci
+
+      - name: Build workspace
+        run: pnpm -w build || npm run build || true
+
+      - name: Initialize CodeQL (typescript alias)
+        uses: github/codeql-action/init@v3
+        with:
+          languages: javascript
+          queries: security-extended,security-and-quality
+
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v3
+
+      - name: Perform CodeQL Analysis (typescript category)
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:typescript"

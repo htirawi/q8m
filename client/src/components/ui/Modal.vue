@@ -1,6 +1,6 @@
 <template>
-  <Teleport to="body">
-    <Transition name="modal" appear>
+  <teleport to="body">
+    <transition name="modal" @enter="handleEnter" @leave="handleLeave">
       <div
         v-if="isOpen"
         class="modal-overlay"
@@ -9,300 +9,242 @@
         :aria-labelledby="titleId"
         :aria-describedby="descriptionId"
         @click="handleOverlayClick"
+        @keydown="handleKeydown"
       >
-        <div :class="modalClasses" @click.stop>
-          <!-- Header -->
-          <div v-if="showHeader" class="modal-header">
-            <h2 v-if="title" :id="titleId" class="modal-title">
-              {{ title }}
-            </h2>
-
+        <div ref="modalRef" class="modal-container" :class="containerClasses" @click.stop>
+          <header v-if="title || $slots.header" class="modal-header">
+            <slot name="header">
+              <h2 :id="titleId" class="modal-title">
+                {{ title }}
+              </h2>
+            </slot>
             <button
-              v-if="showCloseButton"
+              v-if="closable"
               type="button"
               class="modal-close"
-              :aria-label="$t('common.close')"
+              :aria-label="$t('a11y.closeModal')"
               @click="handleClose"
             >
-              <XMarkIcon class="h-5 w-5" />
+              <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
             </button>
-          </div>
+          </header>
 
-          <!-- Content -->
           <div class="modal-content">
             <div v-if="description" :id="descriptionId" class="modal-description">
               {{ description }}
             </div>
-
             <slot />
           </div>
 
-          <!-- Footer -->
-          <div v-if="$slots.footer" class="modal-footer">
+          <footer v-if="$slots.footer" class="modal-footer">
             <slot name="footer" />
-          </div>
+          </footer>
         </div>
       </div>
-    </Transition>
-  </Teleport>
+    </transition>
+  </teleport>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, onUnmounted, useId } from "vue";
-import { useI18n } from "vue-i18n";
-import { XMarkIcon } from "@heroicons/vue/24/outline";
+import { ref, computed, nextTick, onMounted, onUnmounted } from "vue";
 
-interface Props {
-  modelValue: boolean;
+export interface modalprops {
+  isOpen: boolean;
   title?: string;
   description?: string;
-  size?: "sm" | "md" | "lg" | "xl" | "2xl" | "full";
-  showHeader?: boolean;
-  showCloseButton?: boolean;
+  size?: "sm" | "md" | "lg" | "xl" | "full";
+  closable?: boolean;
   closeOnOverlay?: boolean;
   closeOnEscape?: boolean;
-  persistent?: boolean;
-  scrollable?: boolean;
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  modelValue: false,
-  title: "",
-  description: "",
+const props = withDefaults(defineProps<ModalProps>(), {
   size: "md",
-  showHeader: true,
-  showCloseButton: true,
+  closable: true,
   closeOnOverlay: true,
   closeOnEscape: true,
-  persistent: false,
-  scrollable: true,
 });
 
-const emit = defineEmits<{
-  "update:modelValue": [value: boolean];
+const emit = defineemits<{
   close: [];
-  open: [];
+  "update:isOpen": [value: boolean];
 }>();
 
-const { t } = useI18n();
+// Refs
+const modalRef = ref<HTMLElement>();
+const titleId = computed(() => `modal-title-${Math.random().toString(36).substr(2, 9)}`);
+const descriptionId = computed(
+  () => `modal-description-${Math.random().toString(36).substr(2, 9)}`
+);
 
-// Generate unique IDs
-const titleId = useId();
-const descriptionId = useId();
-
-const isOpen = computed({
-  get: () => props.modelValue,
-  set: (value) => emit("update:modelValue", value),
-});
-
-const modalClasses = computed(() => {
-  const baseClasses = [
-    "modal",
-    "relative",
-    "bg-white",
-    "rounded-lg",
-    "shadow-xl",
-    "transform",
-    "transition-all",
-    "duration-300",
-    "dark:bg-secondary-800",
-  ];
-
-  // Size classes
+// Computed properties
+const containerClasses = computed(() => {
   const sizeClasses = {
-    sm: ["max-w-sm"],
-    md: ["max-w-md"],
-    lg: ["max-w-lg"],
-    xl: ["max-w-xl"],
-    "2xl": ["max-w-2xl"],
-    full: ["max-w-full", "mx-4", "my-4"],
+    sm: "max-w-sm",
+    md: "max-w-md",
+    lg: "max-w-lg",
+    xl: "max-w-xl",
+    full: "max-w-full mx-4",
   };
 
-  // Scrollable classes
-  if (props.scrollable) {
-    baseClasses.push("max-h-screen", "overflow-y-auto");
-  }
-
-  return [...baseClasses, ...sizeClasses[props.size]].join(" ");
+  return ["modal-dialog", sizeClasses[props.size]].join(" ");
 });
 
+// Methods
 const handleClose = () => {
-  if (!props.persistent) {
-    isOpen.value = false;
-    emit("close");
-  }
+  emit("close");
+  emit("update:isOpen", false);
 };
 
-const handleOverlayClick = () => {
-  if (props.closeOnOverlay && !props.persistent) {
+const handleoverlayclick = () => {
+  if (props.closeOnOverlay) {
     handleClose();
   }
 };
 
-const handleEscape = (event: KeyboardEvent) => {
-  if (event.key === "Escape" && props.closeOnEscape && !props.persistent) {
+const handlekeydown = (event: KeyboardEvent) => {
+  if (event.key === "Escape" && props.closeOnEscape) {
     handleClose();
   }
 };
 
-// Focus management
-let previousActiveElement: HTMLElement | null = null;
+const handleenter = async () => {
+  await nextTick();
+  if (modalRef.value) {
+    modalRef.value.focus();
+  }
+};
 
-const trapFocus = (event: KeyboardEvent) => {
-  if (!isOpen.value) return;
+const handleleave = () => {
+  // Focus management handled by the component that opened the modal
+};
 
-  const modal = document.querySelector(".modal");
-  if (!modal) return;
+// Keyboard trap
+let focusableElements: HTMLElement[] = [];
+let lastFocusableElement: HTMLElement | null = null;
 
-  const focusableElements = modal.querySelectorAll(
-    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-  ) as NodeListOf<HTMLElement>;
-
-  const firstElement = focusableElements[0];
-  const lastElement = focusableElements[focusableElements.length - 1];
+const trapfocus = (event: KeyboardEvent) => {
+  if (!props.isOpen) return;
 
   if (event.key === "Tab") {
     if (event.shiftKey) {
-      if (document.activeElement === firstElement) {
+      if (document.activeElement === firstFocusableElement) {
+        lastFocusableElement?.focus();
         event.preventDefault();
-        lastElement?.focus();
       }
     } else {
-      if (document.activeElement === lastElement) {
+      if (document.activeElement === lastFocusableElement) {
+        firstFocusableElement?.focus();
         event.preventDefault();
-        firstElement?.focus();
       }
     }
   }
 };
 
-// Watch for modal open/close
-watch(isOpen, (newValue) => {
-  if (newValue) {
-    // Store the currently focused element
-    previousActiveElement = document.activeElement as HTMLElement;
+const updatefocusableelements = () => {
+  if (!modalRef.value) return;
 
-    // Add event listeners
-    document.addEventListener("keydown", handleEscape);
-    document.addEventListener("keydown", trapFocus);
+  focusableElements = Array.from(
+    modalRef.value.querySelectorAll(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    )
+  ) as HTMLElement[];
 
-    // Prevent body scroll
-    document.body.style.overflow = "hidden";
+  firstFocusableElement = focusableElements[0] || null;
+  lastFocusableElement = focusableElements[focusableElements.length - 1] || null;
+};
 
-    emit("open");
-  } else {
-    // Remove event listeners
-    document.removeEventListener("keydown", handleEscape);
-    document.removeEventListener("keydown", trapFocus);
+// Lifecycle
+onMounted(() => {
+  document.addEventListener("keydown", trapFocus);
+});
 
-    // Restore body scroll
-    document.body.style.overflow = "";
+onUnmounted(() => {
+  document.removeEventListener("keydown", trapFocus);
+});
 
-    // Restore focus to the previously focused element
-    if (previousActiveElement) {
-      previousActiveElement.focus();
-      previousActiveElement = null;
+// Watch for modal open to update focusable elements
+import { watch } from "vue";
+
+watch(
+  () => props.isOpen,
+  (isOpen) => {
+    if (isOpen) {
+      nextTick(() => {
+        updateFocusableElements();
+      });
     }
   }
-});
-
-// Cleanup on unmount
-onUnmounted(() => {
-  document.removeEventListener("keydown", handleEscape);
-  document.removeEventListener("keydown", trapFocus);
-  document.body.style.overflow = "";
-});
-
-// Expose methods for parent components
-defineExpose({
-  close: handleClose,
-});
+);
 </script>
 
 <style scoped>
 .modal-overlay {
-  @apply fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm;
+  @apply fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4;
 }
 
-.modal {
-  @apply w-full;
+.modal-container {
+  @apply max-h-[90vh] w-full overflow-hidden rounded-lg bg-white shadow-xl dark:bg-gray-800;
+}
+
+.modal-dialog {
+  @apply mx-auto;
 }
 
 .modal-header {
-  @apply border-secondary-200 dark:border-secondary-700 flex items-center justify-between border-b px-6 py-4;
+  @apply flex items-center justify-between border-b border-gray-200 p-6 dark:border-gray-700;
 }
 
 .modal-title {
-  @apply text-secondary-900 text-lg font-semibold dark:text-white;
+  @apply text-lg font-semibold text-gray-900 dark:text-white;
 }
 
 .modal-close {
-  @apply text-secondary-400 hover:text-secondary-600 hover:bg-secondary-100 focus:ring-primary-500 dark:text-secondary-500 dark:hover:text-secondary-300 dark:hover:bg-secondary-700 rounded-lg p-2 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2;
+  @apply flex min-h-[44px] min-w-[44px] items-center justify-center rounded-md p-2 text-gray-400 transition-colors duration-200 hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-700 dark:hover:text-gray-300;
 }
 
 .modal-content {
-  @apply px-6 py-4;
+  @apply overflow-y-auto p-6;
 }
 
 .modal-description {
-  @apply text-secondary-600 dark:text-secondary-400 mb-4 text-sm;
+  @apply mb-4 text-gray-600 dark:text-gray-300;
 }
 
 .modal-footer {
-  @apply border-secondary-200 dark:border-secondary-700 flex items-center justify-end space-x-3 border-t px-6 py-4;
+  @apply flex justify-end space-x-3 border-t border-gray-200 p-6 dark:border-gray-700;
 }
 
-/* Modal animations */
+/* Focus styles */
+.modal-close:focus {
+  @apply ring-primary-500 outline-none ring-2 ring-offset-2 dark:ring-offset-gray-800;
+}
+
+/* Transitions */
 .modal-enter-active,
 .modal-leave-active {
-  transition: all 0.3s ease;
+  transition: opacity 0.3s ease;
 }
 
 .modal-enter-from,
 .modal-leave-to {
   opacity: 0;
+}
+
+.modal-enter-active .modal-container,
+.modal-leave-active .modal-container {
+  transition: transform 0.3s ease;
+}
+
+.modal-enter-from .modal-container,
+.modal-leave-to .modal-container {
   transform: scale(0.95);
-}
-
-.modal-enter-to,
-.modal-leave-from {
-  opacity: 1;
-  transform: scale(1);
-}
-
-/* RTL support */
-[dir="rtl"] .modal-footer {
-  @apply space-x-0 space-x-reverse;
-}
-
-[dir="rtl"] .modal-close {
-  @apply ml-0 mr-auto;
-}
-
-/* Mobile optimizations */
-@media (max-width: 640px) {
-  .modal-overlay {
-    @apply p-2;
-  }
-
-  .modal-header,
-  .modal-content,
-  .modal-footer {
-    @apply px-4;
-  }
-
-  .modal-footer {
-    @apply flex-col space-x-0 space-y-2;
-  }
-
-  .modal-footer > * {
-    @apply w-full;
-  }
-}
-
-/* Focus styles for better accessibility */
-.modal-close:focus {
-  outline: 2px solid transparent;
-  outline-offset: 2px;
 }
 </style>

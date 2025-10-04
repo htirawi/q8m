@@ -3,7 +3,7 @@ import { createHash } from "crypto";
 
 export interface ValidationResult {
   success: boolean;
-  data?: any;
+  data?: unknown;
   errors?: string[];
 }
 
@@ -94,7 +94,7 @@ export class InputValidationService {
   /**
    * Validate billing address
    */
-  validateBillingAddress(address: any): ValidationResult {
+  validateBillingAddress(address: unknown): ValidationResult {
     const addressSchema = z.object({
       street: z.string().min(1).max(100),
       city: z.string().min(1).max(50),
@@ -104,11 +104,11 @@ export class InputValidationService {
     });
 
     const result = addressSchema.safeParse(address);
-    
+
     if (!result.success) {
       return {
         success: false,
-        errors: result.error.errors.map(err => err.message),
+        errors: result.error.errors.map((err) => err.message),
       };
     }
 
@@ -121,7 +121,7 @@ export class InputValidationService {
   /**
    * Validate payment request
    */
-  validatePaymentRequest(request: any): ValidationResult {
+  validatePaymentRequest(request: unknown): ValidationResult {
     const paymentSchema = z.object({
       planType: z.enum(["INTERMEDIATE", "SENIOR", "BUNDLE"]),
       currency: z.enum(["USD", "JOD", "SAR"]),
@@ -137,11 +137,11 @@ export class InputValidationService {
     });
 
     const result = paymentSchema.safeParse(request);
-    
+
     if (!result.success) {
       return {
         success: false,
-        errors: result.error.errors.map(err => err.message),
+        errors: result.error.errors.map((err) => err.message),
       };
     }
 
@@ -154,7 +154,7 @@ export class InputValidationService {
   /**
    * Sanitize and validate user input
    */
-  sanitizeUserInput(input: any): any {
+  sanitizeUserInput(input: unknown): unknown {
     if (typeof input === "string") {
       return this.sanitizeString(input);
     }
@@ -162,7 +162,7 @@ export class InputValidationService {
     if (typeof input === "object" && input !== null) {
       const sanitized: any = {};
       for (const [key, value] of Object.entries(input)) {
-        sanitized[key] = this.sanitizeUserInput(value);
+        (sanitized as any)[key] = this.sanitizeUserInput(value);
       }
       return sanitized;
     }
@@ -173,7 +173,7 @@ export class InputValidationService {
   /**
    * Generate request hash for integrity checking
    */
-  generateRequestHash(payload: any): string {
+  generateRequestHash(payload: unknown): string {
     const payloadString = JSON.stringify(payload);
     return createHash("sha256").update(payloadString).digest("hex");
   }
@@ -181,7 +181,7 @@ export class InputValidationService {
   /**
    * Validate request integrity
    */
-  validateRequestIntegrity(payload: any, expectedHash: string): boolean {
+  validateRequestIntegrity(payload: unknown, expectedHash: string): boolean {
     const actualHash = this.generateRequestHash(payload);
     return actualHash === expectedHash;
   }

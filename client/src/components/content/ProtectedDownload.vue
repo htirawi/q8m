@@ -47,15 +47,15 @@
     <!-- Download Info -->
     <div v-if="downloadInfo && hasAccess" class="download-info">
       <div class="info-item">
-        <span class="info-label">{{ $t("downloads.fileSize") }}</span>
-        <span class="info-value">{{ fileSize }}</span>
+        <span class="info-label">{{ $t("downloads.fileSize") }} </span>
+        <span class="info-value">{{ fileSize }} </span>
       </div>
       <div class="info-item">
-        <span class="info-label">{{ $t("downloads.format") }}</span>
-        <span class="info-value">{{ fileFormat }}</span>
+        <span class="info-label">{{ $t("downloads.format") }} </span>
+        <span class="info-value">{{ fileFormat }} </span>
       </div>
       <div class="info-item">
-        <span class="info-label">{{ $t("downloads.requiredLevel") }}</span>
+        <span class="info-label">{{ $t("downloads.requiredLevel") }} </span>
         <span class="info-value">{{ requiredLevel }}</span>
       </div>
     </div>
@@ -95,7 +95,7 @@ import { usePaymentStore } from "@/stores/payment";
 import { useContentAccess } from "@/composables/useEntitlementGuard";
 import ContentAccessGuard from "./ContentAccessGuard.vue";
 
-interface Props {
+interface props {
   category: string;
   filename: string;
   fileSize?: string;
@@ -138,7 +138,6 @@ const buttonText = computed(() => {
 // Methods
 const handleDownload = async () => {
   if (!hasAccess.value) return;
-
   try {
     isLoading.value = true;
     error.value = null;
@@ -179,7 +178,7 @@ const handleDownload = async () => {
   }
 };
 
-const retryDownload = () => {
+const retrydownload = () => {
   error.value = null;
   handleDownload();
 };

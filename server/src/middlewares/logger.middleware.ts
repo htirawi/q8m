@@ -1,6 +1,6 @@
 import type { FastifyRequest, FastifyReply } from "fastify";
 
-export const requestLogger = async (request: FastifyRequest, reply: FastifyReply) => {
+export const requestLogger = async (request: FastifyRequest, _reply: FastifyReply) => {
   const startTime = Date.now();
 
   // Log request
@@ -17,19 +17,6 @@ export const requestLogger = async (request: FastifyRequest, reply: FastifyReply
     userAgent: request.headers["user-agent"],
   });
 
-  // Log response
-  reply.addHook("onSend", async (request, reply, payload) => {
-    const responseTime = Date.now() - startTime;
-
-    request.log.info({
-      type: "response",
-      method: request.method,
-      url: request.url,
-      statusCode: reply.statusCode,
-      responseTime: `${responseTime}ms`,
-      contentLength: reply.getHeader("content-length"),
-    });
-
-    return payload;
-  });
+  // Store start time on request for response logging
+  (request as any).startTime = startTime;
 };

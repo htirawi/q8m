@@ -4,7 +4,8 @@ import { Purchase } from "../models/Purchase.js";
 import { Subscription } from "../models/Subscription.js";
 import { User } from "../models/User.js";
 import { currencyService } from "./currency.service.js";
-import crypto from "crypto";
+import { logPaymentEvent } from "../security/logging.js";
+import * as crypto from "crypto";
 
 export interface PayPalPaymentRequest {
   amount: number;
@@ -25,7 +26,7 @@ export interface PayPalPaymentResponse {
 
 export interface PayPalWebhookData {
   event_type: string;
-  resource: any;
+  resource: unknown;
   id: string;
   create_time: string;
   event_version: string;
@@ -59,7 +60,7 @@ export class PayPalService {
     });
 
     this.isConfigured = true;
-    console.log("PayPal service configured successfully");
+    console.warn("PayPal service configured successfully");
   }
 
   /**
@@ -122,14 +123,14 @@ export class PayPalService {
       };
 
       return new Promise((resolve, reject) => {
-        paypal.payment.create(paymentRequest, async (error, payment) => {
+        paypal.payment.create(paymentRequest, async (error: unknown, payment: unknown) => {
           if (error) {
             console.error("PayPal payment creation error:", error);
-            reject(new Error(`PayPal payment creation failed: ${error.message}`));
+            reject(new Error(`PayPal payment creation failed: ${(error as any).message}`));
             return;
           }
 
-          if (!payment || !payment.id) {
+          if (!payment || !(payment as any).id) {
             reject(new Error("Invalid PayPal payment response"));
             return;
           }
@@ -141,7 +142,7 @@ export class PayPalService {
             const purchase = new Purchase({
               userId: request.userId,
               orderId,
-              paymentId: payment.id,
+              paymentId: (payment as any).id,
               paymentGateway: "paypal",
               amount: {
                 currency: finalCurrency,
@@ -175,7 +176,7 @@ export class PayPalService {
             await purchase.save();
 
             // Find approval URL
-            const approvalUrl = payment.links?.find(
+            const approvalUrl = (payment as any).links?.find(
               (link: any) => link.rel === "approval_url"
             )?.href;
 
@@ -184,7 +185,7 @@ export class PayPalService {
             }
 
             resolve({
-              paymentId: payment.id,
+              paymentId: (payment as any).id,
               approvalUrl,
               orderId,
             });
@@ -223,35 +224,42 @@ export class PayPalService {
       };
 
       return new Promise((resolve) => {
-        paypal.payment.execute(paymentId, executeRequest, async (error, payment) => {
-          if (error) {
-            console.error("PayPal payment execution error:", error);
-            await purchase.markAsFailed(`Execution failed: ${error.message}`);
-            resolve({ success: false, error: error.message });
-            return;
-          }
-
-          try {
-            // Check if payment was successful
-            if (payment.state !== "approved") {
-              await purchase.markAsFailed(`Payment state: ${payment.state}`);
-              resolve({ success: false, error: `Payment not approved. State: ${payment.state}` });
+        paypal.payment.execute(
+          paymentId,
+          executeRequest,
+          async (error: unknown, payment: unknown) => {
+            if (error) {
+              console.error("PayPal payment execution error:", error);
+              await purchase.markAsFailed(`Execution failed: ${(error as any).message}`);
+              resolve({ success: false, error: (error as any).message });
               return;
             }
 
-            // Mark purchase as completed
-            purchase.gatewayResponse = payment;
-            await purchase.markAsCompleted(payment);
+            try {
+              // Check if payment was successful
+              if ((payment as any).state !== "approved") {
+                await purchase.markAsFailed(`Payment state: ${(payment as any).state}`);
+                resolve({
+                  success: false,
+                  error: `Payment not approved. State: ${(payment as any).state}`,
+                });
+                return;
+              }
 
-            // Create subscription
-            await this.createSubscription(purchase);
+              // Mark purchase as completed
+              purchase.gatewayResponse = payment;
+              await purchase.markAsCompleted(payment);
 
-            resolve({ success: true, purchaseId: purchase._id.toString() });
-          } catch (dbError) {
-            console.error("Database error during PayPal payment execution:", dbError);
-            resolve({ success: false, error: "Failed to process payment completion" });
+              // Create subscription
+              await this.createSubscription(purchase);
+
+              resolve({ success: true, purchaseId: purchase._id.toString() });
+            } catch (dbError) {
+              console.error("Database error during PayPal payment execution:", dbError);
+              resolve({ success: false, error: "Failed to process payment completion" });
+            }
           }
-        });
+        );
       });
     } catch (error) {
       console.error("PayPal payment execution error:", error);
@@ -262,9 +270,9 @@ export class PayPalService {
   /**
    * Create subscription after successful payment
    */
-  private async createSubscription(purchase: any): Promise<void> {
+  private async createSubscription(purchase: unknown): Promise<void> {
     try {
-      const user = await User.findById(purchase.userId);
+      const user = await User.findById((purchase as any).userId);
       if (!user) {
         throw new Error("User not found");
       }
@@ -276,18 +284,18 @@ export class PayPalService {
 
       // Create subscription
       const subscription = new Subscription({
-        userId: purchase.userId,
-        purchaseId: purchase._id,
-        planType: purchase.items[0].type,
+        userId: (purchase as any).userId,
+        purchaseId: (purchase as any)._id,
+        planType: (purchase as any).items[0].type,
         status: "active",
         currentPeriodStart: now,
         currentPeriodEnd: periodEnd,
         billingCycle,
-        price: purchase.amount,
+        price: (purchase as any).amount,
         metadata: {
-          originalPurchaseCurrency: purchase.metadata?.originalCurrency,
-          fxRateUsed: purchase.metadata?.exchangeRate
-            ? parseFloat(purchase.metadata.exchangeRate)
+          originalPurchaseCurrency: (purchase as any).metadata?.originalCurrency,
+          fxRateUsed: (purchase as any).metadata?.exchangeRate
+            ? parseFloat((purchase as any).metadata.exchangeRate)
             : undefined,
         },
       });
@@ -298,7 +306,7 @@ export class PayPalService {
       user.entitlements = subscription.entitlements;
       await user.save();
 
-      console.log(`Subscription created for user ${user.email}: ${subscription.planType}`);
+      console.warn(`Subscription created for user ${user.email}: ${subscription.planType}`);
     } catch (error) {
       console.error("Error creating subscription:", error);
       throw error;
@@ -335,7 +343,10 @@ export class PayPalService {
           await this.handlePaymentRefunded(webhookData.resource);
           break;
         default:
-          console.log(`Unhandled PayPal webhook event: ${webhookData.event_type}`);
+          logPaymentEvent(console, "paypal_webhook_unhandled", {
+            eventType: webhookData.event_type,
+            service: "paypal",
+          });
       }
 
       return { success: true };
@@ -370,9 +381,9 @@ export class PayPalService {
   /**
    * Handle payment completed webhook
    */
-  private async handlePaymentCompleted(resource: any): Promise<void> {
+  private async handlePaymentCompleted(resource: unknown): Promise<void> {
     try {
-      const paymentId = resource.parent_payment;
+      const paymentId = (resource as any).parent_payment;
       const purchase = await Purchase.findByPaymentId(paymentId);
 
       if (purchase && purchase.status === "pending") {
@@ -387,9 +398,9 @@ export class PayPalService {
   /**
    * Handle payment denied webhook
    */
-  private async handlePaymentDenied(resource: any): Promise<void> {
+  private async handlePaymentDenied(resource: unknown): Promise<void> {
     try {
-      const paymentId = resource.parent_payment;
+      const paymentId = (resource as any).parent_payment;
       const purchase = await Purchase.findByPaymentId(paymentId);
 
       if (purchase && purchase.status === "pending") {
@@ -403,17 +414,17 @@ export class PayPalService {
   /**
    * Handle payment refunded webhook
    */
-  private async handlePaymentRefunded(resource: any): Promise<void> {
+  private async handlePaymentRefunded(resource: unknown): Promise<void> {
     try {
-      const paymentId = resource.parent_payment;
+      const paymentId = (resource as any).parent_payment;
       const purchase = await Purchase.findByPaymentId(paymentId);
 
       if (purchase) {
         await purchase.processRefund(
-          resource.amount.total,
-          resource.amount.currency,
+          (resource as any).amount.total,
+          (resource as any).amount.currency,
           "requested_by_customer",
-          resource.id
+          (resource as any).id
         );
 
         // Cancel associated subscription
@@ -430,15 +441,15 @@ export class PayPalService {
   /**
    * Get payment details
    */
-  async getPaymentDetails(paymentId: string): Promise<any> {
+  async getPaymentDetails(paymentId: string): Promise<unknown> {
     if (!this.isConfigured) {
       throw new Error("PayPal service not configured");
     }
 
     return new Promise((resolve, reject) => {
-      paypal.payment.get(paymentId, (error, payment) => {
+      paypal.payment.get(paymentId, (error: unknown, payment: unknown) => {
         if (error) {
-          reject(new Error(`Failed to get payment details: ${error.message}`));
+          reject(new Error(`Failed to get payment details: ${(error as any).message}`));
           return;
         }
         resolve(payment);
@@ -464,7 +475,7 @@ export class PayPalService {
     return {
       configured: this.isConfigured,
       mode: env.NODE_ENV === "production" ? "live" : "sandbox",
-      clientId: this.isConfigured ? env.PAYPAL_CLIENT_ID : null,
+      clientId: this.isConfigured ? env.PAYPAL_CLIENT_ID || null : null,
     };
   }
 }

@@ -5,26 +5,38 @@
       <div class="checkout-header">
         <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
           {{ $t("checkout.title") }}
+
         </h2>
         <p class="text-gray-600 dark:text-gray-300">
           {{ $t("checkout.subtitle") }}
+
         </p>
       </div>
 
       <!-- Order Summary -->
       <div class="order-summary">
-        <h3 class="summary-title">{{ $t("checkout.orderSummary") }}</h3>
+        <h3 class="summary-title">{{ $t("checkout.orderSummary") }}
+
+</h3>
 
         <div class="plan-details">
           <div class="plan-info">
-            <h4 class="plan-name">{{ selectedPlan.name }}</h4>
-            <p class="plan-description">{{ selectedPlan.description }}</p>
+            <h4 class="plan-name">{{ selectedPlan.name }}
+
+</h4>
+            <p class="plan-description">{{ selectedPlan.description }}
+
+</p>
           </div>
 
           <div class="plan-pricing">
             <div class="price-container">
-              <span class="price-amount">{{ displayPrice }}</span>
-              <span class="price-period">{{ pricePeriod }}</span>
+              <span class="price-amount">{{ displayPrice }}
+
+</span>
+              <span class="price-period">{{ pricePeriod }}
+
+</span>
             </div>
             <p v-if="priceInfo?.isEstimated" class="price-note">
               {{ $t("checkout.estimatedPrice") }}
@@ -56,10 +68,12 @@
               :class="{ 'toggle-label--active': billingCycle === 'yearly' }"
             >
               {{ $t("checkout.yearly") }}
+
             </span>
           </div>
           <p v-if="billingCycle === 'yearly'" class="discount-note">
             {{ $t("checkout.savePercent", { percent: 17 }) }}
+
           </p>
         </div>
       </div>
@@ -67,7 +81,9 @@
       <!-- Billing Information -->
       <form @submit.prevent="handleSubmit" class="checkout-form-content">
         <div class="form-section">
-          <h3 class="section-title">{{ $t("checkout.billingInformation") }}</h3>
+          <h3 class="section-title">{{ $t("checkout.billingInformation") }}
+
+</h3>
 
           <div class="form-grid">
             <!-- Name -->
@@ -82,7 +98,9 @@
                 :class="{ 'form-input--error': errors.name }"
                 :placeholder="$t('checkout.namePlaceholder')"
               />
-              <p v-if="errors.name" class="form-error">{{ errors.name }}</p>
+              <p v-if="errors.name" class="form-error">{{ errors.name }}
+
+</p>
             </div>
 
             <!-- Email -->
@@ -97,7 +115,9 @@
                 :class="{ 'form-input--error': errors.email }"
                 :placeholder="$t('checkout.emailPlaceholder')"
               />
-              <p v-if="errors.email" class="form-error">{{ errors.email }}</p>
+              <p v-if="errors.email" class="form-error">{{ errors.email }}
+
+</p>
             </div>
 
             <!-- Street Address -->
@@ -112,7 +132,9 @@
                 :class="{ 'form-input--error': errors.street }"
                 :placeholder="$t('checkout.streetPlaceholder')"
               />
-              <p v-if="errors.street" class="form-error">{{ errors.street }}</p>
+              <p v-if="errors.street" class="form-error">{{ errors.street }}
+
+</p>
             </div>
 
             <!-- City -->
@@ -127,7 +149,9 @@
                 :class="{ 'form-input--error': errors.city }"
                 :placeholder="$t('checkout.cityPlaceholder')"
               />
-              <p v-if="errors.city" class="form-error">{{ errors.city }}</p>
+              <p v-if="errors.city" class="form-error">{{ errors.city }}
+
+</p>
             </div>
 
             <!-- State -->
@@ -142,7 +166,9 @@
                 :class="{ 'form-input--error': errors.state }"
                 :placeholder="$t('checkout.statePlaceholder')"
               />
-              <p v-if="errors.state" class="form-error">{{ errors.state }}</p>
+              <p v-if="errors.state" class="form-error">{{ errors.state }}
+
+</p>
             </div>
 
             <!-- Postal Code -->
@@ -157,7 +183,9 @@
                 :class="{ 'form-input--error': errors.postalCode }"
                 :placeholder="$t('checkout.postalCodePlaceholder')"
               />
-              <p v-if="errors.postalCode" class="form-error">{{ errors.postalCode }}</p>
+              <p v-if="errors.postalCode" class="form-error">{{ errors.postalCode }}
+
+</p>
             </div>
 
             <!-- Country -->
@@ -170,12 +198,17 @@
                 class="form-input"
                 :class="{ 'form-input--error': errors.country }"
               >
-                <option value="">{{ $t("checkout.selectCountry") }}</option>
+                <option value="">{{ $t("checkout.selectCountry") }}
+
+</option>
                 <option v-for="country in countries" :key="country.code" :value="country.code">
                   {{ country.name }}
+
                 </option>
               </select>
-              <p v-if="errors.country" class="form-error">{{ errors.country }}</p>
+              <p v-if="errors.country" class="form-error">{{ errors.country }}
+
+</p>
             </div>
           </div>
         </div>
@@ -195,8 +228,12 @@
               <div class="payment-method-content">
                 <img :src="method.icon" :alt="method.name" class="payment-icon" />
                 <div class="payment-info">
-                  <h4 class="payment-name">{{ method.name }}</h4>
-                  <p class="payment-description">{{ method.description }}</p>
+                  <h4 class="payment-name">{{ method.name }}
+
+</h4>
+                  <p class="payment-description">{{ method.description }}
+
+</p>
                 </div>
                 <div class="payment-radio">
                   <input
@@ -220,12 +257,16 @@
             <span class="checkbox-custom"></span>
             <span class="terms-text">
               {{ $t("checkout.agreeToTerms") }}
+
               <a href="/terms" target="_blank" class="terms-link">
                 {{ $t("checkout.termsOfService") }}
+
               </a>
               {{ $t("checkout.and") }}
+
               <a href="/privacy" target="_blank" class="terms-link">
                 {{ $t("checkout.privacyPolicy") }}
+
               </a>
             </span>
           </label>
@@ -241,12 +282,16 @@
             <span v-if="paymentStore.isLoading" class="flex items-center justify-center">
               <div class="mr-2 h-5 w-5 animate-spin rounded-full border-b-2 border-white"></div>
               {{ $t("checkout.processing") }}
+
             </span>
-            <span v-else> {{ $t("checkout.completePurchase") }} {{ displayPrice }} </span>
+            <span v-else> {{ $t("checkout.completePurchase") }} {{ displayPrice }}
+
+ </span>
           </button>
 
           <p class="security-note">
             {{ $t("checkout.securityNote") }}
+
           </p>
         </div>
 
@@ -261,6 +306,7 @@
         <!-- Error Display -->
         <div v-else-if="error || paymentStore.error" class="error-message">
           {{ error || paymentStore.error }}
+
         </div>
       </form>
     </div>
@@ -397,14 +443,14 @@ const countries = computed(() => [
 
 // Methods
 const toggleBillingCycle = () => {
-  billingCycle.value = billingCycle.value === "monthly" ? "yearly" : "monthly";
+  billingCycle.value = billingCycle.value === "monthly" ? "yearly" : "monthly";billingCycle.value
 };
 
-const selectPaymentMethod = (methodId: string) => {
+const selectpaymentmethod = (methodId: string) => {
   selectedPaymentMethod.value = methodId;
 };
 
-const validateForm = () => {
+const validateform = () => {
   // Clear previous errors
   Object.keys(errors).forEach((key) => {
     errors[key as keyof typeof errors] = "";
@@ -453,7 +499,7 @@ const validateForm = () => {
   return isValid;
 };
 
-const handleSubmit = async () => {
+const handlesubmit = async () => {
   if (!validateForm()) {
     return;
   }
@@ -462,7 +508,7 @@ const handleSubmit = async () => {
   error.value = null;
 
   try {
-    const paymentRequest = {
+    const paymentrequest = {
       planType: props.selectedPlan.planId as "INTERMEDIATE" | "SENIOR" | "BUNDLE",
       currency: paymentStore.currentCurrency,
       billingCycle: billingCycle.value,
@@ -484,7 +530,9 @@ const handleSubmit = async () => {
           // Redirect to PayPal Checkout
           if (response.checkoutUrl) {
             window.location.href = response.checkoutUrl;
-          } else {
+          }
+
+ else {
             const error = new Error("PayPal checkout URL not received");
             error.name = "PAYMENT_GATEWAY_ERROR";
             throw error;
@@ -495,7 +543,9 @@ const handleSubmit = async () => {
           // Redirect to APS payment page
           if (response.checkoutUrl) {
             window.location.href = response.checkoutUrl;
-          } else {
+          }
+
+ else {
             const error = new Error("APS checkout URL not received");
             error.name = "PAYMENT_GATEWAY_ERROR";
             throw error;
@@ -506,7 +556,9 @@ const handleSubmit = async () => {
           // Redirect to HyperPay payment page
           if (response.checkoutUrl) {
             window.location.href = response.checkoutUrl;
-          } else {
+          }
+
+ else {
             const error = new Error("HyperPay checkout URL not received");
             error.name = "PAYMENT_GATEWAY_ERROR";
             throw error;
@@ -518,7 +570,9 @@ const handleSubmit = async () => {
           error.name = "PAYMENT_GATEWAY_ERROR";
           throw error;
       }
-    } else {
+    }
+
+ else {
       const error = new Error("Payment creation failed");
       error.name = "PAYMENT_FAILED";
       throw error;
@@ -527,7 +581,9 @@ const handleSubmit = async () => {
     const errorState = errorHandler.handlePaymentError(err);
     error.value = errorState.message;
     console.error("Checkout error:", err);
-  } finally {
+  }
+
+ finally {
     isProcessing.value = false;
   }
 };
@@ -726,6 +782,7 @@ onMounted(() => {
 
 .payment-method--selected .radio-custom::after {
   @apply absolute left-1/2 top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 transform rounded-full bg-white;
+
   content: "";
 }
 
@@ -751,6 +808,7 @@ onMounted(() => {
 
 .checkbox-input:checked + .checkbox-custom::after {
   @apply absolute left-1/2 top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 transform rounded bg-white;
+
   content: "✓";
 }
 
@@ -779,7 +837,7 @@ onMounted(() => {
 }
 
 /* Mobile responsiveness */
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .plan-details {
     @apply flex-col items-start gap-4;
   }

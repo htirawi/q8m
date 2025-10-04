@@ -626,5 +626,19 @@
   },
   "common": {
     "appName": "Quiz Platform"
+  },
+  "home": {
+    "hero": {
+      "title": "Master Your Next Interview",
+      "description": "Practice with 500+ curated questions across Angular, React, Next.js, and Redux. Boost your confidence and land your dream job.",
+      "cta": "Start Free Trial",
+      "pricing": "View Pricing",
+      "placeholder": "Interactive Dashboard Coming Soon",
+      "stats": {
+        "questions": "Questions",
+        "frameworks": "Frameworks",
+        "success": "Success Rate"
+      }
+    }
   }
 }

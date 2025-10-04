@@ -1,13 +1,50 @@
 import mongoose, { Document, Schema } from "mongoose";
-import bcrypt from "bcrypt";
-import { User as UserType } from "@shared/types/auth";
+import * as bcrypt from "bcrypt";
 
-export interface IUser extends Document, Omit<UserType, "id"> {
+export interface IUser extends Document {
+  email: string;
+  name: string;
+  password?: string;
+  role: "user" | "admin" | "intermediate" | "senior";
+  entitlements: string[];
+  isEmailVerified: boolean;
+  emailVerificationToken?: string;
+  emailVerificationExpires?: any; // Mongoose Date type
+  passwordResetToken?: string;
+  passwordResetExpires?: any; // Mongoose Date type
+  lastLogin?: any;
+  loginAttempts: number;
+  lockUntil?: any; // Mongoose Date type
+  googleId?: string;
+  facebookId?: string;
+  avatar?: string;
+  bio?: string;
+  location?: string;
+  website?: string;
+  preferences: {
+    language: "en" | "ar";
+    theme: any;
+    notifications: {
+      email: boolean;
+      quizReminders: boolean;
+      newFeatures: boolean;
+    };
+  };
+  subscription: {
+    status: "active" | "canceled" | "past_due" | "incomplete";
+    currentPeriodEnd?: Date;
+    cancelAtPeriodEnd: boolean;
+  };
+  stats: any;
+  twoFactorEnabled: boolean;
+  twoFactorSecret?: string;
+  isActive: boolean;
+  deletedAt?: Date;
   comparePassword(candidatePassword: string): Promise<boolean>;
   generateAuthTokens(): { accessToken: string; refreshToken: string };
 }
 
-const userSchema = new Schema<IUser>(
+const userSchema = new Schema(
   {
     email: {
       type: String,
@@ -26,7 +63,7 @@ const userSchema = new Schema<IUser>(
     },
     password: {
       type: String,
-      required: function () {
+      required(this: any) {
         return !this.googleId && !this.facebookId;
       },
       minlength: [8, "Password must be at least 8 characters"],
@@ -178,8 +215,8 @@ const userSchema = new Schema<IUser>(
   {
     timestamps: true,
     toJSON: {
-      transform: function (doc, ret) {
-        ret.id = ret._id.toString();
+      transform(_doc, ret: Record<string, unknown>) {
+        ret.id = (ret._id as any).toString();
         delete ret._id;
         delete ret.__v;
         delete ret.password;
@@ -205,7 +242,7 @@ userSchema.index({ createdAt: -1 });
 
 // Virtual for account lock status
 userSchema.virtual("isLocked").get(function () {
-  return !!(this.lockUntil && this.lockUntil > Date.now());
+  return !!(this.lockUntil && (this.lockUntil as any) > Date.now());
 });
 
 // Pre-save middleware to hash password
@@ -216,7 +253,7 @@ userSchema.pre("save", async function (next) {
   try {
     // Hash password with cost of 12
     const salt = await bcrypt.genSalt(12);
-    this.password = await bcrypt.hash(this.password, salt);
+    this.password = await bcrypt.hash(this.password!, salt);
     next();
   } catch (error) {
     next(error as Error);
@@ -271,11 +308,11 @@ userSchema.methods.incLoginAttempts = function () {
     });
   }
 
-  const updates: any = { $inc: { loginAttempts: 1 } };
+  const updates: unknown = { $inc: { loginAttempts: 1 } };
 
   // Lock account after 5 failed attempts for 2 hours
   if (this.loginAttempts + 1 >= 5 && !this.isLocked) {
-    updates.$set = { lockUntil: Date.now() + 2 * 60 * 60 * 1000 }; // 2 hours
+    (updates as any).$set = { lockUntil: Date.now() + 2 * 60 * 60 * 1000 }; // 2 hours
   }
 
   return this.updateOne(updates);

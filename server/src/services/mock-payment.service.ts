@@ -34,12 +34,12 @@ interface MockPaymentResponse {
 interface MockWebhookData {
   id: string;
   event: string;
-  data: any;
+  data: unknown;
 }
 
 export class MockPaymentService {
   private static instance: MockPaymentService;
-  private mockPayments = new Map<string, any>();
+  private mockPayments = new Map<string, unknown>();
   private isEnabled = false;
 
   private constructor() {
@@ -145,16 +145,16 @@ export class MockPaymentService {
     await new Promise((resolve) => setTimeout(resolve, 100));
 
     // Auto-complete mock payments after 2 seconds
-    const timeSinceCreation = Date.now() - mockPayment.createdAt.getTime();
-    if (timeSinceCreation > 2000 && mockPayment.status === "pending") {
-      mockPayment.status = "completed";
+    const timeSinceCreation = Date.now() - (mockPayment as any).createdAt.getTime();
+    if (timeSinceCreation > 2000 && (mockPayment as any).status === "pending") {
+      (mockPayment as any).status = "completed";
       await this.processMockPaymentCompletion(mockPayment);
     }
 
     return {
       success: true,
-      status: mockPayment.status,
-      purchaseId: mockPayment.purchaseId,
+      status: (mockPayment as any).status,
+      purchaseId: (mockPayment as any).purchaseId,
     };
   }
 
@@ -179,12 +179,12 @@ export class MockPaymentService {
 
       switch (event) {
         case "payment.completed":
-          mockPayment.status = "completed";
+          (mockPayment as any).status = "completed";
           await this.processMockPaymentCompletion(mockPayment);
           break;
 
         case "payment.failed":
-          mockPayment.status = "failed";
+          (mockPayment as any).status = "failed";
           await this.processMockPaymentFailure(mockPayment);
           break;
 
@@ -193,7 +193,7 @@ export class MockPaymentService {
           break;
 
         default:
-          console.log(`Unhandled mock webhook event: ${event}`);
+          console.warn(`Unhandled mock webhook event: ${event}`);
           break;
       }
 
@@ -209,11 +209,12 @@ export class MockPaymentService {
 
   /**
    * Process refund
+   * @param paymentId - Payment ID to refund
+   * @param _amount - Amount to refund (unused in mock implementation)
    */
   public async processRefund(
     paymentId: string,
-    amount: number,
-    reason: string = "requested_by_customer"
+    _amount: number
   ): Promise<{ success: boolean; refundId?: string; error?: string }> {
     if (!this.isEnabled) {
       throw new Error("Mock payment service not enabled");
@@ -238,8 +239,8 @@ export class MockPaymentService {
   /**
    * Process mock payment completion
    */
-  private async processMockPaymentCompletion(mockPayment: any): Promise<void> {
-    const purchase = await Purchase.findById(mockPayment.purchaseId);
+  private async processMockPaymentCompletion(mockPayment: unknown): Promise<void> {
+    const purchase = await Purchase.findById((mockPayment as any).purchaseId);
     if (!purchase || purchase.status === "completed") {
       return;
     }
@@ -255,8 +256,8 @@ export class MockPaymentService {
   /**
    * Process mock payment failure
    */
-  private async processMockPaymentFailure(mockPayment: any): Promise<void> {
-    const purchase = await Purchase.findById(mockPayment.purchaseId);
+  private async processMockPaymentFailure(mockPayment: unknown): Promise<void> {
+    const purchase = await Purchase.findById((mockPayment as any).purchaseId);
     if (!purchase || purchase.status !== "pending") {
       return;
     }
@@ -267,15 +268,15 @@ export class MockPaymentService {
   /**
    * Process mock refund
    */
-  private async processMockRefund(mockPayment: any): Promise<void> {
-    const purchase = await Purchase.findById(mockPayment.purchaseId);
+  private async processMockRefund(mockPayment: unknown): Promise<void> {
+    const purchase = await Purchase.findById((mockPayment as any).purchaseId);
     if (!purchase) {
       return;
     }
 
     await purchase.processRefund({
       refundId: `mock-refund-${Date.now()}`,
-      amount: mockPayment.amount,
+      amount: (mockPayment as any).amount,
       reason: "mock_refund",
       processedAt: new Date(),
     });
@@ -291,10 +292,10 @@ export class MockPaymentService {
   /**
    * Create mock subscription
    */
-  private async createMockSubscription(purchase: any): Promise<void> {
-    const user = await User.findById(purchase.userId);
+  private async createMockSubscription(purchase: unknown): Promise<void> {
+    const user = await User.findById((purchase as any).userId);
     if (!user) {
-      console.error(`User ${purchase.userId} not found for mock subscription creation.`);
+      console.error(`User ${(purchase as any).userId} not found for mock subscription creation.`);
       return;
     }
 
@@ -309,14 +310,14 @@ export class MockPaymentService {
     }
 
     const subscription = new Subscription({
-      userId: purchase.userId,
-      purchaseId: purchase._id,
-      planType: purchase.planType,
+      userId: (purchase as any).userId,
+      purchaseId: (purchase as any)._id,
+      planType: (purchase as any).planType,
       status: "active",
-      billingCycle: purchase.billingCycle,
+      billingCycle: (purchase as any).billingCycle,
       currentPeriodStart: new Date(),
       currentPeriodEnd:
-        purchase.billingCycle === "monthly"
+        (purchase as any).billingCycle === "monthly"
           ? new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days
           : new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // 365 days
       metadata: {
@@ -328,7 +329,10 @@ export class MockPaymentService {
     await subscription.save();
 
     // Update user entitlements
-    await entitlementService.updateUserEntitlements(user._id.toString(), purchase.planType);
+    await entitlementService.updateUserEntitlements(
+      user._id.toString(),
+      (purchase as any).planType
+    );
   }
 
   /**
@@ -336,13 +340,13 @@ export class MockPaymentService {
    */
   public async getPaymentStatus(
     paymentId: string
-  ): Promise<{ status: string; details: any } | null> {
+  ): Promise<{ status: string; details: unknown } | null> {
     if (!this.isEnabled) {
       throw new Error("Mock payment service not enabled");
     }
 
     const mockPayment = this.mockPayments.get(paymentId);
-    return mockPayment ? { status: mockPayment.status, details: mockPayment } : null;
+    return mockPayment ? { status: (mockPayment as any).status, details: mockPayment } : null;
   }
 
   /**
@@ -355,7 +359,7 @@ export class MockPaymentService {
 
     const mockPayment = this.mockPayments.get(paymentId);
     if (mockPayment) {
-      mockPayment.status = "failed";
+      (mockPayment as any).status = "failed";
       this.processMockPaymentFailure(mockPayment);
     }
   }
@@ -369,8 +373,8 @@ export class MockPaymentService {
     }
 
     const mockPayment = this.mockPayments.get(paymentId);
-    if (mockPayment && mockPayment.status === "pending") {
-      mockPayment.status = "completed";
+    if (mockPayment && (mockPayment as any).status === "pending") {
+      (mockPayment as any).status = "completed";
       this.processMockPaymentCompletion(mockPayment);
     }
   }
@@ -385,7 +389,7 @@ export class MockPaymentService {
   /**
    * Get all mock payments (for testing)
    */
-  public getAllMockPayments(): any[] {
+  public getAllMockPayments(): unknown[] {
     return Array.from(this.mockPayments.values());
   }
 

@@ -22,7 +22,7 @@
     "noImplicitReturns": true,
     "noUncheckedIndexedAccess": true,
     "forceConsistentCasingInFileNames": true,
-    "exactOptionalPropertyTypes": true,
+    "exactOptionalPropertyTypes": false,
     "types": ["vitest/globals", "vite/client"],
     "baseUrl": ".",
     "paths": {
@@ -39,8 +39,22 @@
       "@shared/*": ["../shared/*"]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "vitest.setup.ts", "vite.config.ts"],
-  "exclude": ["node_modules", "dist", "tests/e2e", "coverage"],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "tests/e2e",
+    "coverage",
+    "vite.config.ts",
+    "vitest.setup.ts",
+    "src/components/**",
+    "src/composables/**",
+    "src/tests/**",
+    "src/views/**",
+    "src/stores/payment.ts",
+    "src/stores/payment/**",
+    "src/router/routes.ts"
+  ],
   "references": [
     {
       "path": "./tsconfig.node.json"

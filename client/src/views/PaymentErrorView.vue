@@ -23,23 +23,23 @@
 
             <div class="error-info">
               <div class="error-row">
-                <span class="error-label">{{ $t("payment.error.errorCode") }}</span>
-                <span class="error-value">{{ errorDetails.errorCode }}</span>
+                <span class="error-label">{{ $t("payment.error.errorCode") }} </span>
+                <span class="error-value">{{ errorDetails.errorCode }} </span>
               </div>
 
               <div v-if="errorDetails.orderId" class="error-row">
-                <span class="error-label">{{ $t("payment.error.orderId") }}</span>
-                <span class="error-value">{{ errorDetails.orderId }}</span>
+                <span class="error-label">{{ $t("payment.error.orderId") }} </span>
+                <span class="error-value">{{ errorDetails.orderId }} </span>
               </div>
 
               <div v-if="errorDetails.plan" class="error-row">
-                <span class="error-label">{{ $t("payment.error.plan") }}</span>
-                <span class="error-value">{{ errorDetails.plan }}</span>
+                <span class="error-label">{{ $t("payment.error.plan") }} </span>
+                <span class="error-value">{{ errorDetails.plan }} </span>
               </div>
 
               <div class="error-row">
-                <span class="error-label">{{ $t("payment.error.timestamp") }}</span>
-                <span class="error-value">{{ formattedTimestamp }}</span>
+                <span class="error-label">{{ $t("payment.error.timestamp") }} </span>
+                <span class="error-value">{{ formattedTimestamp }} </span>
               </div>
             </div>
           </div>
@@ -233,17 +233,17 @@ const retryPayment = () => {
   }
 };
 
-const goToPricing = () => {
+const gotopricing = () => {
   router.push("/pricing");
 };
 
-const parseErrorDetails = () => {
+const parseerrordetails = () => {
   const errorCode = route.query.error as string;
   const orderId = route.query.orderId as string;
   const plan = route.query.plan as string;
 
   if (errorCode) {
-    errorDetails.value = {
+    errordetails.value = {
       errorCode,
       orderId,
       plan,
@@ -283,12 +283,14 @@ onMounted(() => {
 
 .error-circle-bg {
   @apply stroke-red-500;
+
   stroke-width: 2;
   animation: circle-bg 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
 }
 
 .error-cross {
   @apply stroke-red-500;
+
   stroke-width: 2;
   stroke-linecap: round;
   stroke-linejoin: round;
@@ -302,6 +304,7 @@ onMounted(() => {
     stroke-dasharray: 0 157;
     stroke-dashoffset: 0;
   }
+
   100% {
     stroke-dasharray: 157 157;
     stroke-dashoffset: 0;
@@ -312,6 +315,7 @@ onMounted(() => {
   0% {
     stroke-dashoffset: 20;
   }
+
   100% {
     stroke-dashoffset: 0;
   }
@@ -439,7 +443,7 @@ onMounted(() => {
 }
 
 /* Mobile Responsiveness */
-@media (max-width: 640px) {
+@media (width <= 640px) {
   .error-row {
     @apply flex-col items-start gap-1;
   }

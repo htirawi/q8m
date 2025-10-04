@@ -1,17 +1,18 @@
 import mongoose, { Document, Schema } from "mongoose";
+import * as crypto from "crypto";
 
 export interface IVerificationToken extends Document {
   userId: mongoose.Types.ObjectId;
   token: string;
   type: "email_verification" | "password_reset" | "two_factor";
-  expiresAt: Date;
+  expiresAt: any; // Mongoose Date type
   used: boolean;
-  usedAt?: Date;
+  usedAt?: any;
   ipAddress?: string;
   userAgent?: string;
 }
 
-const verificationTokenSchema = new Schema<IVerificationToken>(
+const verificationTokenSchema = new Schema(
   {
     userId: {
       type: Schema.Types.ObjectId,
@@ -32,7 +33,7 @@ const verificationTokenSchema = new Schema<IVerificationToken>(
       index: true,
     },
     expiresAt: {
-      type: Date,
+      type: Schema.Types.Date,
       required: true,
       index: true,
     },
@@ -41,7 +42,7 @@ const verificationTokenSchema = new Schema<IVerificationToken>(
       default: false,
       index: true,
     },
-    usedAt: Date,
+    usedAt: Schema.Types.Date,
     ipAddress: {
       type: String,
       match: [
@@ -57,8 +58,8 @@ const verificationTokenSchema = new Schema<IVerificationToken>(
   {
     timestamps: true,
     toJSON: {
-      transform: function (doc, ret) {
-        ret.id = ret._id.toString();
+      transform(_doc, ret: Record<string, unknown>) {
+        ret.id = (ret._id as any).toString();
         delete ret._id;
         delete ret.__v;
         delete ret.token; // Don't expose the actual token
@@ -76,7 +77,7 @@ verificationTokenSchema.index({ used: 1, createdAt: -1 });
 
 // Virtual for token validity
 verificationTokenSchema.virtual("isValid").get(function () {
-  return !this.used && this.expiresAt > new Date();
+  return !(this as any).used && (this as any).expiresAt > new Date();
 });
 
 // Instance method to mark token as used
@@ -95,7 +96,7 @@ verificationTokenSchema.statics.createToken = async function (
   expirationHours: number = 24
 ) {
   // Generate secure random token
-  const token = require("crypto").randomBytes(32).toString("hex");
+  const token = crypto.randomBytes(32).toString("hex");
 
   // Calculate expiration time
   const expiresAt = new Date(Date.now() + expirationHours * 60 * 60 * 1000);
@@ -151,14 +152,14 @@ verificationTokenSchema.statics.getActiveTokensForUser = function (
   userId: mongoose.Types.ObjectId,
   type?: "email_verification" | "password_reset" | "two_factor"
 ) {
-  const query: any = {
+  const query: unknown = {
     userId,
     used: false,
     expiresAt: { $gt: new Date() },
   };
 
   if (type) {
-    query.type = type;
+    (query as any).type = type;
   }
 
   return this.find(query).select("type expiresAt createdAt");

@@ -1,6 +1,6 @@
-import jwt from "jsonwebtoken";
+import * as jwt from "jsonwebtoken";
 import { env } from "../config/env.js";
-import type { User } from "@shared/types/auth";
+import type { IUser } from "../models/User.js";
 
 export interface JWTPayload {
   userId: string;
@@ -34,12 +34,12 @@ export class JWTService {
   /**
    * Generate access and refresh token pair
    */
-  generateTokenPair(user: User, sessionId: string): TokenPair {
+  generateTokenPair(user: IUser, sessionId: string): TokenPair {
     const payload: JWTPayload = {
-      userId: user.id,
+      userId: (user._id as any).toString(),
       email: user.email,
       role: user.role,
-      entitlements: user.entitlements,
+      entitlements: user.entitlements || [],
       sessionId,
     };
 
@@ -47,13 +47,17 @@ export class JWTService {
       expiresIn: this.accessTokenExpiry,
       issuer: "quiz-platform",
       audience: "quiz-platform-client",
-    });
+    } as any);
 
-    const refreshToken = jwt.sign({ userId: user.id, sessionId }, this.refreshTokenSecret, {
-      expiresIn: this.refreshTokenExpiry,
-      issuer: "quiz-platform",
-      audience: "quiz-platform-client",
-    });
+    const refreshToken = jwt.sign(
+      { userId: (user._id as any).toString(), sessionId },
+      this.refreshTokenSecret,
+      {
+        expiresIn: this.refreshTokenExpiry,
+        issuer: "quiz-platform",
+        audience: "quiz-platform-client",
+      } as any
+    );
 
     // Calculate expiry time in seconds
     const expiresIn = this.parseExpiry(this.accessTokenExpiry);
@@ -97,6 +101,10 @@ export class JWTService {
         audience: "quiz-platform-client",
       }) as { userId: string; sessionId: string };
 
+      if (!decoded || !decoded.userId || !decoded.sessionId) {
+        throw new Error("Invalid token payload");
+      }
+
       return decoded;
     } catch (error) {
       if (error instanceof jwt.TokenExpiredError) {
@@ -112,7 +120,7 @@ export class JWTService {
   /**
    * Decode token without verification (for debugging)
    */
-  decodeToken(token: string): any {
+  decodeToken(token: string): unknown {
     return jwt.decode(token);
   }
 
@@ -145,14 +153,14 @@ export class JWTService {
   /**
    * Generate new access token from refresh token
    */
-  refreshAccessToken(refreshToken: string, user: User): string {
+  refreshAccessToken(refreshToken: string, user: IUser): string {
     const { sessionId } = this.verifyRefreshToken(refreshToken);
 
     const payload: JWTPayload = {
-      userId: user.id,
+      userId: (user._id as any).toString(),
       email: user.email,
       role: user.role,
-      entitlements: user.entitlements,
+      entitlements: user.entitlements || [],
       sessionId,
     };
 
@@ -160,7 +168,7 @@ export class JWTService {
       expiresIn: this.accessTokenExpiry,
       issuer: "quiz-platform",
       audience: "quiz-platform-client",
-    });
+    } as any);
   }
 
   /**
@@ -246,8 +254,8 @@ export class JWTService {
       throw new Error(`Invalid expiry format: ${expiry}`);
     }
 
-    const value = parseInt(match[1], 10);
-    const unit = match[2];
+    const value = parseInt(match[1]!, 10);
+    const unit = match[2]!;
 
     switch (unit) {
       case "s":

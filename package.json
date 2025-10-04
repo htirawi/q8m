@@ -35,35 +35,51 @@
   ],
   "scripts": {
     "dev": "cd client && pnpm dev",
-    "build": "cd client && pnpm build",
+    "dev:server": "cd server && pnpm dev",
+    "build": "pnpm -r build",
     "preview": "cd client && pnpm preview",
-    "lint": "cd client && pnpm lint",
-    "lint:fix": "cd client && pnpm lint:fix",
-    "format": "cd client && pnpm format",
-    "format:check": "cd client && pnpm format:check",
-    "test": "cd client && pnpm test",
+    "lint": "pnpm -r lint",
+    "lint:css": "cd client && pnpm lint:css",
+    "lint:fix": "pnpm -r lint:fix",
+    "format": "pnpm -r format",
+    "format:check": "pnpm -r format:check",
+    "test": "pnpm -r test",
+    "test:unit": "pnpm -r test:unit",
     "test:ui": "cd client && pnpm test:ui",
-    "test:coverage": "cd client && pnpm test:coverage",
+    "test:coverage": "pnpm -r test:coverage",
     "test:watch": "cd client && pnpm test:watch",
-    "type-check": "cd client && pnpm type-check",
+    "typecheck": "pnpm -r typecheck",
+    "type-check": "pnpm -r type-check",
     "prepare": "husky install",
-    "validate": "cd client && pnpm validate",
-    "pre-push": "node scripts/pre-push-validation.js",
+    "validate": "pnpm typecheck && pnpm lint && pnpm test:unit",
+    "pre-push": "pnpm typecheck && pnpm lint && pnpm test:unit && pnpm build",
     "guard:react": "node scripts/guard-react.cjs",
     "guard:data": "node scripts/guard-data.cjs",
     "guard:types:inline": "node scripts/guard-inline-types.cjs",
-    "guard:all": "npm run guard:react && npm run guard:data && npm run guard:types:inline"
+    "guard:all": "npm run guard:react && npm run guard:data && npm run guard:types:inline",
+    "codeql:db": "codeql database create ./codeql-db --language=javascript --source-root . --command \"pnpm -w build || npm run build || true\"",
+    "codeql:analyze": "codeql database analyze ./codeql-db codeql/javascript-queries --format=sarifv2.1.0 --output ./codeql-results.sarif",
+    "codeql:clean": "rm -rf ./codeql-db ./codeql-results.sarif || true",
+    "codeql:run": "pnpm codeql:clean && pnpm codeql:db && pnpm codeql:analyze"
   },
   "dependencies": {},
   "devDependencies": {
     "@commitlint/cli": "^18.6.1",
     "@commitlint/config-conventional": "^18.6.3",
     "husky": "^8.0.3",
-    "lint-staged": "^15.5.2"
+    "lint-staged": "^15.5.2",
+    "prettier": "^3.3.3",
+    "prettier-plugin-tailwindcss": "^0.5.14"
   },
   "lint-staged": {
     "*.{json,md,yml,yaml}": [
       "prettier --write"
+    ],
+    "client/**/*.{ts,vue,js}": [
+      "cd client && eslint --fix"
+    ],
+    "server/**/*.{ts,js}": [
+      "cd server && eslint --fix"
     ]
   },
   "engines": {

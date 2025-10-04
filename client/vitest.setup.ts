@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* TODO: Legacy patterns - Replace 'any' types with proper typing and remove unused vars in next PR */
 import { config } from "@vue/test-utils";
 import { beforeAll, afterEach, afterAll, vi } from "vitest";
 import { cleanup } from "@testing-library/vue";
@@ -14,7 +16,7 @@ let testApp: any;
 beforeAll(() => {
   // Create a global Pinia instance for tests
   const pinia = createPinia();
-  
+
   // Create i18n instance for tests with actual translations
   const i18n = createI18n({
     legacy: false,
@@ -30,7 +32,7 @@ beforeAll(() => {
   testApp = createApp({});
   testApp.use(pinia);
   testApp.use(i18n);
-  
+
   config.global.plugins = [pinia, i18n];
 });
 

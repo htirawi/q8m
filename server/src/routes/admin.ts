@@ -1,5 +1,42 @@
 import type { FastifyInstance } from "fastify";
 import { z } from "zod";
+import { sanitizeForDisplay } from "../security/escape.js";
+import { safeUpdateFields, adminFieldValidators, isPlainObject } from "../security/safe-object.js";
+
+/**
+ * Sanitize update data to prevent XSS attacks
+ */
+function sanitizeUpdateData(data: unknown): Record<string, unknown> {
+  if (!data || typeof data !== "object") {
+    return {};
+  }
+
+  const sanitized: Record<string, unknown> = {};
+  const obj = data as Record<string, unknown>;
+
+  for (const [key, value] of Object.entries(obj)) {
+    if (typeof value === "string") {
+      // For question content, we might need to allow some HTML, but escape dangerous tags
+      if (key.includes("content") || key.includes("question") || key.includes("explanation")) {
+        sanitized[key] = sanitizeForDisplay(value);
+      } else {
+        sanitized[key] = sanitizeForDisplay(value);
+      }
+    } else if (typeof value === "number" || typeof value === "boolean") {
+      sanitized[key] = value;
+    } else if (Array.isArray(value)) {
+      sanitized[key] = value.map((item) =>
+        typeof item === "string" ? sanitizeForDisplay(item) : item
+      );
+    } else if (value && typeof value === "object") {
+      sanitized[key] = sanitizeUpdateData(value);
+    } else {
+      sanitized[key] = value;
+    }
+  }
+
+  return sanitized;
+}
 
 export default async function adminRoutes(fastify: FastifyInstance) {
   // Get admin dashboard stats
@@ -8,8 +45,9 @@ export default async function adminRoutes(fastify: FastifyInstance) {
     {
       preHandler: [fastify.requireRole("admin")],
     },
-    async (request, reply) => {
+    async (_request, reply) => {
       // TODO: Implement admin dashboard stats
+      reply.type("application/json; charset=utf-8");
       reply.send({
         totalUsers: 1250,
         activeUsers: 890,
@@ -44,17 +82,18 @@ export default async function adminRoutes(fastify: FastifyInstance) {
       preHandler: [fastify.requireRole("admin")],
       schema: {
         querystring: z.object({
-          limit: z.string().transform(Number).optional().default(20),
-          offset: z.string().transform(Number).optional().default(0),
+          limit: z.string().transform(Number).optional().default("20"),
+          offset: z.string().transform(Number).optional().default("0"),
           search: z.string().optional(),
           role: z.enum(["user", "admin"]).optional(),
         }),
       },
     },
     async (request, reply) => {
-      const { limit, offset, search, role } = request.query as any;
+      const { limit, offset } = request.query as { limit: number; offset: number };
 
       // TODO: Implement real user fetching
+      reply.type("application/json; charset=utf-8");
       reply.send({
         users: [
           {
@@ -127,6 +166,58 @@ export default async function adminRoutes(fastify: FastifyInstance) {
     }
   );
 
+  // Update user (general fields)
+  fastify.patch(
+    "/users/:userId",
+    {
+      preHandler: [fastify.requireRole("admin")],
+      schema: {
+        params: z.object({
+          userId: z.string(),
+        }),
+        body: z.object({
+          displayName: z.string().max(120).optional(),
+          role: z.enum(["user", "admin", "manager", "viewer"]).optional(),
+          isActive: z.boolean().optional(),
+          isEmailVerified: z.boolean().optional(),
+          entitlements: z.array(z.enum(["JUNIOR", "INTERMEDIATE", "SENIOR", "BUNDLE"])).optional(),
+        }),
+      },
+    },
+    async (request, reply) => {
+      const { userId } = request.params as { userId: string };
+      const updateData = request.body as Record<string, unknown>;
+
+      // Define allowed user update fields
+      const allowedUserFields = {
+        displayName: adminFieldValidators.displayName,
+        role: adminFieldValidators.role,
+        isActive: adminFieldValidators.isActive,
+        isEmailVerified: adminFieldValidators.isEmailVerified,
+        entitlements: adminFieldValidators.entitlements,
+      };
+
+      try {
+        // Create a safe update object
+        const safeUpdate: Record<string, unknown> = {};
+        safeUpdateFields(safeUpdate, updateData, allowedUserFields);
+
+        // TODO: Implement actual user update in database
+        reply.send({
+          id: userId,
+          ...safeUpdate,
+          message: "User updated successfully",
+        });
+      } catch (error) {
+        reply.status(400).send({
+          code: 400,
+          error: "Bad Request",
+          message: error instanceof Error ? error.message : "Invalid update data",
+        });
+      }
+    }
+  );
+
   // Get all questions
   fastify.get(
     "/questions",
@@ -134,17 +225,18 @@ export default async function adminRoutes(fastify: FastifyInstance) {
       preHandler: [fastify.requireRole("admin")],
       schema: {
         querystring: z.object({
-          limit: z.string().transform(Number).optional().default(20),
-          offset: z.string().transform(Number).optional().default(0),
+          limit: z.string().transform(Number).optional().default("20"),
+          offset: z.string().transform(Number).optional().default("0"),
           framework: z.enum(["angular", "react", "nextjs", "redux"]).optional(),
           level: z.enum(["junior", "intermediate", "senior"]).optional(),
         }),
       },
     },
     async (request, reply) => {
-      const { limit, offset, framework, level } = request.query as any;
+      const { limit, offset } = request.query as { limit: number; offset: number };
 
       // TODO: Implement real question fetching
+      reply.type("application/json; charset=utf-8");
       reply.send({
         questions: [],
         total: 0,
@@ -200,12 +292,12 @@ export default async function adminRoutes(fastify: FastifyInstance) {
       },
     },
     async (request, reply) => {
-      const questionData = request.body as any;
+      const questionData = request.body as unknown;
 
       // TODO: Implement question creation
       reply.status(201).send({
         id: "new-question-id",
-        ...questionData,
+        ...(questionData as Record<string, unknown>),
         isActive: true,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -222,18 +314,110 @@ export default async function adminRoutes(fastify: FastifyInstance) {
         params: z.object({
           questionId: z.string(),
         }),
+        body: z.object({
+          framework: z.enum(["angular", "react", "nextjs", "redux"]).optional(),
+          level: z.enum(["junior", "intermediate", "senior"]).optional(),
+          type: z
+            .enum(["multiple-choice", "fill-blank", "true-false", "multiple-checkbox"])
+            .optional(),
+          category: z.string().optional(),
+          difficulty: z.enum(["easy", "medium", "hard"]).optional(),
+          tags: z.array(z.string()).optional(),
+          points: z.number().positive().optional(),
+          content: z
+            .object({
+              en: z.object({
+                question: z.string(),
+                options: z
+                  .array(
+                    z.object({
+                      id: z.string(),
+                      text: z.string(),
+                      isCorrect: z.boolean(),
+                    })
+                  )
+                  .optional(),
+                explanation: z.string(),
+              }),
+              ar: z.object({
+                question: z.string(),
+                options: z
+                  .array(
+                    z.object({
+                      id: z.string(),
+                      text: z.string(),
+                      isCorrect: z.boolean(),
+                    })
+                  )
+                  .optional(),
+                explanation: z.string(),
+              }),
+            })
+            .optional(),
+        }),
       },
     },
     async (request, reply) => {
       const { questionId } = request.params as { questionId: string };
-      const updateData = request.body as any;
+      const updateData = request.body as Record<string, unknown>;
 
-      // TODO: Implement question update
-      reply.send({
-        id: questionId,
-        ...updateData,
-        updatedAt: new Date(),
-      });
+      // Define allowed question update fields
+      const allowedQuestionFields = {
+        framework: adminFieldValidators.framework,
+        level: adminFieldValidators.level,
+        difficulty: adminFieldValidators.difficulty,
+        points: adminFieldValidators.points,
+        category: (value: unknown) => String(value).slice(0, 100),
+        tags: (value: unknown) => {
+          if (!Array.isArray(value)) {
+            throw new Error("Tags must be an array");
+          }
+          return value.map((tag) => String(tag).slice(0, 50));
+        },
+        type: (value: unknown) => {
+          const type = String(value);
+          if (
+            !["multiple-choice", "fill-blank", "true-false", "multiple-checkbox"].includes(type)
+          ) {
+            throw new Error("Invalid question type");
+          }
+          return type;
+        },
+        content: (value: unknown) => {
+          if (!isPlainObject(value)) {
+            throw new Error("Content must be an object");
+          }
+          // Validate content structure
+          const content = value as Record<string, unknown>;
+          if (content.en && !isPlainObject(content.en)) {
+            throw new Error("English content must be an object");
+          }
+          if (content.ar && !isPlainObject(content.ar)) {
+            throw new Error("Arabic content must be an object");
+          }
+          return sanitizeUpdateData(value);
+        },
+      };
+
+      try {
+        // Create a safe update object
+        const safeUpdate: Record<string, unknown> = {};
+        safeUpdateFields(safeUpdate, updateData, allowedQuestionFields);
+
+        // TODO: Implement actual question update in database
+        reply.type("application/json; charset=utf-8");
+        reply.send({
+          id: sanitizeForDisplay(questionId),
+          ...safeUpdate,
+          updatedAt: new Date(),
+        });
+      } catch (error) {
+        reply.status(400).send({
+          code: 400,
+          error: "Bad Request",
+          message: error instanceof Error ? error.message : "Invalid update data",
+        });
+      }
     }
   );
 

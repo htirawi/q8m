@@ -28,7 +28,7 @@ export interface ISubscription extends Document {
   updatedAt: Date;
 }
 
-const subscriptionSchema = new Schema<ISubscription>(
+const subscriptionSchema = new Schema(
   {
     userId: {
       type: Schema.Types.ObjectId,
@@ -91,19 +91,18 @@ const subscriptionSchema = new Schema<ISubscription>(
         type: String,
         required: true,
         validate: {
-          validator: function (v: string) {
+          validator(v: string) {
             return /^\d+(\.\d{2})?$/.test(v);
           },
           message: "Amount must be a valid decimal number",
         },
       },
     },
-    entitlements: [
-      {
-        type: String,
-        enum: ["JUNIOR", "INTERMEDIATE", "SENIOR", "BUNDLE"],
-      },
-    ],
+    entitlements: {
+      type: [String],
+      enum: ["JUNIOR", "INTERMEDIATE", "SENIOR", "BUNDLE"],
+      required: true,
+    },
     metadata: {
       originalPurchaseCurrency: {
         type: String,
@@ -117,8 +116,8 @@ const subscriptionSchema = new Schema<ISubscription>(
   {
     timestamps: true,
     toJSON: {
-      transform: function (doc, ret) {
-        ret.id = ret._id.toString();
+      transform(_doc, ret: Record<string, unknown>) {
+        ret.id = (ret._id as any).toString();
         delete ret._id;
         delete ret.__v;
         return ret;
@@ -136,20 +135,29 @@ subscriptionSchema.index({ cancelAtPeriodEnd: 1, currentPeriodEnd: 1 });
 // Virtual for subscription validity
 subscriptionSchema.virtual("isActive").get(function () {
   const now = new Date();
-  return this.status === "active" && this.currentPeriodStart <= now && this.currentPeriodEnd > now;
+  return (
+    (this as any).status === "active" &&
+    (this as any).currentPeriodStart <= now &&
+    (this as any).currentPeriodEnd > now
+  );
 });
 
 // Virtual for days remaining
 subscriptionSchema.virtual("daysRemaining").get(function () {
   const now = new Date();
-  const diffTime = this.currentPeriodEnd.getTime() - now.getTime();
+  const diffTime = (this as any).currentPeriodEnd.getTime() - now.getTime();
   return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 });
 
 // Virtual for is in trial
 subscriptionSchema.virtual("isInTrial").get(function () {
   const now = new Date();
-  return this.trialStart && this.trialEnd && this.trialStart <= now && this.trialEnd > now;
+  return (
+    (this as any).trialStart &&
+    (this as any).trialEnd &&
+    (this as any).trialStart <= now &&
+    (this as any).trialEnd > now
+  );
 });
 
 // Instance method to activate subscription
@@ -274,12 +282,12 @@ subscriptionSchema.statics.getSubscriptionStats = function () {
 
 // Static method to get revenue by plan
 subscriptionSchema.statics.getRevenueByPlan = function (startDate?: Date, endDate?: Date) {
-  const match: any = { status: "active" };
+  const match: unknown = { status: "active" };
 
   if (startDate || endDate) {
-    match.currentPeriodStart = {};
-    if (startDate) match.currentPeriodStart.$gte = startDate;
-    if (endDate) match.currentPeriodStart.$lte = endDate;
+    (match as any).currentPeriodStart = {};
+    if (startDate) (match as any).currentPeriodStart.$gte = startDate;
+    if (endDate) (match as any).currentPeriodStart.$lte = endDate;
   }
 
   return this.aggregate([
@@ -300,19 +308,19 @@ subscriptionSchema.statics.getRevenueByPlan = function (startDate?: Date, endDat
 
 // Pre-save middleware to set entitlements based on plan type
 subscriptionSchema.pre("save", function (next) {
-  if (this.isModified("planType")) {
-    switch (this.planType) {
+  if ((this as any).isModified("planType")) {
+    switch ((this as any).planType) {
       case "INTERMEDIATE":
-        this.entitlements = ["JUNIOR", "INTERMEDIATE"];
+        (this as any).entitlements = ["JUNIOR", "INTERMEDIATE"];
         break;
       case "SENIOR":
-        this.entitlements = ["JUNIOR", "SENIOR"];
+        (this as any).entitlements = ["JUNIOR", "SENIOR"];
         break;
       case "BUNDLE":
-        this.entitlements = ["JUNIOR", "INTERMEDIATE", "SENIOR", "BUNDLE"];
+        (this as any).entitlements = ["JUNIOR", "INTERMEDIATE", "SENIOR", "BUNDLE"];
         break;
       default:
-        this.entitlements = ["JUNIOR"];
+        (this as any).entitlements = ["JUNIOR"];
     }
   }
   next();

@@ -1,3 +1,5 @@
+/* eslint-disable no-console, no-undef, @typescript-eslint/no-unused-vars */
+/* TODO: PWA - Legacy service worker will be refactored in next PR to use Vite PWA plugin properly */
 // Vue 3 Quiz Platform Service Worker
 const CACHE_NAME = "quiz-platform-v1.0.0";
 const STATIC_CACHE = "quiz-platform-static-v1.0.0";

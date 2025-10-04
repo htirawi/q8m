@@ -15,9 +15,9 @@ export default defineConfig({
       registerType: "autoUpdate",
       includeAssets: ["favicon.ico", "robots.txt", "icon-192.png", "icon-512.png"],
       manifest: {
-        name: "Quiz Platform",
-        short_name: "Quiz Platform",
-        description: "Professional interview preparation with curated questions",
+        name: "q8m - Master Frontend Development Interviews",
+        short_name: "q8m",
+        description: "Master frontend development with 500+ curated interview questions",
         theme_color: "#2563eb",
         background_color: "#ffffff",
         display: "standalone",
@@ -105,10 +105,30 @@ export default defineConfig({
           validation: ["vee-validate", "@vee-validate/zod", "zod"],
           utils: ["axios", "@vueuse/core"],
         },
+        chunkFileNames: (chunkInfo) => {
+          const facadeModuleId = chunkInfo.facadeModuleId;
+          if (facadeModuleId) {
+            const fileName = path.basename(facadeModuleId, path.extname(facadeModuleId));
+            return `js/${fileName}-[hash].js`;
+          }
+          return "js/[name]-[hash].js";
+        },
+        entryFileNames: "js/[name]-[hash].js",
+        assetFileNames: (assetInfo) => {
+          const extType = assetInfo.name?.split(".").pop();
+          if (/png|jpe?g|svg|gif|tiff|bmp|ico/i.test(extType || "")) {
+            return "images/[name]-[hash][extname]";
+          }
+          if (/css/i.test(extType || "")) {
+            return "css/[name]-[hash][extname]";
+          }
+          return "assets/[name]-[hash][extname]";
+        },
       },
     },
     target: "esnext",
     minify: "esbuild",
+    chunkSizeWarningLimit: 1000,
   },
   test: {
     globals: true,

@@ -3,17 +3,17 @@ import { z } from "zod";
 
 interface SitemapRoute {
   url: string;
-  lastmod?: string;
+  lastmod: string;
   changefreq?: "always" | "hourly" | "daily" | "weekly" | "monthly" | "yearly" | "never";
   priority?: number;
 }
 
 export default async function seoRoutes(fastify: FastifyInstance) {
   // Generate sitemap.xml
-  fastify.get("/sitemap.xml", async (request: FastifyRequest, reply: FastifyReply) => {
+  fastify.get("/sitemap.xml", async (_request: FastifyRequest, reply: FastifyReply) => {
     try {
       const baseUrl = process.env.CLIENT_URL || "https://quiz-platform.com";
-      const currentDate = new Date().toISOString().split("T")[0];
+      const currentDate = new Date().toISOString().split("T")[0]!;
 
       // Static routes
       const staticRoutes: SitemapRoute[] = [
@@ -104,13 +104,13 @@ export default async function seoRoutes(fastify: FastifyInstance) {
       reply.type("application/xml");
       reply.send(sitemap);
     } catch (error) {
-      fastify.log.error("Error generating sitemap:", error);
+      fastify.log.error(error);
       reply.code(500).send({ error: "Failed to generate sitemap" });
     }
   });
 
   // Generate robots.txt
-  fastify.get("/robots.txt", async (request: FastifyRequest, reply: FastifyReply) => {
+  fastify.get("/robots.txt", async (_request: FastifyRequest, reply: FastifyReply) => {
     try {
       const baseUrl = process.env.CLIENT_URL || "https://quiz-platform.com";
 
@@ -138,7 +138,7 @@ Crawl-delay: 1`;
       reply.type("text/plain");
       reply.send(robotsContent);
     } catch (error) {
-      fastify.log.error("Error generating robots.txt:", error);
+      fastify.log.error(error);
       reply.code(500).send({ error: "Failed to generate robots.txt" });
     }
   });
@@ -169,7 +169,7 @@ Crawl-delay: 1`;
         const { locale = "en", id } = request.query;
         const baseUrl = process.env.CLIENT_URL || "https://quiz-platform.com";
 
-        let structuredData: any = {};
+        let structuredData: unknown = {};
 
         switch (type) {
           case "organization":
@@ -285,7 +285,7 @@ Crawl-delay: 1`;
 
         reply.send(structuredData);
       } catch (error) {
-        fastify.log.error("Error generating structured data:", error);
+        fastify.log.error(error);
         reply.code(500).send({ error: "Failed to generate structured data" });
       }
     }

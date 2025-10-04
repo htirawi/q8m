@@ -19,10 +19,10 @@ export class EmailService {
   private transporter: nodemailer.Transporter;
 
   constructor() {
-    this.transporter = nodemailer.createTransporter({
+    this.transporter = nodemailer.createTransport({
       host: env.SMTP_HOST,
-      port: env.SMTP_PORT,
-      secure: env.SMTP_PORT === 465, // true for 465, false for other ports
+      port: parseInt(env.SMTP_PORT || "587"),
+      secure: env.SMTP_PORT === "465", // true for 465, false for other ports
       auth: {
         user: env.SMTP_USER,
         pass: env.SMTP_PASS,
@@ -103,7 +103,7 @@ export class EmailService {
       };
 
       const result = await this.transporter.sendMail(mailOptions);
-      console.log("Email sent successfully:", result.messageId);
+      console.warn("Email sent successfully:", result.messageId);
     } catch (error) {
       console.error("Email sending failed:", error);
       throw new Error("Failed to send email");
@@ -116,7 +116,7 @@ export class EmailService {
   async verifyConnection(): Promise<boolean> {
     try {
       await this.transporter.verify();
-      console.log("Email service connection verified");
+      console.warn("Email service connection verified");
       return true;
     } catch (error) {
       console.error("Email service connection failed:", error);

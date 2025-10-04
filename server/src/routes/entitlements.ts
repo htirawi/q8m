@@ -21,15 +21,15 @@ export default async function entitlementRoutes(fastify: FastifyInstance) {
     },
     async (request, reply) => {
       try {
-        const userId = request.user!.id;
+        const userId = request.authUser!.id;
         const userEntitlements = await entitlementService.getUserEntitlements(userId);
 
         reply.send({
           success: true,
           entitlements: userEntitlements,
         });
-      } catch (error: any) {
-        request.log.error("Get user entitlements error:", error);
+      } catch (error: unknown) {
+        (request.log as any).error("Get user entitlements error:", error);
         reply.status(500).send({
           success: false,
           error: "Failed to get user entitlements",
@@ -49,7 +49,7 @@ export default async function entitlementRoutes(fastify: FastifyInstance) {
     },
     async (request, reply) => {
       try {
-        const userId = request.user!.id;
+        const userId = request.authUser!.id;
         const { requiredEntitlement } = request.body as z.infer<typeof checkEntitlementSchema>;
 
         const entitlementCheck = await entitlementService.checkEntitlement(
@@ -65,8 +65,8 @@ export default async function entitlementRoutes(fastify: FastifyInstance) {
           subscriptionExpired: entitlementCheck.subscriptionExpired,
           trialExpired: entitlementCheck.trialExpired,
         });
-      } catch (error: any) {
-        request.log.error("Check entitlement error:", error);
+      } catch (error: unknown) {
+        (request.log as any).error("Check entitlement error:", error);
         reply.status(500).send({
           success: false,
           error: "Failed to check entitlement",
@@ -86,7 +86,7 @@ export default async function entitlementRoutes(fastify: FastifyInstance) {
     },
     async (request, reply) => {
       try {
-        const userId = request.user!.id;
+        const userId = request.authUser!.id;
         const { contentLevel } = request.body as z.infer<typeof checkContentAccessSchema>;
 
         const contentCheck = await entitlementService.checkContentAccess(userId, contentLevel);
@@ -97,8 +97,8 @@ export default async function entitlementRoutes(fastify: FastifyInstance) {
           reason: contentCheck.reason,
           upgradeRequired: contentCheck.upgradeRequired,
         });
-      } catch (error: any) {
-        request.log.error("Check content access error:", error);
+      } catch (error: unknown) {
+        (request.log as any).error("Check content access error:", error);
         reply.status(500).send({
           success: false,
           error: "Failed to check content access",
@@ -120,7 +120,7 @@ export default async function entitlementRoutes(fastify: FastifyInstance) {
     },
     async (request, reply) => {
       try {
-        const userId = request.user!.id;
+        const userId = request.authUser!.id;
         const { requiredEntitlements } = request.body as { requiredEntitlements: string[] };
 
         const entitlementChecks = await entitlementService.checkMultipleEntitlements(
@@ -132,8 +132,8 @@ export default async function entitlementRoutes(fastify: FastifyInstance) {
           success: true,
           checks: entitlementChecks,
         });
-      } catch (error: any) {
-        request.log.error("Check multiple entitlements error:", error);
+      } catch (error: unknown) {
+        (request.log as any).error("Check multiple entitlements error:", error);
         reply.status(500).send({
           success: false,
           error: "Failed to check multiple entitlements",
@@ -156,8 +156,8 @@ export default async function entitlementRoutes(fastify: FastifyInstance) {
           success: true,
           hierarchy,
         });
-      } catch (error: any) {
-        request.log.error("Get entitlement hierarchy error:", error);
+      } catch (error: unknown) {
+        (request.log as any).error("Get entitlement hierarchy error:", error);
         reply.status(500).send({
           success: false,
           error: "Failed to get entitlement hierarchy",
@@ -173,14 +173,14 @@ export default async function entitlementRoutes(fastify: FastifyInstance) {
       preHandler: [authenticate],
       schema: {
         querystring: z.object({
-          days: z.string().transform(Number).optional().default(7),
+          days: z.string().transform(Number).optional().default("7"),
         }),
       },
     },
     async (request, reply) => {
       try {
         // Check if user is admin
-        if (request.user!.role !== "admin") {
+        if (request.authUser!.role !== "admin") {
           return reply.status(403).send({
             success: false,
             error: "Admin access required",
@@ -195,8 +195,8 @@ export default async function entitlementRoutes(fastify: FastifyInstance) {
           expiringSubscriptions,
           days,
         });
-      } catch (error: any) {
-        request.log.error("Get expiring subscriptions error:", error);
+      } catch (error: unknown) {
+        (request.log as any).error("Get expiring subscriptions error:", error);
         reply.status(500).send({
           success: false,
           error: "Failed to get expiring subscriptions",
@@ -214,7 +214,7 @@ export default async function entitlementRoutes(fastify: FastifyInstance) {
     async (request, reply) => {
       try {
         // Check if user is admin
-        if (request.user!.role !== "admin") {
+        if (request.authUser!.role !== "admin") {
           return reply.status(403).send({
             success: false,
             error: "Admin access required",
@@ -227,8 +227,8 @@ export default async function entitlementRoutes(fastify: FastifyInstance) {
           success: true,
           stats,
         });
-      } catch (error: any) {
-        request.log.error("Get entitlement stats error:", error);
+      } catch (error: unknown) {
+        (request.log as any).error("Get entitlement stats error:", error);
         reply.status(500).send({
           success: false,
           error: "Failed to get entitlement statistics",
@@ -246,7 +246,7 @@ export default async function entitlementRoutes(fastify: FastifyInstance) {
     async (request, reply) => {
       try {
         // Check if user is admin
-        if (request.user!.role !== "admin") {
+        if (request.authUser!.role !== "admin") {
           return reply.status(403).send({
             success: false,
             error: "Admin access required",
@@ -259,8 +259,8 @@ export default async function entitlementRoutes(fastify: FastifyInstance) {
           success: true,
           message: "Entitlement cache cleared",
         });
-      } catch (error: any) {
-        request.log.error("Clear entitlement cache error:", error);
+      } catch (error: unknown) {
+        (request.log as any).error("Clear entitlement cache error:", error);
         reply.status(500).send({
           success: false,
           error: "Failed to clear entitlement cache",
@@ -283,7 +283,7 @@ export default async function entitlementRoutes(fastify: FastifyInstance) {
     async (request, reply) => {
       try {
         // Check if user is admin
-        if (request.user!.role !== "admin") {
+        if (request.authUser!.role !== "admin") {
           return reply.status(403).send({
             success: false,
             error: "Admin access required",
@@ -297,8 +297,8 @@ export default async function entitlementRoutes(fastify: FastifyInstance) {
           success: true,
           message: `Entitlement cache cleared for user ${userId}`,
         });
-      } catch (error: any) {
-        request.log.error("Clear user entitlement cache error:", error);
+      } catch (error: unknown) {
+        (request.log as any).error("Clear user entitlement cache error:", error);
         reply.status(500).send({
           success: false,
           error: "Failed to clear user entitlement cache",
@@ -316,7 +316,7 @@ export default async function entitlementRoutes(fastify: FastifyInstance) {
     async (request, reply) => {
       try {
         // Check if user is admin
-        if (request.user!.role !== "admin") {
+        if (request.authUser!.role !== "admin") {
           return reply.status(403).send({
             success: false,
             error: "Admin access required",
@@ -329,8 +329,8 @@ export default async function entitlementRoutes(fastify: FastifyInstance) {
           success: true,
           cacheStats,
         });
-      } catch (error: any) {
-        request.log.error("Get cache stats error:", error);
+      } catch (error: unknown) {
+        (request.log as any).error("Get cache stats error:", error);
         reply.status(500).send({
           success: false,
           error: "Failed to get cache statistics",

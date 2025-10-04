@@ -1,148 +1,188 @@
 <template>
-  <div class="toast" :class="toastClasses" role="alert" aria-live="assertive" aria-atomic="true">
-    <div class="toast-content">
-      <div class="toast-icon">
-        <component :is="iconComponent" class="h-5 w-5" />
-      </div>
-
-      <div class="toast-body">
-        <h4 class="toast-title">{{ toast.title }}</h4>
-        <p class="toast-message">{{ toast.message }}</p>
-
-        <div v-if="toast.action" class="toast-actions">
-          <button type="button" class="toast-action-button" @click="$emit('action', toast)">
-            {{ toast.action.label }}
-          </button>
-        </div>
-      </div>
-
-      <button
-        type="button"
-        class="toast-close"
-        :aria-label="$t('common.close')"
-        @click="$emit('close', toast.id)"
-      >
-        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M6 18L18 6M6 6l12 12"
-          />
-        </svg>
-      </button>
-    </div>
-
-    <!-- Progress bar for auto-dismiss toasts -->
+  <Transition name="toast" @enter="handleEnter" @leave="handleLeave">
     <div
-      v-if="!toast.persistent && toast.duration"
-      class="toast-progress"
-      :style="{ animationDuration: `${toast.duration}ms` }"
-    />
-  </div>
+      v-if="isVisible"
+      :id="id"
+      class="toast"
+      :class="toastClasses"
+      role="alert"
+      :aria-live="ariaLive"
+      :aria-atomic="true"
+    >
+      <div class="toast-content">
+        <div v-if="icon" class="toast-icon" aria-hidden="true">
+          <component :is="icon" class="h-5 w-5" />
+        </div>
+        <div class="toast-message">
+          <slot>
+            {{ message }}
+          </slot>
+        </div>
+        <button
+          v-if="dismissible"
+          type="button"
+          class="toast-close"
+          :aria-label="$t('a11y.dismissNotification')"
+          @click="handleDismiss"
+        >
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </Transition>
 </template>
 
 <script setup lang="ts">
-import { computed, defineAsyncComponent } from "vue";
-import { useI18n } from "vue-i18n";
-import type { Toast } from "@/composables/useToast";
+import { ref, computed, onMounted } from "vue";
+import type { Component } from "vue";
 
-interface Props {
-  toast: Toast;
+export interface ToastProps {
+  id?: string;
+  type?: "success" | "error" | "warning" | "info";
+  message?: string;
+  icon?: Component;
+  dismissible?: boolean;
+  duration?: number;
+  persistent?: boolean;
 }
 
-const props = defineProps<Props>();
-
-defineEmits<{
-  close: [id: string];
-  action: [toast: Toast];
-}>();
-
-const { t } = useI18n();
-
-const toastClasses = computed(() => {
-  const baseClasses = "relative overflow-hidden rounded-lg border p-4 shadow-lg backdrop-blur-sm";
-
-  const typeClasses = {
-    success:
-      "bg-green-50 border-green-200 text-green-800 dark:bg-green-900/20 dark:border-green-800 dark:text-green-400",
-    error:
-      "bg-red-50 border-red-200 text-red-800 dark:bg-red-900/20 dark:border-red-800 dark:text-red-400",
-    warning:
-      "bg-yellow-50 border-yellow-200 text-yellow-800 dark:bg-yellow-900/20 dark:border-yellow-800 dark:text-yellow-400",
-    info: "bg-blue-50 border-blue-200 text-blue-800 dark:bg-blue-900/20 dark:border-blue-800 dark:text-blue-400",
-  };
-
-  return `${baseClasses} ${typeClasses[props.toast.type]}`;
+const props = withDefaults(defineProps<ToastProps>(), {
+  type: "info",
+  dismissible: true,
+  duration: 5000,
+  persistent: false,
 });
 
-const iconComponent = computed(() => {
-  const icons = {
-    success: defineAsyncComponent(() => import("@heroicons/vue/24/outline/CheckCircleIcon")),
-    error: defineAsyncComponent(() => import("@heroicons/vue/24/outline/XCircleIcon")),
-    warning: defineAsyncComponent(
-      () => import("@heroicons/vue/24/outline/ExclamationTriangleIcon")
-    ),
-    info: defineAsyncComponent(() => import("@heroicons/vue/24/outline/InformationCircleIcon")),
+const emit = defineEmits<{
+  dismiss: [];
+  "update:isVisible": [value: boolean];
+}>();
+
+// State
+const isVisible = ref(true);
+let timeoutId: number | null = null;
+
+// Computed properties
+const toastClasses = computed(() => {
+  const baseClasses = ["toast"];
+
+  const typeClasses = {
+    success: "toast--success",
+    error: "toast--error",
+    warning: "toast--warning",
+    info: "toast--info",
   };
 
-  return icons[props.toast.type];
+  return [...baseClasses, typeClasses[props.type]].join(" ");
+});
+
+const ariaLive = computed(() => {
+  return props.type === "error" ? "assertive" : "polite";
+});
+
+// Methods
+const handleDismiss = () => {
+  isVisible.value = false;
+  emit("dismiss");
+  emit("update:isVisible", false);
+};
+
+const handleEnter = () => {
+  if (!props.persistent && props.duration > 0) {
+    timeoutId = window.setTimeout(() => {
+      handleDismiss();
+    }, props.duration);
+  }
+};
+
+const handleLeave = () => {
+  if (timeoutId) {
+    clearTimeout(timeoutId);
+    timeoutId = null;
+  }
+};
+
+// Lifecycle
+onMounted(() => {
+  handleEnter();
+});
+
+// Cleanup
+import { onUnmounted } from "vue";
+
+onUnmounted(() => {
+  if (timeoutId) {
+    clearTimeout(timeoutId);
+  }
 });
 </script>
 
 <style scoped>
+.toast {
+  @apply pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5 dark:bg-gray-800;
+}
+
 .toast-content {
-  @apply flex items-start gap-3;
+  @apply flex items-start space-x-3 p-4;
 }
 
 .toast-icon {
   @apply mt-0.5 flex-shrink-0;
 }
 
-.toast-body {
-  @apply min-w-0 flex-1;
-}
-
-.toast-title {
-  @apply text-sm font-semibold leading-5;
-}
-
 .toast-message {
-  @apply mt-1 text-sm leading-5 opacity-90;
-}
-
-.toast-actions {
-  @apply mt-2;
-}
-
-.toast-action-button {
-  @apply text-sm font-medium underline hover:no-underline focus:underline focus:outline-none;
+  @apply flex-1 text-sm text-gray-900 dark:text-gray-100;
 }
 
 .toast-close {
-  @apply flex-shrink-0 rounded-md p-1 hover:bg-black/5 focus:outline-none focus:ring-2 focus:ring-current focus:ring-offset-2 dark:hover:bg-white/5;
+  @apply flex min-h-[44px] min-w-[44px] flex-shrink-0 items-center justify-center rounded-md p-1 text-gray-400 transition-colors duration-200 hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-700 dark:hover:text-gray-300;
 }
 
-.toast-progress {
-  @apply absolute bottom-0 left-0 h-1 bg-current opacity-30;
-  animation: progress linear forwards;
+/* Type variants */
+.toast--success .toast-icon {
+  @apply text-green-500;
 }
 
-@keyframes progress {
-  from {
-    width: 100%;
-  }
-  to {
-    width: 0%;
-  }
+.toast--error .toast-icon {
+  @apply text-red-500;
 }
 
-/* RTL support */
-[dir="rtl"] .toast-content {
-  @apply flex-row-reverse;
+.toast--warning .toast-icon {
+  @apply text-yellow-500;
 }
 
-[dir="rtl"] .toast-progress {
-  @apply left-auto right-0;
+.toast--info .toast-icon {
+  @apply text-blue-500;
+}
+
+/* Focus styles */
+.toast-close:focus {
+  @apply ring-primary-500 outline-none ring-2 ring-offset-2 dark:ring-offset-gray-800;
+}
+
+/* Transitions */
+.toast-enter-active {
+  transition: all 0.3s ease;
+}
+
+.toast-leave-active {
+  transition: all 0.3s ease;
+}
+
+.toast-enter-from {
+  opacity: 0;
+  transform: translateX(100%);
+}
+
+.toast-leave-to {
+  opacity: 0;
+  transform: translateX(100%);
 }
 </style>

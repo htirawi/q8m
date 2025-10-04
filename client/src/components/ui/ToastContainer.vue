@@ -1,75 +1,88 @@
 <template>
-  <Teleport to="body">
-    <div
-      v-if="toasts.length > 0"
-      class="toast-container"
-      role="alert"
-      aria-live="polite"
-      aria-atomic="true"
-    >
-      <TransitionGroup name="toast" tag="div" class="toast-list">
-        <Toast
-          v-for="toast in toasts"
-          :key="toast.id"
-          :toast="toast"
-          @close="removeToast"
-          @action="handleAction"
-        />
-      </TransitionGroup>
-    </div>
-  </Teleport>
+  <div class="toast-container" aria-live="polite" aria-label="Notifications">
+    <TransitionGroup name="toast-list" tag="div" class="toast-list">
+      <Toast
+        v-for="toast in toasts"
+        :key="toast.id"
+        :id="toast.id"
+        :type="toast.type"
+        :message="toast.message"
+        :icon="toast.icon"
+        :dismissible="toast.dismissible"
+        :duration="toast.duration"
+        :persistent="toast.persistent"
+        @dismiss="removeToast(toast.id)"
+      />
+    </TransitionGroup>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { useToast, type Toast } from "@/composables/useToast";
+import { ref } from "vue";
+import Toast from "./Toast.vue";
+import type { Component } from "vue";
 
-const { toasts, removeToast } = useToast();
+export interface ToastItem {
+  id: string;
+  type: "success" | "error" | "warning" | "info";
+  message: string;
+  icon?: Component;
+  dismissible?: boolean;
+  duration?: number;
+  persistent?: boolean;
+}
 
-const handleAction = (toast: Toast) => {
-  if (toast.action?.handler) {
-    toast.action.handler();
-  }
-  removeToast(toast.id);
+// State
+const toasts = ref<ToastItem[]>([]);
+
+// Methods
+const addToast = (toast: Omit<ToastItem, "id">) => {
+  const id = Math.random().toString(36).substr(2, 9);
+  toasts.value.push({ ...toast, id });
 };
+
+const removeToast = (id: string) => {
+  const index = toasts.value.findIndex((toast) => toast.id === id);
+  if (index > -1) {
+    toasts.value.splice(index, 1);
+  }
+};
+
+const clearToasts = () => {
+  toasts.value = [];
+};
+
+// Expose methods for global use
+defineExpose({
+  addToast,
+  removeToast,
+  clearToasts,
+});
 </script>
 
 <style scoped>
 .toast-container {
   @apply fixed right-4 top-4 z-50 space-y-2;
-  max-width: 400px;
 }
 
 .toast-list {
   @apply space-y-2;
 }
 
-/* Toast animations */
-.toast-enter-active,
-.toast-leave-active {
+/* Transitions */
+.toast-list-move,
+.toast-list-enter-active,
+.toast-list-leave-active {
   transition: all 0.3s ease;
 }
 
-.toast-enter-from {
+.toast-list-enter-from,
+.toast-list-leave-to {
   opacity: 0;
   transform: translateX(100%);
 }
 
-.toast-leave-to {
-  opacity: 0;
-  transform: translateX(100%);
-}
-
-.toast-move {
-  transition: transform 0.3s ease;
-}
-
-/* RTL support */
-[dir="rtl"] .toast-container {
-  @apply left-4 right-auto;
-}
-
-[dir="rtl"] .toast-enter-from,
-[dir="rtl"] .toast-leave-to {
-  transform: translateX(-100%);
+.toast-list-leave-active {
+  position: absolute;
 }
 </style>

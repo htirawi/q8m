@@ -1,3 +1,4 @@
+/* TODO: Legacy patterns - Replace 'any' types with proper typing and remove unused vars in next PR */
 import { ref, readonly } from "vue";
 import { useI18n } from "vue-i18n";
 

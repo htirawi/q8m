@@ -18,6 +18,8 @@ export interface PricingInfo {
   formatted: string;
   exchangeRate?: number;
   isEstimated: boolean;
+  rateUsed?: number;
+  settlementCurrency?: string;
 }
 
 export class CurrencyService {
@@ -51,8 +53,8 @@ export class CurrencyService {
       convertedAmount: Math.round(amount * rate.rate * 100) / 100, // Round to 2 decimal places
       convertedCurrency: targetCurrency,
       exchangeRate: rate.rate,
-      rateSource: rate.source,
-      rateAge: rate.ageInHours,
+      rateSource: rate.source as "cache" | "api" | "fallback",
+      rateAge: rate.ageInHours ?? 0,
       timestamp: new Date(),
     };
   }
@@ -72,8 +74,8 @@ export class CurrencyService {
       convertedAmount: Math.round((amount / rate.rate) * 100) / 100,
       convertedCurrency: "USD",
       exchangeRate: rate.rate,
-      rateSource: rate.source,
-      rateAge: rate.ageInHours,
+      rateSource: rate.source as "cache" | "api" | "fallback",
+      rateAge: rate.ageInHours ?? 0,
       timestamp: new Date(),
     };
   }
@@ -92,7 +94,7 @@ export class CurrencyService {
       return {
         rate: fxRate.rate,
         source: "cache",
-        ageInHours: fxRate.ageInHours,
+        ageInHours: ((fxRate as any).ageInHours ?? 0) as number,
       };
     }
 
@@ -103,7 +105,7 @@ export class CurrencyService {
       return {
         rate: fxRate.rate,
         source: "cache",
-        ageInHours: fxRate.ageInHours,
+        ageInHours: ((fxRate as any).ageInHours ?? 0) as number,
       };
     }
 
@@ -120,6 +122,9 @@ export class CurrencyService {
 
       // Use fallback rate
       const fallbackRate = this.fallbackRates[targetCurrency];
+      if (!fallbackRate) {
+        throw new Error(`No fallback rate available for ${targetCurrency}`);
+      }
       await FxRate.createFallbackRate(targetCurrency, fallbackRate, "API unavailable");
 
       return {
@@ -177,7 +182,7 @@ export class CurrencyService {
     rate: number,
     source: "api" | "manual" | "fallback",
     provider: string,
-    providerResponse?: any
+    providerResponse?: unknown
   ): Promise<void> {
     const now = new Date();
     const expiresAt = new Date(now.getTime() + 24 * 60 * 60 * 1000); // 24 hours

@@ -3,7 +3,8 @@ import { Purchase } from "../models/Purchase.js";
 import { Subscription } from "../models/Subscription.js";
 import { User } from "../models/User.js";
 import { currencyService } from "./currency.service.js";
-import crypto from "crypto";
+import { logPaymentEvent } from "../security/logging.js";
+import * as crypto from "crypto";
 
 export interface APSPaymentRequest {
   amount: number;
@@ -48,10 +49,10 @@ export interface APSWebhookData {
 export class APSService {
   private static instance: APSService;
   private isConfigured: boolean = false;
-  private baseUrl: string;
-  private apiKey: string;
-  private merchantId: string;
-  private webhookSecret: string;
+  private baseUrl!: string;
+  private apiKey!: string;
+  private merchantId!: string;
+  private webhookSecret!: string;
 
   private constructor() {
     this.configureAPS();
@@ -77,7 +78,7 @@ export class APSService {
       env.NODE_ENV === "production" ? "https://api.aps.com.sa" : "https://api-sandbox.aps.com.sa";
 
     this.isConfigured = true;
-    console.log("APS service configured successfully");
+    console.warn("APS service configured successfully");
   }
 
   /**
@@ -211,8 +212,13 @@ export class APSService {
       throw new Error("APS service not configured");
     }
 
+    // Validate paymentId to prevent SSRF
+    if (!paymentId || !/^[a-zA-Z0-9_-]+$/.test(paymentId)) {
+      throw new Error("Invalid payment ID format");
+    }
+
     try {
-      const response = await fetch(`${this.baseUrl}/v1/payments/${paymentId}`, {
+      const response = await fetch(`${this.baseUrl}/v1/payments/${encodeURIComponent(paymentId)}`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${this.apiKey}`,
@@ -272,9 +278,9 @@ export class APSService {
   /**
    * Create subscription after successful payment
    */
-  private async createSubscription(purchase: any): Promise<void> {
+  private async createSubscription(purchase: unknown): Promise<void> {
     try {
-      const user = await User.findById(purchase.userId);
+      const user = await User.findById((purchase as any).userId);
       if (!user) {
         throw new Error("User not found");
       }
@@ -286,18 +292,18 @@ export class APSService {
 
       // Create subscription
       const subscription = new Subscription({
-        userId: purchase.userId,
-        purchaseId: purchase._id,
-        planType: purchase.items[0].type,
+        userId: (purchase as any).userId,
+        purchaseId: (purchase as any)._id,
+        planType: (purchase as any).items[0].type,
         status: "active",
         currentPeriodStart: now,
         currentPeriodEnd: periodEnd,
         billingCycle,
-        price: purchase.amount,
+        price: (purchase as any).amount,
         metadata: {
-          originalPurchaseCurrency: purchase.metadata?.originalCurrency,
-          fxRateUsed: purchase.metadata?.exchangeRate
-            ? parseFloat(purchase.metadata.exchangeRate)
+          originalPurchaseCurrency: (purchase as any).metadata?.originalCurrency,
+          fxRateUsed: (purchase as any).metadata?.exchangeRate
+            ? parseFloat((purchase as any).metadata.exchangeRate)
             : undefined,
         },
       });
@@ -308,7 +314,7 @@ export class APSService {
       user.entitlements = subscription.entitlements;
       await user.save();
 
-      console.log(`Subscription created for user ${user.email}: ${subscription.planType}`);
+      console.warn(`Subscription created for user ${user.email}: ${subscription.planType}`);
     } catch (error) {
       console.error("Error creating subscription:", error);
       throw error;
@@ -342,7 +348,10 @@ export class APSService {
           await this.handlePaymentRefunded(webhookData.data);
           break;
         default:
-          console.log(`Unhandled APS webhook event: ${webhookData.event}`);
+          logPaymentEvent(console, "aps_webhook_unhandled", {
+            event: webhookData.event,
+            service: "aps",
+          });
       }
 
       return { success: true };
@@ -373,9 +382,9 @@ export class APSService {
   /**
    * Handle payment completed webhook
    */
-  private async handlePaymentCompleted(data: any): Promise<void> {
+  private async handlePaymentCompleted(data: unknown): Promise<void> {
     try {
-      const purchase = await Purchase.findByPaymentId(data.id);
+      const purchase = await Purchase.findByPaymentId((data as any).id);
 
       if (purchase && purchase.status === "pending") {
         await purchase.markAsCompleted(data);
@@ -389,12 +398,12 @@ export class APSService {
   /**
    * Handle payment failed webhook
    */
-  private async handlePaymentFailed(data: any): Promise<void> {
+  private async handlePaymentFailed(data: unknown): Promise<void> {
     try {
-      const purchase = await Purchase.findByPaymentId(data.id);
+      const purchase = await Purchase.findByPaymentId((data as any).id);
 
       if (purchase && purchase.status === "pending") {
-        await purchase.markAsFailed(`APS status: ${data.status}`);
+        await purchase.markAsFailed(`APS status: ${(data as any).status}`);
       }
     } catch (error) {
       console.error("Error handling payment failed webhook:", error);
@@ -404,16 +413,16 @@ export class APSService {
   /**
    * Handle payment refunded webhook
    */
-  private async handlePaymentRefunded(data: any): Promise<void> {
+  private async handlePaymentRefunded(data: unknown): Promise<void> {
     try {
-      const purchase = await Purchase.findByPaymentId(data.id);
+      const purchase = await Purchase.findByPaymentId((data as any).id);
 
       if (purchase) {
         await purchase.processRefund(
-          (data.amount / 100).toFixed(2), // Convert from cents
-          data.currency,
+          ((data as any).amount / 100).toFixed(2), // Convert from cents
+          (data as any).currency,
           "requested_by_customer",
-          data.id
+          (data as any).id
         );
 
         // Cancel associated subscription

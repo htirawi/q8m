@@ -13,31 +13,40 @@
       </div>
 
       <div class="error-details">
-        <h2 class="error-title">{{ $t("errors.generic") }}</h2>
+        <h2 class="error-title">{{ $t("errors.generic") }}
+
+</h2>
         <p class="error-message">
           {{ errorMessage || $t("errors.serverError.message") }}
+
         </p>
 
         <div v-if="showDetails && errorDetails" class="error-debug">
           <details class="error-debug-details">
             <summary class="error-debug-summary">
               {{ $t("common.technicalDetails") }}
+
             </summary>
-            <pre class="error-debug-content">{{ errorDetails }}</pre>
+            <pre class="error-debug-content">{{ errorDetails }}
+
+</pre>
           </details>
         </div>
 
         <div class="error-actions">
           <button type="button" class="error-action-button primary" @click="retry">
             {{ $t("common.retry") }}
+
           </button>
 
           <button type="button" class="error-action-button secondary" @click="reportError">
             {{ $t("common.reportError") }}
+
           </button>
 
           <button type="button" class="error-action-button secondary" @click="goHome">
             {{ $t("common.goHome") }}
+
           </button>
         </div>
       </div>
@@ -53,7 +62,7 @@ import { useRouter } from "vue-router";
 import { useErrorHandler } from "@/composables/useErrorHandler";
 import { useToast } from "@/composables/useToast";
 
-interface Props {
+interface props {
   fallback?: boolean;
   showDetails?: boolean;
   onRetry?: () => void;
@@ -126,7 +135,7 @@ const retry = () => {
   emit("retry");
 };
 
-const reportError = () => {
+const reporterror = () => {
   // TODO: Integrate with error reporting service (e.g., Sentry)
   const errorReport = {
     message: errorMessage.value,
@@ -145,10 +154,11 @@ const reportError = () => {
   );
 };
 
-const goHome = () => {
+const gohome = () => {
   router.push("/");
   retry();
 };
+
 </script>
 
 <style scoped>
@@ -190,6 +200,7 @@ const goHome = () => {
 
 .error-debug-content {
   @apply mt-2 overflow-auto rounded bg-gray-100 p-3 text-xs text-gray-800 dark:bg-gray-700 dark:text-gray-200;
+
   max-height: 200px;
 }
 

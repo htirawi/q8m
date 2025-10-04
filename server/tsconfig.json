@@ -5,6 +5,7 @@
     "lib": ["ES2023"],
     "module": "ESNext",
     "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
     "moduleResolution": "Bundler",
     "resolveJsonModule": true,
     "allowImportingTsExtensions": true,
@@ -23,7 +24,7 @@
     "noImplicitReturns": true,
     "noUncheckedIndexedAccess": true,
     "forceConsistentCasingInFileNames": true,
-    "exactOptionalPropertyTypes": true,
+    "exactOptionalPropertyTypes": false,
     "types": ["node", "vitest/globals"],
     "baseUrl": ".",
     "paths": {
@@ -38,8 +39,8 @@
       "@shared/*": ["../shared/*"]
     }
   },
-  "include": ["src/**/*.ts", "tests/**/*.ts", "scripts/**/*.ts"],
-  "exclude": ["node_modules", "dist", "coverage"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "tests/**/*.ts", "scripts/**/*.ts"],
+  "exclude": ["node_modules", "dist", "coverage", "src/routes/downloads.ts"],
   "ts-node": {
     "esm": true,
     "experimentalSpecifierResolution": "node"

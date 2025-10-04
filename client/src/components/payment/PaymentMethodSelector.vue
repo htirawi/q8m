@@ -15,8 +15,12 @@
             <component :is="method.icon" class="h-8 w-8" />
           </div>
           <div class="payment-method-info">
-            <h4 class="payment-method-name">{{ method.name }}</h4>
-            <p class="payment-method-description">{{ method.description }}</p>
+            <h4 class="payment-method-name">{{ method.name }}
+
+</h4>
+            <p class="payment-method-description">{{ method.description }}
+
+</p>
           </div>
           <div class="payment-method-radio">
             <input
@@ -37,21 +41,27 @@
       <div v-if="selectedMethod === 'paypal'" class="paypal-info">
         <div class="info-box">
           <CheckCircleIcon class="h-5 w-5 text-green-500" />
-          <p>{{ $t("checkout.paypalInfo") }}</p>
+          <p>{{ $t("checkout.paypalInfo") }}
+
+</p>
         </div>
       </div>
 
       <div v-if="selectedMethod === 'aps'" class="aps-info">
         <div class="info-box">
           <CheckCircleIcon class="h-5 w-5 text-green-500" />
-          <p>{{ $t("checkout.apsInfo") }}</p>
+          <p>{{ $t("checkout.apsInfo") }}
+
+</p>
         </div>
       </div>
 
       <div v-if="selectedMethod === 'hyperpay'" class="hyperpay-info">
         <div class="info-box">
           <CheckCircleIcon class="h-5 w-5 text-green-500" />
-          <p>{{ $t("checkout.hyperpayInfo") }}</p>
+          <p>{{ $t("checkout.hyperpayInfo") }}
+
+</p>
         </div>
       </div>
     </div>
@@ -63,7 +73,7 @@ import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { CheckCircleIcon } from "@heroicons/vue/24/outline";
 
-interface PaymentMethod {
+interface paymentmethod {
   id: string;
   name: string;
   description: string;
@@ -71,14 +81,14 @@ interface PaymentMethod {
   available: boolean;
 }
 
-interface Props {
+interface props {
   modelValue: string;
   currency: string;
 }
 
 const props = defineProps<Props>();
 
-const emit = defineEmits<{
+const emit = defineemits<{
   "update:modelValue": [value: string];
 }>();
 
@@ -117,9 +127,10 @@ const availableMethods = computed((): PaymentMethod[] => {
   return methods.filter((method) => method.available);
 });
 
-const selectMethod = (methodId: string) => {
+const selectmethod = (methodId: string) => {
   selectedMethod.value = methodId;
 };
+
 </script>
 
 <style scoped>
@@ -181,6 +192,7 @@ const selectMethod = (methodId: string) => {
 
 .payment-method--selected .radio-checkmark::after {
   @apply absolute left-1/2 top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white;
+
   content: "";
 }
 

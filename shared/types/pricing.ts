@@ -1,3 +1,5 @@
+export type Plan = "JUNIOR" | "INTERMEDIATE" | "SENIOR" | "BUNDLE";
+
 export interface PricingTier {
   id: string;
   name: string;
