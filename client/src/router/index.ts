@@ -266,12 +266,13 @@ router.beforeEach(async (to, _from, next) => {
   }
 
   // Handle locale detection and validation
+  const { path } = to;
   const locale = getLocaleFromRoute(to);
 
   // Validate locale
   if (!SUPPORTED_LOCALES.includes(locale as SupportedLocale)) {
     // Redirect to default locale if invalid locale
-    const pathWithoutLocale = to.path.replace(/^\/[a-z]{2}(\/|$)/, "/");
+    const pathWithoutLocale = path.replace(/^\/[a-z]{2}(\/|$)/, "/");
     next(`/${DEFAULT_LOCALE}${pathWithoutLocale === "/" ? "" : pathWithoutLocale}`);
     return;
   }
@@ -286,11 +287,12 @@ router.beforeEach(async (to, _from, next) => {
     console.log("New i18n locale:", i18n.global.locale.value);
 
     // Update HTML attributes for RTL support
-    document.documentElement.dir = locale === "ar" ? "rtl" : "ltr";
-    document.documentElement.lang = locale;
+    const { documentElement } = document;
+    documentElement.dir = locale === "ar" ? "rtl" : "ltr";
+    documentElement.lang = locale;
     console.log("HTML attributes updated:", {
-      dir: document.documentElement.dir,
-      lang: document.documentElement.lang,
+      dir: documentElement.dir,
+      lang: documentElement.lang,
     });
 
     // Force a re-render by updating the i18n instance
