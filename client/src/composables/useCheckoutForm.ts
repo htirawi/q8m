@@ -152,7 +152,7 @@ export function useCheckoutForm() {
   };
 
   const clearErrors = () => {
-    Object.keys(errors).forEach(key => {
+    Object.keys(errors).forEach((key) => {
       delete errors[key];
     });
   };
@@ -164,10 +164,10 @@ export function useCheckoutForm() {
     billingCycle,
     isProcessing,
     errors,
-    
+
     // Computed
     isFormValid,
-    
+
     // Methods
     validateForm,
     processPayment,

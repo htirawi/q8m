@@ -1,6 +1,6 @@
 /**
  * DTO Types (Data Transfer Objects)
- * 
+ *
  * API request/response shapes and wire formats.
  * These types represent the exact structure of data sent over the network.
  */

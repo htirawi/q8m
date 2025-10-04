@@ -13,38 +13,64 @@
 
       <!-- Success Content -->
       <div class="success-content">
-        <h1 class="success-title">{{ $t("payment.success.title") }}</h1>
-        <p class="success-message">{{ $t("payment.success.message") }}</p>
+        <h1 class="success-title">{{ $t("payment.success.title") }}
+
+</h1>
+        <p class="success-message">{{ $t("payment.success.message") }}
+
+</p>
 
         <!-- Order Details -->
         <div v-if="orderDetails" class="order-details">
           <div class="order-card">
-            <h3 class="order-title">{{ $t("payment.success.orderDetails") }}</h3>
+            <h3 class="order-title">{{ $t("payment.success.orderDetails") }}
+
+</h3>
 
             <div class="order-info">
               <div class="order-row">
-                <span class="order-label">{{ $t("payment.success.orderId") }}</span>
-                <span class="order-value">{{ orderDetails.orderId }}</span>
+                <span class="order-label">{{ $t("payment.success.orderId") }}
+
+</span>
+                <span class="order-value">{{ orderDetails.orderId }}
+
+</span>
               </div>
 
               <div class="order-row">
-                <span class="order-label">{{ $t("payment.success.plan") }}</span>
-                <span class="order-value">{{ orderDetails.planName }}</span>
+                <span class="order-label">{{ $t("payment.success.plan") }}
+
+</span>
+                <span class="order-value">{{ orderDetails.planName }}
+
+</span>
               </div>
 
               <div class="order-row">
-                <span class="order-label">{{ $t("payment.success.amount") }}</span>
-                <span class="order-value">{{ orderDetails.amount }}</span>
+                <span class="order-label">{{ $t("payment.success.amount") }}
+
+</span>
+                <span class="order-value">{{ orderDetails.amount }}
+
+</span>
               </div>
 
               <div class="order-row">
-                <span class="order-label">{{ $t("payment.success.billing") }}</span>
-                <span class="order-value">{{ orderDetails.billingCycle }}</span>
+                <span class="order-label">{{ $t("payment.success.billing") }}
+
+</span>
+                <span class="order-value">{{ orderDetails.billingCycle }}
+
+</span>
               </div>
 
               <div class="order-row">
-                <span class="order-label">{{ $t("payment.success.date") }}</span>
-                <span class="order-value">{{ orderDetails.date }}</span>
+                <span class="order-label">{{ $t("payment.success.date") }}
+
+</span>
+                <span class="order-value">{{ orderDetails.date }}
+
+</span>
               </div>
             </div>
           </div>
@@ -52,7 +78,9 @@
 
         <!-- Next Steps -->
         <div class="next-steps">
-          <h3 class="steps-title">{{ $t("payment.success.nextSteps") }}</h3>
+          <h3 class="steps-title">{{ $t("payment.success.nextSteps") }}
+
+</h3>
           <div class="steps-list">
             <div class="step-item">
               <div class="step-icon">
@@ -66,8 +94,12 @@
                 </svg>
               </div>
               <div class="step-content">
-                <h4 class="step-title">{{ $t("payment.success.step1.title") }}</h4>
-                <p class="step-description">{{ $t("payment.success.step1.description") }}</p>
+                <h4 class="step-title">{{ $t("payment.success.step1.title") }}
+
+</h4>
+                <p class="step-description">{{ $t("payment.success.step1.description") }}
+
+</p>
               </div>
             </div>
 
@@ -83,8 +115,12 @@
                 </svg>
               </div>
               <div class="step-content">
-                <h4 class="step-title">{{ $t("payment.success.step2.title") }}</h4>
-                <p class="step-description">{{ $t("payment.success.step2.description") }}</p>
+                <h4 class="step-title">{{ $t("payment.success.step2.title") }}
+
+</h4>
+                <p class="step-description">{{ $t("payment.success.step2.description") }}
+
+</p>
               </div>
             </div>
 
@@ -100,8 +136,12 @@
                 </svg>
               </div>
               <div class="step-content">
-                <h4 class="step-title">{{ $t("payment.success.step3.title") }}</h4>
-                <p class="step-description">{{ $t("payment.success.step3.description") }}</p>
+                <h4 class="step-title">{{ $t("payment.success.step3.title") }}
+
+</h4>
+                <p class="step-description">{{ $t("payment.success.step3.description") }}
+
+</p>
               </div>
             </div>
           </div>
@@ -125,6 +165,7 @@
               />
             </svg>
             {{ $t("payment.success.goToDashboard") }}
+
           </button>
 
           <button @click="goToQuizzes" class="btn-secondary">
@@ -137,6 +178,7 @@
               />
             </svg>
             {{ $t("payment.success.startQuizzes") }}
+
           </button>
         </div>
 
@@ -144,8 +186,10 @@
         <div class="support-section">
           <p class="support-text">
             {{ $t("payment.success.support.text") }}
+
             <a href="mailto:support@quizplatform.com" class="support-link">
               {{ $t("payment.success.support.email") }}
+
             </a>
           </p>
         </div>
@@ -181,11 +225,11 @@ const goToDashboard = () => {
   router.push("/dashboard");
 };
 
-const goToQuizzes = () => {
+const gotoquizzes = () => {
   router.push("/quizzes");
 };
 
-const parseOrderDetails = () => {
+const parseorderdetails = () => {
   // Parse order details from URL parameters or state
   const orderId = route.query.orderId as string;
   const planName = route.query.plan as string;
@@ -194,12 +238,14 @@ const parseOrderDetails = () => {
   const billingCycle = route.query.billing as string;
 
   if (orderId && planName && amount) {
-    orderDetails.value = {
+    orderdetails.value = {
       orderId,
       planName,
-      amount: `${amount} ${currency}`,
+      amount: `${amount} ${currency}
+
+`,
       billingCycle,
-      date: new Date().toISOString(),
+      date: new Date().toISOString(),billingCycle,date
     };
   }
 };
@@ -245,12 +291,14 @@ onMounted(async () => {
 
 .success-circle-bg {
   @apply stroke-green-500;
+
   stroke-width: 2;
   animation: circle-bg 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
 }
 
 .success-checkmark-path {
   @apply stroke-green-500;
+
   stroke-width: 2;
   stroke-linecap: round;
   stroke-linejoin: round;
@@ -264,6 +312,7 @@ onMounted(async () => {
     stroke-dasharray: 0 157;
     stroke-dashoffset: 0;
   }
+
   100% {
     stroke-dasharray: 157 157;
     stroke-dashoffset: 0;
@@ -274,6 +323,7 @@ onMounted(async () => {
   0% {
     stroke-dashoffset: 48;
   }
+
   100% {
     stroke-dashoffset: 0;
   }
@@ -381,7 +431,7 @@ onMounted(async () => {
 }
 
 /* Mobile Responsiveness */
-@media (max-width: 640px) {
+@media (width <= 640px) {
   .order-row {
     @apply flex-col items-start gap-1;
   }

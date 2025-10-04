@@ -68,7 +68,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
         rateLimit: {
           max: 5, // Allow only 5 registration attempts per window
           timeWindow: 900000, // 15 minutes
-        }
+        },
       },
       schema: {
         body: registerSchema,
@@ -138,7 +138,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
         rateLimit: {
           max: 10, // Allow only 10 login attempts per window
           timeWindow: 900000, // 15 minutes
-        }
+        },
       },
       schema: {
         body: loginSchema,
@@ -235,7 +235,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
         rateLimit: {
           max: 5, // Allow only 5 verification attempts per window
           timeWindow: 900000, // 15 minutes
-        }
+        },
       },
       schema: {
         body: verifyEmailSchema,
@@ -296,7 +296,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
         rateLimit: {
           max: 3, // Allow only 3 resend attempts per window
           timeWindow: 900000, // 15 minutes
-        }
+        },
       },
       schema: {
         body: resendVerificationSchema,
@@ -356,7 +356,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
         rateLimit: {
           max: 3, // Allow only 3 forgot password attempts per window
           timeWindow: 900000, // 15 minutes
-        }
+        },
       },
       schema: {
         body: forgotPasswordSchema,
@@ -407,7 +407,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
         rateLimit: {
           max: 5, // Allow only 5 reset attempts per window
           timeWindow: 900000, // 15 minutes
-        }
+        },
       },
       schema: {
         body: resetPasswordSchema,
@@ -460,7 +460,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
         rateLimit: {
           max: 5, // Allow only 5 password change attempts per window
           timeWindow: 900000, // 15 minutes
-        }
+        },
       },
       preHandler: [authenticate],
       schema: {
@@ -578,7 +578,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
         rateLimit: {
           max: 10, // Allow only 10 logout attempts per window
           timeWindow: 900000, // 15 minutes
-        }
+        },
       },
       preHandler: [authenticate],
     },
@@ -617,7 +617,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
         rateLimit: {
           max: 5, // Allow only 5 logout-all attempts per window
           timeWindow: 900000, // 15 minutes
-        }
+        },
       },
       preHandler: [authenticate],
     },
@@ -643,99 +643,109 @@ export default async function authRoutes(fastify: FastifyInstance) {
   );
 
   // Refresh token
-  fastify.post("/refresh", {
-    config: {
-      rateLimit: {
-        max: 10, // Allow only 10 refresh attempts per window
-        timeWindow: 900000, // 15 minutes
-      }
+  fastify.post(
+    "/refresh",
+    {
+      config: {
+        rateLimit: {
+          max: 10, // Allow only 10 refresh attempts per window
+          timeWindow: 900000, // 15 minutes
+        },
+      },
+      schema: {
+        body: z.object({
+          refreshToken: z.string().min(32, "Refresh token must be at least 32 characters"),
+        }),
+      },
     },
-    schema: {
-      body: z.object({
-        refreshToken: z.string().min(32, "Refresh token must be at least 32 characters"),
-      }),
-    },
-  }, async (request, reply) => {
-    try {
-      const { refreshToken } = request.body as { refreshToken: string };
+    async (request, reply) => {
+      try {
+        const { refreshToken } = request.body as { refreshToken: string };
 
-      if (!refreshToken) {
-        return reply.status(401).send({
-          code: 401,
-          error: "Unauthorized",
-          message: "Refresh token is required",
-        });
-      }
+        if (!refreshToken) {
+          return reply.status(401).send({
+            code: 401,
+            error: "Unauthorized",
+            message: "Refresh token is required",
+          });
+        }
 
-      // Validate refresh token format to prevent security bypass
-      // Use strict validation to prevent any bypass attempts
-      if (!refreshToken || 
-          typeof refreshToken !== 'string' || 
-          refreshToken.length < 32 || 
-          refreshToken.length > 256 || 
+        // Validate refresh token format to prevent security bypass
+        // Use strict validation to prevent any bypass attempts
+        if (
+          !refreshToken ||
+          typeof refreshToken !== "string" ||
+          refreshToken.length < 32 ||
+          refreshToken.length > 256 ||
           !/^[a-zA-Z0-9]+$/.test(refreshToken) ||
-          refreshToken.includes(' ') ||
-          refreshToken.includes('\n') ||
-          refreshToken.includes('\r') ||
-          refreshToken.includes('\t') ||
-          refreshToken.includes('null') ||
-          refreshToken.includes('undefined') ||
-          refreshToken.includes('false') ||
-          refreshToken.includes('true') ||
-          refreshToken.includes('0') ||
-          refreshToken.includes('1')) {
-        request.log.warn("Invalid refresh token format attempt", { 
-          tokenLength: refreshToken?.length,
-          tokenType: typeof refreshToken,
-          hasWhitespace: refreshToken?.includes(' ') || refreshToken?.includes('\n') || refreshToken?.includes('\r') || refreshToken?.includes('\t')
+          refreshToken.includes(" ") ||
+          refreshToken.includes("\n") ||
+          refreshToken.includes("\r") ||
+          refreshToken.includes("\t") ||
+          refreshToken.includes("null") ||
+          refreshToken.includes("undefined") ||
+          refreshToken.includes("false") ||
+          refreshToken.includes("true") ||
+          refreshToken.includes("0") ||
+          refreshToken.includes("1")
+        ) {
+          request.log.warn("Invalid refresh token format attempt", {
+            tokenLength: refreshToken?.length,
+            tokenType: typeof refreshToken,
+            hasWhitespace:
+              refreshToken?.includes(" ") ||
+              refreshToken?.includes("\n") ||
+              refreshToken?.includes("\r") ||
+              refreshToken?.includes("\t"),
+          });
+          return reply.status(401).send({
+            code: 401,
+            error: "Unauthorized",
+            message: "Invalid refresh token format",
+          });
+        }
+
+        // Verify refresh token
+        const { userId } = jwtService.verifyRefreshToken(refreshToken);
+
+        // Find session
+        const session = await Session.findActiveByRefreshToken(refreshToken);
+        if (!session) {
+          return reply.status(401).send({
+            code: 401,
+            error: "Unauthorized",
+            message: "Invalid refresh token",
+          });
+        }
+
+        // Get user
+        const user = await User.findById(userId);
+        if (!user || !user.isActive) {
+          return reply.status(401).send({
+            code: 401,
+            error: "Unauthorized",
+            message: "User not found or inactive",
+          });
+        }
+
+        // Generate new access token
+        const newAccessToken = jwtService.refreshAccessToken(refreshToken, user);
+
+        // Update session
+        await session.refresh();
+
+        reply.send({
+          accessToken: newAccessToken,
+          expiresIn: 15 * 60, // 15 minutes
         });
-        return reply.status(401).send({
+      } catch (error: any) {
+        request.log.error("Refresh token error:", error);
+        reply.status(401).send({
           code: 401,
           error: "Unauthorized",
-          message: "Invalid refresh token format",
+          message: error.message || "Invalid refresh token",
         });
       }
-
-      // Verify refresh token
-      const { userId } = jwtService.verifyRefreshToken(refreshToken);
-
-      // Find session
-      const session = await Session.findActiveByRefreshToken(refreshToken);
-      if (!session) {
-        return reply.status(401).send({
-          code: 401,
-          error: "Unauthorized",
-          message: "Invalid refresh token",
-        });
-      }
-
-      // Get user
-      const user = await User.findById(userId);
-      if (!user || !user.isActive) {
-        return reply.status(401).send({
-          code: 401,
-          error: "Unauthorized",
-          message: "User not found or inactive",
-        });
-      }
-
-      // Generate new access token
-      const newAccessToken = jwtService.refreshAccessToken(refreshToken, user);
-
-      // Update session
-      await session.refresh();
-
-      reply.send({
-        accessToken: newAccessToken,
-        expiresIn: 15 * 60, // 15 minutes
-      });
-    } catch (error: any) {
-      request.log.error("Refresh token error:", error);
-      reply.status(401).send({
-        code: 401,
-        error: "Unauthorized",
-        message: error.message || "Invalid refresh token",
-      });
     }
-  });
+  );
 }

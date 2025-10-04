@@ -1,6 +1,6 @@
 /**
  * Core Types
- * 
+ *
  * Fundamental types used across the application.
  * These are utility types, primitives, and common patterns.
  */

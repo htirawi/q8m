@@ -3,43 +3,41 @@
     <div class="footer-cta-container">
       <div class="footer-cta-content">
         <h2 id="cta-title" class="footer-cta-title">
-          {{ $t('home.cta.title') }}
+          {{ $t("home.cta.title") }}
+
         </h2>
         <p class="footer-cta-description">
-          {{ $t('home.cta.description') }}
+          {{ $t("home.cta.description") }}
         </p>
         <div class="footer-cta-actions">
-          <Button
-            variant="primary"
-            size="lg"
-            :to="{ name: 'register' }"
-            class="cta-primary"
-          >
-            {{ $t('home.cta.getStarted') }}
+          <Button variant="primary" size="lg" :to="{ name: 'register' }" class="cta-primary">
+            {{ $t("home.cta.getStarted") }}
           </Button>
-          <Button
-            variant="secondary"
-            size="lg"
-            :to="{ name: 'pricing' }"
-            class="cta-secondary"
-          >
-            {{ $t('home.cta.learnMore') }}
+          <Button variant="secondary" size="lg" :to="{ name: 'pricing' }" class="cta-secondary">
+            {{ $t("home.cta.learnMore") }}
+
           </Button>
         </div>
         <div class="footer-cta-trust">
-          <p class="trust-text">{{ $t('home.cta.trust') }}</p>
+          <p class="trust-text">{{ $t("home.cta.trust") }}
+
+</p>
           <div class="trust-badges">
             <div class="trust-badge">
               <ShieldCheckIcon class="trust-icon" aria-hidden="true" />
-              <span>{{ $t('home.cta.secure') }}</span>
+              <span>{{ $t("home.cta.secure") }}
+
+</span>
             </div>
             <div class="trust-badge">
               <ClockIcon class="trust-icon" aria-hidden="true" />
-              <span>{{ $t('home.cta.instant') }}</span>
+              <span>{{ $t("home.cta.instant") }}
+
+</span>
             </div>
             <div class="trust-badge">
               <UserGroupIcon class="trust-icon" aria-hidden="true" />
-              <span>{{ $t('home.cta.support') }}</span>
+              <span>{{ $t("home.cta.support") }}</span>
             </div>
           </div>
         </div>
@@ -49,17 +47,14 @@
 </template>
 
 <script setup lang="ts">
-import Button from '@/components/ui/Button.vue'
-import { 
-  ShieldCheckIcon,
-  ClockIcon,
-  UserGroupIcon
-} from '@heroicons/vue/24/outline'
+import Button from "@/components/ui/Button.vue";
+import { ShieldCheckIcon, ClockIcon, UserGroupIcon } from "@heroicons/vue/24/outline";
+
 </script>
 
 <style scoped>
 .footer-cta-section {
-  @apply py-16 md:py-24 bg-primary-600 dark:bg-primary-700;
+  @apply bg-primary-600 py-16 dark:bg-primary-700 md:py-24;
 }
 
 .footer-cta-container {
@@ -67,19 +62,19 @@ import {
 }
 
 .footer-cta-content {
-  @apply text-center max-w-4xl mx-auto;
+  @apply mx-auto max-w-4xl text-center;
 }
 
 .footer-cta-title {
-  @apply text-3xl md:text-4xl font-bold text-white mb-6;
+  @apply mb-6 text-3xl font-bold text-white md:text-4xl;
 }
 
 .footer-cta-description {
-  @apply text-lg md:text-xl text-primary-100 mb-8 leading-relaxed;
+  @apply mb-8 text-lg leading-relaxed text-primary-100 md:text-xl;
 }
 
 .footer-cta-actions {
-  @apply flex flex-col sm:flex-row gap-4 justify-center mb-12;
+  @apply mb-12 flex flex-col justify-center gap-4 sm:flex-row;
 }
 
 .cta-primary {
@@ -87,7 +82,7 @@ import {
 }
 
 .cta-secondary {
-  @apply min-h-[44px] px-8 bg-white text-primary-600 hover:bg-primary-50;
+  @apply min-h-[44px] bg-white px-8 text-primary-600 hover:bg-primary-50;
 }
 
 .footer-cta-trust {
@@ -95,7 +90,7 @@ import {
 }
 
 .trust-text {
-  @apply text-primary-200 text-sm font-medium uppercase tracking-wide;
+  @apply text-sm font-medium uppercase tracking-wide text-primary-200;
 }
 
 .trust-badges {
@@ -107,7 +102,7 @@ import {
 }
 
 .trust-icon {
-  @apply w-5 h-5;
+  @apply h-5 w-5;
 }
 
 /* Focus styles */
@@ -117,11 +112,11 @@ import {
 }
 
 /* Responsive adjustments */
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .trust-badges {
     @apply gap-6;
   }
-  
+
   .trust-badge {
     @apply text-sm;
   }

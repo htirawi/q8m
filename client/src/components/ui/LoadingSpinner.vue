@@ -20,34 +20,31 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed } from "vue";
 
-export interface LoadingSpinnerProps {
-  size?: 'sm' | 'md' | 'lg'
-  color?: 'primary' | 'white' | 'gray'
+export interface loadingspinnerprops {
+  size?: "sm" | "md" | "lg";
+  color?: "primary" | "white" | "gray";
 }
 
 const props = withDefaults(defineProps<LoadingSpinnerProps>(), {
-  size: 'md',
-  color: 'primary'
-})
+  size: "md",
+  color: "primary",
+});
 
 const spinnerClasses = computed(() => {
   const sizeClasses = {
-    sm: 'w-4 h-4',
-    md: 'w-6 h-6',
-    lg: 'w-8 h-8'
-  }
-  
+    sm: "w-4 h-4",
+    md: "w-6 h-6",
+    lg: "w-8 h-8",
+  };
+
   const colorClasses = {
-    primary: 'text-primary-600 dark:text-primary-400',
-    white: 'text-white',
-    gray: 'text-gray-600 dark:text-gray-400'
-  }
-  
-  return [
-    sizeClasses[props.size],
-    colorClasses[props.color]
-  ].join(' ')
-})
+    primary: "text-primary-600 dark:text-primary-400",
+    white: "text-white",
+    gray: "text-gray-600 dark:text-gray-400",
+  };
+
+  return [sizeClasses[props.size], colorClasses[props.color]].join(" ");
+});
 </script>

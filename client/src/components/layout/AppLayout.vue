@@ -1,59 +1,44 @@
 <template>
   <div class="app-layout">
     <!-- Skip Links for Accessibility -->
-    <a 
-      href="#main-content" 
-      class="skip-link"
-      @click="skipToMain"
-    >
+    <a href="#main-content" class="skip-link" @click="skipToMain">
       {{ $t("a11y.skipToMain") }}
+
     </a>
 
     <!-- Header -->
-    <header 
-      class="app-header" 
-      role="banner"
-      :aria-label="$t('a11y.mainNavigation')"
-    >
+    <header class="app-header" role="banner" :aria-label="$t('a11y.mainNavigation')">
       <nav class="header-nav" role="navigation" aria-label="Main navigation">
         <div class="nav-container">
           <!-- Logo -->
           <div class="nav-brand">
-            <RouterLink 
-              to="/" 
-              class="brand-link"
-              :aria-label="$t('a11y.goToHome')"
-            >
-              <img 
-                src="/logo.svg" 
-                alt="Quiz Platform Logo" 
-                class="brand-logo"
-              />
+            <RouterLink to="/" class="brand-link" :aria-label="$t('a11y.goToHome')">
+              <img src="/logo.svg" alt="Quiz Platform Logo" class="brand-logo" />
               <span class="brand-text">{{ $t("common.appName") }}</span>
             </RouterLink>
           </div>
 
           <!-- Main Navigation -->
           <div class="nav-menu" role="menubar">
-            <RouterLink 
-              to="/" 
+            <RouterLink
+              to="/"
               class="nav-link"
               :class="{ 'nav-link--active': $route.name === 'home' }"
               role="menuitem"
             >
               {{ $t("navigation.home") }}
             </RouterLink>
-            <RouterLink 
-              to="/pricing" 
+            <RouterLink
+              to="/pricing"
               class="nav-link"
               :class="{ 'nav-link--active': $route.name === 'pricing' }"
               role="menuitem"
             >
               {{ $t("navigation.pricing") }}
             </RouterLink>
-            <RouterLink 
+            <RouterLink
               v-if="authStore.isAuthenticated"
-              to="/quiz" 
+              to="/quiz"
               class="nav-link"
               :class="{ 'nav-link--active': $route.name === 'quiz' }"
               role="menuitem"
@@ -65,37 +50,33 @@
           <!-- User Menu -->
           <div class="nav-user" role="menubar">
             <template v-if="authStore.isAuthenticated">
-              <RouterLink 
-                to="/account" 
+              <RouterLink
+                to="/account"
                 class="nav-link"
                 :class="{ 'nav-link--active': $route.name === 'account' }"
                 role="menuitem"
               >
                 {{ $t("navigation.account") }}
+
               </RouterLink>
-              <button 
+              <button
                 @click="handleLogout"
                 class="nav-link nav-link--button"
                 role="menuitem"
                 :aria-label="$t('a11y.logout')"
               >
                 {{ $t("navigation.logout") }}
+
               </button>
             </template>
             <template v-else>
-              <RouterLink 
-                to="/login" 
-                class="nav-link"
-                role="menuitem"
-              >
+              <RouterLink to="/login" class="nav-link" role="menuitem">
                 {{ $t("navigation.login") }}
+
               </RouterLink>
-              <RouterLink 
-                to="/register" 
-                class="nav-link nav-link--primary"
-                role="menuitem"
-              >
+              <RouterLink to="/register" class="nav-link nav-link--primary" role="menuitem">
                 {{ $t("navigation.register") }}
+
               </RouterLink>
             </template>
           </div>
@@ -104,50 +85,84 @@
     </header>
 
     <!-- Main Content -->
-    <main 
-      id="main-content" 
-      class="app-main" 
-      role="main"
-      :aria-label="$t('a11y.mainContent')"
-    >
+    <main id="main-content" class="app-main" role="main" :aria-label="$t('a11y.mainContent')">
       <RouterView />
     </main>
 
     <!-- Footer -->
-    <footer 
-      class="app-footer" 
-      role="contentinfo"
-      :aria-label="$t('a11y.footer')"
-    >
+    <footer class="app-footer" role="contentinfo" :aria-label="$t('a11y.footer')">
       <div class="footer-container">
         <div class="footer-content">
           <div class="footer-section">
-            <h3 class="footer-title">{{ $t("footer.company") }}</h3>
+            <h3 class="footer-title">{{ $t("footer.company") }}
+
+</h3>
             <ul class="footer-links" role="list">
-              <li><RouterLink to="/about" class="footer-link">{{ $t("navigation.about") }}</RouterLink></li>
-              <li><RouterLink to="/contact" class="footer-link">{{ $t("navigation.contact") }}</RouterLink></li>
-              <li><RouterLink to="/help" class="footer-link">{{ $t("navigation.help") }}</RouterLink></li>
+              <li>
+                <RouterLink to="/about" class="footer-link">{{
+                  $t("navigation.about")
+                }}
+
+</RouterLink>
+              </li>
+              <li>
+                <RouterLink to="/contact" class="footer-link">{{
+                  $t("navigation.contact")
+                }}
+
+</RouterLink>
+              </li>
+              <li>
+                <RouterLink to="/help" class="footer-link">{{ $t("navigation.help") }}
+
+</RouterLink>
+              </li>
             </ul>
           </div>
           <div class="footer-section">
-            <h3 class="footer-title">{{ $t("footer.legal") }}</h3>
+            <h3 class="footer-title">{{ $t("footer.legal") }}
+
+</h3>
             <ul class="footer-links" role="list">
-              <li><RouterLink to="/privacy" class="footer-link">{{ $t("navigation.privacy") }}</RouterLink></li>
-              <li><RouterLink to="/terms" class="footer-link">{{ $t("navigation.terms") }}</RouterLink></li>
+              <li>
+                <RouterLink to="/privacy" class="footer-link">{{
+                  $t("navigation.privacy")
+                }}
+
+</RouterLink>
+              </li>
+              <li>
+                <RouterLink to="/terms" class="footer-link">{{
+                  $t("navigation.terms")
+                }}
+
+</RouterLink>
+              </li>
             </ul>
           </div>
           <div class="footer-section">
-            <h3 class="footer-title">{{ $t("footer.social") }}</h3>
+            <h3 class="footer-title">{{ $t("footer.social") }}
+
+</h3>
             <ul class="footer-links" role="list">
-              <li><a href="#" class="footer-link" :aria-label="$t('a11y.followOnTwitter')">Twitter</a></li>
-              <li><a href="#" class="footer-link" :aria-label="$t('a11y.followOnLinkedIn')">LinkedIn</a></li>
-              <li><a href="#" class="footer-link" :aria-label="$t('a11y.followOnGitHub')">GitHub</a></li>
+              <li>
+                <a href="#" class="footer-link" :aria-label="$t('a11y.followOnTwitter')">Twitter</a>
+              </li>
+              <li>
+                <a href="#" class="footer-link" :aria-label="$t('a11y.followOnLinkedIn')"
+                  >LinkedIn</a
+                >
+              </li>
+              <li>
+                <a href="#" class="footer-link" :aria-label="$t('a11y.followOnGitHub')">GitHub</a>
+              </li>
             </ul>
           </div>
         </div>
         <div class="footer-bottom">
           <p class="footer-copyright">
             {{ $t("footer.copyright", { year: new Date().getFullYear() }) }}
+
           </p>
         </div>
       </div>
@@ -195,7 +210,7 @@ const skipToMain = (event: Event) => {
   }
 };
 
-const handleLogout = async () => {
+const handlelogout = async () => {
   await authStore.logout();
   router.push("/");
 };
@@ -214,7 +229,8 @@ onMounted(async () => {
   // Set up default SEO
   seo.updateSEO({
     title: "Vue 3 Quiz Platform",
-    description: "Master Vue 3, React, Angular, and more with our comprehensive quiz platform. Interactive learning, real-time feedback, and expert-level content.",
+    description:
+      "Master Vue 3, React, Angular, and more with our comprehensive quiz platform. Interactive learning, real-time feedback, and expert-level content.",
     structuredData: seo.generateOrganizationStructuredData(),
   });
 
@@ -234,7 +250,7 @@ onMounted(async () => {
 
 /* Skip Links */
 .skip-link {
-  @apply absolute -top-10 left-4 z-50 bg-primary-600 text-white px-4 py-2 rounded-md transition-all duration-200;
+  @apply absolute -top-10 left-4 z-50 rounded-md bg-primary-600 px-4 py-2 text-white transition-all duration-200;
 }
 
 .skip-link:focus {
@@ -243,7 +259,7 @@ onMounted(async () => {
 
 /* Header */
 .app-header {
-  @apply bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700;
+  @apply border-b border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800;
 }
 
 .header-nav {
@@ -251,7 +267,7 @@ onMounted(async () => {
 }
 
 .nav-container {
-  @apply container mx-auto px-4 py-4 flex items-center justify-between;
+  @apply container mx-auto flex items-center justify-between px-4 py-4;
 }
 
 .nav-brand {
@@ -259,7 +275,7 @@ onMounted(async () => {
 }
 
 .brand-link {
-  @apply flex items-center space-x-2 text-gray-900 dark:text-white hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200;
+  @apply flex items-center space-x-2 text-gray-900 transition-colors duration-200 hover:text-primary-600 dark:text-white dark:hover:text-primary-400;
 }
 
 .brand-logo {
@@ -271,7 +287,7 @@ onMounted(async () => {
 }
 
 .nav-menu {
-  @apply hidden md:flex items-center space-x-6;
+  @apply hidden items-center space-x-6 md:flex;
 }
 
 .nav-user {
@@ -279,11 +295,11 @@ onMounted(async () => {
 }
 
 .nav-link {
-  @apply text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200 px-3 py-2 rounded-md;
+  @apply rounded-md px-3 py-2 text-gray-700 transition-colors duration-200 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400;
 }
 
 .nav-link--active {
-  @apply text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20;
+  @apply bg-primary-50 text-primary-600 dark:bg-primary-900/20 dark:text-primary-400;
 }
 
 .nav-link--primary {
@@ -291,7 +307,7 @@ onMounted(async () => {
 }
 
 .nav-link--button {
-  @apply bg-transparent border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700;
+  @apply border border-gray-300 bg-transparent hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-700;
 }
 
 /* Main Content */
@@ -301,7 +317,7 @@ onMounted(async () => {
 
 /* Footer */
 .app-footer {
-  @apply bg-gray-800 text-gray-300 mt-auto;
+  @apply mt-auto bg-gray-800 text-gray-300;
 }
 
 .footer-container {
@@ -309,7 +325,7 @@ onMounted(async () => {
 }
 
 .footer-content {
-  @apply grid grid-cols-1 md:grid-cols-3 gap-8 mb-8;
+  @apply mb-8 grid grid-cols-1 gap-8 md:grid-cols-3;
 }
 
 .footer-section {
@@ -317,7 +333,7 @@ onMounted(async () => {
 }
 
 .footer-title {
-  @apply text-white font-semibold text-lg;
+  @apply text-lg font-semibold text-white;
 }
 
 .footer-links {
@@ -325,7 +341,7 @@ onMounted(async () => {
 }
 
 .footer-link {
-  @apply text-gray-300 hover:text-white transition-colors duration-200;
+  @apply text-gray-300 transition-colors duration-200 hover:text-white;
 }
 
 .footer-bottom {
@@ -333,7 +349,7 @@ onMounted(async () => {
 }
 
 .footer-copyright {
-  @apply text-gray-400 text-sm;
+  @apply text-sm text-gray-400;
 }
 
 /* Focus Styles */
@@ -344,13 +360,13 @@ onMounted(async () => {
 }
 
 /* Responsive */
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .nav-menu {
-    @apply flex flex-col space-y-2 space-x-0;
+    @apply flex flex-col space-x-0 space-y-2;
   }
-  
+
   .nav-user {
-    @apply flex-col space-y-2 space-x-0;
+    @apply flex-col space-x-0 space-y-2;
   }
 }
 </style>

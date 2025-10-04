@@ -7,12 +7,13 @@
       :class="{ 'form-field-label--required': required }"
     >
       {{ label }}
+
     </label>
-    
+
     <div class="form-field-input">
       <slot />
     </div>
-    
+
     <HelperText
       v-if="error || helperText"
       :id="helperTextId"
@@ -20,35 +21,36 @@
       class="form-field-helper"
     >
       {{ error || helperText }}
+
     </HelperText>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import HelperText from './HelperText.vue'
+import { computed } from "vue";
+import HelperText from "./HelperText.vue";
 
-export interface FormFieldProps {
-  id?: string
-  label?: string
-  helperText?: string
-  error?: string
-  required?: boolean
+export interface formfieldprops {
+  id?: string;
+  label?: string;
+  helperText?: string;
+  error?: string;
+  required?: boolean;
 }
 
 const props = withDefaults(defineProps<FormFieldProps>(), {
-  required: false
-})
+  required: false,
+});
 
 // Computed properties
-const hasError = computed(() => !!props.error)
+const hasError = computed(() => !!props.error);
 
 const helperTextId = computed(() => {
   if (props.id) {
-    return `${props.id}-helper`
+    return `${props.id}-helper`;
   }
-  return undefined
-})
+  return undefined;
+});
 </script>
 
 <style scoped>
@@ -61,8 +63,9 @@ const helperTextId = computed(() => {
 }
 
 .form-field-label--required::after {
-  @apply text-red-500 ml-1;
-  content: '*';
+  @apply ml-1 text-red-500;
+
+  content: "*";
 }
 
 .form-field-input {

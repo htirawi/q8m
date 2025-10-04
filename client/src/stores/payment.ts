@@ -3,19 +3,19 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 import { useErrorHandler } from "@/composables/useErrorHandler";
-import type { 
-  PricingInfo, 
-  PlanPricing, 
-  Purchase, 
-  Subscription, 
-  PaymentRequest, 
-  PaymentResponse, 
-  CurrencyRates, 
-  UserEntitlements, 
-  EntitlementCheck, 
-  ContentAccess, 
-  SignedDownloadUrl, 
-  ContentCategory 
+import type {
+  PricingInfo,
+  PlanPricing,
+  Purchase,
+  Subscription,
+  PaymentRequest,
+  PaymentResponse,
+  CurrencyRates,
+  UserEntitlements,
+  EntitlementCheck,
+  ContentAccess,
+  SignedDownloadUrl,
+  ContentCategory,
 } from "@/types/domain/payment";
 
 export const usePaymentStore = defineStore("payment", () => {

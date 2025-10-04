@@ -14,10 +14,7 @@
 
       <!-- Billing Information -->
       <form @submit.prevent="handleSubmit" class="checkout-form-content">
-        <BillingForm
-          v-model="billingForm"
-          :errors="errors"
-        />
+        <BillingForm v-model="billingForm" :errors="errors" />
 
         <!-- Payment Method -->
         <PaymentMethodSelector
@@ -33,13 +30,9 @@
             class="submit-button"
             :class="{ 'submit-button--loading': isProcessing }"
           >
-            <LoadingSpinner
-              v-if="isProcessing"
-              size="sm"
-              color="white"
-              class="mr-2"
-            />
-            {{ isProcessing ? $t("checkout.processing") : $t("checkout.completeOrder") }}
+            <LoadingSpinner v-if="isProcessing" size="sm" color="white" class="mr-2" />
+            {{ isProcessing ? $t("checkout.processing") : $t("checkout.completeOrder")$t }}
+
           </button>
         </div>
       </form>
@@ -79,12 +72,12 @@ const paymentStore = usePaymentStore();
 // Get selected plan from route params
 const selectedPlan = computed((): PlanPricing => {
   const planId = route.params.planId as string;
-  const plan = paymentStore.pricing.find(p => p.planId === planId);
-  
+  const plan = paymentStore.pricing.find((p) => p.planId === planId);
+
   if (!plan) {
     throw new Error(`Plan ${planId} not found`);
   }
-  
+
   return plan;
 });
 
@@ -146,7 +139,7 @@ onMounted(async () => {
   @apply fixed right-0 top-0 h-full w-80 bg-white shadow-lg dark:bg-gray-800;
 }
 
-@media (max-width: 1024px) {
+@media (width <= 1024px) {
   .checkout-sidebar {
     @apply relative w-full shadow-none;
   }

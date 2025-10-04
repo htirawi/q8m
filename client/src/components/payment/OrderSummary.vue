@@ -1,17 +1,27 @@
 <template>
   <div class="order-summary">
-    <h3 class="summary-title">{{ $t("checkout.orderSummary") }}</h3>
+    <h3 class="summary-title">{{ $t("checkout.orderSummary") }}
+
+</h3>
 
     <div class="plan-details">
       <div class="plan-info">
-        <h4 class="plan-name">{{ selectedPlan.name }}</h4>
-        <p class="plan-description">{{ selectedPlan.description }}</p>
+        <h4 class="plan-name">{{ selectedPlan.name }}
+
+</h4>
+        <p class="plan-description">{{ selectedPlan.description }}
+
+</p>
       </div>
 
       <div class="plan-pricing">
         <div class="price-container">
-          <span class="price-amount">{{ displayPrice }}</span>
-          <span class="price-period">{{ pricePeriod }}</span>
+          <span class="price-amount">{{ displayPrice }}
+
+</span>
+          <span class="price-period">{{ pricePeriod }}
+
+</span>
         </div>
         <p v-if="priceInfo?.isEstimated" class="price-note">
           {{ $t("checkout.estimatedPrice") }}
@@ -22,10 +32,7 @@
     <!-- Billing Cycle Toggle -->
     <div v-if="selectedPlan.planId !== 'JUNIOR'" class="billing-toggle">
       <div class="toggle-container">
-        <span
-          class="toggle-label"
-          :class="{ 'toggle-label--active': billingCycle === 'monthly' }"
-        >
+        <span class="toggle-label" :class="{ 'toggle-label--active': billingCycle === 'monthly' }">
           {{ $t("checkout.monthly") }}
         </span>
         <button
@@ -38,15 +45,14 @@
             :class="{ 'toggle-thumb--active': billingCycle === 'yearly' }"
           />
         </button>
-        <span
-          class="toggle-label"
-          :class="{ 'toggle-label--active': billingCycle === 'yearly' }"
-        >
+        <span class="toggle-label" :class="{ 'toggle-label--active': billingCycle === 'yearly' }">
           {{ $t("checkout.yearly") }}
+
         </span>
       </div>
       <p v-if="billingCycle === 'yearly'" class="discount-note">
         {{ $t("checkout.savePercent", { percent: 17 }) }}
+
       </p>
     </div>
   </div>
@@ -57,7 +63,7 @@ import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import type { PlanPricing, PricingInfo } from "@/stores/payment";
 
-interface Props {
+interface props {
   selectedPlan: PlanPricing;
   billingCycle: "monthly" | "yearly";
   priceInfo?: PricingInfo;
@@ -65,8 +71,8 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const emit = defineEmits<{
-  "toggle-billing-cycle": [];
+const emit = defineemits<{
+  
 }>();
 
 const { t } = useI18n();
@@ -77,9 +83,7 @@ const displayPrice = computed(() => {
 });
 
 const pricePeriod = computed(() => {
-  return props.billingCycle === "monthly" 
-    ? t("checkout.perMonth") 
-    : t("checkout.perYear");
+  return props.billingCycle === "monthly" ? t("checkout.perMonth") : t("checkout.perYear");
 });
 </script>
 

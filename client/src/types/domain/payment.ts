@@ -1,20 +1,20 @@
 /**
  * Payment Domain Types
- * 
+ *
  * Types related to payments, subscriptions, pricing, and entitlements.
  * These types are shared across the application and should be imported
  * from this centralized location.
  */
 
 // Re-export shared payment types for convenience
-export type { 
-  PricingTier, 
-  CurrencyRate, 
-  Purchase, 
-  Entitlement, 
-  PriceSnapshot, 
-  CurrencyConversion, 
-  PricingResponse 
+export type {
+  PricingTier,
+  CurrencyRate,
+  Purchase,
+  Entitlement,
+  PriceSnapshot,
+  CurrencyConversion,
+  PricingResponse,
 } from "@shared/types/pricing";
 
 /**

@@ -14,10 +14,7 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true
   },
-  "include": [
-    "src/app.ts",
-    "src/config/**/*.ts"
-  ],
+  "include": ["src/app.ts", "src/config/**/*.ts"],
   "exclude": [
     "node_modules",
     "dist",

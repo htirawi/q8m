@@ -1,6 +1,6 @@
 /**
  * UI Component Types
- * 
+ *
  * Types for component props and UI-related interfaces.
  * These types define the contracts for reusable UI components.
  */
@@ -181,13 +181,16 @@ export interface CheckoutSummaryProps {
     description: string;
     features: string[];
     usdPrice: number;
-    pricing: Record<string, {
-      currency: string;
-      amount: number;
-      formatted: string;
-      exchangeRate?: number;
-      isEstimated: boolean;
-    }>;
+    pricing: Record<
+      string,
+      {
+        currency: string;
+        amount: number;
+        formatted: string;
+        exchangeRate?: number;
+        isEstimated: boolean;
+      }
+    >;
     popular?: boolean;
     recommended?: boolean;
   };
@@ -230,13 +233,16 @@ export interface OrderSummaryProps {
     description: string;
     features: string[];
     usdPrice: number;
-    pricing: Record<string, {
-      currency: string;
-      amount: number;
-      formatted: string;
-      exchangeRate?: number;
-      isEstimated: boolean;
-    }>;
+    pricing: Record<
+      string,
+      {
+        currency: string;
+        amount: number;
+        formatted: string;
+        exchangeRate?: number;
+        isEstimated: boolean;
+      }
+    >;
     popular?: boolean;
     recommended?: boolean;
   };
@@ -253,13 +259,16 @@ export interface CheckoutFormProps {
     description: string;
     features: string[];
     usdPrice: number;
-    pricing: Record<string, {
-      currency: string;
-      amount: number;
-      formatted: string;
-      exchangeRate?: number;
-      isEstimated: boolean;
-    }>;
+    pricing: Record<
+      string,
+      {
+        currency: string;
+        amount: number;
+        formatted: string;
+        exchangeRate?: number;
+        isEstimated: boolean;
+      }
+    >;
     popular?: boolean;
     recommended?: boolean;
   };

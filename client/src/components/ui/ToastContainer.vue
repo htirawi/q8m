@@ -18,51 +18,51 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import Toast from './Toast.vue'
-import type { Component } from 'vue'
+import { ref } from "vue";
+import Toast from "./Toast.vue";
+import type { Component } from "vue";
 
-export interface ToastItem {
-  id: string
-  type: 'success' | 'error' | 'warning' | 'info'
-  message: string
-  icon?: Component
-  dismissible?: boolean
-  duration?: number
-  persistent?: boolean
+export interface toastitem {
+  id: string;
+  type: "success" | "error" | "warning" | "info";
+  message: string;
+  icon?: Component;
+  dismissible?: boolean;
+  duration?: number;
+  persistent?: boolean;
 }
 
 // State
-const toasts = ref<ToastItem[]>([])
+const toasts = ref<ToastItem[]>([]);
 
 // Methods
-const addToast = (toast: Omit<ToastItem, 'id'>) => {
-  const id = Math.random().toString(36).substr(2, 9)
-  toasts.value.push({ ...toast, id })
-}
+const addToast = (toast: Omit<ToastItem, "id">) => {
+  const id = Math.random().toString(36).substr(2, 9);
+  toasts.value.push({ ...toast, id });
+};
 
-const removeToast = (id: string) => {
-  const index = toasts.value.findIndex(toast => toast.id === id)
+const removetoast = (id: string) => {
+  const index = toasts.value.findIndex((toast) => toast.id === id);
   if (index > -1) {
-    toasts.value.splice(index, 1)
+    toasts.value.splice(index, 1);
   }
-}
+};
 
-const clearToasts = () => {
-  toasts.value = []
-}
+const cleartoasts = () => {
+  toasts.value = [];
+};
 
 // Expose methods for global use
 defineExpose({
   addToast,
   removeToast,
-  clearToasts
-})
+  clearToasts,
+});
 </script>
 
 <style scoped>
 .toast-container {
-  @apply fixed top-4 right-4 z-50 space-y-2;
+  @apply fixed right-4 top-4 z-50 space-y-2;
 }
 
 .toast-list {

@@ -1,9 +1,9 @@
 /**
  * Types Index
- * 
+ *
  * Centralized exports for all application types.
  * This file provides a single entry point for importing types.
- * 
+ *
  * Note: Avoid importing everything from this file to prevent
  * circular dependencies and large bundle sizes. Import specific
  * types from their respective modules instead.

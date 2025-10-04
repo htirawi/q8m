@@ -19,7 +19,9 @@
             :style="{ width: `${Math.min(100, Math.max(0, progress))}%` }"
           />
         </div>
-        <div class="progress-text">{{ progressText }}</div>
+        <div class="progress-text">{{ progressText }}
+
+</div>
       </div>
     </div>
   </div>
@@ -30,7 +32,7 @@ import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import LoadingSpinner from "./LoadingSpinner.vue";
 
-interface Props {
+interface props {
   type?: "page" | "section" | "inline" | "overlay";
   size?: "sm" | "md" | "lg" | "xl";
   color?: "primary" | "secondary" | "white" | "gray";

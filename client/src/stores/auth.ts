@@ -83,7 +83,7 @@ export const useAuthStore = defineStore("auth", () => {
       }
 
       setUser(data.user);
-      
+
       // Tokens are now handled by httpOnly cookies
       // We still need to set a dummy token object for compatibility
       setTokens({
@@ -91,7 +91,7 @@ export const useAuthStore = defineStore("auth", () => {
         refreshToken: "cookie-based", // Placeholder since token is in cookie
         expiresIn: 15 * 60, // 15 minutes
       });
-      
+
       return true;
     } catch (err: any) {
       setError(err.message || "Login failed");

@@ -22,7 +22,7 @@ export class WebhookVerificationService {
     try {
       // Extract signature from header (format: "sha256=hash")
       const expectedSignature = signature.replace(/^sha256=/, "");
-      
+
       // Calculate expected signature
       const calculatedSignature = crypto
         .createHmac(algorithm, secret)

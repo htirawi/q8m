@@ -1,6 +1,8 @@
 <template>
   <div class="form-section">
-    <h3 class="section-title">{{ $t("checkout.billingInformation") }}</h3>
+    <h3 class="section-title">{{ $t("checkout.billingInformation") }}
+
+</h3>
 
     <div class="form-grid">
       <!-- Name -->
@@ -15,7 +17,9 @@
           :class="{ 'form-input--error': errors.name }"
           :placeholder="$t('checkout.namePlaceholder')"
         />
-        <p v-if="errors.name" class="form-error">{{ errors.name }}</p>
+        <p v-if="errors.name" class="form-error">{{ errors.name }}
+
+</p>
       </div>
 
       <!-- Email -->
@@ -30,7 +34,9 @@
           :class="{ 'form-input--error': errors.email }"
           :placeholder="$t('checkout.emailPlaceholder')"
         />
-        <p v-if="errors.email" class="form-error">{{ errors.email }}</p>
+        <p v-if="errors.email" class="form-error">{{ errors.email }}
+
+</p>
       </div>
 
       <!-- Street Address -->
@@ -45,7 +51,9 @@
           :class="{ 'form-input--error': errors.street }"
           :placeholder="$t('checkout.streetPlaceholder')"
         />
-        <p v-if="errors.street" class="form-error">{{ errors.street }}</p>
+        <p v-if="errors.street" class="form-error">{{ errors.street }}
+
+</p>
       </div>
 
       <!-- City -->
@@ -60,7 +68,9 @@
           :class="{ 'form-input--error': errors.city }"
           :placeholder="$t('checkout.cityPlaceholder')"
         />
-        <p v-if="errors.city" class="form-error">{{ errors.city }}</p>
+        <p v-if="errors.city" class="form-error">{{ errors.city }}
+
+</p>
       </div>
 
       <!-- State/Province -->
@@ -75,7 +85,9 @@
           :class="{ 'form-input--error': errors.state }"
           :placeholder="$t('checkout.statePlaceholder')"
         />
-        <p v-if="errors.state" class="form-error">{{ errors.state }}</p>
+        <p v-if="errors.state" class="form-error">{{ errors.state }}
+
+</p>
       </div>
 
       <!-- Postal Code -->
@@ -90,7 +102,9 @@
           :class="{ 'form-input--error': errors.postalCode }"
           :placeholder="$t('checkout.postalCodePlaceholder')"
         />
-        <p v-if="errors.postalCode" class="form-error">{{ errors.postalCode }}</p>
+        <p v-if="errors.postalCode" class="form-error">{{ errors.postalCode }}
+
+</p>
       </div>
 
       <!-- Country -->
@@ -103,7 +117,9 @@
           class="form-input"
           :class="{ 'form-input--error': errors.country }"
         >
-          <option value="">{{ $t("checkout.selectCountry") }}</option>
+          <option value="">{{ $t("checkout.selectCountry") }}
+
+</option>
           <option value="US">United States</option>
           <option value="CA">Canada</option>
           <option value="GB">United Kingdom</option>
@@ -126,7 +142,9 @@
           <option value="EG">Egypt</option>
           <option value="ZA">South Africa</option>
         </select>
-        <p v-if="errors.country" class="form-error">{{ errors.country }}</p>
+        <p v-if="errors.country" class="form-error">{{ errors.country }}
+
+</p>
       </div>
     </div>
   </div>
@@ -136,7 +154,7 @@
 import { reactive, watch } from "vue";
 import { useI18n } from "vue-i18n";
 
-interface BillingFormData {
+interface billingformdata {
   name: string;
   email: string;
   street: string;
@@ -146,14 +164,14 @@ interface BillingFormData {
   country: string;
 }
 
-interface Props {
+interface props {
   modelValue: BillingFormData;
   errors: Record<string, string>;
 }
 
 const props = defineProps<Props>();
 
-const emit = defineEmits<{
+const emit = defineemits<{
   "update:modelValue": [value: BillingFormData];
 }>();
 

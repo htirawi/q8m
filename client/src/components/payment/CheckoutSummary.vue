@@ -1,29 +1,45 @@
 <template>
   <div class="checkout-summary">
     <div class="summary-section">
-      <h3 class="summary-title">{{ $t("checkout.orderSummary") }}</h3>
-      
+      <h3 class="summary-title">{{ $t("checkout.orderSummary") }}
+
+</h3>
+
       <div class="summary-items">
         <div class="summary-item">
-          <span class="item-label">{{ selectedPlan.name }}</span>
-          <span class="item-value">{{ displayPrice }}</span>
+          <span class="item-label">{{ selectedPlan.name }}
+
+</span>
+          <span class="item-value">{{ displayPrice }}
+
+</span>
         </div>
-        
+
         <div v-if="billingCycle === 'yearly'" class="summary-item">
-          <span class="item-label">{{ $t("checkout.yearlyDiscount") }}</span>
-          <span class="item-value discount">{{ $t("checkout.savePercent", { percent: 17 }) }}</span>
+          <span class="item-label">{{ $t("checkout.yearlyDiscount") }}
+
+</span>
+          <span class="item-value discount">{{ $t("checkout.savePercent", { percent: 17 }) }}
+
+</span>
         </div>
-        
+
         <div class="summary-item">
-          <span class="item-label">{{ $t("checkout.billingCycle") }}</span>
-          <span class="item-value">{{ billingCycleText }}</span>
+          <span class="item-label">{{ $t("checkout.billingCycle") }}
+
+</span>
+          <span class="item-value">{{ billingCycleText }}
+
+</span>
         </div>
       </div>
-      
+
       <div class="summary-divider" />
-      
+
       <div class="summary-total">
-        <span class="total-label">{{ $t("checkout.total") }}</span>
+        <span class="total-label">{{ $t("checkout.total") }}
+
+</span>
         <span class="total-value">{{ displayPrice }}</span>
       </div>
     </div>
@@ -35,18 +51,15 @@
         class="checkout-button"
         :class="{ 'checkout-button--loading': isProcessing }"
       >
-        <LoadingSpinner
-          v-if="isProcessing"
-          size="sm"
-          color="white"
-          class="mr-2"
-        />
-        {{ isProcessing ? $t("checkout.processing") : $t("checkout.completeOrder") }}
+        <LoadingSpinner v-if="isProcessing" size="sm" color="white" class="mr-2" />
+        {{ isProcessing ? $t("checkout.processing") : $t("checkout.completeOrder")$t }}
+
       </button>
-      
+
       <p class="security-note">
-        <ShieldCheckIcon class="h-4 w-4 inline mr-1" />
+        <ShieldCheckIcon class="mr-1 inline h-4 w-4" />
         {{ $t("checkout.securePayment") }}
+
       </p>
     </div>
   </div>
@@ -59,7 +72,7 @@ import { ShieldCheckIcon } from "@heroicons/vue/24/outline";
 import LoadingSpinner from "@/components/ui/LoadingSpinner.vue";
 import type { PlanPricing, PricingInfo } from "@/stores/payment";
 
-interface Props {
+interface props {
   selectedPlan: PlanPricing;
   billingCycle: "monthly" | "yearly";
   priceInfo?: PricingInfo;
@@ -77,9 +90,7 @@ const displayPrice = computed(() => {
 });
 
 const billingCycleText = computed(() => {
-  return props.billingCycle === "monthly" 
-    ? t("checkout.perMonth") 
-    : t("checkout.perYear");
+  return props.billingCycle === "monthly" ? t("checkout.perMonth") : t("checkout.perYear");
 });
 </script>
 

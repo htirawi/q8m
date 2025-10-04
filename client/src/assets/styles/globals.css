@@ -13,7 +13,20 @@
 }
 
 html {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial,
+    "Noto Sans",
+    sans-serif,
+    "Apple Color Emoji",
+    "Segoe UI Emoji",
+    "Segoe UI Symbol",
+    "Noto Color Emoji";
   line-height: 1.5;
   -webkit-text-size-adjust: 100%;
   -moz-tab-size: 4;
@@ -26,7 +39,9 @@ body {
   line-height: inherit;
   color: var(--color-gray-900);
   background-color: var(--color-gray-50);
-  transition: color var(--duration-200) var(--ease-in-out), background-color var(--duration-200) var(--ease-in-out);
+  transition:
+    color var(--duration-200) var(--ease-in-out),
+    background-color var(--duration-200) var(--ease-in-out);
 }
 
 /* Dark mode body styles */
@@ -38,18 +53,30 @@ body {
 }
 
 /* Typography */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-size: inherit;
   font-weight: inherit;
   line-height: inherit;
 }
 
-p, h1, h2, h3, h4, h5, h6 {
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   overflow-wrap: break-word;
 }
 
 /* Lists */
-ul, ol {
+ul,
+ol {
   list-style: none;
 }
 
@@ -60,7 +87,11 @@ a {
 }
 
 /* Buttons */
-button, input, optgroup, select, textarea {
+button,
+input,
+optgroup,
+select,
+textarea {
   font-family: inherit;
   font-size: 100%;
   font-weight: inherit;
@@ -70,11 +101,15 @@ button, input, optgroup, select, textarea {
   padding: 0;
 }
 
-button, select {
+button,
+select {
   text-transform: none;
 }
 
-button, [type='button'], [type='reset'], [type='submit'] {
+button,
+[type="button"],
+[type="reset"],
+[type="submit"] {
   -webkit-appearance: button;
   background-color: transparent;
   background-image: none;
@@ -82,7 +117,8 @@ button, [type='button'], [type='reset'], [type='submit'] {
 }
 
 /* Form Elements */
-input, textarea {
+input,
+textarea {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
@@ -91,13 +127,18 @@ input, textarea {
   outline: none;
 }
 
-input::placeholder, textarea::placeholder {
+input::placeholder,
+textarea::placeholder {
   opacity: 1;
   color: var(--color-gray-400);
 }
 
 /* Images */
-img, picture, video, canvas, svg {
+img,
+picture,
+video,
+canvas,
+svg {
   display: block;
   max-width: 100%;
   height: auto;
@@ -111,6 +152,7 @@ table {
 }
 
 /* Accessibility */
+
 /* Skip Links */
 .skip-link {
   position: absolute;
@@ -194,7 +236,7 @@ table {
   pre,
   blockquote {
     border: 1px solid #999;
-    page-break-inside: avoid;
+    break-inside: avoid;
   }
 
   thead {
@@ -203,7 +245,7 @@ table {
 
   tr,
   img {
-    page-break-inside: avoid;
+    break-inside: avoid;
   }
 
   p,
@@ -215,7 +257,7 @@ table {
 
   h2,
   h3 {
-    page-break-after: avoid;
+    break-after: avoid;
   }
 }
 
@@ -252,31 +294,31 @@ table {
   padding-right: var(--space-4);
 }
 
-@media (min-width: 640px) {
+@media (width >= 640px) {
   .container {
     max-width: var(--container-sm);
   }
 }
 
-@media (min-width: 768px) {
+@media (width >= 768px) {
   .container {
     max-width: var(--container-md);
   }
 }
 
-@media (min-width: 1024px) {
+@media (width >= 1024px) {
   .container {
     max-width: var(--container-lg);
   }
 }
 
-@media (min-width: 1280px) {
+@media (width >= 1280px) {
   .container {
     max-width: var(--container-xl);
   }
 }
 
-@media (min-width: 1536px) {
+@media (width >= 1536px) {
   .container {
     max-width: var(--container-2xl);
   }
@@ -294,11 +336,11 @@ table {
 
 /* Font Loading Optimization */
 @font-face {
-  font-family: 'Inter';
+  font-family: Inter;
   font-style: normal;
   font-weight: 400 700;
   font-display: swap;
-  src: url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+  src: url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 }
 
 /* Performance Optimizations */

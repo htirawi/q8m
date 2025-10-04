@@ -104,11 +104,11 @@ export class InputValidationService {
     });
 
     const result = addressSchema.safeParse(address);
-    
+
     if (!result.success) {
       return {
         success: false,
-        errors: result.error.errors.map(err => err.message),
+        errors: result.error.errors.map((err) => err.message),
       };
     }
 
@@ -137,11 +137,11 @@ export class InputValidationService {
     });
 
     const result = paymentSchema.safeParse(request);
-    
+
     if (!result.success) {
       return {
         success: false,
-        errors: result.error.errors.map(err => err.message),
+        errors: result.error.errors.map((err) => err.message),
       };
     }
 

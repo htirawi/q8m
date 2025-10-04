@@ -91,7 +91,7 @@ const purchaseSchema = new Schema<IPurchase>(
         type: String,
         required: true,
         validate: {
-          validator (v: string) {
+          validator(v: string) {
             return /^\d+(\.\d{2})?$/.test(v);
           },
           message: "Amount must be a valid decimal number",
@@ -125,7 +125,7 @@ const purchaseSchema = new Schema<IPurchase>(
             type: String,
             required: true,
             validate: {
-              validator (v: string) {
+              validator(v: string) {
                 return /^\d+(\.\d{2})?$/.test(v);
               },
               message: "Price must be a valid decimal number",
@@ -215,7 +215,7 @@ const purchaseSchema = new Schema<IPurchase>(
   {
     timestamps: true,
     toJSON: {
-      transform (doc, ret) {
+      transform(doc, ret) {
         ret.id = ret._id.toString();
         delete ret._id;
         delete ret.__v;

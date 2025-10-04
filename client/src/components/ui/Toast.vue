@@ -1,9 +1,5 @@
 <template>
-  <Transition
-    name="toast"
-    @enter="handleEnter"
-    @leave="handleLeave"
-  >
+  <Transition name="toast" @enter="handleEnter" @leave="handleLeave">
     <div
       v-if="isVisible"
       :id="id"
@@ -15,11 +11,12 @@
     >
       <div class="toast-content">
         <div v-if="icon" class="toast-icon" aria-hidden="true">
-          <component :is="icon" class="w-5 h-5" />
+          <component :is="icon" class="h-5 w-5" />
         </div>
         <div class="toast-message">
           <slot>
             {{ message }}
+
           </slot>
         </div>
         <button
@@ -29,8 +26,13 @@
           :aria-label="$t('a11y.dismissNotification')"
           @click="handleDismiss"
         >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
           </svg>
         </button>
       </div>
@@ -39,103 +41,101 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import type { Component } from 'vue'
+import { ref, computed, onMounted } from "vue";
+import type { Component } from "vue";
 
-export interface ToastProps {
-  id?: string
-  type?: 'success' | 'error' | 'warning' | 'info'
-  message?: string
-  icon?: Component
-  dismissible?: boolean
-  duration?: number
-  persistent?: boolean
+export interface toastprops {
+  id?: string;
+  type?: "success" | "error" | "warning" | "info";
+  message?: string;
+  icon?: Component;
+  dismissible?: boolean;
+  duration?: number;
+  persistent?: boolean;
 }
 
 const props = withDefaults(defineProps<ToastProps>(), {
-  type: 'info',
+  type: "info",
   dismissible: true,
   duration: 5000,
-  persistent: false
-})
+  persistent: false,
+});
 
-const emit = defineEmits<{
-  dismiss: []
-  'update:isVisible': [value: boolean]
-}>()
+const emit = defineemits<{
+  dismiss: [];
+  "update:isVisible": [value: boolean];
+}>();
 
 // State
-const isVisible = ref(true)
-let timeoutId: number | null = null
+const isVisible = ref(true);
+let timeoutId: number | null = null;timeoutId
 
 // Computed properties
 const toastClasses = computed(() => {
-  const baseClasses = ['toast']
-  
+  const baseClasses = ["toast"];
+
   const typeClasses = {
-    success: 'toast--success',
-    error: 'toast--error',
-    warning: 'toast--warning',
-    info: 'toast--info'
-  }
-  
-  return [
-    ...baseClasses,
-    typeClasses[props.type]
-  ].join(' ')
-})
+    success: "toast--success",
+    error: "toast--error",
+    warning: "toast--warning",
+    info: "toast--info",
+  };
+
+  return [...baseClasses, typeClasses[props.type]].join(" ");
+});
 
 const ariaLive = computed(() => {
-  return props.type === 'error' ? 'assertive' : 'polite'
-})
+  return props.type === "error" ? "assertive" : "polite";
+});
 
 // Methods
 const handleDismiss = () => {
-  isVisible.value = false
-  emit('dismiss')
-  emit('update:isVisible', false)
-}
+  isVisible.value = false;
+  emit("dismiss");
+  emit("update:isVisible", false);
+};
 
-const handleEnter = () => {
+const handleenter = () => {
   if (!props.persistent && props.duration > 0) {
     timeoutId = window.setTimeout(() => {
-      handleDismiss()
-    }, props.duration)
+      handleDismiss();
+    }, props.duration);
   }
-}
+};
 
-const handleLeave = () => {
+const handleleave = () => {
   if (timeoutId) {
-    clearTimeout(timeoutId)
-    timeoutId = null
+    clearTimeout(timeoutId);
+    timeoutId = null;
   }
-}
+};
 
 // Lifecycle
 onMounted(() => {
-  handleEnter()
-})
+  handleEnter();
+});
 
 // Cleanup
-import { onUnmounted } from 'vue'
+import { onUnmounted } from "vue";
+
 onUnmounted(() => {
   if (timeoutId) {
-    clearTimeout(timeoutId)
+    clearTimeout(timeoutId);
   }
-})
+});
 </script>
 
 <style scoped>
 .toast {
-  @apply max-w-sm w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg pointer-events-auto ring-1 ring-black ring-opacity-5 overflow-hidden;
+  @apply pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5 dark:bg-gray-800;
 }
 
 .toast-content {
-  @apply p-4 flex items-start space-x-3;
+  @apply flex items-start space-x-3 p-4;
 }
 
 .toast-icon {
-  @apply flex-shrink-0 mt-0.5;
+  @apply mt-0.5 flex-shrink-0;
 }
 
 .toast-message {
@@ -143,7 +143,7 @@ onUnmounted(() => {
 }
 
 .toast-close {
-  @apply flex-shrink-0 p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 min-h-[44px] min-w-[44px] flex items-center justify-center;
+  @apply flex min-h-[44px] min-w-[44px] flex-shrink-0 items-center justify-center rounded-md p-1 text-gray-400 transition-colors duration-200 hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-700 dark:hover:text-gray-300;
 }
 
 /* Type variants */

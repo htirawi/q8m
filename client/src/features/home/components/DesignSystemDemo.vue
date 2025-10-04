@@ -3,37 +3,51 @@
     <div class="demo-container">
       <div class="demo-header">
         <h2 id="demo-title" class="demo-title">
-          {{ $t('home.demo.title') }}
+          {{ $t("home.demo.title") }}
+
         </h2>
         <p class="demo-description">
-          {{ $t('home.demo.description') }}
+          {{ $t("home.demo.description") }}
+
         </p>
       </div>
-      
+
       <div class="demo-content">
         <!-- Component Showcase -->
         <div class="demo-section">
-          <h3 class="demo-section-title">{{ $t('home.demo.components') }}</h3>
+          <h3 class="demo-section-title">{{ $t("home.demo.components") }}
+
+</h3>
           <div class="demo-components">
             <div class="demo-component">
-              <h4 class="demo-component-title">{{ $t('home.demo.buttons') }}</h4>
+              <h4 class="demo-component-title">{{ $t("home.demo.buttons") }}
+
+</h4>
               <div class="demo-buttons">
-                <Button variant="primary" size="sm">{{ $t('home.demo.small') }}</Button>
-                <Button variant="primary" size="md">{{ $t('home.demo.medium') }}</Button>
-                <Button variant="primary" size="lg">{{ $t('home.demo.large') }}</Button>
-                <Button variant="secondary" size="md">{{ $t('home.demo.secondary') }}</Button>
-                <Button variant="outline" size="md">{{ $t('home.demo.outline') }}</Button>
+                <Button variant="primary" size="sm">{{ $t("home.demo.small") }}
+
+</Button>
+                <Button variant="primary" size="md">{{ $t("home.demo.medium") }}
+
+</Button>
+                <Button variant="primary" size="lg">{{ $t("home.demo.large") }}
+
+</Button>
+                <Button variant="secondary" size="md">{{ $t("home.demo.secondary") }}
+
+</Button>
+                <Button variant="outline" size="md">{{ $t("home.demo.outline") }}
+
+</Button>
               </div>
             </div>
-            
+
             <div class="demo-component">
-              <h4 class="demo-component-title">{{ $t('home.demo.form') }}</h4>
+              <h4 class="demo-component-title">{{ $t("home.demo.form") }}
+
+</h4>
               <Card class="demo-form-card">
-                <FormField
-                  :label="$t('home.demo.email')"
-                  :error="emailError"
-                  required
-                >
+                <FormField :label="$t('home.demo.email')" :error="emailError" required>
                   <Input
                     v-model="email"
                     type="email"
@@ -53,32 +67,40 @@
                 </FormField>
                 <div class="demo-form-actions">
                   <Button variant="primary" size="md" :disabled="!isFormValid">
-                    {{ $t('home.demo.submit') }}
+                    {{ $t("home.demo.submit") }}
+
                   </Button>
                   <Button variant="outline" size="md">
-                    {{ $t('home.demo.cancel') }}
+                    {{ $t("home.demo.cancel") }}
+
                   </Button>
                 </div>
               </Card>
             </div>
           </div>
         </div>
-        
+
         <!-- State Examples -->
         <div class="demo-section">
-          <h3 class="demo-section-title">{{ $t('home.demo.states') }}</h3>
+          <h3 class="demo-section-title">{{ $t("home.demo.states") }}
+
+</h3>
           <div class="demo-states">
             <Card class="demo-state-card">
               <div class="demo-state-content">
                 <LoadingSpinner size="md" />
-                <span>{{ $t('home.demo.loading') }}</span>
+                <span>{{ $t("home.demo.loading") }}
+
+</span>
               </div>
             </Card>
             <Card class="demo-state-card">
               <div class="demo-state-content">
                 <div class="demo-empty-state">
                   <div class="empty-icon" aria-hidden="true">📝</div>
-                  <p>{{ $t('home.demo.empty') }}</p>
+                  <p>{{ $t("home.demo.empty") }}
+
+</p>
                 </div>
               </div>
             </Card>
@@ -86,7 +108,9 @@
               <div class="demo-state-content">
                 <div class="demo-error-state">
                   <div class="error-icon" aria-hidden="true">⚠️</div>
-                  <p>{{ $t('home.demo.error') }}</p>
+                  <p>{{ $t("home.demo.error") }}
+
+</p>
                 </div>
               </div>
             </Card>
@@ -98,41 +122,41 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import Button from '@/components/ui/Button.vue'
-import Card from '@/components/ui/Card.vue'
-import Input from '@/components/ui/Input.vue'
-import Select from '@/components/ui/Select.vue'
-import FormField from '@/components/ui/FormField.vue'
-import LoadingSpinner from '@/components/ui/LoadingSpinner.vue'
+import { ref, computed } from "vue";
+import Button from "@/components/ui/Button.vue";
+import Card from "@/components/ui/Card.vue";
+import Input from "@/components/ui/Input.vue";
+import Select from "@/components/ui/Select.vue";
+import FormField from "@/components/ui/FormField.vue";
+import LoadingSpinner from "@/components/ui/LoadingSpinner.vue";
 
 // Form state
-const email = ref('')
-const framework = ref('')
+const email = ref("");
+const framework = ref("");
 
 // Validation
 const emailError = computed(() => {
-  if (!email.value) return ''
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  return emailRegex.test(email.value) ? '' : 'Invalid email format'
-})
+  if (!email.value) return "";
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email.value) ? "" : "Invalid email format";
+});
 
 const isFormValid = computed(() => {
-  return email.value && !emailError.value && framework.value
-})
+  return email.value && !emailError.value && framework.value;
+});
 
 // Framework options
 const frameworkOptions = [
-  { value: 'vue', label: 'Vue.js' },
-  { value: 'react', label: 'React' },
-  { value: 'angular', label: 'Angular' },
-  { value: 'svelte', label: 'Svelte' }
-]
+  { value: "vue", label: "Vue.js" },
+  { value: "react", label: "React" },
+  { value: "angular", label: "Angular" },
+  { value: "svelte", label: "Svelte" },
+];
 </script>
 
 <style scoped>
 .design-system-demo {
-  @apply py-16 md:py-24 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700;
+  @apply border-t border-gray-200 bg-white py-16 dark:border-gray-700 dark:bg-gray-900 md:py-24;
 }
 
 .demo-container {
@@ -140,15 +164,15 @@ const frameworkOptions = [
 }
 
 .demo-header {
-  @apply text-center mb-16;
+  @apply mb-16 text-center;
 }
 
 .demo-title {
-  @apply text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4;
+  @apply mb-4 text-3xl font-bold text-gray-900 dark:text-white md:text-4xl;
 }
 
 .demo-description {
-  @apply text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto;
+  @apply mx-auto max-w-3xl text-lg text-gray-600 dark:text-gray-300;
 }
 
 .demo-content {
@@ -160,11 +184,11 @@ const frameworkOptions = [
 }
 
 .demo-section-title {
-  @apply text-2xl font-semibold text-gray-900 dark:text-white mb-6;
+  @apply mb-6 text-2xl font-semibold text-gray-900 dark:text-white;
 }
 
 .demo-components {
-  @apply grid grid-cols-1 lg:grid-cols-2 gap-8;
+  @apply grid grid-cols-1 gap-8 lg:grid-cols-2;
 }
 
 .demo-component {
@@ -188,7 +212,7 @@ const frameworkOptions = [
 }
 
 .demo-states {
-  @apply grid grid-cols-1 md:grid-cols-3 gap-6;
+  @apply grid grid-cols-1 gap-6 md:grid-cols-3;
 }
 
 .demo-state-card {
@@ -196,12 +220,12 @@ const frameworkOptions = [
 }
 
 .demo-state-content {
-  @apply flex flex-col items-center justify-center space-y-4 min-h-[120px];
+  @apply flex min-h-[120px] flex-col items-center justify-center space-y-4;
 }
 
 .demo-empty-state,
 .demo-error-state {
-  @apply text-center space-y-2;
+  @apply space-y-2 text-center;
 }
 
 .empty-icon,
@@ -211,7 +235,7 @@ const frameworkOptions = [
 
 .demo-empty-state p,
 .demo-error-state p {
-  @apply text-gray-600 dark:text-gray-300 text-sm;
+  @apply text-sm text-gray-600 dark:text-gray-300;
 }
 
 /* Focus styles */
@@ -221,19 +245,19 @@ const frameworkOptions = [
 }
 
 /* Responsive adjustments */
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .demo-components {
     @apply grid-cols-1;
   }
-  
+
   .demo-states {
     @apply grid-cols-1;
   }
-  
+
   .demo-buttons {
     @apply flex-col;
   }
-  
+
   .demo-form-actions {
     @apply flex-col;
   }

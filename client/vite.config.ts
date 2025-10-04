@@ -1,154 +1,154 @@
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import { VitePWA } from 'vite-plugin-pwa'
-import path from 'path'
+import { defineConfig } from "vite";
+import vue from "@vitejs/plugin-vue";
+import { VitePWA } from "vite-plugin-pwa";
+import path from "path";
 
 export default defineConfig({
   plugins: [
     vue({
       script: {
         defineModel: true,
-        propsDestructure: true
-      }
+        propsDestructure: true,
+      },
     }),
     VitePWA({
-      registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'robots.txt', 'icon-192.png', 'icon-512.png'],
+      registerType: "autoUpdate",
+      includeAssets: ["favicon.ico", "robots.txt", "icon-192.png", "icon-512.png"],
       manifest: {
-        name: 'q8m - Master Frontend Development Interviews',
-        short_name: 'q8m',
-        description: 'Master frontend development with 500+ curated interview questions',
-        theme_color: '#2563eb',
-        background_color: '#ffffff',
-        display: 'standalone',
-        orientation: 'portrait',
-        scope: '/',
-        start_url: '/',
+        name: "q8m - Master Frontend Development Interviews",
+        short_name: "q8m",
+        description: "Master frontend development with 500+ curated interview questions",
+        theme_color: "#2563eb",
+        background_color: "#ffffff",
+        display: "standalone",
+        orientation: "portrait",
+        scope: "/",
+        start_url: "/",
         icons: [
           {
-            src: 'icon-192.png',
-            sizes: '192x192',
-            type: 'image/png'
+            src: "icon-192.png",
+            sizes: "192x192",
+            type: "image/png",
           },
           {
-            src: 'icon-512.png',
-            sizes: '512x512',
-            type: 'image/png'
-          }
+            src: "icon-512.png",
+            sizes: "512x512",
+            type: "image/png",
+          },
         ],
-        categories: ['education', 'productivity'],
-        lang: 'en',
-        dir: 'ltr'
+        categories: ["education", "productivity"],
+        lang: "en",
+        dir: "ltr",
       },
       workbox: {
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
-            handler: 'CacheFirst',
+            handler: "CacheFirst",
             options: {
-              cacheName: 'google-fonts-cache',
+              cacheName: "google-fonts-cache",
               expiration: {
                 maxEntries: 10,
-                maxAgeSeconds: 60 * 60 * 24 * 365 // 1 year
-              }
-            }
+                maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
+              },
+            },
           },
           {
             urlPattern: /^https:\/\/api\.quizplatform\.com\/.*/i,
-            handler: 'NetworkFirst',
+            handler: "NetworkFirst",
             options: {
-              cacheName: 'api-cache',
+              cacheName: "api-cache",
               expiration: {
                 maxEntries: 100,
-                maxAgeSeconds: 60 * 5 // 5 minutes
+                maxAgeSeconds: 60 * 5, // 5 minutes
               },
-              networkTimeoutSeconds: 10
-            }
-          }
-        ]
-      }
-    })
+              networkTimeoutSeconds: 10,
+            },
+          },
+        ],
+      },
+    }),
   ],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
-      '@components': path.resolve(__dirname, './src/components'),
-      '@features': path.resolve(__dirname, './src/features'),
-      '@stores': path.resolve(__dirname, './src/stores'),
-      '@composables': path.resolve(__dirname, './src/composables'),
-      '@router': path.resolve(__dirname, './src/router'),
-      '@locales': path.resolve(__dirname, './src/locales'),
-      '@styles': path.resolve(__dirname, './src/styles'),
-      '@types': path.resolve(__dirname, './src/types'),
-      '@utils': path.resolve(__dirname, './src/utils'),
-      '@shared': path.resolve(__dirname, '../shared')
-    }
+      "@": path.resolve(__dirname, "./src"),
+      "@components": path.resolve(__dirname, "./src/components"),
+      "@features": path.resolve(__dirname, "./src/features"),
+      "@stores": path.resolve(__dirname, "./src/stores"),
+      "@composables": path.resolve(__dirname, "./src/composables"),
+      "@router": path.resolve(__dirname, "./src/router"),
+      "@locales": path.resolve(__dirname, "./src/locales"),
+      "@styles": path.resolve(__dirname, "./src/styles"),
+      "@types": path.resolve(__dirname, "./src/types"),
+      "@utils": path.resolve(__dirname, "./src/utils"),
+      "@shared": path.resolve(__dirname, "../shared"),
+    },
   },
   server: {
     port: 5173,
     host: true,
     proxy: {
-      '/api': {
-        target: 'http://localhost:3000',
+      "/api": {
+        target: "http://localhost:3000",
         changeOrigin: true,
-        secure: false
-      }
-    }
+        secure: false,
+      },
+    },
   },
   build: {
     sourcemap: true,
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ['vue', 'vue-router', 'pinia'],
-          ui: ['@headlessui/vue', '@heroicons/vue'],
-          validation: ['vee-validate', '@vee-validate/zod', 'zod'],
-          utils: ['axios', '@vueuse/core']
+          vendor: ["vue", "vue-router", "pinia"],
+          ui: ["@headlessui/vue", "@heroicons/vue"],
+          validation: ["vee-validate", "@vee-validate/zod", "zod"],
+          utils: ["axios", "@vueuse/core"],
         },
         chunkFileNames: (chunkInfo) => {
-          const facadeModuleId = chunkInfo.facadeModuleId
+          const facadeModuleId = chunkInfo.facadeModuleId;
           if (facadeModuleId) {
-            const fileName = path.basename(facadeModuleId, path.extname(facadeModuleId))
-            return `js/${fileName}-[hash].js`
+            const fileName = path.basename(facadeModuleId, path.extname(facadeModuleId));
+            return `js/${fileName}-[hash].js`;
           }
-          return 'js/[name]-[hash].js'
+          return "js/[name]-[hash].js";
         },
-        entryFileNames: 'js/[name]-[hash].js',
+        entryFileNames: "js/[name]-[hash].js",
         assetFileNames: (assetInfo) => {
-          const extType = assetInfo.name?.split('.').pop()
-          if (/png|jpe?g|svg|gif|tiff|bmp|ico/i.test(extType || '')) {
-            return 'images/[name]-[hash][extname]'
+          const extType = assetInfo.name?.split(".").pop();
+          if (/png|jpe?g|svg|gif|tiff|bmp|ico/i.test(extType || "")) {
+            return "images/[name]-[hash][extname]";
           }
-          if (/css/i.test(extType || '')) {
-            return 'css/[name]-[hash][extname]'
+          if (/css/i.test(extType || "")) {
+            return "css/[name]-[hash][extname]";
           }
-          return 'assets/[name]-[hash][extname]'
-        }
-      }
+          return "assets/[name]-[hash][extname]";
+        },
+      },
     },
-    target: 'esnext',
-    minify: 'esbuild',
-    chunkSizeWarningLimit: 1000
+    target: "esnext",
+    minify: "esbuild",
+    chunkSizeWarningLimit: 1000,
   },
   test: {
     globals: true,
-    environment: 'jsdom',
-    setupFiles: './vitest.setup.ts',
+    environment: "jsdom",
+    setupFiles: "./vitest.setup.ts",
     coverage: {
-      provider: 'v8',
-      reporter: ['text', 'json', 'html', 'lcov'],
+      provider: "v8",
+      reporter: ["text", "json", "html", "lcov"],
       exclude: [
-        'node_modules/',
-        'src/**/*.test.{ts,tsx}',
-        'src/**/__tests__/**',
-        '*.config.{js,ts}',
-        'dist/',
-        'tests/'
-      ]
-    }
+        "node_modules/",
+        "src/**/*.test.{ts,tsx}",
+        "src/**/__tests__/**",
+        "*.config.{js,ts}",
+        "dist/",
+        "tests/",
+      ],
+    },
   },
-  assetsInclude: ['**/*.svg'],
+  assetsInclude: ["**/*.svg"],
   optimizeDeps: {
-    include: ['vue', 'vue-router', 'pinia', '@vueuse/core']
-  }
-})
+    include: ["vue", "vue-router", "pinia", "@vueuse/core"],
+  },
+});

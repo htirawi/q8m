@@ -16,7 +16,7 @@ let testApp: any;
 beforeAll(() => {
   // Create a global Pinia instance for tests
   const pinia = createPinia();
-  
+
   // Create i18n instance for tests with actual translations
   const i18n = createI18n({
     legacy: false,
@@ -32,7 +32,7 @@ beforeAll(() => {
   testApp = createApp({});
   testApp.use(pinia);
   testApp.use(i18n);
-  
+
   config.global.plugins = [pinia, i18n];
 });
 

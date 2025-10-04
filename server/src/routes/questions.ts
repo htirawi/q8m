@@ -188,7 +188,6 @@ export default async function questionRoutes(fastify: FastifyInstance) {
       },
     },
     async (request, reply) => {
-
       // TODO: Implement answer submission and scoring
       reply.send({
         correct: true,

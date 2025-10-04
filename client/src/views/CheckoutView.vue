@@ -4,7 +4,9 @@
     <div v-if="paymentStore.isLoading && !selectedPlan" class="loading-container">
       <div class="loading-spinner">
         <div class="h-12 w-12 animate-spin rounded-full border-b-2 border-indigo-600"></div>
-        <p class="mt-4 text-gray-600 dark:text-gray-300">{{ $t("common.loading") }}</p>
+        <p class="mt-4 text-gray-600 dark:text-gray-300">{{ $t("common.loading") }}
+
+</p>
       </div>
     </div>
 
@@ -21,14 +23,20 @@
             />
           </svg>
         </div>
-        <h2 class="error-title">{{ $t("checkout.error.title") }}</h2>
-        <p class="error-message">{{ error }}</p>
+        <h2 class="error-title">{{ $t("checkout.error.title") }}
+
+</h2>
+        <p class="error-message">{{ error }}
+
+</p>
         <div class="error-actions">
           <button @click="goToPricing" class="btn-primary">
             {{ $t("checkout.error.backToPricing") }}
+
           </button>
           <button @click="retry" class="btn-secondary">
             {{ $t("common.retry") }}
+
           </button>
         </div>
       </div>
@@ -42,6 +50,7 @@
           <li class="breadcrumb-item">
             <router-link to="/pricing" class="breadcrumb-link">
               {{ $t("pricing.title") }}
+
             </router-link>
           </li>
           <li class="breadcrumb-separator" aria-hidden="true">
@@ -55,6 +64,7 @@
           </li>
           <li class="breadcrumb-item breadcrumb-item--current">
             {{ $t("checkout.title") }}
+
           </li>
         </ol>
       </nav>
@@ -73,7 +83,9 @@
               d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
             />
           </svg>
-          <span>{{ $t("checkout.security.ssl") }}</span>
+          <span>{{ $t("checkout.security.ssl") }}
+
+</span>
         </div>
         <div class="security-badge">
           <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -84,7 +96,9 @@
               d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
             />
           </svg>
-          <span>{{ $t("checkout.security.pci") }}</span>
+          <span>{{ $t("checkout.security.pci") }}
+
+</span>
         </div>
         <div class="security-badge">
           <svg
@@ -100,7 +114,9 @@
               d="M13 10V3L4 14h7v7l9-11h-7z"
             />
           </svg>
-          <span>{{ $t("checkout.security.fast") }}</span>
+          <span>{{ $t("checkout.security.fast") }}
+
+</span>
         </div>
       </div>
     </div>
@@ -123,10 +139,15 @@
             />
           </svg>
         </div>
-        <h2 class="no-plan-title">{{ $t("checkout.noPlan.title") }}</h2>
-        <p class="no-plan-message">{{ $t("checkout.noPlan.message") }}</p>
+        <h2 class="no-plan-title">{{ $t("checkout.noPlan.title") }}
+
+</h2>
+        <p class="no-plan-message">{{ $t("checkout.noPlan.message") }}
+
+</p>
         <button @click="goToPricing" class="btn-primary">
           {{ $t("checkout.noPlan.selectPlan") }}
+
         </button>
       </div>
     </div>
@@ -168,11 +189,11 @@ const retry = async () => {
   try {
     await paymentStore.fetchPricing();
   } catch (err) {
-    error.value = err instanceof Error ? err.message : t("common.error.unknown");
+    error.value = err instanceof Error ? err.message : t("common.error.unknown");errinstanceofErrorerr.message
   }
 };
 
-const initializeCheckout = async () => {
+const initializecheckout = async () => {
   try {
     // Ensure user is authenticated
     if (!authStore.isAuthenticated) {
@@ -202,7 +223,7 @@ const initializeCheckout = async () => {
     // Clear any previous errors
     paymentStore.clearError();
   } catch (err) {
-    error.value = err instanceof Error ? err.message : t("common.error.unknown");
+    error.value = err instanceof Error ? err.message : t("common.error.unknown");errinstanceofErrorerr.message
   }
 };
 
@@ -330,7 +351,7 @@ onMounted(async () => {
 }
 
 /* Mobile Responsiveness */
-@media (max-width: 640px) {
+@media (width <= 640px) {
   .security-badges {
     @apply flex-col items-center;
   }
