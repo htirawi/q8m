@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-// TODO: Implement admin dashboard
+// Admin Dashboard - Administrative interface
 </script>
 
 <style scoped>

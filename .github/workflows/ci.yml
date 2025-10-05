@@ -74,10 +74,7 @@ jobs:
         run: pnpm lint
 
       - name: Run Unit Tests
-        run: |
-          echo "Skipping unit tests due to legacy test setup issues..."
-          echo "TODO: Re-enable unit tests after legacy test setup is fixed"
-          # pnpm test:unit
+        run: pnpm test:unit
 
       - name: Run Build
         run: pnpm build

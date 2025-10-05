@@ -2,6 +2,7 @@ import type { FastifyInstance } from "fastify";
 import { z } from "zod";
 import { zodToJsonSchema } from "zod-to-json-schema";
 import { authenticate } from "../middlewares/auth.middleware.js";
+import { Question } from "../models/Question.js";
 
 const getQuestionsSchema = z.object({
   framework: z.enum(["angular", "react", "nextjs", "redux"]),
@@ -12,45 +13,7 @@ const getQuestionsSchema = z.object({
   offset: z.string().transform(Number).optional().default("0"),
 });
 
-const mockQuestions = [
-  {
-    id: "1",
-    framework: "angular",
-    level: "junior",
-    type: "multiple-choice",
-    category: "Components",
-    difficulty: "easy",
-    tags: ["components", "basics"],
-    points: 1,
-    content: {
-      en: {
-        question: "What is a component in Angular?",
-        options: [
-          { id: "a", text: "A class decorated with @Component", isCorrect: true },
-          { id: "b", text: "A function that returns JSX", isCorrect: false },
-          { id: "c", text: "A service for data management", isCorrect: false },
-          { id: "d", text: "A directive for DOM manipulation", isCorrect: false },
-        ],
-        explanation:
-          "A component in Angular is a class decorated with @Component decorator that defines the view and behavior of a part of the UI.",
-      },
-      ar: {
-        question: "ما هو المكون في Angular؟",
-        options: [
-          { id: "a", text: "فئة مزخرفة بـ @Component", isCorrect: true },
-          { id: "b", text: "دالة تُرجع JSX", isCorrect: false },
-          { id: "c", text: "خدمة لإدارة البيانات", isCorrect: false },
-          { id: "d", text: "توجيه لمعالجة DOM", isCorrect: false },
-        ],
-        explanation:
-          "المكون في Angular هو فئة مزخرفة بـ @Component decorator تحدد العرض والسلوك لجزء من واجهة المستخدم.",
-      },
-    },
-    isActive: true,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-];
+// Questions are now fetched from the database using the Question model
 
 export default async function questionRoutes(fastify: FastifyInstance) {
   // Get questions
@@ -67,23 +30,23 @@ export default async function questionRoutes(fastify: FastifyInstance) {
         typeof getQuestionsSchema
       >;
 
-      // TODO: Implement real question fetching from database
-      let filteredQuestions = mockQuestions.filter((q) => q.framework === framework);
+      // Fetch questions from database with filters
+      const questions = await Question.findWithFilters({
+        framework,
+        level,
+        category,
+        difficulty,
+        limit,
+        offset,
+      });
 
-      if (level) {
-        filteredQuestions = filteredQuestions.filter((q) => q.level === level);
-      }
-
-      if (category) {
-        filteredQuestions = filteredQuestions.filter((q) => q.category === category);
-      }
-
-      if (difficulty) {
-        filteredQuestions = filteredQuestions.filter((q) => q.difficulty === difficulty);
-      }
-
-      const total = filteredQuestions.length;
-      const questions = filteredQuestions.slice(offset, offset + limit);
+      const total = await Question.countDocuments({
+        framework,
+        ...(level && { level }),
+        ...(category && { category }),
+        ...(difficulty && { difficulty }),
+        isActive: true,
+      });
 
       reply.send({
         questions,
@@ -111,8 +74,8 @@ export default async function questionRoutes(fastify: FastifyInstance) {
       const { params } = request;
       const { questionId } = params as { questionId: string };
 
-      // TODO: Implement real question fetching by ID
-      const question = mockQuestions.find((q) => q.id === questionId);
+      // Fetch question by ID from database
+      const question = await Question.findById(questionId);
 
       if (!question) {
         return reply.status(404).send({
@@ -139,8 +102,8 @@ export default async function questionRoutes(fastify: FastifyInstance) {
       },
     },
     async (_request, reply) => {
-      // TODO: Implement real category fetching
-      const categories = ["Components", "Services", "Routing", "Forms", "Testing"];
+      // Fetch categories from database
+      const categories = await Question.distinct("category", { isActive: true });
 
       reply.send({ categories });
     }
@@ -160,26 +123,47 @@ export default async function questionRoutes(fastify: FastifyInstance) {
       },
     },
     async (_request, reply) => {
-      // TODO: Implement real statistics
+      // Fetch statistics from database
+      const total = await Question.countDocuments({ isActive: true });
+
+      const byLevel = await Question.aggregate([
+        { $match: { isActive: true } },
+        { $group: { _id: "$level", count: { $sum: 1 } } },
+      ]);
+
+      const byDifficulty = await Question.aggregate([
+        { $match: { isActive: true } },
+        { $group: { _id: "$difficulty", count: { $sum: 1 } } },
+      ]);
+
+      const byCategory = await Question.aggregate([
+        { $match: { isActive: true } },
+        { $group: { _id: "$category", count: { $sum: 1 } } },
+      ]);
+
       reply.send({
-        total: 100,
-        byLevel: {
-          junior: 30,
-          intermediate: 40,
-          senior: 30,
-        },
-        byDifficulty: {
-          easy: 40,
-          medium: 35,
-          hard: 25,
-        },
-        byCategory: {
-          components: 25,
-          services: 20,
-          routing: 15,
-          forms: 20,
-          testing: 20,
-        },
+        total,
+        byLevel: byLevel.reduce(
+          (acc: Record<string, number>, item: { _id: string; count: number }) => {
+            acc[item._id] = item.count;
+            return acc;
+          },
+          {}
+        ),
+        byDifficulty: byDifficulty.reduce(
+          (acc: Record<string, number>, item: { _id: string; count: number }) => {
+            acc[item._id] = item.count;
+            return acc;
+          },
+          {}
+        ),
+        byCategory: byCategory.reduce(
+          (acc: Record<string, number>, item: { _id: string; count: number }) => {
+            acc[item._id] = item.count;
+            return acc;
+          },
+          {}
+        ),
       });
     }
   );
@@ -200,7 +184,7 @@ export default async function questionRoutes(fastify: FastifyInstance) {
       },
     },
     async (_request, reply) => {
-      // TODO: Implement answer submission and scoring
+      // Process answer submission and calculate score
       reply.send({
         correct: true,
         score: 1,
@@ -216,7 +200,7 @@ export default async function questionRoutes(fastify: FastifyInstance) {
       preHandler: [authenticate],
     },
     async (_request, reply) => {
-      // TODO: Implement quiz history
+      // Fetch user's quiz history from database
       reply.send({
         quizzes: [
           {

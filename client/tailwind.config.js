@@ -180,7 +180,7 @@ export default {
     },
   },
   plugins: [
-    // TODO: Add Tailwind CSS plugins when needed:
+    // Tailwind CSS plugins can be added here when needed:
     // require("@tailwindcss/forms"),
     // require("@tailwindcss/typography"),
     // require("@tailwindcss/aspect-ratio"),

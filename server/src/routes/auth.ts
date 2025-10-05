@@ -51,17 +51,26 @@ interface RefreshTokenBody {
 }
 
 // Validation schemas
-const registerSchema = z.object({
-  email: z.string().email("Invalid email format"),
-  name: z
-    .string()
-    .min(2, "Name must be at least 2 characters")
-    .max(50, "Name cannot exceed 50 characters"),
-  password: z
-    .string()
-    .min(8, "Password must be at least 8 characters")
-    .max(128, "Password cannot exceed 128 characters"),
-});
+const registerSchema = z
+  .object({
+    email: z.string().email("Invalid email format"),
+    name: z
+      .string()
+      .min(2, "Name must be at least 2 characters")
+      .max(50, "Name cannot exceed 50 characters"),
+    password: z
+      .string()
+      .min(8, "Password must be at least 8 characters")
+      .max(128, "Password cannot exceed 128 characters"),
+    confirmPassword: z.string().optional(),
+    acceptTerms: z.boolean().refine((val) => val === true, {
+      message: "You must accept the terms and conditions",
+    }),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
+  });
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email format"),
@@ -124,7 +133,9 @@ export default async function authRoutes(fastify: FastifyInstance) {
     },
     async (request, reply) => {
       try {
-        const { email, name, password } = request.body as RegisterBody;
+        const { email, name, password, acceptTerms } = request.body as RegisterBody & {
+          acceptTerms: boolean;
+        };
 
         // Check if user already exists
         const existingUser = await User.findOne({ email });
@@ -142,6 +153,10 @@ export default async function authRoutes(fastify: FastifyInstance) {
           name,
           password,
           entitlements: ["JUNIOR"], // Default entitlement
+          permissions: [], // Default permissions
+          acceptTerms,
+          acceptTermsAt: acceptTerms ? new Date() : undefined,
+          acceptTermsVersion: "1.0",
         });
 
         await user.save();

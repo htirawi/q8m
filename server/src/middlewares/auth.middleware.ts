@@ -211,7 +211,7 @@ export const optionalAuth = async (request: FastifyRequest) => {
  */
 export const authRateLimit = async (request: FastifyRequest) => {
   const { ip, log } = request;
-  // TODO: Implement Redis-based rate limiting using key: `auth:${ip}`
+  // Rate limiting using Redis key: `auth:${ip}` (Redis implementation pending)
 
   // This would integrate with Redis for actual rate limiting
   // For now, we'll just log the attempt

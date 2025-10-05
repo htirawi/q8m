@@ -23,7 +23,6 @@ import paymentRoutes from "./routes/payments";
 import questionRoutes from "./routes/questions";
 import adminRoutes from "./routes/admin";
 import entitlementRoutes from "./routes/entitlements";
-// import downloadRoutes from "./routes/downloads"; // TODO: Fix broken downloads route
 import seoRoutes from "./routes/seo";
 
 // Import middleware
@@ -300,7 +299,6 @@ async function registerRoutes() {
   await fastify.register(questionRoutes, { prefix: "/api/questions" });
   await fastify.register(adminRoutes, { prefix: "/api/admin" });
   await fastify.register(entitlementRoutes, { prefix: "/api/entitlements" });
-  // await fastify.register(downloadRoutes, { prefix: "/api/downloads" }); // TODO: Fix broken downloads route
   await fastify.register(seoRoutes);
 }
 

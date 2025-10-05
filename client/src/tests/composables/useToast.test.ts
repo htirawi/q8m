@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* TODO: Legacy patterns - Replace 'any' types with proper typing and remove unused vars in next PR */
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { setActivePinia, createPinia } from "pinia";
 import { useToast } from "@/composables/useToast";

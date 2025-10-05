@@ -6,14 +6,7 @@ import typescriptParser from "@typescript-eslint/parser";
 
 export default [
   {
-    ignores: [
-      "dist/**",
-      "coverage/**",
-      "node_modules/**",
-      "*.config.js",
-      "*.config.ts",
-      "src/routes/downloads.ts", // TODO: Fix parsing error
-    ],
+    ignores: ["dist/**", "coverage/**", "node_modules/**", "*.config.js", "*.config.ts"],
   },
   // TypeScript files only
   {

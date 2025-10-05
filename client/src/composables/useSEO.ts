@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* TODO: Legacy patterns - Replace 'any' types with proper typing and remove unused vars in next PR */
 import { ref, computed, watchEffect } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
@@ -84,7 +83,7 @@ export function useSEO(initialData: Partial<SEOData> = {}) {
 
   // Update meta tags
   const updateMetaTags = () => {
-    const {head} = document;
+    const { head } = document;
 
     // Remove existing meta tags
     const existingTags = head.querySelectorAll('[data-seo="true"]');

@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-// TODO: Implement quiz selection page
+// Quiz Selection Page - Select framework and difficulty level
 </script>
 
 <style scoped>

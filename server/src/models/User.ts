@@ -7,6 +7,7 @@ export interface IUser extends Document {
   password?: string;
   role: "user" | "admin" | "intermediate" | "senior";
   entitlements: string[];
+  permissions: string[];
   isEmailVerified: boolean;
   emailVerificationToken?: string;
   emailVerificationExpires?: any; // Mongoose Date type
@@ -21,6 +22,9 @@ export interface IUser extends Document {
   bio?: string;
   location?: string;
   website?: string;
+  acceptTerms: boolean;
+  acceptTermsAt?: Date;
+  acceptTermsVersion?: string;
   preferences: {
     language: "en" | "ar";
     theme: any;
@@ -78,6 +82,10 @@ const userSchema = new Schema(
       enum: ["JUNIOR", "INTERMEDIATE", "SENIOR", "BUNDLE"],
       default: ["JUNIOR"],
     },
+    permissions: {
+      type: [String],
+      default: [],
+    },
     isEmailVerified: {
       type: Boolean,
       default: false,
@@ -132,6 +140,18 @@ const userSchema = new Schema(
     website: {
       type: String,
       match: [/^https?:\/\/.+/, "Website must be a valid URL"],
+    },
+    acceptTerms: {
+      type: Boolean,
+      default: false,
+      required: true,
+    },
+    acceptTermsAt: {
+      type: Date,
+    },
+    acceptTermsVersion: {
+      type: String,
+      default: "1.0",
     },
     // Preferences
     preferences: {
@@ -234,6 +254,9 @@ userSchema.index({ googleId: 1 }, { unique: true, sparse: true, name: "uniq_goog
 userSchema.index({ facebookId: 1 }, { unique: true, sparse: true, name: "uniq_facebook_id" });
 userSchema.index({ role: 1 }, { name: "idx_role" });
 userSchema.index({ entitlements: 1 }, { name: "idx_entitlements" });
+userSchema.index({ permissions: 1 }, { name: "idx_permissions" });
+userSchema.index({ acceptTerms: 1 }, { name: "idx_accept_terms" });
+userSchema.index({ acceptTermsAt: 1 }, { name: "idx_accept_terms_at" });
 userSchema.index({ isActive: 1 }, { name: "idx_is_active" });
 userSchema.index({ createdAt: -1 }, { name: "idx_created_at" });
 
@@ -265,10 +288,32 @@ userSchema.methods.comparePassword = async function (candidatePassword: string):
 
 // Instance method to generate auth tokens
 userSchema.methods.generateAuthTokens = function () {
-  // This will be implemented when we add JWT logic
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const jwt = require("jsonwebtoken");
+  const secret = process.env.JWT_SECRET || "fallback-secret";
+
+  const payload = {
+    userId: this._id.toString(),
+    email: this.email,
+    role: this.role,
+    permissions: this.permissions,
+  };
+
+  const accessToken = jwt.sign(payload, secret, {
+    expiresIn: "15m",
+    issuer: "q8m-api",
+    audience: "q8m-client",
+  });
+
+  const refreshToken = jwt.sign({ userId: this._id.toString(), type: "refresh" }, secret, {
+    expiresIn: "7d",
+    issuer: "q8m-api",
+    audience: "q8m-client",
+  });
+
   return {
-    accessToken: "temp-access-token",
-    refreshToken: "temp-refresh-token",
+    accessToken,
+    refreshToken,
   };
 };
 

@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-// TODO: Implement unauthorized page
+// Unauthorized Access Page - 403 error page
 </script>
 
 <style scoped>

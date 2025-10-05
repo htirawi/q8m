@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* TODO: Legacy patterns - Replace 'any' types with proper typing and remove unused vars in next PR */
 import { ref, reactive, computed, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { usePaymentStore } from "@/stores/payment";

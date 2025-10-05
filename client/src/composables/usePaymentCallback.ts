@@ -5,7 +5,6 @@
  */
 
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
-/* TODO: Legacy patterns - Replace 'any' types with proper typing and remove unused vars in next PR */
 import { ref, computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useI18n } from "vue-i18n";
@@ -42,7 +41,7 @@ export function usePaymentCallback() {
 
   // Extract callback data from URL parameters
   const extractCallbackData = (): PaymentCallbackData => {
-    const {query} = route;
+    const { query } = route;
 
     return {
       paymentId: query.paymentId as string,
@@ -64,7 +63,7 @@ export function usePaymentCallback() {
     if (data.gateway) return data.gateway;
 
     // Detect from URL path
-    const {path} = route;
+    const { path } = route;
     if (path.includes("/paypal")) return "paypal";
     if (path.includes("/aps")) return "aps";
     if (path.includes("/hyperpay")) return "hyperpay";
@@ -245,7 +244,7 @@ export function usePaymentCallback() {
 
   // Check if current route is a payment callback
   const isPaymentCallback = computed(() => {
-    const {path} = route;
+    const { path } = route;
     return (
       path.includes("/payment/success") ||
       path.includes("/payment/error") ||
