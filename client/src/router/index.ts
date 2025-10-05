@@ -26,7 +26,6 @@ const createLocalizedRoute = (
   },
 });
 
-
 // Route definitions with lazy loading and chunk names
 const routes: RouteRecordRaw[] = [
   // Redirect root to default locale
@@ -271,7 +270,6 @@ const router = createRouter({
     return { top: 0 };
   },
 });
-
 
 // Helper function to get locale from route params
 const getLocaleFromRoute = (to: any): SupportedLocale => {
