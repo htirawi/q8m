@@ -90,10 +90,14 @@
               <section id="user-accounts" class="terms-section">
                 <h2 class="section-title">{{ $t("legal.terms.userAccounts.title") }}</h2>
                 <div class="section-content">
-                  <h3 class="subsection-title">{{ $t("legal.terms.userAccounts.registration.title") }}</h3>
+                  <h3 class="subsection-title">
+                    {{ $t("legal.terms.userAccounts.registration.title") }}
+                  </h3>
                   <p>{{ $t("legal.terms.userAccounts.registration.content") }}</p>
-                  
-                  <h3 class="subsection-title">{{ $t("legal.terms.userAccounts.responsibilities.title") }}</h3>
+
+                  <h3 class="subsection-title">
+                    {{ $t("legal.terms.userAccounts.responsibilities.title") }}
+                  </h3>
                   <ul class="terms-list">
                     <li>{{ $t("legal.terms.userAccounts.responsibilities.accurate") }}</li>
                     <li>{{ $t("legal.terms.userAccounts.responsibilities.security") }}</li>
@@ -106,13 +110,19 @@
               <section id="payment-terms" class="terms-section">
                 <h2 class="section-title">{{ $t("legal.terms.paymentTerms.title") }}</h2>
                 <div class="section-content">
-                  <h3 class="subsection-title">{{ $t("legal.terms.paymentTerms.subscription.title") }}</h3>
+                  <h3 class="subsection-title">
+                    {{ $t("legal.terms.paymentTerms.subscription.title") }}
+                  </h3>
                   <p>{{ $t("legal.terms.paymentTerms.subscription.content") }}</p>
-                  
-                  <h3 class="subsection-title">{{ $t("legal.terms.paymentTerms.billing.title") }}</h3>
+
+                  <h3 class="subsection-title">
+                    {{ $t("legal.terms.paymentTerms.billing.title") }}
+                  </h3>
                   <p>{{ $t("legal.terms.paymentTerms.billing.content") }}</p>
-                  
-                  <h3 class="subsection-title">{{ $t("legal.terms.paymentTerms.refunds.title") }}</h3>
+
+                  <h3 class="subsection-title">
+                    {{ $t("legal.terms.paymentTerms.refunds.title") }}
+                  </h3>
                   <p>{{ $t("legal.terms.paymentTerms.refunds.content") }}</p>
                 </div>
               </section>
@@ -136,10 +146,14 @@
               <section id="intellectual-property" class="terms-section">
                 <h2 class="section-title">{{ $t("legal.terms.intellectualProperty.title") }}</h2>
                 <div class="section-content">
-                  <h3 class="subsection-title">{{ $t("legal.terms.intellectualProperty.ourContent.title") }}</h3>
+                  <h3 class="subsection-title">
+                    {{ $t("legal.terms.intellectualProperty.ourContent.title") }}
+                  </h3>
                   <p>{{ $t("legal.terms.intellectualProperty.ourContent.content") }}</p>
-                  
-                  <h3 class="subsection-title">{{ $t("legal.terms.intellectualProperty.userContent.title") }}</h3>
+
+                  <h3 class="subsection-title">
+                    {{ $t("legal.terms.intellectualProperty.userContent.title") }}
+                  </h3>
                   <p>{{ $t("legal.terms.intellectualProperty.userContent.content") }}</p>
                 </div>
               </section>
@@ -195,11 +209,16 @@
                 <div class="section-content">
                   <p>{{ $t("legal.terms.contact.content") }}</p>
                   <div class="contact-info">
-                    <p><strong>{{ $t("legal.terms.contact.email") }}</strong>: support@q8m.dev</p>
-                    <p><strong>{{ $t("legal.terms.contact.address") }}</strong></p>
+                    <p>
+                      <strong>{{ $t("legal.terms.contact.email") }}</strong
+                      >: support@q8m.dev
+                    </p>
+                    <p>
+                      <strong>{{ $t("legal.terms.contact.address") }}</strong>
+                    </p>
                     <address class="address">
-                      {{ $t("legal.terms.contact.addressLine1") }}<br>
-                      {{ $t("legal.terms.contact.addressLine2") }}<br>
+                      {{ $t("legal.terms.contact.addressLine1") }}<br />
+                      {{ $t("legal.terms.contact.addressLine2") }}<br />
                       {{ $t("legal.terms.contact.country") }}
                     </address>
                   </div>
@@ -252,7 +271,7 @@ const sections = [
 
 /* Header Styles */
 .terms-header {
-  @apply bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700;
+  @apply border-b border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800;
   @apply py-8;
 }
 
@@ -261,11 +280,11 @@ const sections = [
 }
 
 .breadcrumb {
-  @apply flex items-center justify-center space-x-2 text-sm text-gray-600 dark:text-gray-400 mb-4;
+  @apply mb-4 flex items-center justify-center space-x-2 text-sm text-gray-600 dark:text-gray-400;
 }
 
 .breadcrumb-link {
-  @apply hover:text-blue-600 dark:hover:text-blue-400 transition-colors;
+  @apply transition-colors hover:text-blue-600 dark:hover:text-blue-400;
 }
 
 .breadcrumb-separator {
@@ -273,15 +292,15 @@ const sections = [
 }
 
 .breadcrumb-current {
-  @apply text-gray-900 dark:text-white font-medium;
+  @apply font-medium text-gray-900 dark:text-white;
 }
 
 .terms-title {
-  @apply text-4xl font-bold text-gray-900 dark:text-white mb-4;
+  @apply mb-4 text-4xl font-bold text-gray-900 dark:text-white;
 }
 
 .terms-subtitle {
-  @apply text-lg text-gray-600 dark:text-gray-400 mb-6 max-w-3xl mx-auto;
+  @apply mx-auto mb-6 max-w-3xl text-lg text-gray-600 dark:text-gray-400;
 }
 
 .last-updated {
@@ -289,7 +308,7 @@ const sections = [
 }
 
 .update-icon {
-  @apply w-4 h-4;
+  @apply h-4 w-4;
 }
 
 /* Content Layout */
@@ -298,7 +317,7 @@ const sections = [
 }
 
 .content-grid {
-  @apply grid grid-cols-1 lg:grid-cols-4 gap-8;
+  @apply grid grid-cols-1 gap-8 lg:grid-cols-4;
 }
 
 /* Table of Contents */
@@ -307,11 +326,11 @@ const sections = [
 }
 
 .toc-card {
-  @apply bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 sticky top-8;
+  @apply sticky top-8 rounded-lg bg-white p-6 shadow-md dark:bg-gray-800;
 }
 
 .toc-title {
-  @apply text-lg font-semibold text-gray-900 dark:text-white mb-4;
+  @apply mb-4 text-lg font-semibold text-gray-900 dark:text-white;
 }
 
 .toc-nav {
@@ -319,8 +338,8 @@ const sections = [
 }
 
 .toc-link {
-  @apply block text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400;
-  @apply transition-colors py-1;
+  @apply block text-sm text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400;
+  @apply py-1 transition-colors;
 }
 
 /* Main Content */
@@ -329,7 +348,7 @@ const sections = [
 }
 
 .terms-card {
-  @apply bg-white dark:bg-gray-800 rounded-lg shadow-md p-8;
+  @apply rounded-lg bg-white p-8 shadow-md dark:bg-gray-800;
 }
 
 .terms-section {
@@ -337,15 +356,15 @@ const sections = [
 }
 
 .section-title {
-  @apply text-2xl font-bold text-gray-900 dark:text-white mb-4;
+  @apply mb-4 text-2xl font-bold text-gray-900 dark:text-white;
 }
 
 .subsection-title {
-  @apply text-xl font-semibold text-gray-900 dark:text-white mb-3 mt-6;
+  @apply mb-3 mt-6 text-xl font-semibold text-gray-900 dark:text-white;
 }
 
 .section-content {
-  @apply text-gray-700 dark:text-gray-300 leading-relaxed;
+  @apply leading-relaxed text-gray-700 dark:text-gray-300;
 }
 
 .section-content p {
@@ -353,7 +372,7 @@ const sections = [
 }
 
 .terms-list {
-  @apply list-disc list-inside space-y-2 mb-4 ml-4;
+  @apply mb-4 ml-4 list-inside list-disc space-y-2;
 }
 
 .terms-list li {
@@ -361,7 +380,7 @@ const sections = [
 }
 
 .contact-info {
-  @apply mt-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg;
+  @apply mt-4 rounded-lg bg-gray-50 p-4 dark:bg-gray-700;
 }
 
 .contact-info p {
@@ -377,17 +396,17 @@ const sections = [
   .content-grid {
     @apply grid-cols-1;
   }
-  
+
   .toc-sidebar {
     @apply order-2;
   }
-  
+
   .terms-main {
     @apply order-1;
   }
-  
+
   .toc-card {
-    @apply sticky relative top-0;
+    @apply relative sticky top-0;
   }
 }
 
@@ -396,22 +415,22 @@ const sections = [
   .toc-sidebar {
     @apply hidden;
   }
-  
+
   .terms-main {
     @apply lg:col-span-1;
   }
-  
+
   .terms-page {
     @apply bg-white;
   }
-  
+
   .terms-header,
   .terms-content {
     @apply bg-white;
   }
-  
+
   .terms-card {
-    @apply shadow-none border border-gray-300;
+    @apply border border-gray-300 shadow-none;
   }
 }
 </style>
