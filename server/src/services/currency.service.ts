@@ -1,5 +1,5 @@
-import { FxRate } from "../models/FxRate.js";
 import { env } from "../config/env.js";
+import { FxRate } from "../models/FxRate.js";
 
 export interface CurrencyConversionResult {
   originalAmount: number;
@@ -94,7 +94,7 @@ export class CurrencyService {
       return {
         rate: fxRate.rate,
         source: "cache",
-        ageInHours: ((fxRate as any).ageInHours ?? 0) as number,
+        ageInHours: fxRate.ageInHours ?? 0,
       };
     }
 
@@ -105,7 +105,7 @@ export class CurrencyService {
       return {
         rate: fxRate.rate,
         source: "cache",
-        ageInHours: ((fxRate as any).ageInHours ?? 0) as number,
+        ageInHours: fxRate.ageInHours ?? 0,
       };
     }
 

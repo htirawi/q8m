@@ -3,7 +3,7 @@
  */
 
 import { test, expect, describe } from "vitest";
-import { logPaymentEvent, logAuthEvent, logError } from "../../src/security/logging.js";
+import { logPaymentEvent, logAuthEvent, logError } from "@server/security/logging.js";
 
 describe("Log Injection Prevention", () => {
   test("logPaymentEvent should create structured logs", () => {
@@ -102,7 +102,7 @@ describe("Log Injection Prevention", () => {
   });
 
   test("sensitive data should be masked in logs", () => {
-    const { maskEmail, maskSensitive } = require("../../src/security/logging.js");
+    const { maskEmail, maskSensitive } = require("@server/security/logging.js");
 
     const email = "john.doe@example.com";
     const maskedEmail = maskEmail(email);

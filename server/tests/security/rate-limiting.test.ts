@@ -3,7 +3,7 @@
  */
 
 import { test, expect, describe } from "vitest";
-import { buildRateLimitOptions } from "../../src/security/rateLimit.js";
+import { buildRateLimitOptions } from "@server/security/rateLimit.js";
 
 describe("Rate Limiting Integration", () => {
   test("auth routes should have rate limiting applied", async () => {

@@ -1,16 +1,18 @@
-import { FastifyInstance } from "fastify";
+import * as crypto from "crypto";
+
+import type { FastifyInstance } from "fastify";
 import { z } from "zod";
 import { zodToJsonSchema } from "zod-to-json-schema";
-import { User } from "../models/User.js";
-import { Session } from "../models/Session.js";
-import { VerificationToken } from "../models/VerificationToken.js";
-import { jwtService } from "../services/jwt.service.js";
-import { emailService } from "../services/email.service.js";
-import { secureCookieService } from "../services/secure-cookie.service.js";
+
 import { env } from "../config/env.js";
 import { authenticate } from "../middlewares/auth.middleware.js";
+import { Session } from "../models/Session.js";
+import { User } from "../models/User.js";
+import { VerificationToken } from "../models/VerificationToken.js";
 import { comboKey, ipKey } from "../security/rateLimit.js";
-import * as crypto from "crypto";
+import { emailService } from "../services/email.service.js";
+import { jwtService } from "../services/jwt.service.js";
+import { secureCookieService } from "../services/secure-cookie.service.js";
 
 // Type definitions for request bodies
 interface RegisterBody {
@@ -162,8 +164,8 @@ export default async function authRoutes(fastify: FastifyInstance) {
         await user.save();
 
         // Generate verification token
-        const verificationToken = await (VerificationToken as any).createToken(
-          (user as any)._id.toString(),
+        const verificationToken = await VerificationToken.createToken(
+          user._id,
           "email_verification",
           24 // 24 hours
         );
@@ -175,7 +177,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
         reply.status(201).send({
           message: "User registered successfully. Please check your email for verification.",
           user: {
-            id: (user as any)._id.toString(),
+            id: user._id.toString(),
             email: user.email,
             name: user.name,
             isEmailVerified: user.isEmailVerified,
@@ -183,7 +185,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
         });
       } catch (error: unknown) {
         // Error handling
-        (request.log as any).error({
+        request.log.error({
           error: error instanceof Error ? error.message : "Failed to register user",
           message: "Registration error",
         });
@@ -226,7 +228,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
         const { email, password } = request.body as LoginBody;
 
         // Find user with password
-        const user = await (User as any).findByEmailWithPassword(email);
+        const user = await User.findByEmailWithPassword(email);
         if (!user) {
           return reply.status(401).send({
             code: 401,
@@ -264,7 +266,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
 
         // Generate tokens
         const session = new Session({
-          userId: (user as any)._id,
+          userId: user._id,
           refreshToken: crypto.randomBytes(32).toString("hex"),
           accessToken: crypto.randomBytes(32).toString("hex"),
           expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
@@ -277,7 +279,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
         await session.save();
 
         // Generate JWT tokens
-        const tokenPair = jwtService.generateTokenPair(user, (session as any)._id.toString());
+        const tokenPair = jwtService.generateTokenPair(user, session._id.toString());
 
         // Set secure cookies
         secureCookieService.setSecureCookie(reply, "accessToken", tokenPair.accessToken, {
@@ -297,7 +299,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
         reply.send({
           message: "Login successful",
           user: {
-            id: (user as any)._id.toString(),
+            id: user._id.toString(),
             email: user.email,
             name: user.name,
             role: user.role,
@@ -309,7 +311,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
         });
       } catch (error: unknown) {
         // Error handling
-        (request.log as any).error({
+        request.log.error({
           error: error instanceof Error ? error.message : "Failed to login",
           message: "Login error",
         });
@@ -351,10 +353,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
       try {
         const { token } = request.body as VerifyEmailBody;
 
-        const verificationToken = await (VerificationToken as any).verifyToken(
-          token,
-          "email_verification"
-        );
+        const verificationToken = await VerificationToken.verifyToken(token, "email_verification");
         const user = await User.findById(verificationToken.userId);
 
         if (!user) {
@@ -378,7 +377,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
         reply.send({
           message: "Email verified successfully",
           user: {
-            id: (user as any)._id.toString(),
+            id: user._id.toString(),
             email: user.email,
             name: user.name,
             isEmailVerified: user.isEmailVerified,
@@ -386,7 +385,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
         });
       } catch (error: unknown) {
         // Error handling
-        (request.log as any).error({
+        request.log.error({
           error: error instanceof Error ? error.message : "Invalid verification token",
           message: "Email verification error",
         });
@@ -446,8 +445,8 @@ export default async function authRoutes(fastify: FastifyInstance) {
         }
 
         // Generate new verification token
-        const verificationToken = await (VerificationToken as any).createToken(
-          (user as any)._id.toString(),
+        const verificationToken = await VerificationToken.createToken(
+          user._id,
           "email_verification",
           24 // 24 hours
         );
@@ -461,7 +460,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
         });
       } catch (error: unknown) {
         // Error handling
-        (request.log as any).error({
+        request.log.error({
           error: error instanceof Error ? error.message : "Failed to resend verification email",
           message: "Resend verification error",
         });
@@ -511,8 +510,8 @@ export default async function authRoutes(fastify: FastifyInstance) {
         }
 
         // Generate password reset token
-        const resetToken = await (VerificationToken as any).createToken(
-          (user as any)._id.toString(),
+        const resetToken = await VerificationToken.createToken(
+          user._id,
           "password_reset",
           1 // 1 hour
         );
@@ -526,7 +525,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
         });
       } catch (error: unknown) {
         // Error handling
-        (request.log as any).error({
+        request.log.error({
           error:
             error instanceof Error ? error.message : "Failed to process password reset request",
           message: "Forgot password error",
@@ -568,7 +567,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
       try {
         const { token, password } = request.body as ResetPasswordBody;
 
-        const resetToken = await (VerificationToken as any).verifyToken(token, "password_reset");
+        const resetToken = await VerificationToken.verifyToken(token, "password_reset");
         const user = await User.findById(resetToken.userId);
 
         if (!user) {
@@ -588,7 +587,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
 
         // Invalidate all existing sessions
         await Session.updateMany(
-          { userId: (user as any)._id },
+          { userId: user._id },
           { isRevoked: true, revokedAt: new Date(), revokedReason: "password_change" }
         );
 
@@ -597,7 +596,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
         });
       } catch (error: unknown) {
         // Error handling
-        (request.log as any).error({
+        request.log.error({
           error: error instanceof Error ? error.message : "Invalid reset token",
           message: "Reset password error",
         });
@@ -639,10 +638,28 @@ export default async function authRoutes(fastify: FastifyInstance) {
     async (request, reply) => {
       try {
         const { currentPassword, newPassword } = request.body as ChangePasswordBody;
-        const user = request.authUser;
+        const { authUser } = request;
+
+        if (!authUser) {
+          return reply.status(401).send({
+            code: 401,
+            error: "Unauthorized",
+            message: "User not authenticated",
+          });
+        }
+
+        // Fetch full user document from database
+        const user = await User.findById(authUser.id).select("+password");
+        if (!user) {
+          return reply.status(404).send({
+            code: 404,
+            error: "Not Found",
+            message: "User not found",
+          });
+        }
 
         // Verify current password
-        const isCurrentPasswordValid = await (user as any).comparePassword(currentPassword);
+        const isCurrentPasswordValid = await user.comparePassword(currentPassword);
         if (!isCurrentPasswordValid) {
           return reply.status(400).send({
             code: 400,
@@ -652,12 +669,12 @@ export default async function authRoutes(fastify: FastifyInstance) {
         }
 
         // Update password
-        (user as any).password = newPassword;
-        await (user as any).save();
+        user.password = newPassword;
+        await user.save();
 
         // Invalidate all existing sessions except current one
         await Session.updateMany(
-          { userId: (user as any)._id, _id: { $ne: (request as any).sessionId } },
+          { userId: user._id, _id: { $ne: request.sessionId } },
           { isRevoked: true, revokedAt: new Date(), revokedReason: "password_change" }
         );
 
@@ -666,7 +683,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
         });
       } catch (error: unknown) {
         // Error handling
-        (request.log as any).error({
+        request.log.error({
           error: error instanceof Error ? error.message : "Failed to change password",
           message: "Change password error",
         });
@@ -703,21 +720,39 @@ export default async function authRoutes(fastify: FastifyInstance) {
     },
     async (request, reply) => {
       try {
-        const user = request.authUser;
+        const { authUser } = request;
+        if (!authUser) {
+          return reply.status(401).send({
+            code: 401,
+            error: "Unauthorized",
+            message: "User not authenticated",
+          });
+        }
+
+        // Fetch full user document to get lastLogin
+        const user = await User.findById(authUser.id);
+        if (!user) {
+          return reply.status(404).send({
+            code: 404,
+            error: "Not Found",
+            message: "User not found",
+          });
+        }
+
         reply.send({
           user: {
-            id: (user as any)._id.toString(),
-            email: user!.email,
-            name: user!.name,
-            role: user!.role,
-            entitlements: user!.entitlements,
-            isEmailVerified: user!.isEmailVerified,
-            lastLogin: (user as any).lastLogin,
+            id: authUser.id,
+            email: authUser.email,
+            name: authUser.name,
+            role: authUser.role,
+            entitlements: authUser.entitlements,
+            isEmailVerified: authUser.isEmailVerified,
+            lastLogin: user.lastLogin,
           },
         });
       } catch (error: unknown) {
         // Error handling
-        (request.log as any).error({
+        request.log.error({
           error: error instanceof Error ? error.message : "Failed to get user information",
           message: "Get user error",
         });
@@ -754,7 +789,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
     },
     async (request, reply) => {
       try {
-        const { sessionId } = request as any;
+        const { sessionId } = request;
         if (sessionId) {
           await Session.findByIdAndUpdate(sessionId, {
             isRevoked: true,
@@ -764,15 +799,15 @@ export default async function authRoutes(fastify: FastifyInstance) {
         }
 
         // Clear cookies
-        (reply as any).clearCookie("accessToken");
-        (reply as any).clearCookie("refreshToken");
+        reply.clearCookie("accessToken");
+        reply.clearCookie("refreshToken");
 
         reply.send({
           message: "Logged out successfully",
         });
       } catch (error: unknown) {
         // Error handling
-        (request.log as any).error({
+        request.log.error({
           error: error instanceof Error ? error.message : "Failed to logout",
           message: "Logout error",
         });
@@ -809,25 +844,33 @@ export default async function authRoutes(fastify: FastifyInstance) {
     },
     async (request, reply) => {
       try {
-        const user = request.authUser;
-        const currentSessionId = (request as any).sessionId;
+        const { authUser } = request;
+        const currentSessionId = request.sessionId;
+
+        if (!authUser) {
+          return reply.status(401).send({
+            code: 401,
+            error: "Unauthorized",
+            message: "User not authenticated",
+          });
+        }
 
         // Revoke all sessions except current one
         await Session.updateMany(
-          { userId: (user as any)._id, _id: { $ne: currentSessionId } },
+          { userId: authUser.id, _id: { $ne: currentSessionId } },
           { isRevoked: true, revokedAt: new Date(), revokedReason: "user_logout" }
         );
 
         // Clear cookies
-        (reply as any).clearCookie("accessToken");
-        (reply as any).clearCookie("refreshToken");
+        reply.clearCookie("accessToken");
+        reply.clearCookie("refreshToken");
 
         reply.send({
           message: "Logged out from all devices successfully",
         });
       } catch (error: unknown) {
         // Error handling
-        (request.log as any).error({
+        request.log.error({
           error: error instanceof Error ? error.message : "Failed to logout from all devices",
           message: "Logout all error",
         });
@@ -903,7 +946,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
 
         const newAccessToken = jwtService.generateTokenPair(
           user,
-          (session as any)._id.toString()
+          session._id.toString()
         ).accessToken;
 
         // Set new access token cookie
@@ -920,7 +963,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
         });
       } catch (error: unknown) {
         // Error handling
-        (request.log as any).error({
+        request.log.error({
           error: error instanceof Error ? error.message : "Invalid refresh token",
           message: "Refresh token error",
         });

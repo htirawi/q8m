@@ -1,5 +1,6 @@
-import mongoose, { Document, Schema } from "mongoose";
 import bcrypt from "bcryptjs";
+import type { Document } from "mongoose";
+import mongoose, { Schema, type ObjectId } from "mongoose";
 
 export interface IUser extends Document {
   email: string;
@@ -10,12 +11,16 @@ export interface IUser extends Document {
   permissions: string[];
   isEmailVerified: boolean;
   emailVerificationToken?: string;
-  emailVerificationExpires?: any; // Mongoose Date type
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  emailVerificationExpires?: any;
   passwordResetToken?: string;
-  passwordResetExpires?: any; // Mongoose Date type
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  passwordResetExpires?: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   lastLogin?: any;
   loginAttempts: number;
-  lockUntil?: any; // Mongoose Date type
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  lockUntil?: any;
   googleId?: string;
   facebookId?: string;
   avatar?: string;
@@ -23,11 +28,12 @@ export interface IUser extends Document {
   location?: string;
   website?: string;
   acceptTerms: boolean;
-  acceptTermsAt?: Date;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  acceptTermsAt?: any;
   acceptTermsVersion?: string;
   preferences: {
     language: "en" | "ar";
-    theme: any;
+    theme: "light" | "dark" | "auto";
     notifications: {
       email: boolean;
       quizReminders: boolean;
@@ -36,14 +42,22 @@ export interface IUser extends Document {
   };
   subscription: {
     status: "active" | "canceled" | "past_due" | "incomplete";
-    currentPeriodEnd?: Date;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    currentPeriodEnd?: any;
     cancelAtPeriodEnd: boolean;
   };
-  stats: any;
+  stats: {
+    totalQuizzes: number;
+    totalScore: number;
+    averageScore: number;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    lastQuizDate?: any;
+  };
   twoFactorEnabled: boolean;
   twoFactorSecret?: string;
   isActive: boolean;
-  deletedAt?: Date;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  deletedAt?: any;
   comparePassword(candidatePassword: string): Promise<boolean>;
   generateAuthTokens(): { accessToken: string; refreshToken: string };
 }
@@ -66,7 +80,7 @@ const userSchema = new Schema(
     },
     password: {
       type: String,
-      required(this: any) {
+      required(this: IUser) {
         return !this.googleId && !this.facebookId;
       },
       minlength: [8, "Password must be at least 8 characters"],
@@ -233,7 +247,7 @@ const userSchema = new Schema(
     timestamps: true,
     toJSON: {
       transform(_doc, ret: Record<string, unknown>) {
-        ret.id = (ret._id as any).toString();
+        ret.id = (ret._id as ObjectId).toString();
         delete ret._id;
         delete ret.__v;
         delete ret.password;
@@ -262,7 +276,7 @@ userSchema.index({ createdAt: -1 }, { name: "idx_created_at" });
 
 // Virtual for account lock status
 userSchema.virtual("isLocked").get(function () {
-  return !!(this.lockUntil && (this.lockUntil as any) > Date.now());
+  return !!(this.lockUntil && this.lockUntil > new Date());
 });
 
 // Pre-save middleware to hash password
@@ -350,11 +364,13 @@ userSchema.methods.incLoginAttempts = function () {
     });
   }
 
-  const updates: unknown = { $inc: { loginAttempts: 1 } };
+  const updates: { $inc: { loginAttempts: number }; $set?: { lockUntil: number } } = {
+    $inc: { loginAttempts: 1 },
+  };
 
   // Lock account after 5 failed attempts for 2 hours
   if (this.loginAttempts + 1 >= 5 && !this.isLocked) {
-    (updates as any).$set = { lockUntil: Date.now() + 2 * 60 * 60 * 1000 }; // 2 hours
+    updates.$set = { lockUntil: Date.now() + 2 * 60 * 60 * 1000 }; // 2 hours
   }
 
   return this.updateOne(updates);

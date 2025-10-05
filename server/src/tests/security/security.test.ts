@@ -1,6 +1,7 @@
+import type { FastifyInstance } from "fastify";
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { FastifyInstance } from "fastify";
-import { buildApp } from "../../app";
+
+import { buildApp } from "@server/app.js";
 
 describe("Security Tests", () => {
   let app: FastifyInstance;
@@ -316,7 +317,7 @@ describe("Security Tests", () => {
 
       for (const route of csrfRoutes) {
         const response = await app.inject({
-          method: route.method as any,
+          method: route.method as "GET" | "POST" | "PUT" | "DELETE",
           url: route.url,
           headers: {
             "X-Requested-With": "XMLHttpRequest", // Should be required for CSRF protection
@@ -324,7 +325,7 @@ describe("Security Tests", () => {
         });
 
         // Should require proper CSRF token
-        expect((response as any).statusCode).toBe(401);
+        expect(response.statusCode).toBe(401);
       }
     });
   });

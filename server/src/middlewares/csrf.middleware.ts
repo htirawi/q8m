@@ -1,4 +1,5 @@
-import { FastifyRequest, FastifyReply } from "fastify";
+import type { FastifyRequest, FastifyReply } from "fastify";
+
 import { secureCookieService } from "../services/secure-cookie.service.js";
 
 /**

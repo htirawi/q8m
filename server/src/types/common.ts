@@ -1,113 +1,173 @@
-// Proper type definitions to replace any types
-export interface UserPreferences {
-  theme?: 'light' | 'dark';
-  language?: string;
-  notifications?: {
-    email?: boolean;
-    push?: boolean;
-    sms?: boolean;
-  };
-  privacy?: {
-    profileVisibility?: 'public' | 'private';
-    showEmail?: boolean;
-  };
-}
+import type { Document } from "mongoose";
 
-export interface UserStats {
-  loginCount?: number;
-  lastLogin?: Date;
-  totalSessions?: number;
-  activeSessions?: number;
-  subscriptionCount?: number;
-  totalSpent?: number;
-}
-
-export interface RefundData {
-  amount: number;
-  reason: string;
-  paymentId: string;
-  userId: string;
-  timestamp: Date;
-}
-
-export interface TokenData {
-  token: string;
-  userId: string;
-  type: string;
-  expiresAt: Date;
-  createdAt: Date;
-}
-
-export interface SessionData {
-  userId: string;
-  refreshToken: string;
-  accessToken: string;
-  expiresAt: Date;
-  lastUsed: Date;
-  isRevoked?: boolean;
-  revokedAt?: Date;
-  revokedReason?: string;
-}
-
-export interface PaymentData {
-  paymentId: string;
-  userId: string;
-  amount: number;
-  currency: string;
-  status: 'pending' | 'completed' | 'failed' | 'refunded';
-  provider: string;
+// Common MongoDB document type with proper typing
+export interface MongooseDocument extends Document {
+  _id: string;
+  id: string;
   createdAt: Date;
   updatedAt: Date;
 }
 
-export interface SubscriptionData {
+// Fastify request with proper typing
+export interface AuthenticatedRequest {
+  authUser?: {
+    id: string;
+    email: string;
+    name: string;
+    role: string;
+    entitlements: string[];
+    isEmailVerified: boolean;
+  };
+  sessionId?: string;
+}
+
+// Common error response type
+export interface ErrorResponse {
+  code: number;
+  error: string;
+  message: string;
+  errorCode?: string;
+}
+
+// Common success response type
+export interface SuccessResponse<T = unknown> {
+  success: boolean;
+  data?: T;
+  message?: string;
+}
+
+// Payment gateway response types
+export interface PaymentResponse {
+  success: boolean;
+  paymentId?: string;
+  approvalUrl?: string;
+  orderId?: string;
+  error?: string;
+}
+
+// Webhook response types
+export interface WebhookResponse {
+  success: boolean;
+  error?: string;
+}
+
+// Service configuration status
+export interface ServiceStatus {
+  configured: boolean;
+  mode?: string;
+  clientId?: string | null;
+}
+
+// Common logging fields
+export interface LogFields {
+  event: string;
+  error?: string;
+  stack?: string;
+  userId?: string;
+  [key: string]: unknown;
+}
+
+// Currency conversion result
+export interface CurrencyConversion {
+  convertedAmount: number;
+  exchangeRate: number;
+  originalAmount: number;
+  originalCurrency: string;
+  targetCurrency: string;
+}
+
+// Rate limit context
+export interface RateLimitContext {
+  ttl: number;
+  max: number;
+}
+
+// JWT payload types
+export interface JWTPayload {
   userId: string;
-  planId: string;
-  status: 'active' | 'cancelled' | 'expired' | 'trial';
-  currentPeriodStart: Date;
-  currentPeriodEnd: Date;
-  trialStart?: Date;
-  trialEnd?: Date;
-  planType: string;
-  entitlements: string[];
-}
-
-export interface FxRateData {
-  from: string;
-  to: string;
-  rate: number;
-  fetchedAt: Date;
-  expiresAt: Date;
-}
-
-// Generic return types for model methods
-export type ModelMethodResult<T> = Promise<T | null>;
-export type ModelMethodArrayResult<T> = Promise<T[]>;
-export type ModelMethodVoidResult = Promise<void>;
-
-// Specific method return types
-export type UserMethodResult = ModelMethodResult<{
-  _id: string;
   email: string;
-  name: string;
   role: string;
-  entitlements: string[];
-  isEmailVerified: boolean;
-  password?: string;
-  loginAttempts?: number;
-  lockUntil?: Date;
-}>;
+  permissions?: string[];
+  sessionId: string;
+  iat?: number;
+  exp?: number;
+  iss?: string;
+  aud?: string;
+}
 
-export type TokenMethodResult = ModelMethodResult<TokenData>;
-export type SessionMethodResult = ModelMethodResult<SessionData>;
-export type PaymentMethodResult = ModelMethodResult<PaymentData>;
-export type SubscriptionMethodResult = ModelMethodResult<SubscriptionData>;
-export type FxRateMethodResult = ModelMethodResult<FxRateData>;
+export interface RefreshTokenPayload {
+  userId: string;
+  type: "refresh";
+  sessionId: string;
+  iat?: number;
+  exp?: number;
+  iss?: string;
+  aud?: string;
+}
 
-// Logger method signatures with proper types
-export interface LoggerMethods {
-  warn(message: string, ...args: unknown[]): void;
-  error(message: string, ...args: unknown[]): void;
-  info(message: string, ...args: unknown[]): void;
-  debug(message: string, ...args: unknown[]): void;
+// Mongoose query result types
+export type MongooseQueryResult<T> = T | null;
+export type MongooseQueryResults<T> = T[];
+
+// Common service response types
+export interface ServiceResponse<T = unknown> {
+  success: boolean;
+  data?: T;
+  error?: string;
+}
+
+export interface ServiceError {
+  ok: false;
+  code: string;
+}
+
+// Payment service specific types
+export interface PaymentRequest {
+  amount: number;
+  currency: "USD" | "JOD" | "SAR";
+  planType: "INTERMEDIATE" | "SENIOR" | "BUNDLE";
+  userId: string;
+  userEmail: string;
+  userName: string;
+  returnUrl: string;
+  cancelUrl: string;
+  billingAddress?: {
+    street: string;
+    city: string;
+    state: string;
+    postalCode: string;
+    country: string;
+  };
+}
+
+// Webhook data types
+export interface WebhookData {
+  event_type: string;
+  resource: unknown;
+  id: string;
+  create_time: string;
+  event_version: string;
+}
+
+// Common validation error
+export interface ValidationError {
+  field: string;
+  message: string;
+  value?: unknown;
+}
+
+// Pagination types
+export interface PaginationParams {
+  limit: number;
+  skip: number;
+}
+
+export interface PaginatedResponse<T> {
+  data: T[];
+  pagination: {
+    limit: number;
+    skip: number;
+    hasMore: boolean;
+    total?: number;
+  };
 }

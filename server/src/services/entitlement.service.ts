@@ -1,5 +1,7 @@
-import { User } from "../models/User.js";
+import type { ObjectId } from "mongoose";
+
 import { Subscription } from "../models/Subscription.js";
+import { User } from "../models/User.js";
 
 export interface EntitlementCheck {
   hasAccess: boolean;
@@ -332,11 +334,12 @@ export class EntitlementService {
     try {
       const expiringSubscriptions = await Subscription.findExpiringSoon(days);
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return expiringSubscriptions.map((sub: any) => ({
-        userId: (sub as any).userId.toString(),
-        userEmail: (sub as any).userId.email,
+        userId: (sub.userId as ObjectId).toString(),
+        userEmail: sub.userId.email,
         subscription: sub,
-        daysRemaining: (sub as any).daysRemaining,
+        daysRemaining: sub.daysRemaining,
       }));
     } catch (error) {
       console.error("Error fetching expiring subscriptions:", error);
@@ -371,10 +374,12 @@ export class EntitlementService {
 
       // Get plan distribution
       const planDistribution: Record<string, number> = {};
-      subscriptionStats.forEach((stat: unknown) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      subscriptionStats.forEach((stat: any) => {
         const activeCount =
-          (stat as any).statuses.find((s: any) => s.status === "active")?.count || 0;
-        planDistribution[(stat as any)._id] = activeCount;
+          stat.statuses.find((s: { status: string; count: number }) => s.status === "active")
+            ?.count || 0;
+        planDistribution[stat._id] = activeCount;
       });
 
       // Get active and expiring subscriptions

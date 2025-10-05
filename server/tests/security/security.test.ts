@@ -2,9 +2,9 @@
  * Security tests for XSS prevention, rate limiting, and log injection
  */
 
-import { test, expect } from "vitest";
-import { escapeHtml, sanitizeForDisplay, sanitizeRedirectUrl } from "../../src/security/escape";
-import { sanitizeForLog, safeLogFields, maskEmail, shortHash } from "../../src/security/logging";
+import { describe, test, expect } from "vitest";
+import { escapeHtml, sanitizeForDisplay, sanitizeRedirectUrl } from "@server/security/escape.js";
+import { sanitizeForLog, safeLogFields, maskEmail, shortHash } from "@server/security/logging.js";
 
 describe("XSS Prevention", () => {
   test("escapeHtml should escape dangerous characters", () => {

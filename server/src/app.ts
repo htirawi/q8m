@@ -1,52 +1,36 @@
-import Fastify from "fastify";
-import { config } from "dotenv";
 import * as crypto from "crypto";
 
-// Load environment variables
-config();
-
-// Import plugins
+import { features } from "@config/appConfig";
+import { connectDatabase } from "@config/database";
+import { env } from "@config/env";
+import cookie from "@fastify/cookie";
 import cors from "@fastify/cors";
 import helmet from "@fastify/helmet";
+import jwt from "@fastify/jwt";
+import multipart from "@fastify/multipart";
+import oauth2 from "@fastify/oauth2";
 import rateLimit from "@fastify/rate-limit";
 import swagger from "@fastify/swagger";
 import swaggerUi from "@fastify/swagger-ui";
-import multipart from "@fastify/multipart";
-import cookie from "@fastify/cookie";
-import jwt from "@fastify/jwt";
-import oauth2 from "@fastify/oauth2";
-
-// Import routes
-import authRoutes from "./routes/auth.js";
-import pricingRoutes from "./routes/pricing";
-import paymentRoutes from "./routes/payments";
-import questionRoutes from "./routes/questions";
-import adminRoutes from "./routes/admin";
-import entitlementRoutes from "./routes/entitlements";
-import seoRoutes from "./routes/seo";
-
-// Import middleware
-import { errorHandler } from "./middlewares/error.middleware";
-import { requestLogger } from "./middlewares/logger.middleware";
-import authPlugin, { createAuthMiddleware, AuthOptions } from "./middlewares/auth.middleware";
-import type { FastifyRequest, FastifyReply } from "fastify";
-
-// Import security plugins
-import rateLimitPlugin from "./security/rateLimit";
-
-// Import database
-import { connectDatabase } from "./config/database";
-
-// Import environment validation
-import { env } from "./config/env";
-import { features } from "./config/appConfig";
+import authPlugin, { createAuthMiddleware, type AuthOptions } from "@middlewares/auth.middleware";
+import { errorHandler } from "@middlewares/error.middleware";
+import { requestLogger } from "@middlewares/logger.middleware";
+import adminRoutes from "@routes/admin";
+import authRoutes from "@routes/auth";
+import entitlementRoutes from "@routes/entitlements";
+import paymentRoutes from "@routes/payments";
+import pricingRoutes from "@routes/pricing";
+import questionRoutes from "@routes/questions";
+import seoRoutes from "@routes/seo";
+import rateLimitPlugin from "@server/security/rateLimit";
+import Fastify, { type FastifyRequest, type FastifyReply } from "fastify";
 
 // Create Fastify instance
 const fastify = Fastify({
   logger: {
-    level: process.env.LOG_LEVEL || "info",
+    level: env.LOG_LEVEL,
     transport:
-      process.env.NODE_ENV === "development"
+      env.NODE_ENV === "development"
         ? {
             target: "pino-pretty",
             options: {
@@ -67,7 +51,7 @@ const fastify = Fastify({
       remove: true,
     },
   },
-  trustProxy: process.env.RATE_LIMIT_TRUST_PROXY === "true",
+  trustProxy: env.RATE_LIMIT_TRUST_PROXY === "true",
   requestIdHeader: "x-request-id",
   requestIdLogLabel: "reqId",
   genReqId: () => crypto.randomUUID(),
@@ -83,11 +67,11 @@ fastify.addHook("onRequest", requestLogger);
 
 // Register response logger
 fastify.addHook("onSend", async (request, reply, payload) => {
-  const { startTime } = request as { startTime?: number };
+  const { startTime } = request as FastifyRequest & { startTime?: number };
   if (startTime) {
     const responseTime = Date.now() - startTime;
     const { log, method, url } = request;
-    (log as any).info({
+    log.info({
       type: "response",
       method,
       url,
@@ -103,8 +87,8 @@ fastify.addHook("onSend", async (request, reply, payload) => {
 async function registerPlugins() {
   // CORS
   await fastify.register(cors, {
-    origin: process.env.CORS_ORIGIN?.split(",") || true,
-    credentials: process.env.CORS_CREDENTIALS === "true",
+    origin: env.CORS_ORIGIN?.split(",") || true,
+    credentials: env.CORS_CREDENTIALS === "true",
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
   });
@@ -137,7 +121,7 @@ async function registerPlugins() {
     secret: env.JWT_SECRET,
     parseOptions: {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: env.NODE_ENV === "production",
       sameSite: "strict",
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     },
@@ -147,10 +131,10 @@ async function registerPlugins() {
   await fastify.register(jwt, {
     secret: env.JWT_SECRET,
     sign: {
-      expiresIn: process.env.JWT_EXPIRES_IN || "15m",
+      expiresIn: env.JWT_EXPIRES_IN,
     },
     verify: {
-      maxAge: process.env.JWT_EXPIRES_IN || "15m",
+      maxAge: env.JWT_EXPIRES_IN,
     },
   });
 
@@ -159,8 +143,8 @@ async function registerPlugins() {
     name: "googleOAuth2",
     credentials: {
       client: {
-        id: process.env.GOOGLE_CLIENT_ID!,
-        secret: process.env.GOOGLE_CLIENT_SECRET!,
+        id: env.GOOGLE_CLIENT_ID,
+        secret: env.GOOGLE_CLIENT_SECRET,
       },
       auth: {
         authorizeHost: "https://accounts.google.com",
@@ -170,7 +154,7 @@ async function registerPlugins() {
       },
     },
     startRedirectPath: "/auth/google",
-    callbackUri: `${process.env.API_BASE_URL}/auth/google/callback`,
+    callbackUri: `${env.API_BASE_URL}/auth/google/callback`,
     scope: ["profile", "email"],
   });
 
@@ -178,8 +162,8 @@ async function registerPlugins() {
     name: "facebookOAuth2",
     credentials: {
       client: {
-        id: process.env.FACEBOOK_APP_ID!,
-        secret: process.env.FACEBOOK_APP_SECRET!,
+        id: env.FACEBOOK_APP_ID,
+        secret: env.FACEBOOK_APP_SECRET,
       },
       auth: {
         authorizeHost: "https://www.facebook.com",
@@ -189,14 +173,14 @@ async function registerPlugins() {
       },
     },
     startRedirectPath: "/auth/facebook",
-    callbackUri: `${process.env.API_BASE_URL}/auth/facebook/callback`,
+    callbackUri: `${env.API_BASE_URL}/auth/facebook/callback`,
     scope: ["email", "public_profile"],
   });
 
   // Multipart (for file uploads)
   await fastify.register(multipart, {
     limits: {
-      fileSize: parseInt(process.env.MAX_FILE_SIZE || "10485760"), // 10MB
+      fileSize: parseInt(env.MAX_FILE_SIZE), // 10MB
     },
   });
 
@@ -244,13 +228,13 @@ async function registerPlugins() {
   );
 
   // Swagger documentation
-  if (process.env.NODE_ENV === "development") {
+  if (env.NODE_ENV === "development") {
     await fastify.register(swagger, {
       swagger: {
         info: {
           title: "Quiz Platform API",
           description: "API documentation for Quiz Platform",
-          version: "1.0.0",
+          version: env.npm_package_version || "1.0.0",
         },
         host: "localhost:3000",
         schemes: ["http"],
@@ -287,8 +271,8 @@ async function registerRoutes() {
       status: "ok",
       timestamp: new Date().toISOString(),
       uptime: process.uptime(),
-      environment: process.env.NODE_ENV,
-      version: process.env.npm_package_version || "1.0.0",
+      environment: env.NODE_ENV,
+      version: env.npm_package_version || "1.0.0",
     };
   });
 
@@ -315,18 +299,18 @@ async function start() {
     await registerRoutes();
 
     // Start server
-    const port = parseInt(process.env.PORT || "3000");
-    const host = process.env.HOST || "0.0.0.0";
+    const port = env.PORT;
+    const host = env.HOST;
 
     await fastify.listen({ port, host });
 
-    (fastify.log as any).info(`Server listening on http://${host}:${port}`);
-    (fastify.log as any).info(`Environment: ${process.env.NODE_ENV}`);
-    (fastify.log as any).info(`API Documentation: http://${host}:${port}/docs`);
+    fastify.log.info(`Server listening on http://${host}:${port}`);
+    fastify.log.info(`Environment: ${env.NODE_ENV}`);
+    fastify.log.info(`API Documentation: http://${host}:${port}/docs`);
 
     // Graceful shutdown
     const gracefulShutdown = async (signal: string) => {
-      (fastify.log as any).info(`Received ${signal}, shutting down gracefully...`);
+      fastify.log.info(`Received ${signal}, shutting down gracefully...`);
       await fastify.close();
       process.exit(0);
     };
@@ -334,19 +318,19 @@ async function start() {
     process.on("SIGTERM", () => gracefulShutdown("SIGTERM"));
     process.on("SIGINT", () => gracefulShutdown("SIGINT"));
   } catch (error) {
-    (fastify.log as any).error(error);
+    fastify.log.error(error);
     process.exit(1);
   }
 }
 
 // Handle uncaught exceptions
 process.on("uncaughtException", (error) => {
-  (fastify.log as any).error(error);
+  console.error("Uncaught Exception:", error);
   process.exit(1);
 });
 
 process.on("unhandledRejection", (reason, _promise) => {
-  (fastify.log as any).error(reason);
+  console.error("Unhandled Rejection:", reason);
   process.exit(1);
 });
 
@@ -354,7 +338,85 @@ process.on("unhandledRejection", (reason, _promise) => {
 start();
 
 export const buildApp = async () => {
-  return fastify;
+  // Create a new Fastify instance for testing
+  const testApp = Fastify({
+    logger: false, // Disable logging in tests
+    trustProxy: env.RATE_LIMIT_TRUST_PROXY === "true",
+  });
+
+  // Register plugins for test app
+  await testApp.register(helmet, {
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        scriptSrc: ["'self'"],
+        imgSrc: ["'self'", "data:", "https:"],
+      },
+    },
+  });
+
+  await testApp.register(cors, {
+    origin: env.CORS_ORIGIN?.split(",") || [env.CLIENT_URL],
+    credentials: env.CORS_CREDENTIALS === "true",
+  });
+
+  await testApp.register(cookie, {
+    secret: env.CSRF_SECRET,
+  });
+
+  await testApp.register(jwt, {
+    secret: env.JWT_SECRET,
+  });
+
+  await testApp.register(oauth2, {
+    name: "googleOAuth2",
+    credentials: {
+      client: {
+        id: env.GOOGLE_CLIENT_ID,
+        secret: env.GOOGLE_CLIENT_SECRET,
+      },
+      auth: oauth2.GOOGLE_CONFIGURATION,
+    },
+    startRedirectPath: "/auth/google",
+    callbackUri: `${env.SERVER_URL}/auth/google/callback`,
+  });
+
+  await testApp.register(oauth2, {
+    name: "facebookOAuth2",
+    credentials: {
+      client: {
+        id: env.FACEBOOK_APP_ID,
+        secret: env.FACEBOOK_APP_SECRET,
+      },
+      auth: oauth2.FACEBOOK_CONFIGURATION,
+    },
+    startRedirectPath: "/auth/facebook",
+    callbackUri: `${env.SERVER_URL}/auth/facebook/callback`,
+  });
+
+  await testApp.register(multipart, {
+    limits: {
+      fileSize: parseInt(env.MAX_FILE_SIZE),
+    },
+  });
+
+  // Register middleware
+  await testApp.register(requestLogger);
+  await testApp.register(errorHandler);
+  await testApp.register(authPlugin);
+  await testApp.register(rateLimitPlugin);
+
+  // Register routes
+  await testApp.register(authRoutes, { prefix: "/api/auth" });
+  await testApp.register(pricingRoutes, { prefix: "/api/pricing" });
+  await testApp.register(paymentRoutes, { prefix: "/api/payments" });
+  await testApp.register(questionRoutes, { prefix: "/api/questions" });
+  await testApp.register(adminRoutes, { prefix: "/api/admin" });
+  await testApp.register(entitlementRoutes, { prefix: "/api/entitlements" });
+  await testApp.register(seoRoutes);
+
+  return testApp;
 };
 
 export default fastify;

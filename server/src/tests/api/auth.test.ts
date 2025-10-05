@@ -1,6 +1,7 @@
+import type { FastifyInstance } from "fastify";
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { FastifyInstance } from "fastify";
-import { buildApp } from "../../app";
+
+import { buildApp } from "@server/app.js";
 
 describe("Authentication API", () => {
   let app: FastifyInstance;

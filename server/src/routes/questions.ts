@@ -1,6 +1,7 @@
 import type { FastifyInstance } from "fastify";
 import { z } from "zod";
 import { zodToJsonSchema } from "zod-to-json-schema";
+
 import { authenticate } from "../middlewares/auth.middleware.js";
 import { Question } from "../models/Question.js";
 

@@ -1,6 +1,4 @@
-import { loadEnv } from "./env";
-
-export const env = loadEnv();
+import { env } from "./env";
 
 export const features = {
   paypal: Boolean(env.PAYPAL_CLIENT_ID && env.PAYPAL_CLIENT_SECRET),

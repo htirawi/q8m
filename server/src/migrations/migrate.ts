@@ -14,6 +14,7 @@
  */
 
 import { connect } from "mongoose";
+
 import { migrate001 } from "./001_update_user_schema.js";
 import { migrate002 } from "./002_seed_questions.js";
 

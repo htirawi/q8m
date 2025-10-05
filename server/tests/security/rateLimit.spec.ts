@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import Fastify from "fastify";
-import rateLimitPlugin from "../../src/security/rateLimit.js";
+import rateLimitPlugin from "@server/security/rateLimit.js";
 
 // Mock Redis for testing
 vi.mock("@fastify/redis", () => ({
@@ -39,6 +39,11 @@ describe("Rate Limiting Security Plugin", () => {
 
     // Wait for plugin to be ready and decorators to be applied
     await fastify.ready();
+
+    // Verify decorators are available
+    if (!fastify.rateLimitFor) {
+      throw new Error("rateLimitFor decorator not registered");
+    }
 
     // Add a test route for rate limiting
     fastify.post(

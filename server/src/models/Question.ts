@@ -1,4 +1,5 @@
-import { Schema, model, Document } from "mongoose";
+import type { Document, ObjectId } from "mongoose";
+import { Schema, model } from "mongoose";
 
 export interface IQuestion extends Document {
   framework: "angular" | "vue" | "nextjs" | "redux";
@@ -100,7 +101,7 @@ const questionSchema = new Schema(
     timestamps: true,
     toJSON: {
       transform(_doc, ret: Record<string, unknown>) {
-        ret.id = (ret._id as any).toString();
+        ret.id = (ret._id as ObjectId).toString();
         delete ret._id;
         delete ret.__v;
         return ret;
