@@ -402,8 +402,8 @@ export const buildApp = async () => {
   });
 
   // Register middleware
-  await testApp.register(requestLogger);
-  await testApp.register(errorHandler);
+  testApp.addHook("onRequest", requestLogger);
+  testApp.setErrorHandler(errorHandler);
   await testApp.register(authPlugin);
   await testApp.register(rateLimitPlugin);
 
