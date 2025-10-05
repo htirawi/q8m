@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 import { connect } from "mongoose";
 
 /**

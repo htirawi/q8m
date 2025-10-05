@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 import { Question } from "../models/Question.js";
 
 /**

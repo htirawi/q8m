@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+/* eslint-disable no-console */
+
 /**
  * Migration Runner
  *
@@ -127,7 +129,7 @@ async function runSingleMigration(version: string): Promise<void> {
 const args = process.argv.slice(2);
 const command = args[0];
 
-if (command && command.startsWith("00")) {
+if (command?.startsWith("00")) {
   // Run specific migration
   runSingleMigration(command);
 } else {
