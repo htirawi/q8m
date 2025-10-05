@@ -4,15 +4,15 @@
  * Comprehensive tests for payment processing, webhooks, and entitlements
  */
 
-import type { FastifyInstance } from "fastify";
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
 
-import { buildApp } from "@server/app.js";
 import { Purchase } from "@models/Purchase.js";
 import { Subscription } from "@models/Subscription.js";
 import { User, type IUser } from "@models/User.js";
+import { buildApp } from "@server/app.js";
 import { entitlementService } from "@services/entitlement.service.js";
 import { mockPaymentService } from "@services/mock-payment.service.js";
+import type { FastifyInstance } from "fastify";
+import { describe, it, expect, beforeEach, afterEach } from "vitest";
 
 describe("Payment System", () => {
   let app: FastifyInstance;

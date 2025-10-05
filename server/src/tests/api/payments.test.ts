@@ -1,7 +1,7 @@
+import { buildApp } from "@server/app.js";
 import type { FastifyInstance } from "fastify";
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 
-import { buildApp } from "@server/app.js";
 
 describe("Payments API", () => {
   let app: FastifyInstance;
