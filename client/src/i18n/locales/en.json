@@ -267,7 +267,8 @@
   "legal": {
     "breadcrumb": {
       "home": "Home",
-      "privacy": "Privacy Policy"
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Service"
     },
     "privacy": {
       "title": "Privacy Policy",
@@ -350,6 +351,125 @@
         "subtitle": "Join thousands of developers who have mastered frontend interviews with q8m.",
         "getStarted": "Get Started Free",
         "contact": "Contact Support"
+      }
+    },
+    "terms": {
+      "title": "Terms of Service",
+      "subtitle": "Please read these terms carefully before using our platform. By using q8m, you agree to be bound by these terms.",
+      "lastUpdated": "Last updated",
+      "toc": {
+        "title": "Table of Contents",
+        "introduction": "Introduction",
+        "acceptance": "Acceptance of Terms",
+        "serviceDescription": "Service Description",
+        "userAccounts": "User Accounts",
+        "paymentTerms": "Payment Terms",
+        "prohibitedUses": "Prohibited Uses",
+        "intellectualProperty": "Intellectual Property",
+        "termination": "Termination",
+        "disclaimers": "Disclaimers",
+        "limitationLiability": "Limitation of Liability",
+        "governingLaw": "Governing Law",
+        "changesTerms": "Changes to Terms",
+        "contact": "Contact Information"
+      },
+      "introduction": {
+        "title": "Introduction",
+        "content": "Welcome to q8m, a professional platform for frontend development interview preparation. These Terms of Service (\"Terms\") govern your use of our website and services."
+      },
+      "acceptance": {
+        "title": "Acceptance of Terms",
+        "content": "By accessing or using our platform, you agree to be bound by these Terms and our Privacy Policy. If you do not agree to these Terms, please do not use our services."
+      },
+      "serviceDescription": {
+        "title": "Service Description",
+        "content": "q8m provides interview preparation services including:",
+        "features": {
+          "interview": "Interactive coding challenges and interview questions",
+          "practice": "Practice sessions with real-time feedback",
+          "analytics": "Performance analytics and progress tracking",
+          "support": "Educational content and expert support"
+        }
+      },
+      "userAccounts": {
+        "title": "User Accounts",
+        "registration": {
+          "title": "Account Registration",
+          "content": "To access certain features, you must create an account. You are responsible for maintaining the confidentiality of your account information."
+        },
+        "responsibilities": {
+          "title": "User Responsibilities",
+          "accurate": "Provide accurate and complete information",
+          "security": "Maintain the security of your account credentials",
+          "activity": "Take responsibility for all activities under your account"
+        }
+      },
+      "paymentTerms": {
+        "title": "Payment Terms",
+        "subscription": {
+          "title": "Subscription Services",
+          "content": "Certain features require a paid subscription. Subscription fees are billed in advance and are non-refundable except as required by law."
+        },
+        "billing": {
+          "title": "Billing and Renewal",
+          "content": "Subscriptions automatically renew unless cancelled before the renewal date. You can cancel your subscription at any time through your account settings."
+        },
+        "refunds": {
+          "title": "Refund Policy",
+          "content": "We offer refunds within 30 days of purchase for first-time subscribers. Refund requests must be made through our support team."
+        }
+      },
+      "prohibitedUses": {
+        "title": "Prohibited Uses",
+        "content": "You agree not to use our platform for any unlawful or prohibited purposes, including:",
+        "illegal": "Any illegal activities or violations of applicable laws",
+        "harassment": "Harassment, abuse, or harmful behavior toward other users",
+        "security": "Attempting to breach security measures or access restricted areas",
+        "unauthorized": "Unauthorized access to accounts or systems",
+        "automation": "Use of automated tools to access or scrape our platform"
+      },
+      "intellectualProperty": {
+        "title": "Intellectual Property",
+        "ourContent": {
+          "title": "Our Content",
+          "content": "All content on our platform, including questions, explanations, and materials, is protected by copyright and other intellectual property laws."
+        },
+        "userContent": {
+          "title": "User-Generated Content",
+          "content": "You retain ownership of content you create, but grant us a license to use it for providing our services."
+        }
+      },
+      "termination": {
+        "title": "Termination",
+        "content": "We may terminate or suspend your account immediately, without prior notice, for:",
+        "violation": "Violation of these Terms",
+        "fraud": "Fraudulent or illegal activity",
+        "discontinuation": "Discontinuation of our services"
+      },
+      "disclaimers": {
+        "title": "Disclaimers",
+        "content": "Our services are provided \"as is\" without warranties of any kind. We do not guarantee job placement or interview success."
+      },
+      "limitationLiability": {
+        "title": "Limitation of Liability",
+        "content": "To the maximum extent permitted by law, we shall not be liable for any indirect, incidental, or consequential damages arising from your use of our services."
+      },
+      "governingLaw": {
+        "title": "Governing Law",
+        "content": "These Terms are governed by the laws of Jordan, without regard to conflict of law principles."
+      },
+      "changesTerms": {
+        "title": "Changes to Terms",
+        "content": "We reserve the right to modify these Terms at any time. Continued use of our services after changes constitutes acceptance of the new Terms."
+      },
+      "contact": {
+        "title": "Contact Information",
+        "content": "If you have questions about these Terms, please contact us:",
+        "email": "Email",
+        "address": "Address",
+        "addressLine1": "q8m Development Team",
+        "addressLine2": "Amman, Jordan",
+        "country": "Jordan"
       }
     }
   },

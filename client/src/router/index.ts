@@ -60,6 +60,14 @@ const routes: RouteRecordRaw[] = [
     path: "/admin",
     redirect: () => `/${DEFAULT_LOCALE}/admin`,
   },
+  {
+    path: "/privacy",
+    redirect: () => `/${DEFAULT_LOCALE}/privacy`,
+  },
+  {
+    path: "/terms",
+    redirect: () => `/${DEFAULT_LOCALE}/terms`,
+  },
 
   // Localized routes
   createLocalizedRoute(
@@ -204,6 +212,20 @@ const routes: RouteRecordRaw[] = [
       layout: "default",
     },
     "privacy"
+  ),
+  createLocalizedRoute(
+    "/terms",
+    () =>
+      import(
+        /* webpackChunkName: "legal" */
+        "@/features/legal/pages/TermsPage.vue"
+      ),
+    {
+      title: "Terms of Service - q8m",
+      description: "Terms of Service - q8m",
+      layout: "default",
+    },
+    "terms"
   ),
 
   // Catch-all for localized routes (404)
