@@ -1,5 +1,12 @@
 import type { FastifyRequest, FastifyReply } from "fastify";
 
+// Extend FastifyRequest to include startTime
+declare module "fastify" {
+  interface FastifyRequest {
+    startTime?: number;
+  }
+}
+
 export const requestLogger = async (request: FastifyRequest, _reply: FastifyReply) => {
   const startTime = Date.now();
 
@@ -18,5 +25,5 @@ export const requestLogger = async (request: FastifyRequest, _reply: FastifyRepl
   });
 
   // Store start time on request for response logging
-  (request as any).startTime = startTime;
+  request.startTime = startTime;
 };

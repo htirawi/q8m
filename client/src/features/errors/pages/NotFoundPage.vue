@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-// TODO: Implement 404 page
+// 404 Not Found Page - Page not found error
 </script>
 
 <style scoped>

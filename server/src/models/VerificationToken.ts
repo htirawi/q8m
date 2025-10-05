@@ -1,15 +1,21 @@
-import mongoose, { Document, Schema } from "mongoose";
 import * as crypto from "crypto";
+
+import type { Document, ObjectId } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 export interface IVerificationToken extends Document {
   userId: mongoose.Types.ObjectId;
   token: string;
   type: "email_verification" | "password_reset" | "two_factor";
-  expiresAt: any; // Mongoose Date type
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  expiresAt: any;
   used: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   usedAt?: any;
   ipAddress?: string;
   userAgent?: string;
+  isValid(): boolean;
+  markAsUsed(ipAddress?: string, userAgent?: string): Promise<IVerificationToken>;
 }
 
 const verificationTokenSchema = new Schema(
@@ -53,7 +59,7 @@ const verificationTokenSchema = new Schema(
     timestamps: true,
     toJSON: {
       transform(_doc, ret: Record<string, unknown>) {
-        ret.id = (ret._id as any).toString();
+        ret.id = (ret._id as ObjectId).toString();
         delete ret._id;
         delete ret.__v;
         delete ret.token; // Don't expose the actual token
@@ -71,12 +77,16 @@ verificationTokenSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0, name: "
 verificationTokenSchema.index({ used: 1, createdAt: -1 }, { name: "idx_used_created" });
 
 // Virtual for token validity
-verificationTokenSchema.virtual("isValid").get(function () {
-  return !(this as any).used && (this as any).expiresAt > new Date();
+verificationTokenSchema.virtual("isValid").get(function (this: IVerificationToken) {
+  return !this.used && this.expiresAt > new Date();
 });
 
 // Instance method to mark token as used
-verificationTokenSchema.methods.markAsUsed = function (ipAddress?: string, userAgent?: string) {
+verificationTokenSchema.methods.markAsUsed = function (
+  this: IVerificationToken,
+  ipAddress?: string,
+  userAgent?: string
+) {
   this.used = true;
   this.usedAt = new Date();
   if (ipAddress) this.ipAddress = ipAddress;
@@ -147,14 +157,14 @@ verificationTokenSchema.statics.getActiveTokensForUser = function (
   userId: mongoose.Types.ObjectId,
   type?: "email_verification" | "password_reset" | "two_factor"
 ) {
-  const query: unknown = {
+  const query: Record<string, unknown> = {
     userId,
     used: false,
     expiresAt: { $gt: new Date() },
   };
 
   if (type) {
-    (query as any).type = type;
+    query.type = type;
   }
 
   return this.find(query).select("type expiresAt createdAt");

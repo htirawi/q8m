@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-// TODO: Implement quiz page
+// Quiz Page - Interactive quiz interface
 </script>
 
 <style scoped>

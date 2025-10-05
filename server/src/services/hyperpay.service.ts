@@ -1,11 +1,14 @@
+import type { Plan } from "@shared/types/pricing";
+
 import { features } from "../config/appConfig.js";
-import { Purchase, IPurchase } from "../models/Purchase.js";
+import type { IPurchase } from "../models/Purchase.js";
+import { Purchase } from "../models/Purchase.js";
 import { Subscription } from "../models/Subscription.js";
-import { entitlementService } from "./entitlement.service.js";
-import { pricingService } from "./pricing.service.js";
-import { Plan } from "@shared/types/pricing";
 import { User } from "../models/User.js";
 import { logPaymentEvent, safeLogFields } from "../security/logging.js";
+
+import { entitlementService } from "./entitlement.service.js";
+import { pricingService } from "./pricing.service.js";
 
 interface HyperPayPaymentRequest {
   planType: Plan;
@@ -29,7 +32,7 @@ interface HyperPayPaymentResponse {
   error?: string;
 }
 
-interface HyperPayWebhookData {
+export interface HyperPayWebhookData {
   id: string;
   entity: {
     id: string;
@@ -186,7 +189,8 @@ export class HyperPayService {
           planType: request.planType,
           billingCycle: request.billingCycle,
           userId: request.userId,
-          purchaseId: purchase._id.toString(),
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          purchaseId: (purchase._id as any).toString(),
         },
         return_url: request.returnUrl,
         cancel_url: request.cancelUrl,
@@ -241,7 +245,8 @@ export class HyperPayService {
         safeLogFields({
           event: "hyperpay_payment_creation_error",
           error: error instanceof Error ? error.message : "Unknown error",
-          purchaseId: purchase._id.toString(),
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          purchaseId: (purchase._id as any).toString(),
         })
       );
       await purchase.markAsFailed(
@@ -385,7 +390,8 @@ export class HyperPayService {
             console.warn(
               safeLogFields({
                 event: "hyperpay_purchase_completed",
-                purchaseId: purchase._id.toString(),
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                purchaseId: (purchase._id as any).toString(),
                 method: "webhook",
               })
             );
@@ -399,7 +405,8 @@ export class HyperPayService {
             console.warn(
               safeLogFields({
                 event: "hyperpay_purchase_failed",
-                purchaseId: purchase._id.toString(),
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                purchaseId: (purchase._id as any).toString(),
                 method: "webhook",
                 eventType: event,
                 status: entity.status,
@@ -413,7 +420,8 @@ export class HyperPayService {
           console.warn(
             safeLogFields({
               event: "hyperpay_purchase_refunded",
-              purchaseId: purchase._id.toString(),
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              purchaseId: (purchase._id as any).toString(),
               method: "webhook",
             })
           );
@@ -534,7 +542,8 @@ export class HyperPayService {
       console.error(
         safeLogFields({
           event: "hyperpay_user_not_found",
-          userId: (purchase.userId as any).toString(),
+          userId: purchase.userId.toString(),
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           purchaseId: (purchase._id as any).toString(),
         })
       );

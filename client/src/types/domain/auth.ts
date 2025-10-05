@@ -13,7 +13,7 @@ export type {
   LoginCredentials,
   RegisterData,
   AuthResponse,
-} from "@shared/types/auth";
+} from "../../../../shared/types/auth";
 
 /**
  * Authentication tokens for client-side state management

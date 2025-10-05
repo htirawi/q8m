@@ -1,6 +1,7 @@
 import "fastify";
 import type { FastifyReply, FastifyRequest } from "fastify";
-import { AuthOptions } from "../middlewares/auth.middleware";
+
+import type { AuthOptions } from "../middlewares/auth.middleware";
 
 declare module "fastify" {
   interface FastifyInstance {

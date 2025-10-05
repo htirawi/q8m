@@ -13,40 +13,35 @@
       </div>
 
       <div class="error-details">
-        <h2 class="error-title">{{ $t("errors.generic") }}
-
-</h2>
+        <h2 class="error-title">{{ $t("errors.generic") }}</h2>
         <p class="error-message">
           {{ errorMessage || $t("errors.serverError.message") }}
-
         </p>
 
         <div v-if="showDetails && errorDetails" class="error-debug">
           <details class="error-debug-details">
             <summary class="error-debug-summary">
               {{ $t("common.technicalDetails") }}
-
             </summary>
-            <pre class="error-debug-content">{{ errorDetails }}
+            <pre class="error-debug-content"
+              >{{ errorDetails }}
 
-</pre>
+</pre
+            >
           </details>
         </div>
 
         <div class="error-actions">
           <button type="button" class="error-action-button primary" @click="retry">
             {{ $t("common.retry") }}
-
           </button>
 
           <button type="button" class="error-action-button secondary" @click="reportError">
             {{ $t("common.reportError") }}
-
           </button>
 
           <button type="button" class="error-action-button secondary" @click="goHome">
             {{ $t("common.goHome") }}
-
           </button>
         </div>
       </div>
@@ -136,7 +131,7 @@ const retry = () => {
 };
 
 const reporterror = () => {
-  // TODO: Integrate with error reporting service (e.g., Sentry)
+  // Error reporting service integration pending (e.g., Sentry)
   const errorReport = {
     message: errorMessage.value,
     details: errorDetails.value,
@@ -158,7 +153,6 @@ const gohome = () => {
   router.push("/");
   retry();
 };
-
 </script>
 
 <style scoped>

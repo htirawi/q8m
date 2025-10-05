@@ -1,10 +1,12 @@
-import mongoose, { Document, Schema } from "mongoose";
+import type { Document, ObjectId } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 export interface ISession extends Document {
   userId: mongoose.Types.ObjectId;
   refreshToken: string;
   accessToken: string;
-  expiresAt: any; // Mongoose Date type
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  expiresAt: any;
   userAgent?: string;
   ipAddress?: string;
   device?: {
@@ -18,8 +20,10 @@ export interface ISession extends Document {
     timezone?: string;
   };
   isActive: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   lastUsed: any;
   isRevoked: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   revokedAt?: any;
   revokedReason?:
     | "user_logout"
@@ -98,7 +102,7 @@ const sessionSchema = new Schema(
     timestamps: true,
     toJSON: {
       transform(_doc, ret: Record<string, unknown>) {
-        ret.id = (ret._id as any).toString();
+        ret.id = (ret._id as ObjectId).toString();
         delete ret._id;
         delete ret.__v;
         delete ret.refreshToken; // Don't expose refresh token
@@ -118,18 +122,26 @@ sessionSchema.index({ isActive: 1, isRevoked: 1 }, { name: "idx_active_revoked" 
 sessionSchema.index({ lastUsed: -1 }, { name: "idx_last_used" });
 
 // Virtual for session validity
-sessionSchema.virtual("isValid").get(function () {
-  return this.isActive && !this.isRevoked && (this.expiresAt as any) > new Date();
+sessionSchema.virtual("isValid").get(function (this: ISession) {
+  return this.isActive && !this.isRevoked && this.expiresAt > new Date();
 });
 
 // Instance method to refresh session
-sessionSchema.methods.refresh = async function () {
+sessionSchema.methods.refresh = async function (this: ISession) {
   this.lastUsed = new Date();
   return this.save();
 };
 
 // Instance method to revoke session
-sessionSchema.methods.revoke = async function (reason: string = "user_logout") {
+sessionSchema.methods.revoke = async function (
+  this: ISession,
+  reason:
+    | "user_logout"
+    | "password_change"
+    | "suspicious_activity"
+    | "admin_revoke"
+    | "expired" = "user_logout"
+) {
   this.isActive = false;
   this.isRevoked = true;
   this.revokedAt = new Date();
@@ -186,9 +198,9 @@ sessionSchema.statics.findActiveByAccessToken = function (accessToken: string) {
 };
 
 // Pre-save middleware to update lastUsed
-sessionSchema.pre("save", function (next) {
+sessionSchema.pre("save", function (this: ISession, next) {
   if (this.isModified() && !this.isNew) {
-    (this as any).lastUsed = new Date();
+    this.lastUsed = new Date();
   }
   next();
 });

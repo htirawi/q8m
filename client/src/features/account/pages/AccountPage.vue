@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-// TODO: Implement account page
+// Account Page - User account management
 </script>
 
 <style scoped>

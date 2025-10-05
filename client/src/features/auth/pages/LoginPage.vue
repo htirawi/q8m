@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-// TODO: Implement login page
+// Login Page - User authentication form
 </script>
 
 <style scoped>

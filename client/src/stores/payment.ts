@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* TODO: Legacy patterns - Replace 'any' types with proper typing and remove unused vars in next PR */
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 import { useErrorHandler } from "@/composables/useErrorHandler";

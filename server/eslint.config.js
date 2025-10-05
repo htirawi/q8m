@@ -3,17 +3,11 @@ import prettier from "eslint-config-prettier";
 import globals from "globals";
 import typescript from "@typescript-eslint/eslint-plugin";
 import typescriptParser from "@typescript-eslint/parser";
+import importPlugin from "eslint-plugin-import";
 
 export default [
   {
-    ignores: [
-      "dist/**",
-      "coverage/**",
-      "node_modules/**",
-      "*.config.js",
-      "*.config.ts",
-      "src/routes/downloads.ts", // TODO: Fix parsing error
-    ],
+    ignores: ["dist/**", "coverage/**", "node_modules/**", "*.config.js", "*.config.ts"],
   },
   // TypeScript files only
   {
@@ -33,6 +27,7 @@ export default [
     },
     plugins: {
       "@typescript-eslint": typescript,
+      import: importPlugin,
     },
     rules: {
       ...js.configs.recommended.rules,
@@ -44,11 +39,14 @@ export default [
         "error",
         { argsIgnorePattern: "^_", caughtErrorsIgnorePattern: "^_", ignoreRestSiblings: false },
       ],
-      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-explicit-any": "error",
       "@typescript-eslint/explicit-function-return-type": "off",
       "@typescript-eslint/explicit-module-boundary-types": "off",
       "@typescript-eslint/no-require-imports": "warn",
       "@typescript-eslint/prefer-optional-chain": "error",
+      "@typescript-eslint/consistent-type-imports": "error",
+      "import/no-relative-parent-imports": "error",
+      "import/order": ["error", { "newlines-between": "always", alphabetize: { order: "asc" } }],
       "no-case-declarations": "warn",
 
       // Best practices

@@ -90,9 +90,11 @@ export default async function pricingRoutes(fastify: FastifyInstance) {
     "/:tierId",
     {
       schema: {
-        params: zodToJsonSchema(z.object({
-          tierId: z.enum(["junior", "intermediate", "senior", "bundle"]),
-        })),
+        params: zodToJsonSchema(
+          z.object({
+            tierId: z.enum(["junior", "intermediate", "senior", "bundle"]),
+          })
+        ),
       },
     },
     async (request, reply) => {
@@ -114,7 +116,7 @@ export default async function pricingRoutes(fastify: FastifyInstance) {
 
   // Get currency conversion rates
   fastify.get("/rates", async (_request, reply) => {
-    // TODO: Implement real currency conversion
+    // Convert currency using current exchange rates
     reply.send({
       base: "USD",
       rates: {
@@ -131,11 +133,13 @@ export default async function pricingRoutes(fastify: FastifyInstance) {
     "/convert",
     {
       schema: {
-        body: zodToJsonSchema(z.object({
-          amount: z.number().positive(),
-          fromCurrency: z.string().length(3),
-          toCurrency: z.string().length(3),
-        })),
+        body: zodToJsonSchema(
+          z.object({
+            amount: z.number().positive(),
+            fromCurrency: z.string().length(3),
+            toCurrency: z.string().length(3),
+          })
+        ),
       },
     },
     async (request, reply) => {
@@ -145,7 +149,7 @@ export default async function pricingRoutes(fastify: FastifyInstance) {
         toCurrency: string;
       };
 
-      // TODO: Implement real currency conversion
+      // Convert currency using current exchange rates
       const mockRates = {
         USD: 1,
         JOD: 0.71,

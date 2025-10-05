@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* TODO: Legacy patterns - Replace 'any' types with proper typing and remove unused vars in next PR */
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { setActivePinia, createPinia } from "pinia";
 import { usePaymentStore } from "@/stores/payment";

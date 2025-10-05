@@ -33,7 +33,7 @@ export function useLocale() {
   const getLocalizedRouteUrl = (
     routeName: string,
     targetLocale: SupportedLocale,
-    params: any = {}
+    params: Record<string, unknown> = {}
   ) => {
     const { href } = router.resolve({
       name: routeName,
@@ -58,46 +58,34 @@ export function useLocale() {
   // Initialize locale from URL on app start
   const initializeLocale = () => {
     const urlLocale = currentLocale.value;
-    console.log("Initializing locale:", urlLocale);
-    console.log("Current i18n locale:", locale.value);
+    // Initialize locale from URL
 
     // Set i18n locale
     if (locale.value !== urlLocale) {
-      console.log("Setting i18n locale from", locale.value, "to", urlLocale);
       locale.value = urlLocale;
-      console.log("i18n locale set to:", locale.value);
     }
 
     // Update HTML attributes
     document.documentElement.dir = urlLocale === "ar" ? "rtl" : "ltr";
     document.documentElement.lang = urlLocale;
-    console.log("HTML attributes set:", {
-      dir: document.documentElement.dir,
-      lang: document.documentElement.lang,
-    });
+    // HTML attributes updated for locale
   };
 
   // Watch for locale changes and update HTML attributes
   watch(
     currentLocale,
     (newLocale) => {
-      console.log("Locale changed to:", newLocale);
-      console.log("Current i18n locale:", locale.value);
+      // Locale changed, updating i18n and HTML
 
       // Update i18n locale
       if (locale.value !== newLocale) {
-        console.log("Updating i18n locale from", locale.value, "to", newLocale);
         locale.value = newLocale;
-        console.log("i18n locale updated to:", locale.value);
       }
 
       // Update HTML attributes
       document.documentElement.dir = newLocale === "ar" ? "rtl" : "ltr";
       document.documentElement.lang = newLocale;
-      console.log("HTML attributes updated:", {
-        dir: document.documentElement.dir,
-        lang: document.documentElement.lang,
-      });
+      // HTML attributes updated for new locale
     },
     { immediate: true }
   );

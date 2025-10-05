@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
-/* TODO: Legacy patterns - Replace 'any' types with proper typing and remove unused vars in next PR */
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 import type { User } from "@shared/types/auth";

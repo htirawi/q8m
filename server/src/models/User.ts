@@ -1,5 +1,6 @@
-import mongoose, { Document, Schema } from "mongoose";
 import bcrypt from "bcryptjs";
+import type { Document } from "mongoose";
+import mongoose, { Schema, type ObjectId } from "mongoose";
 
 export interface IUser extends Document {
   email: string;
@@ -7,23 +8,32 @@ export interface IUser extends Document {
   password?: string;
   role: "user" | "admin" | "intermediate" | "senior";
   entitlements: string[];
+  permissions: string[];
   isEmailVerified: boolean;
   emailVerificationToken?: string;
-  emailVerificationExpires?: any; // Mongoose Date type
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  emailVerificationExpires?: any;
   passwordResetToken?: string;
-  passwordResetExpires?: any; // Mongoose Date type
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  passwordResetExpires?: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   lastLogin?: any;
   loginAttempts: number;
-  lockUntil?: any; // Mongoose Date type
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  lockUntil?: any;
   googleId?: string;
   facebookId?: string;
   avatar?: string;
   bio?: string;
   location?: string;
   website?: string;
+  acceptTerms: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  acceptTermsAt?: any;
+  acceptTermsVersion?: string;
   preferences: {
     language: "en" | "ar";
-    theme: any;
+    theme: "light" | "dark" | "auto";
     notifications: {
       email: boolean;
       quizReminders: boolean;
@@ -32,14 +42,22 @@ export interface IUser extends Document {
   };
   subscription: {
     status: "active" | "canceled" | "past_due" | "incomplete";
-    currentPeriodEnd?: Date;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    currentPeriodEnd?: any;
     cancelAtPeriodEnd: boolean;
   };
-  stats: any;
+  stats: {
+    totalQuizzes: number;
+    totalScore: number;
+    averageScore: number;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    lastQuizDate?: any;
+  };
   twoFactorEnabled: boolean;
   twoFactorSecret?: string;
   isActive: boolean;
-  deletedAt?: Date;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  deletedAt?: any;
   comparePassword(candidatePassword: string): Promise<boolean>;
   generateAuthTokens(): { accessToken: string; refreshToken: string };
 }
@@ -62,7 +80,7 @@ const userSchema = new Schema(
     },
     password: {
       type: String,
-      required(this: any) {
+      required(this: IUser) {
         return !this.googleId && !this.facebookId;
       },
       minlength: [8, "Password must be at least 8 characters"],
@@ -77,6 +95,10 @@ const userSchema = new Schema(
       type: [String],
       enum: ["JUNIOR", "INTERMEDIATE", "SENIOR", "BUNDLE"],
       default: ["JUNIOR"],
+    },
+    permissions: {
+      type: [String],
+      default: [],
     },
     isEmailVerified: {
       type: Boolean,
@@ -132,6 +154,18 @@ const userSchema = new Schema(
     website: {
       type: String,
       match: [/^https?:\/\/.+/, "Website must be a valid URL"],
+    },
+    acceptTerms: {
+      type: Boolean,
+      default: false,
+      required: true,
+    },
+    acceptTermsAt: {
+      type: Date,
+    },
+    acceptTermsVersion: {
+      type: String,
+      default: "1.0",
     },
     // Preferences
     preferences: {
@@ -213,7 +247,7 @@ const userSchema = new Schema(
     timestamps: true,
     toJSON: {
       transform(_doc, ret: Record<string, unknown>) {
-        ret.id = (ret._id as any).toString();
+        ret.id = (ret._id as ObjectId).toString();
         delete ret._id;
         delete ret.__v;
         delete ret.password;
@@ -234,12 +268,15 @@ userSchema.index({ googleId: 1 }, { unique: true, sparse: true, name: "uniq_goog
 userSchema.index({ facebookId: 1 }, { unique: true, sparse: true, name: "uniq_facebook_id" });
 userSchema.index({ role: 1 }, { name: "idx_role" });
 userSchema.index({ entitlements: 1 }, { name: "idx_entitlements" });
+userSchema.index({ permissions: 1 }, { name: "idx_permissions" });
+userSchema.index({ acceptTerms: 1 }, { name: "idx_accept_terms" });
+userSchema.index({ acceptTermsAt: 1 }, { name: "idx_accept_terms_at" });
 userSchema.index({ isActive: 1 }, { name: "idx_is_active" });
 userSchema.index({ createdAt: -1 }, { name: "idx_created_at" });
 
 // Virtual for account lock status
 userSchema.virtual("isLocked").get(function () {
-  return !!(this.lockUntil && (this.lockUntil as any) > Date.now());
+  return !!(this.lockUntil && this.lockUntil > new Date());
 });
 
 // Pre-save middleware to hash password
@@ -265,10 +302,32 @@ userSchema.methods.comparePassword = async function (candidatePassword: string):
 
 // Instance method to generate auth tokens
 userSchema.methods.generateAuthTokens = function () {
-  // This will be implemented when we add JWT logic
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const jwt = require("jsonwebtoken");
+  const secret = process.env.JWT_SECRET || "fallback-secret";
+
+  const payload = {
+    userId: this._id.toString(),
+    email: this.email,
+    role: this.role,
+    permissions: this.permissions,
+  };
+
+  const accessToken = jwt.sign(payload, secret, {
+    expiresIn: "15m",
+    issuer: "q8m-api",
+    audience: "q8m-client",
+  });
+
+  const refreshToken = jwt.sign({ userId: this._id.toString(), type: "refresh" }, secret, {
+    expiresIn: "7d",
+    issuer: "q8m-api",
+    audience: "q8m-client",
+  });
+
   return {
-    accessToken: "temp-access-token",
-    refreshToken: "temp-refresh-token",
+    accessToken,
+    refreshToken,
   };
 };
 
@@ -305,11 +364,13 @@ userSchema.methods.incLoginAttempts = function () {
     });
   }
 
-  const updates: unknown = { $inc: { loginAttempts: 1 } };
+  const updates: { $inc: { loginAttempts: number }; $set?: { lockUntil: number } } = {
+    $inc: { loginAttempts: 1 },
+  };
 
   // Lock account after 5 failed attempts for 2 hours
   if (this.loginAttempts + 1 >= 5 && !this.isLocked) {
-    (updates as any).$set = { lockUntil: Date.now() + 2 * 60 * 60 * 1000 }; // 2 hours
+    updates.$set = { lockUntil: Date.now() + 2 * 60 * 60 * 1000 }; // 2 hours
   }
 
   return this.updateOne(updates);

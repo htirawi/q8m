@@ -1,4 +1,5 @@
-import mongoose, { Document, Schema } from "mongoose";
+import type { Document, ObjectId } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 export interface IPurchase extends Document {
   userId: mongoose.Types.ObjectId;
@@ -223,7 +224,7 @@ const purchaseSchema = new Schema<IPurchase>(
     timestamps: true,
     toJSON: {
       transform(_doc, ret: Record<string, unknown>) {
-        ret.id = (ret._id as any).toString();
+        ret.id = (ret._id as ObjectId).toString();
         delete ret._id;
         delete ret.__v;
         return ret;
@@ -306,12 +307,12 @@ purchaseSchema.statics.getUserPurchases = function (
 
 // Static method to get revenue statistics
 purchaseSchema.statics.getRevenueStats = function (startDate?: Date, endDate?: Date) {
-  const match: unknown = { status: "completed" };
+  const match: Record<string, unknown> = { status: "completed" };
 
   if (startDate || endDate) {
-    (match as any).createdAt = {};
-    if (startDate) (match as any).createdAt.$gte = startDate;
-    if (endDate) (match as any).createdAt.$lte = endDate;
+    match.createdAt = {};
+    if (startDate) (match.createdAt as Record<string, unknown>).$gte = startDate;
+    if (endDate) (match.createdAt as Record<string, unknown>).$lte = endDate;
   }
 
   return this.aggregate([

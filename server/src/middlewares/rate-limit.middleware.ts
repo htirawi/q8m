@@ -1,5 +1,5 @@
-import { FastifyRequest, FastifyReply, FastifyInstance } from "fastify";
 import rateLimit from "@fastify/rate-limit";
+import type { FastifyRequest, FastifyReply, FastifyInstance } from "fastify";
 
 /**
  * Rate limiting middleware for authentication endpoints

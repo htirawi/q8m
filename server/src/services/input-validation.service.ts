@@ -1,5 +1,6 @@
-import { z } from "zod";
 import { createHash } from "crypto";
+
+import { z } from "zod";
 
 export interface ValidationResult {
   success: boolean;
@@ -160,9 +161,9 @@ export class InputValidationService {
     }
 
     if (typeof input === "object" && input !== null) {
-      const sanitized: any = {};
+      const sanitized: Record<string, unknown> = {};
       for (const [key, value] of Object.entries(input)) {
-        (sanitized as any)[key] = this.sanitizeUserInput(value);
+        sanitized[key] = this.sanitizeUserInput(value);
       }
       return sanitized;
     }

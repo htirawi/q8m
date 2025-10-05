@@ -5,10 +5,13 @@
  * for testing and development purposes.
  */
 
-import { Plan } from "@shared/types/pricing";
-import { User } from "../models/User.js";
+import type { Plan } from "@shared/types/pricing";
+
 import { Purchase } from "../models/Purchase.js";
+import type { IPurchase } from "../models/Purchase.js";
 import { Subscription } from "../models/Subscription.js";
+import { User } from "../models/User.js";
+
 import { entitlementService } from "./entitlement.service.js";
 
 interface MockPaymentRequest {
@@ -31,6 +34,20 @@ interface MockPaymentResponse {
   error?: string;
 }
 
+interface MockPayment {
+  id: string;
+  purchaseId: string;
+  status: "pending" | "completed" | "failed" | "refunded";
+  createdAt: Date;
+  amount: number;
+  currency: string;
+  planType: Plan;
+  billingCycle: "monthly" | "yearly";
+  userId: string;
+  customerEmail: string;
+  customerName: string;
+}
+
 interface MockWebhookData {
   id: string;
   event: string;
@@ -39,7 +56,7 @@ interface MockWebhookData {
 
 export class MockPaymentService {
   private static instance: MockPaymentService;
-  private mockPayments = new Map<string, unknown>();
+  private mockPayments = new Map<string, MockPayment>();
   private isEnabled = false;
 
   private constructor() {
@@ -145,16 +162,16 @@ export class MockPaymentService {
     await new Promise((resolve) => setTimeout(resolve, 100));
 
     // Auto-complete mock payments after 2 seconds
-    const timeSinceCreation = Date.now() - (mockPayment as any).createdAt.getTime();
-    if (timeSinceCreation > 2000 && (mockPayment as any).status === "pending") {
-      (mockPayment as any).status = "completed";
+    const timeSinceCreation = Date.now() - mockPayment.createdAt.getTime();
+    if (timeSinceCreation > 2000 && mockPayment.status === "pending") {
+      mockPayment.status = "completed";
       await this.processMockPaymentCompletion(mockPayment);
     }
 
     return {
       success: true,
-      status: (mockPayment as any).status,
-      purchaseId: (mockPayment as any).purchaseId,
+      status: mockPayment.status,
+      purchaseId: mockPayment.purchaseId,
     };
   }
 
@@ -179,12 +196,12 @@ export class MockPaymentService {
 
       switch (event) {
         case "payment.completed":
-          (mockPayment as any).status = "completed";
+          mockPayment.status = "completed";
           await this.processMockPaymentCompletion(mockPayment);
           break;
 
         case "payment.failed":
-          (mockPayment as any).status = "failed";
+          mockPayment.status = "failed";
           await this.processMockPaymentFailure(mockPayment);
           break;
 
@@ -239,8 +256,8 @@ export class MockPaymentService {
   /**
    * Process mock payment completion
    */
-  private async processMockPaymentCompletion(mockPayment: unknown): Promise<void> {
-    const purchase = await Purchase.findById((mockPayment as any).purchaseId);
+  private async processMockPaymentCompletion(mockPayment: MockPayment): Promise<void> {
+    const purchase = await Purchase.findById(mockPayment.purchaseId);
     if (!purchase || purchase.status === "completed") {
       return;
     }
@@ -256,8 +273,8 @@ export class MockPaymentService {
   /**
    * Process mock payment failure
    */
-  private async processMockPaymentFailure(mockPayment: unknown): Promise<void> {
-    const purchase = await Purchase.findById((mockPayment as any).purchaseId);
+  private async processMockPaymentFailure(mockPayment: MockPayment): Promise<void> {
+    const purchase = await Purchase.findById(mockPayment.purchaseId);
     if (!purchase || purchase.status !== "pending") {
       return;
     }
@@ -268,15 +285,15 @@ export class MockPaymentService {
   /**
    * Process mock refund
    */
-  private async processMockRefund(mockPayment: unknown): Promise<void> {
-    const purchase = await Purchase.findById((mockPayment as any).purchaseId);
+  private async processMockRefund(mockPayment: MockPayment): Promise<void> {
+    const purchase = await Purchase.findById(mockPayment.purchaseId);
     if (!purchase) {
       return;
     }
 
     await purchase.processRefund({
       refundId: `mock-refund-${Date.now()}`,
-      amount: (mockPayment as any).amount,
+      amount: mockPayment.amount,
       reason: "mock_refund",
       processedAt: new Date(),
     });
@@ -292,10 +309,10 @@ export class MockPaymentService {
   /**
    * Create mock subscription
    */
-  private async createMockSubscription(purchase: unknown): Promise<void> {
-    const user = await User.findById((purchase as any).userId);
+  private async createMockSubscription(purchase: IPurchase): Promise<void> {
+    const user = await User.findById(purchase.userId);
     if (!user) {
-      console.error(`User ${(purchase as any).userId} not found for mock subscription creation.`);
+      console.error(`User ${purchase.userId} not found for mock subscription creation.`);
       return;
     }
 
@@ -310,14 +327,14 @@ export class MockPaymentService {
     }
 
     const subscription = new Subscription({
-      userId: (purchase as any).userId,
-      purchaseId: (purchase as any)._id,
-      planType: (purchase as any).planType,
+      userId: purchase.userId,
+      purchaseId: purchase._id,
+      planType: purchase.planType,
       status: "active",
-      billingCycle: (purchase as any).billingCycle,
+      billingCycle: purchase.billingCycle,
       currentPeriodStart: new Date(),
       currentPeriodEnd:
-        (purchase as any).billingCycle === "monthly"
+        purchase.billingCycle === "monthly"
           ? new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days
           : new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // 365 days
       metadata: {
@@ -329,10 +346,9 @@ export class MockPaymentService {
     await subscription.save();
 
     // Update user entitlements
-    await entitlementService.updateUserEntitlements(
-      user._id.toString(),
-      (purchase as any).planType
-    );
+    if (purchase.planType) {
+      await entitlementService.updateUserEntitlements(user._id.toString(), purchase.planType);
+    }
   }
 
   /**
@@ -346,7 +362,7 @@ export class MockPaymentService {
     }
 
     const mockPayment = this.mockPayments.get(paymentId);
-    return mockPayment ? { status: (mockPayment as any).status, details: mockPayment } : null;
+    return mockPayment ? { status: mockPayment.status, details: mockPayment } : null;
   }
 
   /**
@@ -359,7 +375,7 @@ export class MockPaymentService {
 
     const mockPayment = this.mockPayments.get(paymentId);
     if (mockPayment) {
-      (mockPayment as any).status = "failed";
+      mockPayment.status = "failed";
       this.processMockPaymentFailure(mockPayment);
     }
   }
@@ -373,8 +389,8 @@ export class MockPaymentService {
     }
 
     const mockPayment = this.mockPayments.get(paymentId);
-    if (mockPayment && (mockPayment as any).status === "pending") {
-      (mockPayment as any).status = "completed";
+    if (mockPayment && mockPayment.status === "pending") {
+      mockPayment.status = "completed";
       this.processMockPaymentCompletion(mockPayment);
     }
   }

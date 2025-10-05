@@ -13,8 +13,8 @@ export const DEFAULT_LOCALE: SupportedLocale = "en";
 // Helper function to create localized routes
 const createLocalizedRoute = (
   path: string,
-  component: () => Promise<any>,
-  meta: any,
+  component: () => Promise<{ default: any }>,
+  meta: Record<string, unknown>,
   name?: string
 ): RouteRecordRaw => ({
   path: `/:locale${path}`,
@@ -272,8 +272,11 @@ const router = createRouter({
 });
 
 // Helper function to get locale from route params
-const getLocaleFromRoute = (to: any): SupportedLocale => {
-  return to.params.locale || DEFAULT_LOCALE;
+const getLocaleFromRoute = (to: { params: { locale?: string }; path: string }): SupportedLocale => {
+  const { locale } = to.params;
+  return locale && SUPPORTED_LOCALES.includes(locale as SupportedLocale)
+    ? (locale as SupportedLocale)
+    : DEFAULT_LOCALE;
 };
 
 // Router guards
@@ -299,35 +302,25 @@ router.beforeEach(async (to, _from, next) => {
 
   // Set locale in i18n immediately
   if (typeof window !== "undefined") {
-    console.log("Setting locale to:", locale);
-    console.log("Current i18n locale:", i18n.global.locale.value);
+    // Setting locale from route
 
     // Force locale change
     i18n.global.locale.value = locale;
-    console.log("New i18n locale:", i18n.global.locale.value);
 
     // Update HTML attributes for RTL support
     const { documentElement } = document;
     documentElement.dir = locale === "ar" ? "rtl" : "ltr";
     documentElement.lang = locale;
-    console.log("HTML attributes updated:", {
-      dir: documentElement.dir,
-      lang: documentElement.lang,
-    });
+    // HTML attributes updated for RTL support
 
     // Force a re-render by updating the i18n instance
-    console.log("i18n messages available:", Object.keys(i18n.global.messages.value));
-    console.log("Arabic messages available:", !!i18n.global.messages.value.ar);
 
-    // Test Arabic translation
+    // Test Arabic translation for debugging
     if (locale === "ar") {
-      const testTranslation = i18n.global.t("home.hero.title");
-      console.log("Test Arabic translation:", testTranslation);
-
       // Force a re-render by triggering a reactive update
       setTimeout(() => {
-        console.log("Delayed test - i18n locale:", i18n.global.locale.value);
-        console.log("Delayed test - translation:", i18n.global.t("home.hero.title"));
+        // Debug: Check if Arabic translation is working
+        i18n.global.t("home.hero.title");
       }, 100);
     }
   }

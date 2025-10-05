@@ -1,8 +1,10 @@
-import { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
-import { env } from "../config/env.js";
+import * as crypto from "crypto";
+
 import type { FastifyRateLimitOptions } from "@fastify/rate-limit";
 import redis from "@fastify/redis";
-import * as crypto from "crypto";
+import type { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
+
+import { env } from "../config/env.js";
 
 // Types for rate limiting configuration
 interface RateLimitOptions {
@@ -95,7 +97,7 @@ export function comboKey(request: FastifyRequest): string {
  * Create a rate limit configuration for a specific route
  */
 function rateLimitFor(routeId: string, options: RateLimitOptions = {}) {
-  const max = options.max ?? parseInt(env.RATE_LIMIT_USER_MAX);
+  const max = options.max ?? env.RATE_LIMIT_USER_MAX;
   const timeWindow = options.timeWindow ?? env.RATE_LIMIT_USER_WINDOW;
   const keyMode = options.keyMode ?? "combo";
 
@@ -119,7 +121,7 @@ function rateLimitFor(routeId: string, options: RateLimitOptions = {}) {
     },
     onExceeding: (request: FastifyRequest) => {
       const keyHash = keyGenerator(request).substring(0, 8);
-      (request.log as any).warn({
+      request.log.warn({
         message: "Rate limit exceeded",
         routeId,
         keyHash,
@@ -128,7 +130,7 @@ function rateLimitFor(routeId: string, options: RateLimitOptions = {}) {
     },
     onExceeded: (request: FastifyRequest) => {
       const keyHash = keyGenerator(request).substring(0, 8);
-      (request.log as any).warn({
+      request.log.warn({
         message: "Rate limit exceeded - request blocked",
         routeId,
         keyHash,
@@ -177,9 +179,19 @@ export function buildRateLimitOptions(
 /**
  * Get Redis client if available
  */
-async function getRedisClient(fastify: FastifyInstance): Promise<any | null> {
+async function getRedisClient(
+  fastify: FastifyInstance
+): Promise<{
+  get: (key: string) => Promise<string | null>;
+  setex: (key: string, seconds: number, value: string) => Promise<string>;
+  del: (key: string) => Promise<number>;
+} | null> {
   try {
-    return fastify.redis;
+    return fastify.redis as {
+      get: (key: string) => Promise<string | null>;
+      setex: (key: string, seconds: number, value: string) => Promise<string>;
+      del: (key: string) => Promise<number>;
+    };
   } catch {
     return null;
   }
@@ -217,8 +229,8 @@ function loginFailurePenaltyPreHandler(_routeId: string) {
         }
 
         // Check if we need to apply progressive penalty
-        const baseBlockMs = parseInt(env.LOGIN_FAIL_BASE_BLOCK_MS);
-        const maxBlockMs = parseInt(env.LOGIN_FAIL_MAX_BLOCK_MS);
+        const baseBlockMs = env.LOGIN_FAIL_BASE_BLOCK_MS;
+        const maxBlockMs = env.LOGIN_FAIL_MAX_BLOCK_MS;
         const timeSinceLastAttempt = Date.now() - failures.lastAttempt;
 
         // If last attempt was recent (within 5 minutes), apply progressive penalty
@@ -253,11 +265,14 @@ function loginFailurePenaltyPreHandler(_routeId: string) {
       } else {
         // Fallback to in-memory storage (single instance only)
         const memoryKey = `memory_${failureKey}`;
-        if (!(global as any).__rateLimitMemory) {
-          (global as any).__rateLimitMemory = new Map();
+        if (!(global as Record<string, unknown>).__rateLimitMemory) {
+          (global as Record<string, unknown>).__rateLimitMemory = new Map();
         }
 
-        const memory = (global as any).__rateLimitMemory;
+        const memory = (global as Record<string, unknown>).__rateLimitMemory as Map<
+          string,
+          LoginFailureData
+        >;
         let failures: LoginFailureData = memory.get(memoryKey) || { count: 0, lastAttempt: 0 };
 
         // Check if currently blocked
@@ -274,8 +289,8 @@ function loginFailurePenaltyPreHandler(_routeId: string) {
         }
 
         // Apply progressive penalty logic (same as Redis version)
-        const baseBlockMs = parseInt(env.LOGIN_FAIL_BASE_BLOCK_MS);
-        const maxBlockMs = parseInt(env.LOGIN_FAIL_MAX_BLOCK_MS);
+        const baseBlockMs = env.LOGIN_FAIL_BASE_BLOCK_MS;
+        const maxBlockMs = env.LOGIN_FAIL_MAX_BLOCK_MS;
         const timeSinceLastAttempt = Date.now() - failures.lastAttempt;
 
         if (timeSinceLastAttempt < 5 * 60 * 1000 && failures.count > 0) {
@@ -305,7 +320,7 @@ function loginFailurePenaltyPreHandler(_routeId: string) {
       }
     } catch (error) {
       // If penalty system fails, log error but don't block the request
-      (request.log as any).error({
+      request.log.error({
         message: "Login failure penalty system error",
         error: error instanceof Error ? error.message : "Unknown error",
       });
@@ -328,13 +343,15 @@ async function resetLoginFailureCounter(request: FastifyRequest): Promise<void> 
     } else {
       // Fallback to in-memory storage
       const memoryKey = `memory_${failureKey}`;
-      if ((global as any).__rateLimitMemory) {
-        (global as any).__rateLimitMemory.delete(memoryKey);
+      if ((global as Record<string, unknown>).__rateLimitMemory) {
+        (
+          (global as Record<string, unknown>).__rateLimitMemory as Map<string, LoginFailureData>
+        ).delete(memoryKey);
       }
     }
   } catch (error) {
     // Log error but don't fail the request
-    (request.log as any).error({
+    request.log.error({
       message: "Failed to reset login failure counter",
       error: error instanceof Error ? error.message : "Unknown error",
     });
@@ -354,11 +371,11 @@ export async function rateLimitPlugin(fastify: FastifyInstance) {
         url: env.RATE_LIMIT_REDIS_URL,
         lazyConnect: true,
       });
-      (fastify.log as any).info({
+      fastify.log.info({
         message: "Redis connected for rate limiting",
       });
     } catch (error) {
-      (fastify.log as any).warn({
+      fastify.log.warn({
         message: "Failed to connect to Redis, using in-memory fallback",
         error: error instanceof Error ? error.message : "Unknown error",
       });
@@ -386,7 +403,7 @@ declare module "fastify" {
     ipKey(request: FastifyRequest): string;
     makeUserKey(request: FastifyRequest): string;
     comboKey(request: FastifyRequest): string;
-    rateLimitFor(routeId: string, options?: RateLimitOptions): any;
+    rateLimitFor(routeId: string, options?: RateLimitOptions): FastifyRateLimitOptions;
     buildRateLimitOptions(
       routeId: string,
       opts?: Partial<FastifyRateLimitOptions> & {

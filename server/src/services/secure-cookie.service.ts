@@ -1,5 +1,8 @@
-import { env } from "../config/env.js";
 import * as crypto from "crypto";
+
+import type { FastifyReply } from "fastify";
+
+import { env } from "../config/env.js";
 
 export interface SecureCookieOptions {
   httpOnly: boolean;
@@ -23,7 +26,7 @@ export class SecureCookieService {
    * Set a secure httpOnly cookie
    */
   setSecureCookie(
-    reply: unknown,
+    reply: FastifyReply,
     name: string,
     value: string,
     options: Partial<SecureCookieOptions> = {}
@@ -38,7 +41,7 @@ export class SecureCookieService {
 
     const cookieOptions = { ...defaultOptions, ...options };
 
-    (reply as any).setCookie(name, value, {
+    reply.setCookie(name, value, {
       httpOnly: cookieOptions.httpOnly,
       secure: cookieOptions.secure,
       sameSite: cookieOptions.sameSite,
@@ -51,7 +54,7 @@ export class SecureCookieService {
   /**
    * Set access token cookie
    */
-  setAccessTokenCookie(reply: unknown, token: string): void {
+  setAccessTokenCookie(reply: FastifyReply, token: string): void {
     this.setSecureCookie(reply, "accessToken", token, {
       maxAge: 15 * 60 * 1000, // 15 minutes
     });
@@ -60,7 +63,7 @@ export class SecureCookieService {
   /**
    * Set refresh token cookie
    */
-  setRefreshTokenCookie(reply: unknown, token: string): void {
+  setRefreshTokenCookie(reply: FastifyReply, token: string): void {
     this.setSecureCookie(reply, "refreshToken", token, {
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
@@ -69,15 +72,15 @@ export class SecureCookieService {
   /**
    * Clear authentication cookies
    */
-  clearAuthCookies(reply: unknown): void {
-    (reply as any).clearCookie("accessToken", {
+  clearAuthCookies(reply: FastifyReply): void {
+    reply.clearCookie("accessToken", {
       httpOnly: true,
       secure: env.NODE_ENV === "production",
       sameSite: "strict",
       path: "/",
     });
 
-    (reply as any).clearCookie("refreshToken", {
+    reply.clearCookie("refreshToken", {
       httpOnly: true,
       secure: env.NODE_ENV === "production",
       sameSite: "strict",
@@ -95,7 +98,7 @@ export class SecureCookieService {
   /**
    * Set CSRF token cookie
    */
-  setCSRFTokenCookie(reply: unknown, token: string): void {
+  setCSRFTokenCookie(reply: FastifyReply, token: string): void {
     this.setSecureCookie(reply, "csrfToken", token, {
       maxAge: 60 * 60 * 1000, // 1 hour
     });

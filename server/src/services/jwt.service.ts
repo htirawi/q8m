@@ -1,4 +1,6 @@
 import * as jwt from "jsonwebtoken";
+import type { ObjectId } from "mongoose";
+
 import { env } from "../config/env.js";
 import type { IUser } from "../models/User.js";
 
@@ -36,7 +38,7 @@ export class JWTService {
    */
   generateTokenPair(user: IUser, sessionId: string): TokenPair {
     const payload: JWTPayload = {
-      userId: (user._id as any).toString(),
+      userId: (user._id as ObjectId).toString(),
       email: user.email,
       role: user.role,
       entitlements: user.entitlements || [],
@@ -47,16 +49,16 @@ export class JWTService {
       expiresIn: this.accessTokenExpiry,
       issuer: "quiz-platform",
       audience: "quiz-platform-client",
-    } as any);
+    } as jwt.SignOptions);
 
     const refreshToken = jwt.sign(
-      { userId: (user._id as any).toString(), sessionId },
+      { userId: (user._id as ObjectId).toString(), sessionId },
       this.refreshTokenSecret,
       {
         expiresIn: this.refreshTokenExpiry,
         issuer: "quiz-platform",
         audience: "quiz-platform-client",
-      } as any
+      } as jwt.SignOptions
     );
 
     // Calculate expiry time in seconds
@@ -129,7 +131,7 @@ export class JWTService {
    */
   isTokenExpired(token: string): boolean {
     try {
-      const decoded = jwt.decode(token) as any;
+      const decoded = jwt.decode(token) as jwt.JwtPayload | null;
       if (!decoded?.exp) return true;
       return Date.now() >= decoded.exp * 1000;
     } catch {
@@ -142,7 +144,7 @@ export class JWTService {
    */
   getTokenExpiry(token: string): Date | null {
     try {
-      const decoded = jwt.decode(token) as any;
+      const decoded = jwt.decode(token) as jwt.JwtPayload | null;
       if (!decoded?.exp) return null;
       return new Date(decoded.exp * 1000);
     } catch {
@@ -157,7 +159,7 @@ export class JWTService {
     const { sessionId } = this.verifyRefreshToken(refreshToken);
 
     const payload: JWTPayload = {
-      userId: (user._id as any).toString(),
+      userId: (user._id as ObjectId).toString(),
       email: user.email,
       role: user.role,
       entitlements: user.entitlements || [],
@@ -168,7 +170,7 @@ export class JWTService {
       expiresIn: this.accessTokenExpiry,
       issuer: "quiz-platform",
       audience: "quiz-platform-client",
-    } as any);
+    } as jwt.SignOptions);
   }
 
   /**

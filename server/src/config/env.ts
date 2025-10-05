@@ -1,68 +1,101 @@
-import { z } from "zod";
 import { config } from "dotenv";
+import { z } from "zod";
 
 // Load environment variables from .env file
 config();
 
 const EnvSchema = z.object({
-  NODE_ENV: z.string().default("development"),
+  NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
+  PORT: z.coerce.number().default(3000),
+  HOST: z.string().default("0.0.0.0"),
+
   // Database
-  MONGODB_URI: z.string().min(1),
+  MONGODB_URI: z.string().min(1, "MongoDB URI is required"),
+  MONGODB_DB_NAME: z.string().min(1, "MongoDB database name is required"),
   MONGODB_OPTIONS: z.string().optional(),
+
   // Auth / JWT
-  JWT_SECRET: z.string().min(16),
-  JWT_REFRESH_SECRET: z.string().min(16),
+  JWT_SECRET: z.string().min(32, "JWT secret must be at least 32 characters"),
+  JWT_REFRESH_SECRET: z.string().min(32, "JWT refresh secret must be at least 32 characters"),
   JWT_EXPIRES_IN: z.string().default("15m"),
   JWT_REFRESH_EXPIRES_IN: z.string().default("7d"),
+
   // OAuth Configuration
-  GOOGLE_CLIENT_ID: z.string().min(1),
-  GOOGLE_CLIENT_SECRET: z.string().min(1),
-  FACEBOOK_APP_ID: z.string().min(1),
-  FACEBOOK_APP_SECRET: z.string().min(1),
+  GOOGLE_CLIENT_ID: z.string().min(1, "Google Client ID is required"),
+  GOOGLE_CLIENT_SECRET: z.string().min(1, "Google Client Secret is required"),
+  FACEBOOK_APP_ID: z.string().min(1, "Facebook App ID is required"),
+  FACEBOOK_APP_SECRET: z.string().min(1, "Facebook App Secret is required"),
+
   // Email Configuration
-  SMTP_HOST: z.string().min(1),
-  SMTP_PORT: z.string().default("587"),
-  SMTP_USER: z.string().min(1),
-  SMTP_PASS: z.string().min(1),
-  EMAIL_FROM: z.string().email(),
+  SMTP_HOST: z.string().min(1, "SMTP host is required"),
+  SMTP_PORT: z.coerce.number().default(587),
+  SMTP_USER: z.string().min(1, "SMTP user is required"),
+  SMTP_PASS: z.string().min(1, "SMTP password is required"),
+  EMAIL_FROM: z.string().email("Invalid email format"),
   EMAIL_FROM_NAME: z.string().default("Quiz Platform"),
+
   // Payments (optional -> feature toggles)
   PAYPAL_CLIENT_ID: z.string().optional(),
   PAYPAL_CLIENT_SECRET: z.string().optional(),
   PAYPAL_WEBHOOK_SECRET: z.string().optional(),
+  PAYPAL_ENV: z.enum(["sandbox", "live"]).optional(),
+
   APS_ACCESS_KEY: z.string().optional(),
   APS_MERCHANT_IDENTIFIER: z.string().optional(),
   APS_WEBHOOK_SECRET: z.string().optional(),
+
   HYPERPAY_API_KEY: z.string().optional(),
   HYPERPAY_MERCHANT_ID: z.string().optional(),
   HYPERPAY_WEBHOOK_SECRET: z.string().optional(),
+
   // Currency Exchange API
   EXCHANGE_RATE_API_KEY: z.string().optional(),
+
   // Security Configuration
-  CSRF_SECRET: z.string().min(32),
-  SIGNED_URL_SECRET: z.string().min(32).optional(),
+  CSRF_SECRET: z.string().min(32, "CSRF secret must be at least 32 characters"),
+  SIGNED_URL_SECRET: z
+    .string()
+    .min(32, "Signed URL secret must be at least 32 characters")
+    .optional(),
+
   // Rate limiting
-  RATE_LIMIT_USER_MAX: z.string().default("20"),
+  RATE_LIMIT_USER_MAX: z.coerce.number().default(20),
   RATE_LIMIT_USER_WINDOW: z.string().default("15m"),
-  LOGIN_FAIL_BASE_BLOCK_MS: z.string().default("60000"),
-  LOGIN_FAIL_MAX_BLOCK_MS: z.string().default("3600000"),
+  LOGIN_FAIL_BASE_BLOCK_MS: z.coerce.number().default(60000),
+  LOGIN_FAIL_MAX_BLOCK_MS: z.coerce.number().default(3600000),
   RATE_LIMIT_REDIS_URL: z.string().optional(),
+  RATE_LIMIT_TRUST_PROXY: z.string().optional(),
+
   // Rate-limit HMAC
   HMAC_RATE_KEY_SECRET: z.string().default("change-me"),
+
   // API Configuration
-  API_BASE_URL: z.string().url(),
-  CLIENT_URL: z.string().url().default("http://localhost:5173"),
-  SERVER_URL: z.string().url().default("http://localhost:3000"),
+  API_BASE_URL: z.string().url("Invalid API base URL"),
+  CLIENT_URL: z.string().url("Invalid client URL").default("http://localhost:5173"),
+  SERVER_URL: z.string().url("Invalid server URL").default("http://localhost:3000"),
+
+  // CORS Configuration
+  CORS_ORIGIN: z.string().optional(),
+  CORS_CREDENTIALS: z.string().optional(),
+
+  // Logging
+  LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace"]).default("info"),
+
+  // File upload
+  MAX_FILE_SIZE: z.string().default("10485760"), // 10MB
+
+  // Package version
+  npm_package_version: z.string().optional(),
 });
 
-export type AppEnv = z.infer<typeof EnvSchema>;
+export type Env = z.infer<typeof EnvSchema>;
 
-export function loadEnv(): AppEnv {
+export function loadEnv(): Env {
   const parsed = EnvSchema.safeParse(process.env);
   if (!parsed.success) {
     // Fail fast on truly required envs (like DB/JWT). Payments are optional.
     const formatted = parsed.error.format();
-    throw new Error(`Invalid environment configuration: ${JSON.stringify(formatted)}`);
+    throw new Error(`Invalid environment configuration: ${JSON.stringify(formatted, null, 2)}`);
   }
   return parsed.data;
 }

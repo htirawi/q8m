@@ -1,4 +1,5 @@
-import mongoose, { Document, Schema } from "mongoose";
+import type { Document, ObjectId } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 export interface IFxRate extends Document {
   baseCurrency: "USD";
@@ -6,13 +7,20 @@ export interface IFxRate extends Document {
   rate: number;
   source: "api" | "manual" | "fallback";
   provider?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   fetchedAt: any;
-  expiresAt: any; // Mongoose Date type
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  expiresAt: any;
   metadata?: {
     providerResponse?: Record<string, unknown>;
     errorMessage?: string;
   };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   createdAt: any;
+  ageInHours?: number;
+  isExpired?: boolean;
+  isFresh(maxAgeHours?: number): boolean;
+  extendExpiration(hours?: number): Promise<IFxRate>;
 }
 
 const fxRateSchema = new Schema(
@@ -68,7 +76,7 @@ const fxRateSchema = new Schema(
     timestamps: true,
     toJSON: {
       transform(_doc, ret: Record<string, unknown>) {
-        ret.id = (ret._id as any).toString();
+        ret.id = (ret._id as ObjectId).toString();
         delete ret._id;
         delete ret.__v;
         return ret;
@@ -83,18 +91,18 @@ fxRateSchema.index({ targetCurrency: 1, expiresAt: -1 });
 fxRateSchema.index({ fetchedAt: -1 });
 
 // Virtual for currency pair
-fxRateSchema.virtual("currencyPair").get(function () {
-  return `${(this as any).baseCurrency}/${(this as any).targetCurrency}`;
+fxRateSchema.virtual("currencyPair").get(function (this: IFxRate) {
+  return `${this.baseCurrency}/${this.targetCurrency}`;
 });
 
 // Virtual for is expired
-fxRateSchema.virtual("isExpired").get(function () {
-  return new Date() > ((this as any).expiresAt as Date);
+fxRateSchema.virtual("isExpired").get(function (this: IFxRate) {
+  return new Date() > this.expiresAt;
 });
 
 // Virtual for age in hours
-fxRateSchema.virtual("ageInHours").get(function () {
-  return Math.floor((Date.now() - ((this as any).fetchedAt as Date).getTime()) / (1000 * 60 * 60));
+fxRateSchema.virtual("ageInHours").get(function (this: IFxRate) {
+  return Math.floor((Date.now() - this.fetchedAt.getTime()) / (1000 * 60 * 60));
 });
 
 // Instance method to check if rate is fresh (less than 24 hours old)
@@ -251,10 +259,10 @@ fxRateSchema.statics.getRateStats = function (days: number = 7) {
 };
 
 // Pre-save middleware to set default expiration if not provided
-fxRateSchema.pre("save", function (next) {
+fxRateSchema.pre("save", function (this: IFxRate, next) {
   if (!this.expiresAt) {
     // Default to 24 hours from now
-    (this as any).expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000);
+    this.expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000);
   }
   next();
 });

@@ -1,4 +1,5 @@
-import mongoose, { Document, Schema } from "mongoose";
+import type { Document, ObjectId } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 export interface ISubscription extends Document {
   userId: mongoose.Types.ObjectId;
@@ -111,7 +112,7 @@ const subscriptionSchema = new Schema(
     timestamps: true,
     toJSON: {
       transform(_doc, ret: Record<string, unknown>) {
-        ret.id = (ret._id as any).toString();
+        ret.id = (ret._id as ObjectId).toString();
         delete ret._id;
         delete ret.__v;
         return ret;
@@ -131,31 +132,22 @@ subscriptionSchema.index(
 subscriptionSchema.index({ purchaseId: 1 }, { unique: true, name: "uniq_purchase_id" });
 
 // Virtual for subscription validity
-subscriptionSchema.virtual("isActive").get(function () {
+subscriptionSchema.virtual("isActive").get(function (this: ISubscription) {
   const now = new Date();
-  return (
-    (this as any).status === "active" &&
-    (this as any).currentPeriodStart <= now &&
-    (this as any).currentPeriodEnd > now
-  );
+  return this.status === "active" && this.currentPeriodStart <= now && this.currentPeriodEnd > now;
 });
 
 // Virtual for days remaining
-subscriptionSchema.virtual("daysRemaining").get(function () {
+subscriptionSchema.virtual("daysRemaining").get(function (this: ISubscription) {
   const now = new Date();
-  const diffTime = (this as any).currentPeriodEnd.getTime() - now.getTime();
+  const diffTime = this.currentPeriodEnd.getTime() - now.getTime();
   return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 });
 
 // Virtual for is in trial
-subscriptionSchema.virtual("isInTrial").get(function () {
+subscriptionSchema.virtual("isInTrial").get(function (this: ISubscription) {
   const now = new Date();
-  return (
-    (this as any).trialStart &&
-    (this as any).trialEnd &&
-    (this as any).trialStart <= now &&
-    (this as any).trialEnd > now
-  );
+  return this.trialStart && this.trialEnd && this.trialStart <= now && this.trialEnd > now;
 });
 
 // Instance method to activate subscription
@@ -280,12 +272,12 @@ subscriptionSchema.statics.getSubscriptionStats = function () {
 
 // Static method to get revenue by plan
 subscriptionSchema.statics.getRevenueByPlan = function (startDate?: Date, endDate?: Date) {
-  const match: unknown = { status: "active" };
+  const match: Record<string, unknown> = { status: "active" };
 
   if (startDate || endDate) {
-    (match as any).currentPeriodStart = {};
-    if (startDate) (match as any).currentPeriodStart.$gte = startDate;
-    if (endDate) (match as any).currentPeriodStart.$lte = endDate;
+    match.currentPeriodStart = {};
+    if (startDate) (match.currentPeriodStart as Record<string, unknown>).$gte = startDate;
+    if (endDate) (match.currentPeriodStart as Record<string, unknown>).$lte = endDate;
   }
 
   return this.aggregate([
@@ -305,20 +297,20 @@ subscriptionSchema.statics.getRevenueByPlan = function (startDate?: Date, endDat
 };
 
 // Pre-save middleware to set entitlements based on plan type
-subscriptionSchema.pre("save", function (next) {
-  if ((this as any).isModified("planType")) {
-    switch ((this as any).planType) {
+subscriptionSchema.pre("save", function (this: ISubscription, next) {
+  if (this.isModified("planType")) {
+    switch (this.planType) {
       case "INTERMEDIATE":
-        (this as any).entitlements = ["JUNIOR", "INTERMEDIATE"];
+        this.entitlements = ["JUNIOR", "INTERMEDIATE"];
         break;
       case "SENIOR":
-        (this as any).entitlements = ["JUNIOR", "SENIOR"];
+        this.entitlements = ["JUNIOR", "SENIOR"];
         break;
       case "BUNDLE":
-        (this as any).entitlements = ["JUNIOR", "INTERMEDIATE", "SENIOR", "BUNDLE"];
+        this.entitlements = ["JUNIOR", "INTERMEDIATE", "SENIOR", "BUNDLE"];
         break;
       default:
-        (this as any).entitlements = ["JUNIOR"];
+        this.entitlements = ["JUNIOR"];
     }
   }
   next();

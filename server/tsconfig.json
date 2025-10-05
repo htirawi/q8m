@@ -28,7 +28,7 @@
     "types": ["node", "vitest/globals"],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
+      "@server/*": ["./src/*"],
       "@routes/*": ["./src/routes/*"],
       "@services/*": ["./src/services/*"],
       "@schemas/*": ["./src/schemas/*"],
@@ -40,7 +40,7 @@
     }
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "tests/**/*.ts", "scripts/**/*.ts"],
-  "exclude": ["node_modules", "dist", "coverage", "src/routes/downloads.ts"],
+  "exclude": ["node_modules", "dist", "coverage"],
   "ts-node": {
     "esm": true,
     "experimentalSpecifierResolution": "node"
