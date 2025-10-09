@@ -73,7 +73,7 @@ import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { CheckCircleIcon } from "@heroicons/vue/24/outline";
 
-interface paymentmethod {
+interface PaymentMethod {
   id: string;
   name: string;
   description: string;
@@ -81,14 +81,14 @@ interface paymentmethod {
   available: boolean;
 }
 
-interface props {
+interface Props {
   modelValue: string;
   currency: string;
 }
 
 const props = defineProps<Props>();
 
-const emit = defineemits<{
+const emit = defineEmits<{
   "update:modelValue": [value: string];
 }>();
 
@@ -127,7 +127,7 @@ const availableMethods = computed((): PaymentMethod[] => {
   return methods.filter((method) => method.available);
 });
 
-const selectmethod = (methodId: string) => {
+const selectMethod = (methodId: string) => {
   selectedMethod.value = methodId;
 };
 

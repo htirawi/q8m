@@ -89,8 +89,8 @@ export function useToast() {
       t("toasts.payment.success.message", { amount, currency })
     );
 
-  const paymentError = (error: string) =>
-    error(t("toasts.payment.error.title"), error || t("toasts.payment.error.generic"));
+  const paymentError = (errorMessage: string) =>
+    error(t("toasts.payment.error.title"), errorMessage || t("toasts.payment.error.generic"));
 
   const subscriptionUpdated = (plan: string) =>
     success(
@@ -104,8 +104,8 @@ export function useToast() {
   const authSuccess = (action: string) =>
     success(t("toasts.auth.success.title"), t("toasts.auth.success.message", { action }));
 
-  const authError = (error: string) =>
-    error(t("toasts.auth.error.title"), error || t("toasts.auth.error.generic"));
+  const authError = (errorMessage: string) =>
+    error(t("toasts.auth.error.title"), errorMessage || t("toasts.auth.error.generic"));
 
   const networkError = () =>
     error(t("toasts.network.error.title"), t("toasts.network.error.message"));

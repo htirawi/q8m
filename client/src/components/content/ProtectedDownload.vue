@@ -93,9 +93,9 @@ import { ref, computed, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { usePaymentStore } from "@/stores/payment";
 import { useContentAccess } from "@/composables/useEntitlementGuard";
-import ContentAccessGuard from "./ContentAccessGuard.vue";
+import ContentAccessGuard from "@/components/content/ContentAccessGuard.vue";
 
-interface props {
+interface Props {
   category: string;
   filename: string;
   fileSize?: string;

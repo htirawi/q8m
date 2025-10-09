@@ -5,7 +5,7 @@ import { usePaymentStore } from "@/stores/payment";
 import { useAuthStore } from "@/stores/auth";
 import { useErrorHandler } from "@/composables/useErrorHandler";
 import { useToast } from "@/composables/useToast";
-import type { PlanPricing, PricingInfo, PaymentRequest } from "@/stores/payment";
+import type { PlanPricing, PaymentRequest } from "@/types/domain/payment";
 
 export interface BillingFormData {
   name: string;
@@ -79,7 +79,7 @@ export function useCheckoutForm() {
   };
 
   const isFormValid = computed(() => {
-    return (
+    return Boolean(
       billingForm.name.trim() &&
       billingForm.email.trim() &&
       billingForm.street.trim() &&
@@ -107,12 +107,12 @@ export function useCheckoutForm() {
   // Payment processing
   const processPayment = async (selectedPlan: PlanPricing) => {
     if (!validateForm()) {
-      toast.error(t("checkout.validationError"));
+      toast.error(t("checkout.error.title"), t("checkout.validationError"));
       return;
     }
 
     isProcessing.value = true;
-    errors.value = {};
+    Object.keys(errors).forEach((key) => delete errors[key]);
 
     try {
       const paymentRequest: PaymentRequest = {
@@ -131,16 +131,16 @@ export function useCheckoutForm() {
       const result = await paymentStore.createPayment(paymentRequest);
 
       if (result.success) {
-        toast.success(t("checkout.paymentCreated"));
+        toast.success(t("checkout.success.title"), t("checkout.paymentCreated"));
         // Redirect to payment gateway
         window.location.href = result.checkoutUrl;
       } else {
-        throw new Error(result.error || t("checkout.paymentFailed"));
+        throw new Error(t("checkout.paymentFailed"));
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : t("checkout.paymentFailed");
       errorHandler.handlePaymentError(error);
-      toast.error(errorMessage);
+      toast.error(t("checkout.error.title"), errorMessage);
     } finally {
       isProcessing.value = false;
     }

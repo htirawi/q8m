@@ -140,7 +140,6 @@ import { usePaymentStore } from "@/stores/payment";
 import { useAuthStore } from "@/stores/auth";
 import { useI18n } from "vue-i18n";
 import CheckoutForm from "@/components/payment/CheckoutForm.vue";
-import type { PlanPricing } from "@/stores/payment";
 
 const route = useRoute();
 const router = useRouter();
@@ -172,7 +171,7 @@ const retry = async () => {
   }
 };
 
-const initializecheckout = async () => {
+const initializeCheckout = async () => {
   try {
     // Ensure user is authenticated
     if (!authStore.isAuthenticated) {

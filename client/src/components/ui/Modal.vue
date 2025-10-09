@@ -55,7 +55,7 @@
 <script setup lang="ts">
 import { ref, computed, nextTick, onMounted, onUnmounted } from "vue";
 
-export interface modalprops {
+export interface ModalProps {
   isOpen: boolean;
   title?: string;
   description?: string;
@@ -72,7 +72,7 @@ const props = withDefaults(defineProps<ModalProps>(), {
   closeOnEscape: true,
 });
 
-const emit = defineemits<{
+const emit = defineEmits<{
   close: [];
   "update:isOpen": [value: boolean];
 }>();
@@ -103,34 +103,35 @@ const handleClose = () => {
   emit("update:isOpen", false);
 };
 
-const handleoverlayclick = () => {
+const handleOverlayClick = () => {
   if (props.closeOnOverlay) {
     handleClose();
   }
 };
 
-const handlekeydown = (event: KeyboardEvent) => {
+const handleKeydown = (event: KeyboardEvent) => {
   if (event.key === "Escape" && props.closeOnEscape) {
     handleClose();
   }
 };
 
-const handleenter = async () => {
+const handleEnter = async () => {
   await nextTick();
   if (modalRef.value) {
     modalRef.value.focus();
   }
 };
 
-const handleleave = () => {
+const handleLeave = () => {
   // Focus management handled by the component that opened the modal
 };
 
 // Keyboard trap
 let focusableElements: HTMLElement[] = [];
+let firstFocusableElement: HTMLElement | null = null;
 let lastFocusableElement: HTMLElement | null = null;
 
-const trapfocus = (event: KeyboardEvent) => {
+const trapFocus = (event: KeyboardEvent) => {
   if (!props.isOpen) return;
 
   if (event.key === "Tab") {
@@ -148,7 +149,7 @@ const trapfocus = (event: KeyboardEvent) => {
   }
 };
 
-const updatefocusableelements = () => {
+const updateFocusableElements = () => {
   if (!modalRef.value) return;
 
   focusableElements = Array.from(

@@ -4,15 +4,15 @@
  * This file sets up the test environment for payment system testing
  */
 
-import { beforeAll, afterAll, beforeEach, afterEach } from "vitest";
 
-import { connectDatabase, disconnectDatabase } from "../config/database.js";
-import { FxRate } from "../models/FxRate.js";
-import { Purchase } from "../models/Purchase.js";
-import { Subscription } from "../models/Subscription.js";
-import { User } from "../models/User.js";
-import { entitlementService } from "../services/entitlement.service.js";
-import { mockPaymentService } from "../services/mock-payment.service.js";
+import { connectDatabase, disconnectDatabase } from "@config/database.js";
+import { FxRate } from "@models/FxRate.js";
+import { Purchase } from "@models/Purchase.js";
+import { Subscription } from "@models/Subscription.js";
+import { User } from "@models/User.js";
+import { entitlementService } from "@services/entitlement.service.js";
+import { mockPaymentService } from "@services/mock-payment.service.js";
+import { beforeAll, afterAll, beforeEach, afterEach } from "vitest";
 
 // Global test setup
 beforeAll(async () => {

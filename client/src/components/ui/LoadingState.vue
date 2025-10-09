@@ -30,9 +30,9 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
-import LoadingSpinner from "./LoadingSpinner.vue";
+import LoadingSpinner from "@/components/ui/LoadingSpinner.vue";
 
-interface props {
+interface Props {
   type?: "page" | "section" | "inline" | "overlay";
   size?: "sm" | "md" | "lg" | "xl";
   color?: "primary" | "secondary" | "white" | "gray";

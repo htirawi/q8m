@@ -159,9 +159,9 @@ import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
 import { usePaymentStore } from "@/stores/payment";
 import { useEntitlementGuard, useContentAccess } from "@/composables/useEntitlementGuard";
-import type { PlanPricing } from "@/stores/payment";
+import type { PlanPricing } from "@/types/domain/payment";
 
-interface props {
+interface Props {
   requiredEntitlement?: string;
   requiredContentLevel?: string;
   category?: string;

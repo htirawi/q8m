@@ -1,8 +1,8 @@
+import { env } from "@config/env.js";
+import type { IUser } from "@models/User.js";
 import * as jwt from "jsonwebtoken";
 import type { ObjectId } from "mongoose";
 
-import { env } from "../config/env.js";
-import type { IUser } from "../models/User.js";
 
 export interface JWTPayload {
   userId: string;

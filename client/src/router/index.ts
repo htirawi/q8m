@@ -13,18 +13,20 @@ export const DEFAULT_LOCALE: SupportedLocale = "en";
 // Helper function to create localized routes
 const createLocalizedRoute = (
   path: string,
-  component: () => Promise<{ default: any }>,
+  component: RouteRecordRaw["component"],
   meta: Record<string, unknown>,
   name?: string
-): RouteRecordRaw => ({
-  path: `/:locale${path}`,
-  name: name ? `${name}` : undefined,
-  component,
-  meta: {
-    ...meta,
-    locale: true,
-  },
-});
+): RouteRecordRaw => {
+  return {
+    path: `/:locale${path}`,
+    ...(name ? { name } : {}),
+    component,
+    meta: {
+      ...meta,
+      locale: true,
+    },
+  } as RouteRecordRaw;
+};
 
 // Route definitions with lazy loading and chunk names
 const routes: RouteRecordRaw[] = [

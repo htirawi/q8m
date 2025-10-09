@@ -28,7 +28,7 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import HelperText from "./HelperText.vue";
+import HelperText from "@/components/ui/HelperText.vue";
 
 export interface FormFieldProps {
   id?: string;

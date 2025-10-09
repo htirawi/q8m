@@ -5,14 +5,13 @@
  * for testing and development purposes.
  */
 
+
+import { Purchase } from "@models/Purchase.js";
+import type { IPurchase } from "@models/Purchase.js";
+import { Subscription } from "@models/Subscription.js";
+import { User } from "@models/User.js";
+import { entitlementService } from "@services/entitlement.service.js";
 import type { Plan } from "@shared/types/pricing";
-
-import { Purchase } from "../models/Purchase.js";
-import type { IPurchase } from "../models/Purchase.js";
-import { Subscription } from "../models/Subscription.js";
-import { User } from "../models/User.js";
-
-import { entitlementService } from "./entitlement.service.js";
 
 interface MockPaymentRequest {
   planType: Plan;

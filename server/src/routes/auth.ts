@@ -1,18 +1,18 @@
 import * as crypto from "crypto";
 
+
+import { env } from "@config/env.js";
+import { authenticate } from "@middlewares/auth.middleware.js";
+import { Session } from "@models/Session.js";
+import { User } from "@models/User.js";
+import { VerificationToken } from "@models/VerificationToken.js";
+import { comboKey, ipKey } from "@server/security/rateLimit.js";
+import { emailService } from "@services/email.service.js";
+import { jwtService } from "@services/jwt.service.js";
+import { secureCookieService } from "@services/secure-cookie.service.js";
 import type { FastifyInstance } from "fastify";
 import { z } from "zod";
 import { zodToJsonSchema } from "zod-to-json-schema";
-
-import { env } from "../config/env.js";
-import { authenticate } from "../middlewares/auth.middleware.js";
-import { Session } from "../models/Session.js";
-import { User } from "../models/User.js";
-import { VerificationToken } from "../models/VerificationToken.js";
-import { comboKey, ipKey } from "../security/rateLimit.js";
-import { emailService } from "../services/email.service.js";
-import { jwtService } from "../services/jwt.service.js";
-import { secureCookieService } from "../services/secure-cookie.service.js";
 
 // Type definitions for request bodies
 interface RegisterBody {

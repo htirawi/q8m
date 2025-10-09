@@ -61,9 +61,9 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
-import type { PlanPricing, PricingInfo } from "@/stores/payment";
+import type { PlanPricing, PricingInfo } from "@/types/domain/payment";
 
-interface props {
+interface Props {
   selectedPlan: PlanPricing;
   billingCycle: "monthly" | "yearly";
   priceInfo?: PricingInfo;
@@ -71,8 +71,8 @@ interface props {
 
 const props = defineProps<Props>();
 
-const emit = defineemits<{
-  
+defineEmits<{
+  "toggle-billing-cycle": [];
 }>();
 
 const { t } = useI18n();

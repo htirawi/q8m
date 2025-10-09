@@ -157,7 +157,7 @@ const emit = defineEmits<{
   "update:modelValue": [value: BillingFormData];
 }>();
 
-const { t } = useI18n();
+useI18n();
 
 // Destructure props with proper reactivity
 const { modelValue } = toRefs(props);

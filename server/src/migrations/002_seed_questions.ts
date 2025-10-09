@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 
-import { Question } from "../models/Question.js";
+import { Question } from "@models/Question.js";
 
 /**
  * Migration 002: Seed Questions Database

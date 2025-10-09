@@ -1,10 +1,10 @@
 import * as crypto from "crypto";
 
+import { env } from "@config/env.js";
 import type { FastifyRateLimitOptions } from "@fastify/rate-limit";
 import redis from "@fastify/redis";
 import type { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
 
-import { env } from "../config/env.js";
 
 // Types for rate limiting configuration
 interface RateLimitOptions {

@@ -84,7 +84,7 @@
           >
             <!-- Popular/Recommended Badge -->
             <div v-if="plan.popular || plan.recommended" class="pricing-badge">
-              {{ plan.popular ? $t("pricing.popular") : $t("pricing.recommended")$t }}
+              {{ plan.popular ? $t("pricing.popular") : $t("pricing.recommended") }}
             </div>
 
             <!-- Plan Header -->
@@ -196,7 +196,7 @@ import { usePaymentStore } from "@/stores/payment";
 import { useAuthStore } from "@/stores/auth";
 import { useI18n } from "vue-i18n";
 import CurrencySwitcher from "@/components/ui/CurrencySwitcher.vue";
-import type { PlanPricing } from "@/stores/payment";
+import type { PlanPricing } from "@/types/domain/payment";
 
 const router = useRouter();
 const { t } = useI18n();
@@ -209,7 +209,7 @@ const openFaqs = ref<number[]>([]);
 
 // Computed
 const filteredPricing = computed(() => {
-  return paymentStore.pricing.filter((plan) => {
+  return paymentStore.pricing.filter(() => {
     // Show all plans for now, but you could filter based on user needs
     return true;
   });
@@ -238,10 +238,9 @@ const faqs = computed(() => [
 // Methods
 const toggleBillingCycle = () => {
   billingCycle.value = billingCycle.value === "monthly" ? "yearly" : "monthly";
-  billingCycle.value;
 };
 
-const getdisplayprice = (plan: PlanPricing) => {
+const getDisplayPrice = (plan: PlanPricing) => {
   const priceInfo = getPriceInfo(plan);
   if (!priceInfo) return "Free";
 
@@ -255,17 +254,17 @@ const getdisplayprice = (plan: PlanPricing) => {
   return priceInfo.formatted;
 };
 
-const getpriceperiod = (plan: PlanPricing) => {
+const getPricePeriod = (plan: PlanPricing) => {
   if (plan.planId === "JUNIOR") return "";
   return billingCycle.value === "yearly" ? "/year" : "/month";
 };
 
-const getpriceinfo = (plan: PlanPricing) => {
+const getPriceInfo = (plan: PlanPricing) => {
   const currency = paymentStore.currentCurrency;
   return plan.pricing[currency];
 };
 
-const selectplan = async (plan: PlanPricing) => {
+const selectPlan = async (plan: PlanPricing) => {
   if (plan.planId === "JUNIOR") {
     await startFreePlan();
     return;
@@ -277,7 +276,7 @@ const selectplan = async (plan: PlanPricing) => {
   }
 
   try {
-    const paymentrequest = {
+    const paymentRequest = {
       planType: plan.planId as "INTERMEDIATE" | "SENIOR" | "BUNDLE",
       currency: paymentStore.currentCurrency,
       billingCycle: billingCycle.value,
@@ -292,7 +291,7 @@ const selectplan = async (plan: PlanPricing) => {
   }
 };
 
-const startfreeplan = async () => {
+const startFreePlan = async () => {
   if (!authStore.isAuthenticated) {
     router.push("/auth/register");
     return;
@@ -302,7 +301,7 @@ const startfreeplan = async () => {
   router.push("/dashboard");
 };
 
-const togglefaq = (index: number) => {
+const toggleFaq = (index: number) => {
   const currentIndex = openFaqs.value.indexOf(index);
   if (currentIndex > -1) {
     openFaqs.value.splice(currentIndex, 1);
@@ -311,7 +310,7 @@ const togglefaq = (index: number) => {
   }
 };
 
-const contactsupport = () => {
+const contactSupport = () => {
   // In a real app, this might open a contact form or redirect to support
   console.log("Contact support");
 };

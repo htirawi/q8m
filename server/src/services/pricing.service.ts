@@ -1,5 +1,5 @@
-import type { PricingInfo } from "./currency.service.js";
-import { currencyService } from "./currency.service.js";
+import type { PricingInfo } from "@services/currency.service.js";
+import { currencyService } from "@services/currency.service.js";
 
 export interface PlanPricing {
   planId: string;

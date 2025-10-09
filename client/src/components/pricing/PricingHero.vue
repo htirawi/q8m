@@ -39,7 +39,7 @@
 
 <script setup lang="ts">
 import { CheckIcon } from "@heroicons/vue/24/outline";
-import { heroData, trustBadges } from "./pricing.config";
+import { heroData, trustBadges } from "@/components/pricing/pricing.config";
 
 defineOptions({
   name: "PricingHero",

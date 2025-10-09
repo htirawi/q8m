@@ -21,7 +21,7 @@
 
 <script setup lang="ts">
 import { ShieldCheckIcon } from "@heroicons/vue/24/outline";
-import { guaranteeData } from "./pricing.config";
+import { guaranteeData } from "@/components/pricing/pricing.config";
 
 defineOptions({
   name: "GuaranteePanel",

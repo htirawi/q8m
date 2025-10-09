@@ -21,7 +21,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, watch } from "vue";
 
-interface props {
+interface Props {
   items: any[];
   itemHeight: number;
   containerHeight: number;

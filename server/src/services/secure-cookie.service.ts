@@ -1,8 +1,8 @@
 import * as crypto from "crypto";
 
+import { env } from "@config/env.js";
 import type { FastifyReply } from "fastify";
 
-import { env } from "../config/env.js";
 
 export interface SecureCookieOptions {
   httpOnly: boolean;

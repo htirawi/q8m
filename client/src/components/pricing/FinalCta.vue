@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-import { finalCtaData } from "./pricing.config";
+import { finalCtaData } from "@/components/pricing/pricing.config";
 
 interface Emits {
   (e: "cta-click"): void;

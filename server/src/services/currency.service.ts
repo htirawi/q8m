@@ -1,5 +1,5 @@
-import { env } from "../config/env.js";
-import { FxRate } from "../models/FxRate.js";
+import { env } from "@config/env.js";
+import { FxRate } from "@models/FxRate.js";
 
 export interface CurrencyConversionResult {
   originalAmount: number;

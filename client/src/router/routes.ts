@@ -67,7 +67,7 @@ export const routes: RouteRecordRaw[] = [
   {
     path: "/checkout",
     name: "checkout",
-    component: () => import("@/views/CheckoutView.vue"),
+    component: () => import("@/features/checkout/pages/CheckoutPage.vue"),
     meta: {
       title: "Checkout - Quiz Platform",
       requiresAuth: true,
@@ -76,7 +76,7 @@ export const routes: RouteRecordRaw[] = [
   {
     path: "/payment/success",
     name: "payment-success",
-    component: () => import("@/views/PaymentSuccessView.vue"),
+    component: () => import("@/features/payment/pages/PaymentSuccessPage.vue"),
     meta: {
       title: "Payment Successful - Quiz Platform",
       requiresAuth: true,
@@ -85,7 +85,7 @@ export const routes: RouteRecordRaw[] = [
   {
     path: "/payment/error",
     name: "payment-error",
-    component: () => import("@/views/PaymentErrorView.vue"),
+    component: () => import("@/features/payment/pages/PaymentErrorPage.vue"),
     meta: {
       title: "Payment Failed - Quiz Platform",
     },
@@ -122,7 +122,7 @@ export const routes: RouteRecordRaw[] = [
   {
     path: "/subscription",
     name: "subscription",
-    component: () => import("@/views/SubscriptionView.vue"),
+    component: () => import("@/features/account/pages/SubscriptionPage.vue"),
     meta: {
       title: "Subscription - Quiz Platform",
       requiresAuth: true,

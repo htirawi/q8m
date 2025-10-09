@@ -52,8 +52,7 @@
         :class="{ 'checkout-button--loading': isProcessing }"
       >
         <LoadingSpinner v-if="isProcessing" size="sm" color="white" class="mr-2" />
-        {{ isProcessing ? $t("checkout.processing") : $t("checkout.completeOrder")$t }}
-
+        {{ isProcessing ? $t("checkout.processing") : $t("checkout.completeOrder") }}
       </button>
 
       <p class="security-note">
@@ -70,9 +69,9 @@ import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { ShieldCheckIcon } from "@heroicons/vue/24/outline";
 import LoadingSpinner from "@/components/ui/LoadingSpinner.vue";
-import type { PlanPricing, PricingInfo } from "@/stores/payment";
+import type { PlanPricing, PricingInfo } from "@/types/domain/payment";
 
-interface props {
+interface Props {
   selectedPlan: PlanPricing;
   billingCycle: "monthly" | "yearly";
   priceInfo?: PricingInfo;

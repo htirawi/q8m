@@ -1,6 +1,6 @@
+import { entitlementService } from "@services/entitlement.service.js";
 import type { FastifyRequest, FastifyReply } from "fastify";
 
-import { entitlementService } from "../services/entitlement.service.js";
 
 // Extend FastifyRequest to include entitlement data
 declare module "fastify" {

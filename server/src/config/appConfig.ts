@@ -1,4 +1,4 @@
-import { env } from "./env";
+import { env } from "@config/env";
 
 export const features = {
   paypal: Boolean(env.PAYPAL_CLIENT_ID && env.PAYPAL_CLIENT_SECRET),

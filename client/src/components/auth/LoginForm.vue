@@ -216,13 +216,13 @@ import { useI18n } from "vue-i18n";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/vue/24/outline";
 import { useAuthStore } from "@/stores/auth";
 
-interface loginformdata {
+interface LoginFormData {
   email: string;
   password: string;
   rememberMe: boolean;
 }
 
-interface formerrors {
+interface FormErrors {
   email?: string;
   password?: string;
 }

@@ -63,17 +63,17 @@ const currentCurrency = computed(() => paymentStore.currentCurrency);
 
 const currencies = computed(() => [
   {
-    code: "USD",
+    code: "USD" as const,
     name: t("currency.usd"),
     flag: "🇺🇸",
   },
   {
-    code: "JOD",
+    code: "JOD" as const,
     name: t("currency.jod"),
     flag: "🇯🇴",
   },
   {
-    code: "SAR",
+    code: "SAR" as const,
     name: t("currency.sar"),
     flag: "🇸🇦",
   },
@@ -89,7 +89,7 @@ const getCurrencyFlag = (currency: string) => {
   return currencyMap[currency] || "💱";
 };
 
-const selectcurrency = async (currency: "USD" | "JOD" | "SAR") => {
+const selectCurrency = async (currency: "USD" | "JOD" | "SAR") => {
   if (currency === currentCurrency.value) {
     isOpen.value = false;
     return;

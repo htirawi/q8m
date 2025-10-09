@@ -34,7 +34,7 @@
 </template>
 
 <script setup lang="ts">
-import type { BillingCycle } from "./pricing.config";
+import type { BillingCycle } from "@/components/pricing/pricing.config";
 
 interface Props {
   modelValue: BillingCycle;

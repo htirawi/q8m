@@ -1,9 +1,9 @@
-import type { JWTPayload } from "@server/types/common";
-import type { FastifyRequest, FastifyReply, FastifyInstance } from "fastify";
 
-import { Session } from "../models/Session.js";
-import { User } from "../models/User.js";
-import { jwtService } from "../services/jwt.service.js";
+import { Session } from "@models/Session.js";
+import { User } from "@models/User.js";
+import type { JWTPayload } from "@server/types/common";
+import { jwtService } from "@services/jwt.service.js";
+import type { FastifyRequest, FastifyReply, FastifyInstance } from "fastify";
 
 // Extend FastifyRequest to include custom user and session properties
 declare module "fastify" {

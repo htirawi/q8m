@@ -19,7 +19,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import Toast from "./Toast.vue";
+import Toast from "@/components/ui/Toast.vue";
 import type { Component } from "vue";
 
 export interface ToastItem {

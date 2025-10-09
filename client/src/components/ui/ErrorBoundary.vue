@@ -57,7 +57,7 @@ import { useRouter } from "vue-router";
 import { useErrorHandler } from "@/composables/useErrorHandler";
 import { useToast } from "@/composables/useToast";
 
-interface props {
+interface Props {
   fallback?: boolean;
   showDetails?: boolean;
   onRetry?: () => void;

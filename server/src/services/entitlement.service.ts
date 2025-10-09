@@ -1,7 +1,7 @@
-import type { ObjectId } from "mongoose";
 
-import { Subscription } from "../models/Subscription.js";
-import { User } from "../models/User.js";
+import { Subscription } from "@models/Subscription.js";
+import { User } from "@models/User.js";
+import type { ObjectId } from "mongoose";
 
 export interface EntitlementCheck {
   hasAccess: boolean;

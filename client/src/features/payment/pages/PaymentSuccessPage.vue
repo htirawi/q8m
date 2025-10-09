@@ -156,7 +156,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
+import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { usePaymentStore } from "@/stores/payment";
 import { useAuthStore } from "@/stores/auth";
@@ -164,29 +164,23 @@ import { useI18n } from "vue-i18n";
 
 const route = useRoute();
 const router = useRouter();
-const { t } = useI18n();
+useI18n();
 const paymentStore = usePaymentStore();
-const authStore = useAuthStore();
+useAuthStore();
 
 // State
 const orderDetails = ref<any>(null);
-
-// Computed
-const formattedDate = computed(() => {
-  if (!orderDetails.value?.date) return "";
-  return new Date(orderDetails.value.date).toLocaleDateString();
-});
 
 // Methods
 const goToDashboard = () => {
   router.push("/dashboard");
 };
 
-const gotoquizzes = () => {
+const goToQuizzes = () => {
   router.push("/quizzes");
 };
 
-const parseorderdetails = () => {
+const parseOrderDetails = () => {
   // Parse order details from URL parameters or state
   const orderId = route.query.orderId as string;
   const planName = route.query.plan as string;
@@ -195,12 +189,10 @@ const parseorderdetails = () => {
   const billingCycle = route.query.billing as string;
 
   if (orderId && planName && amount) {
-    orderdetails.value = {
+    orderDetails.value = {
       orderId,
       planName,
-      amount: `${amount} ${currency}
-
-`,
+      amount: `${amount} ${currency}`,
       billingCycle,
       date: new Date().toISOString(),
     };
