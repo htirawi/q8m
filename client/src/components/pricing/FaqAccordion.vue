@@ -1,3 +1,25 @@
+<script setup lang="ts">
+import { ref } from "vue";
+import { ChevronDownIcon } from "@heroicons/vue/24/outline";
+
+import { faqs } from "@/components/pricing/pricing.config";
+
+const openFaqs = ref<number[]>([]);
+
+const toggleFaq = (index: number) => {
+  const currentIndex = openFaqs.value.indexOf(index);
+  if (currentIndex > -1) {
+    openFaqs.value.splice(currentIndex, 1);
+  } else {
+    openFaqs.value.push(index);
+  }
+};
+
+defineOptions({
+  name: "FaqAccordion",
+});
+</script>
+
 <template>
   <section class="faq-accordion" aria-labelledby="faq-title">
     <div class="faq-accordion-container">
@@ -45,27 +67,6 @@
   </section>
 </template>
 
-<script setup lang="ts">
-import { ref } from "vue";
-import { ChevronDownIcon } from "@heroicons/vue/24/outline";
-import { faqs } from "@/components/pricing/pricing.config";
-
-const openFaqs = ref<number[]>([]);
-
-const toggleFaq = (index: number) => {
-  const currentIndex = openFaqs.value.indexOf(index);
-  if (currentIndex > -1) {
-    openFaqs.value.splice(currentIndex, 1);
-  } else {
-    openFaqs.value.push(index);
-  }
-};
-
-defineOptions({
-  name: "FaqAccordion",
-});
-</script>
-
 <style scoped>
 .faq-accordion {
   @apply bg-gray-50 py-16 lg:py-24;
@@ -98,6 +99,7 @@ defineOptions({
 .faq-accordion-button {
   @apply flex w-full items-center justify-between px-6 py-4 text-left transition-colors duration-200;
   @apply hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500;
+  @apply min-h-[44px];
 }
 
 .faq-accordion-question {

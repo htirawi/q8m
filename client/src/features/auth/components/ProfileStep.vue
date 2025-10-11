@@ -1,3 +1,36 @@
+<script setup lang="ts">
+import { computed, ref } from "vue";
+
+import { EyeIcon, EyeSlashIcon } from "@heroicons/vue/24/outline";
+import { useI18n } from "vue-i18n";
+
+import LoadingSpinner from "@/components/ui/LoadingSpinner.vue";
+import PasswordStrengthIndicator from "@/features/auth/components/PasswordStrengthIndicator.vue";
+import type { ProfileStepProps } from "@/types/ui/component-props";
+
+const props = defineProps<ProfileStepProps>();
+
+defineEmits<{
+  "update:name": [value: string];
+  "update:password": [value: string];
+  "update:acceptTerms": [value: boolean];
+  back: [];
+}>();
+
+useI18n();
+
+const showPassword = ref(false);
+
+const isValid = computed(() => {
+  return (
+    props.name &&
+    props.password &&
+    props.password.length >= 8 &&
+    props.acceptTerms
+  );
+});
+</script>
+
 <template>
   <div class="form-step">
     <div class="step-indicator">
@@ -25,7 +58,11 @@
           :type="showPassword ? 'text' : 'password'" autocomplete="new-password" required
           class="form-input password-input" :class="{ 'form-input-error': passwordError }"
           :placeholder="$t('auth.fields.passwordPlaceholder')" />
-        <button type="button" @click="showPassword = !showPassword" class="password-toggle">
+        <button
+          type="button"
+          @click="showPassword = !showPassword"
+          :aria-label="showPassword ? $t('auth.fields.hidePassword') : $t('auth.fields.showPassword')"
+          class="password-toggle">
           <EyeIcon v-if="!showPassword" class="toggle-icon" />
           <EyeSlashIcon v-else class="toggle-icon" />
         </button>
@@ -57,17 +94,12 @@
     </div>
 
     <div class="form-actions">
-      <button type="button" @click="$emit('back')" class="back-button">
+      <button type="button" @click="$emit('back')" class="form-button-secondary">
         {{ $t("auth.register.back") }}
       </button>
-      <button type="submit" :disabled="!isValid || isLoading" class="continue-button">
+      <button type="submit" :disabled="!isValid || isLoading" class="form-button">
         <span v-if="isLoading" class="button-content">
-          <svg class="loading-spinner" viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" opacity="0.25" />
-            <path
-              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              fill="currentColor" opacity="0.75" />
-          </svg>
+          <LoadingSpinner size="sm" color="white" />
           {{ $t("auth.register.creating") }}
         </span>
         <span v-else class="button-content">
@@ -78,60 +110,13 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { ref, computed } from "vue";
-import { useI18n } from "vue-i18n";
-import { EyeIcon, EyeSlashIcon } from "@heroicons/vue/24/outline";
-import PasswordStrengthIndicator from "@/features/auth/components/PasswordStrengthIndicator.vue";
-import type { ProfileStepProps } from "@/types/ui/component-props";
-
-const props = defineProps<ProfileStepProps>();
-
-defineEmits<{
-  "update:name": [value: string];
-  "update:password": [value: string];
-  "update:acceptTerms": [value: boolean];
-  back: [];
-}>();
-
-useI18n();
-
-const showPassword = ref(false);
-
-const isValid = computed(() => {
-  return (
-    props.name &&
-    props.password &&
-    props.password.length >= 8 &&
-    props.acceptTerms
-  );
-});
-</script>
-
 <style scoped>
-/* Form Step */
+/* Component-specific animations - shared keyframes are in main.css */
 .form-step {
-  @apply space-y-6;
   animation: fadeIn 0.3s ease-out;
 }
 
-.step-indicator {
-  @apply mb-6 flex items-center gap-3;
-}
-
-.step-number {
-  @apply flex h-8 w-8 items-center justify-center rounded-full;
-  @apply bg-primary-600 text-sm font-bold text-white;
-}
-
-.step-text {
-  @apply text-lg font-medium text-gray-900;
-  @apply dark:text-white;
-}
-
-/* Form Fields */
 .form-group {
-  @apply space-y-2;
   animation: fadeIn 0.3s ease-out;
 }
 
@@ -147,30 +132,21 @@ const isValid = computed(() => {
   animation-delay: 0.3s;
 }
 
-.form-label {
-  @apply block text-sm font-medium text-gray-700;
-  @apply dark:text-gray-300;
+/* Component-specific styles not in shared forms.css */
+.step-indicator {
+  @apply mb-6 flex items-center gap-3;
 }
 
-.form-input {
-  @apply w-full rounded-xl border-2 border-gray-200 px-4 py-3;
-  @apply bg-white text-gray-900 placeholder-gray-500;
-  @apply focus:border-primary-500 focus:ring-4 focus:ring-primary-500/20;
-  @apply transition-all duration-200 ease-in-out;
-  @apply dark:border-gray-600 dark:bg-gray-800 dark:text-white;
-  @apply dark:placeholder-gray-400 dark:focus:border-primary-400;
+.step-number {
+  @apply flex h-8 w-8 items-center justify-center rounded-full;
+  @apply bg-primary-600 text-sm font-bold text-white;
 }
 
-.form-input-error {
-  @apply border-red-500 focus:border-red-500 focus:ring-red-500/20;
+.step-text {
+  @apply text-lg font-medium text-gray-900;
+  @apply dark:text-white;
 }
 
-.form-error {
-  @apply text-sm font-medium text-red-600;
-  @apply dark:text-red-400;
-}
-
-/* Password Input */
 .password-input-container {
   @apply relative;
 }
@@ -179,18 +155,10 @@ const isValid = computed(() => {
   @apply pr-12;
 }
 
-.password-toggle {
-  @apply absolute right-3 top-1/2 -translate-y-1/2;
-  @apply p-2 text-gray-500 hover:text-gray-700;
-  @apply transition-colors duration-200;
-  @apply dark:text-gray-400 dark:hover:text-gray-200;
-}
-
 .toggle-icon {
   @apply h-5 w-5;
 }
 
-/* Terms Checkbox */
 .terms-checkbox {
   @apply flex cursor-pointer items-start gap-3;
 }
@@ -226,28 +194,6 @@ const isValid = computed(() => {
   @apply dark:text-primary-400 dark:hover:text-primary-300;
 }
 
-/* Buttons */
-.continue-button {
-  @apply w-full rounded-xl px-6 py-4 font-semibold;
-  @apply bg-gradient-to-r from-primary-600 to-primary-700;
-  @apply text-white shadow-lg hover:shadow-xl;
-  @apply focus:outline-none focus:ring-4 focus:ring-primary-500/30;
-  @apply transition-all duration-200 ease-in-out;
-  @apply transform hover:-translate-y-0.5;
-  @apply disabled:cursor-not-allowed disabled:opacity-50;
-  @apply disabled:transform-none;
-}
-
-.back-button {
-  @apply rounded-xl border-2 border-gray-300 px-6 py-3;
-  @apply bg-white font-medium text-gray-700;
-  @apply hover:border-gray-400 hover:bg-gray-50;
-  @apply focus:outline-none focus:ring-4 focus:ring-gray-500/20;
-  @apply transition-all duration-200 ease-in-out;
-  @apply dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300;
-  @apply dark:hover:border-gray-500 dark:hover:bg-gray-700;
-}
-
 .form-actions {
   @apply flex gap-4;
 }
@@ -256,35 +202,18 @@ const isValid = computed(() => {
   @apply flex items-center justify-center gap-3;
 }
 
-.loading-spinner {
-  @apply h-5 w-5 animate-spin;
-}
-
 /* Responsive Design */
 @media (max-width: 640px) {
   .form-actions {
     @apply flex-col;
   }
 
-  .back-button {
+  .form-button-secondary {
     @apply order-2;
   }
 
-  .continue-button {
+  .form-button {
     @apply order-1;
-  }
-}
-
-/* Animation */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
   }
 }
 </style>

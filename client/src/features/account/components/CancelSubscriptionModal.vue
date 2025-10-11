@@ -1,3 +1,42 @@
+<script setup lang="ts">
+import { ref, watch } from "vue";
+import { useI18n } from "vue-i18n";
+import type { CancelSubscriptionModalProps } from "@/types/ui/component-props";
+
+const props = defineProps<CancelSubscriptionModalProps>();
+
+const emit = defineEmits<{
+  close: [];
+  confirm: [reason: string];
+}>();
+
+useI18n();
+
+// State
+const selectedReason = ref("");
+
+// Methods
+const handleClose = () => {
+  selectedReason.value = "";
+  emit("close");
+};
+
+const handleConfirm = () => {
+  if (!selectedReason.value) return;
+  emit("confirm", selectedReason.value);
+};
+
+// Watch for modal close to reset reason
+watch(
+  () => props.show,
+  (newValue) => {
+    if (!newValue) {
+      selectedReason.value = "";
+    }
+  }
+);
+</script>
+
 <template>
   <div v-if="show" class="modal-overlay" @click="handleClose">
     <div class="modal-content" @click.stop>
@@ -39,45 +78,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref, watch } from "vue";
-import { useI18n } from "vue-i18n";
-import type { CancelSubscriptionModalProps } from "@/types/ui/component-props";
-
-const props = defineProps<CancelSubscriptionModalProps>();
-
-const emit = defineEmits<{
-  close: [];
-  confirm: [reason: string];
-}>();
-
-useI18n();
-
-// State
-const selectedReason = ref("");
-
-// Methods
-const handleClose = () => {
-  selectedReason.value = "";
-  emit("close");
-};
-
-const handleConfirm = () => {
-  if (!selectedReason.value) return;
-  emit("confirm", selectedReason.value);
-};
-
-// Watch for modal close to reset reason
-watch(
-  () => props.show,
-  (newValue) => {
-    if (!newValue) {
-      selectedReason.value = "";
-    }
-  }
-);
-</script>
 
 <style scoped>
 /* Modal */

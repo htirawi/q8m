@@ -1,3 +1,93 @@
+<script setup lang="ts">
+import { ref, computed, reactive } from "vue";
+
+import { EyeIcon, EyeSlashIcon } from "@heroicons/vue/24/outline";
+import { useI18n } from "vue-i18n";
+import { useRoute } from "vue-router";
+
+import FormDivider from "@/components/ui/FormDivider.vue";
+import LoadingSpinner from "@/components/ui/LoadingSpinner.vue";
+import { useFormValidation } from "@/composables/useFormValidation";
+import { useAuthStore } from "@/stores/auth";
+import type { LoginFormData, FormErrors, LoginFormEmits } from "@/types/ui/component-props";
+
+const emit = defineEmits<LoginFormEmits>();
+useI18n();
+const authStore = useAuthStore();
+const route = useRoute();
+const { validateEmail, validatePassword } = useFormValidation();
+
+// Reactive data
+const formData = reactive<LoginFormData>({
+  email: "",
+  password: "",
+  rememberMe: false,
+});
+
+const errors = ref<FormErrors>({});
+const showPassword = ref(false);
+
+// Computed
+const isLoading = computed(() => authStore.isLoading);
+const error = computed(() => authStore.error);
+const isFormValid = computed(() => {
+  return (
+    formData.email &&
+    formData.password &&
+    formData.email.includes("@") &&
+    formData.password.length >= 8
+  );
+});
+
+// Generate register route with locale preservation
+const registerRoute = computed(() => {
+  const locale = route.params.locale || "en";
+  return {
+    name: "register",
+    params: { locale },
+  };
+});
+
+// Methods
+function validateForm(): boolean {
+  errors.value = {};
+
+  const emailError = validateEmail(formData.email);
+  if (emailError) {
+    errors.value.email = emailError;
+  }
+
+  const passwordError = validatePassword(formData.password);
+  if (passwordError) {
+    errors.value.password = passwordError;
+  }
+
+  return Object.keys(errors.value).length === 0;
+}
+
+async function handleSubmit(): Promise<void> {
+  if (!validateForm()) {
+    return;
+  }
+
+  const success = await authStore.login({
+    email: formData.email,
+    password: formData.password,
+  });
+
+  if (success) {
+    // Emit login success to trigger redirect
+    emit("login-success");
+
+    // Reset form
+    formData.email = "";
+    formData.password = "";
+    formData.rememberMe = false;
+    errors.value = {};
+  }
+}
+</script>
+
 <template>
   <div class="login-form">
     <div class="form-header">
@@ -65,20 +155,11 @@
 
       <!-- Submit Button -->
       <button type="submit" :disabled="isLoading || !isFormValid" class="btn-primary w-full">
-        <span v-if="isLoading" class="flex items-center justify-center">
-          <svg class="-ml-1 mr-3 h-5 w-5 animate-spin text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
-            viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor"
-              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-            </path>
-          </svg>
+        <span v-if="isLoading" class="flex items-center justify-center gap-3">
+          <LoadingSpinner size="sm" color="white" />
           {{ $t("auth.login.signingIn") }}
-
         </span>
-        <span v-else>{{ $t("auth.login.signIn") }}
-
-        </span>
+        <span v-else>{{ $t("auth.login.signIn") }}</span>
       </button>
 
       <!-- Error Message -->
@@ -91,17 +172,7 @@
 
     <!-- Divider -->
     <div class="mt-6">
-      <div class="relative">
-        <div class="absolute inset-0 flex items-center">
-          <div class="w-full border-t border-gray-300 dark:border-gray-600" />
-        </div>
-        <div class="relative flex justify-center text-sm">
-          <span class="bg-white px-2 text-gray-500 dark:bg-gray-900 dark:text-gray-400">
-            {{ $t("auth.login.orContinueWith") }}
-
-          </span>
-        </div>
-      </div>
+      <FormDivider>{{ $t("auth.login.orContinueWith") }}</FormDivider>
     </div>
 
     <!-- OAuth Buttons -->
@@ -137,99 +208,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref, computed, reactive } from "vue";
-import { useI18n } from "vue-i18n";
-import { useRoute } from "vue-router";
-import { EyeIcon, EyeSlashIcon } from "@heroicons/vue/24/outline";
-import { useAuthStore } from "@/stores/auth";
-import type { LoginFormData, FormErrors } from "@/types/ui/component-props";
-
-interface LoginFormEmits {
-  (e: "oauth-login", provider: "google"): void;
-  (e: "show-forgot-password"): void;
-  (e: "login-success"): void;
-}
-
-const emit = defineEmits<LoginFormEmits>();
-const { t } = useI18n();
-const authStore = useAuthStore();
-const route = useRoute();
-
-// Reactive data
-const formData = reactive<LoginFormData>({
-  email: "",
-  password: "",
-  rememberMe: false,
-});
-
-const errors = ref<FormErrors>({});
-const showPassword = ref(false);
-
-// Computed
-const isLoading = computed(() => authStore.isLoading);
-const error = computed(() => authStore.error);
-const isFormValid = computed(() => {
-  return (
-    formData.email &&
-    formData.password &&
-    formData.email.includes("@") &&
-    formData.password.length >= 8
-  );
-});
-
-// Generate register route with locale preservation
-const registerRoute = computed(() => {
-  const locale = route.params.locale || "en";
-  return {
-    name: "register",
-    params: { locale },
-  };
-});
-
-// Methods
-function validateForm(): boolean {
-  errors.value = {};
-
-  if (!formData.email) {
-    errors.value.email = t("auth.validation.emailRequired");
-  } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-    errors.value.email = t("auth.validation.emailInvalid");
-  }
-
-  if (!formData.password) {
-    errors.value.password = t("auth.validation.passwordRequired");
-  } else if (formData.password.length < 8) {
-    errors.value.password = t("auth.validation.passwordMinLength");
-  }
-
-  return Object.keys(errors.value).length === 0;
-}
-
-async function handleSubmit(): Promise<void> {
-  if (!validateForm()) {
-    return;
-  }
-
-  const success = await authStore.login({
-    email: formData.email,
-    password: formData.password,
-  });
-
-  if (success) {
-    // Emit login success to trigger redirect
-    emit("login-success");
-
-    // Reset form
-    formData.email = "";
-    formData.password = "";
-    formData.rememberMe = false;
-    errors.value = {};
-  }
-}
-
-</script>
 
 <style scoped>
 .login-form {

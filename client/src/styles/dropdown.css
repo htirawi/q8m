@@ -1,0 +1,69 @@
+/**
+ * Shared Dropdown Styles
+ * Common styles for dropdown menus, popovers, and select components
+ * Used by: UserMenu, CurrencySwitcher, and other dropdown components
+ */
+
+/* Base dropdown container */
+.dropdown-menu {
+  @apply absolute right-0 top-full z-50 mt-2 rounded-xl border border-gray-200 bg-white shadow-xl;
+  @apply dark:border-gray-700 dark:bg-gray-800;
+}
+
+/* Dropdown sections */
+.dropdown-header {
+  @apply px-4 py-3;
+}
+
+.dropdown-divider {
+  @apply h-px bg-gray-100;
+  @apply dark:bg-gray-700;
+}
+
+.dropdown-items {
+  @apply py-2;
+}
+
+/* Dropdown item (button or link) */
+.dropdown-item {
+  @apply flex w-full items-center gap-3 px-4 py-2.5;
+  @apply text-sm font-medium text-gray-700;
+  @apply transition-all duration-150;
+  @apply hover:bg-gray-50 focus:bg-gray-50 focus:outline-none;
+  @apply dark:text-gray-300 dark:hover:bg-gray-700 dark:focus:bg-gray-700;
+  @apply min-h-[44px];
+}
+
+.dropdown-item-danger {
+  @apply text-red-600 hover:bg-red-50 focus:bg-red-50;
+  @apply dark:text-red-400 dark:hover:bg-red-900/20 dark:focus:bg-red-900/20;
+}
+
+/* Icon within dropdown item */
+.dropdown-item-icon {
+  @apply h-5 w-5 flex-shrink-0;
+}
+
+/* Dropdown transitions */
+.dropdown-enter-active {
+  @apply transition-all duration-200 ease-out;
+}
+
+.dropdown-leave-active {
+  @apply transition-all duration-150 ease-in;
+}
+
+.dropdown-enter-from,
+.dropdown-leave-to {
+  @apply -translate-y-2 scale-95 opacity-0;
+}
+
+/* Mobile backdrop for dropdowns */
+.dropdown-backdrop {
+  @apply fixed inset-0 z-40 bg-black/25;
+}
+
+/* RTL support */
+[dir="rtl"] .dropdown-menu {
+  @apply left-0 right-auto;
+}

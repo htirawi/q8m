@@ -1,3 +1,132 @@
+<script setup lang="ts">
+import { ref, computed, onMounted, onUnmounted } from "vue";
+import Input from "@/components/ui/Input.vue";
+import FormField from "@/components/ui/FormField.vue";
+import { useI18n } from "vue-i18n";
+
+// Form state
+const { t } = useI18n();
+const email = ref("");
+const framework = ref<string[]>([]);
+const isDropdownOpen = ref(false);
+
+// Design system state
+const selectedButtonStyle = ref("primary");
+const selectedButtonSize = ref("md");
+
+// Validation
+const emailError = computed(() => {
+  if (!email.value) return "";
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email.value) ? "" : t("home.demo.form.validation.email");
+});
+
+const isFormValid = computed(() => {
+  return email.value && !emailError.value && framework.value && framework.value.length > 0;
+});
+
+// Dynamic button classes based on selection
+const submitButtonClass = computed(() => {
+  return `demo-btn demo-btn--${selectedButtonStyle.value} demo-btn--${selectedButtonSize.value}`;
+});
+
+const cancelButtonClass = computed(() => {
+  return `demo-btn demo-btn--outline demo-btn--${selectedButtonSize.value}`;
+});
+
+// Framework options
+const frameworkOptions = [
+  { value: "vue", labelKey: "home.hero.techStack.vue" },
+  { value: "react", labelKey: "home.hero.techStack.react" },
+  { value: "angular", labelKey: "home.hero.techStack.angular" },
+  { value: "nextjs", labelKey: "home.hero.techStack.nextjs" },
+  { value: "nuxt", labelKey: "home.hero.techStack.nuxt" },
+  { value: "svelte", labelKey: "home.hero.techStack.svelte" },
+  { value: "sveltekit", labelKey: "home.hero.techStack.sveltekit" },
+  { value: "typescript", labelKey: "home.hero.techStack.typescript" },
+  { value: "javascript", labelKey: "home.hero.techStack.javascript" },
+  { value: "nodejs", labelKey: "home.hero.techStack.nodejs" },
+  { value: "express", labelKey: "home.hero.techStack.express" },
+  { value: "nestjs", labelKey: "home.hero.techStack.nestjs" },
+];
+
+// Helper function to get framework label
+const getFrameworkLabel = (value: string) => {
+  const option = frameworkOptions.find((opt) => opt.value === value);
+  return option ? t(option.labelKey) : value;
+};
+
+// Multi-select methods
+const toggleDropdown = () => {
+  isDropdownOpen.value = !isDropdownOpen.value;
+};
+
+const toggleFramework = (value: string) => {
+  const index = framework.value.indexOf(value);
+  if (index > -1) {
+    framework.value.splice(index, 1);
+  } else {
+    framework.value.push(value);
+  }
+};
+
+const removeFramework = (value: string) => {
+  const index = framework.value.indexOf(value);
+  if (index > -1) {
+    framework.value.splice(index, 1);
+  }
+};
+
+const clearAll = () => {
+  framework.value = [];
+};
+
+// Form submission handler
+const handleSubmit = () => {
+  if (!isFormValid.value) return;
+
+  // Show success message
+  alert(
+    `Form submitted successfully!\n\nEmail: ${email.value}\nFrameworks: ${framework.value.map((f) => getFrameworkLabel(f)).join(", ")}`
+  );
+
+  // Reset form
+  email.value = "";
+  framework.value = [];
+};
+
+const handleCancel = () => {
+  // Reset form
+  email.value = "";
+  framework.value = [];
+};
+
+// Design system button selection handlers
+// const selectButtonStyle = (style: string) => {
+//   selectedButtonStyle.value = style;
+// };
+
+// const selectButtonSize = (size: string) => {
+//   selectedButtonSize.value = size;
+// };
+
+// Click outside handler
+const handleClickOutside = (event: Event) => {
+  const target = event.target as HTMLElement;
+  if (!target.closest(".multi-select-wrapper")) {
+    isDropdownOpen.value = false;
+  }
+};
+
+onMounted(() => {
+  document.addEventListener("click", handleClickOutside);
+});
+
+onUnmounted(() => {
+  document.removeEventListener("click", handleClickOutside);
+});
+</script>
+
 <template>
   <section class="design-system-demo" aria-labelledby="demo-title">
     <!-- Hero Section -->
@@ -671,135 +800,6 @@
     </div>
   </section>
 </template>
-
-<script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from "vue";
-import Input from "@/components/ui/Input.vue";
-import FormField from "@/components/ui/FormField.vue";
-import { useI18n } from "vue-i18n";
-
-// Form state
-const { t } = useI18n();
-const email = ref("");
-const framework = ref<string[]>([]);
-const isDropdownOpen = ref(false);
-
-// Design system state
-const selectedButtonStyle = ref("primary");
-const selectedButtonSize = ref("md");
-
-// Validation
-const emailError = computed(() => {
-  if (!email.value) return "";
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email.value) ? "" : t("home.demo.form.validation.email");
-});
-
-const isFormValid = computed(() => {
-  return email.value && !emailError.value && framework.value && framework.value.length > 0;
-});
-
-// Dynamic button classes based on selection
-const submitButtonClass = computed(() => {
-  return `demo-btn demo-btn--${selectedButtonStyle.value} demo-btn--${selectedButtonSize.value}`;
-});
-
-const cancelButtonClass = computed(() => {
-  return `demo-btn demo-btn--outline demo-btn--${selectedButtonSize.value}`;
-});
-
-// Framework options
-const frameworkOptions = [
-  { value: "vue", labelKey: "home.hero.techStack.vue" },
-  { value: "react", labelKey: "home.hero.techStack.react" },
-  { value: "angular", labelKey: "home.hero.techStack.angular" },
-  { value: "nextjs", labelKey: "home.hero.techStack.nextjs" },
-  { value: "nuxt", labelKey: "home.hero.techStack.nuxt" },
-  { value: "svelte", labelKey: "home.hero.techStack.svelte" },
-  { value: "sveltekit", labelKey: "home.hero.techStack.sveltekit" },
-  { value: "typescript", labelKey: "home.hero.techStack.typescript" },
-  { value: "javascript", labelKey: "home.hero.techStack.javascript" },
-  { value: "nodejs", labelKey: "home.hero.techStack.nodejs" },
-  { value: "express", labelKey: "home.hero.techStack.express" },
-  { value: "nestjs", labelKey: "home.hero.techStack.nestjs" },
-];
-
-// Helper function to get framework label
-const getFrameworkLabel = (value: string) => {
-  const option = frameworkOptions.find((opt) => opt.value === value);
-  return option ? t(option.labelKey) : value;
-};
-
-// Multi-select methods
-const toggleDropdown = () => {
-  isDropdownOpen.value = !isDropdownOpen.value;
-};
-
-const toggleFramework = (value: string) => {
-  const index = framework.value.indexOf(value);
-  if (index > -1) {
-    framework.value.splice(index, 1);
-  } else {
-    framework.value.push(value);
-  }
-};
-
-const removeFramework = (value: string) => {
-  const index = framework.value.indexOf(value);
-  if (index > -1) {
-    framework.value.splice(index, 1);
-  }
-};
-
-const clearAll = () => {
-  framework.value = [];
-};
-
-// Form submission handler
-const handleSubmit = () => {
-  if (!isFormValid.value) return;
-
-  // Show success message
-  alert(
-    `Form submitted successfully!\n\nEmail: ${email.value}\nFrameworks: ${framework.value.map((f) => getFrameworkLabel(f)).join(", ")}`
-  );
-
-  // Reset form
-  email.value = "";
-  framework.value = [];
-};
-
-const handleCancel = () => {
-  // Reset form
-  email.value = "";
-  framework.value = [];
-};
-
-// Design system button selection handlers
-// const selectButtonStyle = (style: string) => {
-//   selectedButtonStyle.value = style;
-// };
-
-// const selectButtonSize = (size: string) => {
-//   selectedButtonSize.value = size;
-// };
-
-// Click outside handler
-const handleClickOutside = (event: Event) => {
-  const target = event.target as HTMLElement;
-  if (!target.closest(".multi-select-wrapper")) {
-    isDropdownOpen.value = false;
-  }
-};
-
-onMounted(() => {
-  document.addEventListener("click", handleClickOutside);
-});
-
-onUnmounted(() => {
-  document.removeEventListener("click", handleClickOutside);
-});
-</script>
 
 <style scoped>
 /* ===== HERO SECTION ===== */

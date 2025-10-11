@@ -1,3 +1,34 @@
+<script setup lang="ts">
+import { useI18n } from "vue-i18n";
+import type { BillingHistorySectionProps } from "@/types/ui/component-props";
+
+defineProps<BillingHistorySectionProps>();
+
+const emit = defineEmits<{
+  refresh: [];
+}>();
+
+useI18n();
+
+// Methods
+const handleRefresh = () => {
+  emit("refresh");
+};
+
+const formatDate = (dateString: string) => {
+  return new Date(dateString).toLocaleDateString();
+};
+
+const getStatusClass = (status: string) => {
+  switch (status) {
+    case "pending":
+      return "text-yellow-600 dark:text-yellow-400";
+    default:
+      return "text-gray-600 dark:text-gray-400";
+  }
+};
+</script>
+
 <template>
   <div class="billing-history">
     <div class="history-header">
@@ -32,37 +63,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { useI18n } from "vue-i18n";
-import type { BillingHistorySectionProps } from "@/types/ui/component-props";
-
-defineProps<BillingHistorySectionProps>();
-
-const emit = defineEmits<{
-  refresh: [];
-}>();
-
-useI18n();
-
-// Methods
-const handleRefresh = () => {
-  emit("refresh");
-};
-
-const formatDate = (dateString: string) => {
-  return new Date(dateString).toLocaleDateString();
-};
-
-const getStatusClass = (status: string) => {
-  switch (status) {
-    case "pending":
-      return "text-yellow-600 dark:text-yellow-400";
-    default:
-      return "text-gray-600 dark:text-gray-400";
-  }
-};
-</script>
 
 <style scoped>
 /* Billing History */

@@ -1,42 +1,3 @@
-<template>
-  <section class="features-section" aria-labelledby="features-title">
-    <div class="features-container">
-      <div class="features-header">
-        <h2 id="features-title" class="features-title">
-          {{ $t("home.features.title") }}
-        </h2>
-        <p class="features-description">
-          {{ $t("home.features.description") }}
-        </p>
-      </div>
-
-      <div class="features-grid">
-        <Card
-          v-for="feature in features"
-          :key="feature.id"
-          class="feature-card"
-          :aria-labelledby="`feature-${feature.id}-title`"
-        >
-          <template #header>
-            <div class="feature-icon" :aria-hidden="true">
-              <component
-                :is="feature.icon"
-                class="h-8 w-8 text-primary-600 dark:text-primary-400"
-              />
-            </div>
-            <h3 :id="`feature-${feature.id}-title`" class="feature-title">
-              {{ $t(feature.titleKey) }}
-            </h3>
-          </template>
-          <p class="feature-description">
-            {{ $t(feature.descriptionKey) }}
-          </p>
-        </Card>
-      </div>
-    </div>
-  </section>
-</template>
-
 <script setup lang="ts">
 import { computed } from "vue";
 
@@ -89,6 +50,48 @@ const features = computed(() => [
   },
 ]);
 </script>
+
+<template>
+  <section class="features-section" aria-labelledby="features-title">
+    <div class="features-container">
+      <div class="features-header">
+        <h2 id="features-title" class="features-title">
+          {{ $t("home.features.title") }}
+        </h2>
+        <p class="features-description">
+          {{ $t("home.features.description") }}
+        </p>
+      </div>
+
+      <div class="features-grid">
+        <Card
+          v-for="feature in features"
+          :key="feature.id"
+          class="feature-card"
+          :aria-labelledby="`feature-${feature.id}-title`"
+        >
+          <template #header>
+            <div class="feature-icon" :aria-hidden="true">
+              <component
+                :is="feature.icon"
+                class="h-8 w-8 text-primary-600 dark:text-primary-400"
+              />
+            </div>
+            <h3 :id="`feature-${feature.id}-title`" class="feature-title">
+              {{ $t(feature.titleKey) }}
+            </h3>
+          </template>
+
+          <template #default>
+            <p class="feature-description">
+              {{ $t(feature.descriptionKey) }}
+            </p>
+          </template>
+        </Card>
+      </div>
+    </div>
+  </section>
+</template>
 
 <style scoped>
 .features-section {

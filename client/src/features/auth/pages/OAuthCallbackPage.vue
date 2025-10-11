@@ -1,44 +1,8 @@
-<template>
-  <div class="oauth-callback-page">
-    <div class="callback-container">
-      <div v-if="isLoading" class="loading-state">
-        <div class="spinner"></div>
-        <h2 class="loading-title">{{ $t("auth.oauth.processing") }}</h2>
-        <p class="loading-subtitle">{{ $t("auth.oauth.pleaseWait") }}</p>
-      </div>
-
-      <div v-else-if="error" class="error-state">
-        <div class="error-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10" />
-            <line x1="15" y1="9" x2="9" y2="15" />
-            <line x1="9" y1="9" x2="15" y2="15" />
-          </svg>
-        </div>
-        <h2 class="error-title">{{ $t("auth.oauth.error") }}</h2>
-        <p class="error-message">{{ error }}</p>
-        <button @click="handleRetry" class="retry-button">
-          {{ $t("auth.oauth.tryAgain") }}
-        </button>
-      </div>
-
-      <div v-else class="success-state">
-        <div class="success-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10" />
-            <path d="M9 12l2 2 4-4" />
-          </svg>
-        </div>
-        <h2 class="success-title">{{ $t("auth.oauth.success") }}</h2>
-        <p class="success-message">{{ $t("auth.oauth.redirecting") }}</p>
-      </div>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
+
 import { useRouter, useRoute } from "vue-router";
+
 import { useAuthStore } from "@/stores/auth";
 
 const router = useRouter();
@@ -94,6 +58,44 @@ function handleRetry() {
   router.push("/auth/register");
 }
 </script>
+
+<template>
+  <div class="oauth-callback-page">
+    <div class="callback-container">
+      <div v-if="isLoading" class="loading-state">
+        <div class="spinner"></div>
+        <h2 class="loading-title">{{ $t("auth.oauth.processing") }}</h2>
+        <p class="loading-subtitle">{{ $t("auth.oauth.pleaseWait") }}</p>
+      </div>
+
+      <div v-else-if="error" class="error-state">
+        <div class="error-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="15" y1="9" x2="9" y2="15" />
+            <line x1="9" y1="9" x2="15" y2="15" />
+          </svg>
+        </div>
+        <h2 class="error-title">{{ $t("auth.oauth.error") }}</h2>
+        <p class="error-message">{{ error }}</p>
+        <button @click="handleRetry" class="retry-button">
+          {{ $t("auth.oauth.tryAgain") }}
+        </button>
+      </div>
+
+      <div v-else class="success-state">
+        <div class="success-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10" />
+            <path d="M9 12l2 2 4-4" />
+          </svg>
+        </div>
+        <h2 class="success-title">{{ $t("auth.oauth.success") }}</h2>
+        <p class="success-message">{{ $t("auth.oauth.redirecting") }}</p>
+      </div>
+    </div>
+  </div>
+</template>
 
 <style scoped>
 /* Main Layout */

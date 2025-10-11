@@ -1,3 +1,41 @@
+<script setup lang="ts">
+import { useRouter } from "vue-router";
+
+import UnifiedAuthForm from "@/components/auth/UnifiedAuthForm.vue";
+import { useAuthRedirect } from "@/composables/useAuthRedirect";
+
+const router = useRouter();
+const { redirectAfterAuth, getCurrentLocale } = useAuthRedirect();
+
+function handleOAuthLogin(provider: "google") {
+  // Redirect to OAuth endpoint on the backend
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api";
+  const oauthUrl = `${apiBaseUrl}/auth/${provider}`;
+
+  // Store the current route to redirect back after OAuth
+  sessionStorage.setItem("oauth_redirect", window.location.pathname);
+
+  // Redirect to OAuth provider
+  window.location.href = oauthUrl;
+}
+
+async function handleLoginSuccess() {
+  // Redirect to validated URL with locale preservation
+  await redirectAfterAuth("signInSuccessUrl", "/");
+}
+
+function handleRegistrationSuccess(email: string) {
+  // For unified flow, we can show a success message or redirect
+  // For now, redirect to home with a success notification
+  const locale = getCurrentLocale();
+  router.push({
+    name: "home",
+    params: { locale },
+    query: { registered: "true", email },
+  });
+}
+</script>
+
 <template>
   <div class="login-page">
     <!-- Background with gradient -->
@@ -45,43 +83,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { useRouter } from "vue-router";
-import UnifiedAuthForm from "@/components/auth/UnifiedAuthForm.vue";
-import { useAuthRedirect } from "@/composables/useAuthRedirect";
-
-const router = useRouter();
-const { redirectAfterAuth, getCurrentLocale } = useAuthRedirect();
-
-function handleOAuthLogin(provider: "google") {
-  // Redirect to OAuth endpoint on the backend
-  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api";
-  const oauthUrl = `${apiBaseUrl}/auth/${provider}`;
-
-  // Store the current route to redirect back after OAuth
-  sessionStorage.setItem("oauth_redirect", window.location.pathname);
-
-  // Redirect to OAuth provider
-  window.location.href = oauthUrl;
-}
-
-async function handleLoginSuccess() {
-  // Redirect to validated URL with locale preservation
-  await redirectAfterAuth("signInSuccessUrl", "/");
-}
-
-function handleRegistrationSuccess(email: string) {
-  // For unified flow, we can show a success message or redirect
-  // For now, redirect to home with a success notification
-  const locale = getCurrentLocale();
-  router.push({
-    name: "home",
-    params: { locale },
-    query: { registered: "true", email },
-  });
-}
-</script>
 
 <style scoped>
 /* Main Layout */

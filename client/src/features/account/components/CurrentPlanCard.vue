@@ -1,3 +1,64 @@
+<script setup lang="ts">
+import { computed } from "vue";
+import { useI18n } from "vue-i18n";
+import type { CurrentPlanCardProps } from "@/types/ui/component-props";
+
+const props = defineProps<CurrentPlanCardProps>();
+useI18n();
+
+// Computed
+const statusClass = computed(() => {
+  const status = props.subscription?.status;
+  switch (status) {
+    case "active":
+      return "text-green-600 dark:text-green-400";
+    case "trial":
+      return "text-blue-600 dark:text-blue-400";
+    case "cancelled":
+      return "text-red-600 dark:text-red-400";
+    case "expired":
+      return "text-gray-600 dark:text-gray-400";
+    default:
+      return "text-gray-600 dark:text-gray-400";
+  }
+});
+
+const statusBadgeClass = computed(() => {
+  const status = props.subscription?.status;
+  switch (status) {
+    case "active":
+      return "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400";
+    case "trial":
+      return "bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400";
+    case "cancelled":
+      return "bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400";
+    case "expired":
+      return "bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400";
+    default:
+      return "bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400";
+  }
+});
+
+const formattedNextBilling = computed(() => {
+  if (!props.subscription?.currentPeriodEnd) return "";
+  return new Date(props.subscription.currentPeriodEnd).toLocaleDateString();
+});
+
+// Get entitlement badge class
+const getEntitlementBadgeClass = (entitlement: string) => {
+  const classes = {
+    JUNIOR: "bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400",
+    INTERMEDIATE: "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400",
+    SENIOR: "bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-400",
+    BUNDLE: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400",
+  };
+  return (
+    classes[entitlement as keyof typeof classes] ||
+    "bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400"
+  );
+};
+</script>
+
 <template>
   <div class="plan-card">
     <div class="plan-header">
@@ -73,67 +134,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { computed } from "vue";
-import { useI18n } from "vue-i18n";
-import type { CurrentPlanCardProps } from "@/types/ui/component-props";
-
-const props = defineProps<CurrentPlanCardProps>();
-useI18n();
-
-// Computed
-const statusClass = computed(() => {
-  const status = props.subscription?.status;
-  switch (status) {
-    case "active":
-      return "text-green-600 dark:text-green-400";
-    case "trial":
-      return "text-blue-600 dark:text-blue-400";
-    case "cancelled":
-      return "text-red-600 dark:text-red-400";
-    case "expired":
-      return "text-gray-600 dark:text-gray-400";
-    default:
-      return "text-gray-600 dark:text-gray-400";
-  }
-});
-
-const statusBadgeClass = computed(() => {
-  const status = props.subscription?.status;
-  switch (status) {
-    case "active":
-      return "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400";
-    case "trial":
-      return "bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400";
-    case "cancelled":
-      return "bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400";
-    case "expired":
-      return "bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400";
-    default:
-      return "bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400";
-  }
-});
-
-const formattedNextBilling = computed(() => {
-  if (!props.subscription?.currentPeriodEnd) return "";
-  return new Date(props.subscription.currentPeriodEnd).toLocaleDateString();
-});
-
-// Get entitlement badge class
-const getEntitlementBadgeClass = (entitlement: string) => {
-  const classes = {
-    JUNIOR: "bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400",
-    INTERMEDIATE: "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400",
-    SENIOR: "bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-400",
-    BUNDLE: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400",
-  };
-  return (
-    classes[entitlement as keyof typeof classes] ||
-    "bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400"
-  );
-};
-</script>
 
 <style scoped>
 /* Plan Card */

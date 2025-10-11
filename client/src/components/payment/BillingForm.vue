@@ -1,3 +1,38 @@
+<script setup lang="ts">
+import { reactive, watch, toRefs } from "vue";
+import { useI18n } from "vue-i18n";
+import type { BillingFormProps, BillingFormData } from "@/types/ui/component-props";
+
+const props = defineProps<BillingFormProps>();
+
+const emit = defineEmits<{
+  "update:modelValue": [value: BillingFormData];
+}>();
+
+useI18n();
+
+// Destructure props with proper reactivity
+const { modelValue } = toRefs(props);
+
+const formData = reactive({ ...modelValue.value });
+
+watch(
+  formData,
+  (newValue) => {
+    emit("update:modelValue", { ...newValue });
+  },
+  { deep: true }
+);
+
+watch(
+  modelValue,
+  (newValue) => {
+    Object.assign(formData, newValue);
+  },
+  { deep: true }
+);
+</script>
+
 <template>
   <div class="form-section">
     <h3 class="section-title">{{ $t("checkout.billingInformation") }}</h3>
@@ -84,41 +119,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { reactive, watch, toRefs } from "vue";
-import { useI18n } from "vue-i18n";
-import type { BillingFormProps, BillingFormData } from "@/types/ui/component-props";
-
-const props = defineProps<BillingFormProps>();
-
-const emit = defineEmits<{
-  "update:modelValue": [value: BillingFormData];
-}>();
-
-useI18n();
-
-// Destructure props with proper reactivity
-const { modelValue } = toRefs(props);
-
-const formData = reactive({ ...modelValue.value });
-
-watch(
-  formData,
-  (newValue) => {
-    emit("update:modelValue", { ...newValue });
-  },
-  { deep: true }
-);
-
-watch(
-  modelValue,
-  (newValue) => {
-    Object.assign(formData, newValue);
-  },
-  { deep: true }
-);
-</script>
 
 <style scoped>
 .form-section {

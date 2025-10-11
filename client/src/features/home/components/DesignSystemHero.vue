@@ -1,3 +1,9 @@
+<script setup lang="ts">
+import { useI18n } from "vue-i18n";
+
+useI18n();
+</script>
+
 <template>
   <div class="demo-hero">
     <div class="hero-container">
@@ -82,12 +88,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { useI18n } from "vue-i18n";
-
-useI18n();
-</script>
 
 <style scoped>
 .demo-hero {

@@ -1,3 +1,25 @@
+<script setup lang="ts">
+import { useAuthStore } from "@/stores/auth";
+
+import Button from "@/components/ui/Button.vue";
+import LangSwitch from "@/components/ui/LangSwitch.vue";
+import ToastContainer from "@/components/ui/ToastContainer.vue";
+import UserMenu from "@/components/ui/UserMenu.vue";
+
+// Stores
+const authStore = useAuthStore();
+
+// Methods
+const skipToMain = (event: Event) => {
+  event.preventDefault();
+  const mainContent = document.getElementById("main-content");
+  if (mainContent) {
+    mainContent.focus();
+    mainContent.scrollIntoView({ behavior: "smooth" });
+  }
+};
+</script>
+
 <template>
   <div class="default-layout">
     <!-- Skip Link for Accessibility -->
@@ -137,27 +159,6 @@
     <ToastContainer />
   </div>
 </template>
-
-<script setup lang="ts">
-import { useAuthStore } from "@/stores/auth";
-import Button from "@/components/ui/Button.vue";
-import LangSwitch from "@/components/ui/LangSwitch.vue";
-import ToastContainer from "@/components/ui/ToastContainer.vue";
-import UserMenu from "@/components/ui/UserMenu.vue";
-
-// Stores
-const authStore = useAuthStore();
-
-// Methods
-const skipToMain = (event: Event) => {
-  event.preventDefault();
-  const mainContent = document.getElementById("main-content");
-  if (mainContent) {
-    mainContent.focus();
-    mainContent.scrollIntoView({ behavior: "smooth" });
-  }
-};
-</script>
 
 <style scoped>
 .default-layout {

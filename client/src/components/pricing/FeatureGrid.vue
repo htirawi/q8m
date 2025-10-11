@@ -1,3 +1,35 @@
+<script setup lang="ts">
+import {
+  AcademicCapIcon,
+  BoltIcon,
+  ChartBarIcon,
+  DevicePhoneMobileIcon,
+  ShieldCheckIcon,
+  UsersIcon,
+} from "@heroicons/vue/24/outline";
+
+import { features } from "@/components/pricing/pricing.config";
+
+type IconComponent = typeof AcademicCapIcon;
+
+const getIconComponent = (iconName: string): IconComponent => {
+  const iconMap: Record<string, IconComponent> = {
+    "academic-cap": AcademicCapIcon,
+    "lightning-bolt": BoltIcon,
+    "chart-bar": ChartBarIcon,
+    users: UsersIcon,
+    "shield-check": ShieldCheckIcon,
+    "device-mobile": DevicePhoneMobileIcon,
+  };
+
+  return iconMap[iconName] || AcademicCapIcon;
+};
+
+defineOptions({
+  name: "FeatureGrid",
+});
+</script>
+
 <template>
   <section class="feature-grid" aria-labelledby="feature-grid-title">
     <div class="feature-grid-container">
@@ -28,35 +60,6 @@
     </div>
   </section>
 </template>
-
-<script setup lang="ts">
-import {
-  AcademicCapIcon,
-  BoltIcon,
-  ChartBarIcon,
-  UsersIcon,
-  ShieldCheckIcon,
-  DevicePhoneMobileIcon,
-} from "@heroicons/vue/24/outline";
-import { features } from "@/components/pricing/pricing.config";
-
-const getIconComponent = (iconName: string) => {
-  const iconMap: Record<string, any> = {
-    "academic-cap": AcademicCapIcon,
-    "lightning-bolt": BoltIcon,
-    "chart-bar": ChartBarIcon,
-    users: UsersIcon,
-    "shield-check": ShieldCheckIcon,
-    "device-mobile": DevicePhoneMobileIcon,
-  };
-
-  return iconMap[iconName] || AcademicCapIcon;
-};
-
-defineOptions({
-  name: "FeatureGrid",
-});
-</script>
 
 <style scoped>
 .feature-grid {

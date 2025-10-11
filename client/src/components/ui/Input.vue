@@ -1,16 +1,16 @@
-<template>
-  <div class="input-wrapper">
-    <input :id="id" :type="type" :value="modelValue" :placeholder="placeholder" :disabled="disabled"
-      :readonly="readonly" :required="required" :aria-label="ariaLabel" :aria-describedby="ariaDescribedby"
-      :aria-invalid="hasError" :aria-required="required" :class="inputClasses" @input="handleInput" @blur="handleBlur"
-      @focus="handleFocus" />
-  </div>
-</template>
-
 <script setup lang="ts">
 import { computed, toRefs } from "vue";
 
 import type { InputProps } from "@/types/ui/component-props";
+
+/**
+ * Input Component
+ * A form input component with error states, accessibility features, and dark mode support.
+ * @emits update:modelValue - Emitted when input value changes
+ * @emits input - Emitted on input event
+ * @emits blur - Emitted when input loses focus
+ * @emits focus - Emitted when input receives focus
+ */
 
 const props = withDefaults(defineProps<InputProps>(), {
   type: "text",
@@ -26,10 +26,8 @@ const emit = defineEmits<{
   focus: [event: FocusEvent];
 }>();
 
-// Destructure props with proper reactivity
 const { error, type } = toRefs(props);
 
-// Computed properties
 const hasError = computed(() => !!error.value);
 
 const inputClasses = computed(() => {
@@ -38,7 +36,7 @@ const inputClasses = computed(() => {
     "focus:outline-none focus:ring-2 focus:ring-offset-2",
     "disabled:bg-gray-50 disabled:text-gray-500 disabled:cursor-not-allowed",
     "readonly:bg-gray-50 readonly:cursor-default",
-    "min-h-[44px]", // WCAG AA minimum touch target
+    "min-h-[44px]",
   ];
 
   if (hasError.value) {
@@ -59,7 +57,6 @@ const inputClasses = computed(() => {
   return baseClasses.join(" ");
 });
 
-// Event handlers
 const handleInput = (event: Event) => {
   const target = event.target as HTMLInputElement;
   const value = type.value === "number" ? Number(target.value) : target.value;
@@ -75,6 +72,15 @@ const handleFocus = (event: FocusEvent) => {
   emit("focus", event);
 };
 </script>
+
+<template>
+  <div class="input-wrapper">
+    <input :id="id" :type="type" :value="modelValue" :placeholder="placeholder" :disabled="disabled"
+      :readonly="readonly" :required="required" :aria-label="ariaLabel" :aria-describedby="ariaDescribedby"
+      :aria-invalid="hasError" :aria-required="required" :class="inputClasses" @input="handleInput" @blur="handleBlur"
+      @focus="handleFocus" />
+  </div>
+</template>
 
 <style scoped>
 .input-wrapper {

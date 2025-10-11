@@ -1,3 +1,18 @@
+<script setup lang="ts">
+import type { FinalCtaEmits } from "@/types/ui/component-props";
+import { finalCtaData } from "@/components/pricing/pricing.config";
+
+const emit = defineEmits<FinalCtaEmits>();
+
+const handleCtaClick = () => {
+  emit("cta-click");
+};
+
+defineOptions({
+  name: "FinalCta",
+});
+</script>
+
 <template>
   <section class="final-cta" aria-labelledby="final-cta-title">
     <div class="final-cta-container">
@@ -18,21 +33,6 @@
     </div>
   </section>
 </template>
-
-<script setup lang="ts">
-import { finalCtaData } from "@/components/pricing/pricing.config";
-import type { FinalCtaEmits } from "@/types/ui/component-props";
-
-const emit = defineEmits<FinalCtaEmits>();
-
-const handleCtaClick = () => {
-  emit("cta-click");
-};
-
-defineOptions({
-  name: "FinalCta",
-});
-</script>
 
 <style scoped>
 .final-cta {
@@ -62,6 +62,7 @@ defineOptions({
 .final-cta-button {
   @apply rounded-lg bg-blue-600 px-8 py-4 text-lg font-medium text-white transition-colors duration-200;
   @apply hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900;
+  @apply min-h-[44px];
 }
 
 /* RTL Support */

@@ -1,3 +1,13 @@
+<script setup lang="ts">
+import { ShieldCheckIcon } from "@heroicons/vue/24/outline";
+
+import { guaranteeData } from "@/components/pricing/pricing.config";
+
+defineOptions({
+  name: "GuaranteePanel",
+});
+</script>
+
 <template>
   <section class="guarantee-panel" aria-labelledby="guarantee-title">
     <div class="guarantee-panel-container">
@@ -18,15 +28,6 @@
     </div>
   </section>
 </template>
-
-<script setup lang="ts">
-import { ShieldCheckIcon } from "@heroicons/vue/24/outline";
-import { guaranteeData } from "@/components/pricing/pricing.config";
-
-defineOptions({
-  name: "GuaranteePanel",
-});
-</script>
 
 <style scoped>
 .guarantee-panel {

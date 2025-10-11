@@ -1,3 +1,9 @@
+<script setup lang="ts">
+import { ClockIcon, ShieldCheckIcon, UserGroupIcon } from "@heroicons/vue/24/outline";
+
+import Button from "@/components/ui/Button.vue";
+</script>
+
 <template>
   <section class="footer-cta-section" aria-labelledby="cta-title">
     <div class="footer-cta-container">
@@ -37,11 +43,6 @@
     </div>
   </section>
 </template>
-
-<script setup lang="ts">
-import Button from "@/components/ui/Button.vue";
-import { ShieldCheckIcon, ClockIcon, UserGroupIcon } from "@heroicons/vue/24/outline";
-</script>
 
 <style scoped>
 .footer-cta-section {

@@ -1,3 +1,11 @@
+<script setup lang="ts">
+import { useI18n } from "vue-i18n";
+
+import Button from "@/components/ui/Button.vue";
+
+const { locale } = useI18n();
+</script>
+
 <template>
   <section class="hero-section" aria-labelledby="hero-title">
     <div class="hero-container">
@@ -81,7 +89,7 @@
                 </div>
                 <div class="quiz-progress">
                   <div class="progress-bar">
-                    <div class="progress-fill" style="width: 60%"></div>
+                    <div class="progress-fill progress-fill--60"></div>
                   </div>
                   <span class="progress-text">60%</span>
                 </div>
@@ -94,7 +102,7 @@
                 </div>
                 <div class="quiz-progress">
                   <div class="progress-bar">
-                    <div class="progress-fill" style="width: 100%"></div>
+                    <div class="progress-fill progress-fill--100"></div>
                   </div>
                   <span class="progress-text">100%</span>
                 </div>
@@ -106,13 +114,6 @@
     </div>
   </section>
 </template>
-
-<script setup lang="ts">
-import Button from "@/components/ui/Button.vue";
-import { useI18n } from "vue-i18n";
-
-const { locale } = useI18n();
-</script>
 
 <style scoped>
 .hero-section {
@@ -192,35 +193,6 @@ const { locale } = useI18n();
   line-height: 1.6;
 }
 
-/* Enhanced Button Styling */
-.hero-actions {
-  @apply flex flex-col gap-4 sm:flex-row sm:gap-6;
-}
-
-/* Primary CTA Button - Clean & Professional */
-.hero-cta {
-  @apply relative overflow-hidden;
-  @apply bg-gradient-to-r from-primary-600 to-primary-700;
-  @apply hover:from-primary-700 hover:to-primary-800;
-  @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
-  @apply transition-all duration-200 ease-in-out;
-  @apply shadow-lg hover:shadow-xl;
-  @apply transform hover:-translate-y-0.5;
-}
-
-/* Secondary Button - Clean & Professional */
-.hero-secondary {
-  @apply relative;
-  @apply border-2 border-primary-600 bg-white text-primary-700;
-  @apply hover:border-primary-600 hover:bg-primary-600 hover:text-white;
-  @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
-  @apply transition-all duration-200 ease-in-out;
-  @apply shadow-md hover:shadow-lg;
-  @apply transform hover:-translate-y-0.5;
-  @apply dark:border-primary-400 dark:bg-slate-800 dark:text-primary-300;
-  @apply dark:hover:border-primary-600 dark:hover:bg-primary-600 dark:hover:text-white;
-}
-
 .hero-description {
   @apply max-w-2xl text-xl leading-relaxed text-slate-600 dark:text-slate-300 md:text-2xl;
 }
@@ -233,16 +205,29 @@ const { locale } = useI18n();
   @apply rounded-lg bg-white/80 px-4 py-2 text-sm font-medium text-slate-700 shadow-sm ring-1 ring-slate-200 dark:bg-slate-800/80 dark:text-slate-300 dark:ring-slate-700;
 }
 
+/* Hero Actions & Buttons */
 .hero-actions {
-  @apply flex flex-col gap-4 sm:flex-row;
+  @apply flex flex-col gap-4 sm:flex-row sm:gap-6;
 }
 
 .hero-cta {
-  @apply min-h-[52px] px-8 text-lg font-semibold shadow-lg transition-all duration-300 hover:shadow-xl;
+  @apply relative min-h-[52px] overflow-hidden px-8 text-lg font-semibold;
+  @apply bg-gradient-to-r from-primary-600 to-primary-700;
+  @apply hover:from-primary-700 hover:to-primary-800;
+  @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+  @apply shadow-lg transition-all duration-300 hover:shadow-xl;
+  @apply transform hover:-translate-y-0.5;
 }
 
 .hero-secondary {
-  @apply min-h-[52px] px-8 text-lg font-semibold;
+  @apply relative min-h-[52px] px-8 text-lg font-semibold;
+  @apply border-2 border-primary-600 bg-white text-primary-700;
+  @apply hover:border-primary-600 hover:bg-primary-600 hover:text-white;
+  @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+  @apply shadow-md transition-all duration-200 ease-in-out hover:shadow-lg;
+  @apply transform hover:-translate-y-0.5;
+  @apply dark:border-primary-400 dark:bg-slate-800 dark:text-primary-300;
+  @apply dark:hover:border-primary-600 dark:hover:bg-primary-600 dark:hover:text-white;
 }
 
 .hero-stats {
@@ -338,6 +323,14 @@ const { locale } = useI18n();
 .progress-fill {
   @apply h-2 rounded-full bg-primary-500 transition-all duration-1000;
   width: 85%;
+}
+
+.progress-fill--60 {
+  width: 60%;
+}
+
+.progress-fill--100 {
+  width: 100%;
 }
 
 .progress-text {

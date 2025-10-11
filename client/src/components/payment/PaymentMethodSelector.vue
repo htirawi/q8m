@@ -1,3 +1,56 @@
+<script setup lang="ts">
+import { computed } from "vue";
+import { useI18n } from "vue-i18n";
+import { CheckCircleIcon } from "@heroicons/vue/24/outline";
+import type { PaymentMethodSelectorProps, PaymentMethod } from "@/types/ui/component-props";
+
+const props = defineProps<PaymentMethodSelectorProps>();
+
+const emit = defineEmits<{
+  "update:modelValue": [value: string];
+}>();
+
+const { t } = useI18n();
+
+const selectedMethod = computed({
+  get: () => props.modelValue,
+  set: (value) => emit("update:modelValue", value),
+});
+
+const availableMethods = computed((): PaymentMethod[] => {
+  const methods: PaymentMethod[] = [
+    {
+      id: "paypal",
+      name: "PayPal",
+      description: t("checkout.paypalDescription"),
+      icon: "div", // Replace with actual PayPal icon
+      available: true,
+    },
+    {
+      id: "aps",
+      name: "Amazon Payment Services",
+      description: t("checkout.apsDescription"),
+      icon: "div", // Replace with actual APS icon
+      available: true,
+    },
+    {
+      id: "hyperpay",
+      name: "HyperPay",
+      description: t("checkout.hyperpayDescription"),
+      icon: "div", // Replace with actual HyperPay icon
+      available: true,
+    },
+  ];
+
+  return methods.filter((method) => method.available);
+});
+
+const selectMethod = (methodId: string) => {
+  selectedMethod.value = methodId;
+};
+
+</script>
+
 <template>
   <div class="form-section">
     <h3 class="section-title">{{ $t("checkout.paymentMethod") }}</h3>
@@ -56,59 +109,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { computed } from "vue";
-import { useI18n } from "vue-i18n";
-import { CheckCircleIcon } from "@heroicons/vue/24/outline";
-import type { PaymentMethodSelectorProps, PaymentMethod } from "@/types/ui/component-props";
-
-const props = defineProps<PaymentMethodSelectorProps>();
-
-const emit = defineEmits<{
-  "update:modelValue": [value: string];
-}>();
-
-const { t } = useI18n();
-
-const selectedMethod = computed({
-  get: () => props.modelValue,
-  set: (value) => emit("update:modelValue", value),
-});
-
-const availableMethods = computed((): PaymentMethod[] => {
-  const methods: PaymentMethod[] = [
-    {
-      id: "paypal",
-      name: "PayPal",
-      description: t("checkout.paypalDescription"),
-      icon: "div", // Replace with actual PayPal icon
-      available: true,
-    },
-    {
-      id: "aps",
-      name: "Amazon Payment Services",
-      description: t("checkout.apsDescription"),
-      icon: "div", // Replace with actual APS icon
-      available: true,
-    },
-    {
-      id: "hyperpay",
-      name: "HyperPay",
-      description: t("checkout.hyperpayDescription"),
-      icon: "div", // Replace with actual HyperPay icon
-      available: true,
-    },
-  ];
-
-  return methods.filter((method) => method.available);
-});
-
-const selectMethod = (methodId: string) => {
-  selectedMethod.value = methodId;
-};
-
-</script>
 
 <style scoped>
 .form-section {

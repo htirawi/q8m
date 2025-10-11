@@ -1,3 +1,19 @@
+<script setup lang="ts">
+import type { BillingCycle } from "@/types/domain/billing";
+import type { BillingToggleEmits, BillingToggleProps } from "@/types/ui/component-props";
+
+defineProps<BillingToggleProps>();
+const emit = defineEmits<BillingToggleEmits>();
+
+const setBillingCycle = (cycle: BillingCycle) => {
+  emit("update:modelValue", cycle);
+};
+
+defineOptions({
+  name: "BillingToggle",
+});
+</script>
+
 <template>
   <div class="billing-toggle" role="group" aria-labelledby="billing-toggle-label">
     <div class="billing-toggle-container">
@@ -25,22 +41,6 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import type { BillingToggleProps, BillingToggleEmits } from "@/types/ui/component-props";
-import type { BillingCycle } from "@/types/domain/billing";
-
-defineProps<BillingToggleProps>();
-const emit = defineEmits<BillingToggleEmits>();
-
-const setBillingCycle = (cycle: BillingCycle) => {
-  emit("update:modelValue", cycle);
-};
-
-defineOptions({
-  name: "BillingToggle",
-});
-</script>
-
 <style scoped>
 .billing-toggle {
   @apply flex justify-center;
@@ -61,6 +61,7 @@ defineOptions({
 .billing-toggle-option {
   @apply relative flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-all duration-200;
   @apply text-gray-700 hover:text-gray-900;
+  @apply min-h-[44px];
 }
 
 .billing-toggle-option--active {

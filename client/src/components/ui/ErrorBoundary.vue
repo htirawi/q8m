@@ -1,57 +1,12 @@
-<template>
-  <div v-if="hasError" class="error-boundary">
-    <div class="error-content">
-      <div class="error-icon">
-        <svg class="h-12 w-12 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
-        </svg>
-      </div>
-
-      <div class="error-details">
-        <h2 class="error-title">{{ $t("errors.generic") }}</h2>
-        <p class="error-message">
-          {{ errorMessage || $t("errors.serverError.message") }}
-        </p>
-
-        <div v-if="showDetails && errorDetails" class="error-debug">
-          <details class="error-debug-details">
-            <summary class="error-debug-summary">
-              {{ $t("common.technicalDetails") }}
-            </summary>
-            <pre class="error-debug-content">{{ errorDetails }}
-
-</pre>
-          </details>
-        </div>
-
-        <div class="error-actions">
-          <button type="button" class="error-action-button primary" @click="retry">
-            {{ $t("common.retry") }}
-          </button>
-
-          <button type="button" class="error-action-button secondary" @click="reportError">
-            {{ $t("common.reportError") }}
-          </button>
-
-          <button type="button" class="error-action-button secondary" @click="goHome">
-            {{ $t("common.goHome") }}
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <slot v-else />
-</template>
-
 <script setup lang="ts">
-import { ref, onErrorCaptured, provide } from "vue";
+import { onErrorCaptured, provide, ref } from "vue";
 import { useRouter } from "vue-router";
+
 import { useErrorHandler } from "@/composables/useErrorHandler";
 import { useToast } from "@/composables/useToast";
-import type { ErrorBoundaryProps } from "@/types/ui/component-props";
+
 import type { ErrorBoundaryEmits } from "@/types/ui/emits";
+import type { ErrorBoundaryProps } from "@/types/ui/component-props";
 
 const props = withDefaults(defineProps<ErrorBoundaryProps>(), {
   fallback: true,
@@ -142,6 +97,51 @@ const goHome = () => {
 };
 </script>
 
+<template>
+  <div v-if="hasError" class="error-boundary">
+    <div class="error-content">
+      <div class="error-icon">
+        <svg class="h-12 w-12 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+        </svg>
+      </div>
+
+      <div class="error-details">
+        <h2 class="error-title">{{ $t("errors.generic") }}</h2>
+        <p class="error-message">
+          {{ errorMessage || $t("errors.serverError.message") }}
+        </p>
+
+        <div v-if="showDetails && errorDetails" class="error-debug">
+          <details class="error-debug-details">
+            <summary class="error-debug-summary">
+              {{ $t("common.technicalDetails") }}
+            </summary>
+            <pre class="error-debug-content">{{ errorDetails }}</pre>
+          </details>
+        </div>
+
+        <div class="error-actions">
+          <button type="button" class="error-action-button primary" @click="retry">
+            {{ $t("common.retry") }}
+          </button>
+
+          <button type="button" class="error-action-button secondary" @click="reportError">
+            {{ $t("common.reportError") }}
+          </button>
+
+          <button type="button" class="error-action-button secondary" @click="goHome">
+            {{ $t("common.goHome") }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <slot v-else />
+</template>
+
 <style scoped>
 .error-boundary {
   @apply flex min-h-screen items-center justify-center bg-gray-50 px-4 py-8 dark:bg-gray-900;
@@ -191,6 +191,7 @@ const goHome = () => {
 
 .error-action-button {
   @apply w-full rounded-md px-4 py-2 font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2;
+  @apply min-h-[44px];
 }
 
 .error-action-button.primary {

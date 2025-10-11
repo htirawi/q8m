@@ -1,21 +1,6 @@
-<template>
-  <div :class="cardClasses" :aria-labelledby="ariaLabelledby" :aria-describedby="ariaDescribedby">
-    <header v-if="$slots.header" class="card-header">
-      <slot name="header" />
-    </header>
-
-    <div class="card-content">
-      <slot />
-    </div>
-
-    <footer v-if="$slots.footer" class="card-footer">
-      <slot name="footer" />
-    </footer>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { computed } from "vue";
+
 import type { CardProps } from "@/types/ui/component-props";
 
 const props = withDefaults(defineProps<CardProps>(), {
@@ -44,6 +29,22 @@ const cardClasses = computed(() => {
   return [...baseClasses, variantClasses[props.variant], paddingClasses[props.padding]].join(" ");
 });
 </script>
+
+<template>
+  <div :class="cardClasses" :aria-labelledby="ariaLabelledby" :aria-describedby="ariaDescribedby">
+    <header v-if="$slots.header" class="card-header">
+      <slot name="header" />
+    </header>
+
+    <div class="card-content">
+      <slot />
+    </div>
+
+    <footer v-if="$slots.footer" class="card-footer">
+      <slot name="footer" />
+    </footer>
+  </div>
+</template>
 
 <style scoped>
 .card {

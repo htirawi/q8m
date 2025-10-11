@@ -1,24 +1,8 @@
-<template>
-  <div class="form-field" :class="{ 'form-field--error': hasError }">
-    <label v-if="label" :for="id" class="form-field-label" :class="{ 'form-field-label--required': required }">
-      {{ label }}
-
-    </label>
-
-    <div class="form-field-input">
-      <slot />
-    </div>
-
-    <HelperText v-if="error || helperText" :id="helperTextId" :error="error" class="form-field-helper">
-      {{ error || helperText }}
-
-    </HelperText>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { computed } from "vue";
+
 import HelperText from "@/components/ui/HelperText.vue";
+
 import type { FormFieldProps } from "@/types/ui/component-props";
 
 const props = withDefaults(defineProps<FormFieldProps>(), {
@@ -35,6 +19,22 @@ const helperTextId = computed(() => {
   return undefined;
 });
 </script>
+
+<template>
+  <div class="form-field" :class="{ 'form-field--error': hasError }">
+    <label v-if="label" :for="id" class="form-field-label" :class="{ 'form-field-label--required': required }">
+      {{ label }}
+    </label>
+
+    <div class="form-field-input">
+      <slot />
+    </div>
+
+    <HelperText v-if="error || helperText" :id="helperTextId" :error="error" class="form-field-helper">
+      {{ error || helperText }}
+    </HelperText>
+  </div>
+</template>
 
 <style scoped>
 .form-field {

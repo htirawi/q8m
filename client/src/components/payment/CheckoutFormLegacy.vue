@@ -1,242 +1,3 @@
-<template>
-  <div class="checkout-form">
-    <div class="mx-auto max-w-2xl">
-      <!-- Header -->
-      <div class="checkout-header">
-        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
-          {{ $t("checkout.title") }}
-
-        </h2>
-        <p class="text-gray-600 dark:text-gray-300">
-          {{ $t("checkout.subtitle") }}
-
-        </p>
-      </div>
-
-      <!-- Order Summary -->
-      <div class="order-summary">
-        <h3 class="summary-title">{{ $t("checkout.orderSummary") }}
-
-        </h3>
-
-        <div class="plan-details">
-          <div class="plan-info">
-            <h4 class="plan-name">{{ selectedPlan.name }}
-
-            </h4>
-            <p class="plan-description">{{ selectedPlan.description }}
-
-            </p>
-          </div>
-
-          <div class="plan-pricing">
-            <div class="price-container">
-              <span class="price-amount">{{ displayPrice }}
-
-              </span>
-              <span class="price-period">{{ pricePeriod }}
-
-              </span>
-            </div>
-            <p v-if="priceInfo?.isEstimated" class="price-note">
-              {{ $t("checkout.estimatedPrice") }}
-            </p>
-          </div>
-        </div>
-
-        <!-- Billing Cycle Toggle -->
-        <div v-if="selectedPlan.planId !== 'JUNIOR'" class="billing-toggle">
-          <div class="toggle-container">
-            <span class="toggle-label" :class="{ 'toggle-label--active': billingCycle === 'monthly' }">
-              {{ $t("checkout.monthly") }}
-            </span>
-            <button @click="toggleBillingCycle" class="toggle-switch"
-              :class="{ 'toggle-switch--active': billingCycle === 'yearly' }">
-              <span class="toggle-thumb" :class="{ 'toggle-thumb--active': billingCycle === 'yearly' }" />
-            </button>
-            <span class="toggle-label" :class="{ 'toggle-label--active': billingCycle === 'yearly' }">
-              {{ $t("checkout.yearly") }}
-
-            </span>
-          </div>
-          <p v-if="billingCycle === 'yearly'" class="discount-note">
-            {{ $t("checkout.savePercent", { percent: 17 }) }}
-
-          </p>
-        </div>
-      </div>
-
-      <!-- Billing Information -->
-      <form @submit.prevent="handleSubmit" class="checkout-form-content">
-        <div class="form-section">
-          <h3 class="section-title">{{ $t("checkout.billingInformation") }}
-
-          </h3>
-
-          <div class="form-grid">
-            <!-- Name -->
-            <div class="form-group">
-              <label for="name" class="form-label"> {{ $t("checkout.fullName") }} * </label>
-              <input id="name" v-model="billingForm.name" type="text" required class="form-input"
-                :class="{ 'form-input--error': errors.name }" :placeholder="$t('checkout.namePlaceholder')" />
-              <p v-if="errors.name" class="form-error">{{ errors.name }}
-
-              </p>
-            </div>
-
-            <!-- Email -->
-            <div class="form-group">
-              <label for="email" class="form-label"> {{ $t("checkout.email") }} * </label>
-              <input id="email" v-model="billingForm.email" type="email" required class="form-input"
-                :class="{ 'form-input--error': errors.email }" :placeholder="$t('checkout.emailPlaceholder')" />
-              <p v-if="errors.email" class="form-error">{{ errors.email }}
-
-              </p>
-            </div>
-
-            <!-- Street Address -->
-            <div class="form-group form-group--full">
-              <label for="street" class="form-label"> {{ $t("checkout.streetAddress") }} * </label>
-              <input id="street" v-model="billingForm.street" type="text" required class="form-input"
-                :class="{ 'form-input--error': errors.street }" :placeholder="$t('checkout.streetPlaceholder')" />
-              <p v-if="errors.street" class="form-error">{{ errors.street }}
-
-              </p>
-            </div>
-
-            <!-- City -->
-            <div class="form-group">
-              <label for="city" class="form-label"> {{ $t("checkout.city") }} * </label>
-              <input id="city" v-model="billingForm.city" type="text" required class="form-input"
-                :class="{ 'form-input--error': errors.city }" :placeholder="$t('checkout.cityPlaceholder')" />
-              <p v-if="errors.city" class="form-error">{{ errors.city }}
-
-              </p>
-            </div>
-
-            <!-- State -->
-            <div class="form-group">
-              <label for="state" class="form-label"> {{ $t("checkout.state") }} * </label>
-              <input id="state" v-model="billingForm.state" type="text" required class="form-input"
-                :class="{ 'form-input--error': errors.state }" :placeholder="$t('checkout.statePlaceholder')" />
-              <p v-if="errors.state" class="form-error">{{ errors.state }}
-
-              </p>
-            </div>
-
-            <!-- Postal Code -->
-            <div class="form-group">
-              <label for="postalCode" class="form-label"> {{ $t("checkout.postalCode") }} * </label>
-              <input id="postalCode" v-model="billingForm.postalCode" type="text" required class="form-input"
-                :class="{ 'form-input--error': errors.postalCode }"
-                :placeholder="$t('checkout.postalCodePlaceholder')" />
-              <p v-if="errors.postalCode" class="form-error">{{ errors.postalCode }}
-
-              </p>
-            </div>
-
-            <!-- Country -->
-            <div class="form-group">
-              <label for="country" class="form-label"> {{ $t("checkout.country") }} * </label>
-              <select id="country" v-model="billingForm.country" required class="form-input"
-                :class="{ 'form-input--error': errors.country }">
-                <option value="">{{ $t("checkout.selectCountry") }}
-
-                </option>
-                <option v-for="country in countries" :key="country.code" :value="country.code">
-                  {{ country.name }}
-
-                </option>
-              </select>
-              <p v-if="errors.country" class="form-error">{{ errors.country }}
-
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Payment Method Selection -->
-        <div class="form-section">
-          <h3 class="section-title">{{ $t("checkout.paymentMethod") }}</h3>
-
-          <div class="payment-methods">
-            <div v-for="method in availablePaymentMethods" :key="method.id" @click="selectPaymentMethod(method.id)"
-              class="payment-method" :class="{ 'payment-method--selected': selectedPaymentMethod === method.id }">
-              <div class="payment-method-content">
-                <img :src="method.icon" :alt="method.name" class="payment-icon" />
-                <div class="payment-info">
-                  <h4 class="payment-name">{{ method.name }}
-
-                  </h4>
-                  <p class="payment-description">{{ method.description }}
-
-                  </p>
-                </div>
-                <div class="payment-radio">
-                  <input type="radio" :id="method.id" :value="method.id" v-model="selectedPaymentMethod"
-                    class="radio-input" />
-                  <span class="radio-custom"></span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Terms and Conditions -->
-        <div class="terms-section">
-          <label class="terms-checkbox">
-            <input v-model="acceptedTerms" type="checkbox" required class="checkbox-input" />
-            <span class="checkbox-custom"></span>
-            <span class="terms-text">
-              {{ $t("checkout.agreeToTerms") }}
-
-              <a href="/terms" target="_blank" class="terms-link">
-                {{ $t("checkout.termsOfService") }}
-
-              </a>
-              {{ $t("checkout.and") }}
-
-              <a href="/privacy" target="_blank" class="terms-link">
-                {{ $t("checkout.privacyPolicy") }}
-
-              </a>
-            </span>
-          </label>
-        </div>
-
-        <!-- Submit Button -->
-        <div class="submit-section">
-          <button type="submit" :disabled="!isFormValid || paymentStore.isLoading" class="submit-button">
-            <span v-if="paymentStore.isLoading" class="flex items-center justify-center">
-              <div class="mr-2 h-5 w-5 animate-spin rounded-full border-b-2 border-white"></div>
-              {{ $t("checkout.processing") }}
-
-            </span>
-            <span v-else> {{ $t("checkout.completePurchase") }} {{ displayPrice }}
-
-            </span>
-          </button>
-
-          <p class="security-note">
-            {{ $t("checkout.securityNote") }}
-
-          </p>
-        </div>
-
-        <!-- Loading State -->
-        <LoadingState v-if="isProcessing" type="inline" :text="$t('checkout.processing')"
-          :description="$t('checkout.processingDescription')" />
-
-        <!-- Error Display -->
-        <div v-else-if="error || paymentStore.error" class="error-message">
-          {{ error || paymentStore.error }}
-
-        </div>
-      </form>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { ref, computed, reactive, onMounted } from "vue";
 import { usePaymentStore } from "@/stores/payment";
@@ -490,6 +251,245 @@ onMounted(() => {
   }
 });
 </script>
+
+<template>
+  <div class="checkout-form">
+    <div class="mx-auto max-w-2xl">
+      <!-- Header -->
+      <div class="checkout-header">
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
+          {{ $t("checkout.title") }}
+
+        </h2>
+        <p class="text-gray-600 dark:text-gray-300">
+          {{ $t("checkout.subtitle") }}
+
+        </p>
+      </div>
+
+      <!-- Order Summary -->
+      <div class="order-summary">
+        <h3 class="summary-title">{{ $t("checkout.orderSummary") }}
+
+        </h3>
+
+        <div class="plan-details">
+          <div class="plan-info">
+            <h4 class="plan-name">{{ selectedPlan.name }}
+
+            </h4>
+            <p class="plan-description">{{ selectedPlan.description }}
+
+            </p>
+          </div>
+
+          <div class="plan-pricing">
+            <div class="price-container">
+              <span class="price-amount">{{ displayPrice }}
+
+              </span>
+              <span class="price-period">{{ pricePeriod }}
+
+              </span>
+            </div>
+            <p v-if="priceInfo?.isEstimated" class="price-note">
+              {{ $t("checkout.estimatedPrice") }}
+            </p>
+          </div>
+        </div>
+
+        <!-- Billing Cycle Toggle -->
+        <div v-if="selectedPlan.planId !== 'JUNIOR'" class="billing-toggle">
+          <div class="toggle-container">
+            <span class="toggle-label" :class="{ 'toggle-label--active': billingCycle === 'monthly' }">
+              {{ $t("checkout.monthly") }}
+            </span>
+            <button @click="toggleBillingCycle" class="toggle-switch"
+              :class="{ 'toggle-switch--active': billingCycle === 'yearly' }">
+              <span class="toggle-thumb" :class="{ 'toggle-thumb--active': billingCycle === 'yearly' }" />
+            </button>
+            <span class="toggle-label" :class="{ 'toggle-label--active': billingCycle === 'yearly' }">
+              {{ $t("checkout.yearly") }}
+
+            </span>
+          </div>
+          <p v-if="billingCycle === 'yearly'" class="discount-note">
+            {{ $t("checkout.savePercent", { percent: 17 }) }}
+
+          </p>
+        </div>
+      </div>
+
+      <!-- Billing Information -->
+      <form @submit.prevent="handleSubmit" class="checkout-form-content">
+        <div class="form-section">
+          <h3 class="section-title">{{ $t("checkout.billingInformation") }}
+
+          </h3>
+
+          <div class="form-grid">
+            <!-- Name -->
+            <div class="form-group">
+              <label for="name" class="form-label"> {{ $t("checkout.fullName") }} * </label>
+              <input id="name" v-model="billingForm.name" type="text" required class="form-input"
+                :class="{ 'form-input--error': errors.name }" :placeholder="$t('checkout.namePlaceholder')" />
+              <p v-if="errors.name" class="form-error">{{ errors.name }}
+
+              </p>
+            </div>
+
+            <!-- Email -->
+            <div class="form-group">
+              <label for="email" class="form-label"> {{ $t("checkout.email") }} * </label>
+              <input id="email" v-model="billingForm.email" type="email" required class="form-input"
+                :class="{ 'form-input--error': errors.email }" :placeholder="$t('checkout.emailPlaceholder')" />
+              <p v-if="errors.email" class="form-error">{{ errors.email }}
+
+              </p>
+            </div>
+
+            <!-- Street Address -->
+            <div class="form-group form-group--full">
+              <label for="street" class="form-label"> {{ $t("checkout.streetAddress") }} * </label>
+              <input id="street" v-model="billingForm.street" type="text" required class="form-input"
+                :class="{ 'form-input--error': errors.street }" :placeholder="$t('checkout.streetPlaceholder')" />
+              <p v-if="errors.street" class="form-error">{{ errors.street }}
+
+              </p>
+            </div>
+
+            <!-- City -->
+            <div class="form-group">
+              <label for="city" class="form-label"> {{ $t("checkout.city") }} * </label>
+              <input id="city" v-model="billingForm.city" type="text" required class="form-input"
+                :class="{ 'form-input--error': errors.city }" :placeholder="$t('checkout.cityPlaceholder')" />
+              <p v-if="errors.city" class="form-error">{{ errors.city }}
+
+              </p>
+            </div>
+
+            <!-- State -->
+            <div class="form-group">
+              <label for="state" class="form-label"> {{ $t("checkout.state") }} * </label>
+              <input id="state" v-model="billingForm.state" type="text" required class="form-input"
+                :class="{ 'form-input--error': errors.state }" :placeholder="$t('checkout.statePlaceholder')" />
+              <p v-if="errors.state" class="form-error">{{ errors.state }}
+
+              </p>
+            </div>
+
+            <!-- Postal Code -->
+            <div class="form-group">
+              <label for="postalCode" class="form-label"> {{ $t("checkout.postalCode") }} * </label>
+              <input id="postalCode" v-model="billingForm.postalCode" type="text" required class="form-input"
+                :class="{ 'form-input--error': errors.postalCode }"
+                :placeholder="$t('checkout.postalCodePlaceholder')" />
+              <p v-if="errors.postalCode" class="form-error">{{ errors.postalCode }}
+
+              </p>
+            </div>
+
+            <!-- Country -->
+            <div class="form-group">
+              <label for="country" class="form-label"> {{ $t("checkout.country") }} * </label>
+              <select id="country" v-model="billingForm.country" required class="form-input"
+                :class="{ 'form-input--error': errors.country }">
+                <option value="">{{ $t("checkout.selectCountry") }}
+
+                </option>
+                <option v-for="country in countries" :key="country.code" :value="country.code">
+                  {{ country.name }}
+
+                </option>
+              </select>
+              <p v-if="errors.country" class="form-error">{{ errors.country }}
+
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Payment Method Selection -->
+        <div class="form-section">
+          <h3 class="section-title">{{ $t("checkout.paymentMethod") }}</h3>
+
+          <div class="payment-methods">
+            <div v-for="method in availablePaymentMethods" :key="method.id" @click="selectPaymentMethod(method.id)"
+              class="payment-method" :class="{ 'payment-method--selected': selectedPaymentMethod === method.id }">
+              <div class="payment-method-content">
+                <img :src="method.icon" :alt="method.name" class="payment-icon" />
+                <div class="payment-info">
+                  <h4 class="payment-name">{{ method.name }}
+
+                  </h4>
+                  <p class="payment-description">{{ method.description }}
+
+                  </p>
+                </div>
+                <div class="payment-radio">
+                  <input type="radio" :id="method.id" :value="method.id" v-model="selectedPaymentMethod"
+                    class="radio-input" />
+                  <span class="radio-custom"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Terms and Conditions -->
+        <div class="terms-section">
+          <label class="terms-checkbox">
+            <input v-model="acceptedTerms" type="checkbox" required class="checkbox-input" />
+            <span class="checkbox-custom"></span>
+            <span class="terms-text">
+              {{ $t("checkout.agreeToTerms") }}
+
+              <a href="/terms" target="_blank" class="terms-link">
+                {{ $t("checkout.termsOfService") }}
+
+              </a>
+              {{ $t("checkout.and") }}
+
+              <a href="/privacy" target="_blank" class="terms-link">
+                {{ $t("checkout.privacyPolicy") }}
+
+              </a>
+            </span>
+          </label>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="submit-section">
+          <button type="submit" :disabled="!isFormValid || paymentStore.isLoading" class="submit-button">
+            <span v-if="paymentStore.isLoading" class="flex items-center justify-center">
+              <div class="mr-2 h-5 w-5 animate-spin rounded-full border-b-2 border-white"></div>
+              {{ $t("checkout.processing") }}
+
+            </span>
+            <span v-else> {{ $t("checkout.completePurchase") }} {{ displayPrice }}
+
+            </span>
+          </button>
+
+          <p class="security-note">
+            {{ $t("checkout.securityNote") }}
+
+          </p>
+        </div>
+
+        <!-- Loading State -->
+        <LoadingState v-if="isProcessing" type="inline" :text="$t('checkout.processing')"
+          :description="$t('checkout.processingDescription')" />
+
+        <!-- Error Display -->
+        <div v-else-if="error || paymentStore.error" class="error-message">
+          {{ error || paymentStore.error }}
+
+        </div>
+      </form>
+    </div>
+  </div>
+</template>
 
 <style scoped>
 .checkout-form {

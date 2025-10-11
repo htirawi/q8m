@@ -1,3 +1,42 @@
+<script setup lang="ts">
+import { computed } from "vue";
+
+import { CheckIcon } from "@heroicons/vue/24/solid";
+
+const learningSteps = computed(() => [
+  {
+    id: "assess",
+    titleKey: "home.learningPath.steps.assess.title",
+    descriptionKey: "home.learningPath.steps.assess.description",
+    features: [
+      "home.learningPath.steps.assess.features.skill",
+      "home.learningPath.steps.assess.features.gap",
+      "home.learningPath.steps.assess.features.plan",
+    ],
+  },
+  {
+    id: "learn",
+    titleKey: "home.learningPath.steps.learn.title",
+    descriptionKey: "home.learningPath.steps.learn.description",
+    features: [
+      "home.learningPath.steps.learn.features.patterns",
+      "home.learningPath.steps.learn.features.practice",
+      "home.learningPath.steps.learn.features.feedback",
+    ],
+  },
+  {
+    id: "master",
+    titleKey: "home.learningPath.steps.master.title",
+    descriptionKey: "home.learningPath.steps.master.description",
+    features: [
+      "home.learningPath.steps.master.features.interview",
+      "home.learningPath.steps.master.features.confidence",
+      "home.learningPath.steps.master.features.job",
+    ],
+  },
+]);
+</script>
+
 <template>
   <section class="learning-path-section" aria-labelledby="learning-path-title">
     <div class="learning-path-container">
@@ -63,44 +102,6 @@
     </div>
   </section>
 </template>
-
-<script setup lang="ts">
-import { computed } from "vue";
-import { CheckIcon } from "@heroicons/vue/24/solid";
-
-const learningSteps = computed(() => [
-  {
-    id: "assess",
-    titleKey: "home.learningPath.steps.assess.title",
-    descriptionKey: "home.learningPath.steps.assess.description",
-    features: [
-      "home.learningPath.steps.assess.features.skill",
-      "home.learningPath.steps.assess.features.gap",
-      "home.learningPath.steps.assess.features.plan",
-    ],
-  },
-  {
-    id: "learn",
-    titleKey: "home.learningPath.steps.learn.title",
-    descriptionKey: "home.learningPath.steps.learn.description",
-    features: [
-      "home.learningPath.steps.learn.features.patterns",
-      "home.learningPath.steps.learn.features.practice",
-      "home.learningPath.steps.learn.features.feedback",
-    ],
-  },
-  {
-    id: "master",
-    titleKey: "home.learningPath.steps.master.title",
-    descriptionKey: "home.learningPath.steps.master.description",
-    features: [
-      "home.learningPath.steps.master.features.interview",
-      "home.learningPath.steps.master.features.confidence",
-      "home.learningPath.steps.master.features.job",
-    ],
-  },
-]);
-</script>
 
 <style scoped>
 .learning-path-section {

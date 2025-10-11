@@ -1,17 +1,6 @@
-<template>
-  <div ref="containerRef" class="virtual-scroll-container" :style="{ height: containerHeight + 'px' }"
-    @scroll="handleScroll">
-    <div class="virtual-scroll-spacer" :style="{ height: totalHeight + 'px' }">
-      <div class="virtual-scroll-content" :style="{ transform: `translateY(${offsetY}px)` }">
-        <slot v-for="(item, index) in visibleItems" :key="getItemKey(item, startIndex + index)" :item="item"
-          :index="startIndex + index" />
-      </div>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts" generic="T extends Record<string, string | number | boolean>">
-import { ref, computed } from "vue";
+import { computed, ref } from "vue";
+
 import type { VirtualScrollProps } from "@/types/ui/component-props";
 
 const props = withDefaults(defineProps<VirtualScrollProps<T>>(), {
@@ -68,6 +57,23 @@ defineExpose({
   },
 });
 </script>
+
+<template>
+  <div
+    ref="containerRef"
+    class="virtual-scroll-container"
+    :style="{ height: containerHeight + 'px' }"
+    role="list"
+    aria-label="Scrollable list"
+    @scroll="handleScroll">
+    <div class="virtual-scroll-spacer" :style="{ height: totalHeight + 'px' }">
+      <div class="virtual-scroll-content" :style="{ transform: `translateY(${offsetY}px)` }">
+        <slot v-for="(item, index) in visibleItems" :key="getItemKey(item, startIndex + index)" :item="item"
+          :index="startIndex + index" />
+      </div>
+    </div>
+  </div>
+</template>
 
 <style scoped>
 .virtual-scroll-container {

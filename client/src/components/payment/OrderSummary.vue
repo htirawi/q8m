@@ -1,3 +1,26 @@
+<script setup lang="ts">
+import { computed } from "vue";
+import { useI18n } from "vue-i18n";
+import type { OrderSummaryProps } from "@/types/ui/component-props";
+
+const props = defineProps<OrderSummaryProps>();
+
+defineEmits<{
+  "toggle-billing-cycle": [];
+}>();
+
+const { t } = useI18n();
+
+const displayPrice = computed(() => {
+  if (!props.priceInfo) return "N/A";
+  return props.priceInfo.formatted;
+});
+
+const pricePeriod = computed(() => {
+  return props.billingCycle === "monthly" ? t("checkout.perMonth") : t("checkout.perYear");
+});
+</script>
+
 <template>
   <div class="order-summary">
     <h3 class="summary-title">{{ $t("checkout.orderSummary") }}
@@ -51,29 +74,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { computed } from "vue";
-import { useI18n } from "vue-i18n";
-import type { OrderSummaryProps } from "@/types/ui/component-props";
-
-const props = defineProps<OrderSummaryProps>();
-
-defineEmits<{
-  "toggle-billing-cycle": [];
-}>();
-
-const { t } = useI18n();
-
-const displayPrice = computed(() => {
-  if (!props.priceInfo) return "N/A";
-  return props.priceInfo.formatted;
-});
-
-const pricePeriod = computed(() => {
-  return props.billingCycle === "monthly" ? t("checkout.perMonth") : t("checkout.perYear");
-});
-</script>
 
 <style scoped>
 .order-summary {

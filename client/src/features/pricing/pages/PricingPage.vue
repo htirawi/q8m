@@ -1,76 +1,3 @@
-<template>
-  <div class="pricing-page" role="main" aria-labelledby="pricing-page-title">
-    <!-- Skip to main content for accessibility -->
-    <a
-      href="#main-content"
-      class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-blue-600 focus:px-4 focus:py-2 focus:text-white"
-    >
-      {{ $t("a11y.skipToMain") }}
-    </a>
-
-    <!-- Hero Section -->
-    <PricingHero />
-
-    <!-- Billing Toggle -->
-    <div class="pricing-page-billing">
-      <div class="pricing-page-billing-container">
-        <BillingToggle v-model="billingCycle" />
-      </div>
-    </div>
-
-    <!-- Plan Cards -->
-    <section id="main-content" class="pricing-page-plans" aria-labelledby="plans-title">
-      <div class="pricing-page-plans-container">
-        <h2 id="plans-title" class="sr-only">
-          {{ $t("pricing.plans.title") }}
-        </h2>
-
-        <div class="pricing-page-plans-grid">
-          <PlanCard
-            v-for="plan in plans"
-            :key="plan.id"
-            :plan="plan"
-            :billing="billingCycle"
-            @select-plan="handlePlanSelection"
-          />
-        </div>
-      </div>
-    </section>
-
-    <!-- Feature Highlights -->
-    <FeatureGrid />
-
-    <!-- Comparison Table -->
-    <ComparisonTable />
-
-    <!-- FAQ Section -->
-    <FaqAccordion />
-
-    <!-- Guarantee Panel -->
-    <GuaranteePanel />
-
-    <!-- Final CTA -->
-    <FinalCta @cta-click="handleFinalCta" />
-
-    <!-- Sticky CTA for Mobile -->
-    <div class="pricing-page-sticky-cta lg:hidden">
-      <div class="pricing-page-sticky-content">
-        <div class="pricing-page-sticky-text">
-          <span class="pricing-page-sticky-title">
-            {{ $t("pricing.sticky.title") }}
-          </span>
-          <span class="pricing-page-sticky-price">
-            {{ $t("pricing.sticky.price", { price: getStickyPrice() }) }}
-          </span>
-        </div>
-        <button @click="handleStickyCta" class="pricing-page-sticky-button">
-          {{ $t("pricing.sticky.cta") }}
-        </button>
-      </div>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
@@ -197,6 +124,79 @@ defineOptions({
   name: "PricingPage",
 });
 </script>
+
+<template>
+  <div class="pricing-page" role="main" aria-labelledby="pricing-page-title">
+    <!-- Skip to main content for accessibility -->
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-blue-600 focus:px-4 focus:py-2 focus:text-white"
+    >
+      {{ $t("a11y.skipToMain") }}
+    </a>
+
+    <!-- Hero Section -->
+    <PricingHero />
+
+    <!-- Billing Toggle -->
+    <div class="pricing-page-billing">
+      <div class="pricing-page-billing-container">
+        <BillingToggle v-model="billingCycle" />
+      </div>
+    </div>
+
+    <!-- Plan Cards -->
+    <section id="main-content" class="pricing-page-plans" aria-labelledby="plans-title">
+      <div class="pricing-page-plans-container">
+        <h2 id="plans-title" class="sr-only">
+          {{ $t("pricing.plans.title") }}
+        </h2>
+
+        <div class="pricing-page-plans-grid">
+          <PlanCard
+            v-for="plan in plans"
+            :key="plan.id"
+            :plan="plan"
+            :billing="billingCycle"
+            @select-plan="handlePlanSelection"
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- Feature Highlights -->
+    <FeatureGrid />
+
+    <!-- Comparison Table -->
+    <ComparisonTable />
+
+    <!-- FAQ Section -->
+    <FaqAccordion />
+
+    <!-- Guarantee Panel -->
+    <GuaranteePanel />
+
+    <!-- Final CTA -->
+    <FinalCta @cta-click="handleFinalCta" />
+
+    <!-- Sticky CTA for Mobile -->
+    <div class="pricing-page-sticky-cta lg:hidden">
+      <div class="pricing-page-sticky-content">
+        <div class="pricing-page-sticky-text">
+          <span class="pricing-page-sticky-title">
+            {{ $t("pricing.sticky.title") }}
+          </span>
+          <span class="pricing-page-sticky-price">
+            {{ $t("pricing.sticky.price", { price: getStickyPrice() }) }}
+          </span>
+        </div>
+        <button @click="handleStickyCta" class="pricing-page-sticky-button">
+          {{ $t("pricing.sticky.cta") }}
+        </button>
+      </div>
+    </div>
+  </div>
+</template>
 
 <style scoped>
 .pricing-page {

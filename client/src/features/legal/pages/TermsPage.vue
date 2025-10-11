@@ -1,3 +1,29 @@
+<script setup lang="ts">
+import { useI18n } from "vue-i18n";
+
+useI18n();
+
+// Last updated date
+const lastUpdated = "January 15, 2024";
+
+// Table of contents sections
+const sections = [
+  { id: "introduction", titleKey: "legal.terms.toc.introduction" },
+  { id: "acceptance", titleKey: "legal.terms.toc.acceptance" },
+  { id: "service-description", titleKey: "legal.terms.toc.serviceDescription" },
+  { id: "user-accounts", titleKey: "legal.terms.toc.userAccounts" },
+  { id: "payment-terms", titleKey: "legal.terms.toc.paymentTerms" },
+  { id: "prohibited-uses", titleKey: "legal.terms.toc.prohibitedUses" },
+  { id: "intellectual-property", titleKey: "legal.terms.toc.intellectualProperty" },
+  { id: "termination", titleKey: "legal.terms.toc.termination" },
+  { id: "disclaimers", titleKey: "legal.terms.toc.disclaimers" },
+  { id: "limitation-liability", titleKey: "legal.terms.toc.limitationLiability" },
+  { id: "governing-law", titleKey: "legal.terms.toc.governingLaw" },
+  { id: "changes-terms", titleKey: "legal.terms.toc.changesTerms" },
+  { id: "contact", titleKey: "legal.terms.toc.contact" },
+];
+</script>
+
 <template>
   <div class="terms-page">
     <!-- Header Section -->
@@ -231,32 +257,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { useI18n } from "vue-i18n";
-
-useI18n();
-
-// Last updated date
-const lastUpdated = "January 15, 2024";
-
-// Table of contents sections
-const sections = [
-  { id: "introduction", titleKey: "legal.terms.toc.introduction" },
-  { id: "acceptance", titleKey: "legal.terms.toc.acceptance" },
-  { id: "service-description", titleKey: "legal.terms.toc.serviceDescription" },
-  { id: "user-accounts", titleKey: "legal.terms.toc.userAccounts" },
-  { id: "payment-terms", titleKey: "legal.terms.toc.paymentTerms" },
-  { id: "prohibited-uses", titleKey: "legal.terms.toc.prohibitedUses" },
-  { id: "intellectual-property", titleKey: "legal.terms.toc.intellectualProperty" },
-  { id: "termination", titleKey: "legal.terms.toc.termination" },
-  { id: "disclaimers", titleKey: "legal.terms.toc.disclaimers" },
-  { id: "limitation-liability", titleKey: "legal.terms.toc.limitationLiability" },
-  { id: "governing-law", titleKey: "legal.terms.toc.governingLaw" },
-  { id: "changes-terms", titleKey: "legal.terms.toc.changesTerms" },
-  { id: "contact", titleKey: "legal.terms.toc.contact" },
-];
-</script>
 
 <style scoped>
 /* Page Layout */

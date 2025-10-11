@@ -1,43 +1,14 @@
-<template>
-  <teleport to="body">
-    <transition name="modal" @enter="handleEnter" @leave="handleLeave">
-      <div v-if="isOpen" class="modal-overlay" role="dialog" :aria-modal="true" :aria-labelledby="titleId"
-        :aria-describedby="descriptionId" @click="handleOverlayClick" @keydown="handleKeydown">
-        <div ref="modalRef" class="modal-container" :class="containerClasses" @click.stop>
-          <header v-if="title || $slots.header" class="modal-header">
-            <slot name="header">
-              <h2 :id="titleId" class="modal-title">
-                {{ title }}
-              </h2>
-            </slot>
-            <button v-if="closable" type="button" class="modal-close" :aria-label="$t('a11y.closeModal')"
-              @click="handleClose">
-              <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </header>
-
-          <div class="modal-content">
-            <div v-if="description" :id="descriptionId" class="modal-description">
-              {{ description }}
-            </div>
-            <slot />
-          </div>
-
-          <footer v-if="$slots.footer" class="modal-footer">
-            <slot name="footer" />
-          </footer>
-        </div>
-      </div>
-    </transition>
-  </teleport>
-</template>
-
 <script setup lang="ts">
-import { ref, computed, nextTick, onMounted, onUnmounted } from "vue";
+import { computed, nextTick, onMounted, onUnmounted, ref, watch } from "vue";
 
 import type { ModalProps } from "@/types/ui/component-props";
+
+/**
+ * Modal Component
+ * Accessible dialog/modal component with focus trap, keyboard navigation, and customizable sizes.
+ * @emits close - Emitted when modal requests to close
+ * @emits update:isOpen - Emitted to sync isOpen prop
+ */
 
 const props = withDefaults(defineProps<ModalProps>(), {
   size: "md",
@@ -51,14 +22,12 @@ const emit = defineEmits<{
   "update:isOpen": [value: boolean];
 }>();
 
-// Refs
 const modalRef = ref<HTMLElement>();
 const titleId = computed(() => `modal-title-${Math.random().toString(36).substr(2, 9)}`);
 const descriptionId = computed(
   () => `modal-description-${Math.random().toString(36).substr(2, 9)}`
 );
 
-// Computed properties
 const containerClasses = computed(() => {
   const sizeClasses = {
     sm: "max-w-sm",
@@ -71,7 +40,6 @@ const containerClasses = computed(() => {
   return ["modal-dialog", sizeClasses[props.size]].join(" ");
 });
 
-// Methods
 const handleClose = () => {
   emit("close");
   emit("update:isOpen", false);
@@ -100,7 +68,6 @@ const handleLeave = () => {
   // Focus management handled by the component that opened the modal
 };
 
-// Keyboard trap
 let focusableElements: HTMLElement[] = [];
 let firstFocusableElement: HTMLElement | null = null;
 let lastFocusableElement: HTMLElement | null = null;
@@ -136,7 +103,6 @@ const updateFocusableElements = () => {
   lastFocusableElement = focusableElements[focusableElements.length - 1] || null;
 };
 
-// Lifecycle
 onMounted(() => {
   document.addEventListener("keydown", trapFocus);
 });
@@ -144,9 +110,6 @@ onMounted(() => {
 onUnmounted(() => {
   document.removeEventListener("keydown", trapFocus);
 });
-
-// Watch for modal open to update focusable elements
-import { watch } from "vue";
 
 watch(
   () => props.isOpen,
@@ -159,6 +122,42 @@ watch(
   }
 );
 </script>
+
+<template>
+  <teleport to="body">
+    <transition name="modal" @enter="handleEnter" @leave="handleLeave">
+      <div v-if="isOpen" class="modal-overlay" role="dialog" :aria-modal="true" :aria-labelledby="titleId"
+        :aria-describedby="descriptionId" @click="handleOverlayClick" @keydown="handleKeydown">
+        <div ref="modalRef" class="modal-container" :class="containerClasses" @click.stop>
+          <header v-if="title || $slots.header" class="modal-header">
+            <slot name="header">
+              <h2 :id="titleId" class="modal-title">
+                {{ title }}
+              </h2>
+            </slot>
+            <button v-if="closable" type="button" class="modal-close" :aria-label="$t('a11y.closeModal')"
+              @click="handleClose">
+              <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </header>
+
+          <div class="modal-content">
+            <div v-if="description" :id="descriptionId" class="modal-description">
+              {{ description }}
+            </div>
+            <slot />
+          </div>
+
+          <footer v-if="$slots.footer" class="modal-footer">
+            <slot name="footer" />
+          </footer>
+        </div>
+      </div>
+    </transition>
+  </teleport>
+</template>
 
 <style scoped>
 .modal-overlay {
@@ -197,12 +196,10 @@ watch(
   @apply flex justify-end space-x-3 border-t border-gray-200 p-6 dark:border-gray-700;
 }
 
-/* Focus styles */
 .modal-close:focus {
   @apply ring-primary-500 outline-none ring-2 ring-offset-2 dark:ring-offset-gray-800;
 }
 
-/* Transitions */
 .modal-enter-active,
 .modal-leave-active {
   transition: opacity 0.3s ease;
