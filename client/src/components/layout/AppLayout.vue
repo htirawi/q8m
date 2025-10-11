@@ -212,12 +212,7 @@ onMounted(async () => {
     structuredData: seo.generateOrganizationStructuredData(),
   });
 
-  // Preconnect to external domains for performance
-  pwa.preconnectToDomain("https://fonts.googleapis.com");
-  pwa.preconnectToDomain("https://fonts.gstatic.com");
-
-  // Preload critical resources
-  pwa.preloadResource("/manifest.json", "manifest");
+  // Preconnect and preload are handled by PWA composable internally
 });
 </script>
 

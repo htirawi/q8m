@@ -239,7 +239,6 @@
 
 <script setup lang="ts">
 import { ref, computed, reactive, onMounted } from "vue";
-import { useRouter } from "vue-router";
 import { usePaymentStore } from "@/stores/payment";
 import { useAuthStore } from "@/stores/auth";
 import { useI18n } from "vue-i18n";
@@ -258,6 +257,8 @@ import type { CheckoutFormProps } from "@/types/ui/component-props";
 const props = defineProps<CheckoutFormProps>();
 
 // State
+const isProcessing = ref(false);
+const error = ref<string | null>(null);
 const billingCycle = ref<"monthly" | "yearly">("monthly");
 const selectedPaymentMethod = ref<string>("");
 const acceptedTerms = ref(false);
@@ -466,12 +467,11 @@ const handleSubmit = async () => {
       throw error;
     }
   } catch (err) {
-    const errorState = errorHandler.handlePaymentError(err);
+    const handleableError = err instanceof Error ? err : new Error(String(err));
+    const errorState = errorHandler.handlePaymentError(handleableError);
     error.value = errorState.message;
     console.error("Checkout error:", err);
-  }
-
-  finally {
+  } finally {
     isProcessing.value = false;
   }
 };
@@ -486,7 +486,7 @@ onMounted(() => {
 
   // Set default payment method
   if (availablePaymentMethods.value.length > 0) {
-    selectedPaymentMethod.value = availablePaymentMethods.value[0].id;
+    selectedPaymentMethod.value = availablePaymentMethods.value[0]?.id ?? "";
   }
 });
 </script>

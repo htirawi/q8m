@@ -50,17 +50,15 @@ import { ref, onErrorCaptured, provide } from "vue";
 import { useRouter } from "vue-router";
 import { useErrorHandler } from "@/composables/useErrorHandler";
 import { useToast } from "@/composables/useToast";
-import type { ErrorBoundaryProps, ErrorBoundaryEmits } from "@/types/ui/component-props";
+import type { ErrorBoundaryProps } from "@/types/ui/component-props";
+import type { ErrorBoundaryEmits } from "@/types/ui/emits";
 
 const props = withDefaults(defineProps<ErrorBoundaryProps>(), {
   fallback: true,
   showDetails: false,
 });
 
-const emit = defineEmits<{
-  error: [error: Error, info: string];
-  retry: [];
-}>();
+const emit = defineEmits<ErrorBoundaryEmits>();
 
 const router = useRouter();
 const errorHandler = useErrorHandler();

@@ -57,7 +57,7 @@
           </span>
         </label>
 
-        <button type="button" @click="$emit('show-forgot-password')"
+        <button type="button" @click="emit('show-forgot-password')"
           class="text-sm text-primary-600 hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300">
           {{ $t("auth.login.forgotPassword") }}
         </button>
@@ -128,7 +128,7 @@
       <p class="text-sm text-gray-600 dark:text-gray-400">
         {{ $t("auth.login.noAccount") }}
 
-        <button type="button" @click="$emit('show-register')"
+        <button type="button" @click="emit('show-register')"
           class="font-medium text-primary-600 hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300">
           {{ $t("auth.login.signUp") }}
 
@@ -144,14 +144,15 @@ import { useI18n } from "vue-i18n";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/vue/24/outline";
 import { useAuthStore } from "@/stores/auth";
 import type { LoginFormData, FormErrors } from "@/types/ui/component-props";
+import type { LoginFormEmits } from "@/types/ui/emits";
 
+interface AdditionalEmits {
+  (e: "oauth-login", provider: "google"): void;
+}
+
+const emit = defineEmits<LoginFormEmits & AdditionalEmits>();
 const { t } = useI18n();
 const authStore = useAuthStore();
-
-// Emits
-defineEmits<{
-  "oauth-login": [provider: "google"];
-}>();
 
 // Reactive data
 const formData = reactive<LoginFormData>({

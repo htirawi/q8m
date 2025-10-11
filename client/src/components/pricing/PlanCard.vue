@@ -60,8 +60,6 @@ import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { CheckIcon } from "@heroicons/vue/24/outline";
 import type { PlanCardProps, PlanCardEmits } from "@/types/ui/component-props";
-import type { Plan } from "@/types/domain/pricing";
-import type { BillingCycle } from "@/types/domain/billing";
 
 const props = defineProps<PlanCardProps>();
 const emit = defineEmits<PlanCardEmits>();

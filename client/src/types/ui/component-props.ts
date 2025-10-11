@@ -203,6 +203,7 @@ export interface OptimizedImageProps {
   format?: "webp" | "jpeg" | "png" | "auto";
   sizes?: string;
   class?: string;
+  decoding?: "async" | "auto" | "sync";
 }
 
 export interface OrderSummaryProps {

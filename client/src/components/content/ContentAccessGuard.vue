@@ -53,7 +53,7 @@
                 <h5 class="plan-name">{{ plan.name }}</h5>
                 <div class="plan-price">
                   <span class="price-amount">{{ formatPrice(plan) }} </span>
-                  <span class="price-period">{{ $t(`billing.${plan.billingCycle || "monthly"}`) }}
+                  <span class="price-period">{{ $t("billing.monthly") }}
                   </span>
                 </div>
               </div>
