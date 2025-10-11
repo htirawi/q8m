@@ -2,11 +2,7 @@ import { createHash } from "crypto";
 
 import { z } from "zod";
 
-export interface ValidationResult {
-  success: boolean;
-  data?: unknown;
-  errors?: string[];
-}
+import type { ValidationResult } from "../types/services/validation";
 
 export class InputValidationService {
   /**

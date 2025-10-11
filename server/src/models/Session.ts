@@ -1,12 +1,12 @@
 import type { Document, ObjectId } from "mongoose";
 import mongoose, { Schema } from "mongoose";
 
-export interface ISession extends Document {
+export interface ISession
+  extends Omit<Document, "expiresAt" | "lastUsed" | "revokedAt" | "revoke"> {
   userId: mongoose.Types.ObjectId;
   refreshToken: string;
   accessToken: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  expiresAt: any;
+  expiresAt: Date;
   userAgent?: string;
   ipAddress?: string;
   device?: {
@@ -20,11 +20,9 @@ export interface ISession extends Document {
     timezone?: string;
   };
   isActive: boolean;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  lastUsed: any;
+  lastUsed: Date;
   isRevoked: boolean;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  revokedAt?: any;
+  revokedAt?: Date;
   revokedReason?:
     | "user_logout"
     | "password_change"
@@ -33,6 +31,9 @@ export interface ISession extends Document {
     | "expired";
   isValid(): boolean;
   refresh(): Promise<void>;
+  revoke(
+    reason?: "user_logout" | "password_change" | "suspicious_activity" | "admin_revoke" | "expired"
+  ): Promise<void>;
 }
 
 const sessionSchema = new Schema(

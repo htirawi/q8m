@@ -1,28 +1,8 @@
+import { Subscription } from "@models/Subscription.js";
+import { User } from "@models/User.js";
 import type { ObjectId } from "mongoose";
 
-import { Subscription } from "../models/Subscription.js";
-import { User } from "../models/User.js";
-
-export interface EntitlementCheck {
-  hasAccess: boolean;
-  reason?: string;
-  upgradeRequired?: string;
-  subscriptionExpired?: boolean;
-  trialExpired?: boolean;
-}
-
-export interface UserEntitlements {
-  userId: string;
-  entitlements: string[];
-  activeSubscription: {
-    planType: string;
-    status: string;
-    expiresAt: Date;
-    isInTrial: boolean;
-  } | null;
-  isActive: boolean;
-  lastChecked: Date;
-}
+import type { EntitlementCheck, UserEntitlements } from "../types/services/entitlement";
 
 export class EntitlementService {
   private static instance: EntitlementService;
@@ -334,13 +314,15 @@ export class EntitlementService {
     try {
       const expiringSubscriptions = await Subscription.findExpiringSoon(days);
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return expiringSubscriptions.map((sub: any) => ({
-        userId: (sub.userId as ObjectId).toString(),
-        userEmail: sub.userId.email,
-        subscription: sub,
-        daysRemaining: sub.daysRemaining,
-      }));
+      return expiringSubscriptions.map((sub: { userId: unknown; daysRemaining: number }) => {
+        const populatedUser = sub.userId as { _id: ObjectId; email: string };
+        return {
+          userId: populatedUser._id.toString(),
+          userEmail: populatedUser.email,
+          subscription: sub,
+          daysRemaining: sub.daysRemaining,
+        };
+      });
     } catch (error) {
       console.error("Error fetching expiring subscriptions:", error);
       return [];
@@ -374,13 +356,12 @@ export class EntitlementService {
 
       // Get plan distribution
       const planDistribution: Record<string, number> = {};
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      subscriptionStats.forEach((stat: any) => {
-        const activeCount =
-          stat.statuses.find((s: { status: string; count: number }) => s.status === "active")
-            ?.count || 0;
-        planDistribution[stat._id] = activeCount;
-      });
+      subscriptionStats.forEach(
+        (stat: { _id: string; statuses: Array<{ status: string; count: number }> }) => {
+          const activeCount = stat.statuses.find((s) => s.status === "active")?.count || 0;
+          planDistribution[stat._id] = activeCount;
+        }
+      );
 
       // Get active and expiring subscriptions
       const activeSubscriptions = await Subscription.countDocuments({ status: "active" });

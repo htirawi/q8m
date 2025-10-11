@@ -1,9 +1,9 @@
+import { sanitizeForDisplay } from "@server/security/escape.js";
+import { safeUpdateFields, adminFieldValidators, isPlainObject } from "@server/security/safe-object.js";
 import type { FastifyInstance } from "fastify";
 import { z } from "zod";
 import { zodToJsonSchema } from "zod-to-json-schema";
 
-import { sanitizeForDisplay } from "../security/escape.js";
-import { safeUpdateFields, adminFieldValidators, isPlainObject } from "../security/safe-object.js";
 
 /**
  * Sanitize update data to prevent XSS attacks

@@ -4,7 +4,7 @@ export const routes: RouteRecordRaw[] = [
   {
     path: "/",
     name: "home",
-    component: () => import("@/features/home/views/HomeView.vue"),
+    component: () => import("@/features/home/pages/HomePage.vue"),
     meta: {
       title: "Quiz Platform - Professional Interview Preparation",
       description: "Master frontend development with 500+ curated interview questions",
@@ -21,7 +21,7 @@ export const routes: RouteRecordRaw[] = [
   {
     path: "/en/:pathMatch(.*)*",
     name: "en-catch-all",
-    component: () => import("@/features/home/views/HomeView.vue"),
+    component: () => import("@/features/home/pages/HomePage.vue"),
     meta: {
       locale: "en",
     },
@@ -29,7 +29,7 @@ export const routes: RouteRecordRaw[] = [
   {
     path: "/ar/:pathMatch(.*)*",
     name: "ar-catch-all",
-    component: () => import("@/features/home/views/HomeView.vue"),
+    component: () => import("@/features/home/pages/HomePage.vue"),
     meta: {
       locale: "ar",
     },
@@ -38,7 +38,7 @@ export const routes: RouteRecordRaw[] = [
   {
     path: "/login",
     name: "login",
-    component: () => import("@/features/auth/views/LoginView.vue"),
+    component: () => import("@/features/auth/pages/LoginPage.vue"),
     meta: {
       title: "Login - Quiz Platform",
       requiresGuest: true,
@@ -47,17 +47,25 @@ export const routes: RouteRecordRaw[] = [
   {
     path: "/register",
     name: "register",
-    component: () => import("@/features/auth/views/RegisterView.vue"),
+    component: () => import("@/features/auth/pages/RegisterPage.vue"),
     meta: {
       title: "Register - Quiz Platform",
       requiresGuest: true,
+    },
+  },
+  {
+    path: "/auth/callback",
+    name: "oauth-callback",
+    component: () => import("@/features/auth/pages/OAuthCallbackPage.vue"),
+    meta: {
+      title: "Authenticating - Quiz Platform",
     },
   },
   // Pricing routes
   {
     path: "/subscribe",
     name: "subscribe",
-    component: () => import("@/features/pricing/views/PricingView.vue"),
+    component: () => import("@/features/pricing/pages/PricingPage.vue"),
     meta: {
       title: "Subscribe - Quiz Platform",
       description: "Choose the perfect plan for your frontend interview preparation journey",
@@ -67,7 +75,7 @@ export const routes: RouteRecordRaw[] = [
   {
     path: "/checkout",
     name: "checkout",
-    component: () => import("@/views/CheckoutView.vue"),
+    component: () => import("@/features/checkout/pages/CheckoutPage.vue"),
     meta: {
       title: "Checkout - Quiz Platform",
       requiresAuth: true,
@@ -76,7 +84,7 @@ export const routes: RouteRecordRaw[] = [
   {
     path: "/payment/success",
     name: "payment-success",
-    component: () => import("@/views/PaymentSuccessView.vue"),
+    component: () => import("@/features/payment/pages/PaymentSuccessPage.vue"),
     meta: {
       title: "Payment Successful - Quiz Platform",
       requiresAuth: true,
@@ -85,7 +93,7 @@ export const routes: RouteRecordRaw[] = [
   {
     path: "/payment/error",
     name: "payment-error",
-    component: () => import("@/views/PaymentErrorView.vue"),
+    component: () => import("@/features/payment/pages/PaymentErrorPage.vue"),
     meta: {
       title: "Payment Failed - Quiz Platform",
     },
@@ -94,7 +102,7 @@ export const routes: RouteRecordRaw[] = [
   {
     path: "/quiz",
     name: "quiz",
-    component: () => import("@/features/quiz/views/QuizSelectionView.vue"),
+    component: () => import("@/features/quiz/pages/QuizSelectionPage.vue"),
     meta: {
       title: "Quiz Selection - Quiz Platform",
       requiresAuth: true,
@@ -103,7 +111,7 @@ export const routes: RouteRecordRaw[] = [
   {
     path: "/quiz/:framework/:level",
     name: "quiz-take",
-    component: () => import("@/features/quiz/views/QuizView.vue"),
+    component: () => import("@/features/quiz/pages/QuizPage.vue"),
     meta: {
       title: "Quiz - Quiz Platform",
       requiresAuth: true,
@@ -113,7 +121,7 @@ export const routes: RouteRecordRaw[] = [
   {
     path: "/account",
     name: "account",
-    component: () => import("@/features/account/views/AccountView.vue"),
+    component: () => import("@/features/account/pages/AccountPage.vue"),
     meta: {
       title: "Account - Quiz Platform",
       requiresAuth: true,
@@ -122,7 +130,7 @@ export const routes: RouteRecordRaw[] = [
   {
     path: "/subscription",
     name: "subscription",
-    component: () => import("@/views/SubscriptionView.vue"),
+    component: () => import("@/features/account/pages/SubscriptionPage.vue"),
     meta: {
       title: "Subscription - Quiz Platform",
       requiresAuth: true,
@@ -132,7 +140,7 @@ export const routes: RouteRecordRaw[] = [
   {
     path: "/admin",
     name: "admin",
-    component: () => import("@/features/admin/views/AdminDashboardView.vue"),
+    component: () => import("@/features/admin/pages/AdminDashboardPage.vue"),
     meta: {
       title: "Admin Dashboard - Quiz Platform",
       requiresAuth: true,
@@ -143,7 +151,7 @@ export const routes: RouteRecordRaw[] = [
   {
     path: "/unauthorized",
     name: "unauthorized",
-    component: () => import("@/features/errors/views/UnauthorizedView.vue"),
+    component: () => import("@/features/errors/pages/UnauthorizedPage.vue"),
     meta: {
       title: "Unauthorized - Quiz Platform",
     },
@@ -151,7 +159,7 @@ export const routes: RouteRecordRaw[] = [
   {
     path: "/:pathMatch(.*)*",
     name: "not-found",
-    component: () => import("@/features/errors/views/NotFoundView.vue"),
+    component: () => import("@/features/errors/pages/NotFoundPage.vue"),
     meta: {
       title: "Page Not Found - Quiz Platform",
     },

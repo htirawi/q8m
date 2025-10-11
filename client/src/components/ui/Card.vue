@@ -16,13 +16,7 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-
-export interface CardProps {
-  variant?: "default" | "elevated" | "outlined";
-  padding?: "none" | "sm" | "md" | "lg";
-  ariaLabelledby?: string;
-  ariaDescribedby?: string;
-}
+import type { CardProps } from "@/types/ui/component-props";
 
 const props = withDefaults(defineProps<CardProps>(), {
   variant: "default",

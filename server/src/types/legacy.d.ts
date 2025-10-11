@@ -13,7 +13,7 @@ import type {
   SubscriptionMethodResult,
   FxRateMethodResult,
   LoggerMethods
-} from './common.js';
+} from '@server/types/common.js';
 
 declare global {
   namespace NodeJS {

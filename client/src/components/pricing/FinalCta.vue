@@ -20,13 +20,10 @@
 </template>
 
 <script setup lang="ts">
-import { finalCtaData } from "./pricing.config";
+import { finalCtaData } from "@/components/pricing/pricing.config";
+import type { FinalCtaEmits } from "@/types/ui/component-props";
 
-interface Emits {
-  (e: "cta-click"): void;
-}
-
-const emit = defineEmits<Emits>();
+const emit = defineEmits<FinalCtaEmits>();
 
 const handleCtaClick = () => {
   emit("cta-click");

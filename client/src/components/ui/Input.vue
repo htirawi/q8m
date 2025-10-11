@@ -1,40 +1,16 @@
 <template>
   <div class="input-wrapper">
-    <input
-      :id="id"
-      :type="type"
-      :value="modelValue"
-      :placeholder="placeholder"
-      :disabled="disabled"
-      :readonly="readonly"
-      :required="required"
-      :aria-label="ariaLabel"
-      :aria-describedby="ariaDescribedby"
-      :aria-invalid="hasError"
-      :aria-required="required"
-      :class="inputClasses"
-      @input="handleInput"
-      @blur="handleBlur"
-      @focus="handleFocus"
-    />
+    <input :id="id" :type="type" :value="modelValue" :placeholder="placeholder" :disabled="disabled"
+      :readonly="readonly" :required="required" :aria-label="ariaLabel" :aria-describedby="ariaDescribedby"
+      :aria-invalid="hasError" :aria-required="required" :class="inputClasses" @input="handleInput" @blur="handleBlur"
+      @focus="handleFocus" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, toRefs } from "vue";
 
-export interface InputProps {
-  id?: string;
-  type?: "text" | "email" | "password" | "number" | "tel" | "url" | "search";
-  modelValue?: string | number;
-  placeholder?: string;
-  disabled?: boolean;
-  readonly?: boolean;
-  required?: boolean;
-  error?: string;
-  ariaLabel?: string;
-  ariaDescribedby?: string;
-}
+import type { InputProps } from "@/types/ui/component-props";
 
 const props = withDefaults(defineProps<InputProps>(), {
   type: "text",

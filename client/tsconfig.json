@@ -36,6 +36,7 @@
       "@styles/*": ["./src/styles/*"],
       "@types/*": ["./src/types/*"],
       "@utils/*": ["./src/utils/*"],
+      "@config/*": ["./src/config/*"],
       "@shared/*": ["../shared/*"]
     }
   },
@@ -47,13 +48,7 @@
     "coverage",
     "vite.config.ts",
     "vitest.setup.ts",
-    "src/components/**",
-    "src/composables/**",
-    "src/tests/**",
-    "src/views/**",
-    "src/stores/payment.ts",
-    "src/stores/payment/**",
-    "src/router/routes.ts"
+    "src/tests/**"
   ],
   "references": [
     {

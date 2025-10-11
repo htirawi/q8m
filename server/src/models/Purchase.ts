@@ -5,6 +5,7 @@ export interface IPurchase extends Document {
   userId: mongoose.Types.ObjectId;
   orderId: string;
   paymentId: string;
+  gatewayPaymentId?: string; // Capture/Transaction ID from payment gateway
   paymentGateway: "paypal" | "aps" | "hyperpay";
   amount: {
     currency: string;
@@ -54,6 +55,9 @@ export interface IPurchase extends Document {
     campaign?: string;
     originalCurrency?: string;
     exchangeRate?: string;
+    planType?: string;
+    billingCycle?: string;
+    requestId?: string;
   };
   createdAt: Date;
   updatedAt: Date;
@@ -73,6 +77,9 @@ const purchaseSchema = new Schema<IPurchase>(
     paymentId: {
       type: String,
       required: true,
+    },
+    gatewayPaymentId: {
+      type: String,
     },
     paymentGateway: {
       type: String,

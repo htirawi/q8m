@@ -1,23 +1,13 @@
 import * as crypto from "crypto";
 
+import { env } from "@config/env.js";
 import type { FastifyRateLimitOptions } from "@fastify/rate-limit";
 import redis from "@fastify/redis";
-import type { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
+import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
-import { env } from "../config/env.js";
+import type { LoginFailureData, RateLimitOptions } from "../types/security/rate-limit";
 
 // Types for rate limiting configuration
-interface RateLimitOptions {
-  max?: number;
-  timeWindow?: string;
-  keyMode?: "ip" | "combo";
-}
-
-interface LoginFailureData {
-  count: number;
-  lastAttempt: number;
-  blockUntil?: number;
-}
 
 // HMAC key for hashing user identifiers
 const HMAC_KEY = crypto.createHash("sha256").update(env.HMAC_RATE_KEY_SECRET).digest();
@@ -179,9 +169,7 @@ export function buildRateLimitOptions(
 /**
  * Get Redis client if available
  */
-async function getRedisClient(
-  fastify: FastifyInstance
-): Promise<{
+async function getRedisClient(fastify: FastifyInstance): Promise<{
   get: (key: string) => Promise<string | null>;
   setex: (key: string, seconds: number, value: string) => Promise<string>;
   del: (key: string) => Promise<number>;

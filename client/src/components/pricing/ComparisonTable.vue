@@ -111,8 +111,8 @@
 
 <script setup lang="ts">
 import { CheckIcon } from "@heroicons/vue/24/outline";
-import { plans, comparisonRows } from "./pricing.config";
-import type { ComparisonRow } from "./pricing.config";
+import { plans, comparisonRows } from "@/components/pricing/pricing.config";
+import type { ComparisonRow } from "@/components/pricing/pricing.config";
 
 const getCellValue = (row: ComparisonRow, planId: string): boolean | string => {
   switch (planId) {

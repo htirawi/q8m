@@ -54,7 +54,7 @@ export interface EmailVerification {
 }
 
 export interface OAuthProvider {
-  name: "google" | "facebook";
+  name: "google";
   url: string;
   icon: string;
 }

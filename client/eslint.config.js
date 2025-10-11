@@ -14,8 +14,10 @@ export default [
       "node_modules/**",
       "*.config.js",
       "*.config.ts",
-      "tests/e2e/**",
+      "tests/**",
       "public/**/*.js",
+      "**/*.d.ts",
+      "src/tests/**",
     ],
   },
   // Vue files
@@ -78,7 +80,7 @@ export default [
         "error",
         { argsIgnorePattern: "^_", caughtErrorsIgnorePattern: "^_" },
       ],
-      "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/no-explicit-any": "error",
       "@typescript-eslint/explicit-function-return-type": "off",
       "@typescript-eslint/explicit-module-boundary-types": "off",
       "@typescript-eslint/prefer-optional-chain": "off", // Disabled due to project service issues

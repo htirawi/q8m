@@ -141,7 +141,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from "vue";
-import { usePerformance } from "../composables/usePerformance";
+import { usePerformance } from "@/composables/usePerformance";
 
 import {
   XMarkIcon,
@@ -177,7 +177,7 @@ const memoryPercentage = computed(() => {
   return (memoryUsage.value.usedJSHeapSize / memoryUsage.value.jsHeapSizeLimit) * 100;
 });
 
-const getmetricclass = (metric: string) => {
+const getMetricClass = (metric: string) => {
   const value = metrics.value[metric as keyof typeof metrics.value];
   if (value === null) return "metric-unknown";
   const thresholds: Record<string, number> = {
@@ -189,6 +189,7 @@ const getmetricclass = (metric: string) => {
   };
 
   const threshold = thresholds[metric];
+  if (!threshold) return "metric-warning";
   if (value <= threshold) return "metric-good";
   if (value <= threshold * 1.5) return "metric-warning";
   return "metric-poor";
@@ -218,16 +219,16 @@ const formatBytes = (bytes: number): string => {
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`;
 };
 
-const togglemonitor = () => {
+const toggleMonitor = () => {
   showMonitor.value = !showMonitor.value;
 };
 
-const refreshmetrics = () => {
+const refreshMetrics = () => {
   performance.analyzeResourceTimings();
 };
 
-const exportmetrics = () => {
-  const exportdata = {
+const exportMetrics = () => {
+  const exportData = {
     timestamp: new Date().toISOString(),
     metrics: metrics.value,
     resourceTimings: resourceTimings.value,

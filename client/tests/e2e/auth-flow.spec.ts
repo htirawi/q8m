@@ -144,17 +144,6 @@ test.describe("Authentication Flow", () => {
     await expect(page).toHaveURL(/.*accounts\.google\.com/);
   });
 
-  test("should handle Facebook OAuth login", async ({ page }) => {
-    // Click on login button
-    await page.click('text="Login"');
-
-    // Click Facebook login button
-    await page.click('button:has-text("Continue with Facebook")');
-
-    // Check that OAuth flow is initiated
-    await expect(page).toHaveURL(/.*facebook\.com/);
-  });
-
   test("should maintain authentication state on page refresh", async ({ page }) => {
     // Login first
     await page.click('text="Login"');

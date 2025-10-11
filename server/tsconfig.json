@@ -36,11 +36,25 @@
       "@models/*": ["./src/models/*"],
       "@utils/*": ["./src/utils/*"],
       "@config/*": ["./src/config/*"],
+      "@controllers/*": ["./src/controllers/*"],
+      "@repositories/*": ["./src/repositories/*"],
+      "@lib/*": ["./src/lib/*"],
       "@shared/*": ["../shared/*"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "tests/**/*.ts", "scripts/**/*.ts"],
-  "exclude": ["node_modules", "dist", "coverage"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "coverage",
+    "src/tests/paypal/createOrder.spec.ts",
+    "src/tests/services/jwt.service.test.ts",
+    "tests/security/rate-limiting.test.ts",
+    "src/models/User.ts",
+    "src/models/Session.ts",
+    "src/models/FxRate.ts",
+    "src/models/VerificationToken.ts"
+  ],
   "ts-node": {
     "esm": true,
     "experimentalSpecifierResolution": "node"

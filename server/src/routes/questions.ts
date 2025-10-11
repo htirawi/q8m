@@ -1,9 +1,9 @@
+import { authenticate } from "@middlewares/auth.middleware.js";
+import { Question } from "@models/Question.js";
 import type { FastifyInstance } from "fastify";
 import { z } from "zod";
 import { zodToJsonSchema } from "zod-to-json-schema";
 
-import { authenticate } from "../middlewares/auth.middleware.js";
-import { Question } from "../models/Question.js";
 
 const getQuestionsSchema = z.object({
   framework: z.enum(["angular", "react", "nextjs", "redux"]),

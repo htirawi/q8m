@@ -1,42 +1,15 @@
 <template>
-  <component
-    :is="tag"
-    :to="to"
-    :href="href"
-    :type="type"
-    :disabled="disabled"
-    :class="buttonClasses"
-    :aria-label="ariaLabel"
-    :aria-describedby="ariaDescribedby"
-    :aria-pressed="ariaPressed"
-    :aria-expanded="ariaExpanded"
-    :aria-controls="ariaControls"
-    @click="handleClick"
-    @focus="handleFocus"
-    @blur="handleBlur"
-  >
+  <component :is="tag" :to="to" :href="href" :type="type" :disabled="disabled" :class="buttonClasses"
+    :aria-label="ariaLabel" :aria-describedby="ariaDescribedby" :aria-pressed="ariaPressed"
+    :aria-expanded="ariaExpanded" :aria-controls="ariaControls" @click="handleClick" @focus="handleFocus"
+    @blur="handleBlur">
     <slot />
   </component>
 </template>
 
 <script setup lang="ts">
 import { computed } from "vue";
-import type { RouteLocationRaw } from "vue-router";
-
-export interface ButtonProps {
-  variant?: "primary" | "secondary" | "outline" | "ghost" | "danger";
-  size?: "sm" | "md" | "lg";
-  disabled?: boolean;
-  loading?: boolean;
-  to?: RouteLocationRaw;
-  href?: string;
-  type?: "button" | "submit" | "reset";
-  ariaLabel?: string;
-  ariaDescribedby?: string;
-  ariaPressed?: boolean | "true" | "false";
-  ariaExpanded?: boolean | "true" | "false";
-  ariaControls?: string;
-}
+import type { ButtonProps } from "@/types/ui/component-props";
 
 const props = withDefaults(defineProps<ButtonProps>(), {
   variant: "primary",

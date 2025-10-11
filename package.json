@@ -36,6 +36,7 @@
   "scripts": {
     "dev": "cd client && pnpm dev",
     "dev:server": "cd server && pnpm dev",
+    "dev:all": "concurrently --names \"SERVER,CLIENT\" --prefix-colors \"blue,green\" \"pnpm dev:server\" \"pnpm dev\"",
     "build": "pnpm -r build",
     "preview": "cd client && pnpm preview",
     "lint": "pnpm -r lint",
@@ -62,10 +63,10 @@
     "codeql:clean": "rm -rf ./codeql-db ./codeql-results.sarif || true",
     "codeql:run": "pnpm codeql:clean && pnpm codeql:db && pnpm codeql:analyze"
   },
-  "dependencies": {},
   "devDependencies": {
     "@commitlint/cli": "^18.6.1",
     "@commitlint/config-conventional": "^18.6.3",
+    "concurrently": "^9.2.1",
     "husky": "^8.0.3",
     "lint-staged": "^15.5.2",
     "prettier": "^3.3.3"

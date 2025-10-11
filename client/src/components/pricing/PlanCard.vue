@@ -1,21 +1,13 @@
 <template>
-  <div
-    class="plan-card"
-    :class="{
-      'plan-card--popular': plan.popular,
-      'plan-card--recommended': plan.recommended,
-    }"
-    :aria-labelledby="`plan-${plan.id}-title`"
-  >
+  <div class="plan-card" :class="{
+    'plan-card--popular': plan.popular,
+    'plan-card--recommended': plan.recommended,
+  }" :aria-labelledby="`plan-${plan.id}-title`">
     <!-- Popular/Recommended Badge -->
-    <div
-      v-if="plan.badgeKey"
-      class="plan-card-badge"
-      :class="{
-        'plan-card-badge--popular': plan.popular,
-        'plan-card-badge--recommended': plan.recommended,
-      }"
-    >
+    <div v-if="plan.badgeKey" class="plan-card-badge" :class="{
+      'plan-card-badge--popular': plan.popular,
+      'plan-card-badge--recommended': plan.recommended,
+    }">
       {{ $t(plan.badgeKey) }}
     </div>
 
@@ -43,11 +35,7 @@
       <!-- Plan Features -->
       <div class="plan-card-features">
         <ul class="plan-card-feature-list" role="list">
-          <li
-            v-for="featureKey in plan.featuresKeys"
-            :key="featureKey"
-            class="plan-card-feature-item"
-          >
+          <li v-for="featureKey in plan.featuresKeys" :key="featureKey" class="plan-card-feature-item">
             <CheckIcon class="plan-card-check-icon" aria-hidden="true" />
             <span>{{ $t(featureKey) }}</span>
           </li>
@@ -56,15 +44,10 @@
 
       <!-- Plan CTA -->
       <div class="plan-card-footer">
-        <button
-          @click="handleCtaClick"
-          class="plan-card-cta"
-          :class="{
-            'plan-card-cta--primary': plan.popular || plan.recommended,
-            'plan-card-cta--secondary': !plan.popular && !plan.recommended,
-          }"
-          :aria-describedby="`plan-${plan.id}-title`"
-        >
+        <button @click="handleCtaClick" class="plan-card-cta" :class="{
+          'plan-card-cta--primary': plan.popular || plan.recommended,
+          'plan-card-cta--secondary': !plan.popular && !plan.recommended,
+        }" :aria-describedby="`plan-${plan.id}-title`">
           {{ $t(plan.ctaLabelKey) }}
         </button>
       </div>
@@ -76,19 +59,10 @@
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { CheckIcon } from "@heroicons/vue/24/outline";
-import type { Plan, BillingCycle } from "./pricing.config";
+import type { PlanCardProps, PlanCardEmits } from "@/types/ui/component-props";
 
-interface Props {
-  plan: Plan;
-  billing: BillingCycle;
-}
-
-interface Emits {
-  (e: "select-plan", plan: Plan): void;
-}
-
-const props = defineProps<Props>();
-const emit = defineEmits<Emits>();
+const props = defineProps<PlanCardProps>();
+const emit = defineEmits<PlanCardEmits>();
 const { t } = useI18n();
 
 const displayPrice = computed(() => {

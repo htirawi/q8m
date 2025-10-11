@@ -10,18 +10,18 @@
  */
 
 // Domain types
-export * from "./domain/auth";
-export * from "./domain/payment";
+export * from "@/types/domain/auth";
+export * from "@/types/domain/payment";
 
 // Core types
-export * from "./core/index";
+export * from "@/types/core/index";
 
 // DTO types
-export * from "./dto/payment.dto";
+export * from "@/types/dto/payment.dto";
 
 // UI types
-export * from "./ui/index";
+export * from "@/types/ui/index";
 
 // Store types
-export * from "../stores/auth/types";
-export * from "../stores/payment/types";
+export * from "@/stores/auth/types";
+export * from "@/stores/payment/types";

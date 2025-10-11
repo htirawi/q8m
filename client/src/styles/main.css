@@ -5,6 +5,7 @@
 /* Design System Tokens - Vue 3 Quiz Platform */
 :root {
   /* ===== COLORS ===== */
+
   /* Primary Colors */
   --color-primary-50: #eff6ff;
   --color-primary-100: #dbeafe;
@@ -107,6 +108,7 @@
   --space-64: 256px;
 
   /* ===== TYPOGRAPHY ===== */
+
   /* Font Families */
   --font-family-sans:
     "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial,
@@ -226,6 +228,7 @@
   --z-index-tooltip: 1800;
 
   /* ===== COMPONENT SPECIFIC TOKENS ===== */
+
   /* Button Tokens */
   --button-height-sm: 32px;
   --button-height-md: 40px;

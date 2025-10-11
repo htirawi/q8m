@@ -1,23 +1,7 @@
-import type { FastifyRequest, FastifyReply } from "fastify";
+import { entitlementService } from "@services/entitlement.service.js";
+import type { FastifyReply, FastifyRequest } from "fastify";
 
-import { entitlementService } from "../services/entitlement.service.js";
-
-// Extend FastifyRequest to include entitlement data
-declare module "fastify" {
-  interface FastifyRequest {
-    entitlementCheck?: {
-      hasAccess: boolean;
-      reason?: string;
-      upgradeRequired?: string;
-    };
-  }
-}
-
-export interface EntitlementOptions {
-  requiredEntitlement: string;
-  allowTrial?: boolean;
-  customMessage?: string;
-}
+import type { EntitlementOptions } from "../types/middleware";
 
 /**
  * Create entitlement middleware for protecting routes

@@ -1,17 +1,9 @@
 import * as crypto from "crypto";
 
+import { env } from "@config/env.js";
 import type { FastifyReply } from "fastify";
 
-import { env } from "../config/env.js";
-
-export interface SecureCookieOptions {
-  httpOnly: boolean;
-  secure: boolean;
-  sameSite: "strict" | "lax" | "none";
-  maxAge: number;
-  path: string;
-  domain?: string;
-}
+import type { SecureCookieOptions } from "../types/services/cookie";
 
 export class SecureCookieService {
   private readonly cookieSecret: string;

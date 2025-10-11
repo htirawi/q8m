@@ -33,7 +33,7 @@ export function useLocale() {
   const getLocalizedRouteUrl = (
     routeName: string,
     targetLocale: SupportedLocale,
-    params: Record<string, unknown> = {}
+    params: Record<string, string | number> = {}
   ) => {
     const { href } = router.resolve({
       name: routeName,

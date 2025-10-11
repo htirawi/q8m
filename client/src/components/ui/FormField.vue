@@ -1,11 +1,6 @@
 <template>
   <div class="form-field" :class="{ 'form-field--error': hasError }">
-    <label
-      v-if="label"
-      :for="id"
-      class="form-field-label"
-      :class="{ 'form-field-label--required': required }"
-    >
+    <label v-if="label" :for="id" class="form-field-label" :class="{ 'form-field-label--required': required }">
       {{ label }}
 
     </label>
@@ -14,12 +9,7 @@
       <slot />
     </div>
 
-    <HelperText
-      v-if="error || helperText"
-      :id="helperTextId"
-      :error="error"
-      class="form-field-helper"
-    >
+    <HelperText v-if="error || helperText" :id="helperTextId" :error="error" class="form-field-helper">
       {{ error || helperText }}
 
     </HelperText>
@@ -28,15 +18,8 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import HelperText from "./HelperText.vue";
-
-export interface FormFieldProps {
-  id?: string;
-  label?: string;
-  helperText?: string;
-  error?: string;
-  required?: boolean;
-}
+import HelperText from "@/components/ui/HelperText.vue";
+import type { FormFieldProps } from "@/types/ui/component-props";
 
 const props = withDefaults(defineProps<FormFieldProps>(), {
   required: false,

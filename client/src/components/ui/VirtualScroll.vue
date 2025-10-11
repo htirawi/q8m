@@ -1,37 +1,22 @@
 <template>
-  <div
-    ref="containerRef"
-    class="virtual-scroll-container"
-    :style="{ height: containerHeight + 'px' }"
-    @scroll="handleScroll"
-  >
+  <div ref="containerRef" class="virtual-scroll-container" :style="{ height: containerHeight + 'px' }"
+    @scroll="handleScroll">
     <div class="virtual-scroll-spacer" :style="{ height: totalHeight + 'px' }">
       <div class="virtual-scroll-content" :style="{ transform: `translateY(${offsetY}px)` }">
-        <slot
-          v-for="(item, index) in visibleItems"
-          :key="getItemKey(item, startIndex + index)"
-          :item="item"
-          :index="startIndex + index"
-        />
+        <slot v-for="(item, index) in visibleItems" :key="getItemKey(item, startIndex + index)" :item="item"
+          :index="startIndex + index" />
       </div>
     </div>
   </div>
 </template>
 
-<script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, watch } from "vue";
+<script setup lang="ts" generic="T extends Record<string, string | number | boolean>">
+import { ref, computed } from "vue";
+import type { VirtualScrollProps } from "@/types/ui/component-props";
 
-interface props {
-  items: any[];
-  itemHeight: number;
-  containerHeight: number;
-  overscan?: number;
-  getItemKey?: (item: any, index: number) => string | number;
-}
-
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<VirtualScrollProps<T>>(), {
   overscan: 5,
-  getItemKey: (item: any, index: number) => index,
+  getItemKey: (_item: T, index: number) => index,
 });
 
 const containerRef = ref<HTMLElement>();

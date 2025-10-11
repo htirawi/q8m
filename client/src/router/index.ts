@@ -2,10 +2,10 @@ import { createRouter, createWebHistory } from "vue-router";
 import type { RouteRecordRaw } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 import i18n from "@/i18n";
+import type { RouteMeta } from "@/types/router";
+import { SUPPORTED_LOCALES, type SupportedLocale } from "@/types/router";
 
-// Supported locales
-export const SUPPORTED_LOCALES = ["en", "ar"] as const;
-export type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
+export { SUPPORTED_LOCALES, type SupportedLocale };
 
 // Default locale
 export const DEFAULT_LOCALE: SupportedLocale = "en";
@@ -13,18 +13,20 @@ export const DEFAULT_LOCALE: SupportedLocale = "en";
 // Helper function to create localized routes
 const createLocalizedRoute = (
   path: string,
-  component: () => Promise<{ default: any }>,
-  meta: Record<string, unknown>,
+  component: RouteRecordRaw["component"],
+  meta: RouteMeta,
   name?: string
-): RouteRecordRaw => ({
-  path: `/:locale${path}`,
-  name: name ? `${name}` : undefined,
-  component,
-  meta: {
-    ...meta,
-    locale: true,
-  },
-});
+): RouteRecordRaw => {
+  return {
+    path: `/:locale${path}`,
+    ...(name ? { name } : {}),
+    component,
+    meta: {
+      ...meta,
+      locale: true,
+    },
+  } as RouteRecordRaw;
+};
 
 // Route definitions with lazy loading and chunk names
 const routes: RouteRecordRaw[] = [

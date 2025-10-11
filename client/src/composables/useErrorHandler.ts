@@ -1,19 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ref, computed, readonly } from "vue";
 import { useI18n } from "vue-i18n";
-
-export interface ErrorState {
-  message: string | null;
-  code: string | null;
-  details: Record<string, any> | null;
-  timestamp: number | null;
-}
-
-export interface ErrorHandlerOptions {
-  showToast?: boolean;
-  logToConsole?: boolean;
-  showDetails?: boolean;
-}
+import type {
+  ErrorDetails,
+  ErrorState,
+  ErrorHandlerOptions,
+} from "@/types/composables/error-handler";
 
 export function useErrorHandler() {
   const { t } = useI18n();
@@ -39,12 +30,15 @@ export function useErrorHandler() {
     };
   };
 
-  const handleError = (error: unknown, options: ErrorHandlerOptions = {}): ErrorState => {
+  const handleError = (
+    error: Error | string | Record<string, string | number | boolean>,
+    options: ErrorHandlerOptions = {}
+  ): ErrorState => {
     const { showToast = true, logToConsole = true, showDetails = false } = options;
 
     let errorMessage = t("errors.generic");
     let errorCode = "UNKNOWN_ERROR";
-    let errorDetails: Record<string, any> | null = null;
+    let errorDetails: ErrorDetails | null = null;
 
     // Parse different error types
     if (error instanceof Error) {
@@ -52,16 +46,15 @@ export function useErrorHandler() {
       errorCode = error.name || "ERROR";
       errorDetails = {
         stack: error.stack,
-        cause: error.cause,
+        cause: error.cause as Error | undefined,
       };
     } else if (typeof error === "string") {
       errorMessage = error;
       errorCode = "STRING_ERROR";
     } else if (typeof error === "object" && error !== null) {
-      const errorObj = error as Record<string, any>;
-      errorMessage = errorObj.message || errorObj.error || t("errors.generic");
-      errorCode = errorObj.code || errorObj.status || "OBJECT_ERROR";
-      errorDetails = errorObj;
+      errorMessage = (error.message as string) || (error.error as string) || t("errors.generic");
+      errorCode = (error.code as string) || (error.status as string) || "OBJECT_ERROR";
+      errorDetails = error as ErrorDetails;
     }
 
     // Translate common error codes
@@ -146,7 +139,9 @@ export function useErrorHandler() {
     return errorTranslations[code] || defaultMessage || t("errors.generic");
   };
 
-  const handlePaymentError = (error: unknown) => {
+  const handlePaymentError = (
+    error: Error | string | Record<string, string | number | boolean>
+  ) => {
     return handleError(error, {
       showToast: true,
       logToConsole: true,
@@ -154,7 +149,7 @@ export function useErrorHandler() {
     });
   };
 
-  const handleAuthError = (error: unknown) => {
+  const handleAuthError = (error: Error | string | Record<string, string | number | boolean>) => {
     return handleError(error, {
       showToast: true,
       logToConsole: true,
@@ -162,7 +157,9 @@ export function useErrorHandler() {
     });
   };
 
-  const handleNetworkError = (error: unknown) => {
+  const handleNetworkError = (
+    error: Error | string | Record<string, string | number | boolean>
+  ) => {
     return handleError(error, {
       showToast: true,
       logToConsole: true,
@@ -170,7 +167,9 @@ export function useErrorHandler() {
     });
   };
 
-  const handleValidationError = (error: unknown) => {
+  const handleValidationError = (
+    error: Error | string | Record<string, string | number | boolean>
+  ) => {
     return handleError(error, {
       showToast: false, // Validation errors are usually shown inline
       logToConsole: true,

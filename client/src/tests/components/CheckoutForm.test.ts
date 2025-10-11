@@ -4,7 +4,7 @@ import { mount } from "@vue/test-utils";
 import { setActivePinia, createPinia } from "pinia";
 import { nextTick } from "vue";
 import CheckoutForm from "@/components/payment/CheckoutForm.vue";
-import type { PlanPricing } from "@/stores/payment";
+import type { PlanPricing } from "@/types/domain/payment";
 
 // Mock fetch
 const mockFetch = vi.fn();

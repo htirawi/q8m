@@ -5,8 +5,6 @@
  * These are utility types, primitives, and common patterns.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 /**
  * Toast notification structure
  */
@@ -78,12 +76,23 @@ export interface SEOData {
 }
 
 /**
+ * Error details structure
+ */
+export interface ErrorDetails {
+  stack?: string;
+  cause?: Error;
+  statusCode?: number;
+  response?: Record<string, string | number | boolean>;
+  [key: string]: string | number | boolean | Error | Record<string, string | number | boolean> | undefined;
+}
+
+/**
  * Error state for error handling
  */
 export interface ErrorState {
   message: string | null;
   code: string | null;
-  details?: any;
+  details?: ErrorDetails;
 }
 
 /**
@@ -98,9 +107,9 @@ export interface ErrorHandlerOptions {
 /**
  * Validation result
  */
-export interface ValidationResult {
+export interface ValidationResult<T = Record<string, string | number | boolean>> {
   success: boolean;
-  data?: any;
+  data?: T;
   errors?: string[];
 }
 

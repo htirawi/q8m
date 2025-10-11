@@ -107,7 +107,7 @@ export const oauthCallbackSchema = z.object({
   state: z.string().optional(),
 });
 
-export const oauthProviderSchema = z.enum(["google", "facebook"]);
+export const oauthProviderSchema = z.enum(["google"]);
 
 // Session schemas
 export const sessionSchema = z.object({
@@ -124,7 +124,7 @@ export const sessionSchema = z.object({
 export const accountSchema = z.object({
   id: z.string(),
   userId: z.string(),
-  provider: z.enum(["google", "facebook", "email"]),
+  provider: z.enum(["google", "email"]),
   providerAccountId: z.string(),
   accessToken: z.string().optional(),
   refreshToken: z.string().optional(),

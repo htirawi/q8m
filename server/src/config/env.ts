@@ -23,8 +23,6 @@ const EnvSchema = z.object({
   // OAuth Configuration
   GOOGLE_CLIENT_ID: z.string().min(1, "Google Client ID is required"),
   GOOGLE_CLIENT_SECRET: z.string().min(1, "Google Client Secret is required"),
-  FACEBOOK_APP_ID: z.string().min(1, "Facebook App ID is required"),
-  FACEBOOK_APP_SECRET: z.string().min(1, "Facebook App Secret is required"),
 
   // Email Configuration
   SMTP_HOST: z.string().min(1, "SMTP host is required"),
@@ -34,11 +32,13 @@ const EnvSchema = z.object({
   EMAIL_FROM: z.string().email("Invalid email format"),
   EMAIL_FROM_NAME: z.string().default("Quiz Platform"),
 
-  // Payments (optional -> feature toggles)
-  PAYPAL_CLIENT_ID: z.string().optional(),
-  PAYPAL_CLIENT_SECRET: z.string().optional(),
-  PAYPAL_WEBHOOK_SECRET: z.string().optional(),
-  PAYPAL_ENV: z.enum(["sandbox", "live"]).optional(),
+  // PayPal Configuration (Orders v2 API)
+  PAYPAL_ENV: z.enum(["sandbox", "live"]).default("sandbox"),
+  PAYPAL_CLIENT_ID: z.string().min(1, "PayPal Client ID is required"),
+  PAYPAL_CLIENT_SECRET: z.string().min(1, "PayPal Client Secret is required"),
+  PAYPAL_WEBHOOK_ID: z.string().min(1, "PayPal Webhook ID is required for webhook verification"),
+
+  // Other Payment Gateways (optional -> feature toggles)
 
   APS_ACCESS_KEY: z.string().optional(),
   APS_MERCHANT_IDENTIFIER: z.string().optional(),

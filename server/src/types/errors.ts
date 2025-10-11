@@ -1,13 +1,17 @@
 // Error types for better type safety
+export interface ErrorDetails {
+  [key: string]: string | number | boolean | string[];
+}
+
 export interface AppError extends Error {
   code?: string | number;
   statusCode?: number;
-  details?: unknown;
+  details?: ErrorDetails;
 }
 
 export interface ValidationError extends AppError {
   field?: string;
-  value?: unknown;
+  value?: string | number | boolean;
 }
 
 export interface DatabaseError extends AppError {
@@ -28,30 +32,30 @@ export interface PaymentError extends AppError {
 export type ErrorHandler = (error: unknown) => AppError;
 
 // Common error types
-export type KnownError = 
-  | AppError 
-  | ValidationError 
-  | DatabaseError 
-  | AuthenticationError 
+export type KnownError =
+  | AppError
+  | ValidationError
+  | DatabaseError
+  | AuthenticationError
   | PaymentError;
 
 // Type guard functions
 export function isAppError(error: unknown): error is AppError {
-  return error instanceof Error && 'code' in error;
+  return error instanceof Error && "code" in error;
 }
 
 export function isValidationError(error: unknown): error is ValidationError {
-  return isAppError(error) && 'field' in error;
+  return isAppError(error) && "field" in error;
 }
 
 export function isDatabaseError(error: unknown): error is DatabaseError {
-  return isAppError(error) && 'operation' in error;
+  return isAppError(error) && "operation" in error;
 }
 
 export function isAuthenticationError(error: unknown): error is AuthenticationError {
-  return isAppError(error) && 'reason' in error;
+  return isAppError(error) && "reason" in error;
 }
 
 export function isPaymentError(error: unknown): error is PaymentError {
-  return isAppError(error) && 'paymentId' in error;
+  return isAppError(error) && "paymentId" in error;
 }

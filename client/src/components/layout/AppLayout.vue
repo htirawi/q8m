@@ -188,7 +188,7 @@ const skipToMain = (event: Event) => {
   }
 };
 
-const handlelogout = async () => {
+const handleLogout = async () => {
   await authStore.logout();
   router.push("/");
 };
@@ -206,18 +206,13 @@ onMounted(async () => {
 
   // Set up default SEO
   seo.updateSEO({
-    title: "Vue 3 Quiz Platform",
+    title: "q8m - Master Frontend Development Interviews",
     description:
-      "Master Vue 3, React, Angular, and more with our comprehensive quiz platform. Interactive learning, real-time feedback, and expert-level content.",
+      "Master frontend development with 500+ curated interview questions covering Angular, React, Next.js, Redux, TypeScript, and advanced topics. Expert-level content for developers.",
     structuredData: seo.generateOrganizationStructuredData(),
   });
 
-  // Preconnect to external domains for performance
-  pwa.preconnectToDomain("https://fonts.googleapis.com");
-  pwa.preconnectToDomain("https://fonts.gstatic.com");
-
-  // Preload critical resources
-  pwa.preloadResource("/manifest.json", "manifest");
+  // Preconnect and preload are handled by PWA composable internally
 });
 </script>
 

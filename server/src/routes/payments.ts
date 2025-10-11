@@ -1,18 +1,17 @@
+
+import { features } from "@config/appConfig.js";
+import { env } from "@config/env.js";
+import { authenticate, optionalAuth } from "@middlewares/auth.middleware.js";
+import { Purchase } from "@models/Purchase.js";
+import { Subscription } from "@models/Subscription.js";
+import { safeLogFields } from "@server/security/logging.js";
+import { apsService, type APSWebhookData } from "@services/aps.service.js";
+import { currencyService } from "@services/currency.service.js";
+import { hyperpayService, type HyperPayWebhookData } from "@services/hyperpay.service.js";
+import { pricingService } from "@services/pricing.service.js";
 import type { FastifyInstance } from "fastify";
 import { z } from "zod";
 import { zodToJsonSchema } from "zod-to-json-schema";
-
-import { features } from "../config/appConfig.js";
-import { env } from "../config/env.js";
-import { authenticate, optionalAuth } from "../middlewares/auth.middleware.js";
-import { Purchase } from "../models/Purchase.js";
-import { Subscription } from "../models/Subscription.js";
-import { safeLogFields } from "../security/logging.js";
-import { apsService, type APSWebhookData } from "../services/aps.service.js";
-import { currencyService } from "../services/currency.service.js";
-import { hyperpayService, type HyperPayWebhookData } from "../services/hyperpay.service.js";
-import { paypalService, type PayPalWebhookData } from "../services/paypal.service.js";
-import { pricingService } from "../services/pricing.service.js";
 
 // Validation schemas
 const createPaymentSchema = z.object({
@@ -193,12 +192,12 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
               ? "hyperpay"
               : "paypal";
         } else {
-          // Default to PayPal for USD, with HyperPay as fallback
-          paymentGateway = paypalService.isServiceConfigured()
-            ? "paypal"
-            : hyperpayService.isServiceConfigured()
-              ? "hyperpay"
-              : "aps";
+          // Default to HyperPay for USD (PayPal uses new Orders v2 API via /paypal routes)
+          paymentGateway = hyperpayService.isServiceConfigured()
+            ? "hyperpay"
+            : apsService.isServiceConfigured()
+              ? "aps"
+              : "paypal";
         }
 
         // Prepare payment request
@@ -220,20 +219,11 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
         // Create payment based on selected gateway
         switch (paymentGateway) {
           case "paypal":
-            if (!features.paypal) {
-              return reply.status(503).send({
-                success: false,
-                error: "PayPal provider not configured",
-              });
-            }
-            paymentResponse = await paypalService.createPayment(paymentRequest);
-            if ("ok" in paymentResponse && !paymentResponse.ok) {
-              return reply.status(503).send({
-                success: false,
-                error: "PayPal service not configured",
-              });
-            }
-            break;
+            // NOTE: PayPal now uses Orders v2 API via /api/payments/paypal routes
+            return reply.status(503).send({
+              success: false,
+              error: "Use /api/payments/paypal/create-order endpoint for PayPal Orders v2 API",
+            });
 
           case "aps":
             if (!features.aps) {
@@ -325,27 +315,17 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
     async (request, reply) => {
       try {
         const { gateway } = request.params as { gateway: "paypal" | "aps" | "hyperpay" };
-        const { paymentId, payerId, PayerID } = request.body as z.infer<
-          typeof paymentCallbackSchema
-        >;
+        const { paymentId } = request.body as z.infer<typeof paymentCallbackSchema>;
 
         let result;
 
         switch (gateway) {
-          case "paypal": {
-            const paypalPayerId = payerId || PayerID;
-            if (!paypalPayerId) {
-              throw new Error("PayPal payer ID is required");
-            }
-            result = await paypalService.executePayment(paymentId, paypalPayerId);
-            if ("ok" in result && !result.ok) {
-              return reply.status(503).send({
-                success: false,
-                error: "PayPal service not configured",
-              });
-            }
-            break;
-          }
+          case "paypal":
+            // NOTE: PayPal now uses Orders v2 API via /api/payments/paypal routes
+            return reply.status(503).send({
+              success: false,
+              error: "Use /api/payments/paypal/capture-order endpoint for PayPal Orders v2 API",
+            });
 
           case "aps":
             result = await apsService.verifyPayment(paymentId);
@@ -538,41 +518,12 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
     }
   );
 
-  // PayPal webhook
-  fastify.post("/webhooks/paypal", async (request, reply) => {
-    try {
-      const webhookData = request.body as PayPalWebhookData;
-      const signature = request.headers["x-paypal-signature"] as string;
-
-      const result = await paypalService.handleWebhook(webhookData, signature);
-      if ("ok" in result && !result.ok) {
-        return reply.status(503).send({
-          success: false,
-          error: "PayPal service not configured",
-        });
-      }
-
-      if ("success" in result && result.success) {
-        reply.send({ success: true });
-      } else {
-        reply.status(400).send({
-          success: false,
-          error: "success" in result ? result.error : "Service not configured",
-        });
-      }
-    } catch (error: unknown) {
-      request.log.error(
-        safeLogFields({
-          event: "paypal_webhook_error",
-          error: error instanceof Error ? error.message : "Unknown error",
-          stack: error instanceof Error ? error.stack : undefined,
-        })
-      );
-      reply.status(500).send({
-        success: false,
-        error: "Webhook processing failed",
-      });
-    }
+  // PayPal webhook - NOTE: PayPal now uses Orders v2 API via /api/payments/paypal/webhook
+  fastify.post("/webhooks/paypal", async (_request, reply) => {
+    reply.status(410).send({
+      success: false,
+      error: "This endpoint is deprecated. Use /api/payments/paypal/webhook for PayPal Orders v2 API",
+    });
   });
 
   // APS webhook
@@ -650,14 +601,13 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
   // Get payment gateway status
   fastify.get("/gateways/status", async (request, reply) => {
     try {
-      const paypalStatus = paypalService.getConfigurationStatus();
       const apsStatus = apsService.getConfigurationStatus();
       const hyperpayStatus = hyperpayService.getConfigurationStatus();
 
       reply.send({
         success: true,
         gateways: {
-          paypal: paypalStatus,
+          paypal: { configured: features.paypal, note: "Uses Orders v2 API" },
           aps: apsStatus,
           hyperpay: hyperpayStatus,
         },

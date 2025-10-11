@@ -1,13 +1,8 @@
 import crypto from "crypto";
 
-import { env } from "../config/env.js";
+import { env } from "@config/env.js";
 
-export interface WebhookVerificationOptions {
-  signature: string;
-  payload: string | Buffer;
-  secret: string;
-  algorithm?: string;
-}
+import type { WebhookVerificationOptions } from "../types/services/webhook";
 
 export class WebhookVerificationService {
   /**
@@ -42,20 +37,18 @@ export class WebhookVerificationService {
   }
 
   /**
-   * Verify PayPal webhook signature
+   * @deprecated Use PayPalWebhookVerificationService instead (SEC-001)
+   * This method used insecure HMAC verification instead of PayPal SDK verification.
+   *
+   * Verify PayPal webhook signature - DEPRECATED
    */
-  verifyPayPalWebhook(signature: string, payload: string): boolean {
-    const secret = env.PAYPAL_WEBHOOK_SECRET;
-    if (!secret) {
-      console.warn("PayPal webhook secret not configured");
-      return false;
-    }
-
-    return this.verifySignature({
-      signature,
-      payload,
-      secret,
-    });
+  verifyPayPalWebhook(_signature: string, _payload: string): boolean {
+    console.warn(
+      "DEPRECATED: verifyPayPalWebhook() is deprecated. Use PayPalWebhookVerificationService instead."
+    );
+    // PayPal webhook verification now uses PayPal SDK (paypal-webhook-verification.service.ts)
+    // This method is kept for backwards compatibility but should not be used
+    return false;
   }
 
   /**

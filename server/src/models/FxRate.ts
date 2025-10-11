@@ -1,24 +1,23 @@
 import type { Document, ObjectId } from "mongoose";
 import mongoose, { Schema } from "mongoose";
 
-export interface IFxRate extends Document {
+export interface IFxRate
+  extends Omit<Document, "fetchedAt" | "expiresAt" | "createdAt"> {
   baseCurrency: "USD";
   targetCurrency: "JOD" | "SAR";
   rate: number;
   source: "api" | "manual" | "fallback";
   provider?: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  fetchedAt: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  expiresAt: any;
+  fetchedAt: Date;
+  expiresAt: Date;
   metadata?: {
     providerResponse?: Record<string, unknown>;
     errorMessage?: string;
   };
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  createdAt: any;
+  createdAt: Date;
   ageInHours?: number;
   isExpired?: boolean;
+  currencyPair?: string;
   isFresh(maxAgeHours?: number): boolean;
   extendExpiration(hours?: number): Promise<IFxRate>;
 }

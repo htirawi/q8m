@@ -1,13 +1,8 @@
-import type { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
+import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 import { zodToJsonSchema } from "zod-to-json-schema";
 
-interface SitemapRoute {
-  url: string;
-  lastmod: string;
-  changefreq?: "always" | "hourly" | "daily" | "weekly" | "monthly" | "yearly" | "never";
-  priority?: number;
-}
+import type { SitemapRoute } from "../types/routes/seo";
 
 export default async function seoRoutes(fastify: FastifyInstance) {
   // Generate sitemap.xml
@@ -149,13 +144,17 @@ Crawl-delay: 1`;
     "/api/seo/structured-data/:type",
     {
       schema: {
-        params: zodToJsonSchema(z.object({
-          type: z.enum(["organization", "quiz", "pricing"]),
-        })),
-        querystring: zodToJsonSchema(z.object({
-          locale: z.string().optional(),
-          id: z.string().optional(),
-        })),
+        params: zodToJsonSchema(
+          z.object({
+            type: z.enum(["organization", "quiz", "pricing"]),
+          })
+        ),
+        querystring: zodToJsonSchema(
+          z.object({
+            locale: z.string().optional(),
+            id: z.string().optional(),
+          })
+        ),
       },
     },
     async (

@@ -14,7 +14,7 @@ export interface User {
 export interface Account {
   _id: string;
   userId: string;
-  provider: "google" | "facebook" | "email";
+  provider: "google" | "email";
   providerAccountId: string;
   accessToken?: string;
   refreshToken?: string;
@@ -84,7 +84,7 @@ export interface EmailVerification {
 }
 
 export interface OAuthProvider {
-  name: "google" | "facebook";
+  name: "google";
   url: string;
   icon: string;
 }

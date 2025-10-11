@@ -5,13 +5,11 @@
  * These types define the contracts for reusable UI components.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 /**
  * Virtual scroll component props
  */
-export interface VirtualScrollProps {
-  items: any[];
+export interface VirtualScrollProps<T = Record<string, string | number | boolean>> {
+  items: T[];
   itemHeight: number;
   containerHeight: number;
   overscan?: number;

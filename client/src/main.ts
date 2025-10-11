@@ -1,16 +1,16 @@
 import { createApp } from "vue";
 import { createHead } from "@unhead/vue";
 
-import App from "./App.vue";
-import router from "./router";
-import pinia from "./store";
-import i18n from "./i18n";
-import { DEFAULT_LOCALE, type SupportedLocale } from "./router";
+import App from "@/App.vue";
+import router from "@/router";
+import pinia from "@/store";
+import i18n from "@/i18n";
+import { DEFAULT_LOCALE, type SupportedLocale } from "@/router";
 
 // Styles
-import "./styles/main.css";
-import "./assets/styles/tokens.css";
-import "./assets/styles/globals.css";
+import "@/styles/main.css";
+import "@/assets/styles/tokens.css";
+import "@/assets/styles/globals.css";
 
 // Create Vue app
 const app = createApp(App);

@@ -38,7 +38,7 @@ import {
   ShieldCheckIcon,
   DevicePhoneMobileIcon,
 } from "@heroicons/vue/24/outline";
-import { features } from "./pricing.config";
+import { features } from "@/components/pricing/pricing.config";
 
 const getIconComponent = (iconName: string) => {
   const iconMap: Record<string, any> = {

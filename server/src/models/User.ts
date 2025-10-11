@@ -1,8 +1,20 @@
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 import type { Document } from "mongoose";
 import mongoose, { Schema, type ObjectId } from "mongoose";
 
-export interface IUser extends Document {
+export interface IUser
+  extends Omit<
+    Document,
+    | "emailVerificationExpires"
+    | "passwordResetExpires"
+    | "lastLogin"
+    | "lockUntil"
+    | "acceptTermsAt"
+    | "deletedAt"
+    | "incLoginAttempts"
+    | "resetLoginAttempts"
+  > {
   email: string;
   name: string;
   password?: string;
@@ -11,25 +23,19 @@ export interface IUser extends Document {
   permissions: string[];
   isEmailVerified: boolean;
   emailVerificationToken?: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  emailVerificationExpires?: any;
+  emailVerificationExpires?: Date;
   passwordResetToken?: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  passwordResetExpires?: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  lastLogin?: any;
+  passwordResetExpires?: Date;
+  lastLogin?: Date;
   loginAttempts: number;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  lockUntil?: any;
+  lockUntil?: Date;
   googleId?: string;
-  facebookId?: string;
   avatar?: string;
   bio?: string;
   location?: string;
   website?: string;
   acceptTerms: boolean;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  acceptTermsAt?: any;
+  acceptTermsAt?: Date;
   acceptTermsVersion?: string;
   preferences: {
     language: "en" | "ar";
@@ -42,24 +48,24 @@ export interface IUser extends Document {
   };
   subscription: {
     status: "active" | "canceled" | "past_due" | "incomplete";
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    currentPeriodEnd?: any;
+    currentPeriodEnd?: Date;
     cancelAtPeriodEnd: boolean;
   };
   stats: {
     totalQuizzes: number;
     totalScore: number;
     averageScore: number;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    lastQuizDate?: any;
+    lastQuizDate?: Date;
   };
   twoFactorEnabled: boolean;
   twoFactorSecret?: string;
   isActive: boolean;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  deletedAt?: any;
+  deletedAt?: Date;
+  isLocked?: boolean;
   comparePassword(candidatePassword: string): Promise<boolean>;
   generateAuthTokens(): { accessToken: string; refreshToken: string };
+  incLoginAttempts(): Promise<unknown>;
+  resetLoginAttempts(): Promise<unknown>;
 }
 
 const userSchema = new Schema(
@@ -81,7 +87,7 @@ const userSchema = new Schema(
     password: {
       type: String,
       required(this: IUser) {
-        return !this.googleId && !this.facebookId;
+        return !this.googleId;
       },
       minlength: [8, "Password must be at least 8 characters"],
       select: false, // Don't include password in queries by default
@@ -132,10 +138,6 @@ const userSchema = new Schema(
     },
     // OAuth fields
     googleId: {
-      type: String,
-      sparse: true,
-    },
-    facebookId: {
       type: String,
       sparse: true,
     },
@@ -265,7 +267,6 @@ const userSchema = new Schema(
 // Indexes for performance
 userSchema.index({ email: 1 }, { unique: true, name: "uniq_email" });
 userSchema.index({ googleId: 1 }, { unique: true, sparse: true, name: "uniq_google_id" });
-userSchema.index({ facebookId: 1 }, { unique: true, sparse: true, name: "uniq_facebook_id" });
 userSchema.index({ role: 1 }, { name: "idx_role" });
 userSchema.index({ entitlements: 1 }, { name: "idx_entitlements" });
 userSchema.index({ permissions: 1 }, { name: "idx_permissions" });
@@ -302,8 +303,6 @@ userSchema.methods.comparePassword = async function (candidatePassword: string):
 
 // Instance method to generate auth tokens
 userSchema.methods.generateAuthTokens = function () {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const jwt = require("jsonwebtoken");
   const secret = process.env.JWT_SECRET || "fallback-secret";
 
   const payload = {

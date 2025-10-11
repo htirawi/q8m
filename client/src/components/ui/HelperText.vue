@@ -9,13 +9,7 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-
-export interface HelperTextProps {
-  id?: string;
-  text?: string;
-  error?: string;
-  ariaLive?: "polite" | "assertive" | "off";
-}
+import type { HelperTextProps } from "@/types/ui/component-props";
 
 const props = withDefaults(defineProps<HelperTextProps>(), {
   ariaLive: "polite",

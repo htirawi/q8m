@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 import { useErrorHandler } from "@/composables/useErrorHandler";
@@ -246,9 +245,13 @@ export const usePaymentStore = defineStore("payment", () => {
         error.name = data.code || "PAYMENT_FAILED";
         throw error;
       }
-    } catch (err) {
+    } catch (error) {
+      const err =
+        error instanceof Error
+          ? error
+          : new Error(typeof error === "string" ? error : "Failed to create payment");
       const errorState = errorHandler.handlePaymentError(err);
-      const errorMessage = errorState.message || "Failed to create payment";
+      const errorMessage = errorState.message ?? "Failed to create payment";
       setError(errorMessage);
       throw err;
     } finally {
@@ -359,8 +362,17 @@ export const usePaymentStore = defineStore("payment", () => {
     }
   };
 
+  // Payment callback data interface
+  interface PaymentCallbackPayload {
+    paymentId: string;
+    payerId?: string;
+    token?: string;
+    orderId?: string;
+    [key: string]: string | undefined;
+  }
+
   // Handle payment callback
-  const handlePaymentCallback = async (gateway: string, paymentData: any) => {
+  const handlePaymentCallback = async (gateway: string, paymentData: PaymentCallbackPayload) => {
     try {
       setLoading(true);
       setError(null);
@@ -472,9 +484,13 @@ export const usePaymentStore = defineStore("payment", () => {
         error.name = data.code || "NETWORK_ERROR";
         throw error;
       }
-    } catch (err) {
+    } catch (error) {
+      const err =
+        error instanceof Error
+          ? error
+          : new Error(typeof error === "string" ? error : "Failed to fetch user entitlements");
       const errorState = errorHandler.handleNetworkError(err);
-      const errorMessage = errorState.message || "Failed to fetch user entitlements";
+      const errorMessage = errorState.message ?? "Failed to fetch user entitlements";
       setError(errorMessage);
       throw err;
     } finally {

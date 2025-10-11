@@ -5,54 +5,19 @@
  * for testing and development purposes.
  */
 
-import type { Plan } from "@shared/types/pricing";
+import { Purchase } from "@models/Purchase.js";
+import type { IPurchase } from "@models/Purchase.js";
+import { Subscription } from "@models/Subscription.js";
+import { User } from "@models/User.js";
+import { entitlementService } from "@services/entitlement.service.js";
 
-import { Purchase } from "../models/Purchase.js";
-import type { IPurchase } from "../models/Purchase.js";
-import { Subscription } from "../models/Subscription.js";
-import { User } from "../models/User.js";
-
-import { entitlementService } from "./entitlement.service.js";
-
-interface MockPaymentRequest {
-  planType: Plan;
-  currency: "USD" | "JOD" | "SAR";
-  amount: number;
-  billingCycle: "monthly" | "yearly";
-  userId: string;
-  returnUrl: string;
-  cancelUrl: string;
-  customerEmail: string;
-  customerName: string;
-}
-
-interface MockPaymentResponse {
-  success: boolean;
-  checkoutUrl?: string;
-  paymentId: string;
-  purchaseId: string;
-  error?: string;
-}
-
-interface MockPayment {
-  id: string;
-  purchaseId: string;
-  status: "pending" | "completed" | "failed" | "refunded";
-  createdAt: Date;
-  amount: number;
-  currency: string;
-  planType: Plan;
-  billingCycle: "monthly" | "yearly";
-  userId: string;
-  customerEmail: string;
-  customerName: string;
-}
-
-interface MockWebhookData {
-  id: string;
-  event: string;
-  data: unknown;
-}
+import type { PaymentStatusDetails } from "../types/payment-gateway";
+import type {
+  MockPayment,
+  MockPaymentRequest,
+  MockPaymentResponse,
+  MockWebhookData,
+} from "../types/services/payment-services";
 
 export class MockPaymentService {
   private static instance: MockPaymentService;
@@ -356,13 +321,23 @@ export class MockPaymentService {
    */
   public async getPaymentStatus(
     paymentId: string
-  ): Promise<{ status: string; details: unknown } | null> {
+  ): Promise<{ status: string; details: PaymentStatusDetails } | null> {
     if (!this.isEnabled) {
       throw new Error("Mock payment service not enabled");
     }
 
     const mockPayment = this.mockPayments.get(paymentId);
-    return mockPayment ? { status: mockPayment.status, details: mockPayment } : null;
+    if (!mockPayment) return null;
+    
+    return {
+      status: mockPayment.status,
+      details: {
+        status: mockPayment.status,
+        transactionId: mockPayment.id,
+        amount: mockPayment.amount,
+        currency: mockPayment.currency,
+      },
+    };
   }
 
   /**

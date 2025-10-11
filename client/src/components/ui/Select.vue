@@ -1,29 +1,13 @@
 <template>
   <div class="select-wrapper">
-    <select
-      :id="id"
-      :value="modelValue"
-      :disabled="disabled"
-      :required="required"
-      :aria-label="ariaLabel"
-      :aria-describedby="ariaDescribedby"
-      :aria-invalid="hasError"
-      :aria-required="required"
-      :class="selectClasses"
-      @change="handleChange"
-      @blur="handleBlur"
-      @focus="handleFocus"
-    >
+    <select :id="id" :value="modelValue" :disabled="disabled" :required="required" :aria-label="ariaLabel"
+      :aria-describedby="ariaDescribedby" :aria-invalid="hasError" :aria-required="required" :class="selectClasses"
+      @change="handleChange" @blur="handleBlur" @focus="handleFocus">
       <option v-if="placeholder" value="" disabled>
         {{ placeholder }}
 
       </option>
-      <option
-        v-for="option in options"
-        :key="option.value"
-        :value="option.value"
-        :disabled="option.disabled"
-      >
+      <option v-for="option in options" :key="option.value" :value="option.value" :disabled="option.disabled">
         {{ option.label }}
 
       </option>
@@ -38,24 +22,7 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-
-export interface SelectOption {
-  value: string | number;
-  label: string;
-  disabled?: boolean;
-}
-
-export interface SelectProps {
-  id?: string;
-  modelValue?: string | number;
-  options: SelectOption[];
-  placeholder?: string;
-  disabled?: boolean;
-  required?: boolean;
-  error?: string;
-  ariaLabel?: string;
-  ariaDescribedby?: string;
-}
+import type { SelectProps } from "@/types/ui/component-props";
 
 const props = withDefaults(defineProps<SelectProps>(), {
   disabled: false,

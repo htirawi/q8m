@@ -1,36 +1,17 @@
 <template>
   <div class="toast-container" aria-live="polite" aria-label="Notifications">
     <TransitionGroup name="toast-list" tag="div" class="toast-list">
-      <Toast
-        v-for="toast in toasts"
-        :key="toast.id"
-        :id="toast.id"
-        :type="toast.type"
-        :message="toast.message"
-        :icon="toast.icon"
-        :dismissible="toast.dismissible"
-        :duration="toast.duration"
-        :persistent="toast.persistent"
-        @dismiss="removeToast(toast.id)"
-      />
+      <Toast v-for="toast in toasts" :key="toast.id" :id="toast.id" :type="toast.type" :message="toast.message"
+        :icon="toast.icon" :dismissible="toast.dismissible" :duration="toast.duration" :persistent="toast.persistent"
+        @dismiss="removeToast(toast.id)" />
     </TransitionGroup>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from "vue";
-import Toast from "./Toast.vue";
-import type { Component } from "vue";
-
-export interface ToastItem {
-  id: string;
-  type: "success" | "error" | "warning" | "info";
-  message: string;
-  icon?: Component;
-  dismissible?: boolean;
-  duration?: number;
-  persistent?: boolean;
-}
+import Toast from "@/components/ui/Toast.vue";
+import type { ToastItem } from "@/types/ui/internal";
 
 // State
 const toasts = ref<ToastItem[]>([]);

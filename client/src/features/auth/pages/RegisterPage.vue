@@ -96,9 +96,16 @@ import RegisterForm from "@/components/auth/RegisterForm.vue";
 
 const router = useRouter();
 
-function handleOAuthLogin(provider: "google" | "facebook") {
-  // OAuth login integration pending
-  console.log(`OAuth login with ${provider}`);
+function handleOAuthLogin(provider: "google") {
+  // Redirect to OAuth endpoint on the backend
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api";
+  const oauthUrl = `${apiBaseUrl}/auth/${provider}`;
+
+  // Store the current route to redirect back after OAuth
+  sessionStorage.setItem("oauth_redirect", window.location.pathname);
+
+  // Redirect to OAuth provider
+  window.location.href = oauthUrl;
 }
 
 function handleRegistrationSuccess(email: string) {
