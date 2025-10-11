@@ -282,4 +282,129 @@ test.describe("Authentication Flow", () => {
     // Check for rate limit error message
     await expect(page.locator('text="Too many login attempts"')).toBeVisible();
   });
+
+  test("should navigate from Register to Login page with locale", async ({ page }) => {
+    // Navigate to Register page with English locale
+    await page.goto("/en/register");
+
+    // Click on "Sign in" link
+    await page.click('text="Sign in"');
+
+    // Check that user is redirected to Login page with locale preserved
+    await expect(page).toHaveURL(/\/en\/login/);
+
+    // Check that Login page is displayed
+    await expect(page.locator('h2:has-text("Welcome back")')).toBeVisible();
+  });
+
+  test("should navigate from Register to Login page with Arabic locale", async ({ page }) => {
+    // Navigate to Register page with Arabic locale
+    await page.goto("/ar/register");
+
+    // Click on "Sign in" link (in Arabic)
+    await page.click('text="تسجيل الدخول"');
+
+    // Check that user is redirected to Login page with locale preserved
+    await expect(page).toHaveURL(/\/ar\/login/);
+
+    // Check that Login page is displayed in Arabic
+    await expect(page.locator('h2:has-text("مرحباً بعودتك")')).toBeVisible();
+  });
+
+  test("should navigate from Login to Register page with locale", async ({ page }) => {
+    // Navigate to Login page with English locale
+    await page.goto("/en/login");
+
+    // Click on "Sign up" link
+    await page.click('text="Sign up"');
+
+    // Check that user is redirected to Register page with locale preserved
+    await expect(page).toHaveURL(/\/en\/register/);
+
+    // Check that Register page is displayed
+    await expect(page.locator('h2:has-text("Your new job is waiting")')).toBeVisible();
+  });
+
+  test("should redirect to signInSuccessUrl after successful login", async ({ page }) => {
+    // Navigate to Login page with redirect param
+    await page.goto("/en/login?signInSuccessUrl=%2Fdashboard");
+
+    // Fill and submit login form
+    await page.fill('input[type="email"]', "e2etest@example.com");
+    await page.fill('input[type="password"]', "SecurePassword123!");
+    await page.click('button[type="submit"]:has-text("Sign in")');
+
+    // Check that user is redirected to dashboard with locale
+    await expect(page).toHaveURL(/\/en\/dashboard/);
+  });
+
+  test("should redirect to default path when signInSuccessUrl is missing", async ({ page }) => {
+    // Navigate to Login page without redirect param
+    await page.goto("/en/login");
+
+    // Fill and submit login form
+    await page.fill('input[type="email"]', "e2etest@example.com");
+    await page.fill('input[type="password"]', "SecurePassword123!");
+    await page.click('button[type="submit"]:has-text("Sign in")');
+
+    // Check that user is redirected to default path (home)
+    await expect(page).toHaveURL(/\/en$/);
+  });
+
+  test("should reject invalid signInSuccessUrl (absolute URL)", async ({ page }) => {
+    // Navigate to Login page with malicious redirect param
+    await page.goto("/en/login?signInSuccessUrl=http%3A%2F%2Fevil.com");
+
+    // Fill and submit login form
+    await page.fill('input[type="email"]', "e2etest@example.com");
+    await page.fill('input[type="password"]', "SecurePassword123!");
+    await page.click('button[type="submit"]:has-text("Sign in")');
+
+    // Check that user is redirected to default path, not evil.com
+    await expect(page).toHaveURL(/\/en$/);
+    await expect(page).not.toHaveURL(/evil\.com/);
+  });
+
+  test("should redirect authenticated user from Login to signInSuccessUrl", async ({ page, context }) => {
+    // First login to create authenticated session
+    await page.goto("/en/login");
+    await page.fill('input[type="email"]', "e2etest@example.com");
+    await page.fill('input[type="password"]', "SecurePassword123!");
+    await page.click('button[type="submit"]:has-text("Sign in")');
+
+    // Wait for login to complete
+    await expect(page).toHaveURL(/\/en$/);
+
+    // Now try to visit login page with redirect param (while already authenticated)
+    await page.goto("/en/login?signInSuccessUrl=%2Fpricing");
+
+    // Check that user is immediately redirected to pricing
+    await expect(page).toHaveURL(/\/en\/pricing/);
+  });
+
+  test("should preserve locale in signInSuccessUrl redirect", async ({ page }) => {
+    // Navigate to Arabic Login page with redirect param
+    await page.goto("/ar/login?signInSuccessUrl=%2Fquiz");
+
+    // Fill and submit login form
+    await page.fill('input[type="email"]', "e2etest@example.com");
+    await page.fill('input[type="password"]', "SecurePassword123!");
+    await page.click('button[type="submit"]');
+
+    // Check that user is redirected to quiz with Arabic locale
+    await expect(page).toHaveURL(/\/ar\/quiz/);
+  });
+
+  test("should handle signInSuccessUrl with query params", async ({ page }) => {
+    // Navigate to Login page with redirect param that includes query params
+    await page.goto("/en/login?signInSuccessUrl=%2Fdashboard%3Ftab%3Dsettings");
+
+    // Fill and submit login form
+    await page.fill('input[type="email"]', "e2etest@example.com");
+    await page.fill('input[type="password"]', "SecurePassword123!");
+    await page.click('button[type="submit"]:has-text("Sign in")');
+
+    // Check that user is redirected with query params preserved
+    await expect(page).toHaveURL(/\/en\/dashboard\?tab=settings/);
+  });
 });

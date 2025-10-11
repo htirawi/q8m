@@ -9,6 +9,9 @@
     "pricing": "Pricing",
     "quiz": "Quiz",
     "account": "Account",
+    "profile": "Profile",
+    "settings": "Settings",
+    "userMenu": "User menu",
     "login": "Login",
     "register": "Register",
     "logout": "Logout",
@@ -236,6 +239,37 @@
       "alreadyHaveAccount": "Already have an account?",
       "signIn": "Sign in"
     },
+    "login": {
+      "title": "Welcome back",
+      "subtitle": "Sign in to continue your learning journey",
+      "signIn": "Sign in",
+      "signingIn": "Signing in...",
+      "rememberMe": "Remember me",
+      "forgotPassword": "Forgot password?",
+      "orContinueWith": "Or continue with",
+      "google": "Continue with Google",
+      "noAccount": "Don't have an account?",
+      "signUp": "Sign up"
+    },
+    "unified": {
+      "title": "Welcome",
+      "subtitle": "Sign in or create your account",
+      "or": "or",
+      "continue": "Continue",
+      "checking": "Checking...",
+      "signIn": "Sign in",
+      "signUp": "Sign up",
+      "signingIn": "Signing in...",
+      "creatingAccount": "Creating account...",
+      "forgotPassword": "Forgot password?",
+      "changeEmail": "Change email",
+      "change": "Change",
+      "showPassword": "Show password",
+      "hidePassword": "Hide password",
+      "continueWithGoogle": "Continue with Google",
+      "secureEncrypted": "Secure & Encrypted",
+      "joinThousands": "Join 10,000+ developers"
+    },
     "fields": {
       "name": "Full Name",
       "namePlaceholder": "Enter your first and last name",
@@ -251,13 +285,18 @@
       "nameMinLength": "Name must be at least 2 characters",
       "emailRequired": "Email is required",
       "emailInvalid": "Please enter a valid email address",
+      "emailAlreadyRegistered": "This email is already registered. Please sign in instead.",
       "passwordRequired": "Password is required",
       "passwordMinLength": "Password must be at least 8 characters",
+      "passwordUppercase": "Password must contain at least one uppercase letter",
+      "passwordLowercase": "Password must contain at least one lowercase letter",
+      "passwordNumber": "Password must contain at least one number",
       "confirmPasswordRequired": "Please confirm your password",
       "passwordsDoNotMatch": "Passwords do not match",
       "acceptTermsRequired": "You must accept the terms and conditions",
       "passwordStrength": {
         "weak": "Weak password",
+        "medium": "Medium password",
         "strong": "Strong password"
       }
     }
