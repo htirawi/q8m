@@ -61,12 +61,12 @@ const imageClasses = computed(() => {
   return baseClasses.join(" ");
 });
 
-const handleload = (event: Event) => {
+const handleLoad = () => {
   isLoaded.value = true;
-  emit("load", event);
+  emit("load");
 };
 
-const handleerror = (event: Event) => {
+const handleError = (event: Event) => {
   hasError.value = true;
   emit("error", event);
 };

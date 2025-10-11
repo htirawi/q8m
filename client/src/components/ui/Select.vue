@@ -22,7 +22,7 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import type { SelectProps, SelectOption } from "@/types/ui/component-props";
+import type { SelectProps } from "@/types/ui/component-props";
 
 const props = withDefaults(defineProps<SelectProps>(), {
   disabled: false,

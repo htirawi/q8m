@@ -188,7 +188,7 @@ const skipToMain = (event: Event) => {
   }
 };
 
-const handlelogout = async () => {
+const handleLogout = async () => {
   await authStore.logout();
   router.push("/");
 };

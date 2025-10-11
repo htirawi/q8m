@@ -146,7 +146,7 @@ const handleDownload = async () => {
   }
 };
 
-const retrydownload = () => {
+const retryDownload = () => {
   error.value = null;
   handleDownload();
 };

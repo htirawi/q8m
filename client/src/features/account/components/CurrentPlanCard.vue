@@ -78,6 +78,8 @@
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import type { CurrentPlanCardProps } from "@/types/ui/component-props";
+
+const props = defineProps<CurrentPlanCardProps>();
 useI18n();
 
 // Computed

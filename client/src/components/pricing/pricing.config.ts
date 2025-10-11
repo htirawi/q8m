@@ -6,7 +6,7 @@
 import type { PlanTier, Plan, Feature, ComparisonRow, FAQ } from "@/types/domain/pricing";
 import type { BillingCycle } from "@/types/domain/billing";
 
-export type { PlanTier, BillingCycle };
+export type { PlanTier, BillingCycle, Plan, ComparisonRow };
 
 // Plan configurations
 export const plans: Plan[] = [

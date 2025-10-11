@@ -203,11 +203,11 @@ const goToPricing = () => {
   router.push({ path: "/subscribe", query });
 };
 
-const selectplan = (plan: PlanPricing) => {
+const selectPlan = (plan: PlanPricing) => {
   router.push({ path: "/checkout", query: { plan: plan.planId } });
 };
 
-const formatprice = (plan: PlanPricing) => {
+const formatPrice = (plan: PlanPricing, _billingCycle: string = "monthly") => {
   const pricing = plan.pricing[paymentStore.currentCurrency];
   return pricing ? paymentStore.formatCurrency(pricing.amount, pricing.currency) : "N/A";
 };

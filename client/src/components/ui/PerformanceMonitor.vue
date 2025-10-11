@@ -189,6 +189,7 @@ const getMetricClass = (metric: string) => {
   };
 
   const threshold = thresholds[metric];
+  if (!threshold) return "metric-warning";
   if (value <= threshold) return "metric-good";
   if (value <= threshold * 1.5) return "metric-warning";
   return "metric-poor";

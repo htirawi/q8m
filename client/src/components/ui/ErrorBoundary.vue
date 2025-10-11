@@ -46,11 +46,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onErrorCaptured, provide, inject, type Ref } from "vue";
+import { ref, onErrorCaptured, provide } from "vue";
 import { useRouter } from "vue-router";
 import { useErrorHandler } from "@/composables/useErrorHandler";
 import { useToast } from "@/composables/useToast";
-import type { ErrorBoundaryProps } from "@/types/ui/component-props";
+import type { ErrorBoundaryProps, ErrorBoundaryEmits } from "@/types/ui/component-props";
 
 const props = withDefaults(defineProps<ErrorBoundaryProps>(), {
   fallback: true,
@@ -83,7 +83,7 @@ provide(ERROR_BOUNDARY_KEY, {
 });
 
 // Capture errors from child components
-onErrorCaptured((error: Error, instance, info: string) => {
+onErrorCaptured((error: Error, _instance, info: string) => {
   console.error("Error caught by ErrorBoundary:", error, info);
 
   // Handle the error
@@ -119,7 +119,7 @@ const retry = () => {
   emit("retry");
 };
 
-const reporterror = () => {
+const reportError = () => {
   // Error reporting service integration pending (e.g., Sentry)
   const errorReport = {
     message: errorMessage.value,
@@ -138,7 +138,7 @@ const reporterror = () => {
   );
 };
 
-const gohome = () => {
+const goHome = () => {
   router.push("/");
   retry();
 };

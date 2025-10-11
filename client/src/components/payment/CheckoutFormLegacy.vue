@@ -244,17 +244,13 @@ import { usePaymentStore } from "@/stores/payment";
 import { useAuthStore } from "@/stores/auth";
 import { useI18n } from "vue-i18n";
 import { useErrorHandler } from "@/composables/useErrorHandler";
-import { useToast } from "@/composables/useToast";
 import LoadingState from "@/components/ui/LoadingState.vue";
-import type { PlanPricing } from "@/types/domain/payment";
 import { COUNTRIES, getAvailablePaymentMethods, YEARLY_DISCOUNT_MULTIPLIER } from "@/constants";
 
-const router = useRouter();
 const { t } = useI18n();
 const paymentStore = usePaymentStore();
 const authStore = useAuthStore();
 const errorHandler = useErrorHandler();
-const toast = useToast();
 
 // Props
 import type { CheckoutFormProps } from "@/types/ui/component-props";

@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts" generic="T extends Record<string, string | number | boolean>">
-import { ref, computed, onMounted, onUnmounted, watch } from "vue";
+import { ref, computed } from "vue";
 import type { VirtualScrollProps } from "@/types/ui/component-props";
 
 const props = withDefaults(defineProps<VirtualScrollProps<T>>(), {
