@@ -92,12 +92,10 @@
 
 <script setup lang="ts">
 import { useRouter } from "vue-router";
-import { useCheckoutRedirect } from "@/composables/useCheckoutRedirect";
 import { useToast } from "@/composables/useToast";
 import RegisterForm from "@/components/auth/RegisterForm.vue";
 
 const router = useRouter();
-const { checkoutUrl, clearParams } = useCheckoutRedirect();
 const { authSuccess, info } = useToast();
 
 function handleOAuthLogin(provider: "google") {
