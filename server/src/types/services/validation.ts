@@ -4,8 +4,9 @@
  * Type definitions for input validation operations
  */
 
-export interface ValidationResult {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export interface ValidationResult<T = any> {
   success: boolean;
-  data?: Record<string, string | number | boolean>;
+  data?: T;
   errors?: string[];
 }

@@ -327,7 +327,17 @@ export class MockPaymentService {
     }
 
     const mockPayment = this.mockPayments.get(paymentId);
-    return mockPayment ? { status: mockPayment.status, details: mockPayment } : null;
+    if (!mockPayment) return null;
+    
+    return {
+      status: mockPayment.status,
+      details: {
+        status: mockPayment.status,
+        transactionId: mockPayment.id,
+        amount: mockPayment.amount,
+        currency: mockPayment.currency,
+      },
+    };
   }
 
   /**
