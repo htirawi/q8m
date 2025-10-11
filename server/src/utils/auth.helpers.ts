@@ -3,10 +3,10 @@
  * Common utilities and error responses for authentication
  */
 
-import type { FastifyReply, FastifyRequest } from "fastify";
 
 import type { ISession } from "@models/Session";
 import type { IUser } from "@models/User";
+import type { FastifyReply, FastifyRequest } from "fastify";
 
 /**
  * Standard error responses for authentication

@@ -7,8 +7,8 @@ import { Subscription } from "@models/Subscription.js";
 import { WebhookEvent } from "@models/WebhookEvent.js";
 import { paymentRepository } from "@repositories/payment.repository.js";
 import type { PayPalWebhookEvent, WebhookHeaders } from "@schemas/paypal.schemas.js";
-import { paypalWebhookVerificationService } from "@services/paypal-webhook-verification.service.js";
 import { paypalSubscriptionService } from "@services/paypal/paypal-subscription.service.js";
+import { paypalWebhookVerificationService } from "@services/paypal-webhook-verification.service.js";
 import type { FastifyRequest } from "fastify";
 
 export class PayPalWebhookService {

@@ -1,4 +1,3 @@
-import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
 import { authorizationService } from "@services/auth/authorization.service.js";
 import { sessionValidationService } from "@services/auth/session-validation.service.js";
@@ -9,6 +8,7 @@ import {
   handleAuthError,
   sendAuthError,
 } from "@utils/auth.helpers.js";
+import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
 import type { AuthOptions } from "../types/middleware/auth";
 

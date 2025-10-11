@@ -3,10 +3,10 @@
  * Handles JWT token extraction and verification
  */
 
-import type { FastifyRequest } from "fastify";
 
 import type { JWTPayload } from "@server/types/common";
 import { jwtService } from "@services/jwt.service.js";
+import type { FastifyRequest } from "fastify";
 
 export interface TokenExtractionResult {
   token: string;
