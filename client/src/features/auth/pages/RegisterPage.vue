@@ -92,28 +92,45 @@
 
 <script setup lang="ts">
 import { useRouter } from "vue-router";
+import { useCheckoutRedirect } from "@/composables/useCheckoutRedirect";
+import { useToast } from "@/composables/useToast";
 import RegisterForm from "@/components/auth/RegisterForm.vue";
 
 const router = useRouter();
+const { checkoutUrl, clearParams } = useCheckoutRedirect();
+const { authSuccess, info } = useToast();
 
 function handleOAuthLogin(provider: "google") {
   // Redirect to OAuth endpoint on the backend
   const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api";
   const oauthUrl = `${apiBaseUrl}/auth/${provider}`;
 
-  // Store the current route to redirect back after OAuth
-  sessionStorage.setItem("oauth_redirect", window.location.pathname);
+  // Store the current route (with query params) to redirect back after OAuth
+  sessionStorage.setItem("oauth_redirect", window.location.pathname + window.location.search);
 
   // Redirect to OAuth provider
   window.location.href = oauthUrl;
 }
 
-function handleRegistrationSuccess(email: string) {
-  // Redirect to verification page or show success message
-  router.push({
-    name: "auth-verify",
-    query: { email },
+async function handleRegistrationSuccess(email: string) {
+  // Show success toast
+  authSuccess("signup");
+  
+  // Show email verification notice
+  info(
+    "Verify your email",
+    `We've sent a verification link to ${email}. Please check your inbox.`
+  );
+  
+  // Navigate to login page with preserved params
+  // After email verification and login, they'll be redirected to checkout
+  const { query } = router.currentRoute.value;
+  await router.replace({
+    name: "login",
+    query,
   });
+  
+  // Don't clear params yet - they'll be needed after login
 }
 </script>
 

@@ -212,6 +212,22 @@
     "copyright": "© {year} q8m. All rights reserved."
   },
   "auth": {
+    "login": {
+      "title": "Sign In",
+      "welcomeBack": "Welcome Back",
+      "subtitle": "Continue your frontend interview preparation journey",
+      "rememberMe": "Remember me",
+      "forgotPassword": "Forgot password?",
+      "signIn": "Sign In",
+      "signingIn": "Signing in...",
+      "orContinueWith": "Or continue with",
+      "google": "Continue with Google",
+      "noAccount": "Don't have an account?",
+      "signUp": "Sign up",
+      "secure": "Secure & Protected",
+      "fast": "Quick Access",
+      "support": "24/7 Support"
+    },
     "register": {
       "title": "Your new job is waiting",
       "subtitle": "83% of people that complete the program get a job offer.",

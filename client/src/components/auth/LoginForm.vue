@@ -148,6 +148,7 @@ import type { LoginFormEmits } from "@/types/ui/emits";
 
 interface AdditionalEmits {
   (e: "oauth-login", provider: "google"): void;
+  (e: "login-success"): void;
 }
 
 const emit = defineEmits<LoginFormEmits & AdditionalEmits>();
@@ -206,6 +207,9 @@ async function handleSubmit(): Promise<void> {
   });
 
   if (success) {
+    // Emit success event for parent to handle redirect
+    emit("login-success");
+    
     // Reset form
     formData.email = "";
     formData.password = "";

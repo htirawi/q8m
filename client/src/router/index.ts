@@ -340,7 +340,46 @@ router.beforeEach(async (to, _from, next) => {
     }
 
     // Check if route requires guest (not authenticated)
+    // For auth pages (login/register), redirect authenticated users to checkout with preserved params
     if (to.meta.requiresGuest && authStore.isAuthenticated) {
+      const isAuthPage = to.name === "login" || to.name === "register";
+      
+      if (isAuthPage && (to.query.plan ?? to.query.billing ?? to.query.redirect)) {
+        // Build checkout URL with preserved plan and billing params
+        const plan = (to.query.plan as string) ?? "intermediate";
+        const billing = (to.query.billing as string) ?? "monthly";
+        const redirect = (to.query.redirect as string) ?? "/checkout";
+        
+        // Sanitize plan
+        const validPlans = ["basic", "intermediate", "advanced"];
+        const sanitizedPlan = validPlans.includes(plan.toLowerCase()) 
+          ? plan.toLowerCase() 
+          : "intermediate";
+        
+        // Sanitize billing
+        const validBilling = ["monthly", "yearly"];
+        const sanitizedBilling = validBilling.includes(billing.toLowerCase()) 
+          ? billing.toLowerCase() 
+          : "monthly";
+        
+        // Sanitize redirect
+        const sanitizedRedirect = redirect.startsWith("/") && !redirect.includes("://")
+          ? redirect
+          : "/checkout";
+        
+        // Build final URL with locale
+        const path = sanitizedRedirect.startsWith(`/${locale}`) 
+          ? sanitizedRedirect 
+          : `/${locale}${sanitizedRedirect}`;
+        const params = new URLSearchParams();
+        params.set("plan", sanitizedPlan);
+        params.set("billing", sanitizedBilling);
+        
+        next(`${path}?${params.toString()}`);
+        return;
+      }
+      
+      // Default redirect to home for authenticated users
       next({
         name: "home",
         params: { locale },
