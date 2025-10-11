@@ -54,7 +54,7 @@ export class PaymentRepository {
     purchase.gatewayPaymentId = captureData.captureId;
     purchase.status = captureData.status as "completed" | "pending" | "failed";
     if (captureData.gatewayResponse) {
-      purchase.gatewayResponse = captureData.gatewayResponse as Record<string, unknown>;
+      purchase.gatewayResponse = captureData.gatewayResponse as unknown as Record<string, unknown>;
     }
 
     if (captureData.payerEmail && purchase.customer) {
@@ -79,7 +79,7 @@ export class PaymentRepository {
 
     purchase.status = "completed";
     if (gatewayResponse) {
-      purchase.gatewayResponse = gatewayResponse as Record<string, unknown>;
+      purchase.gatewayResponse = gatewayResponse as unknown as Record<string, unknown>;
     }
     await purchase.save();
     return purchase;

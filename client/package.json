@@ -52,9 +52,10 @@
   },
   "dependencies": {
     "@headlessui/vue": "^1.7.23",
-    "@heroicons/vue": "^2.0.0",
+    "@heroicons/vue": "^2.2.0",
     "@unhead/vue": "^1.9.0",
     "@vee-validate/zod": "^4.15.1",
+    "axios": "^1.12.2",
     "pinia": "^2.1.0",
     "vee-validate": "^4.15.1",
     "vue": "^3.4.0",

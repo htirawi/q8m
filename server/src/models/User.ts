@@ -3,7 +3,18 @@ import jwt from "jsonwebtoken";
 import type { Document } from "mongoose";
 import mongoose, { Schema, type ObjectId } from "mongoose";
 
-export interface IUser extends Document {
+export interface IUser
+  extends Omit<
+    Document,
+    | "emailVerificationExpires"
+    | "passwordResetExpires"
+    | "lastLogin"
+    | "lockUntil"
+    | "acceptTermsAt"
+    | "deletedAt"
+    | "incLoginAttempts"
+    | "resetLoginAttempts"
+  > {
   email: string;
   name: string;
   password?: string;
@@ -50,8 +61,11 @@ export interface IUser extends Document {
   twoFactorSecret?: string;
   isActive: boolean;
   deletedAt?: Date;
+  isLocked?: boolean;
   comparePassword(candidatePassword: string): Promise<boolean>;
   generateAuthTokens(): { accessToken: string; refreshToken: string };
+  incLoginAttempts(): Promise<unknown>;
+  resetLoginAttempts(): Promise<unknown>;
 }
 
 const userSchema = new Schema(

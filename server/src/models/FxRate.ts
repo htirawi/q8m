@@ -1,7 +1,8 @@
 import type { Document, ObjectId } from "mongoose";
 import mongoose, { Schema } from "mongoose";
 
-export interface IFxRate extends Document {
+export interface IFxRate
+  extends Omit<Document, "fetchedAt" | "expiresAt" | "createdAt"> {
   baseCurrency: "USD";
   targetCurrency: "JOD" | "SAR";
   rate: number;
@@ -16,6 +17,7 @@ export interface IFxRate extends Document {
   createdAt: Date;
   ageInHours?: number;
   isExpired?: boolean;
+  currencyPair?: string;
   isFresh(maxAgeHours?: number): boolean;
   extendExpiration(hours?: number): Promise<IFxRate>;
 }

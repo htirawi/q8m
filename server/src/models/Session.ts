@@ -1,7 +1,8 @@
 import type { Document, ObjectId } from "mongoose";
 import mongoose, { Schema } from "mongoose";
 
-export interface ISession extends Document {
+export interface ISession
+  extends Omit<Document, "expiresAt" | "lastUsed" | "revokedAt" | "revoke"> {
   userId: mongoose.Types.ObjectId;
   refreshToken: string;
   accessToken: string;
@@ -30,6 +31,9 @@ export interface ISession extends Document {
     | "expired";
   isValid(): boolean;
   refresh(): Promise<void>;
+  revoke(
+    reason?: "user_logout" | "password_change" | "suspicious_activity" | "admin_revoke" | "expired"
+  ): Promise<void>;
 }
 
 const sessionSchema = new Schema(
