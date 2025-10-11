@@ -1,155 +1,15 @@
-<template>
-  <div v-if="showMonitor" class="performance-monitor">
-    <div class="monitor-header">
-      <h3>Performance Monitor</h3>
-      <button @click="toggleMonitor" class="close-btn" aria-label="Close monitor">
-        <XMarkIcon class="h-4 w-4" />
-      </button>
-    </div>
-
-    <div class="monitor-content">
-      <!-- Core Web Vitals -->
-      <div class="metrics-section">
-        <h4>Core Web Vitals</h4>
-        <div class="metrics-grid">
-          <div class="metric-card" :class="getMetricClass('lcp')">
-            <div class="metric-label">LCP</div>
-            <div class="metric-value">
-              {{ formatMetric(metrics.lcp) }}
-            </div>
-            <div class="metric-threshold">2.5s</div>
-          </div>
-
-          <div class="metric-card" :class="getMetricClass('fid')">
-            <div class="metric-label">FID</div>
-            <div class="metric-value">
-              {{ formatMetric(metrics.fid) }}
-            </div>
-            <div class="metric-threshold">100ms</div>
-          </div>
-
-          <div class="metric-card" :class="getMetricClass('cls')">
-            <div class="metric-label">CLS</div>
-            <div class="metric-value">
-              {{ formatMetric(metrics.cls, 3) }}
-            </div>
-            <div class="metric-threshold">0.1</div>
-          </div>
-
-          <div class="metric-card" :class="getMetricClass('fcp')">
-            <div class="metric-label">FCP</div>
-            <div class="metric-value">
-              {{ formatMetric(metrics.fcp) }}
-            </div>
-            <div class="metric-threshold">1.8s</div>
-          </div>
-
-          <div class="metric-card" :class="getMetricClass('ttfb')">
-            <div class="metric-label">TTFB</div>
-            <div class="metric-value">
-              {{ formatMetric(metrics.ttfb) }}
-            </div>
-            <div class="metric-threshold">600ms</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Resource Analysis -->
-      <div class="metrics-section">
-        <h4>Resource Analysis</h4>
-        <div class="resource-stats">
-          <div class="stat-item">
-            <span class="stat-label">Total Resources:</span>
-            <span class="stat-value">{{ resourceTimings.length }} </span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Total Size:</span>
-            <span class="stat-value">{{ formatBytes(totalSize) }} </span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Slow Resources:</span>
-            <span class="stat-value">{{ slowResources.length }} </span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Large Resources:</span>
-            <span class="stat-value">{{ largeResources.length }} </span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Performance Recommendations -->
-      <div v-if="recommendations.length > 0" class="metrics-section">
-        <h4>Recommendations</h4>
-        <div class="recommendations">
-          <div
-            v-for="(recommendation, index) in recommendations"
-            :key="index"
-            class="recommendation-item"
-          >
-            <ExclamationTriangleIcon class="h-4 w-4 text-warning-500" />
-            <span>{{ recommendation }} </span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Memory Usage -->
-      <div v-if="memoryUsage" class="metrics-section">
-        <h4>Memory Usage</h4>
-        <div class="memory-stats">
-          <div class="stat-item">
-            <span class="stat-label">Used:</span>
-            <span class="stat-value">{{ formatBytes(memoryUsage.usedJSHeapSize) }} </span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Total:</span>
-            <span class="stat-value">{{ formatBytes(memoryUsage.totalJSHeapSize) }} </span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Limit:</span>
-            <span class="stat-value">{{ formatBytes(memoryUsage.jsHeapSizeLimit) }}</span>
-          </div>
-        </div>
-
-        <div class="memory-bar">
-          <div class="memory-fill" :style="{ width: memoryPercentage + '%' }"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="monitor-actions">
-      <button @click="refreshMetrics" class="action-btn">
-        <ArrowPathIcon class="h-4 w-4" />
-        Refresh
-      </button>
-      <button @click="exportMetrics" class="action-btn">
-        <DocumentArrowDownIcon class="h-4 w-4" />
-        Export
-      </button>
-    </div>
-  </div>
-
-  <!-- Toggle Button -->
-  <button
-    v-else
-    @click="toggleMonitor"
-    class="monitor-toggle"
-    aria-label="Open performance monitor"
-  >
-    <ChartBarIcon class="h-5 w-5" />
-  </button>
-</template>
-
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from "vue";
-import { usePerformance } from "@/composables/usePerformance";
+import { computed, onMounted, onUnmounted, ref } from "vue";
 
 import {
-  XMarkIcon,
-  ExclamationTriangleIcon,
   ArrowPathIcon,
-  DocumentArrowDownIcon,
   ChartBarIcon,
+  DocumentArrowDownIcon,
+  ExclamationTriangleIcon,
+  XMarkIcon,
 } from "@heroicons/vue/24/outline";
+
+import { usePerformance } from "@/composables/usePerformance";
 
 const showMonitor = ref(false);
 const performance = usePerformance();
@@ -267,6 +127,147 @@ onUnmounted(() => {
 });
 </script>
 
+<template>
+  <div v-if="showMonitor" class="performance-monitor">
+    <div class="monitor-header">
+      <h3>Performance Monitor</h3>
+      <button @click="toggleMonitor" class="close-btn" aria-label="Close monitor">
+        <XMarkIcon class="h-4 w-4" />
+      </button>
+    </div>
+
+    <div class="monitor-content">
+      <!-- Core Web Vitals -->
+      <div class="metrics-section">
+        <h4>Core Web Vitals</h4>
+        <div class="metrics-grid">
+          <div class="metric-card" :class="getMetricClass('lcp')">
+            <div class="metric-label">LCP</div>
+            <div class="metric-value">
+              {{ formatMetric(metrics.lcp) }}
+            </div>
+            <div class="metric-threshold">2.5s</div>
+          </div>
+
+          <div class="metric-card" :class="getMetricClass('fid')">
+            <div class="metric-label">FID</div>
+            <div class="metric-value">
+              {{ formatMetric(metrics.fid) }}
+            </div>
+            <div class="metric-threshold">100ms</div>
+          </div>
+
+          <div class="metric-card" :class="getMetricClass('cls')">
+            <div class="metric-label">CLS</div>
+            <div class="metric-value">
+              {{ formatMetric(metrics.cls, 3) }}
+            </div>
+            <div class="metric-threshold">0.1</div>
+          </div>
+
+          <div class="metric-card" :class="getMetricClass('fcp')">
+            <div class="metric-label">FCP</div>
+            <div class="metric-value">
+              {{ formatMetric(metrics.fcp) }}
+            </div>
+            <div class="metric-threshold">1.8s</div>
+          </div>
+
+          <div class="metric-card" :class="getMetricClass('ttfb')">
+            <div class="metric-label">TTFB</div>
+            <div class="metric-value">
+              {{ formatMetric(metrics.ttfb) }}
+            </div>
+            <div class="metric-threshold">600ms</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resource Analysis -->
+      <div class="metrics-section">
+        <h4>Resource Analysis</h4>
+        <div class="resource-stats">
+          <div class="stat-item">
+            <span class="stat-label">Total Resources:</span>
+            <span class="stat-value">{{ resourceTimings.length }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Total Size:</span>
+            <span class="stat-value">{{ formatBytes(totalSize) }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Slow Resources:</span>
+            <span class="stat-value">{{ slowResources.length }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Large Resources:</span>
+            <span class="stat-value">{{ largeResources.length }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Performance Recommendations -->
+      <div v-if="recommendations.length > 0" class="metrics-section">
+        <h4>Recommendations</h4>
+        <div class="recommendations">
+          <div
+            v-for="(recommendation, index) in recommendations"
+            :key="index"
+            class="recommendation-item"
+          >
+            <ExclamationTriangleIcon class="h-4 w-4 text-warning-500" />
+            <span>{{ recommendation }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Memory Usage -->
+      <div v-if="memoryUsage" class="metrics-section">
+        <h4>Memory Usage</h4>
+        <div class="memory-stats">
+          <div class="stat-item">
+            <span class="stat-label">Used:</span>
+            <span class="stat-value">{{ formatBytes(memoryUsage.usedJSHeapSize) }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Total:</span>
+            <span class="stat-value">{{ formatBytes(memoryUsage.totalJSHeapSize) }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Limit:</span>
+            <span class="stat-value">{{ formatBytes(memoryUsage.jsHeapSizeLimit) }}</span>
+          </div>
+        </div>
+
+        <div class="memory-bar">
+          <div class="memory-fill" :style="{ width: memoryPercentage + '%' }"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="monitor-actions">
+      <button @click="refreshMetrics" class="action-btn">
+        <ArrowPathIcon class="h-4 w-4" />
+        Refresh
+      </button>
+      <button @click="exportMetrics" class="action-btn">
+        <DocumentArrowDownIcon class="h-4 w-4" />
+        Export
+      </button>
+    </div>
+  </div>
+
+  <!-- Toggle Button -->
+  <button
+    v-else
+    @click="toggleMonitor"
+    class="monitor-toggle"
+    aria-label="Open performance monitor"
+  >
+    <ChartBarIcon class="h-5 w-5" />
+  </button>
+</template>
+
 <style scoped>
 .performance-monitor {
   @apply fixed right-4 top-4 z-50 max-h-[80vh] w-96 max-w-full overflow-hidden rounded-lg border border-secondary-200 bg-white shadow-xl dark:border-secondary-700 dark:bg-secondary-800;
@@ -282,6 +283,7 @@ onUnmounted(() => {
 
 .close-btn {
   @apply rounded-md p-1 text-secondary-400 hover:bg-secondary-100 hover:text-secondary-600 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:text-secondary-500 dark:hover:bg-secondary-700 dark:hover:text-secondary-300;
+  @apply min-h-[44px] min-w-[44px] flex items-center justify-center;
 }
 
 .monitor-content {
@@ -378,10 +380,12 @@ onUnmounted(() => {
 
 .action-btn {
   @apply flex items-center space-x-2 rounded-md px-3 py-2 text-sm font-medium text-primary-600 transition-colors hover:bg-primary-50 hover:text-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:text-primary-400 dark:hover:bg-primary-900/20 dark:hover:text-primary-300;
+  @apply min-h-[44px];
 }
 
 .monitor-toggle {
   @apply fixed bottom-4 right-4 z-40 rounded-full bg-primary-600 p-3 text-white shadow-lg transition-colors hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+  @apply min-h-[44px] min-w-[44px] flex items-center justify-center;
 }
 
 /* Mobile optimizations */

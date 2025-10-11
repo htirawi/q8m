@@ -1,55 +1,3 @@
-<template>
-  <div class="checkout-form">
-    <div class="mx-auto max-w-2xl">
-      <!-- Header -->
-      <CheckoutHeader />
-
-      <!-- Order Summary -->
-      <OrderSummary
-        :selected-plan="selectedPlan"
-        :billing-cycle="billingCycle"
-        :price-info="priceInfo"
-        @toggle-billing-cycle="toggleBillingCycle"
-      />
-
-      <!-- Billing Information -->
-      <form @submit.prevent="handleSubmit" class="checkout-form-content">
-        <BillingForm v-model="billingForm" :errors="errors" />
-
-        <!-- Payment Method -->
-        <PaymentMethodSelector
-          v-model="selectedPaymentMethod"
-          :currency="paymentStore.currentCurrency"
-        />
-
-        <!-- Submit Button -->
-        <div class="form-actions">
-          <button
-            type="submit"
-            :disabled="isProcessing || !isFormValid"
-            class="submit-button"
-            :class="{ 'submit-button--loading': isProcessing }"
-          >
-            <LoadingSpinner v-if="isProcessing" size="sm" color="white" class="mr-2" />
-            {{ isProcessing ? $t("checkout.processing") : $t("checkout.completeOrder") }}
-          </button>
-        </div>
-      </form>
-    </div>
-
-    <!-- Checkout Summary Sidebar -->
-    <div class="checkout-sidebar">
-      <CheckoutSummary
-        :selected-plan="selectedPlan"
-        :billing-cycle="billingCycle"
-        :price-info="priceInfo"
-        :is-processing="isProcessing"
-        :is-form-valid="isFormValid"
-      />
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { computed, onMounted } from "vue";
 import { useRoute } from "vue-router";
@@ -111,6 +59,58 @@ onMounted(async () => {
   }
 });
 </script>
+
+<template>
+  <div class="checkout-form">
+    <div class="mx-auto max-w-2xl">
+      <!-- Header -->
+      <CheckoutHeader />
+
+      <!-- Order Summary -->
+      <OrderSummary
+        :selected-plan="selectedPlan"
+        :billing-cycle="billingCycle"
+        :price-info="priceInfo"
+        @toggle-billing-cycle="toggleBillingCycle"
+      />
+
+      <!-- Billing Information -->
+      <form @submit.prevent="handleSubmit" class="checkout-form-content">
+        <BillingForm v-model="billingForm" :errors="errors" />
+
+        <!-- Payment Method -->
+        <PaymentMethodSelector
+          v-model="selectedPaymentMethod"
+          :currency="paymentStore.currentCurrency"
+        />
+
+        <!-- Submit Button -->
+        <div class="form-actions">
+          <button
+            type="submit"
+            :disabled="isProcessing || !isFormValid"
+            class="submit-button"
+            :class="{ 'submit-button--loading': isProcessing }"
+          >
+            <LoadingSpinner v-if="isProcessing" size="sm" color="white" class="mr-2" />
+            {{ isProcessing ? $t("checkout.processing") : $t("checkout.completeOrder") }}
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Checkout Summary Sidebar -->
+    <div class="checkout-sidebar">
+      <CheckoutSummary
+        :selected-plan="selectedPlan"
+        :billing-cycle="billingCycle"
+        :price-info="priceInfo"
+        :is-processing="isProcessing"
+        :is-form-valid="isFormValid"
+      />
+    </div>
+  </div>
+</template>
 
 <style scoped>
 .checkout-form {

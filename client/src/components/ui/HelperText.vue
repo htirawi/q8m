@@ -1,14 +1,6 @@
-<template>
-  <div :id="id" :class="helperTextClasses" :aria-live="ariaLive" :role="role">
-    <slot>
-      {{ text }}
-
-    </slot>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { computed } from "vue";
+
 import type { HelperTextProps } from "@/types/ui/component-props";
 
 const props = withDefaults(defineProps<HelperTextProps>(), {
@@ -30,3 +22,14 @@ const role = computed(() => {
   return props.error ? "alert" : undefined;
 });
 </script>
+
+<template>
+  <div :id="id" :class="helperTextClasses" :aria-live="ariaLive" :role="role">
+    <slot>
+      {{ text }}
+    </slot>
+  </div>
+</template>
+
+<style scoped>
+</style>

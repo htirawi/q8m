@@ -1,3 +1,12 @@
+<script setup lang="ts">
+import { CheckIcon } from "@heroicons/vue/24/outline";
+import { heroData, trustBadges } from "@/components/pricing/pricing.config";
+
+defineOptions({
+  name: "PricingHero",
+});
+</script>
+
 <template>
   <section class="pricing-hero" aria-labelledby="pricing-hero-title">
     <div class="pricing-hero-container">
@@ -36,15 +45,6 @@
     </div>
   </section>
 </template>
-
-<script setup lang="ts">
-import { CheckIcon } from "@heroicons/vue/24/outline";
-import { heroData, trustBadges } from "@/components/pricing/pricing.config";
-
-defineOptions({
-  name: "PricingHero",
-});
-</script>
 
 <style scoped>
 .pricing-hero {

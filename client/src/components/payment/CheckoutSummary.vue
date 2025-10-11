@@ -1,3 +1,24 @@
+<script setup lang="ts">
+import { computed } from "vue";
+import { useI18n } from "vue-i18n";
+import { ShieldCheckIcon } from "@heroicons/vue/24/outline";
+import LoadingSpinner from "@/components/ui/LoadingSpinner.vue";
+import type { CheckoutSummaryProps } from "@/types/ui/component-props";
+
+const props = defineProps<CheckoutSummaryProps>();
+
+const { t } = useI18n();
+
+const displayPrice = computed(() => {
+  if (!props.priceInfo) return "N/A";
+  return props.priceInfo.formatted;
+});
+
+const billingCycleText = computed(() => {
+  return props.billingCycle === "monthly" ? t("checkout.perMonth") : t("checkout.perYear");
+});
+</script>
+
 <template>
   <div class="checkout-summary">
     <div class="summary-section">
@@ -59,27 +80,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { computed } from "vue";
-import { useI18n } from "vue-i18n";
-import { ShieldCheckIcon } from "@heroicons/vue/24/outline";
-import LoadingSpinner from "@/components/ui/LoadingSpinner.vue";
-import type { CheckoutSummaryProps } from "@/types/ui/component-props";
-
-const props = defineProps<CheckoutSummaryProps>();
-
-const { t } = useI18n();
-
-const displayPrice = computed(() => {
-  if (!props.priceInfo) return "N/A";
-  return props.priceInfo.formatted;
-});
-
-const billingCycleText = computed(() => {
-  return props.billingCycle === "monthly" ? t("checkout.perMonth") : t("checkout.perYear");
-});
-</script>
 
 <style scoped>
 .checkout-summary {

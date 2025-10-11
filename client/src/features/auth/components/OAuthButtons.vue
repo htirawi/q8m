@@ -1,6 +1,29 @@
+<script setup lang="ts">
+import { useI18n } from "vue-i18n";
+
+import type { OAuthButtonsProps } from "@/types/ui/component-props";
+
+defineProps<OAuthButtonsProps>();
+
+const emit = defineEmits<{
+  "oauth-login": [provider: "google"];
+}>();
+
+useI18n();
+
+const handleOAuthLogin = (provider: "google") => {
+  emit("oauth-login", provider);
+};
+</script>
+
 <template>
   <div class="oauth-section">
-    <button type="button" @click="handleOAuthLogin('google')" :disabled="isLoading" class="oauth-button google-button">
+    <button
+      type="button"
+      @click="handleOAuthLogin('google')"
+      :disabled="isLoading"
+      :aria-label="$t('auth.register.continueWithGoogle')"
+      class="oauth-button google-button">
       <svg class="oauth-icon" viewBox="0 0 24 24">
         <path fill="#4285F4"
           d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -17,23 +40,6 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { useI18n } from "vue-i18n";
-import type { OAuthButtonsProps } from "@/types/ui/component-props";
-
-defineProps<OAuthButtonsProps>();
-
-const emit = defineEmits<{
-  "oauth-login": [provider: "google"];
-}>();
-
-useI18n();
-
-const handleOAuthLogin = (provider: "google") => {
-  emit("oauth-login", provider);
-};
-</script>
-
 <style scoped>
 /* OAuth Section */
 .oauth-section {
@@ -45,6 +51,7 @@ const handleOAuthLogin = (provider: "google") => {
   @apply rounded-xl border-2 font-medium transition-all duration-200;
   @apply focus:outline-none focus:ring-4 focus:ring-offset-2;
   @apply disabled:cursor-not-allowed disabled:opacity-50;
+  @apply min-h-[44px];
 }
 
 .google-button {

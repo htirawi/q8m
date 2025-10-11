@@ -1,19 +1,3 @@
-<template>
-  <div class="action-buttons">
-    <button v-if="canUpgrade" @click="handleUpgrade" class="btn-primary">
-      {{ $t("subscription.upgradePlan") }}
-    </button>
-
-    <button v-if="isActive" @click="handleCancel" class="btn-danger">
-      {{ $t("subscription.cancelSubscription") }}
-    </button>
-
-    <button @click="handleStartQuizzes" class="btn-secondary">
-      {{ $t("subscription.startQuizzes") }}
-    </button>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
 import type { SubscriptionActionsProps } from "@/types/ui/component-props";
@@ -41,6 +25,22 @@ const handleStartQuizzes = () => {
   emit("startQuizzes");
 };
 </script>
+
+<template>
+  <div class="action-buttons">
+    <button v-if="canUpgrade" @click="handleUpgrade" class="btn-primary">
+      {{ $t("subscription.upgradePlan") }}
+    </button>
+
+    <button v-if="isActive" @click="handleCancel" class="btn-danger">
+      {{ $t("subscription.cancelSubscription") }}
+    </button>
+
+    <button @click="handleStartQuizzes" class="btn-secondary">
+      {{ $t("subscription.startQuizzes") }}
+    </button>
+  </div>
+</template>
 
 <style scoped>
 /* Action Buttons */

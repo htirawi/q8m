@@ -1,15 +1,8 @@
-<template>
-  <div v-if="password" class="password-strength">
-    <div class="strength-bars">
-      <div v-for="level in 4" :key="level" class="strength-bar" :class="getStrengthClass(level)"></div>
-    </div>
-    <span class="strength-text">{{ strengthText }}</span>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { computed } from "vue";
+
 import { useI18n } from "vue-i18n";
+
 import type { PasswordStrengthIndicatorProps } from "@/types/ui/component-props";
 
 const props = defineProps<PasswordStrengthIndicatorProps>();
@@ -50,6 +43,15 @@ const getStrengthClass = (level: number): string => {
   return "bg-gray-200 dark:bg-gray-600";
 };
 </script>
+
+<template>
+  <div v-if="password" class="password-strength">
+    <div class="strength-bars">
+      <div v-for="level in 4" :key="level" class="strength-bar" :class="getStrengthClass(level)"></div>
+    </div>
+    <span class="strength-text">{{ strengthText }}</span>
+  </div>
+</template>
 
 <style scoped>
 /* Password Strength */

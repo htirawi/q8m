@@ -298,7 +298,21 @@
         "weak": "Weak password",
         "medium": "Medium password",
         "strong": "Strong password"
+      },
+      "passwordRequirements": {
+        "minLength": "At least 8 characters",
+        "uppercase": "One uppercase letter",
+        "lowercase": "One lowercase letter",
+        "number": "One number"
       }
+    },
+    "oauth": {
+      "processing": "Processing authentication...",
+      "pleaseWait": "Please wait while we complete your sign in",
+      "error": "Authentication Error",
+      "tryAgain": "Try Again",
+      "success": "Success!",
+      "redirecting": "Redirecting you now..."
     }
   },
   "legal": {

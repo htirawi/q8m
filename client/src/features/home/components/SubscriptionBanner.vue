@@ -1,3 +1,14 @@
+<script setup lang="ts">
+import { useRouter } from "vue-router";
+import { ArrowRightIcon } from "@heroicons/vue/24/outline";
+
+const router = useRouter();
+
+const redirectToSubscribe = () => {
+  router.push({ name: "subscribe" });
+};
+</script>
+
 <template>
   <div class="subscription-banner" @click="redirectToSubscribe">
     <div class="banner-content">
@@ -12,17 +23,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { useRouter } from "vue-router";
-import { ArrowRightIcon } from "@heroicons/vue/24/outline";
-
-const router = useRouter();
-
-const redirectToSubscribe = () => {
-  router.push({ name: "subscribe" });
-};
-</script>
 
 <style scoped>
 .subscription-banner {

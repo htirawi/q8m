@@ -1,3 +1,136 @@
+<script setup lang="ts">
+import { ref, computed, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import { CheckIcon, ChevronDownIcon } from "@heroicons/vue/24/outline";
+import { usePaymentStore } from "@/stores/payment";
+import { useAuthStore } from "@/stores/auth";
+import { useI18n } from "vue-i18n";
+import CurrencySwitcher from "@/components/ui/CurrencySwitcher.vue";
+import type { PlanPricing } from "@/types/domain/payment";
+
+const router = useRouter();
+const { t } = useI18n();
+const paymentStore = usePaymentStore();
+const authStore = useAuthStore();
+
+// State
+const billingCycle = ref<"monthly" | "yearly">("monthly");
+const openFaqs = ref<number[]>([]);
+
+// Computed
+const filteredPricing = computed(() => {
+  return paymentStore.pricing.filter(() => {
+    // Show all plans for now, but you could filter based on user needs
+    return true;
+  });
+});
+
+// FAQ data
+const faqs = computed(() => [
+  {
+    question: t("pricing.faq.question1"),
+    answer: t("pricing.faq.answer1"),
+  },
+  {
+    question: t("pricing.faq.question2"),
+    answer: t("pricing.faq.answer2"),
+  },
+  {
+    question: t("pricing.faq.question3"),
+    answer: t("pricing.faq.answer3"),
+  },
+  {
+    question: t("pricing.faq.question4"),
+    answer: t("pricing.faq.answer4"),
+  },
+]);
+
+// Methods
+const toggleBillingCycle = () => {
+  billingCycle.value = billingCycle.value === "monthly" ? "yearly" : "monthly";
+};
+
+const getDisplayPrice = (plan: PlanPricing) => {
+  const priceInfo = getPriceInfo(plan);
+  if (!priceInfo) return "Free";
+
+  if (billingCycle.value === "yearly") {
+    // Calculate yearly price (assuming monthly price * 12 with discount)
+    const monthlyPrice = priceInfo.amount;
+    const yearlyPrice = monthlyPrice * 12 * 0.83; // 17% discount
+    return paymentStore.formatCurrency(yearlyPrice, priceInfo.currency);
+  }
+
+  return priceInfo.formatted;
+};
+
+const getPricePeriod = (plan: PlanPricing) => {
+  if (plan.planId === "JUNIOR") return "";
+  return billingCycle.value === "yearly" ? "/year" : "/month";
+};
+
+const getPriceInfo = (plan: PlanPricing) => {
+  const currency = paymentStore.currentCurrency;
+  return plan.pricing[currency];
+};
+
+const selectPlan = async (plan: PlanPricing) => {
+  if (plan.planId === "JUNIOR") {
+    await startFreePlan();
+    return;
+  }
+
+  if (!authStore.isAuthenticated) {
+    router.push("/auth/login");
+    return;
+  }
+
+  try {
+    const paymentRequest = {
+      planType: plan.planId as "INTERMEDIATE" | "SENIOR" | "BUNDLE",
+      currency: paymentStore.currentCurrency,
+      billingCycle: billingCycle.value,
+    };
+
+    const response = await paymentStore.createPayment(paymentRequest);
+
+    // Redirect to payment gateway
+    window.location.href = response.checkoutUrl;
+  } catch (error) {
+    console.error("Failed to create payment:", error);
+  }
+};
+
+const startFreePlan = async () => {
+  if (!authStore.isAuthenticated) {
+    router.push("/auth/register");
+    return;
+  }
+
+  // Free plan doesn't require payment
+  router.push("/dashboard");
+};
+
+const toggleFaq = (index: number) => {
+  const currentIndex = openFaqs.value.indexOf(index);
+  if (currentIndex > -1) {
+    openFaqs.value.splice(currentIndex, 1);
+  } else {
+    openFaqs.value.push(index);
+  }
+};
+
+const contactSupport = () => {
+  // In a real app, this might open a contact form or redirect to support
+  console.log("Contact support");
+};
+
+// Lifecycle
+onMounted(async () => {
+  await paymentStore.initialize();
+});
+</script>
+
 <template>
   <div class="pricing-page">
     <!-- Header Section -->
@@ -187,139 +320,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
-import { useRouter } from "vue-router";
-import { CheckIcon, ChevronDownIcon } from "@heroicons/vue/24/outline";
-import { usePaymentStore } from "@/stores/payment";
-import { useAuthStore } from "@/stores/auth";
-import { useI18n } from "vue-i18n";
-import CurrencySwitcher from "@/components/ui/CurrencySwitcher.vue";
-import type { PlanPricing } from "@/types/domain/payment";
-
-const router = useRouter();
-const { t } = useI18n();
-const paymentStore = usePaymentStore();
-const authStore = useAuthStore();
-
-// State
-const billingCycle = ref<"monthly" | "yearly">("monthly");
-const openFaqs = ref<number[]>([]);
-
-// Computed
-const filteredPricing = computed(() => {
-  return paymentStore.pricing.filter(() => {
-    // Show all plans for now, but you could filter based on user needs
-    return true;
-  });
-});
-
-// FAQ data
-const faqs = computed(() => [
-  {
-    question: t("pricing.faq.question1"),
-    answer: t("pricing.faq.answer1"),
-  },
-  {
-    question: t("pricing.faq.question2"),
-    answer: t("pricing.faq.answer2"),
-  },
-  {
-    question: t("pricing.faq.question3"),
-    answer: t("pricing.faq.answer3"),
-  },
-  {
-    question: t("pricing.faq.question4"),
-    answer: t("pricing.faq.answer4"),
-  },
-]);
-
-// Methods
-const toggleBillingCycle = () => {
-  billingCycle.value = billingCycle.value === "monthly" ? "yearly" : "monthly";
-};
-
-const getDisplayPrice = (plan: PlanPricing) => {
-  const priceInfo = getPriceInfo(plan);
-  if (!priceInfo) return "Free";
-
-  if (billingCycle.value === "yearly") {
-    // Calculate yearly price (assuming monthly price * 12 with discount)
-    const monthlyPrice = priceInfo.amount;
-    const yearlyPrice = monthlyPrice * 12 * 0.83; // 17% discount
-    return paymentStore.formatCurrency(yearlyPrice, priceInfo.currency);
-  }
-
-  return priceInfo.formatted;
-};
-
-const getPricePeriod = (plan: PlanPricing) => {
-  if (plan.planId === "JUNIOR") return "";
-  return billingCycle.value === "yearly" ? "/year" : "/month";
-};
-
-const getPriceInfo = (plan: PlanPricing) => {
-  const currency = paymentStore.currentCurrency;
-  return plan.pricing[currency];
-};
-
-const selectPlan = async (plan: PlanPricing) => {
-  if (plan.planId === "JUNIOR") {
-    await startFreePlan();
-    return;
-  }
-
-  if (!authStore.isAuthenticated) {
-    router.push("/auth/login");
-    return;
-  }
-
-  try {
-    const paymentRequest = {
-      planType: plan.planId as "INTERMEDIATE" | "SENIOR" | "BUNDLE",
-      currency: paymentStore.currentCurrency,
-      billingCycle: billingCycle.value,
-    };
-
-    const response = await paymentStore.createPayment(paymentRequest);
-
-    // Redirect to payment gateway
-    window.location.href = response.checkoutUrl;
-  } catch (error) {
-    console.error("Failed to create payment:", error);
-  }
-};
-
-const startFreePlan = async () => {
-  if (!authStore.isAuthenticated) {
-    router.push("/auth/register");
-    return;
-  }
-
-  // Free plan doesn't require payment
-  router.push("/dashboard");
-};
-
-const toggleFaq = (index: number) => {
-  const currentIndex = openFaqs.value.indexOf(index);
-  if (currentIndex > -1) {
-    openFaqs.value.splice(currentIndex, 1);
-  } else {
-    openFaqs.value.push(index);
-  }
-};
-
-const contactSupport = () => {
-  // In a real app, this might open a contact form or redirect to support
-  console.log("Contact support");
-};
-
-// Lifecycle
-onMounted(async () => {
-  await paymentStore.initialize();
-});
-</script>
 
 <style scoped>
 .pricing-page {

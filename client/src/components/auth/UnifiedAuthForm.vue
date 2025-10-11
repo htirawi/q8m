@@ -1,353 +1,13 @@
-<template>
-  <div class="unified-auth-form">
-    <!-- OAuth Buttons (Top) -->
-    <div class="oauth-section">
-      <button
-        type="button"
-        @click="handleOAuthLogin('google')"
-        :disabled="isLoading"
-        class="oauth-button"
-      >
-        <svg class="oauth-icon" viewBox="0 0 24 24">
-          <path
-            fill="#4285F4"
-            d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-          />
-          <path
-            fill="#34A853"
-            d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-          />
-          <path
-            fill="#FBBC05"
-            d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-          />
-          <path
-            fill="#EA4335"
-            d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-          />
-        </svg>
-        <span>{{ $t("auth.unified.continueWithGoogle") }}</span>
-      </button>
-    </div>
-
-    <!-- Divider -->
-    <div class="form-divider">
-      <div class="divider-line"></div>
-      <span class="divider-text">{{ $t("auth.unified.or") }}</span>
-      <div class="divider-line"></div>
-    </div>
-
-    <!-- Progressive Form -->
-    <form @submit.prevent="handleSubmit" novalidate class="progressive-form">
-      <!-- Email Field with Floating Label -->
-      <div class="form-group" :class="{ 'has-value': formData.email, 'is-disabled': emailConfirmed }">
-        <input
-          id="email"
-          v-model="formData.email"
-          type="email"
-          autocomplete="email"
-          :disabled="emailConfirmed"
-          class="form-input"
-          :class="{ 'input-error': errors.email }"
-          @focus="emailFocused = true"
-          @blur="handleEmailBlur"
-          @input="handleEmailInput"
-        />
-        <label for="email" class="floating-label">
-          {{ $t("auth.fields.email") }}
-        </label>
-        <button
-          v-if="emailConfirmed"
-          type="button"
-          @click="resetEmailStep"
-          class="change-email-btn"
-          :aria-label="$t('auth.unified.changeEmail')"
-        >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-          </svg>
-          <span>{{ $t("auth.unified.change") }}</span>
-        </button>
-        <transition name="fade">
-          <p v-if="errors.email" class="form-error">{{ errors.email }}</p>
-        </transition>
-      </div>
-
-      <!-- Login Flow (Email exists) -->
-      <transition name="slide-fade" mode="out-in">
-        <div v-if="emailConfirmed && authMode === 'login'" key="login" class="auth-fields">
-          <!-- Password Field -->
-          <div class="form-group" :class="{ 'has-value': formData.password }">
-            <div class="password-wrapper">
-              <input
-                ref="passwordInputRef"
-                id="password"
-                v-model="formData.password"
-                :type="showPassword ? 'text' : 'password'"
-                autocomplete="current-password"
-                class="form-input"
-                :class="{ 'input-error': errors.password }"
-                @input="handlePasswordInput"
-              />
-              <label for="password" class="floating-label">
-                {{ $t("auth.fields.password") }}
-              </label>
-              <button
-                type="button"
-                @click="showPassword = !showPassword"
-                class="password-toggle"
-                :aria-label="showPassword ? $t('auth.unified.hidePassword') : $t('auth.unified.showPassword')"
-              >
-                <EyeIcon v-if="!showPassword" class="icon" />
-                <EyeSlashIcon v-else class="icon" />
-              </button>
-            </div>
-
-            <!-- Password Requirements Checklist (Login) -->
-            <transition name="fade">
-              <div v-if="formData.password && errors.password" class="password-requirements">
-                <div class="requirement-item" :class="{ met: passwordRequirements.minLength }">
-                  <svg class="requirement-icon" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                  </svg>
-                  <span>At least 8 characters</span>
-                </div>
-                <div class="requirement-item" :class="{ met: passwordRequirements.hasUppercase }">
-                  <svg class="requirement-icon" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                  </svg>
-                  <span>One uppercase letter</span>
-                </div>
-                <div class="requirement-item" :class="{ met: passwordRequirements.hasLowercase }">
-                  <svg class="requirement-icon" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                  </svg>
-                  <span>One lowercase letter</span>
-                </div>
-                <div class="requirement-item" :class="{ met: passwordRequirements.hasNumber }">
-                  <svg class="requirement-icon" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                  </svg>
-                  <span>One number</span>
-                </div>
-              </div>
-            </transition>
-          </div>
-
-          <!-- Forgot Password -->
-          <div class="forgot-password-wrapper">
-            <button
-              type="button"
-              @click="emit('show-forgot-password')"
-              class="forgot-password-link"
-            >
-              {{ $t("auth.unified.forgotPassword") }}
-            </button>
-          </div>
-        </div>
-      </transition>
-
-      <!-- Register Flow (Email doesn't exist) -->
-      <transition name="slide-fade" mode="out-in">
-        <div v-if="emailConfirmed && authMode === 'register'" key="register" class="auth-fields">
-          <!-- Name Field -->
-          <div class="form-group" :class="{ 'has-value': formData.name }">
-            <input
-              ref="nameInputRef"
-              id="name"
-              v-model="formData.name"
-              type="text"
-              autocomplete="name"
-              class="form-input"
-              :class="{ 'input-error': errors.name }"
-              @input="handleNameInput"
-            />
-            <label for="name" class="floating-label">
-              {{ $t("auth.fields.name") }}
-            </label>
-            <transition name="fade">
-              <p v-if="errors.name" class="form-error">{{ errors.name }}</p>
-            </transition>
-          </div>
-
-          <!-- Password Field with Strength Indicator -->
-          <div class="form-group" :class="{ 'has-value': formData.password }">
-            <div class="password-wrapper">
-              <input
-                id="register-password"
-                v-model="formData.password"
-                :type="showPassword ? 'text' : 'password'"
-                autocomplete="new-password"
-                class="form-input"
-                :class="{ 'input-error': errors.password }"
-                @input="handlePasswordInput"
-              />
-              <label for="register-password" class="floating-label">
-                {{ $t("auth.fields.password") }}
-              </label>
-              <button
-                type="button"
-                @click="showPassword = !showPassword"
-                class="password-toggle"
-                :aria-label="showPassword ? $t('auth.unified.hidePassword') : $t('auth.unified.showPassword')"
-              >
-                <EyeIcon v-if="!showPassword" class="icon" />
-                <EyeSlashIcon v-else class="icon" />
-              </button>
-            </div>
-
-            <!-- Password Requirements Checklist -->
-            <transition name="fade">
-              <div v-if="formData.password && authMode === 'register'" class="password-requirements">
-                <div class="requirement-item" :class="{ met: passwordRequirements.minLength }">
-                  <svg class="requirement-icon" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                  </svg>
-                  <span>At least 8 characters</span>
-                </div>
-                <div class="requirement-item" :class="{ met: passwordRequirements.hasUppercase }">
-                  <svg class="requirement-icon" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                  </svg>
-                  <span>One uppercase letter</span>
-                </div>
-                <div class="requirement-item" :class="{ met: passwordRequirements.hasLowercase }">
-                  <svg class="requirement-icon" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                  </svg>
-                  <span>One lowercase letter</span>
-                </div>
-                <div class="requirement-item" :class="{ met: passwordRequirements.hasNumber }">
-                  <svg class="requirement-icon" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                  </svg>
-                  <span>One number</span>
-                </div>
-              </div>
-            </transition>
-          </div>
-
-          <!-- Terms Checkbox -->
-          <div class="form-group checkbox-group">
-            <label class="checkbox-label group">
-              <input
-                v-model="formData.acceptTerms"
-                type="checkbox"
-                class="checkbox-input"
-                :class="{ 'input-error': errors.acceptTerms }"
-              />
-              <span class="checkbox-box">
-                <svg v-if="formData.acceptTerms" class="checkmark" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
-                </svg>
-              </span>
-              <span class="checkbox-text">
-                {{ $t("auth.register.agreeToTerms") }}
-                <a href="/terms" target="_blank" class="link" @click.stop>
-                  {{ $t("auth.register.termsOfService") }}
-                </a>
-                {{ $t("auth.register.and") }}
-                <a href="/privacy" target="_blank" class="link" @click.stop>
-                  {{ $t("auth.register.privacyPolicy") }}
-                </a>
-              </span>
-            </label>
-            <transition name="fade">
-              <p v-if="errors.acceptTerms" class="form-error">{{ errors.acceptTerms }}</p>
-            </transition>
-          </div>
-        </div>
-      </transition>
-
-      <!-- Error Message -->
-      <transition name="slide-fade">
-        <div v-if="error" class="error-alert">
-          <svg class="error-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10" />
-            <path d="M12 8v4m0 4h.01" />
-          </svg>
-          <span>{{ error }}</span>
-        </div>
-      </transition>
-
-      <!-- Submit Button -->
-      <button
-        type="submit"
-        :disabled="isLoading || isCheckingEmail"
-        class="submit-btn"
-        :class="{ 'btn-loading': isLoading || isCheckingEmail }"
-      >
-        <span v-if="isLoading || isCheckingEmail" class="btn-content">
-          <svg class="spinner" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
-            <path
-              class="opacity-75"
-              fill="currentColor"
-              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-            ></path>
-          </svg>
-          <span>{{ getLoadingText }}</span>
-        </span>
-        <span v-else class="btn-content">
-          {{ getButtonText }}
-        </span>
-      </button>
-    </form>
-
-    <!-- Trust Indicators -->
-    <div class="trust-section">
-      <div class="trust-item">
-        <svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-        </svg>
-        <span>{{ $t("auth.unified.secureEncrypted") }}</span>
-      </div>
-      <div class="trust-item">
-        <svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
-          <circle cx="9" cy="7" r="4" />
-          <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
-        </svg>
-        <span>{{ $t("auth.unified.joinThousands") }}</span>
-      </div>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { ref, computed, reactive, watch, nextTick } from "vue";
+
 import { useI18n } from "vue-i18n";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/vue/24/outline";
-import { useAuthStore } from "@/stores/auth";
-import { emailStepSchema, loginFormSchema, registerFormSchema, passwordSchema, nameSchema } from "@/schemas/auth";
 import { ZodError } from "zod";
 
-interface UnifiedAuthFormData {
-  email: string;
-  name: string;
-  password: string;
-  acceptTerms: boolean;
-}
-
-interface FormErrors {
-  email?: string;
-  name?: string;
-  password?: string;
-  acceptTerms?: string;
-}
-
-interface PasswordStrength {
-  score: number;
-  level: string;
-  text: string;
-}
-
-interface UnifiedAuthFormEmits {
-  (e: "oauth-login", provider: "google"): void;
-  (e: "show-forgot-password"): void;
-  (e: "login-success"): void;
-  (e: "registration-success", email: string): void;
-}
+import { useAuthStore } from "@/stores/auth";
+import { emailStepSchema, loginFormSchema, registerFormSchema, passwordSchema, nameSchema } from "@/schemas/auth";
+import type { UnifiedAuthFormData, FormErrors, UnifiedAuthFormEmits, PasswordRequirements, PasswordStrength } from "@/types/ui/component-props";
 
 const emit = defineEmits<UnifiedAuthFormEmits>();
 const { t } = useI18n();
@@ -374,7 +34,7 @@ const passwordStrength = ref<PasswordStrength>({
 });
 
 // Password requirements tracking
-const passwordRequirements = reactive({
+const passwordRequirements = reactive<PasswordRequirements>({
   minLength: false,
   hasUppercase: false,
   hasLowercase: false,
@@ -724,6 +384,322 @@ async function handleSubmit(): Promise<void> {
   }
 }
 </script>
+
+<template>
+  <div class="unified-auth-form">
+    <!-- OAuth Buttons (Top) -->
+    <div class="oauth-section">
+      <button
+        type="button"
+        @click="handleOAuthLogin('google')"
+        :disabled="isLoading"
+        class="oauth-button"
+      >
+        <svg class="oauth-icon" viewBox="0 0 24 24">
+          <path
+            fill="#4285F4"
+            d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+          />
+          <path
+            fill="#34A853"
+            d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+          />
+          <path
+            fill="#FBBC05"
+            d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+          />
+          <path
+            fill="#EA4335"
+            d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+          />
+        </svg>
+        <span>{{ $t("auth.unified.continueWithGoogle") }}</span>
+      </button>
+    </div>
+
+    <!-- Divider -->
+    <div class="form-divider">
+      <div class="divider-line"></div>
+      <span class="divider-text">{{ $t("auth.unified.or") }}</span>
+      <div class="divider-line"></div>
+    </div>
+
+    <!-- Progressive Form -->
+    <form @submit.prevent="handleSubmit" novalidate class="progressive-form">
+      <!-- Email Field with Floating Label -->
+      <div class="form-group" :class="{ 'has-value': formData.email, 'is-disabled': emailConfirmed }">
+        <input
+          id="email"
+          v-model="formData.email"
+          type="email"
+          autocomplete="email"
+          :disabled="emailConfirmed"
+          class="form-input"
+          :class="{ 'input-error': errors.email }"
+          @focus="emailFocused = true"
+          @blur="handleEmailBlur"
+          @input="handleEmailInput"
+        />
+        <label for="email" class="floating-label">
+          {{ $t("auth.fields.email") }}
+        </label>
+        <button
+          v-if="emailConfirmed"
+          type="button"
+          @click="resetEmailStep"
+          class="change-email-btn"
+          :aria-label="$t('auth.unified.changeEmail')"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+          </svg>
+          <span>{{ $t("auth.unified.change") }}</span>
+        </button>
+        <transition name="fade">
+          <p v-if="errors.email" class="form-error">{{ errors.email }}</p>
+        </transition>
+      </div>
+
+      <!-- Login Flow (Email exists) -->
+      <transition name="slide-fade" mode="out-in">
+        <div v-if="emailConfirmed && authMode === 'login'" key="login" class="auth-fields">
+          <!-- Password Field -->
+          <div class="form-group" :class="{ 'has-value': formData.password }">
+            <div class="password-wrapper">
+              <input
+                ref="passwordInputRef"
+                id="password"
+                v-model="formData.password"
+                :type="showPassword ? 'text' : 'password'"
+                autocomplete="current-password"
+                class="form-input"
+                :class="{ 'input-error': errors.password }"
+                @input="handlePasswordInput"
+              />
+              <label for="password" class="floating-label">
+                {{ $t("auth.fields.password") }}
+              </label>
+              <button
+                type="button"
+                @click="showPassword = !showPassword"
+                class="password-toggle"
+                :aria-label="showPassword ? $t('auth.unified.hidePassword') : $t('auth.unified.showPassword')"
+              >
+                <EyeIcon v-if="!showPassword" class="icon" />
+                <EyeSlashIcon v-else class="icon" />
+              </button>
+            </div>
+
+            <!-- Password Requirements Checklist (Login) -->
+            <transition name="fade">
+              <div v-if="formData.password && errors.password" class="password-requirements">
+                <div class="requirement-item" :class="{ met: passwordRequirements.minLength }">
+                  <svg class="requirement-icon" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                  </svg>
+                  <span>{{ $t("auth.validation.passwordRequirements.minLength") }}</span>
+                </div>
+                <div class="requirement-item" :class="{ met: passwordRequirements.hasUppercase }">
+                  <svg class="requirement-icon" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                  </svg>
+                  <span>{{ $t("auth.validation.passwordRequirements.uppercase") }}</span>
+                </div>
+                <div class="requirement-item" :class="{ met: passwordRequirements.hasLowercase }">
+                  <svg class="requirement-icon" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                  </svg>
+                  <span>{{ $t("auth.validation.passwordRequirements.lowercase") }}</span>
+                </div>
+                <div class="requirement-item" :class="{ met: passwordRequirements.hasNumber }">
+                  <svg class="requirement-icon" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                  </svg>
+                  <span>{{ $t("auth.validation.passwordRequirements.number") }}</span>
+                </div>
+              </div>
+            </transition>
+          </div>
+
+          <!-- Forgot Password -->
+          <div class="forgot-password-wrapper">
+            <button
+              type="button"
+              @click="emit('show-forgot-password')"
+              class="forgot-password-link"
+            >
+              {{ $t("auth.unified.forgotPassword") }}
+            </button>
+          </div>
+        </div>
+      </transition>
+
+      <!-- Register Flow (Email doesn't exist) -->
+      <transition name="slide-fade" mode="out-in">
+        <div v-if="emailConfirmed && authMode === 'register'" key="register" class="auth-fields">
+          <!-- Name Field -->
+          <div class="form-group" :class="{ 'has-value': formData.name }">
+            <input
+              ref="nameInputRef"
+              id="name"
+              v-model="formData.name"
+              type="text"
+              autocomplete="name"
+              class="form-input"
+              :class="{ 'input-error': errors.name }"
+              @input="handleNameInput"
+            />
+            <label for="name" class="floating-label">
+              {{ $t("auth.fields.name") }}
+            </label>
+            <transition name="fade">
+              <p v-if="errors.name" class="form-error">{{ errors.name }}</p>
+            </transition>
+          </div>
+
+          <!-- Password Field with Strength Indicator -->
+          <div class="form-group" :class="{ 'has-value': formData.password }">
+            <div class="password-wrapper">
+              <input
+                id="register-password"
+                v-model="formData.password"
+                :type="showPassword ? 'text' : 'password'"
+                autocomplete="new-password"
+                class="form-input"
+                :class="{ 'input-error': errors.password }"
+                @input="handlePasswordInput"
+              />
+              <label for="register-password" class="floating-label">
+                {{ $t("auth.fields.password") }}
+              </label>
+              <button
+                type="button"
+                @click="showPassword = !showPassword"
+                class="password-toggle"
+                :aria-label="showPassword ? $t('auth.unified.hidePassword') : $t('auth.unified.showPassword')"
+              >
+                <EyeIcon v-if="!showPassword" class="icon" />
+                <EyeSlashIcon v-else class="icon" />
+              </button>
+            </div>
+
+            <!-- Password Requirements Checklist -->
+            <transition name="fade">
+              <div v-if="formData.password && authMode === 'register'" class="password-requirements">
+                <div class="requirement-item" :class="{ met: passwordRequirements.minLength }">
+                  <svg class="requirement-icon" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                  </svg>
+                  <span>{{ $t("auth.validation.passwordRequirements.minLength") }}</span>
+                </div>
+                <div class="requirement-item" :class="{ met: passwordRequirements.hasUppercase }">
+                  <svg class="requirement-icon" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                  </svg>
+                  <span>{{ $t("auth.validation.passwordRequirements.uppercase") }}</span>
+                </div>
+                <div class="requirement-item" :class="{ met: passwordRequirements.hasLowercase }">
+                  <svg class="requirement-icon" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                  </svg>
+                  <span>{{ $t("auth.validation.passwordRequirements.lowercase") }}</span>
+                </div>
+                <div class="requirement-item" :class="{ met: passwordRequirements.hasNumber }">
+                  <svg class="requirement-icon" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                  </svg>
+                  <span>{{ $t("auth.validation.passwordRequirements.number") }}</span>
+                </div>
+              </div>
+            </transition>
+          </div>
+
+          <!-- Terms Checkbox -->
+          <div class="form-group checkbox-group">
+            <label class="checkbox-label group">
+              <input
+                v-model="formData.acceptTerms"
+                type="checkbox"
+                class="checkbox-input"
+                :class="{ 'input-error': errors.acceptTerms }"
+              />
+              <span class="checkbox-box">
+                <svg v-if="formData.acceptTerms" class="checkmark" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                </svg>
+              </span>
+              <span class="checkbox-text">
+                {{ $t("auth.register.agreeToTerms") }}
+                <a href="/terms" target="_blank" class="link" @click.stop>
+                  {{ $t("auth.register.termsOfService") }}
+                </a>
+                {{ $t("auth.register.and") }}
+                <a href="/privacy" target="_blank" class="link" @click.stop>
+                  {{ $t("auth.register.privacyPolicy") }}
+                </a>
+              </span>
+            </label>
+            <transition name="fade">
+              <p v-if="errors.acceptTerms" class="form-error">{{ errors.acceptTerms }}</p>
+            </transition>
+          </div>
+        </div>
+      </transition>
+
+      <!-- Error Message -->
+      <transition name="slide-fade">
+        <div v-if="error" class="error-alert">
+          <svg class="error-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10" />
+            <path d="M12 8v4m0 4h.01" />
+          </svg>
+          <span>{{ error }}</span>
+        </div>
+      </transition>
+
+      <!-- Submit Button -->
+      <button
+        type="submit"
+        :disabled="isLoading || isCheckingEmail"
+        class="submit-btn"
+        :class="{ 'btn-loading': isLoading || isCheckingEmail }"
+      >
+        <span v-if="isLoading || isCheckingEmail" class="btn-content">
+          <svg class="spinner" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            ></path>
+          </svg>
+          <span>{{ getLoadingText }}</span>
+        </span>
+        <span v-else class="btn-content">
+          {{ getButtonText }}
+        </span>
+      </button>
+    </form>
+
+    <!-- Trust Indicators -->
+    <div class="trust-section">
+      <div class="trust-item">
+        <svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+        </svg>
+        <span>{{ $t("auth.unified.secureEncrypted") }}</span>
+      </div>
+      <div class="trust-item">
+        <svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+          <circle cx="9" cy="7" r="4" />
+          <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
+        </svg>
+        <span>{{ $t("auth.unified.joinThousands") }}</span>
+      </div>
+    </div>
+  </div>
+</template>
 
 <style scoped>
 /* Container */

@@ -1,10 +1,6 @@
-<template>
-  <img :src="optimizedSrc" :alt="alt" :class="imageClasses" :loading="lazy ? 'lazy' : 'eager'" :decoding="decoding"
-    :sizes="sizes" :srcset="srcset" @load="handleLoad" @error="handleError" />
-</template>
-
 <script setup lang="ts">
 import { computed, ref } from "vue";
+
 import type { OptimizedImageProps } from "@/types/ui/component-props";
 
 const props = withDefaults(defineProps<OptimizedImageProps>(), {
@@ -71,3 +67,11 @@ const handleError = (event: Event) => {
   emit("error", event);
 };
 </script>
+
+<template>
+  <img :src="optimizedSrc" :alt="alt" :class="imageClasses" :loading="lazy ? 'lazy' : 'eager'" :decoding="decoding"
+    :sizes="sizes" :srcset="srcset" @load="handleLoad" @error="handleError" />
+</template>
+
+<style scoped>
+</style>

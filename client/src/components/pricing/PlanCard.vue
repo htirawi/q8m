@@ -1,3 +1,43 @@
+<script setup lang="ts">
+import { computed } from "vue";
+
+import { useI18n } from "vue-i18n";
+import { CheckIcon } from "@heroicons/vue/24/outline";
+
+import type { PlanCardEmits, PlanCardProps } from "@/types/ui/component-props";
+
+const props = defineProps<PlanCardProps>();
+const emit = defineEmits<PlanCardEmits>();
+const { t } = useI18n();
+
+const displayPrice = computed(() => {
+  if (props.plan.priceMonthly === 0) {
+    return "0";
+  }
+
+  const price = props.billing === "yearly" ? props.plan.priceYearly : props.plan.priceMonthly;
+  return price.toString();
+});
+
+const displayPeriod = computed(() => {
+  if (props.plan.priceMonthly === 0) {
+    return "";
+  }
+
+  return props.billing === "yearly"
+    ? `/${t("pricing.billing.year")}`
+    : `/${t("pricing.billing.month")}`;
+});
+
+const handleCtaClick = () => {
+  emit("select-plan", props.plan);
+};
+
+defineOptions({
+  name: "PlanCard",
+});
+</script>
+
 <template>
   <div class="plan-card" :class="{
     'plan-card--popular': plan.popular,
@@ -54,44 +94,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { computed } from "vue";
-import { useI18n } from "vue-i18n";
-import { CheckIcon } from "@heroicons/vue/24/outline";
-import type { PlanCardProps, PlanCardEmits } from "@/types/ui/component-props";
-
-const props = defineProps<PlanCardProps>();
-const emit = defineEmits<PlanCardEmits>();
-const { t } = useI18n();
-
-const displayPrice = computed(() => {
-  if (props.plan.priceMonthly === 0) {
-    return "0";
-  }
-
-  const price = props.billing === "yearly" ? props.plan.priceYearly : props.plan.priceMonthly;
-  return price.toString();
-});
-
-const displayPeriod = computed(() => {
-  if (props.plan.priceMonthly === 0) {
-    return "";
-  }
-
-  return props.billing === "yearly"
-    ? `/${t("pricing.billing.year")}`
-    : `/${t("pricing.billing.month")}`;
-});
-
-const handleCtaClick = () => {
-  emit("select-plan", props.plan);
-};
-
-defineOptions({
-  name: "PlanCard",
-});
-</script>
 
 <style scoped>
 .plan-card {
@@ -180,6 +182,7 @@ defineOptions({
 
 .plan-card-cta {
   @apply w-full rounded-lg px-6 py-3 font-medium transition-colors duration-200;
+  @apply min-h-[44px];
 }
 
 .plan-card-cta--primary {

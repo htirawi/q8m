@@ -1,28 +1,9 @@
-<template>
-  <div class="loading-state" :class="containerClasses" role="status" :aria-label="ariaLabel">
-    <div class="loading-content">
-      <LoadingSpinner :size="spinnerSize as 'sm' | 'md' | 'lg'" :color="spinnerColor as 'primary' | 'white' | 'gray'" :text="text" :show-text="showText" />
-
-      <div v-if="description" class="loading-description">
-        {{ description }}
-      </div>
-
-      <div v-if="showProgress && progress !== undefined" class="loading-progress">
-        <div class="progress-bar">
-          <div class="progress-fill" :style="{ width: `${Math.min(100, Math.max(0, progress))}%` }" />
-        </div>
-        <div class="progress-text">{{ progressText }}
-
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
+
 import LoadingSpinner from "@/components/ui/LoadingSpinner.vue";
+
 import type { LoadingStateProps } from "@/types/ui/component-props";
 
 const props = withDefaults(defineProps<LoadingStateProps>(), {
@@ -80,6 +61,25 @@ const ariaLabel = computed(() => {
   return t("common.loading");
 });
 </script>
+
+<template>
+  <div class="loading-state" :class="containerClasses" role="status" :aria-label="ariaLabel">
+    <div class="loading-content">
+      <LoadingSpinner :size="spinnerSize as 'sm' | 'md' | 'lg'" :color="spinnerColor as 'primary' | 'white' | 'gray'" :text="text" :show-text="showText" />
+
+      <div v-if="description" class="loading-description">
+        {{ description }}
+      </div>
+
+      <div v-if="showProgress && progress !== undefined" class="loading-progress">
+        <div class="progress-bar">
+          <div class="progress-fill" :style="{ width: `${Math.min(100, Math.max(0, progress))}%` }" />
+        </div>
+        <div class="progress-text">{{ progressText }}</div>
+      </div>
+    </div>
+  </div>
+</template>
 
 <style scoped>
 .loading-state {

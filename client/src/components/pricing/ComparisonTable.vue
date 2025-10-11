@@ -1,3 +1,29 @@
+<script setup lang="ts">
+import { CheckIcon } from "@heroicons/vue/24/outline";
+
+import type { ComparisonRow } from "@/components/pricing/pricing.config";
+import { comparisonRows, plans } from "@/components/pricing/pricing.config";
+
+const getCellValue = (row: ComparisonRow, planId: string): boolean | string => {
+  switch (planId) {
+    case "junior":
+      return row.junior;
+    case "intermediate":
+      return row.intermediate;
+    case "senior":
+      return row.senior;
+    case "bundle":
+      return row.bundle;
+    default:
+      return false;
+  }
+};
+
+defineOptions({
+  name: "ComparisonTable",
+});
+</script>
+
 <template>
   <section class="comparison-table" aria-labelledby="comparison-title">
     <div class="comparison-table-container">
@@ -108,31 +134,6 @@
     </div>
   </section>
 </template>
-
-<script setup lang="ts">
-import { CheckIcon } from "@heroicons/vue/24/outline";
-import { plans, comparisonRows } from "@/components/pricing/pricing.config";
-import type { ComparisonRow } from "@/components/pricing/pricing.config";
-
-const getCellValue = (row: ComparisonRow, planId: string): boolean | string => {
-  switch (planId) {
-    case "junior":
-      return row.junior;
-    case "intermediate":
-      return row.intermediate;
-    case "senior":
-      return row.senior;
-    case "bundle":
-      return row.bundle;
-    default:
-      return false;
-  }
-};
-
-defineOptions({
-  name: "ComparisonTable",
-});
-</script>
 
 <style scoped>
 .comparison-table {

@@ -1,37 +1,13 @@
-<template>
-  <div class="home-page">
-    <!-- Subscription Banner -->
-    <SubscriptionBanner />
-
-    <!-- Hero Section -->
-    <HeroSection />
-
-    <!-- Features Grid -->
-    <FeaturesGrid />
-
-    <!-- Testimonials Section -->
-    <TestimonialsSection />
-
-    <!-- Learning Path Section -->
-    <LearningPathSection />
-
-    <!-- Footer CTA -->
-    <FooterCta />
-
-    <!-- Design System Demo -->
-    <DesignSystemDemo />
-  </div>
-</template>
-
 <script setup lang="ts">
 import { useHead } from "@unhead/vue";
-import SubscriptionBanner from "@/features/home/components/SubscriptionBanner.vue";
-import HeroSection from "@/features/home/components/HeroSection.vue";
-import FeaturesGrid from "@/features/home/components/FeaturesGrid.vue";
-import TestimonialsSection from "@/features/home/components/TestimonialsSection.vue";
-import LearningPathSection from "@/features/home/components/LearningPathSection.vue";
-import FooterCta from "@/features/home/components/FooterCta.vue";
+
 import DesignSystemDemo from "@/features/home/components/DesignSystemDemo.vue";
+import FeaturesGrid from "@/features/home/components/FeaturesGrid.vue";
+import FooterCta from "@/features/home/components/FooterCta.vue";
+import HeroSection from "@/features/home/components/HeroSection.vue";
+import LearningPathSection from "@/features/home/components/LearningPathSection.vue";
+import SubscriptionBanner from "@/features/home/components/SubscriptionBanner.vue";
+import TestimonialsSection from "@/features/home/components/TestimonialsSection.vue";
 
 // SEO Meta
 useHead({
@@ -67,6 +43,31 @@ useHead({
   ],
 });
 </script>
+
+<template>
+  <div class="home-page">
+    <!-- Subscription Banner -->
+    <SubscriptionBanner />
+
+    <!-- Hero Section -->
+    <HeroSection />
+
+    <!-- Features Grid -->
+    <FeaturesGrid />
+
+    <!-- Testimonials Section -->
+    <TestimonialsSection />
+
+    <!-- Learning Path Section -->
+    <LearningPathSection />
+
+    <!-- Footer CTA -->
+    <FooterCta />
+
+    <!-- Design System Demo -->
+    <DesignSystemDemo />
+  </div>
+</template>
 
 <style scoped>
 .home-page {

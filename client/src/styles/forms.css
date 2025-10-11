@@ -1,0 +1,158 @@
+/**
+ * Shared Form Styles
+ * Common styles for forms, inputs, labels, and validation states
+ * Used by: auth forms, checkout forms, and other form components
+ */
+
+/* Form container */
+.form-step {
+  @apply space-y-6;
+}
+
+/* Form group */
+.form-group {
+  @apply space-y-2;
+}
+
+/* Form labels */
+.form-label {
+  @apply block text-sm font-medium text-gray-700;
+  @apply dark:text-gray-300;
+}
+
+.form-label-required::after {
+  content: " *";
+  @apply text-red-500;
+}
+
+/* Form inputs */
+.form-input {
+  @apply w-full rounded-xl border-2 border-gray-200 px-4 py-3;
+  @apply bg-white text-gray-900 placeholder-gray-500;
+  @apply transition-all duration-200 ease-in-out;
+  @apply focus:border-primary-500 focus:outline-none focus:ring-4 focus:ring-primary-500/20;
+  @apply disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500;
+  @apply dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400;
+  @apply dark:focus:border-primary-400;
+  @apply min-h-[44px];
+}
+
+.form-input-error {
+  @apply border-red-500 focus:border-red-500 focus:ring-red-500/20;
+  @apply dark:border-red-600;
+}
+
+/* Form textarea */
+.form-textarea {
+  @apply form-input resize-none;
+  @apply min-h-[120px];
+}
+
+/* Form select */
+.form-select {
+  @apply form-input appearance-none pr-10;
+}
+
+/* Form checkbox */
+.form-checkbox {
+  @apply h-4 w-4 rounded border-gray-300 text-primary-600;
+  @apply focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+  @apply dark:border-gray-600 dark:bg-gray-800;
+}
+
+/* Form radio */
+.form-radio {
+  @apply form-checkbox rounded-full;
+}
+
+/* Form error message */
+.form-error {
+  @apply text-sm font-medium text-red-600;
+  @apply dark:text-red-400;
+}
+
+/* Form help text */
+.form-help {
+  @apply text-sm text-gray-500;
+  @apply dark:text-gray-400;
+}
+
+/* Form success message */
+.form-success {
+  @apply text-sm font-medium text-green-600;
+  @apply dark:text-green-400;
+}
+
+/* Form button (primary CTA) */
+.form-button {
+  @apply w-full rounded-xl px-6 py-4 font-semibold;
+  @apply bg-gradient-to-r from-primary-600 to-primary-700;
+  @apply text-white shadow-lg hover:shadow-xl;
+  @apply transition-all duration-200 ease-in-out;
+  @apply focus:outline-none focus:ring-4 focus:ring-primary-500/30;
+  @apply transform hover:-translate-y-0.5;
+  @apply disabled:cursor-not-allowed disabled:opacity-50 disabled:transform-none;
+  @apply min-h-[44px];
+}
+
+/* Form button secondary */
+.form-button-secondary {
+  @apply form-button;
+  @apply bg-none bg-gray-100 text-gray-700 shadow-none;
+  @apply hover:bg-gray-200 hover:shadow-none;
+  @apply dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600;
+}
+
+/* Password field container */
+.password-field {
+  @apply relative;
+}
+
+.password-toggle {
+  @apply absolute right-3 top-1/2 -translate-y-1/2;
+  @apply flex items-center justify-center;
+  @apply rounded-lg p-2;
+  @apply text-gray-400 transition-all duration-200;
+  @apply hover:bg-gray-100 hover:text-gray-600;
+  @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+  @apply dark:text-gray-500 dark:hover:bg-gray-700 dark:hover:text-gray-300;
+  @apply min-h-[44px] min-w-[44px];
+}
+
+/* Form validation states */
+.form-field-valid .form-input {
+  @apply border-green-500 focus:border-green-500 focus:ring-green-500/20;
+}
+
+.form-field-invalid .form-input {
+  @apply border-red-500 focus:border-red-500 focus:ring-red-500/20;
+}
+
+/* Form loading state */
+.form-loading {
+  @apply pointer-events-none opacity-60;
+}
+
+/* Form animations */
+.form-field-enter-active,
+.form-field-leave-active {
+  @apply transition-all duration-200;
+}
+
+.form-field-enter-from,
+.form-field-leave-to {
+  @apply -translate-y-2 opacity-0;
+}
+
+/* RTL support for forms */
+[dir="rtl"] .form-input {
+  @apply text-right;
+}
+
+[dir="rtl"] .password-toggle {
+  @apply left-3 right-auto;
+}
+
+[dir="rtl"] .form-select {
+  @apply pl-10 pr-4;
+}

@@ -1,3 +1,35 @@
+<script setup lang="ts">
+import { computed } from "vue";
+import { ChatBubbleLeftRightIcon } from "@heroicons/vue/24/outline";
+
+const testimonials = computed(() => [
+  {
+    id: "sarah",
+    textKey: "home.testimonials.sarah.text",
+    nameKey: "home.testimonials.sarah.name",
+    roleKey: "home.testimonials.sarah.role",
+    companyKey: "home.testimonials.sarah.company",
+    initials: "SC",
+  },
+  {
+    id: "michael",
+    textKey: "home.testimonials.michael.text",
+    nameKey: "home.testimonials.michael.name",
+    roleKey: "home.testimonials.michael.role",
+    companyKey: "home.testimonials.michael.company",
+    initials: "MR",
+  },
+  {
+    id: "emma",
+    textKey: "home.testimonials.emma.text",
+    nameKey: "home.testimonials.emma.name",
+    roleKey: "home.testimonials.emma.role",
+    companyKey: "home.testimonials.emma.company",
+    initials: "ET",
+  },
+]);
+</script>
+
 <template>
   <section class="testimonials-section" aria-labelledby="testimonials-title">
     <div class="testimonials-container">
@@ -35,38 +67,6 @@
     </div>
   </section>
 </template>
-
-<script setup lang="ts">
-import { computed } from "vue";
-import { ChatBubbleLeftRightIcon } from "@heroicons/vue/24/outline";
-
-const testimonials = computed(() => [
-  {
-    id: "sarah",
-    textKey: "home.testimonials.sarah.text",
-    nameKey: "home.testimonials.sarah.name",
-    roleKey: "home.testimonials.sarah.role",
-    companyKey: "home.testimonials.sarah.company",
-    initials: "SC",
-  },
-  {
-    id: "michael",
-    textKey: "home.testimonials.michael.text",
-    nameKey: "home.testimonials.michael.name",
-    roleKey: "home.testimonials.michael.role",
-    companyKey: "home.testimonials.michael.company",
-    initials: "MR",
-  },
-  {
-    id: "emma",
-    textKey: "home.testimonials.emma.text",
-    nameKey: "home.testimonials.emma.name",
-    roleKey: "home.testimonials.emma.role",
-    companyKey: "home.testimonials.emma.company",
-    initials: "ET",
-  },
-]);
-</script>
 
 <style scoped>
 .testimonials-section {

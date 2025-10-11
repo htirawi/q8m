@@ -1,3 +1,64 @@
+<script setup lang="ts">
+import { ref, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { usePaymentStore } from "@/stores/payment";
+import { useAuthStore } from "@/stores/auth";
+import { useI18n } from "vue-i18n";
+
+const route = useRoute();
+const router = useRouter();
+useI18n();
+const paymentStore = usePaymentStore();
+useAuthStore();
+
+// State
+const orderDetails = ref<any>(null);
+
+// Methods
+const goToDashboard = () => {
+  router.push("/dashboard");
+};
+
+const goToQuizzes = () => {
+  router.push("/quizzes");
+};
+
+const parseOrderDetails = () => {
+  // Parse order details from URL parameters or state
+  const orderId = route.query.orderId as string;
+  const planName = route.query.plan as string;
+  const amount = route.query.amount as string;
+  const currency = route.query.currency as string;
+  const billingCycle = route.query.billing as string;
+
+  if (orderId && planName && amount) {
+    orderDetails.value = {
+      orderId,
+      planName,
+      amount: `${amount} ${currency}`,
+      billingCycle,
+      date: new Date().toISOString(),
+    };
+  }
+};
+
+// Lifecycle
+onMounted(async () => {
+  // Refresh subscription to get updated entitlements
+  try {
+    await paymentStore.fetchSubscription();
+  } catch (error) {
+    console.warn("Failed to refresh subscription:", error);
+  }
+
+  // Parse order details
+  parseOrderDetails();
+
+  // Clear any payment errors
+  paymentStore.clearError();
+});
+</script>
+
 <template>
   <div class="payment-success-view">
     <div class="success-container">
@@ -154,67 +215,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref, onMounted } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import { usePaymentStore } from "@/stores/payment";
-import { useAuthStore } from "@/stores/auth";
-import { useI18n } from "vue-i18n";
-
-const route = useRoute();
-const router = useRouter();
-useI18n();
-const paymentStore = usePaymentStore();
-useAuthStore();
-
-// State
-const orderDetails = ref<any>(null);
-
-// Methods
-const goToDashboard = () => {
-  router.push("/dashboard");
-};
-
-const goToQuizzes = () => {
-  router.push("/quizzes");
-};
-
-const parseOrderDetails = () => {
-  // Parse order details from URL parameters or state
-  const orderId = route.query.orderId as string;
-  const planName = route.query.plan as string;
-  const amount = route.query.amount as string;
-  const currency = route.query.currency as string;
-  const billingCycle = route.query.billing as string;
-
-  if (orderId && planName && amount) {
-    orderDetails.value = {
-      orderId,
-      planName,
-      amount: `${amount} ${currency}`,
-      billingCycle,
-      date: new Date().toISOString(),
-    };
-  }
-};
-
-// Lifecycle
-onMounted(async () => {
-  // Refresh subscription to get updated entitlements
-  try {
-    await paymentStore.fetchSubscription();
-  } catch (error) {
-    console.warn("Failed to refresh subscription:", error);
-  }
-
-  // Parse order details
-  parseOrderDetails();
-
-  // Clear any payment errors
-  paymentStore.clearError();
-});
-</script>
 
 <style scoped>
 .payment-success-view {

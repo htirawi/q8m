@@ -1,3 +1,50 @@
+<script setup lang="ts">
+import { computed } from "vue";
+
+import { CheckIcon } from "@heroicons/vue/24/solid";
+
+import Button from "@/components/ui/Button.vue";
+import Card from "@/components/ui/Card.vue";
+
+const plans = computed(() => [
+  {
+    id: "free",
+    titleKey: "home.pricing.plans.free.title",
+    price: 0,
+    featured: false,
+    features: [
+      "home.pricing.plans.free.features.basic",
+      "home.pricing.plans.free.features.limited",
+      "home.pricing.plans.free.features.community",
+    ],
+  },
+  {
+    id: "pro",
+    titleKey: "home.pricing.plans.pro.title",
+    price: 29,
+    featured: true,
+    features: [
+      "home.pricing.plans.pro.features.unlimited",
+      "home.pricing.plans.pro.features.analytics",
+      "home.pricing.plans.pro.features.priority",
+      "home.pricing.plans.pro.features.advanced",
+    ],
+  },
+  {
+    id: "enterprise",
+    titleKey: "home.pricing.plans.enterprise.title",
+    price: 99,
+    featured: false,
+    features: [
+      "home.pricing.plans.enterprise.features.everything",
+      "home.pricing.plans.enterprise.features.custom",
+      "home.pricing.plans.enterprise.features.support",
+      "home.pricing.plans.enterprise.features.team",
+    ],
+  },
+]);
+</script>
+
 <template>
   <section class="pricing-teaser-section" aria-labelledby="pricing-title">
     <div class="pricing-teaser-container">
@@ -65,51 +112,6 @@
     </div>
   </section>
 </template>
-
-<script setup lang="ts">
-import { computed } from "vue";
-import Card from "@/components/ui/Card.vue";
-import Button from "@/components/ui/Button.vue";
-import { CheckIcon } from "@heroicons/vue/24/solid";
-
-const plans = computed(() => [
-  {
-    id: "free",
-    titleKey: "home.pricing.plans.free.title",
-    price: 0,
-    featured: false,
-    features: [
-      "home.pricing.plans.free.features.basic",
-      "home.pricing.plans.free.features.limited",
-      "home.pricing.plans.free.features.community",
-    ],
-  },
-  {
-    id: "pro",
-    titleKey: "home.pricing.plans.pro.title",
-    price: 29,
-    featured: true,
-    features: [
-      "home.pricing.plans.pro.features.unlimited",
-      "home.pricing.plans.pro.features.analytics",
-      "home.pricing.plans.pro.features.priority",
-      "home.pricing.plans.pro.features.advanced",
-    ],
-  },
-  {
-    id: "enterprise",
-    titleKey: "home.pricing.plans.enterprise.title",
-    price: 99,
-    featured: false,
-    features: [
-      "home.pricing.plans.enterprise.features.everything",
-      "home.pricing.plans.enterprise.features.custom",
-      "home.pricing.plans.enterprise.features.support",
-      "home.pricing.plans.enterprise.features.team",
-    ],
-  },
-]);
-</script>
 
 <style scoped>
 .pricing-teaser-section {

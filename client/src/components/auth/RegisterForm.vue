@@ -1,62 +1,21 @@
-<template>
-  <div class="register-form">
-    <!-- OAuth Buttons (Top) -->
-    <OAuthButtons :is-loading="isLoading" @oauth-login="handleOAuthLogin" />
-
-    <!-- Divider -->
-    <div class="form-divider">
-      <div class="divider-line"></div>
-      <span class="divider-text">{{ $t("auth.register.or") }}</span>
-      <div class="divider-line"></div>
-    </div>
-
-    <!-- Progressive Form -->
-    <form @submit.prevent="handleSubmit" class="progressive-form">
-      <!-- Step 1: Email Only -->
-      <EmailStep v-if="currentStep === 1" v-model:email="formData.email" :is-loading="isLoading"
-        @continue="proceedToStep2" />
-
-      <!-- Step 2: Additional Fields -->
-      <ProfileStep v-if="currentStep === 2" v-model:name="formData.name" v-model:password="formData.password"
-        v-model:accept-terms="formData.acceptTerms" :name-error="errors.name" :password-error="errors.password"
-        :terms-error="errors.acceptTerms" :is-loading="isLoading" @back="goBackToStep1" />
-
-      <!-- Error Message -->
-      <div v-if="error" class="error-message">
-        <svg class="error-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="10" />
-          <line x1="15" y1="9" x2="9" y2="15" />
-          <line x1="9" y1="9" x2="15" y2="15" />
-        </svg>
-        {{ error }}
-      </div>
-    </form>
-
-    <!-- Sign In Link -->
-    <div class="signin-link">
-      <p class="signin-text">
-        {{ $t("auth.register.alreadyHaveAccount") }}
-        <router-link :to="loginRoute" class="signin-button">
-          {{ $t("auth.register.signIn") }}
-        </router-link>
-      </p>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { ref, computed, reactive } from "vue";
+
 import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
-import { useAuthStore } from "@/stores/auth";
-import OAuthButtons from "@/features/auth/components/OAuthButtons.vue";
+
+import FormDivider from "@/components/ui/FormDivider.vue";
+import { useFormValidation } from "@/composables/useFormValidation";
 import EmailStep from "@/features/auth/components/EmailStep.vue";
+import OAuthButtons from "@/features/auth/components/OAuthButtons.vue";
 import ProfileStep from "@/features/auth/components/ProfileStep.vue";
+import { useAuthStore } from "@/stores/auth";
 import type { RegisterFormData, FormErrors } from "@/types/ui/component-props";
 
-const { t } = useI18n();
+useI18n();
 const authStore = useAuthStore();
 const route = useRoute();
+const { validateEmail, validateName, validatePassword, validateAcceptance } = useFormValidation();
 
 // Emits
 const emit = defineEmits<{
@@ -108,26 +67,24 @@ function goBackToStep1() {
 function validateForm(): boolean {
   errors.value = {};
 
-  if (!formData.email) {
-    errors.value.email = t("auth.validation.emailRequired");
-  } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-    errors.value.email = t("auth.validation.emailInvalid");
+  const emailError = validateEmail(formData.email);
+  if (emailError) {
+    errors.value.email = emailError;
   }
 
-  if (!formData.name.trim()) {
-    errors.value.name = t("auth.validation.nameRequired");
-  } else if (formData.name.trim().length < 2) {
-    errors.value.name = t("auth.validation.nameMinLength");
+  const nameError = validateName(formData.name);
+  if (nameError) {
+    errors.value.name = nameError;
   }
 
-  if (!formData.password) {
-    errors.value.password = t("auth.validation.passwordRequired");
-  } else if (formData.password.length < 8) {
-    errors.value.password = t("auth.validation.passwordMinLength");
+  const passwordError = validatePassword(formData.password);
+  if (passwordError) {
+    errors.value.password = passwordError;
   }
 
-  if (!formData.acceptTerms) {
-    errors.value.acceptTerms = t("auth.validation.acceptTermsRequired");
+  const acceptTermsError = validateAcceptance(formData.acceptTerms, "acceptTerms");
+  if (acceptTermsError) {
+    errors.value.acceptTerms = acceptTermsError;
   }
 
   return Object.keys(errors.value).length === 0;
@@ -161,25 +118,52 @@ async function handleSubmit(): Promise<void> {
 }
 </script>
 
+<template>
+  <div class="register-form">
+    <!-- OAuth Buttons (Top) -->
+    <OAuthButtons :is-loading="isLoading" @oauth-login="handleOAuthLogin" />
+
+    <!-- Divider -->
+    <FormDivider>{{ $t("auth.register.or") }}</FormDivider>
+
+    <!-- Progressive Form -->
+    <form @submit.prevent="handleSubmit" class="progressive-form">
+      <!-- Step 1: Email Only -->
+      <EmailStep v-if="currentStep === 1" v-model:email="formData.email" :is-loading="isLoading"
+        @continue="proceedToStep2" />
+
+      <!-- Step 2: Additional Fields -->
+      <ProfileStep v-if="currentStep === 2" v-model:name="formData.name" v-model:password="formData.password"
+        v-model:accept-terms="formData.acceptTerms" :name-error="errors.name" :password-error="errors.password"
+        :terms-error="errors.acceptTerms" :is-loading="isLoading" @back="goBackToStep1" />
+
+      <!-- Error Message -->
+      <div v-if="error" class="error-message">
+        <svg class="error-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10" />
+          <line x1="15" y1="9" x2="9" y2="15" />
+          <line x1="9" y1="9" x2="15" y2="15" />
+        </svg>
+        {{ error }}
+      </div>
+    </form>
+
+    <!-- Sign In Link -->
+    <div class="signin-link">
+      <p class="signin-text">
+        {{ $t("auth.register.alreadyHaveAccount") }}
+        <router-link :to="loginRoute" class="signin-button">
+          {{ $t("auth.register.signIn") }}
+        </router-link>
+      </p>
+    </div>
+  </div>
+</template>
+
 <style scoped>
 /* Form Container */
 .register-form {
   @apply w-full space-y-6;
-}
-
-/* Form Divider */
-.form-divider {
-  @apply my-8 flex items-center gap-4;
-}
-
-.divider-line {
-  @apply h-px flex-1 bg-gray-300;
-  @apply dark:bg-gray-600;
-}
-
-.divider-text {
-  @apply text-sm font-medium text-gray-500;
-  @apply dark:text-gray-400;
 }
 
 /* Progressive Form */

@@ -1,3 +1,66 @@
+<script setup lang="ts">
+import { onMounted, ref } from "vue";
+import { useRouter } from "vue-router";
+
+import PerformanceMonitor from "@/components/ui/PerformanceMonitor.vue";
+import ToastContainer from "@/components/ui/ToastContainer.vue";
+import { usePWA } from "@/composables/usePWA";
+import { useSEO } from "@/composables/useSEO";
+import { useAuthStore } from "@/stores/auth";
+import { useThemeStore } from "@/stores/theme";
+
+// Stores
+const authStore = useAuthStore();
+const themeStore = useThemeStore();
+
+// Router
+const router = useRouter();
+
+// Composables
+const seo = useSEO();
+const pwa = usePWA();
+
+// State
+const showPerformanceMonitor = ref(import.meta.env.DEV);
+
+// Methods
+const skipToMain = (event: Event) => {
+  event.preventDefault();
+  const mainContent = document.getElementById("main-content");
+  if (mainContent) {
+    mainContent.focus();
+    mainContent.scrollIntoView({ behavior: "smooth" });
+  }
+};
+
+const handleLogout = async () => {
+  await authStore.logout();
+  router.push("/");
+};
+
+// Initialize app
+onMounted(async () => {
+  // Initialize theme
+  themeStore.initializeTheme();
+
+  // Initialize PWA
+  await pwa.initialize();
+
+  // Try to restore authentication state
+  await authStore.initializeAuth();
+
+  // Set up default SEO
+  seo.updateSEO({
+    title: "q8m - Master Frontend Development Interviews",
+    description:
+      "Master frontend development with 500+ curated interview questions covering Angular, React, Next.js, Redux, TypeScript, and advanced topics. Expert-level content for developers.",
+    structuredData: seo.generateOrganizationStructuredData(),
+  });
+
+  // Preconnect and preload are handled by PWA composable internally
+});
+</script>
+
 <template>
   <div class="app-layout">
     <!-- Skip Links for Accessibility -->
@@ -153,68 +216,6 @@
     <PerformanceMonitor v-if="showPerformanceMonitor" />
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref, onMounted } from "vue";
-import { useRouter } from "vue-router";
-import { useAuthStore } from "@/stores/auth";
-import { useThemeStore } from "@/stores/theme";
-import { useSEO } from "@/composables/useSEO";
-import { usePWA } from "@/composables/usePWA";
-import ToastContainer from "@/components/ui/ToastContainer.vue";
-import PerformanceMonitor from "@/components/ui/PerformanceMonitor.vue";
-
-// Stores
-const authStore = useAuthStore();
-const themeStore = useThemeStore();
-
-// Router
-const router = useRouter();
-
-// Composables
-const seo = useSEO();
-const pwa = usePWA();
-
-// State
-const showPerformanceMonitor = ref(import.meta.env.DEV);
-
-// Methods
-const skipToMain = (event: Event) => {
-  event.preventDefault();
-  const mainContent = document.getElementById("main-content");
-  if (mainContent) {
-    mainContent.focus();
-    mainContent.scrollIntoView({ behavior: "smooth" });
-  }
-};
-
-const handleLogout = async () => {
-  await authStore.logout();
-  router.push("/");
-};
-
-// Initialize app
-onMounted(async () => {
-  // Initialize theme
-  themeStore.initializeTheme();
-
-  // Initialize PWA
-  await pwa.initialize();
-
-  // Try to restore authentication state
-  await authStore.initializeAuth();
-
-  // Set up default SEO
-  seo.updateSEO({
-    title: "q8m - Master Frontend Development Interviews",
-    description:
-      "Master frontend development with 500+ curated interview questions covering Angular, React, Next.js, Redux, TypeScript, and advanced topics. Expert-level content for developers.",
-    structuredData: seo.generateOrganizationStructuredData(),
-  });
-
-  // Preconnect and preload are handled by PWA composable internally
-});
-</script>
 
 <style scoped>
 .app-layout {

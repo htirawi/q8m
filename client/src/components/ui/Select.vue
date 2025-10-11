@@ -1,27 +1,6 @@
-<template>
-  <div class="select-wrapper">
-    <select :id="id" :value="modelValue" :disabled="disabled" :required="required" :aria-label="ariaLabel"
-      :aria-describedby="ariaDescribedby" :aria-invalid="hasError" :aria-required="required" :class="selectClasses"
-      @change="handleChange" @blur="handleBlur" @focus="handleFocus">
-      <option v-if="placeholder" value="" disabled>
-        {{ placeholder }}
-
-      </option>
-      <option v-for="option in options" :key="option.value" :value="option.value" :disabled="option.disabled">
-        {{ option.label }}
-
-      </option>
-    </select>
-    <div class="select-icon" aria-hidden="true">
-      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-      </svg>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { computed } from "vue";
+
 import type { SelectProps } from "@/types/ui/component-props";
 
 const props = withDefaults(defineProps<SelectProps>(), {
@@ -79,8 +58,27 @@ const handleBlur = (event: FocusEvent) => {
 const handleFocus = (event: FocusEvent) => {
   emit("focus", event);
 };
-
 </script>
+
+<template>
+  <div class="select-wrapper">
+    <select :id="id" :value="modelValue" :disabled="disabled" :required="required" :aria-label="ariaLabel"
+      :aria-describedby="ariaDescribedby" :aria-invalid="hasError" :aria-required="required" :class="selectClasses"
+      @change="handleChange" @blur="handleBlur" @focus="handleFocus">
+      <option v-if="placeholder" value="" disabled>
+        {{ placeholder }}
+      </option>
+      <option v-for="option in options" :key="option.value" :value="option.value" :disabled="option.disabled">
+        {{ option.label }}
+      </option>
+    </select>
+    <div class="select-icon" aria-hidden="true">
+      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+      </svg>
+    </div>
+  </div>
+</template>
 
 <style scoped>
 .select-wrapper {

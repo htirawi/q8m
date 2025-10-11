@@ -1,3 +1,24 @@
+<script setup lang="ts">
+import { useI18n } from "vue-i18n";
+
+useI18n();
+
+// Last updated date
+const lastUpdated = "January 15, 2024";
+
+// Table of contents sections
+const sections = [
+  { id: "introduction", titleKey: "legal.privacy.toc.introduction" },
+  { id: "information-collection", titleKey: "legal.privacy.toc.informationCollection" },
+  { id: "information-usage", titleKey: "legal.privacy.toc.informationUsage" },
+  { id: "information-sharing", titleKey: "legal.privacy.toc.informationSharing" },
+  { id: "data-security", titleKey: "legal.privacy.toc.dataSecurity" },
+  { id: "your-rights", titleKey: "legal.privacy.toc.yourRights" },
+  { id: "cookies", titleKey: "legal.privacy.toc.cookies" },
+  { id: "contact", titleKey: "legal.privacy.toc.contact" },
+];
+</script>
+
 <template>
   <div class="privacy-page">
     <!-- Header Section -->
@@ -216,27 +237,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { useI18n } from "vue-i18n";
-
-useI18n();
-
-// Last updated date
-const lastUpdated = "January 15, 2024";
-
-// Table of contents sections
-const sections = [
-  { id: "introduction", titleKey: "legal.privacy.toc.introduction" },
-  { id: "information-collection", titleKey: "legal.privacy.toc.informationCollection" },
-  { id: "information-usage", titleKey: "legal.privacy.toc.informationUsage" },
-  { id: "information-sharing", titleKey: "legal.privacy.toc.informationSharing" },
-  { id: "data-security", titleKey: "legal.privacy.toc.dataSecurity" },
-  { id: "your-rights", titleKey: "legal.privacy.toc.yourRights" },
-  { id: "cookies", titleKey: "legal.privacy.toc.cookies" },
-  { id: "contact", titleKey: "legal.privacy.toc.contact" },
-];
-</script>
 
 <style scoped>
 /* Page Layout */

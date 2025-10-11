@@ -1,3 +1,10 @@
+<script setup lang="ts">
+import { useI18n } from "vue-i18n";
+
+useI18n();
+
+</script>
+
 <template>
   <div class="checkout-header">
     <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
@@ -10,13 +17,6 @@
     </p>
   </div>
 </template>
-
-<script setup lang="ts">
-import { useI18n } from "vue-i18n";
-
-useI18n();
-
-</script>
 
 <style scoped>
 .checkout-header {

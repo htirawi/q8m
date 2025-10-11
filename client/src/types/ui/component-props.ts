@@ -123,6 +123,7 @@ export interface FormErrors {
   phone?: string;
   paymentMethod?: string;
   terms?: string;
+  acceptTerms?: string;
   [key: string]: string | undefined;
 }
 
@@ -325,4 +326,41 @@ export interface VirtualScrollProps<T = Record<string, string | number | boolean
   containerHeight: number;
   overscan?: number;
   getItemKey?: (item: T, index: number) => string | number;
+}
+
+/**
+ * Auth Component Interfaces
+ */
+
+export interface LoginFormEmits {
+  (e: "oauth-login", provider: "google"): void;
+  (e: "show-forgot-password"): void;
+  (e: "login-success"): void;
+}
+
+export interface UnifiedAuthFormData {
+  email: string;
+  name: string;
+  password: string;
+  acceptTerms: boolean;
+}
+
+export interface UnifiedAuthFormEmits {
+  (e: "oauth-login", provider: "google"): void;
+  (e: "show-forgot-password"): void;
+  (e: "login-success"): void;
+  (e: "registration-success", email: string): void;
+}
+
+export interface PasswordRequirements {
+  minLength: boolean;
+  hasUppercase: boolean;
+  hasLowercase: boolean;
+  hasNumber: boolean;
+}
+
+export interface PasswordStrength {
+  score: number;
+  level: string;
+  text: string;
 }

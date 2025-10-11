@@ -1,3 +1,90 @@
+<script setup lang="ts">
+import { ref, computed, onMounted, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { usePaymentStore } from "@/stores/payment";
+import { useAuthStore } from "@/stores/auth";
+import { useI18n } from "vue-i18n";
+import CheckoutForm from "@/components/payment/CheckoutForm.vue";
+
+const route = useRoute();
+const router = useRouter();
+const { t } = useI18n();
+const paymentStore = usePaymentStore();
+const authStore = useAuthStore();
+
+// State
+const error = ref<string | null>(null);
+
+// Computed
+const selectedPlan = computed(() => {
+  const planId = route.query.plan as string;
+  const plan = paymentStore.pricing.find((p) => p.planId === planId);
+  return plan || null;
+});
+
+// Methods
+const goToPricing = () => {
+  router.push("/subscribe");
+};
+
+const retry = async () => {
+  error.value = null;
+  try {
+    await paymentStore.fetchPricing();
+  } catch (err) {
+    error.value = err instanceof Error ? err.message : t("common.error.unknown");
+  }
+};
+
+const initializeCheckout = async () => {
+  try {
+    // Ensure user is authenticated
+    if (!authStore.isAuthenticated) {
+      router.push("/auth/login?redirect=/checkout");
+      return;
+    }
+
+    // Check if plan is specified
+    const planId = route.query.plan as string;
+    if (!planId) {
+      error.value = t("checkout.error.noPlan");
+      return;
+    }
+
+    // Load pricing if not already loaded
+    if (paymentStore.pricing.length === 0) {
+      await paymentStore.fetchPricing();
+    }
+
+    // Verify plan exists
+    const plan = paymentStore.pricing.find((p) => p.planId === planId);
+    if (!plan) {
+      error.value = t("checkout.error.invalidPlan");
+      return;
+    }
+
+    // Clear any previous errors
+    paymentStore.clearError();
+  } catch (err) {
+    error.value = err instanceof Error ? err.message : t("common.error.unknown");
+  }
+};
+
+// Watch for route changes
+watch(
+  () => route.query.plan,
+  () => {
+    initializeCheckout();
+  },
+  { immediate: false }
+);
+
+// Lifecycle
+onMounted(async () => {
+  await initializeCheckout();
+});
+</script>
+
 <template>
   <div class="checkout-view">
     <!-- Loading State -->
@@ -132,93 +219,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref, computed, onMounted, watch } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import { usePaymentStore } from "@/stores/payment";
-import { useAuthStore } from "@/stores/auth";
-import { useI18n } from "vue-i18n";
-import CheckoutForm from "@/components/payment/CheckoutForm.vue";
-
-const route = useRoute();
-const router = useRouter();
-const { t } = useI18n();
-const paymentStore = usePaymentStore();
-const authStore = useAuthStore();
-
-// State
-const error = ref<string | null>(null);
-
-// Computed
-const selectedPlan = computed(() => {
-  const planId = route.query.plan as string;
-  const plan = paymentStore.pricing.find((p) => p.planId === planId);
-  return plan || null;
-});
-
-// Methods
-const goToPricing = () => {
-  router.push("/subscribe");
-};
-
-const retry = async () => {
-  error.value = null;
-  try {
-    await paymentStore.fetchPricing();
-  } catch (err) {
-    error.value = err instanceof Error ? err.message : t("common.error.unknown");
-  }
-};
-
-const initializeCheckout = async () => {
-  try {
-    // Ensure user is authenticated
-    if (!authStore.isAuthenticated) {
-      router.push("/auth/login?redirect=/checkout");
-      return;
-    }
-
-    // Check if plan is specified
-    const planId = route.query.plan as string;
-    if (!planId) {
-      error.value = t("checkout.error.noPlan");
-      return;
-    }
-
-    // Load pricing if not already loaded
-    if (paymentStore.pricing.length === 0) {
-      await paymentStore.fetchPricing();
-    }
-
-    // Verify plan exists
-    const plan = paymentStore.pricing.find((p) => p.planId === planId);
-    if (!plan) {
-      error.value = t("checkout.error.invalidPlan");
-      return;
-    }
-
-    // Clear any previous errors
-    paymentStore.clearError();
-  } catch (err) {
-    error.value = err instanceof Error ? err.message : t("common.error.unknown");
-  }
-};
-
-// Watch for route changes
-watch(
-  () => route.query.plan,
-  () => {
-    initializeCheckout();
-  },
-  { immediate: false }
-);
-
-// Lifecycle
-onMounted(async () => {
-  await initializeCheckout();
-});
-</script>
 
 <style scoped>
 .checkout-view {

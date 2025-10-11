@@ -1,3 +1,79 @@
+<script setup lang="ts">
+import { ref, computed, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { usePaymentStore } from "@/stores/payment";
+import { useI18n } from "vue-i18n";
+
+const route = useRoute();
+const router = useRouter();
+const { t } = useI18n();
+const paymentStore = usePaymentStore();
+
+// State
+const errorDetails = ref<any>(null);
+
+// Computed
+const errorMessage = computed(() => {
+  const errorCode = route.query.error as string;
+  const message = route.query.message as string;
+
+  if (message) return message;
+
+  // Default messages based on error codes
+  const errorMessages: Record<string, string> = {
+    PAYMENT_DECLINED: t("payment.error.messages.declined"),
+    INSUFFICIENT_FUNDS: t("payment.error.messages.insufficientFunds"),
+    CARD_EXPIRED: t("payment.error.messages.cardExpired"),
+    INVALID_CARD: t("payment.error.messages.invalidCard"),
+    NETWORK_ERROR: t("payment.error.messages.networkError"),
+    TIMEOUT: t("payment.error.messages.timeout"),
+    CANCELLED: t("payment.error.messages.cancelled"),
+  };
+
+  return errorMessages[errorCode] || t("payment.error.messages.default");
+});
+
+const formattedTimestamp = computed(() => {
+  if (!errorDetails.value?.timestamp) return new Date().toLocaleString();
+  return new Date(errorDetails.value.timestamp).toLocaleString();
+});
+
+// Methods
+const retryPayment = () => {
+  const plan = route.query.plan as string;
+  if (plan) {
+    router.push(`/checkout?plan=${plan}`);
+  } else {
+    router.push("/subscribe");
+  }
+};
+
+const goToPricing = () => {
+  router.push("/subscribe");
+};
+
+const parseErrorDetails = () => {
+  const errorCode = route.query.error as string;
+  const orderId = route.query.orderId as string;
+  const plan = route.query.plan as string;
+
+  if (errorCode) {
+    errorDetails.value = {
+      errorCode,
+      orderId,
+      plan,
+      timestamp: new Date().toISOString(),
+    };
+  }
+};
+
+// Lifecycle
+onMounted(() => {
+  parseErrorDetails();
+  paymentStore.clearError();
+});
+</script>
+
 <template>
   <div class="payment-error-view">
     <div class="error-container">
@@ -182,82 +258,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import { usePaymentStore } from "@/stores/payment";
-import { useI18n } from "vue-i18n";
-
-const route = useRoute();
-const router = useRouter();
-const { t } = useI18n();
-const paymentStore = usePaymentStore();
-
-// State
-const errorDetails = ref<any>(null);
-
-// Computed
-const errorMessage = computed(() => {
-  const errorCode = route.query.error as string;
-  const message = route.query.message as string;
-
-  if (message) return message;
-
-  // Default messages based on error codes
-  const errorMessages: Record<string, string> = {
-    PAYMENT_DECLINED: t("payment.error.messages.declined"),
-    INSUFFICIENT_FUNDS: t("payment.error.messages.insufficientFunds"),
-    CARD_EXPIRED: t("payment.error.messages.cardExpired"),
-    INVALID_CARD: t("payment.error.messages.invalidCard"),
-    NETWORK_ERROR: t("payment.error.messages.networkError"),
-    TIMEOUT: t("payment.error.messages.timeout"),
-    CANCELLED: t("payment.error.messages.cancelled"),
-  };
-
-  return errorMessages[errorCode] || t("payment.error.messages.default");
-});
-
-const formattedTimestamp = computed(() => {
-  if (!errorDetails.value?.timestamp) return new Date().toLocaleString();
-  return new Date(errorDetails.value.timestamp).toLocaleString();
-});
-
-// Methods
-const retryPayment = () => {
-  const plan = route.query.plan as string;
-  if (plan) {
-    router.push(`/checkout?plan=${plan}`);
-  } else {
-    router.push("/subscribe");
-  }
-};
-
-const goToPricing = () => {
-  router.push("/subscribe");
-};
-
-const parseErrorDetails = () => {
-  const errorCode = route.query.error as string;
-  const orderId = route.query.orderId as string;
-  const plan = route.query.plan as string;
-
-  if (errorCode) {
-    errorDetails.value = {
-      errorCode,
-      orderId,
-      plan,
-      timestamp: new Date().toISOString(),
-    };
-  }
-};
-
-// Lifecycle
-onMounted(() => {
-  parseErrorDetails();
-  paymentStore.clearError();
-});
-</script>
 
 <style scoped>
 .payment-error-view {
