@@ -9,7 +9,6 @@ export interface GatewayResponseBase {
   status: string;
   create_time?: string;
   update_time?: string;
-  [key: string]: string | number | boolean | GatewayAmount | GatewayPayer | undefined;
 }
 
 export interface GatewayAmount {
@@ -68,10 +67,10 @@ export type PaymentGatewayResponse =
 export interface PaymentStatusDetails {
   status: string;
   transactionId?: string;
-  amount?: string;
+  amount?: string | number;
   currency?: string;
   paymentBrand?: string;
   responseCode?: string;
   responseMessage?: string;
-  [key: string]: string | undefined;
+  [key: string]: string | number | undefined;
 }

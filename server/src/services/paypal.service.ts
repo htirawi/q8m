@@ -423,7 +423,7 @@ export class PayPalService {
    */
   private async handlePaymentRefunded(webhookData: PayPalWebhookData): Promise<void> {
     try {
-      const resource = webhookData.resource as {
+      const resource = webhookData.resource as unknown as {
         parent_payment: string;
         amount: { total: string; currency: string };
         id: string;

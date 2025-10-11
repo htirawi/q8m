@@ -479,8 +479,8 @@ export class PayPalController {
         return;
       }
 
-      // Mark as completed
-      await paymentRepository.markAsCompleted(payment.paymentId, webhookEvent);
+      // Mark as completed (webhookEvent includes the full payload)
+      await paymentRepository.markAsCompleted(payment.paymentId, undefined);
 
       // Create subscription (pass request for logging)
       await this.createSubscription(payment, request);
