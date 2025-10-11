@@ -8,37 +8,33 @@
       {{ $t("a11y.skipToMain") }}
     </a>
 
-    <!-- Header Section -->
-    <div class="auth-header">
-      <div class="container">
-        <div class="header-content">
-          <!-- Logo -->
-          <div class="logo-section">
-            <div class="logo-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M12 2L2 7l10 5 10-5-10-5z" />
-                <path d="M2 17l10 5 10-5" />
-                <path d="M2 12l10 5 10-5" />
-              </svg>
-            </div>
-            <h1 class="logo-text">q8m</h1>
+    <!-- Main Content -->
+    <main id="main-content" class="auth-content">
+      <div class="auth-container">
+        <!-- Logo Section -->
+        <div class="logo-section">
+          <div class="logo-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2L2 7l10 5 10-5-10-5z" />
+              <path d="M2 17l10 5 10-5" />
+              <path d="M2 12l10 5 10-5" />
+            </svg>
           </div>
+          <h1 class="logo-text">q8m</h1>
+        </div>
 
-          <!-- Dynamic Title and Subtitle based on mode -->
-          <h2 class="auth-title">
+        <!-- Title and Subtitle -->
+        <div class="title-section">
+          <h2 class="main-title">
             {{ $t(`auth.${mode}.${mode === 'login' ? 'welcomeBack' : 'title'}`) }}
           </h2>
-          <p class="auth-subtitle">
+          <p class="subtitle">
             {{ $t(`auth.${mode}.subtitle`) }}
           </p>
         </div>
-      </div>
-    </div>
 
-    <!-- Main Content -->
-    <main id="main-content" class="auth-content">
-      <div class="container">
-        <div class="auth-form-container">
+        <!-- Form Container -->
+        <div class="form-section">
           <!-- Dynamic Form Component based on mode -->
           <LoginForm
             v-if="mode === 'login'"
@@ -138,32 +134,28 @@ function handleShowForgotPassword() {
 </script>
 
 <style scoped>
-/* Page Layout */
+/* Page Layout - Clean white background like in screenshot */
 .auth-page {
-  @apply min-h-screen bg-gray-50;
+  @apply min-h-screen bg-white;
   @apply dark:bg-gray-900;
 }
 
-.container {
-  @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
+/* Main Content - Centered layout */
+.auth-content {
+  @apply flex min-h-screen items-center justify-center px-4 py-12;
 }
 
-/* Header Section */
-.auth-header {
-  @apply border-b border-gray-200 bg-white;
-  @apply dark:border-gray-700 dark:bg-gray-800;
+.auth-container {
+  @apply w-full max-w-md space-y-8;
 }
 
-.header-content {
-  @apply py-8 text-center;
-}
-
+/* Logo Section - Centered with proper spacing */
 .logo-section {
-  @apply mb-6 flex items-center justify-center gap-3;
+  @apply flex items-center justify-center gap-3;
 }
 
 .logo-icon {
-  @apply h-10 w-10 rounded-lg bg-primary-600;
+  @apply h-10 w-10 rounded-lg bg-blue-600;
   @apply flex items-center justify-center text-white;
   @apply shadow-sm;
 }
@@ -177,39 +169,41 @@ function handleShowForgotPassword() {
   @apply dark:text-white;
 }
 
-.auth-title {
-  @apply mb-4 text-3xl font-bold text-gray-900;
+/* Title Section - Professional typography */
+.title-section {
+  @apply text-center;
+}
+
+.main-title {
+  @apply text-2xl font-bold text-gray-900;
   @apply dark:text-white;
-  @apply sm:text-4xl;
+  @apply sm:text-3xl;
+  @apply mb-4;
 }
 
-.auth-subtitle {
-  @apply text-lg text-gray-600;
+.subtitle {
+  @apply text-base text-gray-600;
   @apply dark:text-gray-400;
-  @apply mx-auto max-w-2xl;
+  @apply leading-relaxed;
 }
 
-/* Main Content */
-.auth-content {
-  @apply py-12;
-}
-
-.auth-form-container {
-  @apply mx-auto max-w-md;
+/* Form Section */
+.form-section {
+  @apply space-y-6;
 }
 
 /* Responsive Design */
 @media (max-width: 640px) {
-  .auth-title {
-    @apply text-2xl;
+  .main-title {
+    @apply text-xl;
   }
 
-  .auth-subtitle {
-    @apply text-base;
+  .subtitle {
+    @apply text-sm;
   }
 
-  .header-content {
-    @apply py-6;
+  .auth-container {
+    @apply max-w-sm;
   }
 }
 </style>
