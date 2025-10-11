@@ -1,27 +1,6 @@
-import type { PricingInfo } from "@services/currency.service.js";
 import { currencyService } from "@services/currency.service.js";
 
-export interface PlanPricing {
-  planId: string;
-  name: string;
-  description: string;
-  features: string[];
-  usdPrice: number;
-  pricing: Record<string, PricingInfo>;
-  popular?: boolean;
-  recommended?: boolean;
-}
-
-export interface PricingTier {
-  id: "JUNIOR" | "INTERMEDIATE" | "SENIOR" | "BUNDLE";
-  name: string;
-  description: string;
-  features: string[];
-  monthlyPrice: number;
-  yearlyPrice: number;
-  isPopular: boolean;
-  isRecommended: boolean;
-}
+import type { PlanPricing, PricingTier } from "../types/services/pricing";
 
 export class PricingService {
   private static instance: PricingService;

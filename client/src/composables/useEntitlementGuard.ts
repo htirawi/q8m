@@ -4,20 +4,13 @@
  * Provides utilities for checking user entitlements and protecting routes
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
+import type { RouteLocationNormalized, NavigationGuardNext } from "vue-router";
 import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
 import { usePaymentStore } from "@/stores/payment";
 import { useAuthStore } from "@/stores/auth";
-
-export interface EntitlementGuardOptions {
-  requiredEntitlement?: string;
-  requiredContentLevel?: string;
-  redirectTo?: string;
-  showUpgradeModal?: boolean;
-}
+import type { EntitlementGuardOptions } from "@/types/composables/entitlement";
 
 export function useEntitlementGuard(options: EntitlementGuardOptions = {}) {
   const router = useRouter();
@@ -185,7 +178,11 @@ export function useEntitlementGuard(options: EntitlementGuardOptions = {}) {
 
 // Higher-order function for route guards
 export function createEntitlementGuard(options: EntitlementGuardOptions) {
-  return async (to: any, from: any, next: any) => {
+  return async (
+    _to: RouteLocationNormalized,
+    _from: RouteLocationNormalized,
+    next: NavigationGuardNext
+  ) => {
     const guard = useEntitlementGuard(options);
     const hasAccess = await guard.checkAccess();
 

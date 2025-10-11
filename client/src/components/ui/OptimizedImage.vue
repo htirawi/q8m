@@ -1,33 +1,13 @@
 <template>
-  <img
-    :src="optimizedSrc"
-    :alt="alt"
-    :class="imageClasses"
-    :loading="lazy ? 'lazy' : 'eager'"
-    :decoding="decoding"
-    :sizes="sizes"
-    :srcset="srcset"
-    @load="handleLoad"
-    @error="handleError"
-  />
+  <img :src="optimizedSrc" :alt="alt" :class="imageClasses" :loading="lazy ? 'lazy' : 'eager'" :decoding="decoding"
+    :sizes="sizes" :srcset="srcset" @load="handleLoad" @error="handleError" />
 </template>
 
 <script setup lang="ts">
 import { computed, ref } from "vue";
+import type { OptimizedImageProps } from "@/types/ui/component-props";
 
-interface Props {
-  src: string;
-  alt: string;
-  width?: number;
-  height?: number;
-  lazy?: boolean;
-  quality?: number;
-  format?: "webp" | "jpeg" | "png" | "auto";
-  sizes?: string;
-  class?: string;
-}
-
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<OptimizedImageProps>(), {
   lazy: true,
   quality: 80,
   format: "auto",

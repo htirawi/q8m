@@ -6,23 +6,15 @@
       </span>
 
       <div class="billing-toggle-switch">
-        <button
-          @click="setBillingCycle('monthly')"
-          class="billing-toggle-option"
+        <button @click="setBillingCycle('monthly')" class="billing-toggle-option"
           :class="{ 'billing-toggle-option--active': modelValue === 'monthly' }"
-          :aria-pressed="modelValue === 'monthly'"
-          type="button"
-        >
+          :aria-pressed="modelValue === 'monthly'" type="button">
           {{ $t("pricing.billing.monthly") }}
         </button>
 
-        <button
-          @click="setBillingCycle('yearly')"
-          class="billing-toggle-option billing-toggle-option--yearly"
-          :class="{ 'billing-toggle-option--active': modelValue === 'yearly' }"
-          :aria-pressed="modelValue === 'yearly'"
-          type="button"
-        >
+        <button @click="setBillingCycle('yearly')" class="billing-toggle-option billing-toggle-option--yearly"
+          :class="{ 'billing-toggle-option--active': modelValue === 'yearly' }" :aria-pressed="modelValue === 'yearly'"
+          type="button">
           {{ $t("pricing.billing.yearly") }}
           <span v-if="modelValue === 'yearly'" class="billing-toggle-save-badge">
             {{ $t("pricing.billing.savePercent", { percent: 17 }) }}
@@ -34,18 +26,11 @@
 </template>
 
 <script setup lang="ts">
-import type { BillingCycle } from "@/components/pricing/pricing.config";
+import type { BillingToggleProps, BillingToggleEmits } from "@/types/ui/component-props";
+import type { BillingCycle } from "@/types/domain/billing";
 
-interface Props {
-  modelValue: BillingCycle;
-}
-
-interface Emits {
-  (e: "update:modelValue", value: BillingCycle): void;
-}
-
-defineProps<Props>();
-const emit = defineEmits<Emits>();
+defineProps<BillingToggleProps>();
+const emit = defineEmits<BillingToggleEmits>();
 
 const setBillingCycle = (cycle: BillingCycle) => {
   emit("update:modelValue", cycle);

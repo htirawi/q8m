@@ -1,28 +1,13 @@
 <template>
   <div class="protected-download">
     <!-- Download Button -->
-    <button
-      @click="handleDownload"
-      :disabled="isLoading || !hasAccess"
-      class="download-btn"
-      :class="{
-        'btn-primary': hasAccess,
-        'btn-disabled': !hasAccess || isLoading,
-      }"
-    >
-      <svg
-        v-if="!isLoading"
-        class="mr-2 h-5 w-5"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-        />
+    <button @click="handleDownload" :disabled="isLoading || !hasAccess" class="download-btn" :class="{
+      'btn-primary': hasAccess,
+      'btn-disabled': !hasAccess || isLoading,
+    }">
+      <svg v-if="!isLoading" class="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
       </svg>
 
       <div v-if="isLoading" class="loading-spinner">
@@ -34,14 +19,9 @@
 
     <!-- Access Denied Overlay -->
     <div v-if="!hasAccess && !isLoading" class="access-overlay">
-      <ContentAccessGuard
-        :category="category"
-        :required-content-level="requiredLevel"
-        :show-preview="false"
-        :show-plan-comparison="false"
-        :custom-title="$t('downloads.accessRequired')"
-        :custom-description="$t('downloads.upgradeToDownload', { filename })"
-      />
+      <ContentAccessGuard :category="category" :required-content-level="requiredLevel" :show-preview="false"
+        :show-plan-comparison="false" :custom-title="$t('downloads.accessRequired')"
+        :custom-description="$t('downloads.upgradeToDownload', { filename })" />
     </div>
 
     <!-- Download Info -->
@@ -72,12 +52,8 @@
     <div v-if="error" class="error-message">
       <div class="error-icon">
         <svg class="h-5 w-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"
-          />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
         </svg>
       </div>
       <p class="error-text">{{ error }}</p>
@@ -94,17 +70,9 @@ import { useI18n } from "vue-i18n";
 import { usePaymentStore } from "@/stores/payment";
 import { useContentAccess } from "@/composables/useEntitlementGuard";
 import ContentAccessGuard from "@/components/content/ContentAccessGuard.vue";
+import type { ProtectedDownloadProps } from "@/types/ui/component-props";
 
-interface Props {
-  category: string;
-  filename: string;
-  fileSize?: string;
-  fileFormat?: string;
-  buttonText?: string;
-  expiresIn?: number; // seconds, default 1 hour
-}
-
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<ProtectedDownloadProps>(), {
   fileSize: "N/A",
   fileFormat: "PDF",
   expiresIn: 3600,

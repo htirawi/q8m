@@ -5,8 +5,6 @@
  * These types represent the exact structure of data sent over the network.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 /**
  * Mock payment request DTO
  */
@@ -146,11 +144,23 @@ export interface PayPalPaymentResponseDto {
 }
 
 /**
+ * PayPal resource data
+ */
+export interface PayPalResourceData {
+  id: string;
+  state?: string;
+  amount?: { total: string; currency: string };
+  sale_id?: string;
+  parent_payment?: string;
+  [key: string]: string | number | boolean | { total: string; currency: string } | undefined;
+}
+
+/**
  * PayPal webhook data DTO
  */
 export interface PayPalWebhookDataDto {
   event_type: string;
-  resource: any;
+  resource: PayPalResourceData;
   id: string;
   create_time: string;
 }

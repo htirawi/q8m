@@ -119,6 +119,31 @@
       "confirmPassword": "Confirm New Password",
       "updatePassword": "Update Password",
       "success": "Password updated successfully"
+    },
+    "oauth": {
+      "processing": "Authenticating",
+      "pleaseWait": "Please wait while we complete your authentication...",
+      "success": "Authentication Successful",
+      "redirecting": "Redirecting you to your dashboard...",
+      "error": "Authentication Failed",
+      "tryAgain": "Try Again"
+    },
+    "fields": {
+      "email": "Email Address",
+      "emailPlaceholder": "Enter your email address",
+      "name": "Full Name",
+      "namePlaceholder": "Enter your full name",
+      "password": "Password",
+      "passwordPlaceholder": "Enter your password"
+    },
+    "validation": {
+      "emailRequired": "Email is required",
+      "emailInvalid": "Please enter a valid email address",
+      "nameRequired": "Name is required",
+      "nameMinLength": "Name must be at least 2 characters",
+      "passwordRequired": "Password is required",
+      "passwordMinLength": "Password must be at least 8 characters",
+      "acceptTermsRequired": "You must accept the terms and conditions"
     }
   },
   "pricing": {
@@ -452,7 +477,7 @@
       "startQuizzes": "Start Quizzes",
       "support": {
         "text": "Need help? Contact our support team at",
-        "email": "support@quizplatform.com"
+        "email": "support{'@'}quizplatform.com"
       }
     },
     "error": {

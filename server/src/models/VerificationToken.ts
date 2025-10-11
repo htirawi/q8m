@@ -7,11 +7,9 @@ export interface IVerificationToken extends Document {
   userId: mongoose.Types.ObjectId;
   token: string;
   type: "email_verification" | "password_reset" | "two_factor";
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  expiresAt: any;
+  expiresAt: Date;
   used: boolean;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  usedAt?: any;
+  usedAt?: Date;
   ipAddress?: string;
   userAgent?: string;
   isValid(): boolean;

@@ -4,43 +4,19 @@
       <label for="email" class="form-label">
         {{ $t("auth.fields.email") }}
       </label>
-      <input
-        id="email"
-        :model-value="email"
-        @input="handleInput"
-        @blur="handleBlur"
-        type="email"
-        autocomplete="email"
-        required
-        class="form-input"
-        :class="{ 'form-input-error': error }"
-        :placeholder="$t('auth.fields.emailPlaceholder')"
-      />
+      <input id="email" :model-value="email" @input="handleInput" @blur="handleBlur" type="email" autocomplete="email"
+        required class="form-input" :class="{ 'form-input-error': error }"
+        :placeholder="$t('auth.fields.emailPlaceholder')" />
       <p v-if="error" class="form-error">{{ error }}</p>
     </div>
 
-    <button
-      type="button"
-      @click="handleContinue"
-      :disabled="!isValid || isLoading"
-      class="continue-button"
-    >
+    <button type="button" @click="handleContinue" :disabled="!isValid || isLoading" class="continue-button">
       <span v-if="isLoading" class="button-content">
         <svg class="loading-spinner" viewBox="0 0 24 24">
-          <circle
-            cx="12"
-            cy="12"
-            r="10"
-            stroke="currentColor"
-            stroke-width="4"
-            fill="none"
-            opacity="0.25"
-          />
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" opacity="0.25" />
           <path
             d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-            fill="currentColor"
-            opacity="0.75"
-          />
+            fill="currentColor" opacity="0.75" />
         </svg>
         {{ $t("auth.register.processing") }}
       </span>
@@ -54,13 +30,9 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import { useI18n } from "vue-i18n";
+import type { EmailStepProps } from "@/types/ui/component-props";
 
-interface Props {
-  email: string;
-  isLoading: boolean;
-}
-
-const props = defineProps<Props>();
+const props = defineProps<EmailStepProps>();
 
 const emit = defineEmits<{
   "update:email": [value: string];
@@ -158,6 +130,7 @@ const handleContinue = () => {
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);

@@ -7,16 +7,13 @@ export interface IFxRate extends Document {
   rate: number;
   source: "api" | "manual" | "fallback";
   provider?: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  fetchedAt: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  expiresAt: any;
+  fetchedAt: Date;
+  expiresAt: Date;
   metadata?: {
     providerResponse?: Record<string, unknown>;
     errorMessage?: string;
   };
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  createdAt: any;
+  createdAt: Date;
   ageInHours?: number;
   isExpired?: boolean;
   isFresh(maxAgeHours?: number): boolean;

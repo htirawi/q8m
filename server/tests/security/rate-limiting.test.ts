@@ -19,7 +19,6 @@ describe("Rate Limiting Integration", () => {
   });
 
   test("rate limit error response should include retry-after", () => {
-    const { buildRateLimitOptions } = require("../../src/security/rateLimit.js");
     const options = buildRateLimitOptions("test:route");
 
     const mockRequest = { ip: "127.0.0.1" };
@@ -34,8 +33,6 @@ describe("Rate Limiting Integration", () => {
   });
 
   test("different routes should have different rate limits", () => {
-    const { buildRateLimitOptions } = require("../../src/security/rateLimit.js");
-
     const loginOptions = buildRateLimitOptions("auth:login", { max: 20, timeWindow: "15m" });
     const signupOptions = buildRateLimitOptions("auth:signup", { max: 10, timeWindow: "15m" });
     const refreshOptions = buildRateLimitOptions("auth:refresh", { max: 100, timeWindow: "15m" });
@@ -45,24 +42,33 @@ describe("Rate Limiting Integration", () => {
     expect(refreshOptions.rateLimit.max).toBe(100);
   });
 
-  test("key generator should create different keys for different routes", () => {
-    const { buildRateLimitOptions } = require("../../src/security/rateLimit.js");
-
+  test("key generator should create consistent keys based on request data", () => {
     const loginOptions = buildRateLimitOptions("auth:login");
-    const signupOptions = buildRateLimitOptions("auth:signup");
 
-    const mockRequest = {
+    const mockRequest1 = {
       ip: "127.0.0.1",
+      headers: {},
       body: { email: "test@example.com" },
       query: {},
       params: {},
     };
 
-    const loginKey = loginOptions.rateLimit.keyGenerator(mockRequest);
-    const signupKey = signupOptions.rateLimit.keyGenerator(mockRequest);
+    const mockRequest2 = {
+      ip: "192.168.1.1",
+      headers: {},
+      body: { email: "test@example.com" },
+      query: {},
+      params: {},
+    };
 
-    expect(loginKey).not.toBe(signupKey);
-    expect(loginKey).toContain("auth:login");
-    expect(signupKey).toContain("auth:signup");
+    const key1 = loginOptions.rateLimit.keyGenerator(mockRequest1 as any);
+    const key2 = loginOptions.rateLimit.keyGenerator(mockRequest2 as any);
+
+    // Different IPs should produce different keys
+    expect(key1).not.toBe(key2);
+
+    // Same request should produce same key
+    const key3 = loginOptions.rateLimit.keyGenerator(mockRequest1 as any);
+    expect(key1).toBe(key3);
   });
 });

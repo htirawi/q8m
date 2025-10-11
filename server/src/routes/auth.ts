@@ -1,6 +1,5 @@
 import * as crypto from "crypto";
 
-
 import { env } from "@config/env.js";
 import { authenticate } from "@middlewares/auth.middleware.js";
 import { Session } from "@models/Session.js";
@@ -14,43 +13,16 @@ import type { FastifyInstance } from "fastify";
 import { z } from "zod";
 import { zodToJsonSchema } from "zod-to-json-schema";
 
-// Type definitions for request bodies
-interface RegisterBody {
-  email: string;
-  name: string;
-  password: string;
-}
-
-interface LoginBody {
-  email: string;
-  password: string;
-}
-
-interface VerifyEmailBody {
-  token: string;
-}
-
-interface ResendVerificationBody {
-  email: string;
-}
-
-interface ForgotPasswordBody {
-  email: string;
-}
-
-interface ResetPasswordBody {
-  token: string;
-  password: string;
-}
-
-interface ChangePasswordBody {
-  currentPassword: string;
-  newPassword: string;
-}
-
-interface RefreshTokenBody {
-  refreshToken: string;
-}
+import type {
+  ChangePasswordBody,
+  ForgotPasswordBody,
+  LoginBody,
+  RefreshTokenBody,
+  RegisterBody,
+  ResendVerificationBody,
+  ResetPasswordBody,
+  VerifyEmailBody,
+} from "../types/routes/auth";
 
 // Validation schemas
 const registerSchema = z
@@ -69,7 +41,7 @@ const registerSchema = z
       message: "You must accept the terms and conditions",
     }),
   })
-  .refine((data) => data.password === data.confirmPassword, {
+  .refine((data) => !data.confirmPassword || data.password === data.confirmPassword, {
     message: "Passwords don't match",
     path: ["confirmPassword"],
   });
@@ -976,4 +948,114 @@ export default async function authRoutes(fastify: FastifyInstance) {
       }
     }
   );
+
+  // Google OAuth callback
+  fastify.get("/google/callback", async (request, reply) => {
+    try {
+      // Get the OAuth2 token from Google
+      const token = await fastify.googleOAuth2.getAccessTokenFromAuthorizationCodeFlow(request);
+
+      // Fetch user profile from Google
+      const response = await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
+        headers: {
+          Authorization: `Bearer ${token.access_token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch user profile from Google");
+      }
+
+      const googleUser = (await response.json()) as {
+        id: string;
+        email: string;
+        name: string;
+        picture?: string;
+        verified_email: boolean;
+      };
+
+      // Check if user exists
+      let user = await User.findOne({ email: googleUser.email });
+
+      if (!user) {
+        // Create new user with OAuth
+        user = new User({
+          email: googleUser.email,
+          name: googleUser.name,
+          isEmailVerified: googleUser.verified_email,
+          entitlements: ["JUNIOR"], // Default entitlement
+          permissions: [],
+          acceptTerms: true,
+          acceptTermsAt: new Date(),
+          acceptTermsVersion: "1.0",
+          googleId: googleUser.id,
+        });
+        await user.save();
+
+        // Send welcome email for OAuth users
+        await emailService.sendWelcomeEmail(user.email, user.name);
+      } else if (!user.googleId) {
+        // Link existing account to Google OAuth
+        user.googleId = googleUser.id;
+        user.isEmailVerified = true;
+        await user.save();
+      }
+
+      // Reset login attempts on successful login
+      await user.resetLoginAttempts();
+
+      // Generate session
+      const session = new Session({
+        userId: user._id,
+        refreshToken: crypto.randomBytes(32).toString("hex"),
+        accessToken: crypto.randomBytes(32).toString("hex"),
+        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+        userAgent: request.headers["user-agent"],
+        ipAddress: request.ip,
+        isActive: true,
+        lastUsed: new Date(),
+      });
+
+      await session.save();
+
+      // Generate JWT tokens
+      const tokenPair = jwtService.generateTokenPair(user, session._id.toString());
+
+      // Set secure cookies
+      secureCookieService.setSecureCookie(reply, "accessToken", tokenPair.accessToken, {
+        maxAge: 15 * 60 * 1000, // 15 minutes
+        httpOnly: true,
+        secure: env.NODE_ENV === "production",
+        sameSite: "lax", // Changed to 'lax' for OAuth callback
+      });
+
+      secureCookieService.setSecureCookie(reply, "refreshToken", tokenPair.refreshToken, {
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        httpOnly: true,
+        secure: env.NODE_ENV === "production",
+        sameSite: "lax", // Changed to 'lax' for OAuth callback
+      });
+
+      // Redirect to client with success
+      const redirectUrl = new URL(env.CLIENT_URL);
+      redirectUrl.pathname = "/auth/callback";
+      redirectUrl.searchParams.set("success", "true");
+      redirectUrl.searchParams.set("provider", "google");
+
+      reply.redirect(redirectUrl.toString());
+    } catch (error: unknown) {
+      request.log.error({
+        error: error instanceof Error ? error.message : "Google OAuth failed",
+        message: "Google OAuth callback error",
+      });
+
+      // Redirect to client with error
+      const redirectUrl = new URL(env.CLIENT_URL);
+      redirectUrl.pathname = "/auth/callback";
+      redirectUrl.searchParams.set("error", "oauth_failed");
+      redirectUrl.searchParams.set("provider", "google");
+
+      reply.redirect(redirectUrl.toString());
+    }
+  });
 }

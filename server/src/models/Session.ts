@@ -5,8 +5,7 @@ export interface ISession extends Document {
   userId: mongoose.Types.ObjectId;
   refreshToken: string;
   accessToken: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  expiresAt: any;
+  expiresAt: Date;
   userAgent?: string;
   ipAddress?: string;
   device?: {
@@ -20,11 +19,9 @@ export interface ISession extends Document {
     timezone?: string;
   };
   isActive: boolean;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  lastUsed: any;
+  lastUsed: Date;
   isRevoked: boolean;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  revokedAt?: any;
+  revokedAt?: Date;
   revokedReason?:
     | "user_logout"
     | "password_change"

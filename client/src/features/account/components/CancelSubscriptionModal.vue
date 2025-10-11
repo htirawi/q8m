@@ -5,12 +5,7 @@
         <h3 class="modal-title">{{ $t("subscription.cancelConfirm") }}</h3>
         <button @click="handleClose" class="modal-close">
           <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M6 18L18 6M6 6l12 12"
-            />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
       </div>
@@ -33,11 +28,7 @@
         <button @click="handleClose" class="btn-secondary">
           {{ $t("common.cancel") }}
         </button>
-        <button
-          @click="handleConfirm"
-          :disabled="!selectedReason || isLoading"
-          class="btn-danger"
-        >
+        <button @click="handleConfirm" :disabled="!selectedReason || isLoading" class="btn-danger">
           <span v-if="isLoading" class="flex items-center">
             <div class="mr-2 h-4 w-4 animate-spin rounded-full border-b-2 border-white"></div>
             {{ $t("common.processing") }}
@@ -52,14 +43,9 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
+import type { CancelSubscriptionModalProps } from "@/types/ui/component-props";
 
-interface Props {
-  show: boolean;
-  reasons: Record<string, string>;
-  isLoading?: boolean;
-}
-
-const props = defineProps<Props>();
+const props = defineProps<CancelSubscriptionModalProps>();
 
 const emit = defineEmits<{
   close: [];

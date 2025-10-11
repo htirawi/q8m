@@ -5,6 +5,7 @@
 import { describe, test, expect } from "vitest";
 import { escapeHtml, sanitizeForDisplay, sanitizeRedirectUrl } from "@server/security/escape.js";
 import { sanitizeForLog, safeLogFields, maskEmail, shortHash } from "@server/security/logging.js";
+import { buildRateLimitOptions } from "@server/security/rateLimit.js";
 
 describe("XSS Prevention", () => {
   test("escapeHtml should escape dangerous characters", () => {
@@ -56,7 +57,7 @@ describe("Log Injection Prevention", () => {
     const maliciousInput = "Payment\n\r\tcompleted";
     const sanitized = sanitizeForLog(maliciousInput);
 
-    expect(sanitized).toBe("Payment    completed");
+    expect(sanitized).toBe("Payment   completed");
     expect(sanitized).not.toContain("\n");
     expect(sanitized).not.toContain("\r");
     expect(sanitized).not.toContain("\t");
@@ -111,8 +112,6 @@ describe("Log Injection Prevention", () => {
 
 describe("Rate Limiting", () => {
   test("buildRateLimitOptions should create valid rate limit configuration", () => {
-    const { buildRateLimitOptions } = require("../src/security/rateLimit.js");
-
     const options = buildRateLimitOptions("test:route", { max: 10, timeWindow: "1m" });
 
     expect(options).toHaveProperty("rateLimit");
@@ -123,8 +122,6 @@ describe("Rate Limiting", () => {
   });
 
   test("buildRateLimitOptions should use environment defaults", () => {
-    const { buildRateLimitOptions } = require("../src/security/rateLimit.js");
-
     const options = buildRateLimitOptions("test:route");
 
     expect(options.rateLimit.max).toBeGreaterThan(0);

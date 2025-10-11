@@ -1,10 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, no-console, no-undef */
 import { ref, computed, onMounted, readonly } from "vue";
-
-interface PWAInstallPrompt {
-  prompt: () => Promise<void>;
-  userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
-}
+import type { PWAInstallPrompt, WebAppManifest } from "@/types/composables/pwa";
 
 export function usePWA() {
   const isInstallable = ref(false);
@@ -18,7 +13,8 @@ export function usePWA() {
   const checkIfInstalled = () => {
     // Check if running in standalone mode
     const isStandalone = window.matchMedia("(display-mode: standalone)").matches;
-    const isInWebAppiOS = (window.navigator as any).standalone === true;
+    const nav = window.navigator as Navigator & { standalone?: boolean };
+    const isInWebAppiOS = nav.standalone === true;
 
     isInstalled.value = isStandalone || isInWebAppiOS;
   };
@@ -34,12 +30,10 @@ export function usePWA() {
       const choiceResult = await installPrompt.value.userChoice;
 
       if (choiceResult.outcome === "accepted") {
-        console.log("PWA installed successfully");
         isInstallable.value = false;
         installPrompt.value = null;
         return true;
       } else {
-        console.log("PWA installation dismissed");
         return false;
       }
     } catch (error) {
@@ -70,7 +64,6 @@ export function usePWA() {
         });
 
         swRegistration.value = registration;
-        console.log("Service Worker registered successfully:", registration);
 
         // Handle updates
         registration.addEventListener("updatefound", () => {
@@ -79,7 +72,6 @@ export function usePWA() {
             newWorker.addEventListener("statechange", () => {
               if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
                 updateAvailable.value = true;
-                console.log("New version available");
               }
             });
           }
@@ -98,7 +90,7 @@ export function usePWA() {
   // Handle install prompt
   const handleInstallPrompt = (e: Event) => {
     e.preventDefault();
-    installPrompt.value = e as any;
+    installPrompt.value = e as PWAInstallPrompt;
     isInstallable.value = true;
   };
 
@@ -108,7 +100,7 @@ export function usePWA() {
   };
 
   // Share content
-  const share = async (data: ShareData): Promise<boolean> => {
+  const share = async (data: { title?: string; text?: string; url?: string }): Promise<boolean> => {
     if ("share" in navigator) {
       try {
         await navigator.share(data);
@@ -147,7 +139,7 @@ export function usePWA() {
   };
 
   // Request notification permission
-  const requestNotificationPermission = async (): Promise<NotificationPermission> => {
+  const requestNotificationPermission = async (): Promise<"granted" | "denied" | "default"> => {
     if ("Notification" in window) {
       const permission = await Notification.requestPermission();
       return permission;
@@ -156,7 +148,16 @@ export function usePWA() {
   };
 
   // Show notification
-  const showNotification = (title: string, options?: NotificationOptions): boolean => {
+  const showNotification = (
+    title: string,
+    options?: {
+      body?: string;
+      icon?: string;
+      badge?: string;
+      tag?: string;
+      data?: Record<string, string | number | boolean>;
+    }
+  ): boolean => {
     if ("Notification" in window && Notification.permission === "granted") {
       const notification = new Notification(title, {
         icon: "/icons/icon-192x192.png",
@@ -179,7 +180,7 @@ export function usePWA() {
     try {
       const response = await fetch("/manifest.json");
       const manifest = await response.json();
-      return manifest;
+      return manifest as WebAppManifest;
     } catch (error) {
       console.error("Failed to fetch manifest:", error);
       return null;
@@ -244,7 +245,6 @@ export function usePWA() {
     window.addEventListener("appinstalled", () => {
       isInstalled.value = true;
       isInstallable.value = false;
-      console.log("PWA was installed");
     });
   };
 

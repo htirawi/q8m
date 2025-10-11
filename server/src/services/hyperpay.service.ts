@@ -1,4 +1,3 @@
-
 import { features } from "@config/appConfig.js";
 import type { IPurchase } from "@models/Purchase.js";
 import { Purchase } from "@models/Purchase.js";
@@ -9,46 +8,14 @@ import { entitlementService } from "@services/entitlement.service.js";
 import { pricingService } from "@services/pricing.service.js";
 import type { Plan } from "@shared/types/pricing";
 
-interface HyperPayPaymentRequest {
-  planType: Plan;
-  currency: "USD" | "JOD" | "SAR";
-  amount: number;
-  billingCycle: "monthly" | "yearly";
-  userId: string;
-  returnUrl: string;
-  cancelUrl: string;
-  ipAddress?: string;
-  userAgent?: string;
-  customerEmail: string;
-  customerName: string;
-}
+import type { PaymentStatusDetails } from "../types/payment-gateway";
+import type {
+  HyperPayPaymentRequest,
+  HyperPayPaymentResponse,
+  HyperPayWebhookData,
+} from "../types/services/payment-services";
 
-interface HyperPayPaymentResponse {
-  success: boolean;
-  checkoutUrl?: string;
-  paymentId: string;
-  purchaseId: string;
-  error?: string;
-}
-
-export interface HyperPayWebhookData {
-  id: string;
-  entity: {
-    id: string;
-    status: string;
-    amount: number;
-    currency: string;
-    notes: {
-      planType?: string;
-      billingCycle?: string;
-      userId?: string;
-    };
-    payment_id: string;
-    created_at: number;
-    updated_at: number;
-  };
-  event: string;
-}
+export type { HyperPayPaymentRequest, HyperPayPaymentResponse, HyperPayWebhookData };
 
 export class HyperPayService {
   private static instance: HyperPayService;
@@ -188,8 +155,7 @@ export class HyperPayService {
           planType: request.planType,
           billingCycle: request.billingCycle,
           userId: request.userId,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          purchaseId: (purchase._id as any).toString(),
+          purchaseId: purchase._id.toString(),
         },
         return_url: request.returnUrl,
         cancel_url: request.cancelUrl,
@@ -244,8 +210,7 @@ export class HyperPayService {
         safeLogFields({
           event: "hyperpay_payment_creation_error",
           error: error instanceof Error ? error.message : "Unknown error",
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          purchaseId: (purchase._id as any).toString(),
+          purchaseId: purchase._id.toString(),
         })
       );
       await purchase.markAsFailed(
@@ -389,8 +354,7 @@ export class HyperPayService {
             console.warn(
               safeLogFields({
                 event: "hyperpay_purchase_completed",
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                purchaseId: (purchase._id as any).toString(),
+                purchaseId: purchase._id.toString(),
                 method: "webhook",
               })
             );
@@ -404,8 +368,7 @@ export class HyperPayService {
             console.warn(
               safeLogFields({
                 event: "hyperpay_purchase_failed",
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                purchaseId: (purchase._id as any).toString(),
+                purchaseId: purchase._id.toString(),
                 method: "webhook",
                 eventType: event,
                 status: entity.status,
@@ -419,8 +382,7 @@ export class HyperPayService {
           console.warn(
             safeLogFields({
               event: "hyperpay_purchase_refunded",
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              purchaseId: (purchase._id as any).toString(),
+              purchaseId: purchase._id.toString(),
               method: "webhook",
             })
           );
@@ -542,8 +504,7 @@ export class HyperPayService {
         safeLogFields({
           event: "hyperpay_user_not_found",
           userId: purchase.userId.toString(),
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          purchaseId: (purchase._id as any).toString(),
+          purchaseId: String(purchase._id),
         })
       );
       return;
@@ -618,7 +579,9 @@ export class HyperPayService {
    */
   public async getPaymentStatus(
     paymentId: string
-  ): Promise<{ status: string; details: unknown } | null | { ok: false; code: "NOT_CONFIGURED" }> {
+  ): Promise<
+    { status: string; details: PaymentStatusDetails } | null | { ok: false; code: "NOT_CONFIGURED" }
+  > {
     if (!this.isConfigured) {
       return { ok: false, code: "NOT_CONFIGURED" };
     }

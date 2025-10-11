@@ -30,7 +30,7 @@ export interface ErrorResponse {
 }
 
 // Common success response type
-export interface SuccessResponse<T = unknown> {
+export interface SuccessResponse<T = Record<string, string | number | boolean>> {
   success: boolean;
   data?: T;
   message?: string;
@@ -51,6 +51,27 @@ export interface WebhookResponse {
   error?: string;
 }
 
+// Webhook resource data
+export interface WebhookResourceData {
+  id: string;
+  state?: string;
+  status?: string;
+  amount?: {
+    total: string;
+    currency: string;
+    details?: Record<string, string | number>;
+  };
+  sale_id?: string;
+  parent_payment?: string;
+  [key: string]: string | number | boolean | WebhookAmountData | undefined;
+}
+
+export interface WebhookAmountData {
+  total: string;
+  currency: string;
+  details?: Record<string, string | number>;
+}
+
 // Service configuration status
 export interface ServiceStatus {
   configured: boolean;
@@ -64,7 +85,7 @@ export interface LogFields {
   error?: string;
   stack?: string;
   userId?: string;
-  [key: string]: unknown;
+  [key: string]: string | number | boolean | undefined;
 }
 
 // Currency conversion result
@@ -110,7 +131,7 @@ export type MongooseQueryResult<T> = T | null;
 export type MongooseQueryResults<T> = T[];
 
 // Common service response types
-export interface ServiceResponse<T = unknown> {
+export interface ServiceResponse<T = Record<string, string | number | boolean>> {
   success: boolean;
   data?: T;
   error?: string;
@@ -143,17 +164,17 @@ export interface PaymentRequest {
 // Webhook data types
 export interface WebhookData {
   event_type: string;
-  resource: unknown;
+  resource: WebhookResourceData;
   id: string;
   create_time: string;
   event_version: string;
 }
 
 // Common validation error
-export interface ValidationError {
+export interface ValidationErrorDetail {
   field: string;
   message: string;
-  value?: unknown;
+  value?: string | number | boolean;
 }
 
 // Pagination types

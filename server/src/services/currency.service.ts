@@ -1,26 +1,7 @@
 import { env } from "@config/env.js";
 import { FxRate } from "@models/FxRate.js";
 
-export interface CurrencyConversionResult {
-  originalAmount: number;
-  originalCurrency: string;
-  convertedAmount: number;
-  convertedCurrency: string;
-  exchangeRate: number;
-  rateSource: "cache" | "api" | "fallback";
-  rateAge: number; // in hours
-  timestamp: Date;
-}
-
-export interface PricingInfo {
-  currency: string;
-  amount: number;
-  formatted: string;
-  exchangeRate?: number;
-  isEstimated: boolean;
-  rateUsed?: number;
-  settlementCurrency?: string;
-}
+import type { CurrencyConversionResult, PricingInfo } from "../types/services/currency";
 
 export class CurrencyService {
   private static instance: CurrencyService;

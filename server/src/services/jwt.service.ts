@@ -3,22 +3,7 @@ import type { IUser } from "@models/User.js";
 import * as jwt from "jsonwebtoken";
 import type { ObjectId } from "mongoose";
 
-
-export interface JWTPayload {
-  userId: string;
-  email: string;
-  role: string;
-  entitlements: string[];
-  sessionId: string;
-  iat?: number;
-  exp?: number;
-}
-
-export interface TokenPair {
-  accessToken: string;
-  refreshToken: string;
-  expiresIn: number;
-}
+import type { JWTPayload, TokenPair } from "../types/services/jwt";
 
 export class JWTService {
   private readonly accessTokenSecret: string;

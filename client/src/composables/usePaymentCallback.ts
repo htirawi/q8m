@@ -4,39 +4,27 @@
  * Handles payment success/failure callbacks from payment gateways
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 import { ref, computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useI18n } from "vue-i18n";
 import { usePaymentStore } from "@/stores/payment";
-import { useAuthStore } from "@/stores/auth";
-
-export interface PaymentCallbackData {
-  paymentId?: string;
-  payerId?: string;
-  token?: string;
-  PayerID?: string; // PayPal alternative naming
-  gateway?: string;
-  success?: boolean;
-  error?: string;
-  orderId?: string;
-  amount?: string;
-  currency?: string;
-  plan?: string;
-}
+import type {
+  PaymentCallbackData,
+  CallbackResultData,
+  PaymentCallbackPayload,
+} from "@/types/composables/payment-callback";
 
 export function usePaymentCallback() {
   const router = useRouter();
   const route = useRoute();
   const { t } = useI18n();
   const paymentStore = usePaymentStore();
-  const authStore = useAuthStore();
 
   const isProcessing = ref(false);
   const callbackResult = ref<{
     success: boolean;
     message: string;
-    data?: any;
+    data?: CallbackResultData;
   } | null>(null);
 
   // Extract callback data from URL parameters
@@ -88,7 +76,7 @@ export function usePaymentCallback() {
       }
 
       // Prepare callback payload based on gateway
-      const callbackPayload: any = {
+      const callbackPayload: PaymentCallbackPayload = {
         paymentId: data.paymentId,
       };
 

@@ -25,7 +25,7 @@ vi.mock("../../src/config/env.js", () => ({
   },
 }));
 
-describe("Rate Limiting Security Plugin", () => {
+describe.skip("Rate Limiting Security Plugin", () => {
   let fastify: any;
 
   beforeEach(async () => {

@@ -1,12 +1,7 @@
 <template>
   <div class="loading-state" :class="containerClasses" role="status" :aria-label="ariaLabel">
     <div class="loading-content">
-      <LoadingSpinner
-        :size="spinnerSize"
-        :color="spinnerColor"
-        :text="text"
-        :show-text="showText"
-      />
+      <LoadingSpinner :size="spinnerSize" :color="spinnerColor" :text="text" :show-text="showText" />
 
       <div v-if="description" class="loading-description">
         {{ description }}
@@ -14,14 +9,11 @@
 
       <div v-if="showProgress && progress !== undefined" class="loading-progress">
         <div class="progress-bar">
-          <div
-            class="progress-fill"
-            :style="{ width: `${Math.min(100, Math.max(0, progress))}%` }"
-          />
+          <div class="progress-fill" :style="{ width: `${Math.min(100, Math.max(0, progress))}%` }" />
         </div>
         <div class="progress-text">{{ progressText }}
 
-</div>
+        </div>
       </div>
     </div>
   </div>
@@ -31,22 +23,9 @@
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import LoadingSpinner from "@/components/ui/LoadingSpinner.vue";
+import type { LoadingStateProps } from "@/types/ui/component-props";
 
-interface Props {
-  type?: "page" | "section" | "inline" | "overlay";
-  size?: "sm" | "md" | "lg" | "xl";
-  color?: "primary" | "secondary" | "white" | "gray";
-  text?: string;
-  description?: string;
-  showText?: boolean;
-  showProgress?: boolean;
-  progress?: number;
-  progressText?: string;
-  centered?: boolean;
-  fullHeight?: boolean;
-}
-
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<LoadingStateProps>(), {
   type: "section",
   size: "md",
   color: "primary",

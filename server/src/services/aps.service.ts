@@ -1,6 +1,5 @@
 import * as crypto from "crypto";
 
-
 import { features } from "@config/appConfig.js";
 import { Purchase } from "@models/Purchase.js";
 import { Subscription } from "@models/Subscription.js";
@@ -9,45 +8,13 @@ import { logPaymentEvent } from "@server/security/logging.js";
 import { currencyService } from "@services/currency.service.js";
 import type { ObjectId } from "mongoose";
 
-export interface APSPaymentRequest {
-  amount: number;
-  currency: "USD" | "JOD" | "SAR";
-  planType: "INTERMEDIATE" | "SENIOR" | "BUNDLE";
-  userId: string;
-  userEmail: string;
-  userName: string;
-  returnUrl: string;
-  cancelUrl: string;
-  billingAddress?: {
-    street: string;
-    city: string;
-    state: string;
-    postalCode: string;
-    country: string;
-  };
-}
+import type {
+  APSPaymentRequest,
+  APSPaymentResponse,
+  APSWebhookData,
+} from "../types/services/payment-services";
 
-export interface APSPaymentResponse {
-  paymentId: string;
-  checkoutUrl: string;
-  orderId: string;
-}
-
-export interface APSWebhookData {
-  event: string;
-  data: {
-    id: string;
-    amount: number;
-    currency: string;
-    status: string;
-    order_id: string;
-    payment_method: string;
-    created_at: string;
-    updated_at: string;
-  };
-  signature: string;
-  timestamp: string;
-}
+export type { APSPaymentRequest, APSPaymentResponse, APSWebhookData };
 
 export class APSService {
   private static instance: APSService;

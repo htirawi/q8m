@@ -4,12 +4,8 @@
       <h3 class="history-title">{{ $t("subscription.billingHistory") }}</h3>
       <button @click="handleRefresh" class="refresh-button">
         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-          />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
         </svg>
         {{ $t("common.refresh") }}
       </button>
@@ -26,8 +22,7 @@
           <p class="history-date">{{ formatDate(purchase.createdAt.toString()) }}</p>
         </div>
         <div class="history-details">
-          <span class="history-amount"
-            >{{ purchase.amount.displayAmount }} {{ purchase.amount.displayCurrency }}
+          <span class="history-amount">{{ purchase.amount.displayAmount }} {{ purchase.amount.displayCurrency }}
           </span>
           <span class="history-status" :class="getStatusClass(purchase.status)">
             {{ $t(`subscription.purchaseStatus.${purchase.status}`) }}
@@ -40,13 +35,9 @@
 
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
-import type { Purchase } from "@/types/domain/payment";
+import type { BillingHistorySectionProps } from "@/types/ui/component-props";
 
-interface Props {
-  purchases: Purchase[];
-}
-
-defineProps<Props>();
+defineProps<BillingHistorySectionProps>();
 
 const emit = defineEmits<{
   refresh: [];
@@ -132,7 +123,7 @@ const getStatusClass = (status: string) => {
 }
 
 /* Mobile Responsiveness */
-@media (width <= 640px) {
+@media (width <=640px) {
   .history-item {
     @apply flex-col items-start gap-2;
   }

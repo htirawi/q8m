@@ -10,8 +10,7 @@
       <div class="plan-price">
         <span class="price-amount">{{ subscription.price.amount }} </span>
         <span class="price-currency">{{ subscription.price.currency }} </span>
-        <span class="price-period"
-          >{{ $t(`subscription.billing.${subscription.billingCycle}`) }}
+        <span class="price-period">{{ $t(`subscription.billing.${subscription.billingCycle}`) }}
         </span>
       </div>
     </div>
@@ -21,18 +20,8 @@
       <h3 class="features-title">{{ $t("subscription.features.title") }}</h3>
       <ul class="features-list">
         <li v-for="feature in features" :key="feature" class="feature-item">
-          <svg
-            class="h-5 w-5 text-green-500"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M5 13l4 4L19 7"
-            />
+          <svg class="h-5 w-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
           </svg>
           <span>{{ feature }} </span>
         </li>
@@ -43,19 +32,11 @@
     <div class="entitlements-section">
       <h3 class="entitlements-title">{{ $t("subscription.entitlements.title") }}</h3>
       <div class="entitlements-grid">
-        <div
-          v-for="entitlement in entitlements"
-          :key="entitlement"
-          class="entitlement-badge"
-          :class="getEntitlementBadgeClass(entitlement)"
-        >
+        <div v-for="entitlement in entitlements" :key="entitlement" class="entitlement-badge"
+          :class="getEntitlementBadgeClass(entitlement)">
           <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           <span>{{ $t(`entitlements.${entitlement}`) }} </span>
         </div>
@@ -96,15 +77,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
-import type { Subscription } from "@/types/domain/payment";
-
-interface Props {
-  subscription: Subscription;
-  entitlements: string[];
-  features: string[];
-}
-
-const props = defineProps<Props>();
+import type { CurrentPlanCardProps } from "@/types/ui/component-props";
 useI18n();
 
 // Computed
@@ -254,7 +227,7 @@ const getEntitlementBadgeClass = (entitlement: string) => {
 }
 
 /* Mobile Responsiveness */
-@media (width <= 640px) {
+@media (width <=640px) {
   .plan-header {
     @apply flex-col items-start gap-4;
   }

@@ -4,6 +4,21 @@ import mongoose from "mongoose";
 
 export const connectDatabase = async (): Promise<void> => {
   try {
+    // Check if already connected
+    if (mongoose.connection.readyState === 1) {
+      console.warn("✅ Already connected to MongoDB");
+      return;
+    }
+
+    // If currently connecting, wait for it to complete
+    if (mongoose.connection.readyState === 2) {
+      console.warn("⏳ Waiting for pending MongoDB connection...");
+      await new Promise((resolve) => {
+        mongoose.connection.once("connected", resolve);
+      });
+      return;
+    }
+
     const mongoUri = env.MONGODB_URI;
 
     if (!mongoUri) {
@@ -48,6 +63,10 @@ export const connectDatabase = async (): Promise<void> => {
     });
   } catch (error) {
     console.error("Failed to connect to MongoDB:", error);
+    // Don't exit during tests, throw error instead
+    if (process.env.NODE_ENV === "test") {
+      throw error;
+    }
     process.exit(1);
   }
 };

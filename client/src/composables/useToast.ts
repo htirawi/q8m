@@ -1,27 +1,6 @@
 import { ref, readonly } from "vue";
 import { useI18n } from "vue-i18n";
-
-export interface Toast {
-  id: string;
-  type: "success" | "error" | "warning" | "info";
-  title: string;
-  message: string;
-  duration?: number;
-  persistent?: boolean;
-  action?: {
-    label: string;
-    handler: () => void;
-  };
-}
-
-export interface ToastOptions {
-  duration?: number;
-  persistent?: boolean;
-  action?: {
-    label: string;
-    handler: () => void;
-  };
-}
+import type { Toast, ToastOptions } from "@/types/composables/toast";
 
 export function useToast() {
   const { t } = useI18n();
@@ -34,7 +13,7 @@ export function useToast() {
     options: ToastOptions = {}
   ): string => {
     const id = `toast-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-    const duration = options.duration || (type === "error" ? 8000 : 5000);
+    const duration = options.duration ?? (type === "error" ? 8000 : 5000);
 
     const toast: Toast = {
       id,
@@ -42,8 +21,9 @@ export function useToast() {
       title,
       message,
       duration: options.persistent ? undefined : duration,
-      persistent: options.persistent || false,
+      persistent: options.persistent ?? false,
       action: options.action,
+      createdAt: new Date(),
     };
 
     toasts.value.push(toast);

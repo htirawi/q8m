@@ -1,16 +1,8 @@
 <template>
   <teleport to="body">
     <transition name="modal" @enter="handleEnter" @leave="handleLeave">
-      <div
-        v-if="isOpen"
-        class="modal-overlay"
-        role="dialog"
-        :aria-modal="true"
-        :aria-labelledby="titleId"
-        :aria-describedby="descriptionId"
-        @click="handleOverlayClick"
-        @keydown="handleKeydown"
-      >
+      <div v-if="isOpen" class="modal-overlay" role="dialog" :aria-modal="true" :aria-labelledby="titleId"
+        :aria-describedby="descriptionId" @click="handleOverlayClick" @keydown="handleKeydown">
         <div ref="modalRef" class="modal-container" :class="containerClasses" @click.stop>
           <header v-if="title || $slots.header" class="modal-header">
             <slot name="header">
@@ -18,20 +10,10 @@
                 {{ title }}
               </h2>
             </slot>
-            <button
-              v-if="closable"
-              type="button"
-              class="modal-close"
-              :aria-label="$t('a11y.closeModal')"
-              @click="handleClose"
-            >
+            <button v-if="closable" type="button" class="modal-close" :aria-label="$t('a11y.closeModal')"
+              @click="handleClose">
               <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M6 18L18 6M6 6l12 12"
-                />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
           </header>
@@ -55,15 +37,7 @@
 <script setup lang="ts">
 import { ref, computed, nextTick, onMounted, onUnmounted } from "vue";
 
-export interface ModalProps {
-  isOpen: boolean;
-  title?: string;
-  description?: string;
-  size?: "sm" | "md" | "lg" | "xl" | "full";
-  closable?: boolean;
-  closeOnOverlay?: boolean;
-  closeOnEscape?: boolean;
-}
+import type { ModalProps } from "@/types/ui/component-props";
 
 const props = withDefaults(defineProps<ModalProps>(), {
   size: "md",

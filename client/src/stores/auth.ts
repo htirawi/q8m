@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 import type { User } from "@shared/types/auth";
@@ -92,8 +91,9 @@ export const useAuthStore = defineStore("auth", () => {
       });
 
       return true;
-    } catch (err: any) {
-      setError(err.message ?? "Login failed");
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Login failed";
+      setError(errorMessage);
       return false;
     } finally {
       setLoading(false);
@@ -121,8 +121,9 @@ export const useAuthStore = defineStore("auth", () => {
 
       // Don't set user/tokens for registration - email verification required
       return true;
-    } catch (err: any) {
-      setError(err.message ?? "Registration failed");
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Registration failed";
+      setError(errorMessage);
       return false;
     } finally {
       setLoading(false);
@@ -147,11 +148,12 @@ export const useAuthStore = defineStore("auth", () => {
       setTokens(null);
 
       return true;
-    } catch (err: any) {
+    } catch (err) {
       // Still clear local state even if API call fails
       setUser(null);
       setTokens(null);
-      setError(err.message ?? "Logout failed");
+      const errorMessage = err instanceof Error ? err.message : "Logout failed";
+      setError(errorMessage);
       return false;
     } finally {
       setLoading(false);
@@ -174,10 +176,11 @@ export const useAuthStore = defineStore("auth", () => {
       setTokens(null);
 
       return true;
-    } catch (err: any) {
+    } catch (err) {
       setUser(null);
       setTokens(null);
-      setError(err.message ?? "Logout failed");
+      const errorMessage = err instanceof Error ? err.message : "Logout failed";
+      setError(errorMessage);
       return false;
     } finally {
       setLoading(false);
@@ -209,7 +212,7 @@ export const useAuthStore = defineStore("auth", () => {
       });
 
       return true;
-    } catch (err: any) {
+    } catch (_err) {
       // Refresh failed, clear auth state
       setUser(null);
       setTokens(null);
@@ -243,7 +246,7 @@ export const useAuthStore = defineStore("auth", () => {
       const data = await response.json();
       setUser(data.user);
       return true;
-    } catch (err: any) {
+    } catch (_err) {
       setUser(null);
       setTokens(null);
       return false;
@@ -275,8 +278,9 @@ export const useAuthStore = defineStore("auth", () => {
       }
 
       return true;
-    } catch (err: any) {
-      setError(err.message ?? "Email verification failed");
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Email verification failed";
+      setError(errorMessage);
       return false;
     } finally {
       setLoading(false);
@@ -303,8 +307,10 @@ export const useAuthStore = defineStore("auth", () => {
       }
 
       return true;
-    } catch (err: any) {
-      setError(err.message ?? "Failed to resend verification email");
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to resend verification email";
+      setError(errorMessage);
       return false;
     } finally {
       setLoading(false);
@@ -331,8 +337,10 @@ export const useAuthStore = defineStore("auth", () => {
       }
 
       return true;
-    } catch (err: any) {
-      setError(err.message ?? "Failed to send password reset email");
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to send password reset email";
+      setError(errorMessage);
       return false;
     } finally {
       setLoading(false);
@@ -359,8 +367,9 @@ export const useAuthStore = defineStore("auth", () => {
       }
 
       return true;
-    } catch (err: any) {
-      setError(err.message ?? "Password reset failed");
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Password reset failed";
+      setError(errorMessage);
       return false;
     } finally {
       setLoading(false);
@@ -391,8 +400,9 @@ export const useAuthStore = defineStore("auth", () => {
       }
 
       return true;
-    } catch (err: any) {
-      setError(err.message ?? "Password change failed");
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Password change failed";
+      setError(errorMessage);
       return false;
     } finally {
       setLoading(false);

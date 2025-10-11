@@ -19,6 +19,7 @@ import adminRoutes from "@routes/admin";
 import authRoutes from "@routes/auth";
 import entitlementRoutes from "@routes/entitlements";
 import paymentRoutes from "@routes/payments";
+import paypalRoutes from "@routes/paypal.routes";
 import pricingRoutes from "@routes/pricing";
 import questionRoutes from "@routes/questions";
 import seoRoutes from "@routes/seo";
@@ -94,19 +95,57 @@ async function registerPlugins() {
   });
 
   // Security headers
+  // ✅ SECURITY FIX (SEC-002): PayPal domains whitelisted in CSP
   await fastify.register(helmet, {
     contentSecurityPolicy: {
       useDefaults: true,
       directives: {
         "default-src": ["'self'"],
-        "script-src": ["'self'"],
-        "style-src": ["'self'", "'unsafe-inline'"],
-        "img-src": ["'self'", "data:"],
-        "connect-src": ["'self'"],
+        // Allow PayPal SDK scripts
+        "script-src": [
+          "'self'",
+          "https://www.paypal.com",
+          "https://www.sandbox.paypal.com",
+        ],
+        "style-src": [
+          "'self'",
+          "'unsafe-inline'", // Required for Tailwind & PayPal
+          "https://www.paypal.com",
+          "https://www.sandbox.paypal.com",
+        ],
+        "img-src": [
+          "'self'",
+          "data:",
+          "https://www.paypal.com",
+          "https://www.sandbox.paypal.com",
+          "https://www.paypalobjects.com",
+        ],
+        // Allow PayPal API connections
+        "connect-src": [
+          "'self'",
+          "https://www.paypal.com",
+          "https://www.sandbox.paypal.com",
+          "https://api.paypal.com",
+          "https://api.sandbox.paypal.com",
+        ],
+        // Allow PayPal checkout iframe
+        "frame-src": [
+          "'self'",
+          "https://www.paypal.com",
+          "https://www.sandbox.paypal.com",
+        ],
         "frame-ancestors": ["'none'"],
       },
     },
     xssFilter: true,
+    // HSTS for production
+    strictTransportSecurity: env.NODE_ENV === "production" ? {
+      maxAge: 31536000, // 1 year
+      includeSubDomains: true,
+      preload: true,
+    } : false,
+    // Allow PayPal popup windows
+    crossOriginOpenerPolicy: { policy: "same-origin-allow-popups" },
     crossOriginEmbedderPolicy: false,
   });
 
@@ -138,7 +177,7 @@ async function registerPlugins() {
     },
   });
 
-  // OAuth2 (for Google and Facebook)
+  // OAuth2 (for Google)
   await fastify.register(oauth2, {
     name: "googleOAuth2",
     credentials: {
@@ -153,29 +192,11 @@ async function registerPlugins() {
         tokenPath: "/oauth2/v4/token",
       },
     },
-    startRedirectPath: "/auth/google",
-    callbackUri: `${env.API_BASE_URL}/auth/google/callback`,
+    startRedirectPath: "/api/auth/google",
+    callbackUri: `${env.API_BASE_URL}/api/auth/google/callback`,
     scope: ["profile", "email"],
   });
 
-  await fastify.register(oauth2, {
-    name: "facebookOAuth2",
-    credentials: {
-      client: {
-        id: env.FACEBOOK_APP_ID,
-        secret: env.FACEBOOK_APP_SECRET,
-      },
-      auth: {
-        authorizeHost: "https://www.facebook.com",
-        authorizePath: "/v18.0/dialog/oauth",
-        tokenHost: "https://graph.facebook.com",
-        tokenPath: "/v18.0/oauth/access_token",
-      },
-    },
-    startRedirectPath: "/auth/facebook",
-    callbackUri: `${env.API_BASE_URL}/auth/facebook/callback`,
-    scope: ["email", "public_profile"],
-  });
 
   // Multipart (for file uploads)
   await fastify.register(multipart, {
@@ -280,6 +301,7 @@ async function registerRoutes() {
   await fastify.register(authRoutes, { prefix: "/api/auth" });
   await fastify.register(pricingRoutes, { prefix: "/api/pricing" });
   await fastify.register(paymentRoutes, { prefix: "/api/payments" });
+  await fastify.register(paypalRoutes, { prefix: "/api/payments/paypal" });
   await fastify.register(questionRoutes, { prefix: "/api/questions" });
   await fastify.register(adminRoutes, { prefix: "/api/admin" });
   await fastify.register(entitlementRoutes, { prefix: "/api/entitlements" });
@@ -334,83 +356,209 @@ process.on("unhandledRejection", (reason, _promise) => {
   process.exit(1);
 });
 
-// Start the server
-start();
+// Start the server (but not during tests)
+if (process.env.NODE_ENV !== "test") {
+  start();
+}
 
 export const buildApp = async () => {
+  // Connect to database for integration tests
+  // This will reuse existing connection if already connected
+  await connectDatabase();
+
   // Create a new Fastify instance for testing
   const testApp = Fastify({
-    logger: false, // Disable logging in tests
+    logger: true, // Enable logging to see errors
     trustProxy: env.RATE_LIMIT_TRUST_PROXY === "true",
+    requestIdHeader: "x-request-id",
+    requestIdLogLabel: "reqId",
+    genReqId: () => crypto.randomUUID(),
   });
 
-  // Register plugins for test app
+  // Register error handler
+  testApp.setErrorHandler((error, request, reply) => {
+    return errorHandler(error, request, reply);
+  });
+
+  // Register request logger
+  testApp.addHook("onRequest", requestLogger);
+
+  // Register response logger
+  testApp.addHook("onSend", async (request, reply, payload) => {
+    const { startTime } = request as FastifyRequest & { startTime?: number };
+    if (startTime) {
+      const responseTime = Date.now() - startTime;
+      const { log, method, url } = request;
+      log.info({
+        type: "response",
+        method,
+        url,
+        statusCode: reply.statusCode,
+        responseTime: `${responseTime}ms`,
+        contentLength: reply.getHeader("content-length"),
+      });
+    }
+    return payload;
+  });
+
+  // CORS
+  await testApp.register(cors, {
+    origin: env.CORS_ORIGIN?.split(",") || ["http://localhost:5173", "https://quiz-platform.com"],
+    credentials: env.CORS_CREDENTIALS === "true",
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+  });
+
+  // Security headers (same as production for consistency)
   await testApp.register(helmet, {
     contentSecurityPolicy: {
+      useDefaults: true,
       directives: {
-        defaultSrc: ["'self'"],
-        styleSrc: ["'self'", "'unsafe-inline'"],
-        scriptSrc: ["'self'"],
-        imgSrc: ["'self'", "data:", "https:"],
+        "default-src": ["'self'"],
+        "script-src": [
+          "'self'",
+          "https://www.paypal.com",
+          "https://www.sandbox.paypal.com",
+        ],
+        "style-src": [
+          "'self'",
+          "'unsafe-inline'",
+          "https://www.paypal.com",
+          "https://www.sandbox.paypal.com",
+        ],
+        "img-src": [
+          "'self'",
+          "data:",
+          "https://www.paypal.com",
+          "https://www.sandbox.paypal.com",
+          "https://www.paypalobjects.com",
+        ],
+        "connect-src": [
+          "'self'",
+          "https://www.paypal.com",
+          "https://www.sandbox.paypal.com",
+          "https://api.paypal.com",
+          "https://api.sandbox.paypal.com",
+        ],
+        "frame-src": [
+          "'self'",
+          "https://www.paypal.com",
+          "https://www.sandbox.paypal.com",
+        ],
+        "frame-ancestors": ["'none'"],
       },
+    },
+    xssFilter: true,
+    xContentTypeOptions: true,
+    xFrameOptions: { action: "deny" },
+    strictTransportSecurity: {
+      maxAge: 31536000,
+      includeSubDomains: true,
+    },
+    crossOriginOpenerPolicy: { policy: "same-origin-allow-popups" },
+    crossOriginEmbedderPolicy: false,
+  });
+
+  // Rate limiting plugin (per-route configuration)
+  await testApp.register(rateLimit, {
+    global: false,
+    hook: "onRequest",
+  });
+
+  // Cookies
+  await testApp.register(cookie, {
+    secret: env.JWT_SECRET,
+    parseOptions: {
+      httpOnly: true,
+      secure: env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     },
   });
 
-  await testApp.register(cors, {
-    origin: env.CORS_ORIGIN?.split(",") || [env.CLIENT_URL],
-    credentials: env.CORS_CREDENTIALS === "true",
-  });
-
-  await testApp.register(cookie, {
-    secret: env.CSRF_SECRET,
-  });
-
+  // JWT
   await testApp.register(jwt, {
     secret: env.JWT_SECRET,
-  });
-
-  await testApp.register(oauth2, {
-    name: "googleOAuth2",
-    credentials: {
-      client: {
-        id: env.GOOGLE_CLIENT_ID,
-        secret: env.GOOGLE_CLIENT_SECRET,
-      },
-      auth: oauth2.GOOGLE_CONFIGURATION,
+    sign: {
+      expiresIn: env.JWT_EXPIRES_IN,
     },
-    startRedirectPath: "/auth/google",
-    callbackUri: `${env.SERVER_URL}/auth/google/callback`,
-  });
-
-  await testApp.register(oauth2, {
-    name: "facebookOAuth2",
-    credentials: {
-      client: {
-        id: env.FACEBOOK_APP_ID,
-        secret: env.FACEBOOK_APP_SECRET,
-      },
-      auth: oauth2.FACEBOOK_CONFIGURATION,
+    verify: {
+      maxAge: env.JWT_EXPIRES_IN,
     },
-    startRedirectPath: "/auth/facebook",
-    callbackUri: `${env.SERVER_URL}/auth/facebook/callback`,
   });
 
+  // OAuth2 (for Google) - skip if credentials not available
+  if (env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET) {
+    try {
+      await testApp.register(oauth2, {
+        name: "googleOAuth2",
+        credentials: {
+          client: {
+            id: env.GOOGLE_CLIENT_ID,
+            secret: env.GOOGLE_CLIENT_SECRET,
+          },
+          auth: oauth2.GOOGLE_CONFIGURATION,
+        },
+        startRedirectPath: "/auth/google",
+        callbackUri: `${env.API_BASE_URL}/auth/google/callback`,
+        scope: ["profile", "email"],
+      });
+    } catch (error) {
+      console.warn("Google OAuth2 registration failed:", error);
+    }
+  }
+
+
+  // Multipart (for file uploads)
   await testApp.register(multipart, {
     limits: {
       fileSize: parseInt(env.MAX_FILE_SIZE),
     },
   });
 
-  // Register middleware
-  testApp.addHook("onRequest", requestLogger);
-  testApp.setErrorHandler(errorHandler);
+  // Auth plugin (must be registered before routes)
   await testApp.register(authPlugin);
+
+  // Register auth decorators directly
+  testApp.decorate("authenticate", (options?: AuthOptions) => {
+    return createAuthMiddleware(options);
+  });
+
+  testApp.decorate("requireRole", (roles: string | string[]) => {
+    const roleArray = Array.isArray(roles) ? roles : [roles];
+    return createAuthMiddleware({ requiredRole: roleArray });
+  });
+
+  testApp.decorate("loginFailurePenaltyPreHandler", (_routeId: string) => {
+    return async (_req: FastifyRequest, _reply: FastifyReply) => {
+      /* no-op by default; your rate-limit penalty logic can go here */
+    };
+  });
+
+  // Rate limiting security plugin (must be registered before routes)
   await testApp.register(rateLimitPlugin);
+
+  // Health check
+  testApp.get("/health", async () => {
+    return {
+      status: "ok",
+      timestamp: new Date().toISOString(),
+      uptime: process.uptime(),
+      environment: env.NODE_ENV,
+      version: env.npm_package_version || "1.0.0",
+    };
+  });
+
+  // Root route for CSP tests
+  testApp.get("/", async () => {
+    return { message: "Quiz Platform API" };
+  });
 
   // Register routes
   await testApp.register(authRoutes, { prefix: "/api/auth" });
   await testApp.register(pricingRoutes, { prefix: "/api/pricing" });
   await testApp.register(paymentRoutes, { prefix: "/api/payments" });
+  await testApp.register(paypalRoutes, { prefix: "/api/payments/paypal" });
   await testApp.register(questionRoutes, { prefix: "/api/questions" });
   await testApp.register(adminRoutes, { prefix: "/api/admin" });
   await testApp.register(entitlementRoutes, { prefix: "/api/entitlements" });

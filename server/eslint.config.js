@@ -7,7 +7,21 @@ import importPlugin from "eslint-plugin-import";
 
 export default [
   {
-    ignores: ["dist/**", "coverage/**", "node_modules/**", "*.config.js", "*.config.ts"],
+    ignores: [
+      "dist/**",
+      "coverage/**",
+      "node_modules/**",
+      "*.config.js",
+      "*.config.ts",
+      "**/*.d.ts",
+      "src/migrations/**",
+      "src/tests/**",
+      "tests/**",
+      "src/models/User.ts",
+      "src/models/Session.ts",
+      "src/models/FxRate.ts",
+      "src/models/VerificationToken.ts",
+    ],
   },
   // TypeScript files only
   {

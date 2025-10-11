@@ -119,6 +119,31 @@
       "confirmPassword": "تأكيد كلمة المرور الجديدة",
       "updatePassword": "تحديث كلمة المرور",
       "success": "تم تحديث كلمة المرور بنجاح"
+    },
+    "oauth": {
+      "processing": "جاري المصادقة",
+      "pleaseWait": "يرجى الانتظار بينما نكمل عملية المصادقة...",
+      "success": "تمت المصادقة بنجاح",
+      "redirecting": "جاري إعادة توجيهك إلى لوحة التحكم...",
+      "error": "فشلت المصادقة",
+      "tryAgain": "حاول مرة أخرى"
+    },
+    "fields": {
+      "email": "البريد الإلكتروني",
+      "emailPlaceholder": "أدخل عنوان بريدك الإلكتروني",
+      "name": "الاسم الكامل",
+      "namePlaceholder": "أدخل اسمك الكامل",
+      "password": "كلمة المرور",
+      "passwordPlaceholder": "أدخل كلمة المرور"
+    },
+    "validation": {
+      "emailRequired": "البريد الإلكتروني مطلوب",
+      "emailInvalid": "يرجى إدخال بريد إلكتروني صحيح",
+      "nameRequired": "الاسم مطلوب",
+      "nameMinLength": "الاسم يجب أن يكون حرفين على الأقل",
+      "passwordRequired": "كلمة المرور مطلوبة",
+      "passwordMinLength": "كلمة المرور يجب أن تكون 8 أحرف على الأقل",
+      "acceptTermsRequired": "يجب الموافقة على الشروط والأحكام"
     }
   },
   "pricing": {
@@ -452,7 +477,7 @@
       "startQuizzes": "ابدأ الاختبارات",
       "support": {
         "text": "تحتاج مساعدة؟ اتصل بفريق الدعم على",
-        "email": "support@quizplatform.com"
+        "email": "support{'@'}quizplatform.com"
       }
     },
     "error": {

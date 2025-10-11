@@ -90,6 +90,10 @@ export function sanitizeRedirectUrl(url: string, allowedHosts: string[] = []): s
  */
 export function sanitizeForDisplay(input: unknown): string {
   const s = String(input ?? "");
-  // Remove control characters and limit length
-  return s.replace(/[\p{Cc}\p{Cf}]/gu, "").slice(0, 1000);
+  // Remove control characters and escape HTML to prevent XSS
+  return s
+    .replace(/[\p{Cc}\p{Cf}]/gu, "")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .slice(0, 1000);
 }

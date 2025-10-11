@@ -9,17 +9,9 @@
       <label for="name" class="form-label">
         {{ $t("auth.fields.name") }}
       </label>
-      <input
-        id="name"
-        :model-value="name"
-        @input="$emit('update:name', ($event.target as HTMLInputElement).value)"
-        type="text"
-        autocomplete="name"
-        required
-        class="form-input"
-        :class="{ 'form-input-error': nameError }"
-        :placeholder="$t('auth.fields.namePlaceholder')"
-      />
+      <input id="name" :model-value="name" @input="$emit('update:name', ($event.target as HTMLInputElement).value)"
+        type="text" autocomplete="name" required class="form-input" :class="{ 'form-input-error': nameError }"
+        :placeholder="$t('auth.fields.namePlaceholder')" />
       <p v-if="nameError" class="form-error">{{ nameError }}</p>
     </div>
 
@@ -28,22 +20,12 @@
         {{ $t("auth.fields.password") }}
       </label>
       <div class="password-input-container">
-        <input
-          id="password"
-          :model-value="password"
+        <input id="password" :model-value="password"
           @input="$emit('update:password', ($event.target as HTMLInputElement).value)"
-          :type="showPassword ? 'text' : 'password'"
-          autocomplete="new-password"
-          required
-          class="form-input password-input"
-          :class="{ 'form-input-error': passwordError }"
-          :placeholder="$t('auth.fields.passwordPlaceholder')"
-        />
-        <button
-          type="button"
-          @click="showPassword = !showPassword"
-          class="password-toggle"
-        >
+          :type="showPassword ? 'text' : 'password'" autocomplete="new-password" required
+          class="form-input password-input" :class="{ 'form-input-error': passwordError }"
+          :placeholder="$t('auth.fields.passwordPlaceholder')" />
+        <button type="button" @click="showPassword = !showPassword" class="password-toggle">
           <EyeIcon v-if="!showPassword" class="toggle-icon" />
           <EyeSlashIcon v-else class="toggle-icon" />
         </button>
@@ -57,12 +39,8 @@
     <!-- Terms and Conditions -->
     <div class="form-group">
       <label class="terms-checkbox">
-        <input
-          :checked="acceptTerms"
-          @change="$emit('update:acceptTerms', ($event.target as HTMLInputElement).checked)"
-          type="checkbox"
-          class="checkbox-input"
-        />
+        <input :checked="acceptTerms" @change="$emit('update:acceptTerms', ($event.target as HTMLInputElement).checked)"
+          type="checkbox" class="checkbox-input" />
         <span class="checkbox-custom"></span>
         <span class="terms-text">
           {{ $t("auth.register.agreeToTerms") }}
@@ -82,27 +60,13 @@
       <button type="button" @click="$emit('back')" class="back-button">
         {{ $t("auth.register.back") }}
       </button>
-      <button
-        type="submit"
-        :disabled="!isValid || isLoading"
-        class="continue-button"
-      >
+      <button type="submit" :disabled="!isValid || isLoading" class="continue-button">
         <span v-if="isLoading" class="button-content">
           <svg class="loading-spinner" viewBox="0 0 24 24">
-            <circle
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              stroke-width="4"
-              fill="none"
-              opacity="0.25"
-            />
+            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" opacity="0.25" />
             <path
               d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              fill="currentColor"
-              opacity="0.75"
-            />
+              fill="currentColor" opacity="0.75" />
           </svg>
           {{ $t("auth.register.creating") }}
         </span>
@@ -119,18 +83,9 @@ import { ref, computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/vue/24/outline";
 import PasswordStrengthIndicator from "@/features/auth/components/PasswordStrengthIndicator.vue";
+import type { ProfileStepProps } from "@/types/ui/component-props";
 
-interface Props {
-  name: string;
-  password: string;
-  acceptTerms: boolean;
-  nameError?: string;
-  passwordError?: string;
-  termsError?: string;
-  isLoading: boolean;
-}
-
-const props = defineProps<Props>();
+const props = defineProps<ProfileStepProps>();
 
 defineEmits<{
   "update:name": [value: string];
@@ -183,9 +138,11 @@ const isValid = computed(() => {
 .form-group:nth-child(2) {
   animation-delay: 0.1s;
 }
+
 .form-group:nth-child(3) {
   animation-delay: 0.2s;
 }
+
 .form-group:nth-child(4) {
   animation-delay: 0.3s;
 }
@@ -249,11 +206,11 @@ const isValid = computed(() => {
   @apply dark:border-gray-600;
 }
 
-.checkbox-input:checked + .checkbox-custom {
+.checkbox-input:checked+.checkbox-custom {
   @apply border-primary-500 bg-primary-500;
 }
 
-.checkbox-input:checked + .checkbox-custom::after {
+.checkbox-input:checked+.checkbox-custom::after {
   content: "✓";
   @apply text-sm font-bold text-white;
 }
@@ -324,6 +281,7 @@ const isValid = computed(() => {
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);

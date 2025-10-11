@@ -3,43 +3,10 @@
  * Contains all plan data, features, FAQs, and comparison data
  */
 
-export type PlanTier = "JUNIOR" | "INTERMEDIATE" | "SENIOR" | "BUNDLE";
-export type BillingCycle = "monthly" | "yearly";
+import type { PlanTier, Plan, Feature, ComparisonRow, FAQ } from "@/types/domain/pricing";
+import type { BillingCycle } from "@/types/domain/billing";
 
-export interface Plan {
-  id: string;
-  tier: PlanTier;
-  titleKey: string; // i18n key
-  priceMonthly: number;
-  priceYearly: number;
-  currency: "USD" | "JOD" | "SAR";
-  featuresKeys: string[]; // i18n keys
-  badgeKey?: string; // e.g., "Most Popular"
-  ctaLabelKey: string;
-  ctaHref: string; // existing payment link or router link
-  guaranteeDays?: number;
-  popular?: boolean;
-  recommended?: boolean;
-}
-
-export interface Feature {
-  icon: string;
-  titleKey: string;
-  descriptionKey: string;
-}
-
-export interface ComparisonRow {
-  featureKey: string;
-  junior: boolean | string;
-  intermediate: boolean | string;
-  senior: boolean | string;
-  bundle: boolean | string;
-}
-
-export interface FAQ {
-  questionKey: string;
-  answerKey: string;
-}
+export type { PlanTier, BillingCycle };
 
 // Plan configurations
 export const plans: Plan[] = [

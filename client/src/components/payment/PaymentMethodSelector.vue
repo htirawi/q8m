@@ -3,13 +3,8 @@
     <h3 class="section-title">{{ $t("checkout.paymentMethod") }}</h3>
 
     <div class="payment-methods">
-      <div
-        v-for="method in availableMethods"
-        :key="method.id"
-        class="payment-method"
-        :class="{ 'payment-method--selected': selectedMethod === method.id }"
-        @click="selectMethod(method.id)"
-      >
+      <div v-for="method in availableMethods" :key="method.id" class="payment-method"
+        :class="{ 'payment-method--selected': selectedMethod === method.id }" @click="selectMethod(method.id)">
         <div class="payment-method-content">
           <div class="payment-method-icon">
             <component :is="method.icon" class="h-8 w-8" />
@@ -17,19 +12,13 @@
           <div class="payment-method-info">
             <h4 class="payment-method-name">{{ method.name }}
 
-</h4>
+            </h4>
             <p class="payment-method-description">{{ method.description }}
 
-</p>
+            </p>
           </div>
           <div class="payment-method-radio">
-            <input
-              :id="method.id"
-              v-model="selectedMethod"
-              type="radio"
-              :value="method.id"
-              class="radio-input"
-            />
+            <input :id="method.id" v-model="selectedMethod" type="radio" :value="method.id" class="radio-input" />
             <span class="radio-checkmark" />
           </div>
         </div>
@@ -43,7 +32,7 @@
           <CheckCircleIcon class="h-5 w-5 text-green-500" />
           <p>{{ $t("checkout.paypalInfo") }}
 
-</p>
+          </p>
         </div>
       </div>
 
@@ -52,7 +41,7 @@
           <CheckCircleIcon class="h-5 w-5 text-green-500" />
           <p>{{ $t("checkout.apsInfo") }}
 
-</p>
+          </p>
         </div>
       </div>
 
@@ -61,7 +50,7 @@
           <CheckCircleIcon class="h-5 w-5 text-green-500" />
           <p>{{ $t("checkout.hyperpayInfo") }}
 
-</p>
+          </p>
         </div>
       </div>
     </div>
@@ -72,21 +61,9 @@
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { CheckCircleIcon } from "@heroicons/vue/24/outline";
+import type { PaymentMethodSelectorProps, PaymentMethod } from "@/types/ui/component-props";
 
-interface PaymentMethod {
-  id: string;
-  name: string;
-  description: string;
-  icon: any;
-  available: boolean;
-}
-
-interface Props {
-  modelValue: string;
-  currency: string;
-}
-
-const props = defineProps<Props>();
+const props = defineProps<PaymentMethodSelectorProps>();
 
 const emit = defineEmits<{
   "update:modelValue": [value: string];

@@ -12,7 +12,33 @@ import { Subscription } from "@models/Subscription.js";
 import { User } from "@models/User.js";
 import { entitlementService } from "@services/entitlement.service.js";
 import { mockPaymentService } from "@services/mock-payment.service.js";
-import { beforeAll, afterAll, beforeEach, afterEach } from "vitest";
+import { afterAll, afterEach, beforeAll, beforeEach, vi } from "vitest";
+
+// Mock external packages and services (Vitest automatically hoists these)
+vi.mock("paypal-rest-sdk", () => ({
+  default: {
+    configure: vi.fn(),
+    payment: {
+      create: vi.fn(),
+      execute: vi.fn(),
+    },
+  },
+  configure: vi.fn(),
+  payment: {
+    create: vi.fn(),
+    execute: vi.fn(),
+  },
+}));
+
+vi.mock("@services/email.service.js", () => ({
+  emailService: {
+    sendEmailVerification: vi.fn().mockResolvedValue(undefined),
+    sendPasswordReset: vi.fn().mockResolvedValue(undefined),
+    sendWelcomeEmail: vi.fn().mockResolvedValue(undefined),
+    sendPaymentConfirmation: vi.fn().mockResolvedValue(undefined),
+    sendSubscriptionReminder: vi.fn().mockResolvedValue(undefined),
+  },
+}));
 
 // Global test setup
 beforeAll(async () => {
@@ -37,15 +63,27 @@ beforeAll(async () => {
   process.env.LOG_LEVEL = "error";
   process.env.MAX_FILE_SIZE = "10485760";
   process.env.npm_package_version = "2.0.0";
+  process.env.JWT_EXPIRES_IN = "15m";
+  process.env.CORS_ORIGIN = "http://localhost:5173,https://quiz-platform.com";
+  process.env.CORS_CREDENTIALS = "true";
+  process.env.GOOGLE_CLIENT_ID = "test-google-client-id";
+  process.env.GOOGLE_CLIENT_SECRET = "test-google-client-secret";
+  process.env.PAYPAL_CLIENT_ID = "test-paypal-client-id";
+  process.env.PAYPAL_CLIENT_SECRET = "test-paypal-client-secret";
+  process.env.PAYPAL_WEBHOOK_ID = "test-paypal-webhook-id";
+  process.env.PAYPAL_ENV = "sandbox";
+  process.env.SMTP_HOST = "smtp.test.com";
+  process.env.SMTP_PORT = "587";
+  process.env.SMTP_USER = "test@test.com";
+  process.env.SMTP_PASS = "test-password";
+  process.env.EMAIL_FROM = "noreply@test.com";
 
-  // Skip database connection for tests that don't need it
-  // Only connect if MONGODB_URI is available and not a test URI
-  if (process.env.MONGODB_URI && !process.env.MONGODB_URI.includes("test")) {
-    try {
-      await connectDatabase();
-    } catch (error) {
-      console.warn("Database connection skipped for tests:", error);
-    }
+  // Connect to database for integration tests
+  // Note: Database connection will also be handled in buildApp for each test
+  try {
+    await connectDatabase();
+  } catch (_error) {
+    console.warn("Database connection failed in setup (this is OK for unit tests):", _error);
   }
 
   // Enable mock payment service
@@ -64,36 +102,44 @@ afterAll(async () => {
 
 // Test-specific setup
 beforeEach(async () => {
-  // Only clear test data if database is connected
-  try {
-    await User.deleteMany({});
-    await Purchase.deleteMany({});
-    await Subscription.deleteMany({});
-    await FxRate.deleteMany({});
-  } catch (error) {
-    // Database not available, skip cleanup
-    console.warn("Database cleanup skipped:", error);
+  // Skip database operations for unit tests (they use mocks)
+  const isUnitTest = process.env.VITEST_WORKER_ID !== undefined;
+
+  if (!isUnitTest) {
+    // Only clear test data if database is connected
+    try {
+      await User.deleteMany({});
+      await Purchase.deleteMany({});
+      await Subscription.deleteMany({});
+      await FxRate.deleteMany({});
+    } catch (_error) {
+      // Database not available, skip cleanup silently for unit tests
+    }
   }
 
-  // Clear mock payments
+  // Clear mock payments and cache
   mockPaymentService.clearMockPayments();
   entitlementService.clearAllCache();
 });
 
 // Test-specific cleanup
 afterEach(async () => {
-  // Only clear test data if database is connected
-  try {
-    await User.deleteMany({});
-    await Purchase.deleteMany({});
-    await Subscription.deleteMany({});
-    await FxRate.deleteMany({});
-  } catch (error) {
-    // Database not available, skip cleanup
-    console.warn("Database cleanup skipped:", error);
+  // Skip database operations for unit tests (they use mocks)
+  const isUnitTest = process.env.VITEST_WORKER_ID !== undefined;
+
+  if (!isUnitTest) {
+    // Only clear test data if database is connected
+    try {
+      await User.deleteMany({});
+      await Purchase.deleteMany({});
+      await Subscription.deleteMany({});
+      await FxRate.deleteMany({});
+    } catch (_error) {
+      // Database not available, skip cleanup silently for unit tests
+    }
   }
 
-  // Clear mock payments
+  // Clear mock payments and cache
   mockPaymentService.clearMockPayments();
   entitlementService.clearAllCache();
 });

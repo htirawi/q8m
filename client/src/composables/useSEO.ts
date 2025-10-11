@@ -1,42 +1,27 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ref, computed, watchEffect } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
-
-interface SEOData {
-  title?: string;
-  description?: string;
-  keywords?: string[];
-  canonical?: string;
-  ogTitle?: string;
-  ogDescription?: string;
-  ogImage?: string;
-  ogType?: string;
-  ogUrl?: string;
-  twitterCard?: string;
-  twitterTitle?: string;
-  twitterDescription?: string;
-  twitterImage?: string;
-  twitterSite?: string;
-  twitterCreator?: string;
-  noindex?: boolean;
-  nofollow?: boolean;
-  structuredData?: Record<string, any>;
-}
+import { getBaseUrl } from "@/config/env";
+import type { SEOData, StructuredData, QuizData, PricingData } from "@/types/composables/seo";
 
 const defaultSEO: SEOData = {
-  title: "Vue 3 Quiz Platform - Learn with Interactive Quizzes",
+  title: "q8m - Master Frontend Development Interviews",
   description:
-    "Master Vue 3, React, Angular, and more with our comprehensive quiz platform. Interactive learning, real-time feedback, and expert-level content.",
+    "Master frontend development with 500+ curated interview questions covering Angular, React, Next.js, Redux, TypeScript, and advanced topics. Expert-level content for developers.",
   keywords: [
-    "vue 3",
-    "react",
+    "frontend",
+    "interview",
+    "questions",
     "angular",
+    "react",
+    "nextjs",
+    "redux",
+    "typescript",
     "javascript",
     "quiz",
     "learning",
     "programming",
-    "frontend",
+    "development",
   ],
   ogType: "website",
   twitterCard: "summary_large_image",
@@ -55,13 +40,16 @@ export function useSEO(initialData: Partial<SEOData> = {}) {
 
   // Computed properties for dynamic SEO
   const pageTitle = computed(() => {
-    const baseTitle = seoData.value.title || defaultSEO.title;
-    const siteName = t("seo.siteName", "Vue 3 Quiz Platform");
+    const baseTitle = seoData.value.title ?? defaultSEO.title ?? "";
+    const siteNameTranslated = t("seo.siteName");
+    const siteName =
+      (typeof siteNameTranslated === "string" ? siteNameTranslated : null) ??
+      "q8m - Quiz 8 Mastery";
     return `${baseTitle} | ${siteName}`;
   });
 
   const pageDescription = computed(() => {
-    return seoData.value.description || defaultSEO.description;
+    return seoData.value.description ?? defaultSEO.description ?? "";
   });
 
   const canonicalUrl = computed(() => {
@@ -69,16 +57,13 @@ export function useSEO(initialData: Partial<SEOData> = {}) {
       return seoData.value.canonical;
     }
 
-    const baseUrl = import.meta.env.VITE_CLIENT_URL || "https://quiz-platform.com";
+    const baseUrl = getBaseUrl();
     const path = route.fullPath;
     return `${baseUrl}${path}`;
   });
 
   const ogImage = computed(() => {
-    return (
-      seoData.value.ogImage ||
-      `${import.meta.env.VITE_CLIENT_URL || "https://quiz-platform.com"}/images/og-default.jpg`
-    );
+    return seoData.value.ogImage ?? `${getBaseUrl()}/images/og-default.jpg`;
   });
 
   // Update meta tags
@@ -111,25 +96,29 @@ export function useSEO(initialData: Partial<SEOData> = {}) {
     head.appendChild(canonicalTag);
 
     // Open Graph tags
-    addMetaTag("og:title", seoData.value.ogTitle || pageTitle.value, "property");
-    addMetaTag("og:description", seoData.value.ogDescription || pageDescription.value, "property");
+    addMetaTag("og:title", seoData.value.ogTitle ?? pageTitle.value, "property");
+    addMetaTag("og:description", seoData.value.ogDescription ?? pageDescription.value, "property");
     addMetaTag("og:image", ogImage.value, "property");
-    addMetaTag("og:type", seoData.value.ogType || "website", "property");
-    addMetaTag("og:url", seoData.value.ogUrl || canonicalUrl.value, "property");
-    addMetaTag("og:site_name", t("seo.siteName", "Vue 3 Quiz Platform"), "property");
+    addMetaTag("og:type", seoData.value.ogType ?? "website", "property");
+    addMetaTag("og:url", seoData.value.ogUrl ?? canonicalUrl.value, "property");
+    const siteNameTranslated = t("seo.siteName");
+    const siteName =
+      (typeof siteNameTranslated === "string" ? siteNameTranslated : null) ??
+      "q8m - Quiz 8 Mastery";
+    addMetaTag("og:site_name", siteName, "property");
     addMetaTag("og:locale", locale.value, "property");
 
     // Twitter Card tags
-    addMetaTag("twitter:card", seoData.value.twitterCard || "summary_large_image", "name");
-    addMetaTag("twitter:site", seoData.value.twitterSite || "@quizplatform", "name");
-    addMetaTag("twitter:creator", seoData.value.twitterCreator || "@quizplatform", "name");
-    addMetaTag("twitter:title", seoData.value.twitterTitle || pageTitle.value, "name");
+    addMetaTag("twitter:card", seoData.value.twitterCard ?? "summary_large_image", "name");
+    addMetaTag("twitter:site", seoData.value.twitterSite ?? "@quizplatform", "name");
+    addMetaTag("twitter:creator", seoData.value.twitterCreator ?? "@quizplatform", "name");
+    addMetaTag("twitter:title", seoData.value.twitterTitle ?? pageTitle.value, "name");
     addMetaTag(
       "twitter:description",
-      seoData.value.twitterDescription || pageDescription.value,
+      seoData.value.twitterDescription ?? pageDescription.value,
       "name"
     );
-    addMetaTag("twitter:image", seoData.value.twitterImage || ogImage.value, "name");
+    addMetaTag("twitter:image", seoData.value.twitterImage ?? ogImage.value, "name");
 
     // Robots meta
     const robotsContent = [];
@@ -159,7 +148,7 @@ export function useSEO(initialData: Partial<SEOData> = {}) {
   };
 
   const addAlternateLinks = () => {
-    const baseUrl = import.meta.env.VITE_CLIENT_URL || "https://quiz-platform.com";
+    const baseUrl = getBaseUrl();
     const currentPath = route.path;
 
     // Remove locale prefix if present
@@ -185,7 +174,7 @@ export function useSEO(initialData: Partial<SEOData> = {}) {
     document.head.appendChild(defaultTag);
   };
 
-  const addStructuredData = (data: Record<string, any>) => {
+  const addStructuredData = (data: StructuredData) => {
     const scriptTag = document.createElement("script");
     scriptTag.type = "application/ld+json";
     scriptTag.textContent = JSON.stringify(data);
@@ -208,7 +197,7 @@ export function useSEO(initialData: Partial<SEOData> = {}) {
   });
 
   // Generate structured data for different page types
-  const generateQuizStructuredData = (quiz: any) => {
+  const generateQuizStructuredData = (quiz: QuizData): StructuredData => {
     return {
       "@context": "https://schema.org",
       "@type": "Quiz",
@@ -221,25 +210,25 @@ export function useSEO(initialData: Partial<SEOData> = {}) {
       learningResourceType: "quiz",
       author: {
         "@type": "Organization",
-        name: "Vue 3 Quiz Platform",
+        name: "q8m - Quiz 8 Mastery",
       },
       publisher: {
         "@type": "Organization",
-        name: "Vue 3 Quiz Platform",
-        url: import.meta.env.VITE_CLIENT_URL || "https://quiz-platform.com",
+        name: "q8m - Quiz 8 Mastery",
+        url: getBaseUrl(),
       },
       dateCreated: quiz.createdAt,
       dateModified: quiz.updatedAt,
-      numberOfQuestions: quiz.questions?.length || 0,
-      timeRequired: quiz.estimatedTime,
+      numberOfQuestions: quiz.questions?.length ?? 0,
+      timeRequired: quiz.estimatedTime ?? "15 minutes",
       category: quiz.category,
-      keywords: quiz.tags?.join(", ") || "",
+      keywords: quiz.tags?.join(", ") ?? "",
     };
   };
 
-  const generatePricingStructuredData = (pricing: any) => {
+  const generatePricingStructuredData = (pricing: PricingData): StructuredData => {
     const offers =
-      pricing.plans?.map((plan: any) => ({
+      pricing.plans?.map((plan) => ({
         "@type": "Offer",
         name: plan.name,
         description: plan.description,
@@ -248,32 +237,35 @@ export function useSEO(initialData: Partial<SEOData> = {}) {
         availability: "https://schema.org/InStock",
         url: `${canonicalUrl.value}#${plan.id}`,
         validFrom: new Date().toISOString(),
-      })) || [];
+      })) ?? [];
 
     return {
       "@context": "https://schema.org",
       "@type": "Product",
-      name: "Vue 3 Quiz Platform Subscription",
-      description: "Comprehensive quiz platform for learning Vue 3, React, Angular, and more",
+      name: "q8m - Frontend Interview Mastery Subscription",
+      description:
+        "Comprehensive quiz platform with 500+ curated interview questions for mastering Angular, React, Next.js, Redux, TypeScript, and advanced frontend topics",
       url: canonicalUrl.value,
       inLanguage: locale.value,
       offers,
       brand: {
         "@type": "Brand",
-        name: "Vue 3 Quiz Platform",
+        name: "q8m - Quiz 8 Mastery",
       },
       category: "Educational Software",
     };
   };
 
-  const generateOrganizationStructuredData = () => {
+  const generateOrganizationStructuredData = (): StructuredData => {
+    const baseUrl = getBaseUrl();
     return {
       "@context": "https://schema.org",
       "@type": "Organization",
-      name: "Vue 3 Quiz Platform",
-      url: import.meta.env.VITE_CLIENT_URL || "https://quiz-platform.com",
-      logo: `${import.meta.env.VITE_CLIENT_URL || "https://quiz-platform.com"}/images/logo.png`,
-      description: "Interactive quiz platform for learning modern web development",
+      name: "q8m - Quiz 8 Mastery",
+      url: baseUrl,
+      logo: `${baseUrl}/images/logo.png`,
+      description:
+        "Professional frontend interview preparation platform with 500+ curated questions covering Angular, React, Next.js, Redux, TypeScript, and advanced topics",
       foundingDate: "2024",
       contactPoint: {
         "@type": "ContactPoint",

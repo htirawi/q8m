@@ -10,18 +10,9 @@
       <div class="access-denied-content">
         <!-- Lock Icon -->
         <div class="lock-icon">
-          <svg
-            class="h-16 w-16 text-gray-400"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-            />
+          <svg class="h-16 w-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
           </svg>
         </div>
 
@@ -35,30 +26,18 @@
         <div class="upgrade-options">
           <button @click="goToPricing" class="btn-primary">
             <svg class="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-              />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
             </svg>
             {{ $t("entitlements.upgradeNow") }}
           </button>
 
           <button v-if="showPreview" @click="showPreviewContent = true" class="btn-secondary">
             <svg class="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-              />
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-              />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
             </svg>
             {{ $t("entitlements.previewContent") }}
           </button>
@@ -68,36 +47,21 @@
         <div v-if="showPlanComparison" class="plan-comparison">
           <h4 class="comparison-title">{{ $t("entitlements.choosePlan") }}</h4>
           <div class="plan-grid">
-            <div
-              v-for="plan in availablePlans"
-              :key="plan.planId"
-              class="plan-card"
-              :class="{ 'plan-recommended': plan.recommended }"
-            >
+            <div v-for="plan in availablePlans" :key="plan.planId" class="plan-card"
+              :class="{ 'plan-recommended': plan.recommended }">
               <div class="plan-header">
                 <h5 class="plan-name">{{ plan.name }}</h5>
                 <div class="plan-price">
                   <span class="price-amount">{{ formatPrice(plan) }} </span>
-                  <span class="price-period"
-                    >{{ $t(`billing.${plan.billingCycle || "monthly"}`) }}
+                  <span class="price-period">{{ $t(`billing.${plan.billingCycle || "monthly"}`) }}
                   </span>
                 </div>
               </div>
               <div class="plan-features">
                 <ul class="feature-list">
                   <li v-for="feature in plan.features" :key="feature" class="feature-item">
-                    <svg
-                      class="h-4 w-4 text-green-500"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M5 13l4 4L19 7"
-                      />
+                    <svg class="h-4 w-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                     </svg>
                     <span>{{ feature }} </span>
                   </li>
@@ -121,22 +85,13 @@
     </div>
 
     <!-- Preview Modal -->
-    <div
-      v-if="showPreviewContent"
-      class="preview-modal-overlay"
-      @click="showPreviewContent = false"
-    >
+    <div v-if="showPreviewContent" class="preview-modal-overlay" @click="showPreviewContent = false">
       <div class="preview-modal" @click.stop>
         <div class="preview-header">
           <h3 class="preview-title">{{ $t("entitlements.contentPreview") }}</h3>
           <button @click="showPreviewContent = false" class="preview-close">
             <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
@@ -160,18 +115,9 @@ import { useI18n } from "vue-i18n";
 import { usePaymentStore } from "@/stores/payment";
 import { useEntitlementGuard, useContentAccess } from "@/composables/useEntitlementGuard";
 import type { PlanPricing } from "@/types/domain/payment";
+import type { ContentAccessGuardProps } from "@/types/ui/component-props";
 
-interface Props {
-  requiredEntitlement?: string;
-  requiredContentLevel?: string;
-  category?: string;
-  showPreview?: boolean;
-  showPlanComparison?: boolean;
-  customTitle?: string;
-  customDescription?: string;
-}
-
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<ContentAccessGuardProps>(), {
   showPreview: false,
   showPlanComparison: true,
 });

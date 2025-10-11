@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ref, reactive, computed, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { usePaymentStore } from "@/stores/payment";
@@ -6,16 +5,7 @@ import { useAuthStore } from "@/stores/auth";
 import { useErrorHandler } from "@/composables/useErrorHandler";
 import { useToast } from "@/composables/useToast";
 import type { PlanPricing, PaymentRequest } from "@/types/domain/payment";
-
-export interface BillingFormData {
-  name: string;
-  email: string;
-  street: string;
-  city: string;
-  state: string;
-  postalCode: string;
-  country: string;
-}
+import type { BillingFormData } from "@/types/composables/checkout";
 
 export function useCheckoutForm() {
   const { t } = useI18n();
@@ -81,14 +71,14 @@ export function useCheckoutForm() {
   const isFormValid = computed(() => {
     return Boolean(
       billingForm.name.trim() &&
-      billingForm.email.trim() &&
-      billingForm.street.trim() &&
-      billingForm.city.trim() &&
-      billingForm.state.trim() &&
-      billingForm.postalCode.trim() &&
-      billingForm.country &&
-      selectedPaymentMethod.value &&
-      Object.keys(errors).length === 0
+        billingForm.email.trim() &&
+        billingForm.street.trim() &&
+        billingForm.city.trim() &&
+        billingForm.state.trim() &&
+        billingForm.postalCode.trim() &&
+        billingForm.country &&
+        selectedPaymentMethod.value &&
+        Object.keys(errors).length === 0
     );
   });
 
@@ -137,8 +127,12 @@ export function useCheckoutForm() {
       } else {
         throw new Error(t("checkout.paymentFailed"));
       }
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : t("checkout.paymentFailed");
+    } catch (err) {
+      const error =
+        err instanceof Error
+          ? err
+          : new Error(typeof err === "string" ? err : t("checkout.paymentFailed"));
+      const errorMessage = error.message;
       errorHandler.handlePaymentError(error);
       toast.error(t("checkout.error.title"), errorMessage);
     } finally {

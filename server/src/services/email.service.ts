@@ -1,20 +1,7 @@
 import { env } from "@config/env.js";
 import nodemailer from "nodemailer";
 
-
-export interface EmailTemplate {
-  subject: string;
-  html: string;
-  text: string;
-}
-
-export interface EmailOptions {
-  to: string;
-  subject: string;
-  html: string;
-  text?: string;
-  from?: string;
-}
+import type { EmailOptions, EmailTemplate } from "../types/services/email";
 
 export class EmailService {
   private transporter: nodemailer.Transporter;

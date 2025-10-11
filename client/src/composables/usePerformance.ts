@@ -1,20 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars, no-undef */
 import { ref, onMounted, onUnmounted, readonly } from "vue";
-
-interface PerformanceMetrics {
-  lcp: number | null; // Largest Contentful Paint
-  fid: number | null; // First Input Delay
-  cls: number | null; // Cumulative Layout Shift
-  fcp: number | null; // First Contentful Paint
-  ttfb: number | null; // Time to First Byte
-}
-
-interface ResourceTiming {
-  name: string;
-  duration: number;
-  size: number;
-  type: string;
-}
+import type { PerformanceMetrics, ResourceTiming } from "@/types/composables/performance";
 
 export function usePerformance() {
   const metrics = ref<PerformanceMetrics>({
@@ -38,15 +23,18 @@ export function usePerformance() {
     const lcpObserver = new PerformanceObserver((list) => {
       const entries = list.getEntries();
       const lastEntry = entries[entries.length - 1];
-      metrics.value.lcp = lastEntry.startTime;
+      if (lastEntry) {
+        metrics.value.lcp = lastEntry.startTime;
+      }
     });
     lcpObserver.observe({ entryTypes: ["largest-contentful-paint"] });
 
     // First Input Delay
     const fidObserver = new PerformanceObserver((list) => {
       const entries = list.getEntries();
-      entries.forEach((entry: any) => {
-        metrics.value.fid = entry.processingStart - entry.startTime;
+      entries.forEach((entry) => {
+        const fidEntry = entry as PerformanceEntry & { processingStart: number };
+        metrics.value.fid = fidEntry.processingStart - entry.startTime;
       });
     });
     fidObserver.observe({ entryTypes: ["first-input"] });
@@ -55,9 +43,10 @@ export function usePerformance() {
     let clsValue = 0;
     const clsObserver = new PerformanceObserver((list) => {
       const entries = list.getEntries();
-      entries.forEach((entry: any) => {
-        if (!entry.hadRecentInput) {
-          clsValue += entry.value;
+      entries.forEach((entry) => {
+        const clsEntry = entry as PerformanceEntry & { hadRecentInput?: boolean; value: number };
+        if (!clsEntry.hadRecentInput) {
+          clsValue += clsEntry.value;
         }
       });
       metrics.value.cls = clsValue;
@@ -165,7 +154,7 @@ export function usePerformance() {
   };
 
   // Image optimization
-  const optimizeImage = (src: string, width?: number, height?: number): string => {
+  const optimizeImage = (src: string, _width?: number, _height?: number): string => {
     // In a real implementation, you might use a service like Cloudinary or ImageKit
     // For now, we'll return the original src
     return src;
@@ -173,14 +162,18 @@ export function usePerformance() {
 
   // Lazy loading utility
   const createIntersectionObserver = (
-    callback: IntersectionObserverCallback,
-    options?: IntersectionObserverInit
+    callback: (entries: IntersectionObserverEntry[], observer: IntersectionObserver) => void,
+    options?: {
+      root?: Element | null;
+      rootMargin?: string;
+      threshold?: number | number[];
+    }
   ) => {
     if (typeof window === "undefined" || !("IntersectionObserver" in window)) {
       return null;
     }
 
-    const defaultOptions: IntersectionObserverInit = {
+    const defaultOptions = {
       rootMargin: "50px",
       threshold: 0.1,
       ...options,

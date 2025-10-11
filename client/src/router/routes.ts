@@ -53,6 +53,14 @@ export const routes: RouteRecordRaw[] = [
       requiresGuest: true,
     },
   },
+  {
+    path: "/auth/callback",
+    name: "oauth-callback",
+    component: () => import("@/features/auth/pages/OAuthCallbackPage.vue"),
+    meta: {
+      title: "Authenticating - Quiz Platform",
+    },
+  },
   // Pricing routes
   {
     path: "/subscribe",

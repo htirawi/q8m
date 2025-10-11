@@ -6,103 +6,56 @@
       <!-- Name -->
       <div class="form-group">
         <label for="name" class="form-label"> {{ $t("checkout.fullName") }} * </label>
-        <input
-          id="name"
-          v-model="formData.name"
-          type="text"
-          required
-          class="form-input"
-          :class="{ 'form-input--error': errors.name }"
-          :placeholder="$t('checkout.namePlaceholder')"
-        />
+        <input id="name" v-model="formData.name" type="text" required class="form-input"
+          :class="{ 'form-input--error': errors.name }" :placeholder="$t('checkout.namePlaceholder')" />
         <p v-if="errors.name" class="form-error">{{ errors.name }}</p>
       </div>
 
       <!-- Email -->
       <div class="form-group">
         <label for="email" class="form-label"> {{ $t("checkout.email") }} * </label>
-        <input
-          id="email"
-          v-model="formData.email"
-          type="email"
-          required
-          class="form-input"
-          :class="{ 'form-input--error': errors.email }"
-          :placeholder="$t('checkout.emailPlaceholder')"
-        />
+        <input id="email" v-model="formData.email" type="email" required class="form-input"
+          :class="{ 'form-input--error': errors.email }" :placeholder="$t('checkout.emailPlaceholder')" />
         <p v-if="errors.email" class="form-error">{{ errors.email }}</p>
       </div>
 
       <!-- Street Address -->
       <div class="form-group">
         <label for="street" class="form-label"> {{ $t("checkout.streetAddress") }} * </label>
-        <input
-          id="street"
-          v-model="formData.street"
-          type="text"
-          required
-          class="form-input"
-          :class="{ 'form-input--error': errors.street }"
-          :placeholder="$t('checkout.streetPlaceholder')"
-        />
+        <input id="street" v-model="formData.street" type="text" required class="form-input"
+          :class="{ 'form-input--error': errors.street }" :placeholder="$t('checkout.streetPlaceholder')" />
         <p v-if="errors.street" class="form-error">{{ errors.street }}</p>
       </div>
 
       <!-- City -->
       <div class="form-group">
         <label for="city" class="form-label"> {{ $t("checkout.city") }} * </label>
-        <input
-          id="city"
-          v-model="formData.city"
-          type="text"
-          required
-          class="form-input"
-          :class="{ 'form-input--error': errors.city }"
-          :placeholder="$t('checkout.cityPlaceholder')"
-        />
+        <input id="city" v-model="formData.city" type="text" required class="form-input"
+          :class="{ 'form-input--error': errors.city }" :placeholder="$t('checkout.cityPlaceholder')" />
         <p v-if="errors.city" class="form-error">{{ errors.city }}</p>
       </div>
 
       <!-- State/Province -->
       <div class="form-group">
         <label for="state" class="form-label"> {{ $t("checkout.state") }} * </label>
-        <input
-          id="state"
-          v-model="formData.state"
-          type="text"
-          required
-          class="form-input"
-          :class="{ 'form-input--error': errors.state }"
-          :placeholder="$t('checkout.statePlaceholder')"
-        />
+        <input id="state" v-model="formData.state" type="text" required class="form-input"
+          :class="{ 'form-input--error': errors.state }" :placeholder="$t('checkout.statePlaceholder')" />
         <p v-if="errors.state" class="form-error">{{ errors.state }}</p>
       </div>
 
       <!-- Postal Code -->
       <div class="form-group">
         <label for="postalCode" class="form-label"> {{ $t("checkout.postalCode") }} * </label>
-        <input
-          id="postalCode"
-          v-model="formData.postalCode"
-          type="text"
-          required
-          class="form-input"
-          :class="{ 'form-input--error': errors.postalCode }"
-          :placeholder="$t('checkout.postalCodePlaceholder')"
-        />
+        <input id="postalCode" v-model="formData.postalCode" type="text" required class="form-input"
+          :class="{ 'form-input--error': errors.postalCode }" :placeholder="$t('checkout.postalCodePlaceholder')" />
         <p v-if="errors.postalCode" class="form-error">{{ errors.postalCode }}</p>
       </div>
 
       <!-- Country -->
       <div class="form-group">
         <label for="country" class="form-label"> {{ $t("checkout.country") }} * </label>
-        <select
-          id="country"
-          v-model="formData.country"
-          required
-          class="form-input"
-          :class="{ 'form-input--error': errors.country }"
-        >
+        <select id="country" v-model="formData.country" required class="form-input"
+          :class="{ 'form-input--error': errors.country }">
           <option value="">{{ $t("checkout.selectCountry") }}</option>
           <option value="US">United States</option>
           <option value="CA">Canada</option>
@@ -135,23 +88,9 @@
 <script setup lang="ts">
 import { reactive, watch, toRefs } from "vue";
 import { useI18n } from "vue-i18n";
+import type { BillingFormProps, BillingFormData } from "@/types/ui/component-props";
 
-interface BillingFormData {
-  name: string;
-  email: string;
-  street: string;
-  city: string;
-  state: string;
-  postalCode: string;
-  country: string;
-}
-
-interface Props {
-  modelValue: BillingFormData;
-  errors: Record<string, string>;
-}
-
-const props = defineProps<Props>();
+const props = defineProps<BillingFormProps>();
 
 const emit = defineEmits<{
   "update:modelValue": [value: BillingFormData];

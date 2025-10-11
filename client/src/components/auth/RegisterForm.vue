@@ -13,35 +13,17 @@
     <!-- Progressive Form -->
     <form @submit.prevent="handleSubmit" class="progressive-form">
       <!-- Step 1: Email Only -->
-      <EmailStep
-        v-if="currentStep === 1"
-        v-model:email="formData.email"
-        :is-loading="isLoading"
-        @continue="proceedToStep2"
-      />
+      <EmailStep v-if="currentStep === 1" v-model:email="formData.email" :is-loading="isLoading"
+        @continue="proceedToStep2" />
 
       <!-- Step 2: Additional Fields -->
-      <ProfileStep
-        v-if="currentStep === 2"
-        v-model:name="formData.name"
-        v-model:password="formData.password"
-        v-model:accept-terms="formData.acceptTerms"
-        :name-error="errors.name"
-        :password-error="errors.password"
-        :terms-error="errors.acceptTerms"
-        :is-loading="isLoading"
-        @back="goBackToStep1"
-      />
+      <ProfileStep v-if="currentStep === 2" v-model:name="formData.name" v-model:password="formData.password"
+        v-model:accept-terms="formData.acceptTerms" :name-error="errors.name" :password-error="errors.password"
+        :terms-error="errors.acceptTerms" :is-loading="isLoading" @back="goBackToStep1" />
 
       <!-- Error Message -->
       <div v-if="error" class="error-message">
-        <svg
-          class="error-icon"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-        >
+        <svg class="error-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="12" cy="12" r="10" />
           <line x1="15" y1="9" x2="9" y2="15" />
           <line x1="9" y1="9" x2="15" y2="15" />
@@ -69,27 +51,14 @@ import { useAuthStore } from "@/stores/auth";
 import OAuthButtons from "@/features/auth/components/OAuthButtons.vue";
 import EmailStep from "@/features/auth/components/EmailStep.vue";
 import ProfileStep from "@/features/auth/components/ProfileStep.vue";
-
-interface RegisterFormData {
-  email: string;
-  name: string;
-  password: string;
-  acceptTerms: boolean;
-}
-
-interface FormErrors {
-  email?: string;
-  name?: string;
-  password?: string;
-  acceptTerms?: string;
-}
+import type { RegisterFormData, FormErrors } from "@/types/ui/component-props";
 
 const { t } = useI18n();
 const authStore = useAuthStore();
 
 // Emits
 const emit = defineEmits<{
-  "oauth-login": [provider: "google" | "facebook"];
+  "oauth-login": [provider: "google"];
   "registration-success": [email: string];
   "show-login": [show: boolean];
 }>();
@@ -112,7 +81,7 @@ const isLoading = computed(() => authStore.isLoading);
 const error = computed(() => authStore.error);
 
 // Methods
-const handleOAuthLogin = (provider: "google" | "facebook") => {
+const handleOAuthLogin = (provider: "google") => {
   emit("oauth-login", provider);
 };
 

@@ -16,13 +16,9 @@
 
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
+import type { SubscriptionActionsProps } from "@/types/ui/component-props";
 
-interface Props {
-  canUpgrade: boolean;
-  isActive: boolean;
-}
-
-defineProps<Props>();
+defineProps<SubscriptionActionsProps>();
 
 const emit = defineEmits<{
   upgrade: [];
@@ -65,7 +61,7 @@ const handleStartQuizzes = () => {
 }
 
 /* Mobile Responsiveness */
-@media (width <= 640px) {
+@media (width <=640px) {
   .action-buttons {
     @apply flex-col;
   }

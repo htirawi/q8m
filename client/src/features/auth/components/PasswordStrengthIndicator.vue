@@ -1,12 +1,7 @@
 <template>
   <div v-if="password" class="password-strength">
     <div class="strength-bars">
-      <div
-        v-for="level in 4"
-        :key="level"
-        class="strength-bar"
-        :class="getStrengthClass(level)"
-      ></div>
+      <div v-for="level in 4" :key="level" class="strength-bar" :class="getStrengthClass(level)"></div>
     </div>
     <span class="strength-text">{{ strengthText }}</span>
   </div>
@@ -15,12 +10,9 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
+import type { PasswordStrengthIndicatorProps } from "@/types/ui/component-props";
 
-interface Props {
-  password: string;
-}
-
-const props = defineProps<Props>();
+const props = defineProps<PasswordStrengthIndicatorProps>();
 const { t } = useI18n();
 
 const strength = computed(() => {

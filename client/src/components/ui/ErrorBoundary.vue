@@ -3,12 +3,8 @@
     <div class="error-content">
       <div class="error-icon">
         <svg class="h-12 w-12 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"
-          />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
         </svg>
       </div>
 
@@ -23,11 +19,9 @@
             <summary class="error-debug-summary">
               {{ $t("common.technicalDetails") }}
             </summary>
-            <pre class="error-debug-content"
-              >{{ errorDetails }}
+            <pre class="error-debug-content">{{ errorDetails }}
 
-</pre
-            >
+</pre>
           </details>
         </div>
 
@@ -56,14 +50,9 @@ import { ref, onErrorCaptured, provide, inject, type Ref } from "vue";
 import { useRouter } from "vue-router";
 import { useErrorHandler } from "@/composables/useErrorHandler";
 import { useToast } from "@/composables/useToast";
+import type { ErrorBoundaryProps } from "@/types/ui/component-props";
 
-interface Props {
-  fallback?: boolean;
-  showDetails?: boolean;
-  onRetry?: () => void;
-}
-
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<ErrorBoundaryProps>(), {
   fallback: true,
   showDetails: false,
 });

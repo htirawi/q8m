@@ -2,18 +2,7 @@ import { createHmac } from "crypto";
 
 import { env } from "@config/env.js";
 
-interface SignedUrlOptions {
-  expiresIn?: number; // seconds, default 1 hour
-  userId?: string;
-  resource?: string;
-  metadata?: Record<string, unknown>;
-}
-
-interface SignedUrlData {
-  url: string;
-  expiresAt: Date;
-  signature: string;
-}
+import type { SignedUrlData, SignedUrlOptions } from "../types/services/url";
 
 export class SignedUrlService {
   private static instance: SignedUrlService;

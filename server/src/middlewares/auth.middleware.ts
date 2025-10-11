@@ -1,9 +1,12 @@
-
 import { Session } from "@models/Session.js";
 import { User } from "@models/User.js";
 import type { JWTPayload } from "@server/types/common";
 import { jwtService } from "@services/jwt.service.js";
-import type { FastifyRequest, FastifyReply, FastifyInstance } from "fastify";
+import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
+
+import type { AuthOptions } from "../types/middleware/auth";
+
+export type { AuthOptions };
 
 // Extend FastifyRequest to include custom user and session properties
 declare module "fastify" {
@@ -27,13 +30,6 @@ declare module "fastify" {
       roles: string | string[]
     ) => (request: FastifyRequest, reply: FastifyReply) => Promise<void>;
   }
-}
-
-export interface AuthOptions {
-  requireEmailVerification?: boolean;
-  requiredRole?: string[];
-  requiredEntitlements?: string[];
-  allowExpiredTokens?: boolean;
 }
 
 /**

@@ -2,10 +2,10 @@ import { createRouter, createWebHistory } from "vue-router";
 import type { RouteRecordRaw } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 import i18n from "@/i18n";
+import type { RouteMeta } from "@/types/router";
+import { SUPPORTED_LOCALES, type SupportedLocale } from "@/types/router";
 
-// Supported locales
-export const SUPPORTED_LOCALES = ["en", "ar"] as const;
-export type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
+export { SUPPORTED_LOCALES, type SupportedLocale };
 
 // Default locale
 export const DEFAULT_LOCALE: SupportedLocale = "en";
@@ -14,7 +14,7 @@ export const DEFAULT_LOCALE: SupportedLocale = "en";
 const createLocalizedRoute = (
   path: string,
   component: RouteRecordRaw["component"],
-  meta: Record<string, unknown>,
+  meta: RouteMeta,
   name?: string
 ): RouteRecordRaw => {
   return {

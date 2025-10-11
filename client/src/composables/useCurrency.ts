@@ -4,29 +4,11 @@
  * Handles currency detection, conversion, and formatting
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
-
 import { ref, computed, onMounted } from "vue";
-import { useI18n } from "vue-i18n";
 import { usePaymentStore } from "@/stores/payment";
-
-export interface CurrencyInfo {
-  code: string;
-  name: string;
-  symbol: string;
-  locale: string;
-  country: string;
-  rate: number;
-}
-
-export interface GeoLocationInfo {
-  country: string;
-  currency: string;
-  timezone: string;
-}
+import type { CurrencyInfo, GeoLocationInfo } from "@/types/composables/currency";
 
 export function useCurrency() {
-  const { locale } = useI18n();
   const paymentStore = usePaymentStore();
 
   const detectedCurrency = ref<string | null>(null);
@@ -134,7 +116,7 @@ export function useCurrency() {
   // Detect currency from browser locale
   const detectFromBrowserLocale = (): string | null => {
     try {
-      const browserLocale = navigator.language || (navigator as any).userLanguage;
+      const browserLocale = navigator.language;
 
       // Extract country code from locale (e.g., "en-US" -> "US")
       const countryCode = browserLocale.split("-")[1]?.toUpperCase();
@@ -202,13 +184,16 @@ export function useCurrency() {
       const response = await fetch("https://ipapi.co/json/");
       const data = await response.json();
 
-      if (data.country_code && countryCurrencyMap[data.country_code]) {
+      const countryCode = data.country_code as string | undefined;
+      if (countryCode && countryCurrencyMap[countryCode]) {
         geoLocation.value = {
-          country: data.country_code,
-          currency: countryCurrencyMap[data.country_code],
-          timezone: data.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone,
+          country: countryCode,
+          currency: countryCurrencyMap[countryCode],
+          timezone:
+            (data.timezone as string | undefined) ||
+            Intl.DateTimeFormat().resolvedOptions().timeZone,
         };
-        return countryCurrencyMap[data.country_code];
+        return countryCurrencyMap[countryCode];
       }
 
       return null;
@@ -228,8 +213,8 @@ export function useCurrency() {
       const data = await response.json();
 
       return data.countryCode || null;
-    } catch (error) {
-      console.warn("Reverse geocoding failed:", error);
+    } catch (_error) {
+      console.warn("Reverse geocoding failed");
       return null;
     }
   };
@@ -267,15 +252,23 @@ export function useCurrency() {
     const rates = paymentStore.currencyRates;
     if (!rates) return amount;
 
+    // Helper to safely get rate
+    const getRate = (currency: string): number => {
+      if (currency === "USD") return rates.USD;
+      if (currency === "JOD") return rates.JOD;
+      if (currency === "SAR") return rates.SAR;
+      return 1;
+    };
+
     // Convert to USD first, then to target currency
     let usdAmount = amount;
     if (fromCurrency !== "USD") {
-      const fromRate = rates[fromCurrency] || 1;
+      const fromRate = getRate(fromCurrency);
       usdAmount = amount / fromRate;
     }
 
     if (toCurrency !== "USD") {
-      const toRate = rates[toCurrency] || 1;
+      const toRate = getRate(toCurrency);
       return usdAmount * toRate;
     }
 
@@ -289,8 +282,16 @@ export function useCurrency() {
     const rates = paymentStore.currencyRates;
     if (!rates) return 1;
 
-    const fromRate = rates[fromCurrency] || 1;
-    const toRate = rates[toCurrency] || 1;
+    // Helper to safely get rate
+    const getRate = (currency: string): number => {
+      if (currency === "USD") return rates.USD;
+      if (currency === "JOD") return rates.JOD;
+      if (currency === "SAR") return rates.SAR;
+      return 1;
+    };
+
+    const fromRate = getRate(fromCurrency);
+    const toRate = getRate(toCurrency);
 
     return toRate / fromRate;
   };
@@ -330,7 +331,7 @@ export function useCurrency() {
     try {
       const formatter = new Intl.DisplayNames([targetLocale], { type: "currency" });
       return formatter.of(currency);
-    } catch (error) {
+    } catch (_error) {
       return currency;
     }
   };

@@ -63,7 +63,7 @@ q8m is a bilingual (English/Arabic) interview preparation platform built with Vu
 │                    EXTERNAL SERVICES                           │
 ├─────────────────────────────────────────────────────────────────┤
 │  MongoDB Atlas │ PayPal │ APS Gateway │ HyperPay │ Google OAuth │
-│  Facebook OAuth │ FX API │ Email Service │ Webhooks           │
+│  FX API │ Email Service │ Webhooks                             │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
@@ -87,7 +87,7 @@ q8m is a bilingual (English/Arabic) interview preparation platform built with Vu
 - Fastify 4.24+ (web framework)
 - TypeScript 5.6+ (strict mode)
 - MongoDB Atlas + Mongoose 8.0+ (database)
-- JWT + OAuth (Google/Facebook authentication)
+- JWT + OAuth (Google authentication)
 - PayPal + APS/HyperPay (payments)
 - Zod 3.22+ (validation)
 - Rate limiting, CSRF, CSP (security)
@@ -238,7 +238,6 @@ openssl rand -hex 32                                # For CSRF_SECRET
 **OAuth Providers:**
 
 - **Google**: [Google Cloud Console](https://console.developers.google.com/)
-- **Facebook**: [Facebook Developers](https://developers.facebook.com/)
 
 **Email Service:**
 
@@ -285,7 +284,7 @@ openssl rand -hex 32                                # For CSRF_SECRET
 1. **Signup → Verify → Login**
    - Email/password registration
    - Email verification required
-   - OAuth (Google/Facebook) support
+   - OAuth (Google) support
 
 2. **Payment Flow**
    - PayPal checkout with redirect

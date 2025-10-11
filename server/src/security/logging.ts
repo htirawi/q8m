@@ -31,6 +31,9 @@ export function safeLogFields(fields: Record<string, unknown>): Record<string, u
       out[k] = v;
     } else if (v == null) {
       out[k] = v;
+    } else if (typeof v === "object" && !Array.isArray(v)) {
+      // Recursively sanitize nested objects
+      out[k] = safeLogFields(v as Record<string, unknown>);
     } else {
       out[k] = sanitizeForLog(JSON.stringify(v));
     }
@@ -70,8 +73,16 @@ export function maskEmail(email: string): string {
   if (!domain) return maskSensitive(email, 2);
 
   const maskedLocal = maskSensitive(localPart || "", 2);
-  const maskedDomain = maskSensitive(domain, 3);
 
+  // Preserve dot structure in domain while masking
+  const domainParts = domain.split(".");
+  if (domainParts.length > 1) {
+    const tld = domainParts[domainParts.length - 1] || "";
+    const maskedDomainBase = "*".repeat(domain.length - tld.length - 1);
+    return `${maskedLocal}@${maskedDomainBase}.${tld}`;
+  }
+
+  const maskedDomain = maskSensitive(domain, 3);
   return `${maskedLocal}@${maskedDomain}`;
 }
 

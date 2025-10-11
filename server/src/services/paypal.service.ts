@@ -1,6 +1,5 @@
 import * as crypto from "crypto";
 
-
 import { features } from "@config/appConfig.js";
 import { Purchase } from "@models/Purchase.js";
 import type { IPurchase } from "@models/Purchase.js";
@@ -10,36 +9,13 @@ import { logPaymentEvent } from "@server/security/logging.js";
 import { currencyService } from "@services/currency.service.js";
 import paypal from "paypal-rest-sdk";
 
-export interface PayPalPaymentRequest {
-  amount: number;
-  currency: "USD" | "JOD" | "SAR";
-  planType: "INTERMEDIATE" | "SENIOR" | "BUNDLE";
-  userId: string;
-  userEmail: string;
-  userName: string;
-  returnUrl: string;
-  cancelUrl: string;
-}
+import type {
+  PayPalPaymentRequest,
+  PayPalPaymentResponse,
+  PayPalWebhookData,
+} from "../types/services/payment-services";
 
-interface PayPalPaymentResponse {
-  id: string;
-  state: string;
-  links: Array<{
-    href: string;
-    rel: string;
-    method: string;
-  }>;
-  paymentId: string;
-  approvalUrl: string;
-  orderId: string;
-}
-
-export interface PayPalWebhookData {
-  id: string;
-  event_type: string;
-  resource: Record<string, unknown>;
-  create_time: string;
-}
+export type { PayPalPaymentRequest, PayPalPaymentResponse, PayPalWebhookData };
 
 export class PayPalService {
   private static instance: PayPalService;
