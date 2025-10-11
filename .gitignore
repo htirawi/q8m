@@ -67,9 +67,13 @@ scripts/internal/
 scripts/backups/
 scripts/tools/
 
-# Documentation files in root (keep only README.md and LICENSE)
+# Documentation files (keep local, not pushed to git)
+# Keep only essential docs in root: README.md, CONTRIBUTING.md, SECURITY.md, LICENSE
+docs/
 *.md
 !README.md
+!CONTRIBUTING.md
+!SECURITY.md
 !LICENSE
 
 # Backup and temporary files
