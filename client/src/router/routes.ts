@@ -38,7 +38,7 @@ export const routes: RouteRecordRaw[] = [
   {
     path: "/login",
     name: "login",
-    component: () => import("@/features/auth/pages/LoginPage.vue"),
+    component: () => import("@/features/auth/pages/AuthPage.vue"),
     meta: {
       title: "Login - Quiz Platform",
       requiresGuest: true,
@@ -47,7 +47,7 @@ export const routes: RouteRecordRaw[] = [
   {
     path: "/register",
     name: "register",
-    component: () => import("@/features/auth/pages/RegisterPage.vue"),
+    component: () => import("@/features/auth/pages/AuthPage.vue"),
     meta: {
       title: "Register - Quiz Platform",
       requiresGuest: true,
