@@ -5,8 +5,8 @@ import { cleanup } from "@testing-library/vue";
 import { createPinia } from "pinia";
 import { createI18n } from "vue-i18n";
 import { createApp } from "vue";
-import en from "./src/locales/en.json";
-import ar from "./src/locales/ar.json";
+import en from "./src/i18n/locales/en.json";
+import ar from "./src/i18n/locales/ar.json";
 
 // Create test app instance
 let testApp: any;

@@ -62,7 +62,8 @@ function sanitizeRedirect(redirect: string | undefined): string {
   
   // Ensure redirect starts with / and doesn't contain protocol or domain
   const cleaned = redirect.trim();
-  if (!cleaned.startsWith("/") || cleaned.includes("://")) {
+  // Reject if it doesn't start with / or contains :// or starts with // (protocol-relative URL)
+  if (!cleaned.startsWith("/") || cleaned.includes("://") || cleaned.startsWith("//")) {
     return DEFAULT_REDIRECT;
   }
   
