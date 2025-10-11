@@ -19,6 +19,9 @@ const EnvSchema = z.object({
   JWT_REFRESH_SECRET: z.string().min(32, "JWT refresh secret must be at least 32 characters"),
   JWT_EXPIRES_IN: z.string().default("15m"),
   JWT_REFRESH_EXPIRES_IN: z.string().default("7d"),
+  
+  // Testing whitelist (comma-separated emails that bypass email verification)
+  TEST_EMAIL_WHITELIST: z.string().optional().default(""),
 
   // OAuth Configuration
   GOOGLE_CLIENT_ID: z.string().min(1, "Google Client ID is required"),

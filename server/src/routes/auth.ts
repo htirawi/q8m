@@ -9,6 +9,7 @@ import { comboKey, ipKey } from "@server/security/rateLimit.js";
 import { emailService } from "@services/email.service.js";
 import { jwtService } from "@services/jwt.service.js";
 import { secureCookieService } from "@services/secure-cookie.service.js";
+import { isEmailWhitelisted } from "@utils/email-whitelist.js";
 import type { FastifyInstance } from "fastify";
 import { z } from "zod";
 import { zodToJsonSchema } from "zod-to-json-schema";
@@ -121,6 +122,9 @@ export default async function authRoutes(fastify: FastifyInstance) {
           });
         }
 
+        // Check if email is whitelisted for testing (auto-verify)
+        const isWhitelisted = isEmailWhitelisted(email);
+
         // Create new user
         const user = new User({
           email,
@@ -131,23 +135,33 @@ export default async function authRoutes(fastify: FastifyInstance) {
           acceptTerms,
           acceptTermsAt: acceptTerms ? new Date() : undefined,
           acceptTermsVersion: "1.0",
+          isEmailVerified: isWhitelisted, // Auto-verify whitelisted emails
         });
 
         await user.save();
 
-        // Generate verification token
-        const verificationToken = await VerificationToken.createToken(
-          user._id,
-          "email_verification",
-          24 // 24 hours
-        );
+        // Only send verification email for non-whitelisted emails
+        if (!isWhitelisted) {
+          // Generate verification token
+          const verificationToken = await VerificationToken.createToken(
+            user._id,
+            "email_verification",
+            24 // 24 hours
+          );
 
-        // Send verification email
-        const verificationUrl = `${env.CLIENT_URL}/verify-email?token=${verificationToken.token}`;
-        await emailService.sendEmailVerification(user.email, user.name, verificationUrl);
+          // Send verification email
+          const verificationUrl = `${env.CLIENT_URL}/verify-email?token=${verificationToken.token}`;
+          await emailService.sendEmailVerification(user.email, user.name, verificationUrl);
+        } else {
+          // For whitelisted emails, send welcome email immediately
+          await emailService.sendWelcomeEmail(user.email, user.name);
+          request.log.info(`Whitelisted email registered: ${email} (auto-verified)`);
+        }
 
         reply.status(201).send({
-          message: "User registered successfully. Please check your email for verification.",
+          message: isWhitelisted
+            ? "User registered successfully. Email auto-verified for testing."
+            : "User registered successfully. Please check your email for verification.",
           user: {
             id: user._id.toString(),
             email: user.email,
