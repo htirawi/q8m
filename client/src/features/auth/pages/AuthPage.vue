@@ -1,5 +1,5 @@
 <template>
-  <div class="login-page">
+  <div class="auth-page">
     <!-- Skip to main content for accessibility -->
     <a
       href="#main-content"
@@ -9,7 +9,7 @@
     </a>
 
     <!-- Header Section -->
-    <div class="login-header">
+    <div class="auth-header">
       <div class="container">
         <div class="header-content">
           <!-- Logo -->
@@ -24,26 +24,33 @@
             <h1 class="logo-text">q8m</h1>
           </div>
 
-          <!-- Title and Subtitle -->
-          <h2 class="login-title">
-            {{ $t("auth.login.welcomeBack") }}
+          <!-- Dynamic Title and Subtitle based on mode -->
+          <h2 class="auth-title">
+            {{ $t(`auth.${mode}.${mode === 'login' ? 'welcomeBack' : 'title'}`) }}
           </h2>
-          <p class="login-subtitle">
-            {{ $t("auth.login.subtitle") }}
+          <p class="auth-subtitle">
+            {{ $t(`auth.${mode}.subtitle`) }}
           </p>
         </div>
       </div>
     </div>
 
     <!-- Main Content -->
-    <main id="main-content" class="login-content">
+    <main id="main-content" class="auth-content">
       <div class="container">
-        <div class="login-form-container">
+        <div class="auth-form-container">
+          <!-- Dynamic Form Component based on mode -->
           <LoginForm
+            v-if="mode === 'login'"
             @oauth-login="handleOAuthLogin"
             @login-success="handleLoginSuccess"
             @show-register="handleShowRegister"
             @show-forgot-password="handleShowForgotPassword"
+          />
+          <RegisterForm
+            v-else-if="mode === 'register'"
+            @oauth-login="handleOAuthLogin"
+            @registration-success="handleRegistrationSuccess"
           />
         </div>
       </div>
@@ -52,15 +59,24 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from "vue-router";
+import { computed } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import { useCheckoutRedirect } from "@/composables/useCheckoutRedirect";
 import { useToast } from "@/composables/useToast";
 import LoginForm from "@/components/auth/LoginForm.vue";
+import RegisterForm from "@/components/auth/RegisterForm.vue";
 
+const route = useRoute();
+
+// Determine mode from route name
+const mode = computed(() => {
+  return route.name === "login" ? "login" : "register";
+});
 const router = useRouter();
 const { checkoutUrl, clearParams } = useCheckoutRedirect();
-const { authSuccess } = useToast();
+const { authSuccess, info } = useToast();
 
+// OAuth Login Handler
 function handleOAuthLogin(provider: "google") {
   // Redirect to OAuth endpoint on the backend
   const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api";
@@ -73,6 +89,7 @@ function handleOAuthLogin(provider: "google") {
   window.location.href = oauthUrl;
 }
 
+// Login Success Handler
 async function handleLoginSuccess() {
   // Show success toast
   authSuccess("login");
@@ -84,9 +101,28 @@ async function handleLoginSuccess() {
   clearParams();
 }
 
+// Registration Success Handler
+function handleRegistrationSuccess(_email: string) {
+  // Show success toast
+  authSuccess("signup");
+  
+  // Show info toast for email verification
+  info("Check your email", "Please check your inbox and click the verification link to complete registration.");
+
+  // Navigate to login page while preserving query params
+  const { query } = route;
+  router.replace({ 
+    name: "login", 
+    query 
+  });
+  
+  // Don't clear params yet - they'll be needed after login
+}
+
+// Navigation Handlers
 function handleShowRegister() {
   // Navigate to register page while preserving query params
-  const { query } = router.currentRoute.value;
+  const { query } = route;
   router.push({
     name: "register",
     query,
@@ -103,7 +139,7 @@ function handleShowForgotPassword() {
 
 <style scoped>
 /* Page Layout */
-.login-page {
+.auth-page {
   @apply min-h-screen bg-gray-50;
   @apply dark:bg-gray-900;
 }
@@ -113,7 +149,7 @@ function handleShowForgotPassword() {
 }
 
 /* Header Section */
-.login-header {
+.auth-header {
   @apply border-b border-gray-200 bg-white;
   @apply dark:border-gray-700 dark:bg-gray-800;
 }
@@ -141,34 +177,34 @@ function handleShowForgotPassword() {
   @apply dark:text-white;
 }
 
-.login-title {
+.auth-title {
   @apply mb-4 text-3xl font-bold text-gray-900;
   @apply dark:text-white;
   @apply sm:text-4xl;
 }
 
-.login-subtitle {
+.auth-subtitle {
   @apply text-lg text-gray-600;
   @apply dark:text-gray-400;
   @apply mx-auto max-w-2xl;
 }
 
 /* Main Content */
-.login-content {
+.auth-content {
   @apply py-12;
 }
 
-.login-form-container {
+.auth-form-container {
   @apply mx-auto max-w-md;
 }
 
 /* Responsive Design */
 @media (max-width: 640px) {
-  .login-title {
+  .auth-title {
     @apply text-2xl;
   }
 
-  .login-subtitle {
+  .auth-subtitle {
     @apply text-base;
   }
 

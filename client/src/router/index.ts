@@ -105,7 +105,7 @@ const routes: RouteRecordRaw[] = [
     () =>
       import(
         /* webpackChunkName: "auth" */
-        "@/features/auth/pages/LoginPage.vue"
+        "@/features/auth/pages/AuthPage.vue"
       ),
     {
       title: "Login - q8m",
@@ -119,7 +119,7 @@ const routes: RouteRecordRaw[] = [
     () =>
       import(
         /* webpackChunkName: "auth" */
-        "@/features/auth/pages/RegisterPage.vue"
+        "@/features/auth/pages/AuthPage.vue"
       ),
     {
       title: "Register - q8m",
