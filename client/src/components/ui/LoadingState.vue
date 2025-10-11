@@ -1,7 +1,7 @@
 <template>
   <div class="loading-state" :class="containerClasses" role="status" :aria-label="ariaLabel">
     <div class="loading-content">
-      <LoadingSpinner :size="spinnerSize" :color="spinnerColor" :text="text" :show-text="showText" />
+      <LoadingSpinner :size="spinnerSize as 'sm' | 'md' | 'lg'" :color="spinnerColor as 'primary' | 'white' | 'gray'" :text="text" :show-text="showText" />
 
       <div v-if="description" class="loading-description">
         {{ description }}
