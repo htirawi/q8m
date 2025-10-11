@@ -51,23 +51,7 @@
             <LangSwitch class="nav-lang-switch" />
 
             <template v-if="authStore.isAuthenticated">
-              <RouterLink
-                to="/account"
-                class="nav-link"
-                :class="{ 'nav-link--active': $route.name === 'account' }"
-                role="menuitem"
-              >
-                {{ $t("navigation.account") }}
-              </RouterLink>
-              <Button
-                variant="outline"
-                size="sm"
-                @click="handleLogout"
-                class="nav-logout"
-                :aria-label="$t('a11y.logout')"
-              >
-                {{ $t("navigation.logout") }}
-              </Button>
+              <UserMenu />
             </template>
             <template v-else>
               <RouterLink to="/login" class="nav-link" role="menuitem">
@@ -155,17 +139,14 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 import Button from "@/components/ui/Button.vue";
 import LangSwitch from "@/components/ui/LangSwitch.vue";
 import ToastContainer from "@/components/ui/ToastContainer.vue";
+import UserMenu from "@/components/ui/UserMenu.vue";
 
 // Stores
 const authStore = useAuthStore();
-
-// Router
-const router = useRouter();
 
 // Methods
 const skipToMain = (event: Event) => {
@@ -175,11 +156,6 @@ const skipToMain = (event: Event) => {
     mainContent.focus();
     mainContent.scrollIntoView({ behavior: "smooth" });
   }
-};
-
-const handleLogout = async () => {
-  await authStore.logout();
-  router.push("/");
 };
 </script>
 

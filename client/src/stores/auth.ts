@@ -65,6 +65,38 @@ export const useAuthStore = defineStore("auth", () => {
     setError(null);
 
     try {
+      // Mock login for whitelisted dev emails
+      const DEV_WHITELIST = ["dev@example.com"];
+      const isDev = import.meta.env.DEV;
+
+      if (isDev && DEV_WHITELIST.includes(credentials.email.toLowerCase())) {
+        // Mock successful login with test user
+        console.warn(`[DEV] Mock login for whitelisted email: ${credentials.email}`);
+
+        // Simulate API delay
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        const mockUser: User = {
+          id: "dev-user-123",
+          email: credentials.email,
+          name: "Dev User",
+          role: "admin",
+          isEmailVerified: true,
+          permissions: ["read", "write", "admin"],
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        };
+
+        setUser(mockUser);
+        setTokens({
+          accessToken: "dev-mock-token",
+          refreshToken: "dev-mock-refresh-token",
+          expiresIn: 15 * 60,
+        });
+
+        return true;
+      }
+
       const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: {
@@ -409,6 +441,44 @@ export const useAuthStore = defineStore("auth", () => {
     }
   }
 
+  async function checkEmailExists(email: string): Promise<boolean> {
+    // Whitelist for development testing
+    const DEV_WHITELIST = ["dev@example.com"];
+    const isDev = import.meta.env.DEV;
+
+    if (isDev && DEV_WHITELIST.includes(email.toLowerCase())) {
+      console.warn(`[DEV] Whitelisted email detected: ${email} - treating as existing account`);
+      return true;
+    }
+
+    try {
+      const response = await fetch("/api/auth/check-email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        // If endpoint doesn't exist (404), fall back to mock behavior
+        if (response.status === 404) {
+          throw new Error("Endpoint not implemented");
+        }
+        throw new Error(data.message ?? "Email check failed");
+      }
+
+      return data.exists ?? false;
+    } catch (_err) {
+      // Fallback mock behavior for development
+      // In production, this should always hit the real API
+      console.warn("checkEmailExists: API not available, using mock behavior");
+      return false;
+    }
+  }
+
   // Initialize auth state from localStorage
   function initializeAuth() {
     const accessToken = localStorage.getItem("accessToken");
@@ -448,6 +518,7 @@ export const useAuthStore = defineStore("auth", () => {
     forgotPassword,
     resetPassword,
     changePassword,
+    checkEmailExists,
     initializeAuth,
 
     // Helpers

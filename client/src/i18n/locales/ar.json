@@ -9,6 +9,9 @@
     "pricing": "الأسعار",
     "quiz": "الاختبارات",
     "account": "الحساب",
+    "profile": "الملف الشخصي",
+    "settings": "الإعدادات",
+    "userMenu": "قائمة المستخدم",
     "login": "تسجيل الدخول",
     "register": "إنشاء حساب",
     "logout": "تسجيل الخروج",
@@ -267,6 +270,37 @@
       "alreadyHaveAccount": "هل لديك حساب بالفعل؟",
       "signIn": "تسجيل الدخول"
     },
+    "login": {
+      "title": "مرحباً بعودتك",
+      "subtitle": "سجل دخولك لمتابعة رحلة التعلم",
+      "signIn": "تسجيل الدخول",
+      "signingIn": "جاري تسجيل الدخول...",
+      "rememberMe": "تذكرني",
+      "forgotPassword": "نسيت كلمة المرور؟",
+      "orContinueWith": "أو تابع مع",
+      "google": "متابعة مع جوجل",
+      "noAccount": "ليس لديك حساب؟",
+      "signUp": "إنشاء حساب"
+    },
+    "unified": {
+      "title": "مرحباً",
+      "subtitle": "سجل دخولك أو أنشئ حسابك",
+      "or": "أو",
+      "continue": "متابعة",
+      "checking": "جاري التحقق...",
+      "signIn": "تسجيل الدخول",
+      "signUp": "إنشاء حساب",
+      "signingIn": "جاري تسجيل الدخول...",
+      "creatingAccount": "جاري إنشاء الحساب...",
+      "forgotPassword": "نسيت كلمة المرور؟",
+      "changeEmail": "تغيير البريد الإلكتروني",
+      "change": "تغيير",
+      "showPassword": "إظهار كلمة المرور",
+      "hidePassword": "إخفاء كلمة المرور",
+      "continueWithGoogle": "متابعة مع جوجل",
+      "secureEncrypted": "آمن ومشفر",
+      "joinThousands": "انضم إلى 10,000+ مطور"
+    },
     "fields": {
       "name": "الاسم الكامل",
       "namePlaceholder": "أدخل اسمك الأول واسم العائلة",
@@ -282,13 +316,18 @@
       "nameMinLength": "يجب أن يكون الاسم حرفين على الأقل",
       "emailRequired": "البريد الإلكتروني مطلوب",
       "emailInvalid": "تنسيق البريد الإلكتروني غير صحيح",
+      "emailAlreadyRegistered": "هذا البريد الإلكتروني مسجل مسبقاً. يرجى تسجيل الدخول بدلاً من ذلك.",
       "passwordRequired": "كلمة المرور مطلوبة",
       "passwordMinLength": "يجب أن تكون كلمة المرور 8 أحرف على الأقل",
+      "passwordUppercase": "يجب أن تحتوي كلمة المرور على حرف كبير واحد على الأقل",
+      "passwordLowercase": "يجب أن تحتوي كلمة المرور على حرف صغير واحد على الأقل",
+      "passwordNumber": "يجب أن تحتوي كلمة المرور على رقم واحد على الأقل",
       "confirmPasswordRequired": "تأكيد كلمة المرور مطلوب",
       "passwordsDoNotMatch": "كلمات المرور غير متطابقة",
       "acceptTermsRequired": "يجب الموافقة على الشروط والأحكام",
       "passwordStrength": {
         "weak": "كلمة مرور ضعيفة",
+        "medium": "كلمة مرور متوسطة",
         "strong": "كلمة مرور قوية"
       }
     }

@@ -108,7 +108,7 @@ const routes: RouteRecordRaw[] = [
         "@/features/auth/pages/LoginPage.vue"
       ),
     {
-      title: "Login - q8m",
+      title: "Welcome - q8m",
       requiresGuest: true,
       layout: "auth",
     },
@@ -122,7 +122,7 @@ const routes: RouteRecordRaw[] = [
         "@/features/auth/pages/RegisterPage.vue"
       ),
     {
-      title: "Register - q8m",
+      title: "Welcome - q8m",
       requiresGuest: true,
       layout: "auth",
     },
@@ -341,6 +341,27 @@ router.beforeEach(async (to, _from, next) => {
 
     // Check if route requires guest (not authenticated)
     if (to.meta.requiresGuest && authStore.isAuthenticated) {
+      // If visiting login page and there's a redirect param, go there
+      if (to.name === "login" && to.query.signInSuccessUrl) {
+        const redirectUrl = to.query.signInSuccessUrl as string;
+        // Validate redirect URL (must be relative path)
+        if (
+          redirectUrl &&
+          redirectUrl.startsWith("/") &&
+          !redirectUrl.startsWith("//") &&
+          !redirectUrl.includes("://") &&
+          !redirectUrl.includes("@")
+        ) {
+          // Add locale if not present
+          let finalUrl = redirectUrl;
+          if (!redirectUrl.match(/^\/[a-z]{2}\//)) {
+            finalUrl = redirectUrl === "/" ? `/${locale}` : `/${locale}${redirectUrl}`;
+          }
+          next(finalUrl);
+          return;
+        }
+      }
+      // Default: redirect to home
       next({
         name: "home",
         params: { locale },

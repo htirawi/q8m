@@ -6,95 +6,54 @@
       <div class="background-gradient"></div>
     </div>
 
+    <!-- Top Brand Header -->
+    <div class="brand-header">
+      <div class="logo-section">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L2 7l10 5 10-5-10-5z" />
+            <path d="M2 17l10 5 10-5" />
+            <path d="M2 12l10 5 10-5" />
+          </svg>
+        </div>
+        <h1 class="logo-text">q8m</h1>
+      </div>
+    </div>
+
     <!-- Main Content -->
     <div class="register-container">
-      <!-- Header Section -->
-      <div class="register-header">
-        <div class="logo-section">
-          <div class="logo-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 2L2 7l10 5 10-5-10-5z" />
-              <path d="M2 17l10 5 10-5" />
-              <path d="M2 12l10 5 10-5" />
-            </svg>
-          </div>
-          <h1 class="logo-text">q8m</h1>
-        </div>
-
-        <div class="welcome-section">
-          <h2 class="welcome-title">
-            {{ $t("auth.register.title") }}
-          </h2>
-          <p class="welcome-subtitle">
-            {{ $t("auth.register.subtitle") }}
-          </p>
-        </div>
+      <!-- Welcome Section -->
+      <div class="welcome-section">
+        <h2 class="welcome-title">
+          {{ $t("auth.unified.title") }}
+        </h2>
+        <p class="welcome-subtitle">
+          {{ $t("auth.unified.subtitle") }}
+        </p>
       </div>
 
       <!-- Form Section -->
       <div class="register-form-container">
         <div class="form-card">
-          <RegisterForm
+          <UnifiedAuthForm
             @oauth-login="handleOAuthLogin"
+            @login-success="handleLoginSuccess"
             @registration-success="handleRegistrationSuccess"
           />
-        </div>
-      </div>
 
-      <!-- Footer Section -->
-      <div class="register-footer">
-        <div class="trust-indicators">
-          <div class="trust-item">
-            <svg
-              class="trust-icon"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path d="M9 12l2 2 4-4" />
-              <path d="M21 12c-1 0-3-1-3-3s2-3 3-3 3 1 3 3-2 3-3 3" />
-              <path d="M3 12c1 0 3-1 3-3s-2-3-3-3-3 1-3 3 2 3 3 3" />
-            </svg>
-            <span class="trust-text">{{ $t("auth.register.secure") }}</span>
-          </div>
-          <div class="trust-item">
-            <svg
-              class="trust-icon"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path
-                d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
-              />
-            </svg>
-            <span class="trust-text">{{ $t("auth.register.trusted") }}</span>
-          </div>
-          <div class="trust-item">
-            <svg
-              class="trust-icon"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
-            </svg>
-            <span class="trust-text">{{ $t("auth.register.fast") }}</span>
           </div>
         </div>
       </div>
     </div>
-  </div>
 </template>
 
 <script setup lang="ts">
 import { useRouter } from "vue-router";
-import RegisterForm from "@/components/auth/RegisterForm.vue";
+import UnifiedAuthForm from "@/components/auth/UnifiedAuthForm.vue";
+import { useAuthRedirect } from "@/composables/useAuthRedirect";
 
 const router = useRouter();
+const { redirectAfterAuth, getCurrentLocale } = useAuthRedirect();
 
 function handleOAuthLogin(provider: "google") {
   // Redirect to OAuth endpoint on the backend
@@ -108,11 +67,19 @@ function handleOAuthLogin(provider: "google") {
   window.location.href = oauthUrl;
 }
 
+async function handleLoginSuccess() {
+  // Redirect to validated URL with locale preservation
+  await redirectAfterAuth("signInSuccessUrl", "/");
+}
+
 function handleRegistrationSuccess(email: string) {
-  // Redirect to verification page or show success message
+  // For unified flow, we can show a success message or redirect
+  // For now, redirect to home with a success notification
+  const locale = getCurrentLocale();
   router.push({
-    name: "auth-verify",
-    query: { email },
+    name: "home",
+    params: { locale },
+    query: { registered: "true", email },
   });
 }
 </script>
@@ -121,7 +88,7 @@ function handleRegistrationSuccess(email: string) {
 /* Main Layout */
 .register-page {
   @apply relative min-h-screen overflow-hidden;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
 }
 
 /* Background Elements */
@@ -130,41 +97,38 @@ function handleRegistrationSuccess(email: string) {
 }
 
 .background-pattern {
-  @apply absolute inset-0 opacity-10;
+  @apply absolute inset-0 opacity-30;
   background-image:
-    radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.2) 0%, transparent 50%),
-    radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+    radial-gradient(circle at 20% 20%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.06) 0%, transparent 50%);
 }
 
 .background-gradient {
   @apply absolute inset-0;
   background: linear-gradient(
     135deg,
-    rgba(102, 126, 234, 0.8) 0%,
-    rgba(118, 75, 162, 0.8) 50%,
-    rgba(59, 130, 246, 0.8) 100%
+    rgba(248, 249, 255, 0.95) 0%,
+    rgba(240, 244, 255, 0.95) 100%
   );
 }
 
-/* Main Container */
-.register-container {
-  @apply relative z-10 flex min-h-screen flex-col;
-  @apply px-4 py-8 sm:px-6 lg:px-8;
-}
-
-/* Header Section */
-.register-header {
-  @apply mb-8 text-center;
+/* Brand Header at Top */
+.brand-header {
+  @apply relative z-10 pt-8 pb-6;
+  @apply px-4 sm:px-6 lg:px-8;
 }
 
 .logo-section {
-  @apply mb-6 flex items-center justify-center gap-3;
+  @apply flex items-center justify-center gap-3;
+  @apply max-w-7xl mx-auto;
 }
 
 .logo-icon {
-  @apply h-12 w-12 rounded-xl bg-white/20 backdrop-blur-sm;
-  @apply flex items-center justify-center text-white;
-  @apply shadow-lg;
+  @apply h-11 w-11 rounded-xl;
+  @apply flex items-center justify-center;
+  @apply shadow-sm;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  color: white;
 }
 
 .logo-icon svg {
@@ -172,61 +136,61 @@ function handleRegistrationSuccess(email: string) {
 }
 
 .logo-text {
-  @apply text-3xl font-bold text-white;
-  @apply drop-shadow-lg;
+  @apply text-3xl font-bold;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Main Container */
+.register-container {
+  @apply relative z-10 flex flex-col items-center justify-center;
+  @apply px-4 pb-12 sm:px-6 lg:px-8;
+  @apply max-w-7xl mx-auto;
+  min-height: calc(100vh - 140px);
 }
 
 .welcome-section {
+  @apply mb-8 text-center;
   @apply mx-auto max-w-2xl;
 }
 
 .welcome-title {
-  @apply mb-4 text-4xl font-bold text-white;
-  @apply drop-shadow-lg;
+  @apply mb-3 text-4xl font-bold;
   @apply sm:text-5xl;
+  color: #1e293b;
+  font-weight: 700;
+  letter-spacing: -0.02em;
 }
 
 .welcome-subtitle {
-  @apply text-xl leading-relaxed text-white/90;
-  @apply drop-shadow-md;
-  @apply sm:text-2xl;
+  @apply text-lg leading-relaxed;
+  @apply sm:text-xl;
+  color: #64748b;
+  font-weight: 400;
 }
 
 /* Form Container */
 .register-form-container {
-  @apply flex flex-1 items-center justify-center;
   @apply mx-auto w-full max-w-md;
 }
 
 .form-card {
-  @apply w-full rounded-2xl bg-white/95 backdrop-blur-sm;
-  @apply border border-white/20 shadow-2xl;
-  @apply p-8;
-  @apply dark:border-slate-700/50 dark:bg-slate-900/95;
+  @apply w-full rounded-2xl bg-white;
+  @apply border border-gray-100;
+  @apply p-10;
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.02),
+    0 4px 6px -1px rgba(0, 0, 0, 0.04),
+    0 10px 15px -3px rgba(0, 0, 0, 0.06),
+    0 20px 25px -5px rgba(0, 0, 0, 0.04);
 }
 
-/* Footer Section */
-.register-footer {
-  @apply mt-8;
-}
+/* Social Proof Section */
 
-.trust-indicators {
-  @apply flex flex-wrap justify-center gap-6;
-  @apply text-white/80;
-}
 
-.trust-item {
-  @apply flex items-center gap-2;
-  @apply text-sm font-medium;
-}
 
-.trust-icon {
-  @apply h-5 w-5;
-}
-
-.trust-text {
-  @apply drop-shadow-sm;
-}
 
 /* Responsive Design */
 @media (max-width: 640px) {
@@ -235,15 +199,11 @@ function handleRegistrationSuccess(email: string) {
   }
 
   .welcome-subtitle {
-    @apply text-lg;
+    @apply text-base;
   }
 
   .form-card {
     @apply p-6;
-  }
-
-  .trust-indicators {
-    @apply gap-4;
   }
 }
 
@@ -253,13 +213,33 @@ function handleRegistrationSuccess(email: string) {
     background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
   }
 
+  .background-pattern {
+    @apply opacity-20;
+  }
+
   .background-gradient {
     background: linear-gradient(
       135deg,
-      rgba(30, 41, 59, 0.9) 0%,
-      rgba(51, 65, 85, 0.9) 50%,
-      rgba(59, 130, 246, 0.8) 100%
+      rgba(30, 41, 59, 0.95) 0%,
+      rgba(51, 65, 85, 0.95) 100%
     );
+  }
+
+  .welcome-title {
+    color: #f8fafc;
+  }
+
+  .welcome-subtitle {
+    color: #cbd5e1;
+  }
+
+  .form-card {
+    @apply bg-slate-800 border-slate-700;
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.08),
+      0 4px 6px -1px rgba(0, 0, 0, 0.3),
+      0 10px 15px -3px rgba(0, 0, 0, 0.4),
+      0 20px 25px -5px rgba(0, 0, 0, 0.3);
   }
 }
 
@@ -275,17 +255,17 @@ function handleRegistrationSuccess(email: string) {
   }
 }
 
-.register-header,
-.register-form-container,
-.register-footer {
+.brand-header,
+.welcome-section,
+.register-form-container {
   animation: fadeInUp 0.6s ease-out;
+}
+
+.welcome-section {
+  animation-delay: 0.1s;
 }
 
 .register-form-container {
   animation-delay: 0.2s;
-}
-
-.register-footer {
-  animation-delay: 0.4s;
 }
 </style>

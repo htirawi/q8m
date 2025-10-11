@@ -128,11 +128,11 @@
       <p class="text-sm text-gray-600 dark:text-gray-400">
         {{ $t("auth.login.noAccount") }}
 
-        <button type="button" @click="emit('show-register')"
-          class="font-medium text-primary-600 hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300">
+        <router-link :to="registerRoute"
+          class="signup-link font-medium text-primary-600 hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300">
           {{ $t("auth.login.signUp") }}
 
-        </button>
+        </router-link>
       </p>
     </div>
   </div>
@@ -141,18 +141,21 @@
 <script setup lang="ts">
 import { ref, computed, reactive } from "vue";
 import { useI18n } from "vue-i18n";
+import { useRoute } from "vue-router";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/vue/24/outline";
 import { useAuthStore } from "@/stores/auth";
 import type { LoginFormData, FormErrors } from "@/types/ui/component-props";
-import type { LoginFormEmits } from "@/types/ui/emits";
 
-interface AdditionalEmits {
+interface LoginFormEmits {
   (e: "oauth-login", provider: "google"): void;
+  (e: "show-forgot-password"): void;
+  (e: "login-success"): void;
 }
 
-const emit = defineEmits<LoginFormEmits & AdditionalEmits>();
+const emit = defineEmits<LoginFormEmits>();
 const { t } = useI18n();
 const authStore = useAuthStore();
+const route = useRoute();
 
 // Reactive data
 const formData = reactive<LoginFormData>({
@@ -174,6 +177,15 @@ const isFormValid = computed(() => {
     formData.email.includes("@") &&
     formData.password.length >= 8
   );
+});
+
+// Generate register route with locale preservation
+const registerRoute = computed(() => {
+  const locale = route.params.locale || "en";
+  return {
+    name: "register",
+    params: { locale },
+  };
 });
 
 // Methods
@@ -206,6 +218,9 @@ async function handleSubmit(): Promise<void> {
   });
 
   if (success) {
+    // Emit login success to trigger redirect
+    emit("login-success");
+
     // Reset form
     formData.email = "";
     formData.password = "";
@@ -239,5 +254,11 @@ button:focus {
 /* Loading state */
 button:disabled {
   @apply cursor-not-allowed opacity-50;
+}
+
+/* Sign up link styles */
+.signup-link {
+  @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+  @apply underline decoration-transparent hover:decoration-current;
 }
 </style>

@@ -36,9 +36,9 @@
     <div class="signin-link">
       <p class="signin-text">
         {{ $t("auth.register.alreadyHaveAccount") }}
-        <button type="button" @click="$emit('show-login', true)" class="signin-button">
+        <router-link :to="loginRoute" class="signin-button">
           {{ $t("auth.register.signIn") }}
-        </button>
+        </router-link>
       </p>
     </div>
   </div>
@@ -47,6 +47,7 @@
 <script setup lang="ts">
 import { ref, computed, reactive } from "vue";
 import { useI18n } from "vue-i18n";
+import { useRoute } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 import OAuthButtons from "@/features/auth/components/OAuthButtons.vue";
 import EmailStep from "@/features/auth/components/EmailStep.vue";
@@ -55,12 +56,12 @@ import type { RegisterFormData, FormErrors } from "@/types/ui/component-props";
 
 const { t } = useI18n();
 const authStore = useAuthStore();
+const route = useRoute();
 
 // Emits
 const emit = defineEmits<{
   "oauth-login": [provider: "google"];
   "registration-success": [email: string];
-  "show-login": [show: boolean];
 }>();
 
 // Progressive form state
@@ -79,6 +80,15 @@ const errors = ref<FormErrors>({});
 // Computed
 const isLoading = computed(() => authStore.isLoading);
 const error = computed(() => authStore.error);
+
+// Generate login route with locale preservation
+const loginRoute = computed(() => {
+  const locale = route.params.locale || "en";
+  return {
+    name: "login",
+    params: { locale },
+  };
+});
 
 // Methods
 const handleOAuthLogin = (provider: "google") => {
@@ -202,5 +212,7 @@ async function handleSubmit(): Promise<void> {
   @apply font-semibold text-primary-600 hover:text-primary-700;
   @apply transition-colors duration-200;
   @apply dark:text-primary-400 dark:hover:text-primary-300;
+  @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+  @apply underline decoration-transparent hover:decoration-current;
 }
 </style>
