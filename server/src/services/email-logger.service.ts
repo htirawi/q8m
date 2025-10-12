@@ -3,6 +3,8 @@
  * Stores emails in memory for inspection during development
  */
 
+import { randomBytes } from "crypto";
+
 interface LoggedEmail {
   id: string;
   to: string;
@@ -20,7 +22,7 @@ class EmailLoggerService {
    * Log an email (development only)
    */
   logEmail(to: string, subject: string, html: string, text: string): string {
-    const id = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    const id = `${Date.now()}-${randomBytes(6).toString("base64url")}`;
 
     const loggedEmail: LoggedEmail = {
       id,

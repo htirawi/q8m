@@ -3,6 +3,8 @@
  * Handles Convert Modal checkout flow with provider-agnostic architecture
  */
 
+import { randomBytes } from "crypto";
+
 import { env } from "@config/env.js";
 import { authenticate } from "@middlewares/auth.middleware.js";
 import { Coupon } from "@models/Coupon.js";
@@ -138,8 +140,10 @@ export default async function checkoutRoutes(fastify: FastifyInstance) {
         }
 
         // Create checkout session data
+        // Use cryptographically secure random bytes for session ID
+        const randomSuffix = randomBytes(6).toString("base64url");
         const checkoutSession = {
-          sessionId: `cs_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+          sessionId: `cs_${Date.now()}_${randomSuffix}`,
           userId: user.id,
           planTier: tier,
           planType,
