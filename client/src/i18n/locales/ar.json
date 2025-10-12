@@ -7,6 +7,7 @@
   "navigation": {
     "home": "الرئيسية",
     "pricing": "الأسعار",
+    "study": "الدراسة",
     "quiz": "الاختبارات",
     "account": "الحساب",
     "profile": "الملف الشخصي",
@@ -299,7 +300,7 @@
       "hidePassword": "إخفاء كلمة المرور",
       "continueWithGoogle": "متابعة مع جوجل",
       "secureEncrypted": "آمن ومشفر",
-      "joinThousands": "انضم إلى 10,000+ مطور"
+      "joinThousands": "موثوق من قبل 10,000+ طالب"
     },
     "fields": {
       "name": "الاسم الكامل",
@@ -709,5 +710,168 @@
     "switchLanguage": "تغيير اللغة",
     "closeModal": "إغلاق النافذة المنبثقة",
     "dismissNotification": "إغلاق الإشعار"
+  },
+  "plans": {
+    "names": {
+      "free": "مجاني",
+      "intermediate": "متوسط",
+      "advanced": "متقدم",
+      "pro": "احترافي"
+    },
+    "free": {
+      "welcomeBack": "مرحباً بعودتك! هل أنت مستعد لمتابعة الاختبارات السهلة؟",
+      "landingTitle": "دليل الدراسة السهل",
+      "landingSubtitle": "أتقن الأساسيات مع محتوانا المختار من المستوى السهل",
+      "startQuizzes": "ابدأ الاختبارات السهلة",
+      "browseContent": "تصفح المحتوى السهل"
+    },
+    "access": {
+      "available": "متاح"
+    }
+  },
+  "paywall": {
+    "title": "افتح المحتوى المميز",
+    "description": "قم بالترقية إلى {plan} للوصول إلى هذه الميزة وإطلاق إمكاناتك الكاملة",
+    "cta": {
+      "seePlans": "عرض الخطط والأسعار",
+      "continueFree": "متابعة مع المجاني"
+    },
+    "features": {
+      "feature1": "الوصول إلى جميع أسئلة {plan}",
+      "feature2": "تفسيرات مفصلة لكل إجابة",
+      "feature3": "تتبع تقدمك باستخدام التحليلات"
+    },
+    "locked": {
+      "tooltip": "هذه الميزة تتطلب خطة {plan}"
+    }
+  },
+  "dashboard": {
+    "welcome": "مرحباً بعودتك",
+    "resume": {
+      "title": "تابع من حيث توقفت",
+      "noneAvailable": "لا يوجد نشاط حديث. ابدأ اختباراً جديداً!"
+    },
+    "yourPlan": "خطتك",
+    "manage": "إدارة",
+    "vipChip": "VIP"
+  },
+  "study": {
+    "selection": {
+      "title": "وضع الدراسة",
+      "subtitle": "تدرب بوتيرتك الخاصة مع شروحات مفصلة",
+      "chooseDifficulty": "اختر مستوى الصعوبة",
+      "startStudy": "ابدأ الدراسة"
+    },
+    "loading": "جارٍ تحميل الأسئلة...",
+    "backToSelection": "العودة إلى الاختيار",
+    "answer": "الإجابة",
+    "revealAnswer": "إظهار الإجابة",
+    "previous": "السابق",
+    "next": "التالي",
+    "finish": "إنهاء",
+    "bookmark": "إضافة إلى المفضلة",
+    "bookmarked": "مضاف إلى المفضلة",
+    "quickNavigation": "التنقل السريع",
+    "features": {
+      "selfPaced": {
+        "title": "تعلم ذاتي",
+        "description": "ادرس بوتيرتك الخاصة دون ضغط الوقت"
+      },
+      "detailedExplanations": {
+        "title": "شروحات مفصلة",
+        "description": "تعلم السبب وراء كل إجابة"
+      },
+      "bookmarks": {
+        "title": "حفظ الأسئلة",
+        "description": "احفظ الأسئلة للمراجعة لاحقاً"
+      }
+    },
+    "error": {
+      "title": "خطأ في تحميل الأسئلة",
+      "retry": "حاول مرة أخرى",
+      "noQuestions": "لا توجد أسئلة متاحة لهذا المستوى من الصعوبة",
+      "generic": "حدث خطأ ما. يرجى المحاولة مرة أخرى."
+    }
+  },
+  "quiz": {
+    "selection": {
+      "title": "وضع الاختبار",
+      "subtitle": "اختبر معرفتك مع اختبارات موقوتة",
+      "chooseLevel": "اختر مستوى الخبرة",
+      "startQuiz": "ابدأ الاختبار"
+    },
+    "loading": "جارٍ تحميل الاختبار...",
+    "exit": "الخروج من الاختبار",
+    "points": "نقاط",
+    "submit": "إرسال الإجابة",
+    "next": "التالي",
+    "finish": "إنهاء الاختبار",
+    "explanation": "الشرح",
+    "fillBlankPlaceholder": "اكتب إجابتك هنا...",
+    "confirmExit": "هل أنت متأكد من الخروج؟ سيتم فقدان تقدمك.",
+    "features": {
+      "multipleChoice": {
+        "title": "الاختيار من متعدد",
+        "description": "اختر الإجابة الصحيحة من بين خيارات متعددة"
+      },
+      "fillBlank": {
+        "title": "املأ الفراغ",
+        "description": "أكمل الجمل بالمصطلحات الصحيحة"
+      },
+      "multipleCheckbox": {
+        "title": "اختيارات متعددة",
+        "description": "حدد جميع الإجابات الصحيحة من بين خيارات متعددة"
+      },
+      "trueFalse": {
+        "title": "صح/خطأ",
+        "description": "حدد ما إذا كانت العبارات صحيحة أم خاطئة"
+      }
+    },
+    "results": {
+      "title": "اكتمل الاختبار!",
+      "levelQuiz": "اختبار",
+      "correctAnswers": "الإجابات الصحيحة",
+      "accuracy": "الدقة",
+      "timeSpent": "الوقت المستغرق",
+      "tryAgain": "حاول مرة أخرى",
+      "backToSelection": "العودة إلى الاختيار"
+    },
+    "error": {
+      "title": "خطأ في تحميل الاختبار",
+      "retry": "حاول مرة أخرى",
+      "noQuestions": "لا توجد أسئلة متاحة لهذا المستوى",
+      "generic": "حدث خطأ ما. يرجى المحاولة مرة أخرى."
+    }
+  },
+  "difficulty": {
+    "easy": {
+      "label": "سهل",
+      "description": "مثالي للمبتدئين والأساسيات"
+    },
+    "medium": {
+      "label": "متوسط",
+      "description": "المفاهيم والأنماط المتوسطة"
+    },
+    "hard": {
+      "label": "صعب",
+      "description": "المواضيع المتقدمة والتحديات على مستوى الخبراء"
+    }
+  },
+  "level": {
+    "junior": {
+      "label": "مبتدئ",
+      "description": "أسئلة للمطورين المبتدئين",
+      "questionCount": "{count} سؤال"
+    },
+    "intermediate": {
+      "label": "متوسط",
+      "description": "أسئلة للمطورين ذوي المستوى المتوسط",
+      "questionCount": "{count} سؤال"
+    },
+    "senior": {
+      "label": "محترف",
+      "description": "أسئلة للمطورين المحترفين",
+      "questionCount": "{count} سؤال"
+    }
   }
 }

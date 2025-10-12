@@ -5,7 +5,9 @@
 
 import { env } from "@config/env.js";
 import { paypalClient } from "@lib/paypalClient.js";
-import { orders as paypalOrders } from "@paypal/checkout-server-sdk";
+import paypalCheckoutSdk from "@paypal/checkout-server-sdk";
+
+const paypalOrders = paypalCheckoutSdk.orders;
 
 import type { PayPalGatewayResponse } from "../types/payment-gateway";
 

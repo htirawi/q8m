@@ -100,12 +100,21 @@ onMounted(async () => {
             </RouterLink>
             <RouterLink
               v-if="authStore.isAuthenticated"
-              to="/quiz"
+              to="/study"
               class="nav-link"
-              :class="{ 'nav-link--active': $route.name === 'quiz' }"
+              :class="{ 'nav-link--active': $route.name?.toString().startsWith('study') }"
               role="menuitem"
             >
-              {{ $t("navigation.quiz") }}
+              📚 {{ $t("navigation.study") }}
+            </RouterLink>
+            <RouterLink
+              v-if="authStore.isAuthenticated"
+              to="/quiz"
+              class="nav-link"
+              :class="{ 'nav-link--active': $route.name?.toString().startsWith('quiz') }"
+              role="menuitem"
+            >
+              🎯 {{ $t("navigation.quiz") }}
             </RouterLink>
           </div>
 

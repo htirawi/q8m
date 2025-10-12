@@ -1,11 +1,14 @@
 import { createApp } from "vue";
+import { createPinia } from "pinia";
 import { createHead } from "@unhead/vue";
 
 import App from "@/App.vue";
 import router from "@/router";
-import pinia from "@/store";
 import i18n from "@/i18n";
 import { DEFAULT_LOCALE, type SupportedLocale } from "@/router";
+
+// Create Pinia store
+const pinia = createPinia();
 
 // Styles
 import "@/styles/main.css";

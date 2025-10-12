@@ -10,8 +10,12 @@ export interface RouteMeta {
   requiresGuest?: boolean;
   requiresAdmin?: boolean;
   requiresEntitlement?: string;
+  requiresRole?: string;
   title?: string;
+  description?: string;
   breadcrumb?: string;
   layout?: string;
+  locale?: boolean;
+  access?: "free" | "paid" | "paid:intermediate" | "paid:advanced" | "paid:pro";
   [key: string]: string | boolean | undefined;
 }

@@ -3,6 +3,8 @@ import nodemailer from "nodemailer";
 
 import type { EmailOptions, EmailTemplate } from "../types/services/email";
 
+import { emailLoggerService } from "./email-logger.service.js";
+
 export class EmailService {
   private transporter: nodemailer.Transporter;
 
@@ -90,10 +92,29 @@ export class EmailService {
         text: options.text,
       };
 
+      // In development mode with dummy credentials, log instead of sending
+      const isDevMode = env.NODE_ENV === "development" && env.SMTP_USER === "dummy@example.com";
+
+      if (isDevMode) {
+        const emailId = emailLoggerService.logEmail(
+          mailOptions.to,
+          mailOptions.subject,
+          mailOptions.html,
+          mailOptions.text ?? ""
+        );
+
+        console.warn("📧 [DEV MODE] Email logged (ID:", emailId, ")");
+        console.warn("   To:", mailOptions.to);
+        console.warn("   Subject:", mailOptions.subject);
+        console.warn(`   View at: http://localhost:3000/api/dev/emails/${emailId}`);
+        return;
+      }
+
+      // Production: Send real email
       const result = await this.transporter.sendMail(mailOptions);
-      console.warn("Email sent successfully:", result.messageId);
+      console.warn("✅ Email sent successfully:", result.messageId);
     } catch (error) {
-      console.error("Email sending failed:", error);
+      console.error("❌ Email sending failed:", error);
       throw new Error("Failed to send email");
     }
   }

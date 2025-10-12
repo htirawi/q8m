@@ -1,3 +1,5 @@
+import type { PlanTier } from "./plan";
+
 export interface User {
   id: string;
   email: string;
@@ -9,6 +11,8 @@ export interface User {
   createdAt: Date;
   updatedAt: Date;
   lastLoginAt?: Date;
+  planTier?: PlanTier;
+  planExpiresAt?: Date;
 }
 
 export interface Account {

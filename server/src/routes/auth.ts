@@ -79,8 +79,60 @@ const changePasswordSchema = z.object({
     .max(128, "New password cannot exceed 128 characters"),
 });
 
+const checkEmailSchema = z.object({
+  email: z.string().email("Invalid email format"),
+});
+
 // Auth routes with explicit inline per-route rate limits for CodeQL visibility
 export default async function authRoutes(fastify: FastifyInstance) {
+  // Check if email exists
+  fastify.post(
+    "/check-email",
+    {
+      // Top-level rateLimit for CodeQL compliance
+      rateLimit: {
+        max: 30,
+        timeWindow: "15m",
+        hook: "onRequest",
+        keyGenerator: comboKey,
+      },
+      // config.rateLimit for plugin compliance
+      config: {
+        rateLimit: {
+          max: 30,
+          timeWindow: "15m",
+          hook: "onRequest",
+          keyGenerator: comboKey,
+        },
+      },
+      schema: {
+        body: zodToJsonSchema(checkEmailSchema),
+      },
+    },
+    async (request, reply) => {
+      try {
+        const { email } = request.body as { email: string };
+
+        // Check if user exists with this email
+        const existingUser = await User.findOne({ email });
+
+        reply.send({
+          exists: !!existingUser,
+        });
+      } catch (error: unknown) {
+        request.log.error({
+          error: error instanceof Error ? error.message : "Failed to check email",
+          message: "Check email error",
+        });
+        reply.status(500).send({
+          code: 500,
+          error: "Internal Server Error",
+          message: "Failed to check email",
+        });
+      }
+    }
+  );
+
   // Register new user
   fastify.post(
     "/register",
