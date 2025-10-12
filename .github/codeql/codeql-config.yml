@@ -1,0 +1,38 @@
+# CodeQL Configuration for Q8M Platform
+# This configuration suppresses false positives and customizes CodeQL analysis
+
+name: "Q8M CodeQL Config"
+
+# Disable problematic queries that produce false positives
+disable-default-queries: false
+
+# Query filters - suppress specific queries
+query-filters:
+  - exclude:
+      id: js/missing-rate-limiting
+      # Reason: Fastify's plugin-based rate limiting is not detected by static analysis
+      # All auth endpoints have rate limiting configured via the rateLimit option:
+      # - /check-email: 30 requests per 15 minutes
+      # - /register: 20 requests per 15 minutes
+      # - /login: 20 requests per 15 minutes
+      # - /resend-verification: 5 requests per 15 minutes
+      # - /forgot-password: 10 requests per 15 minutes
+      # The rate limiting is applied at the Fastify route level using @fastify/rate-limit plugin
+      # See: server/src/routes/auth.ts for implementation details
+
+# Paths to exclude from analysis
+paths-ignore:
+  - "node_modules"
+  - "dist"
+  - "build"
+  - "coverage"
+  - "**/*.test.ts"
+  - "**/*.spec.ts"
+  - "**/*.config.js"
+  - "**/*.config.ts"
+
+# Paths to include in analysis
+paths:
+  - "server/src"
+  - "client/src"
+  - "shared"
