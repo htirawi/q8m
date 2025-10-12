@@ -253,8 +253,14 @@ export const useAuthStore = defineStore("auth", () => {
     }
 
     try {
+      // If using cookie-based auth (OAuth), use cookies instead of Bearer token
+      const useCookies = tokens.value.accessToken === "cookie-based";
+
       const response = await fetch("/api/auth/me", {
-        headers: {
+        credentials: useCookies ? "include" : "same-origin",
+        headers: useCookies ? {
+          "Content-Type": "application/json",
+        } : {
           Authorization: `Bearer ${tokens.value.accessToken}`,
         },
       });
@@ -280,39 +286,12 @@ export const useAuthStore = defineStore("auth", () => {
     }
   }
 
-  async function verifyEmail(token: string): Promise<boolean> {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const response = await fetch("/api/auth/verify-email", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ token }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message ?? "Email verification failed");
-      }
-
-      // Update user if logged in
-      if (user.value) {
-        user.value.isEmailVerified = true;
-      }
-
-      return true;
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Email verification failed";
-      setError(errorMessage);
-      return false;
-    } finally {
-      setLoading(false);
-    }
-  }
+  // Email verification is now handled via secure session cookies
+  // The verification flow is:
+  // 1. User clicks link in email -> hits backend /api/auth/verify-email/:token
+  // 2. Backend sets secure httpOnly cookie and redirects to frontend /verify-email
+  // 3. Frontend /verify-email calls /api/auth/verify-email-complete with cookie
+  // This ensures no tokens are exposed in URLs or browser history
 
   async function resendVerificationEmail(email: string): Promise<boolean> {
     setLoading(true);
@@ -525,7 +504,6 @@ export const useAuthStore = defineStore("auth", () => {
     logoutFromAllDevices,
     refreshToken,
     getCurrentUser,
-    verifyEmail,
     resendVerificationEmail,
     forgotPassword,
     resetPassword,

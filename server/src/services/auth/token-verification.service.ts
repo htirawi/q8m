@@ -15,14 +15,23 @@ export interface TokenExtractionResult {
 
 export class TokenVerificationService {
   /**
-   * Extract token from Authorization header
+   * Extract token from Authorization header or cookies
+   * Checks Bearer token first, then falls back to accessToken cookie
    */
   extractToken(request: FastifyRequest): string | null {
+    // First, try to get token from Authorization header (Bearer token)
     const authHeader = request.headers.authorization;
-    if (!authHeader?.startsWith("Bearer ")) {
-      return null;
+    if (authHeader?.startsWith("Bearer ")) {
+      return authHeader.substring(7); // Remove 'Bearer ' prefix
     }
-    return authHeader.substring(7); // Remove 'Bearer ' prefix
+
+    // Fall back to accessToken cookie (used by OAuth)
+    const cookieToken = request.cookies?.accessToken;
+    if (cookieToken) {
+      return cookieToken;
+    }
+
+    return null;
   }
 
   /**

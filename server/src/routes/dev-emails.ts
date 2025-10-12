@@ -85,10 +85,10 @@ export default async function devEmailRoutes(fastify: FastifyInstance) {
             `).join('')}
           </div>
           ${emails.length > 0 ? `
-            <form method="POST" action="/api/dev/emails/clear" style="margin-top: 1rem;">
-              <button type="submit" class="clear-btn">Clear All Emails</button>
+            <div style="margin-top: 1rem;">
+              <a href="/api/dev/emails/clear" class="clear-btn" style="display: inline-block; text-decoration: none;">Clear All Emails</a>
               <button type="button" class="refresh-btn" onclick="window.location.reload()">Refresh</button>
-            </form>
+            </div>
           ` : ''}
         </div>
       </body>
@@ -182,8 +182,8 @@ export default async function devEmailRoutes(fastify: FastifyInstance) {
     `);
   });
 
-  // Clear all emails
-  fastify.post("/clear", async (_request, reply) => {
+  // Clear all emails (simple GET request)
+  fastify.get("/clear", async (_request, reply) => {
     emailLoggerService.clearAll();
     reply.redirect("/api/dev/emails");
   });

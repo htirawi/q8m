@@ -1,6 +1,6 @@
 import { env } from "@config/env.js";
 import type { IUser } from "@models/User.js";
-import * as jwt from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import type { ObjectId } from "mongoose";
 
 import type { JWTPayload, TokenPair } from "../types/services/jwt";

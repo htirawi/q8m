@@ -2,7 +2,9 @@
   "common": {
     "appName": "q8m",
     "currency": "$",
-    "perMonth": "/month"
+    "perMonth": "/month",
+    "selected": "selected",
+    "notSelected": "not selected"
   },
   "navigation": {
     "home": "Home",
@@ -229,7 +231,7 @@
       "or": "or",
       "getStarted": "Get started with your free account",
       "secure": "Secure & Encrypted",
-      "trusted": "Trusted by 10k+ developers",
+      "trusted": "Trusted by 300+ developers",
       "fast": "Quick Setup",
       "agreeToTerms": "I agree to the",
       "termsOfService": "Terms of Service",
@@ -269,7 +271,7 @@
       "hidePassword": "Hide password",
       "continueWithGoogle": "Continue with Google",
       "secureEncrypted": "Secure & Encrypted",
-      "joinThousands": "Trusted by 10,000+ students"
+      "joinThousands": "Trusted by 300+ developers"
     },
     "fields": {
       "name": "Full Name",
@@ -314,6 +316,16 @@
       "tryAgain": "Try Again",
       "success": "Success!",
       "redirecting": "Redirecting you now..."
+    },
+    "verify": {
+      "verifying": "Verifying Your Email",
+      "pleaseWait": "Please wait while we verify your email address...",
+      "success": "Email Verified!",
+      "successMessage": "Your email has been successfully verified. You can now sign in to your account.",
+      "redirecting": "Redirecting to login page...",
+      "error": "Verification Failed",
+      "goToLogin": "Go to Login",
+      "resendEmail": "Resend Verification Email"
     }
   },
   "legal": {
@@ -690,10 +702,10 @@
   },
   "plans": {
     "names": {
-      "free": "Free",
+      "free": "Junior",
       "intermediate": "Intermediate",
-      "advanced": "Advanced",
-      "pro": "Pro"
+      "advanced": "Senior",
+      "pro": "Bundle"
     },
     "free": {
       "welcomeBack": "Welcome back! Ready to continue with Easy quizzes?",
@@ -749,6 +761,102 @@
     "bookmark": "Bookmark",
     "bookmarked": "Bookmarked",
     "quickNavigation": "Quick Navigation",
+    "levelCard": {
+      "currentPlan": "Current Plan",
+      "clickToUnlock": "Click to unlock",
+      "ariaLabelLocked": "{difficulty} difficulty - Requires {plan} plan - Click to upgrade",
+      "ariaLabelUnlocked": "{difficulty} difficulty - {selected}",
+      "features": {
+        "easy": {
+          "feature1": "100+ fundamental questions",
+          "feature2": "Self-paced learning",
+          "feature3": "Basic explanations"
+        },
+        "medium": {
+          "feature1": "200+ intermediate questions",
+          "feature2": "In-depth explanations",
+          "feature3": "Performance analytics",
+          "feature4": "Bookmark & notes"
+        },
+        "hard": {
+          "feature1": "150+ expert questions",
+          "feature2": "Advanced system design",
+          "feature3": "Mock interviews",
+          "feature4": "Expert code reviews",
+          "feature5": "Priority support"
+        }
+      }
+    },
+    "cta": {
+      "startStudying": "Start Studying",
+      "chooseDifficultyFirst": "Choose a Difficulty",
+      "ariaLabelWithSelection": "Start studying at {difficulty} difficulty",
+      "ariaLabelNoSelection": "Choose a difficulty level first",
+      "trust": {
+        "users": "Trusted by 300+ developers",
+        "successRate": "95% success rate"
+      }
+    },
+    "upsell": {
+      "title": "Unlock Your Full Potential",
+      "subtitle": "Upgrade to access {difficulty} questions and advance your skills",
+      "comparison": {
+        "title": "Compare Plans",
+        "feature": "Feature",
+        "features": {
+          "basicQuestions": "Basic Questions (Easy)",
+          "advancedQuestions": "Advanced Questions",
+          "detailedExplanations": "Detailed Explanations",
+          "progressAnalytics": "Progress Analytics",
+          "prioritySupport": "Priority Support"
+        }
+      },
+      "benefits": {
+        "title": "What You'll Get with {plan}",
+        "intermediate": {
+          "benefit1": "Access 200+ intermediate questions covering core patterns",
+          "benefit2": "In-depth explanations with code examples",
+          "benefit3": "Track your progress with detailed analytics",
+          "benefit4": "Bookmark questions for future review",
+          "benefit5": "Priority email support"
+        },
+        "advanced": {
+          "benefit1": "Access 150+ advanced questions including system design",
+          "benefit2": "Expert-level explanations with best practices",
+          "benefit3": "Advanced analytics with personalized insights",
+          "benefit4": "Mock interviews with real-time feedback",
+          "benefit5": "Priority support with expert code reviews"
+        }
+      },
+      "testimonial": {
+        "text": "Upgrading to the intermediate plan was the best investment I made. The detailed explanations helped me land my dream job!",
+        "author": "Sarah Chen, Senior Developer at Google"
+      },
+      "faq": {
+        "title": "Quick Questions",
+        "q1": {
+          "question": "Can I change my plan later?",
+          "answer": "Yes! You can upgrade or downgrade at any time. Changes take effect immediately."
+        },
+        "q2": {
+          "question": "What payment methods do you accept?",
+          "answer": "We accept PayPal, credit cards, and local payment methods for your region."
+        },
+        "q3": {
+          "question": "Is there a money-back guarantee?",
+          "answer": "Yes! We offer a 7-day money-back guarantee. No questions asked."
+        }
+      },
+      "cta": {
+        "upgrade": "Upgrade to {plan}",
+        "viewAllPlans": "View All Plans",
+        "maybeLater": "Maybe Later"
+      },
+      "trust": {
+        "secure": "Secure Payment",
+        "moneyBack": "7-Day Money Back"
+      }
+    },
     "features": {
       "selfPaced": {
         "title": "Self-Paced Learning",
@@ -768,6 +876,115 @@
       "retry": "Try Again",
       "noQuestions": "No questions available for this difficulty level",
       "generic": "Something went wrong. Please try again."
+    },
+    "sticky": {
+      "loading": "Loading session...",
+      "error": "Failed to start session",
+      "start": "Start Studying",
+      "resume": "Resume Session",
+      "starting": "Starting...",
+      "retry": "Retry",
+      "retryAriaLabel": "Retry starting study session",
+      "startAriaLabel": "Start studying at {difficulty} difficulty",
+      "startAriaLabelGeneric": "Start studying",
+      "trustNew": "Practice 30 curated questions • Instant feedback",
+      "trustResume": "Continue where you left off",
+      "keyboardHint": "Press 'S' to start"
+    }
+  },
+  "convert": {
+    "headline": {
+      "a": "Unlock Your Full Potential",
+      "b": "Limited Time: Upgrade & Save",
+      "c": "Get Results Faster with {plan}"
+    },
+    "subhead": "Upgrade to access {difficulty} questions and advance your skills. Join {count}+ developers who have mastered their interviews.",
+    "cycle": {
+      "monthly": "Monthly",
+      "annual": "Annual",
+      "save": "Save {percent}%",
+      "recommended": "Recommended",
+      "mostPopular": "Most Popular"
+    },
+    "planSelection": {
+      "title": "Select Your Billing Cycle"
+    },
+    "price": {
+      "perMonth": "/month",
+      "perYear": "/year",
+      "billedMonthly": "Billed monthly",
+      "billedAnnually": "Billed annually"
+    },
+    "coupon": {
+      "toggle": "Have a coupon code?",
+      "placeholder": "Enter code",
+      "apply": "Apply",
+      "applied": "Coupon applied!",
+      "invalid": "Invalid coupon code",
+      "ariaLabel": "Enter coupon code to get a discount"
+    },
+    "summary": {
+      "total": "Total",
+      "billedAs": "Billed {cycle}"
+    },
+    "cta": {
+      "primary": "Subscribe & Start Learning",
+      "processing": "Processing...",
+      "maybeLater": "Maybe Later"
+    },
+    "reassurance": {
+      "cancel": "Cancel anytime",
+      "secure": "Secure payment",
+      "guarantee": "7-day money-back guarantee"
+    },
+    "socialProof": {
+      "rating": "{rating}/5 from {count}+ developers",
+      "trust": "Trusted by 300+ developers worldwide"
+    },
+    "testimonial": {
+      "text": "Upgrading to the Intermediate plan was the best investment I made. The detailed explanations helped me land my dream job!",
+      "author": "Sarah Chen",
+      "role": "Senior Developer at Google"
+    },
+    "trustBadges": {
+      "secure": "Secure Payment",
+      "moneyBack": "7-Day Money Back",
+      "cancelAnytime": "Cancel Anytime"
+    },
+    "comparison": {
+      "toggle": "Compare plans",
+      "title": "What's Included",
+      "feature": "Feature",
+      "features": {
+        "basicQuestions": "Basic Questions (Easy)",
+        "advancedQuestions": "Advanced Questions",
+        "detailedExplanations": "Detailed Explanations",
+        "progressAnalytics": "Progress Analytics",
+        "prioritySupport": "Priority Support"
+      }
+    },
+    "faq": {
+      "toggle": "Questions?",
+      "title": "Quick Questions",
+      "q1": {
+        "question": "Can I change my plan later?",
+        "answer": "Yes! You can upgrade or downgrade at any time. Changes take effect immediately."
+      },
+      "q2": {
+        "question": "What payment methods do you accept?",
+        "answer": "We accept PayPal, credit cards, and local payment methods for your region."
+      },
+      "q3": {
+        "question": "Is there a money-back guarantee?",
+        "answer": "Yes! We offer a 7-day money-back guarantee. No questions asked."
+      }
+    },
+    "analytics": {
+      "modalOpened": "Convert modal opened",
+      "planChanged": "Plan changed in convert modal",
+      "couponApplied": "Coupon applied in convert modal",
+      "subscribeClick": "Subscribe button clicked",
+      "modalDismissed": "Convert modal dismissed"
     }
   },
   "quiz": {

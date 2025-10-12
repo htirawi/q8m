@@ -21,7 +21,6 @@ import type {
   RegisterBody,
   ResendVerificationBody,
   ResetPasswordBody,
-  VerifyEmailBody,
 } from "../types/routes/auth";
 
 // Validation schemas
@@ -49,10 +48,6 @@ const registerSchema = z
 const loginSchema = z.object({
   email: z.string().email("Invalid email format"),
   password: z.string().min(1, "Password is required"),
-});
-
-const verifyEmailSchema = z.object({
-  token: z.string().min(32, "Invalid verification token"),
 });
 
 const resendVerificationSchema = z.object({
@@ -204,8 +199,8 @@ export default async function authRoutes(fastify: FastifyInstance) {
           24 // 24 hours
         );
 
-        // Send verification email
-        const verificationUrl = `${env.CLIENT_URL}/verify-email?token=${verificationToken.token}`;
+        // Send verification email with secure backend URL (no token exposed in final URL)
+        const verificationUrl = `${env.SERVER_URL}/api/auth/verify-email/${verificationToken.token}`;
         await emailService.sendEmailVerification(user.email, user.name, verificationUrl);
 
         reply.status(201).send({
@@ -364,33 +359,95 @@ export default async function authRoutes(fastify: FastifyInstance) {
     }
   );
 
-  // Verify email
-  fastify.post(
-    "/verify-email",
+  // Secure email verification initiation (GET endpoint that creates session)
+  // User clicks this link from email - no sensitive data exposed in URL after redirect
+  fastify.get(
+    "/verify-email/:token",
     {
-      // Top-level rateLimit for CodeQL compliance
       rateLimit: {
         max: 15,
         timeWindow: "15m",
         hook: "onRequest",
-        keyGenerator: comboKey,
+        keyGenerator: ipKey,
       },
-      // config.rateLimit for plugin compliance
       config: {
         rateLimit: {
           max: 15,
           timeWindow: "15m",
           hook: "onRequest",
-          keyGenerator: comboKey,
+          keyGenerator: ipKey,
         },
-      },
-      schema: {
-        body: zodToJsonSchema(verifyEmailSchema),
       },
     },
     async (request, reply) => {
       try {
-        const { token } = request.body as VerifyEmailBody;
+        const { token } = request.params as { token: string };
+
+        // Verify token validity (throws error if invalid)
+        await VerificationToken.verifyToken(token, "email_verification");
+
+        // Store verification session in secure httpOnly cookie
+        // This allows frontend to complete verification without exposing token
+        secureCookieService.setSecureCookie(reply, "verificationSession", token, {
+          maxAge: 5 * 60 * 1000, // 5 minutes - short-lived
+          httpOnly: true,
+          secure: env.NODE_ENV === "production",
+          sameSite: "lax", // Allow redirect from email
+          path: "/api/auth/verify-email-complete",
+        });
+
+        // Redirect to frontend verification page (no token in URL)
+        const redirectUrl = new URL(env.CLIENT_URL);
+        redirectUrl.pathname = "/verify-email";
+
+        reply.redirect(redirectUrl.toString());
+      } catch (error: unknown) {
+        request.log.error({
+          error: error instanceof Error ? error.message : "Invalid verification token",
+          message: "Email verification initiation error",
+        });
+
+        // Redirect to frontend with error indicator
+        const redirectUrl = new URL(env.CLIENT_URL);
+        redirectUrl.pathname = "/verify-email";
+        redirectUrl.searchParams.set("error", "invalid_token");
+
+        reply.redirect(redirectUrl.toString());
+      }
+    }
+  );
+
+  // Complete email verification using secure session cookie
+  fastify.post(
+    "/verify-email-complete",
+    {
+      rateLimit: {
+        max: 15,
+        timeWindow: "15m",
+        hook: "onRequest",
+        keyGenerator: ipKey,
+      },
+      config: {
+        rateLimit: {
+          max: 15,
+          timeWindow: "15m",
+          hook: "onRequest",
+          keyGenerator: ipKey,
+        },
+      },
+    },
+    async (request, reply) => {
+      try {
+        // Retrieve token from secure session cookie
+        const token = request.cookies.verificationSession;
+
+        if (!token) {
+          return reply.status(400).send({
+            code: 400,
+            error: "Bad Request",
+            message: "No verification session found. Please click the link in your email again.",
+          });
+        }
 
         const verificationToken = await VerificationToken.verifyToken(token, "email_verification");
         const user = await User.findById(verificationToken.userId);
@@ -409,6 +466,11 @@ export default async function authRoutes(fastify: FastifyInstance) {
 
         // Mark token as used
         await verificationToken.markAsUsed(request.ip, request.headers["user-agent"]);
+
+        // Clear the verification session cookie
+        reply.clearCookie("verificationSession", {
+          path: "/api/auth/verify-email-complete",
+        });
 
         // Send welcome email
         await emailService.sendWelcomeEmail(user.email, user.name);
@@ -496,8 +558,8 @@ export default async function authRoutes(fastify: FastifyInstance) {
           24 // 24 hours
         );
 
-        // Send verification email
-        const verificationUrl = `${env.CLIENT_URL}/verify-email?token=${verificationToken.token}`;
+        // Send verification email with secure backend URL (no token exposed in final URL)
+        const verificationUrl = `${env.SERVER_URL}/api/auth/verify-email/${verificationToken.token}`;
         await emailService.sendEmailVerification(user.email, user.name, verificationUrl);
 
         reply.send({
@@ -934,7 +996,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
     }
   );
 
-  // Refresh token
+  // Refresh token (supports both body and cookie-based refresh tokens)
   fastify.post(
     "/refresh",
     {
@@ -956,18 +1018,32 @@ export default async function authRoutes(fastify: FastifyInstance) {
       },
       schema: {
         body: zodToJsonSchema(
-          z.object({
-            refreshToken: z
-              .string()
-              .min(32, "Refresh token must be at least 32 characters")
-              .max(256, "Refresh token too long"),
-          })
+          z
+            .object({
+              refreshToken: z
+                .string()
+                .min(32, "Refresh token must be at least 32 characters")
+                .max(256, "Refresh token too long")
+                .optional(), // Made optional to support cookie-based auth
+            })
+            .optional()
         ),
       },
     },
     async (request, reply) => {
       try {
-        const { refreshToken } = request.body as RefreshTokenBody;
+        // Get refresh token from body (Bearer token auth) or cookies (OAuth)
+        const bodyToken = (request.body as RefreshTokenBody | undefined)?.refreshToken;
+        const cookieToken = request.cookies?.refreshToken;
+        const refreshToken = bodyToken || cookieToken;
+
+        if (!refreshToken) {
+          return reply.status(401).send({
+            code: 401,
+            error: "Unauthorized",
+            message: "No refresh token provided",
+          });
+        }
 
         // Verify refresh token
         const decoded = jwtService.verifyRefreshToken(refreshToken);
@@ -1005,7 +1081,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
           maxAge: 15 * 60 * 1000, // 15 minutes
           httpOnly: true,
           secure: env.NODE_ENV === "production",
-          sameSite: "strict",
+          sameSite: cookieToken ? "lax" : "strict", // Use 'lax' for OAuth
         });
 
         reply.send({
@@ -1032,7 +1108,17 @@ export default async function authRoutes(fastify: FastifyInstance) {
   fastify.get("/google/callback", async (request, reply) => {
     try {
       // Get the OAuth2 token from Google
-      const token = await fastify.googleOAuth2.getAccessTokenFromAuthorizationCodeFlow(request);
+      const tokenResponse = await fastify.googleOAuth2.getAccessTokenFromAuthorizationCodeFlow(request);
+
+      // Runtime behavior: tokenResponse has a nested 'token' property despite type definition
+      // Type assertion needed because fastify-oauth2 types don't match actual runtime structure
+      const token = (tokenResponse as { token?: typeof tokenResponse }).token || tokenResponse;
+
+      request.log.info({
+        message: "OAuth token received from Google",
+        hasAccessToken: !!token.access_token,
+        tokenType: token.token_type,
+      });
 
       // Fetch user profile from Google
       const response = await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
@@ -1042,7 +1128,14 @@ export default async function authRoutes(fastify: FastifyInstance) {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to fetch user profile from Google");
+        const errorBody = await response.text();
+        request.log.error({
+          message: "Google userinfo API error",
+          status: response.status,
+          statusText: response.statusText,
+          errorBody,
+        });
+        throw new Error(`Failed to fetch user profile from Google: ${response.status} ${errorBody}`);
       }
 
       const googleUser = (await response.json()) as {
@@ -1056,8 +1149,21 @@ export default async function authRoutes(fastify: FastifyInstance) {
       // Check if user exists
       let user = await User.findOne({ email: googleUser.email });
 
+      request.log.info({
+        message: "User lookup result",
+        email: googleUser.email,
+        userExists: !!user,
+      });
+
       if (!user) {
         // Create new user with OAuth
+        request.log.info({
+          message: "Creating new user from OAuth",
+          email: googleUser.email,
+          name: googleUser.name,
+          googleId: googleUser.id,
+        });
+
         user = new User({
           email: googleUser.email,
           name: googleUser.name,
@@ -1069,15 +1175,41 @@ export default async function authRoutes(fastify: FastifyInstance) {
           acceptTermsVersion: "1.0",
           googleId: googleUser.id,
         });
-        await user.save();
+
+        const savedUser = await user.save();
+
+        request.log.info({
+          message: "User saved successfully",
+          userId: savedUser._id.toString(),
+          email: savedUser.email,
+          name: savedUser.name,
+          googleId: savedUser.googleId,
+        });
 
         // Send welcome email for OAuth users
         await emailService.sendWelcomeEmail(user.email, user.name);
       } else if (!user.googleId) {
         // Link existing account to Google OAuth
+        request.log.info({
+          message: "Linking existing account to Google OAuth",
+          userId: user._id.toString(),
+          email: user.email,
+        });
+
         user.googleId = googleUser.id;
         user.isEmailVerified = true;
         await user.save();
+
+        request.log.info({
+          message: "Account linked successfully",
+          userId: user._id.toString(),
+        });
+      } else {
+        request.log.info({
+          message: "User already exists with Google OAuth",
+          userId: user._id.toString(),
+          email: user.email,
+        });
       }
 
       // Reset login attempts on successful login
@@ -1115,9 +1247,9 @@ export default async function authRoutes(fastify: FastifyInstance) {
         sameSite: "lax", // Changed to 'lax' for OAuth callback
       });
 
-      // Redirect to client with success
+      // Redirect to client with success (using localized route)
       const redirectUrl = new URL(env.CLIENT_URL);
-      redirectUrl.pathname = "/auth/callback";
+      redirectUrl.pathname = "/en/auth/callback"; // Use localized route
       redirectUrl.searchParams.set("success", "true");
       redirectUrl.searchParams.set("provider", "google");
 
@@ -1128,9 +1260,9 @@ export default async function authRoutes(fastify: FastifyInstance) {
         message: "Google OAuth callback error",
       });
 
-      // Redirect to client with error
+      // Redirect to client with error (using localized route)
       const redirectUrl = new URL(env.CLIENT_URL);
-      redirectUrl.pathname = "/auth/callback";
+      redirectUrl.pathname = "/en/auth/callback"; // Use localized route
       redirectUrl.searchParams.set("error", "oauth_failed");
       redirectUrl.searchParams.set("provider", "google");
 
