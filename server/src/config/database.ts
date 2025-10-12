@@ -25,8 +25,18 @@ export const connectDatabase = async (): Promise<void> => {
       throw new Error("MONGODB_URI is not defined in environment variables");
     }
 
-    // Detect if using MongoDB Atlas (cloud)
-    const isAtlas = mongoUri.includes("mongodb+srv://") || mongoUri.includes("mongodb.net");
+    // Detect if using MongoDB Atlas (cloud) by checking protocol and hostname
+    let isAtlas = false;
+    try {
+      const parsedUri = new URL(mongoUri);
+      // Check if using mongodb+srv protocol and hostname is mongodb.net or subdomain
+      isAtlas =
+        parsedUri.protocol === "mongodb+srv:" &&
+        (parsedUri.hostname === "mongodb.net" || parsedUri.hostname.endsWith(".mongodb.net"));
+    } catch {
+      // If parse fails, fallback to protocol check only
+      isAtlas = mongoUri.startsWith("mongodb+srv://");
+    }
 
     const options: mongoose.ConnectOptions = {
       // Connection pool settings

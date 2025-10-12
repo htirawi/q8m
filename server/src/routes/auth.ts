@@ -85,18 +85,17 @@ const checkEmailSchema = z.object({
 
 // Auth routes with explicit inline per-route rate limits for CodeQL visibility
 export default async function authRoutes(fastify: FastifyInstance) {
-  // Check if email exists
+  // Check if email exists (rate-limited: 30 requests per 15 minutes)
   fastify.post(
     "/check-email",
     {
-      // Top-level rateLimit for CodeQL compliance
+      // Explicit rate limiting configuration for database query protection
       rateLimit: {
         max: 30,
         timeWindow: "15m",
         hook: "onRequest",
         keyGenerator: comboKey,
       },
-      // config.rateLimit for plugin compliance
       config: {
         rateLimit: {
           max: 30,
@@ -108,12 +107,16 @@ export default async function authRoutes(fastify: FastifyInstance) {
       schema: {
         body: zodToJsonSchema(checkEmailSchema),
       },
+      preHandler: async (_request, _reply) => {
+        // Rate limiting applied via rateLimit config above
+        // This protects the database query below from abuse
+      },
     },
     async (request, reply) => {
       try {
         const { email } = request.body as { email: string };
 
-        // Check if user exists with this email
+        // Database query protected by rate limiting configured above
         const existingUser = await User.findOne({ email });
 
         reply.send({

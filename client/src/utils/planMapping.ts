@@ -119,8 +119,8 @@ export function decodeIntentFromUrl(url: string): PlanIntent | null {
   // Validate mode
   if (mode !== "study" && mode !== "quiz") return null;
 
-  // Ensure locale is defined
-  if (!locale || !mode || !desired) return null;
+  // Ensure locale and desired are defined
+  if (!locale || !desired) return null;
 
   return {
     mode: mode as IntentMode,
