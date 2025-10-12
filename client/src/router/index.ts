@@ -1,9 +1,12 @@
 import { createRouter, createWebHistory } from "vue-router";
 import type { RouteRecordRaw } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
+import { usePlanStore } from "@/stores/plan";
+import { useSoftPaywall } from "@/composables/useSoftPaywall";
 import i18n from "@/i18n";
 import type { RouteMeta } from "@/types/router";
 import { SUPPORTED_LOCALES, type SupportedLocale } from "@/types/router";
+import { hasAccessLevel, type PlanTier } from "@shared/types/plan";
 
 export { SUPPORTED_LOCALES, type SupportedLocale };
 
@@ -129,6 +132,104 @@ const routes: RouteRecordRaw[] = [
     "register"
   ),
   createLocalizedRoute(
+    "/auth/callback",
+    () =>
+      import(
+        /* webpackChunkName: "auth" */
+        "@/features/auth/pages/OAuthCallbackPage.vue"
+      ),
+    {
+      title: "Authenticating - q8m",
+      layout: "auth",
+    },
+    "oauth-callback"
+  ),
+  // Easy Study Guide (Free plan)
+  createLocalizedRoute(
+    "/guide/easy",
+    () =>
+      import(
+        /* webpackChunkName: "guide-easy" */
+        "@/features/guide/pages/EasyGuidePage.vue"
+      ),
+    {
+      title: "Easy Study Guide - q8m",
+      requiresAuth: true,
+      access: "free",
+      layout: "default",
+    },
+    "guide-easy"
+  ),
+
+  // Easy Quizzes (Free plan)
+  createLocalizedRoute(
+    "/quizzes/easy",
+    () =>
+      import(
+        /* webpackChunkName: "quizzes-easy" */
+        "@/features/quiz/pages/EasyQuizzesPage.vue"
+      ),
+    {
+      title: "Easy Quizzes - q8m",
+      requiresAuth: true,
+      access: "free",
+      layout: "default",
+    },
+    "quizzes-easy"
+  ),
+
+  // Dashboard (Paid plans)
+  createLocalizedRoute(
+    "/dashboard",
+    () =>
+      import(
+        /* webpackChunkName: "dashboard" */
+        "@/features/dashboard/pages/DashboardPage.vue"
+      ),
+    {
+      title: "Dashboard - q8m",
+      requiresAuth: true,
+      access: "paid",
+      layout: "default",
+    },
+    "dashboard"
+  ),
+
+  // Study Mode Selection
+  createLocalizedRoute(
+    "/study",
+    () =>
+      import(
+        /* webpackChunkName: "study" */
+        "@/features/study/pages/StudySelectionPage.vue"
+      ),
+    {
+      title: "Study Mode - q8m",
+      requiresAuth: true,
+      access: "free",
+      layout: "default",
+    },
+    "study"
+  ),
+
+  // Study Mode by Difficulty
+  createLocalizedRoute(
+    "/study/:difficulty",
+    () =>
+      import(
+        /* webpackChunkName: "study" */
+        "@/features/study/pages/StudyModePage.vue"
+      ),
+    {
+      title: "Study - q8m",
+      requiresAuth: true,
+      layout: "default",
+    },
+    "study-practice"
+  ),
+
+  // Quiz Mode Selection
+  createLocalizedRoute(
     "/quiz",
     () =>
       import(
@@ -138,12 +239,15 @@ const routes: RouteRecordRaw[] = [
     {
       title: "Quiz Selection - q8m",
       requiresAuth: true,
+      access: "free",
       layout: "default",
     },
     "quiz"
   ),
+
+  // Quiz Mode by Level
   createLocalizedRoute(
-    "/quiz/:framework/:level",
+    "/quiz/:level",
     () =>
       import(
         /* webpackChunkName: "quiz" */
@@ -284,10 +388,17 @@ const getLocaleFromRoute = (to: { params: { locale?: string }; path: string }): 
 // Router guards
 router.beforeEach(async (to, _from, next) => {
   const authStore = useAuthStore();
+  const planStore = usePlanStore();
+  const { show: showPaywall } = useSoftPaywall();
 
   // Initialize auth state if not already done
   if (!authStore.isInitialized) {
     await authStore.initializeAuth();
+  }
+
+  // Initialize plan if authenticated and not loaded
+  if (authStore.isAuthenticated && !planStore.currentPlan) {
+    await planStore.fetchCurrentPlan();
   }
 
   // Handle locale detection and validation
@@ -334,39 +445,83 @@ router.beforeEach(async (to, _from, next) => {
       next({
         name: "login",
         params: { locale },
-        query: { redirect: to.fullPath },
+        query: { signInSuccessUrl: to.fullPath },
       });
       return;
     }
 
     // Check if route requires guest (not authenticated)
     if (to.meta.requiresGuest && authStore.isAuthenticated) {
-      // If visiting login page and there's a redirect param, go there
-      if (to.name === "login" && to.query.signInSuccessUrl) {
-        const redirectUrl = to.query.signInSuccessUrl as string;
-        // Validate redirect URL (must be relative path)
-        if (
-          redirectUrl &&
-          redirectUrl.startsWith("/") &&
-          !redirectUrl.startsWith("//") &&
-          !redirectUrl.includes("://") &&
-          !redirectUrl.includes("@")
-        ) {
-          // Add locale if not present
-          let finalUrl = redirectUrl;
-          if (!redirectUrl.match(/^\/[a-z]{2}\//)) {
-            finalUrl = redirectUrl === "/" ? `/${locale}` : `/${locale}${redirectUrl}`;
-          }
-          next(finalUrl);
-          return;
-        }
-      }
-      // Default: redirect to home
+      // Don't use post-login routing here, just redirect to home
+      // Post-login routing is handled after successful login action
       next({
         name: "home",
         params: { locale },
       });
       return;
+    }
+
+    // Check plan-based access control
+    if (to.meta.access && authStore.isAuthenticated) {
+      const requiredAccess = to.meta.access as string;
+      const userTier = planStore.planTier;
+
+      if (
+        !hasAccessLevel(
+          userTier,
+          requiredAccess as "free" | "paid" | "paid:intermediate" | "paid:advanced" | "paid:pro"
+        )
+      ) {
+        // User doesn't have access - show soft paywall
+        // Determine suggested plan based on required access
+        let suggestedPlan: PlanTier = "intermediate";
+        if (requiredAccess.startsWith("paid:")) {
+          suggestedPlan = requiredAccess.replace("paid:", "") as PlanTier;
+        } else if (requiredAccess === "paid") {
+          suggestedPlan = "intermediate";
+        }
+
+        // Show soft paywall (non-blocking)
+        showPaywall(to.fullPath, suggestedPlan);
+
+        // Allow navigation to proceed, but the paywall modal will be shown
+        // This is the "soft" paywall - user sees the page but gets the upgrade prompt
+        next();
+        return;
+      }
+    }
+
+    // Check study/quiz specific access (difficulty/level based)
+    if (to.name === "study-practice" && to.params.difficulty) {
+      const { canAccessStudyDifficulty, getRequiredStudyPlanTier, getSuggestedUpgradeTier } =
+        await import("@/types/plan/access");
+      const difficulty = to.params.difficulty as string;
+      const userTier = planStore.planTier;
+
+      if (
+        !canAccessStudyDifficulty(userTier, difficulty as "easy" | "medium" | "hard")
+      ) {
+        const requiredTier = getRequiredStudyPlanTier(difficulty as "easy" | "medium" | "hard");
+        const suggestedTier = getSuggestedUpgradeTier(requiredTier, userTier);
+        showPaywall(to.fullPath, suggestedTier);
+        next();
+        return;
+      }
+    }
+
+    if (to.name === "quiz-take" && to.params.level) {
+      const { canAccessQuizLevel, getRequiredQuizPlanTier, getSuggestedUpgradeTier } =
+        await import("@/types/plan/access");
+      const level = to.params.level as string;
+      const userTier = planStore.planTier;
+
+      if (!canAccessQuizLevel(userTier, level as "junior" | "intermediate" | "senior")) {
+        const requiredTier = getRequiredQuizPlanTier(level as "junior" | "intermediate" | "senior");
+        const suggestedTier = getSuggestedUpgradeTier(requiredTier, userTier);
+        showPaywall(to.fullPath, suggestedTier);
+        next();
+        return;
+      }
     }
 
     // Check if route requires specific role

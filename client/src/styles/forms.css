@@ -14,6 +14,11 @@
   @apply space-y-2;
 }
 
+/* Override Tailwind's space utility that adds unwanted spacing between form elements */
+.form-group > :not([hidden]) ~ :not([hidden]) {
+  margin-top: 0 !important;
+}
+
 /* Form labels */
 .form-label {
   @apply block text-sm font-medium text-gray-700;
@@ -91,14 +96,14 @@
   @apply transition-all duration-200 ease-in-out;
   @apply focus:outline-none focus:ring-4 focus:ring-primary-500/30;
   @apply transform hover:-translate-y-0.5;
-  @apply disabled:cursor-not-allowed disabled:opacity-50 disabled:transform-none;
+  @apply disabled:transform-none disabled:cursor-not-allowed disabled:opacity-50;
   @apply min-h-[44px];
 }
 
 /* Form button secondary */
 .form-button-secondary {
   @apply form-button;
-  @apply bg-none bg-gray-100 text-gray-700 shadow-none;
+  @apply bg-gray-100 bg-none text-gray-700 shadow-none;
   @apply hover:bg-gray-200 hover:shadow-none;
   @apply dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600;
 }

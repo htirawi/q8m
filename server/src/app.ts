@@ -17,6 +17,7 @@ import { errorHandler } from "@middlewares/error.middleware";
 import { requestLogger } from "@middlewares/logger.middleware";
 import adminRoutes from "@routes/admin";
 import authRoutes from "@routes/auth";
+import devEmailRoutes from "@routes/dev-emails";
 import entitlementRoutes from "@routes/entitlements";
 import paymentRoutes from "@routes/payments";
 import paypalRoutes from "@routes/paypal.routes";
@@ -306,6 +307,11 @@ async function registerRoutes() {
   await fastify.register(adminRoutes, { prefix: "/api/admin" });
   await fastify.register(entitlementRoutes, { prefix: "/api/entitlements" });
   await fastify.register(seoRoutes);
+
+  // Development routes (only in dev mode)
+  if (env.NODE_ENV === "development") {
+    await fastify.register(devEmailRoutes, { prefix: "/api/dev/emails" });
+  }
 }
 
 // Start server

@@ -58,9 +58,7 @@ const isValid = computed(() => {
           :type="showPassword ? 'text' : 'password'" autocomplete="new-password" required
           class="form-input password-input" :class="{ 'form-input-error': passwordError }"
           :placeholder="$t('auth.fields.passwordPlaceholder')" />
-        <button
-          type="button"
-          @click="showPassword = !showPassword"
+        <button type="button" @click="showPassword = !showPassword"
           :aria-label="showPassword ? $t('auth.fields.hidePassword') : $t('auth.fields.showPassword')"
           class="password-toggle">
           <EyeIcon v-if="!showPassword" class="toggle-icon" />
@@ -202,11 +200,22 @@ const isValid = computed(() => {
   @apply flex items-center justify-center gap-3;
 }
 
+/* Override Tailwind's space utility that adds unwanted spacing */
+.form-group> :not([hidden])~ :not([hidden]) {
+  margin-top: 0 !important;
+}
+
+
 /* Responsive Design */
 @media (max-width: 640px) {
   .form-actions {
     @apply flex-col;
   }
+
+  .form-input {
+    @apply text-sm;
+  }
+
 
   .form-button-secondary {
     @apply order-2;

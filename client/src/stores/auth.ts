@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 import type { User } from "@shared/types/auth";
 import type { AuthTokens, LoginFormData, RegisterFormData } from "@/types/domain/auth";
+import { handleApiResponse, getErrorMessage } from "@/utils/apiHelpers";
 
 export const useAuthStore = defineStore("auth", () => {
   const user = ref<User | null>(null);
@@ -106,11 +107,8 @@ export const useAuthStore = defineStore("auth", () => {
         body: JSON.stringify(credentials),
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message ?? "Login failed");
-      }
+      // Use safe JSON parsing to handle 500 errors
+      const data = await handleApiResponse<{ user: User }>(response);
 
       setUser(data.user);
 
@@ -124,7 +122,7 @@ export const useAuthStore = defineStore("auth", () => {
 
       return true;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Login failed";
+      const errorMessage = getErrorMessage(err, "Login failed");
       setError(errorMessage);
       return false;
     } finally {
@@ -145,16 +143,13 @@ export const useAuthStore = defineStore("auth", () => {
         body: JSON.stringify(userData),
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message ?? "Registration failed");
-      }
+      // Use safe JSON parsing to handle 500 errors
+      await handleApiResponse(response);
 
       // Don't set user/tokens for registration - email verification required
       return true;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Registration failed";
+      const errorMessage = getErrorMessage(err, "Registration failed");
       setError(errorMessage);
       return false;
     } finally {
@@ -460,34 +455,51 @@ export const useAuthStore = defineStore("auth", () => {
         body: JSON.stringify({ email }),
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        // If endpoint doesn't exist (404), fall back to mock behavior
-        if (response.status === 404) {
-          throw new Error("Endpoint not implemented");
-        }
-        throw new Error(data.message ?? "Email check failed");
-      }
+      // Use safe JSON parsing
+      const data = await handleApiResponse<{ exists: boolean }>(response);
 
       return data.exists ?? false;
-    } catch (_err) {
+    } catch (err) {
       // Fallback mock behavior for development
       // In production, this should always hit the real API
-      console.warn("checkEmailExists: API not available, using mock behavior");
+      console.warn("checkEmailExists: API not available, using mock behavior", getErrorMessage(err));
       return false;
     }
   }
 
-  // Initialize auth state from localStorage
-  function initializeAuth() {
-    const accessToken = localStorage.getItem("accessToken");
-    const refreshToken = localStorage.getItem("refreshToken");
+  // Initialize auth state from server (httpOnly cookies)
+  async function initializeAuth() {
+    // Skip if already initialized
+    if (isInitialized.value) {
+      return;
+    }
 
-    if (accessToken && refreshToken) {
-      setTokens({ accessToken, refreshToken, expiresIn: 0 });
-      // Try to get current user
-      getCurrentUser();
+    try {
+      // Try to get current user from server (will use httpOnly cookies)
+      const response = await fetch("/api/auth/me", {
+        credentials: "include", // Include httpOnly cookies
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setUser(data.user);
+
+        // Set dummy tokens to indicate authenticated state
+        setTokens({
+          accessToken: "cookie-based",
+          refreshToken: "cookie-based",
+          expiresIn: 15 * 60,
+        });
+      }
+    } catch (_err) {
+      // Failed to get user - stay logged out
+      setUser(null);
+      setTokens(null);
+    } finally {
+      isInitialized.value = true;
     }
   }
 

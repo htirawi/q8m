@@ -436,6 +436,7 @@ async function handleSubmit(): Promise<void> {
           :disabled="emailConfirmed"
           class="form-input"
           :class="{ 'input-error': errors.email }"
+          placeholder=" "
           @focus="emailFocused = true"
           @blur="handleEmailBlur"
           @input="handleEmailInput"
@@ -474,6 +475,7 @@ async function handleSubmit(): Promise<void> {
                 autocomplete="current-password"
                 class="form-input"
                 :class="{ 'input-error': errors.password }"
+                placeholder=" "
                 @input="handlePasswordInput"
               />
               <label for="password" class="floating-label">
@@ -547,6 +549,7 @@ async function handleSubmit(): Promise<void> {
               autocomplete="name"
               class="form-input"
               :class="{ 'input-error': errors.name }"
+              placeholder=" "
               @input="handleNameInput"
             />
             <label for="name" class="floating-label">
@@ -567,6 +570,7 @@ async function handleSubmit(): Promise<void> {
                 autocomplete="new-password"
                 class="form-input"
                 :class="{ 'input-error': errors.password }"
+                placeholder=" "
                 @input="handlePasswordInput"
               />
               <label for="register-password" class="floating-label">
@@ -758,7 +762,7 @@ async function handleSubmit(): Promise<void> {
 }
 
 .form-input {
-  @apply w-full px-4 pt-6 pb-2 rounded-xl;
+  @apply w-full px-4 py-4 rounded-xl;
   @apply border-2 border-gray-200 bg-white;
   @apply text-gray-900 text-base;
   @apply transition-all duration-200;
@@ -766,6 +770,13 @@ async function handleSubmit(): Promise<void> {
   @apply focus:outline-none;
   @apply dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100;
   @apply dark:focus:border-primary-400;
+  @apply placeholder-transparent;
+  @apply leading-6;
+}
+
+.form-group.has-value .form-input,
+.form-input:focus {
+  @apply pt-6 pb-2;
 }
 
 .form-input:disabled {
@@ -782,9 +793,10 @@ async function handleSubmit(): Promise<void> {
   @apply dark:border-red-400 dark:focus:border-red-500;
 }
 
-/* Floating Labels */
+/* Floating Labels - Vertically centered when empty */
 .floating-label {
-  @apply absolute left-4 top-4;
+  @apply absolute left-4;
+  top: 1.125rem; /* Center within input: border(2px) + padding-top(16px) + half line-height(12px) - half font(8px) */
   @apply text-gray-500 text-base;
   @apply transition-all duration-200;
   @apply pointer-events-none;
@@ -792,8 +804,10 @@ async function handleSubmit(): Promise<void> {
 }
 
 .form-group.has-value .floating-label,
-.form-input:focus ~ .floating-label {
-  @apply top-2 text-xs font-medium;
+.form-input:focus ~ .floating-label,
+.form-input:not(:placeholder-shown) ~ .floating-label {
+  top: 0.5rem; /* Float to top */
+  @apply text-xs font-medium;
   @apply text-primary-600;
   @apply dark:text-primary-400;
 }
@@ -1069,11 +1083,24 @@ async function handleSubmit(): Promise<void> {
   }
 
   .form-input {
-    @apply text-sm pt-5;
+    @apply text-sm py-3;
+  }
+
+  .form-group.has-value .form-input,
+  .form-input:focus {
+    @apply pt-5 pb-2;
   }
 
   .floating-label {
+    top: 0.875rem; /* Center within smaller mobile input */
     @apply text-sm;
+  }
+
+  .form-group.has-value .floating-label,
+  .form-input:focus ~ .floating-label,
+  .form-input:not(:placeholder-shown) ~ .floating-label {
+    top: 0.5rem; /* Float to top on mobile */
+    @apply text-xs;
   }
 
   .submit-btn {

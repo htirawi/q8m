@@ -7,6 +7,7 @@
   "navigation": {
     "home": "Home",
     "pricing": "Pricing",
+    "study": "Study",
     "quiz": "Quiz",
     "account": "Account",
     "profile": "Profile",
@@ -268,7 +269,7 @@
       "hidePassword": "Hide password",
       "continueWithGoogle": "Continue with Google",
       "secureEncrypted": "Secure & Encrypted",
-      "joinThousands": "Join 10,000+ developers"
+      "joinThousands": "Trusted by 10,000+ students"
     },
     "fields": {
       "name": "Full Name",
@@ -686,5 +687,168 @@
     "switchLanguage": "Switch language",
     "closeModal": "Close modal",
     "dismissNotification": "Dismiss notification"
+  },
+  "plans": {
+    "names": {
+      "free": "Free",
+      "intermediate": "Intermediate",
+      "advanced": "Advanced",
+      "pro": "Pro"
+    },
+    "free": {
+      "welcomeBack": "Welcome back! Ready to continue with Easy quizzes?",
+      "landingTitle": "Easy Study Guide",
+      "landingSubtitle": "Master the fundamentals with our curated easy-level content",
+      "startQuizzes": "Start Easy Quizzes",
+      "browseContent": "Browse Easy Content"
+    },
+    "access": {
+      "available": "Available"
+    }
+  },
+  "paywall": {
+    "title": "Unlock Premium Content",
+    "description": "Upgrade to {plan} to access this feature and unlock your full potential",
+    "cta": {
+      "seePlans": "See Plans & Pricing",
+      "continueFree": "Continue with Free"
+    },
+    "features": {
+      "feature1": "Access all {plan} questions",
+      "feature2": "Detailed explanations for every answer",
+      "feature3": "Track your progress with analytics"
+    },
+    "locked": {
+      "tooltip": "This feature requires {plan} plan"
+    }
+  },
+  "dashboard": {
+    "welcome": "Welcome back",
+    "resume": {
+      "title": "Continue where you left off",
+      "noneAvailable": "No recent activity. Start a new quiz!"
+    },
+    "yourPlan": "Your Plan",
+    "manage": "Manage",
+    "vipChip": "VIP"
+  },
+  "study": {
+    "selection": {
+      "title": "Study Mode",
+      "subtitle": "Practice at your own pace with detailed explanations",
+      "chooseDifficulty": "Choose Difficulty Level",
+      "startStudy": "Start Studying"
+    },
+    "loading": "Loading questions...",
+    "backToSelection": "Back to Selection",
+    "answer": "Answer",
+    "revealAnswer": "Reveal Answer",
+    "previous": "Previous",
+    "next": "Next",
+    "finish": "Finish",
+    "bookmark": "Bookmark",
+    "bookmarked": "Bookmarked",
+    "quickNavigation": "Quick Navigation",
+    "features": {
+      "selfPaced": {
+        "title": "Self-Paced Learning",
+        "description": "Study at your own pace without time pressure"
+      },
+      "detailedExplanations": {
+        "title": "Detailed Explanations",
+        "description": "Learn the why behind every answer"
+      },
+      "bookmarks": {
+        "title": "Bookmark Questions",
+        "description": "Save questions for later review"
+      }
+    },
+    "error": {
+      "title": "Error Loading Questions",
+      "retry": "Try Again",
+      "noQuestions": "No questions available for this difficulty level",
+      "generic": "Something went wrong. Please try again."
+    }
+  },
+  "quiz": {
+    "selection": {
+      "title": "Quiz Mode",
+      "subtitle": "Test your knowledge with timed quizzes",
+      "chooseLevel": "Choose Experience Level",
+      "startQuiz": "Start Quiz"
+    },
+    "loading": "Loading quiz...",
+    "exit": "Exit Quiz",
+    "points": "points",
+    "submit": "Submit Answer",
+    "next": "Next",
+    "finish": "Finish Quiz",
+    "explanation": "Explanation",
+    "fillBlankPlaceholder": "Type your answer here...",
+    "confirmExit": "Are you sure you want to exit? Your progress will be lost.",
+    "features": {
+      "multipleChoice": {
+        "title": "Multiple Choice",
+        "description": "Choose the correct answer from multiple options"
+      },
+      "fillBlank": {
+        "title": "Fill in the Blank",
+        "description": "Complete sentences with the correct terms"
+      },
+      "multipleCheckbox": {
+        "title": "Multiple Checkbox",
+        "description": "Select all correct answers from multiple options"
+      },
+      "trueFalse": {
+        "title": "True/False",
+        "description": "Determine if statements are true or false"
+      }
+    },
+    "results": {
+      "title": "Quiz Complete!",
+      "levelQuiz": "Quiz",
+      "correctAnswers": "Correct Answers",
+      "accuracy": "Accuracy",
+      "timeSpent": "Time Spent",
+      "tryAgain": "Try Again",
+      "backToSelection": "Back to Selection"
+    },
+    "error": {
+      "title": "Error Loading Quiz",
+      "retry": "Try Again",
+      "noQuestions": "No questions available for this level",
+      "generic": "Something went wrong. Please try again."
+    }
+  },
+  "difficulty": {
+    "easy": {
+      "label": "Easy",
+      "description": "Perfect for beginners and fundamentals"
+    },
+    "medium": {
+      "label": "Medium",
+      "description": "Intermediate concepts and patterns"
+    },
+    "hard": {
+      "label": "Hard",
+      "description": "Advanced topics and expert-level challenges"
+    }
+  },
+  "level": {
+    "junior": {
+      "label": "Junior",
+      "description": "Entry-level developer questions",
+      "questionCount": "{count} questions"
+    },
+    "intermediate": {
+      "label": "Intermediate",
+      "description": "Mid-level developer questions",
+      "questionCount": "{count} questions"
+    },
+    "senior": {
+      "label": "Senior",
+      "description": "Senior developer questions",
+      "questionCount": "{count} questions"
+    }
   }
 }

@@ -1,36 +1,40 @@
 <script setup lang="ts">
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 
 import UnifiedAuthForm from "@/components/auth/UnifiedAuthForm.vue";
 import { useAuthRedirect } from "@/composables/useAuthRedirect";
+import { usePostLoginRouter } from "@/composables/usePostLoginRouter";
 
 const router = useRouter();
-const { redirectAfterAuth, getCurrentLocale } = useAuthRedirect();
+const route = useRoute();
+const { getCurrentLocale } = useAuthRedirect();
+const { routeAfterLogin } = usePostLoginRouter();
 
 function handleOAuthLogin(provider: "google") {
   // Redirect to OAuth endpoint on the backend
   const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api";
   const oauthUrl = `${apiBaseUrl}/auth/${provider}`;
 
-  // Store the current route to redirect back after OAuth
-  sessionStorage.setItem("oauth_redirect", window.location.pathname);
+  // Store the intended redirect URL (from signInSuccessUrl query param) or default to study
+  const signInSuccessUrl = route.query.signInSuccessUrl as string | undefined;
+  const locale = getCurrentLocale();
+  const redirectPath = signInSuccessUrl || `/${locale}/study/easy`;
+  sessionStorage.setItem("oauth_redirect", redirectPath);
 
   // Redirect to OAuth provider
   window.location.href = oauthUrl;
 }
 
 async function handleLoginSuccess() {
-  // Redirect to validated URL with locale preservation
-  await redirectAfterAuth("signInSuccessUrl", "/");
+  // Use plan-based post-login routing
+  await routeAfterLogin();
 }
 
 function handleRegistrationSuccess(email: string) {
-  // For unified flow, we can show a success message or redirect
-  // For now, redirect to home with a success notification
+  // After successful registration, redirect to login page with success message
   const locale = getCurrentLocale();
   router.push({
-    name: "home",
-    params: { locale },
+    path: `/${locale}/login`,
     query: { registered: "true", email },
   });
 }

@@ -4,10 +4,12 @@ import { ref, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 
 import { useAuthStore } from "@/stores/auth";
+import { useAuthRedirect } from "@/composables/useAuthRedirect";
 
 const router = useRouter();
 const route = useRoute();
 const authStore = useAuthStore();
+const { getCurrentLocale } = useAuthRedirect();
 
 const isLoading = ref(true);
 const error = ref<string | null>(null);
@@ -34,8 +36,10 @@ onMounted(async () => {
 
       await authStore.getCurrentUser();
 
-      // Get the redirect path from session storage or default to quiz
-      const redirectPath = sessionStorage.getItem("oauth_redirect") || "/quiz";
+      // Get the redirect path from session storage or default to quiz with locale
+      const locale = getCurrentLocale();
+      const defaultRedirect = `/${locale}/quiz`;
+      const redirectPath = sessionStorage.getItem("oauth_redirect") || defaultRedirect;
       sessionStorage.removeItem("oauth_redirect");
 
       // Redirect to the original page or quiz selection
@@ -54,8 +58,12 @@ onMounted(async () => {
 });
 
 function handleRetry() {
-  // Redirect back to register page
-  router.push("/auth/register");
+  // Redirect back to register page with locale
+  const locale = getCurrentLocale();
+  router.push({
+    name: "register",
+    params: { locale },
+  });
 }
 </script>
 

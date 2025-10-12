@@ -77,6 +77,11 @@ const handleContinue = () => {
   animation: fadeIn 0.3s ease-out;
 }
 
+/* Override Tailwind's space utility that adds unwanted spacing */
+.form-group> :not([hidden])~ :not([hidden]) {
+  margin-top: 0 !important;
+}
+
 .button-content {
   @apply flex items-center justify-center gap-3;
 }
