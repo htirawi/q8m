@@ -12,10 +12,10 @@ fi
 # Define the new files to lint (excluding CSS files)
 NEW_FILES=(
   "src/features/"
-  "src/layouts/"
   "src/components/ui/"
+  "src/components/layout/"
   "src/i18n/"
-  "src/store/index.ts"
+  "src/stores/"
   "src/router/index.ts"
   "src/main.ts"
   "src/App.vue"
