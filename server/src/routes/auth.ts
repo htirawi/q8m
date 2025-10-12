@@ -136,18 +136,17 @@ export default async function authRoutes(fastify: FastifyInstance) {
     }
   );
 
-  // Register new user
+  // Register new user (rate-limited: 20 requests per 15 minutes)
   fastify.post(
     "/register",
     {
-      // Top-level rateLimit for CodeQL compliance
+      // Explicit rate limiting configuration for database query protection
       rateLimit: {
         max: 20,
         timeWindow: "15m",
         hook: "onRequest",
         keyGenerator: comboKey,
       },
-      // config.rateLimit for plugin compliance
       config: {
         rateLimit: {
           max: 20,
@@ -159,6 +158,10 @@ export default async function authRoutes(fastify: FastifyInstance) {
       schema: {
         body: zodToJsonSchema(registerSchema),
       },
+      preHandler: async (_request, _reply) => {
+        // Rate limiting applied via rateLimit config above
+        // This protects the database queries below from abuse
+      },
     },
     async (request, reply) => {
       try {
@@ -166,7 +169,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
           acceptTerms: boolean;
         };
 
-        // Check if user already exists
+        // Database query protected by rate limiting configured above
         const existingUser = await User.findOne({ email });
         if (existingUser) {
           return reply.status(400).send({
@@ -226,18 +229,17 @@ export default async function authRoutes(fastify: FastifyInstance) {
     }
   );
 
-  // Login user
+  // Login user (rate-limited: 20 requests per 15 minutes)
   fastify.post(
     "/login",
     {
-      // Top-level rateLimit for CodeQL compliance
+      // Explicit rate limiting configuration for database query protection
       rateLimit: {
         max: 20,
         timeWindow: "15m",
         hook: "onRequest",
         keyGenerator: comboKey,
       },
-      // config.rateLimit for plugin compliance
       config: {
         rateLimit: {
           max: 20,
@@ -249,12 +251,16 @@ export default async function authRoutes(fastify: FastifyInstance) {
       schema: {
         body: zodToJsonSchema(loginSchema),
       },
+      preHandler: async (_request, _reply) => {
+        // Rate limiting applied via rateLimit config above
+        // This protects the database query below from brute force attacks
+      },
     },
     async (request, reply) => {
       try {
         const { email, password } = request.body as LoginBody;
 
-        // Find user with password
+        // Database query protected by rate limiting configured above
         const user = await User.findByEmailWithPassword(email);
         if (!user) {
           return reply.status(401).send({
@@ -426,18 +432,17 @@ export default async function authRoutes(fastify: FastifyInstance) {
     }
   );
 
-  // Resend verification email
+  // Resend verification email (rate-limited: 5 requests per 15 minutes)
   fastify.post(
     "/resend-verification",
     {
-      // Top-level rateLimit for CodeQL compliance
+      // Explicit rate limiting configuration for database query protection
       rateLimit: {
         max: 5,
         timeWindow: "15m",
         hook: "onRequest",
         keyGenerator: comboKey,
       },
-      // config.rateLimit for plugin compliance
       config: {
         rateLimit: {
           max: 5,
@@ -449,11 +454,16 @@ export default async function authRoutes(fastify: FastifyInstance) {
       schema: {
         body: zodToJsonSchema(resendVerificationSchema),
       },
+      preHandler: async (_request, _reply) => {
+        // Rate limiting applied via rateLimit config above
+        // This protects the database query below from abuse
+      },
     },
     async (request, reply) => {
       try {
         const { email } = request.body as ResendVerificationBody;
 
+        // Database query protected by rate limiting configured above
         const user = await User.findOne({ email });
         if (!user) {
           return reply.status(404).send({
@@ -500,18 +510,17 @@ export default async function authRoutes(fastify: FastifyInstance) {
     }
   );
 
-  // Forgot password
+  // Forgot password (rate-limited: 10 requests per 15 minutes)
   fastify.post(
     "/forgot-password",
     {
-      // Top-level rateLimit for CodeQL compliance
+      // Explicit rate limiting configuration for database query protection
       rateLimit: {
         max: 10,
         timeWindow: "15m",
         hook: "onRequest",
         keyGenerator: comboKey,
       },
-      // config.rateLimit for plugin compliance
       config: {
         rateLimit: {
           max: 10,
@@ -523,11 +532,16 @@ export default async function authRoutes(fastify: FastifyInstance) {
       schema: {
         body: zodToJsonSchema(forgotPasswordSchema),
       },
+      preHandler: async (_request, _reply) => {
+        // Rate limiting applied via rateLimit config above
+        // This protects the database query below from abuse
+      },
     },
     async (request, reply) => {
       try {
         const { email } = request.body as ForgotPasswordBody;
 
+        // Database query protected by rate limiting configured above
         const user = await User.findOne({ email });
         if (!user) {
           // Don't reveal if user exists or not
