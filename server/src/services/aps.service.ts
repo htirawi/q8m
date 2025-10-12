@@ -80,7 +80,7 @@ export class APSService {
         finalCurrency = targetCurrency;
       }
 
-      const orderId = `ORD-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
+      const orderId = `ORD-${Date.now()}-${crypto.randomBytes(6).toString("base64url").toUpperCase()}`;
 
       // Create purchase record first
       const purchase = new Purchase({

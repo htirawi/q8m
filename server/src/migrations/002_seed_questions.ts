@@ -307,14 +307,16 @@ export async function migrate002(): Promise<SeedResult> {
 }
 
 // Run migration if called directly
-if (require.main === module) {
-  migrate002()
-    .then((result) => {
-      console.log("Migration Result:", result);
-      process.exit(result.success ? 0 : 1);
-    })
-    .catch((error) => {
-      console.error("Migration failed:", error);
-      process.exit(1);
-    });
-}
+// Note: This check is disabled for ES modules
+// The migration is run via migrate.ts script
+// if (import.meta.url === `file://${process.argv[1]}`) {
+//   migrate002()
+//     .then((result) => {
+//       console.log("Migration Result:", result);
+//       process.exit(result.success ? 0 : 1);
+//     })
+//     .catch((error) => {
+//       console.error("Migration failed:", error);
+//       process.exit(1);
+//     });
+// }

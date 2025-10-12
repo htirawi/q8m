@@ -48,7 +48,7 @@ const WebhookEventSchema = new Schema<IWebhookEvent>(
       type: Date,
       required: true,
       default: Date.now,
-      index: true,
+      // index: true, // Removed: TTL index defined below on line 79
     },
     processedAt: {
       type: Date,

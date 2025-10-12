@@ -17,10 +17,13 @@ import { errorHandler } from "@middlewares/error.middleware";
 import { requestLogger } from "@middlewares/logger.middleware";
 import adminRoutes from "@routes/admin";
 import authRoutes from "@routes/auth";
+import checkoutRoutes from "@routes/checkout";
+import couponRoutes from "@routes/coupons";
 import devEmailRoutes from "@routes/dev-emails";
 import entitlementRoutes from "@routes/entitlements";
 import paymentRoutes from "@routes/payments";
 import paypalRoutes from "@routes/paypal.routes";
+import plansRoutes from "@routes/plans";
 import pricingRoutes from "@routes/pricing";
 import questionRoutes from "@routes/questions";
 import seoRoutes from "@routes/seo";
@@ -303,9 +306,12 @@ async function registerRoutes() {
   await fastify.register(pricingRoutes, { prefix: "/api/pricing" });
   await fastify.register(paymentRoutes, { prefix: "/api/payments" });
   await fastify.register(paypalRoutes, { prefix: "/api/payments/paypal" });
+  await fastify.register(checkoutRoutes, { prefix: "/api/checkout" });
+  await fastify.register(couponRoutes, { prefix: "/api/coupons" });
   await fastify.register(questionRoutes, { prefix: "/api/questions" });
   await fastify.register(adminRoutes, { prefix: "/api/admin" });
   await fastify.register(entitlementRoutes, { prefix: "/api/entitlements" });
+  await fastify.register(plansRoutes, { prefix: "/api/plans" });
   await fastify.register(seoRoutes);
 
   // Development routes (only in dev mode)
@@ -565,9 +571,12 @@ export const buildApp = async () => {
   await testApp.register(pricingRoutes, { prefix: "/api/pricing" });
   await testApp.register(paymentRoutes, { prefix: "/api/payments" });
   await testApp.register(paypalRoutes, { prefix: "/api/payments/paypal" });
+  await testApp.register(checkoutRoutes, { prefix: "/api/checkout" });
+  await testApp.register(couponRoutes, { prefix: "/api/coupons" });
   await testApp.register(questionRoutes, { prefix: "/api/questions" });
   await testApp.register(adminRoutes, { prefix: "/api/admin" });
   await testApp.register(entitlementRoutes, { prefix: "/api/entitlements" });
+  await testApp.register(plansRoutes, { prefix: "/api/plans" });
   await testApp.register(seoRoutes);
 
   return testApp;

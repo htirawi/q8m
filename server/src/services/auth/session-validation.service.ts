@@ -15,10 +15,27 @@ export interface SessionValidationResult {
 
 export class SessionValidationService {
   /**
-   * Find and validate active session by access token
+   * Find and validate active session by session ID
    */
-  async findActiveSession(token: string): Promise<ISession | null> {
-    return Session.findActiveByAccessToken(token);
+  async findActiveSessionById(sessionId: string): Promise<ISession | null> {
+    const session = await Session.findById(sessionId);
+
+    // Check if session exists and is valid
+    if (!session) {
+      return null;
+    }
+
+    // Check if session is active and not revoked
+    if (!session.isActive || session.isRevoked) {
+      return null;
+    }
+
+    // Check if session is expired
+    if (session.expiresAt < new Date()) {
+      return null;
+    }
+
+    return session;
   }
 
   /**
@@ -33,11 +50,11 @@ export class SessionValidationService {
   }
 
   /**
-   * Validate session and fetch user
+   * Validate session and fetch user using sessionId from JWT payload
    */
-  async validateSessionAndUser(token: string, userId: string): Promise<SessionValidationResult> {
+  async validateSessionAndUser(sessionId: string, userId: string): Promise<SessionValidationResult> {
     // Check if session exists and is valid
-    const session = await this.findActiveSession(token);
+    const session = await this.findActiveSessionById(sessionId);
     if (!session) {
       throw new Error("Session not found or expired");
     }

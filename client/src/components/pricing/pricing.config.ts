@@ -31,8 +31,8 @@ export const plans: Plan[] = [
     id: "intermediate",
     tier: "INTERMEDIATE",
     titleKey: "pricing.plans.intermediate.title",
-    priceMonthly: 5,
-    priceYearly: 50, // $5 * 12 * 0.83 = $49.80 ≈ $50
+    priceMonthly: 10,
+    priceYearly: 100, // $10 * 12 * 0.83 = $99.60 ≈ $100
     currency: "USD",
     featuresKeys: [
       "pricing.plans.intermediate.features.advanced",
@@ -52,8 +52,8 @@ export const plans: Plan[] = [
     id: "senior",
     tier: "SENIOR",
     titleKey: "pricing.plans.senior.title",
-    priceMonthly: 10,
-    priceYearly: 100, // $10 * 12 * 0.83 = $99.60 ≈ $100
+    priceMonthly: 15,
+    priceYearly: 150, // $15 * 12 * 0.83 = $149.40 ≈ $150
     currency: "USD",
     featuresKeys: [
       "pricing.plans.senior.features.expert",
@@ -72,8 +72,8 @@ export const plans: Plan[] = [
     id: "bundle",
     tier: "BUNDLE",
     titleKey: "pricing.plans.bundle.title",
-    priceMonthly: 12,
-    priceYearly: 120, // $12 * 12 * 0.83 = $119.52 ≈ $120
+    priceMonthly: 20,
+    priceYearly: 200, // $20 * 12 * 0.83 = $199.20 ≈ $200
     currency: "USD",
     featuresKeys: [
       "pricing.plans.bundle.features.everything",

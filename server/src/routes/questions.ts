@@ -6,7 +6,7 @@ import { zodToJsonSchema } from "zod-to-json-schema";
 
 
 const getQuestionsSchema = z.object({
-  framework: z.enum(["angular", "react", "nextjs", "redux"]),
+  framework: z.enum(["angular", "react", "nextjs", "redux"]).optional(),
   level: z.enum(["junior", "intermediate", "senior"]).optional(),
   category: z.string().optional(),
   difficulty: z.enum(["easy", "medium", "hard"]).optional(),
@@ -42,7 +42,7 @@ export default async function questionRoutes(fastify: FastifyInstance) {
       });
 
       const total = await Question.countDocuments({
-        framework,
+        ...(framework && { framework }),
         ...(level && { level }),
         ...(category && { category }),
         ...(difficulty && { difficulty }),

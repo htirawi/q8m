@@ -12,154 +12,59 @@
       </div>
 
       <!-- Difficulty Selection -->
-      <div class="mb-12">
+      <div ref="difficultySelectionRef" class="mb-12">
         <h2 class="mb-8 text-center text-2xl font-bold text-gray-900 dark:text-white">
           {{ t('study.selection.chooseDifficulty') }}
         </h2>
         <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
           <!-- Easy -->
-          <button
-            type="button"
-            :disabled="!canUserAccessDifficulty('easy')"
-            :class="getDifficultyCardClass('easy')"
-            @click="selectDifficulty('easy')"
-          >
-            <div class="relative z-10">
-              <div class="mb-4 flex items-center gap-3">
-                <span class="text-3xl">🟢</span>
-                <h3 class="text-xl font-bold">{{ t('difficulty.easy.label') }}</h3>
-              </div>
-              <p :class="getDifficultyDescriptionClass('easy')">
-                {{ t('difficulty.easy.description') }}
-              </p>
-              <div class="mt-4">
-                <span v-if="canUserAccessDifficulty('easy')" class="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800 dark:bg-green-900 dark:text-green-200">
-                  {{ t('plans.access.available') }}
-                </span>
-                <LockedBadge v-else required-plan="free" />
-              </div>
-            </div>
-            <div
-              v-if="selectedDifficulty === 'easy' && canUserAccessDifficulty('easy')"
-              class="absolute right-4 top-4"
-            >
-              <div class="flex h-8 w-8 items-center justify-center rounded-full bg-white/20">
-                <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    fill-rule="evenodd"
-                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-              </div>
-            </div>
-          </button>
+          <LevelCard
+            difficulty="easy"
+            :is-locked="!canUserAccessDifficulty('easy') && authStore.isAuthenticated"
+            :is-selected="selectedDifficulty === 'easy'"
+            :is-current-plan="isUserCurrentPlan('easy')"
+            :features="easyFeatures"
+            :auto-start-enabled="isAutoStartEnabled"
+            required-plan="free"
+            @select="handleDifficultySelect"
+            @auto-start="handleAutoStart"
+            @unlock-click="handleUnlockClick"
+          />
 
           <!-- Medium -->
-          <button
-            type="button"
-            :disabled="!canUserAccessDifficulty('medium')"
-            :class="getDifficultyCardClass('medium')"
-            @click="selectDifficulty('medium')"
-          >
-            <div class="relative z-10">
-              <div class="mb-4 flex items-center gap-3">
-                <span class="text-3xl">🟡</span>
-                <h3 class="text-xl font-bold">{{ t('difficulty.medium.label') }}</h3>
-              </div>
-              <p :class="getDifficultyDescriptionClass('medium')">
-                {{ t('difficulty.medium.description') }}
-              </p>
-              <div class="mt-4">
-                <span v-if="canUserAccessDifficulty('medium')" class="inline-flex items-center rounded-full bg-yellow-100 px-2.5 py-0.5 text-xs font-medium text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
-                  {{ t('plans.access.available') }}
-                </span>
-                <LockedBadge v-else required-plan="intermediate" />
-              </div>
-            </div>
-            <div
-              v-if="selectedDifficulty === 'medium' && canUserAccessDifficulty('medium')"
-              class="absolute right-4 top-4"
-            >
-              <div class="flex h-8 w-8 items-center justify-center rounded-full bg-white/20">
-                <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    fill-rule="evenodd"
-                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-              </div>
-            </div>
-          </button>
+          <LevelCard
+            difficulty="medium"
+            :is-locked="!canUserAccessDifficulty('medium') && authStore.isAuthenticated"
+            :is-selected="selectedDifficulty === 'medium'"
+            :is-current-plan="isUserCurrentPlan('medium')"
+            :features="mediumFeatures"
+            required-plan="intermediate"
+            @select="handleDifficultySelect"
+            @unlock-click="handleUnlockClick"
+          />
 
           <!-- Hard -->
-          <button
-            type="button"
-            :disabled="!canUserAccessDifficulty('hard')"
-            :class="getDifficultyCardClass('hard')"
-            @click="selectDifficulty('hard')"
-          >
-            <div class="relative z-10">
-              <div class="mb-4 flex items-center gap-3">
-                <span class="text-3xl">🔴</span>
-                <h3 class="text-xl font-bold">{{ t('difficulty.hard.label') }}</h3>
-              </div>
-              <p :class="getDifficultyDescriptionClass('hard')">
-                {{ t('difficulty.hard.description') }}
-              </p>
-              <div class="mt-4">
-                <span v-if="canUserAccessDifficulty('hard')" class="inline-flex items-center rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-800 dark:bg-red-900 dark:text-red-200">
-                  {{ t('plans.access.available') }}
-                </span>
-                <LockedBadge v-else required-plan="advanced" />
-              </div>
-            </div>
-            <div
-              v-if="selectedDifficulty === 'hard' && canUserAccessDifficulty('hard')"
-              class="absolute right-4 top-4"
-            >
-              <div class="flex h-8 w-8 items-center justify-center rounded-full bg-white/20">
-                <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    fill-rule="evenodd"
-                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-              </div>
-            </div>
-          </button>
+          <LevelCard
+            difficulty="hard"
+            :is-locked="!canUserAccessDifficulty('hard') && authStore.isAuthenticated"
+            :is-selected="selectedDifficulty === 'hard'"
+            :is-current-plan="isUserCurrentPlan('hard')"
+            :features="hardFeatures"
+            required-plan="advanced"
+            @select="handleDifficultySelect"
+            @unlock-click="handleUnlockClick"
+          />
         </div>
       </div>
 
-      <!-- Start Button -->
-      <div class="text-center">
-        <button
-          type="button"
-          :disabled="!selectedDifficulty || !canUserAccessDifficulty(selectedDifficulty)"
-          class="group relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 px-12 py-4 text-lg font-bold text-white shadow-2xl transition-all duration-300 hover:scale-105 hover:shadow-3xl disabled:cursor-not-allowed disabled:opacity-50"
-          @click="startStudy"
-        >
-          <span class="relative z-10 flex items-center gap-3">
-            <span>{{ t('study.selection.startStudy') }}</span>
-            <svg
-              class="h-5 w-5 transition-transform group-hover:translate-x-1"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M13 7l5 5m0 0l-5 5m5-5H6"
-              />
-            </svg>
-          </span>
-          <div class="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 opacity-0 transition-opacity group-hover:opacity-100" />
-        </button>
-      </div>
+      <!-- Start Button (Visible when auto-start is disabled or no selection) -->
+      <StartStudyingCta
+        v-if="!isAutoStartEnabled || selectedDifficulty !== 'easy'"
+        :selected-difficulty="selectedDifficulty"
+        :disabled="selectedDifficulty !== null && !canUserAccessDifficulty(selectedDifficulty)"
+        scroll-target-selector="#difficulty-selection"
+        @click="startStudy"
+      />
 
       <!-- Features -->
       <div class="mt-16 grid grid-cols-1 gap-6 md:grid-cols-3">
@@ -194,87 +99,244 @@
         </div>
       </div>
     </div>
+
+    <!-- Sticky Start Bar (secondary affordance when auto-start is off) -->
+    <StickyStartBar
+      :is-visible="!isAutoStartEnabled && selectedDifficulty === 'easy'"
+      :selected-difficulty="selectedDifficulty"
+      :state="loadingState"
+      :error-message="errorMessage"
+      :has-last-session="hasLastSession"
+      @start="handleStickyStart"
+      @retry="handleStickyRetry"
+    />
+
+    <!-- Convert Modal -->
+    <ConvertModal
+      v-if="upsellModalContext"
+      :is-visible="isUpsellModalVisible"
+      :difficulty="upsellModalContext.difficulty"
+      :required-plan="upsellModalContext.requiredPlan"
+      @dismiss="handleUpsellDismiss"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 import { usePlanStore } from "@/stores/plan";
 import { useAuthStore } from "@/stores/auth";
-import LockedBadge from "@/components/paywall/LockedBadge.vue";
+import { useUpsell } from "@/composables/useUpsell";
+import { useStudy } from "@/composables/useStudy";
+import { useAnalytics } from "@/composables/useAnalytics";
 import { canAccessDifficulty } from "@/types/plan/access";
-import { isBundlePlan } from "@/utils/planMapping";
 import { usePlanEntry } from "@/composables/usePlanEntry";
+import LevelCard from "@/components/study/LevelCard.vue";
+import StartStudyingCta from "@/components/study/StartStudyingCta.vue";
+import StickyStartBar from "@/components/study/StickyStartBar.vue";
+import ConvertModal from "@/components/marketing/ConvertModal.vue";
 import type { DifficultyLevel } from "@/types/plan/access";
+import type { PlanTier } from "@shared/types/plan";
 
 const { t } = useI18n();
 const router = useRouter();
 const planStore = usePlanStore();
 const authStore = useAuthStore();
 const { handlePlanEntryClick } = usePlanEntry();
+const { isModalVisible: isUpsellModalVisible, modalContext: upsellModalContext, openUpsellModal, closeUpsellModal } = useUpsell();
+const { trackStudyEvent } = useAnalytics();
+
+// Study composable with auto-start logic
+const {
+  loadingState,
+  errorMessage,
+  isAutoStartEnabled,
+  hasLastSession,
+  startEasySession,
+  resumeLastSession,
+  retry,
+} = useStudy();
 
 const selectedDifficulty = ref<DifficultyLevel | null>(null);
+const difficultySelectionRef = ref<HTMLDivElement>();
 
 const locale = computed(() => (router.currentRoute.value.params.locale as string) || "en");
-
-// Get accessible difficulties for current plan (for Bundle visibility)
-
-// Check if user has Bundle plan (Pro tier with Medium+Hard visibility)
-const hasBundle = computed(() => isBundlePlan(planStore.planTier));
 
 const canUserAccessDifficulty = (difficulty: DifficultyLevel): boolean => {
   return canAccessDifficulty(planStore.planTier, difficulty);
 };
 
-const selectDifficulty = (difficulty: DifficultyLevel) => {
+// Determine if a difficulty level represents the user's current plan tier
+// Mapping: free → easy, intermediate → medium, advanced → hard, pro/bundle → medium + hard
+const isUserCurrentPlan = (difficulty: DifficultyLevel): boolean => {
+  const currentTier = planStore.planTier;
+
+  // Bundle/Pro plan includes both Intermediate (medium) and Senior (hard)
+  if (currentTier === 'pro') {
+    return difficulty === 'medium' || difficulty === 'hard';
+  }
+
+  // For other plans, map to specific difficulty
+  const tierToDifficultyMap: Record<Exclude<PlanTier, 'pro'>, DifficultyLevel> = {
+    free: 'easy',
+    intermediate: 'medium',
+    advanced: 'hard',
+  };
+
+  return tierToDifficultyMap[currentTier] === difficulty;
+};
+
+// Features for each difficulty level (shown on locked cards)
+const easyFeatures = computed(() => [
+  t('study.levelCard.features.easy.feature1'),
+  t('study.levelCard.features.easy.feature2'),
+  t('study.levelCard.features.easy.feature3'),
+]);
+
+const mediumFeatures = computed(() => [
+  t('study.levelCard.features.medium.feature1'),
+  t('study.levelCard.features.medium.feature2'),
+  t('study.levelCard.features.medium.feature3'),
+  t('study.levelCard.features.medium.feature4'),
+]);
+
+const hardFeatures = computed(() => [
+  t('study.levelCard.features.hard.feature1'),
+  t('study.levelCard.features.hard.feature2'),
+  t('study.levelCard.features.hard.feature3'),
+  t('study.levelCard.features.hard.feature4'),
+  t('study.levelCard.features.hard.feature5'),
+]);
+
+/**
+ * Handle auto-start for Easy difficulty (one-click flow)
+ */
+const handleAutoStart = async (difficulty: DifficultyLevel) => {
+  if (difficulty !== 'easy') {
+    // Only Easy supports auto-start
+    return;
+  }
+
+  try {
+    if (hasLastSession.value) {
+      await resumeLastSession(locale.value);
+    } else {
+      await startEasySession(locale.value);
+    }
+  } catch (error) {
+    // Error handled by useStudy composable
+    console.error('Auto-start failed:', error);
+  }
+};
+
+/**
+ * Handle traditional selection (Medium/Hard or Easy with auto-start disabled)
+ */
+const handleDifficultySelect = (difficulty: DifficultyLevel) => {
   if (canUserAccessDifficulty(difficulty) || !authStore.isAuthenticated) {
     selectedDifficulty.value = difficulty;
   }
 };
 
-const getDifficultyCardClass = (difficulty: DifficultyLevel) => {
-  const isSelected = selectedDifficulty.value === difficulty;
-  const canAccess = canUserAccessDifficulty(difficulty);
-  const isPrimaryForBundle = hasBundle.value && (difficulty === "medium" || difficulty === "hard");
-
-  const baseClass = "group relative overflow-hidden rounded-2xl border-2 p-6 text-left transition-all duration-300";
-
-  if (!canAccess && authStore.isAuthenticated) {
-    return `${baseClass} cursor-not-allowed opacity-60 border-gray-300 bg-gray-100 dark:border-gray-600 dark:bg-gray-700`;
-  }
-
-  if (isSelected) {
-    return `${baseClass} scale-105 border-blue-500 bg-gradient-to-br from-blue-500 to-purple-600 text-white shadow-2xl`;
-  }
-
-  // Highlight Bundle cards with special border
-  if (isPrimaryForBundle) {
-    return `${baseClass} cursor-pointer border-purple-300 bg-white hover:border-purple-500 hover:shadow-xl dark:border-purple-700 dark:bg-gray-800 dark:hover:border-purple-500`;
-  }
-
-  return `${baseClass} cursor-pointer border-gray-200 bg-white hover:border-blue-400 hover:shadow-xl dark:border-gray-700 dark:bg-gray-800 dark:hover:border-blue-600`;
+/**
+ * Handle unlock click for locked difficulties (Medium/Hard)
+ */
+const handleUnlockClick = (difficulty: DifficultyLevel, requiredPlan: PlanTier) => {
+  // Open upsell modal
+  openUpsellModal(difficulty, requiredPlan, 'level_card');
 };
 
-const getDifficultyDescriptionClass = (difficulty: DifficultyLevel) => {
-  const isSelected = selectedDifficulty.value === difficulty;
-  const canAccess = canUserAccessDifficulty(difficulty);
-
-  if (isSelected && canAccess) {
-    return "text-sm text-white/90";
-  }
-
-  return "text-sm text-gray-600 dark:text-gray-400";
+/**
+ * Handle upsell modal dismiss
+ */
+const handleUpsellDismiss = () => {
+  closeUpsellModal();
 };
 
-const startStudy = async () => {
-  if (!selectedDifficulty.value) {
+/**
+ * Start study session (from CTA or sticky bar)
+ */
+const startStudy = async (difficulty: DifficultyLevel | null) => {
+  if (!difficulty) {
     return;
   }
 
   // Use plan entry handler for auth gating and intent preservation
-  await handlePlanEntryClick("study", selectedDifficulty.value, locale.value);
+  await handlePlanEntryClick("study", difficulty, locale.value);
 };
+
+/**
+ * Handle sticky bar start click
+ */
+const handleStickyStart = async () => {
+  if (selectedDifficulty.value) {
+    await startStudy(selectedDifficulty.value);
+  } else {
+    // Default to Easy
+    await startEasySession(locale.value);
+  }
+};
+
+/**
+ * Handle sticky bar retry
+ */
+const handleStickyRetry = async () => {
+  await retry(locale.value);
+};
+
+/**
+ * Handle keyboard shortcut 'S' for start/resume
+ */
+const handleKeyboardShortcut = (event: KeyboardEvent) => {
+  // Check if 'S' or 's' key is pressed (without modifiers except shift)
+  if (
+    (event.key === 'S' || event.key === 's') &&
+    !event.ctrlKey &&
+    !event.metaKey &&
+    !event.altKey
+  ) {
+    // Don't trigger if user is typing in an input/textarea
+    const target = event.target as HTMLElement;
+    if (
+      target.tagName === 'INPUT' ||
+      target.tagName === 'TEXTAREA' ||
+      target.isContentEditable
+    ) {
+      return;
+    }
+
+    // Prevent default behavior
+    event.preventDefault();
+
+    // Track event
+    trackStudyEvent('keyboard_shortcut_used', {
+      key: 'S',
+      action: 'start_resume_study',
+    });
+
+    // Trigger start/resume
+    if (isAutoStartEnabled.value && canUserAccessDifficulty('easy')) {
+      handleAutoStart('easy');
+    } else if (selectedDifficulty.value) {
+      startStudy(selectedDifficulty.value);
+    } else {
+      // Default to Easy
+      handleAutoStart('easy');
+    }
+  }
+};
+
+// Lifecycle hooks
+onMounted(() => {
+  // Register keyboard shortcut
+  window.addEventListener('keydown', handleKeyboardShortcut);
+});
+
+onUnmounted(() => {
+  // Cleanup keyboard shortcut
+  window.removeEventListener('keydown', handleKeyboardShortcut);
+});
 </script>
 

@@ -45,14 +45,14 @@ export function createAuthMiddleware(options: AuthOptions = {}) {
   return async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       // Extract and verify token
-      const { token, payload } = tokenVerificationService.extractAndVerify(
+      const { payload } = tokenVerificationService.extractAndVerify(
         request,
         options.allowExpiredTokens
       );
 
-      // Validate session and fetch user
+      // Validate session and fetch user using sessionId from JWT payload
       const { session, user } = await sessionValidationService.validateSessionAndUser(
-        token,
+        payload.sessionId,
         payload.userId
       );
 
@@ -93,11 +93,11 @@ export const optionalAuth = async (request: FastifyRequest) => {
       return; // No token or invalid, continue without authentication
     }
 
-    const { token, payload } = result;
+    const { payload } = result;
 
-    // Validate session and fetch user
+    // Validate session and fetch user using sessionId from JWT payload
     const { session, user } = await sessionValidationService.validateSessionAndUser(
-      token,
+      payload.sessionId,
       payload.userId
     );
 

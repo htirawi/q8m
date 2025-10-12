@@ -1,3 +1,5 @@
+import { randomBytes } from "crypto";
+
 import { features } from "@config/appConfig.js";
 import type { IPurchase } from "@models/Purchase.js";
 import { Purchase } from "@models/Purchase.js";
@@ -107,7 +109,7 @@ export class HyperPayService {
     const finalAmount = amountDetails.amount;
     const finalCurrency = amountDetails.currency;
 
-    const orderId = `HP-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
+    const orderId = `HP-${Date.now()}-${randomBytes(6).toString("base64url").toUpperCase()}`;
 
     // Create purchase record first
     const purchase = new Purchase({

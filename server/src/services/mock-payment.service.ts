@@ -5,6 +5,8 @@
  * for testing and development purposes.
  */
 
+import { randomBytes } from "crypto";
+
 import { Purchase } from "@models/Purchase.js";
 import type { IPurchase } from "@models/Purchase.js";
 import { Subscription } from "@models/Subscription.js";
@@ -54,8 +56,8 @@ export class MockPaymentService {
       throw new Error("Mock payment service not enabled");
     }
 
-    const paymentId = `mock-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-    const orderId = `MOCK-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
+    const paymentId = `mock-${Date.now()}-${randomBytes(6).toString("base64url")}`;
+    const orderId = `MOCK-${Date.now()}-${randomBytes(6).toString("base64url").toUpperCase()}`;
 
     // Create purchase record
     const purchase = new Purchase({

@@ -1,3 +1,5 @@
+import { randomBytes } from "crypto";
+
 import type { Document, ObjectId } from "mongoose";
 import mongoose, { Schema } from "mongoose";
 
@@ -341,7 +343,7 @@ purchaseSchema.statics.getRevenueStats = function (startDate?: Date, endDate?: D
 // Pre-save middleware to generate order ID if not provided
 purchaseSchema.pre("save", function (next) {
   if (!this.orderId) {
-    this.orderId = `ORD-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
+    this.orderId = `ORD-${Date.now()}-${randomBytes(6).toString("base64url").toUpperCase()}`;
   }
   next();
 });

@@ -111,9 +111,8 @@ button,
 [type="reset"],
 [type="submit"] {
   -webkit-appearance: button;
-  background-color: transparent;
-  background-image: none;
   cursor: pointer;
+  /* Note: background styles removed to allow Tailwind gradient classes to work */
 }
 
 /* Form Elements */

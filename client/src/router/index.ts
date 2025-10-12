@@ -53,6 +53,10 @@ const routes: RouteRecordRaw[] = [
     redirect: () => `/${DEFAULT_LOCALE}/register`,
   },
   {
+    path: "/study",
+    redirect: () => `/${DEFAULT_LOCALE}/study`,
+  },
+  {
     path: "/quiz",
     redirect: () => `/${DEFAULT_LOCALE}/quiz`,
   },
@@ -71,6 +75,11 @@ const routes: RouteRecordRaw[] = [
   {
     path: "/terms",
     redirect: () => `/${DEFAULT_LOCALE}/terms`,
+  },
+  // Redirect /auth/* to prevent it from being treated as a locale
+  {
+    path: "/auth/study",
+    redirect: () => `/${DEFAULT_LOCALE}/study`,
   },
 
   // Localized routes
@@ -102,6 +111,21 @@ const routes: RouteRecordRaw[] = [
       layout: "default",
     },
     "subscribe"
+  ),
+  // Modern Pricing Page with PayPal Integration
+  createLocalizedRoute(
+    "/pricing",
+    () =>
+      import(
+        /* webpackChunkName: "pricing-modern" */
+        "@/features/pricing/pages/ModernPricingPage.vue"
+      ),
+    {
+      title: "Pricing - q8m",
+      description: "Choose your plan and pay securely with PayPal or Credit Card",
+      layout: "default",
+    },
+    "pricing"
   ),
   createLocalizedRoute(
     "/login",
@@ -143,6 +167,19 @@ const routes: RouteRecordRaw[] = [
       layout: "auth",
     },
     "oauth-callback"
+  ),
+  createLocalizedRoute(
+    "/verify-email",
+    () =>
+      import(
+        /* webpackChunkName: "auth" */
+        "@/features/auth/pages/VerifyEmailPage.vue"
+      ),
+    {
+      title: "Verify Email - q8m",
+      layout: "auth",
+    },
+    "verify-email"
   ),
   // Easy Study Guide (Free plan)
   createLocalizedRoute(

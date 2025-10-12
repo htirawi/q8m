@@ -30,13 +30,13 @@ async function handleLoginSuccess() {
   await routeAfterLogin();
 }
 
-function handleRegistrationSuccess(email: string) {
+function handleRegistrationSuccess(_email: string) {
   // After successful registration, redirect to login page with success message
-  // User needs to verify email or can login directly
+  // No sensitive data stored or exposed in URL
   const locale = getCurrentLocale();
   router.push({
     path: `/${locale}/login`,
-    query: { registered: "true", email },
+    query: { registered: "true" },
   });
 }
 </script>
