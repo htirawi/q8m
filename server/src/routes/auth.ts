@@ -112,11 +112,13 @@ export default async function authRoutes(fastify: FastifyInstance) {
         // This protects the database query below from abuse
       },
     },
+    // lgtm[js/missing-rate-limiting] - Rate limiting is configured above via rateLimit option
+    // codeql[js/missing-rate-limiting] - Rate limited via Fastify plugin (30 req/15min)
     async (request, reply) => {
       try {
         const { email } = request.body as { email: string };
 
-        // Database query protected by rate limiting configured above
+        // Database query protected by rate limiting configured above (30 requests per 15 minutes)
         const existingUser = await User.findOne({ email });
 
         reply.send({
@@ -163,13 +165,15 @@ export default async function authRoutes(fastify: FastifyInstance) {
         // This protects the database queries below from abuse
       },
     },
+    // lgtm[js/missing-rate-limiting] - Rate limiting is configured above via rateLimit option
+    // codeql[js/missing-rate-limiting] - Rate limited via Fastify plugin (20 req/15min)
     async (request, reply) => {
       try {
         const { email, name, password, acceptTerms } = request.body as RegisterBody & {
           acceptTerms: boolean;
         };
 
-        // Database query protected by rate limiting configured above
+        // Database query protected by rate limiting configured above (20 requests per 15 minutes)
         const existingUser = await User.findOne({ email });
         if (existingUser) {
           return reply.status(400).send({
@@ -256,11 +260,13 @@ export default async function authRoutes(fastify: FastifyInstance) {
         // This protects the database query below from brute force attacks
       },
     },
+    // lgtm[js/missing-rate-limiting] - Rate limiting is configured above via rateLimit option
+    // codeql[js/missing-rate-limiting] - Rate limited via Fastify plugin (20 req/15min)
     async (request, reply) => {
       try {
         const { email, password } = request.body as LoginBody;
 
-        // Database query protected by rate limiting configured above
+        // Database query protected by rate limiting configured above (20 requests per 15 minutes)
         const user = await User.findByEmailWithPassword(email);
         if (!user) {
           return reply.status(401).send({
@@ -459,11 +465,13 @@ export default async function authRoutes(fastify: FastifyInstance) {
         // This protects the database query below from abuse
       },
     },
+    // lgtm[js/missing-rate-limiting] - Rate limiting is configured above via rateLimit option
+    // codeql[js/missing-rate-limiting] - Rate limited via Fastify plugin (5 req/15min)
     async (request, reply) => {
       try {
         const { email } = request.body as ResendVerificationBody;
 
-        // Database query protected by rate limiting configured above
+        // Database query protected by rate limiting configured above (5 requests per 15 minutes)
         const user = await User.findOne({ email });
         if (!user) {
           return reply.status(404).send({
@@ -537,11 +545,13 @@ export default async function authRoutes(fastify: FastifyInstance) {
         // This protects the database query below from abuse
       },
     },
+    // lgtm[js/missing-rate-limiting] - Rate limiting is configured above via rateLimit option
+    // codeql[js/missing-rate-limiting] - Rate limited via Fastify plugin (10 req/15min)
     async (request, reply) => {
       try {
         const { email } = request.body as ForgotPasswordBody;
 
-        // Database query protected by rate limiting configured above
+        // Database query protected by rate limiting configured above (10 requests per 15 minutes)
         const user = await User.findOne({ email });
         if (!user) {
           // Don't reveal if user exists or not
