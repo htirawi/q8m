@@ -1,9 +1,63 @@
 <script setup lang="ts">
-import { useI18n } from "vue-i18n";
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRouter, useRoute } from 'vue-router';
+import { useHomepageAnalytics } from '@/composables/useHomepageAnalytics';
 
-import Button from "@/components/ui/Button.vue";
+interface Props {
+  headlineVariant?: string;
+}
 
-const { locale } = useI18n();
+const props = withDefaults(defineProps<Props>(), {
+  headlineVariant: 'control',
+});
+
+const { locale, t } = useI18n();
+const router = useRouter();
+const route = useRoute();
+const { trackCTAClick } = useHomepageAnalytics();
+
+const currentLocale = computed(() => route.params.locale as string || locale.value);
+
+// Headline text based on A/B test variant
+const headlineText = computed(() => {
+  const key = `home.hero.headline.${props.headlineVariant}`;
+  return t(key);
+});
+
+// Handle primary CTA click
+const handlePrimaryCTA = (): void => {
+  trackCTAClick({
+    ctaType: 'primary',
+    ctaText: t('home.hero.cta.primary'),
+    ctaLocation: 'hero',
+    destinationUrl: '/register',
+    variant: props.headlineVariant,
+  });
+
+  router.push({
+    name: 'register',
+    params: { locale: currentLocale.value },
+    query: { source: 'hero', trial: '7-day' },
+  });
+};
+
+// Handle secondary CTA click (view all plans)
+const handleSecondaryCTA = (): void => {
+  trackCTAClick({
+    ctaType: 'secondary',
+    ctaText: t('home.hero.cta.secondary'),
+    ctaLocation: 'hero',
+    destinationUrl: '/pricing',
+    variant: props.headlineVariant,
+  });
+
+  router.push({
+    name: 'pricing',
+    params: { locale: currentLocale.value },
+    query: { source: 'hero' },
+  });
+};
 </script>
 
 <template>
@@ -16,7 +70,7 @@ const { locale } = useI18n();
         </div>
 
         <h1 id="hero-title" :class="['hero-title', { 'font-arabic': locale === 'ar' }]">
-          {{ $t("home.hero.title") }}
+          {{ headlineText }}
         </h1>
         <p :class="['hero-description', { 'font-arabic-sans': locale === 'ar' }]">
           {{ $t("home.hero.description") }}
@@ -32,13 +86,62 @@ const { locale } = useI18n();
         </div>
 
         <div class="hero-actions">
-          <Button variant="primary" size="lg" :to="{ name: 'subscribe' }" class="hero-cta">
-            {{ $t("home.hero.cta") }}
-          </Button>
-          <Button variant="outline" size="lg" :to="{ name: 'register' }" class="hero-secondary">
-            {{ $t("home.hero.register") }}
-          </Button>
+          <!-- Primary CTA (single, prominent) -->
+          <button
+            type="button"
+            class="hero-cta-primary"
+            @click="handlePrimaryCTA"
+            :aria-label="t('home.hero.cta.primaryAriaLabel')"
+          >
+            {{ $t("home.hero.cta.primary") }}
+            <svg
+              class="hero-cta-icon"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 7l5 5m0 0l-5 5m5-5H6"
+              />
+            </svg>
+          </button>
+
+          <!-- Secondary CTA (text link, low visual weight) -->
+          <button
+            type="button"
+            class="hero-cta-secondary"
+            @click="handleSecondaryCTA"
+            :aria-label="t('home.hero.cta.secondaryAriaLabel')"
+          >
+            {{ $t("home.hero.cta.secondary") }}
+          </button>
         </div>
+
+        <!-- Reassurance bullets -->
+        <ul class="hero-reassurance" role="list">
+          <li class="hero-reassurance__item">
+            <svg class="hero-reassurance__icon" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+            </svg>
+            <span>{{ $t("home.hero.reassurance.noCard") }}</span>
+          </li>
+          <li class="hero-reassurance__item">
+            <svg class="hero-reassurance__icon" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+            </svg>
+            <span>{{ $t("home.hero.reassurance.fullAccess") }}</span>
+          </li>
+          <li class="hero-reassurance__item">
+            <svg class="hero-reassurance__icon" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+            </svg>
+            <span>{{ $t("home.hero.reassurance.cancelAnytime") }}</span>
+          </li>
+        </ul>
 
         <div class="hero-stats">
           <div class="stat-item">
@@ -207,27 +310,49 @@ const { locale } = useI18n();
 
 /* Hero Actions & Buttons */
 .hero-actions {
-  @apply flex flex-col gap-4 sm:flex-row sm:gap-6;
+  @apply flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-6;
 }
 
-.hero-cta {
-  @apply relative min-h-[52px] overflow-hidden px-8 text-lg font-semibold;
-  @apply bg-gradient-to-r from-primary-600 to-primary-700;
-  @apply hover:from-primary-700 hover:to-primary-800;
-  @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
-  @apply shadow-lg transition-all duration-300 hover:shadow-xl;
-  @apply transform hover:-translate-y-0.5;
+.hero-cta-primary {
+  @apply inline-flex items-center justify-center gap-2;
+  @apply px-8 py-4 rounded-lg;
+  @apply text-lg font-bold text-white;
+  @apply bg-gradient-to-r from-blue-600 to-purple-600;
+  @apply hover:from-blue-700 hover:to-purple-700;
+  @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
+  @apply shadow-xl transition-all duration-300 hover:shadow-2xl;
+  @apply transform hover:scale-105;
 }
 
-.hero-secondary {
-  @apply relative min-h-[52px] px-8 text-lg font-semibold;
-  @apply border-2 border-primary-600 bg-white text-primary-700;
-  @apply hover:border-primary-600 hover:bg-primary-600 hover:text-white;
-  @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
-  @apply shadow-md transition-all duration-200 ease-in-out hover:shadow-lg;
-  @apply transform hover:-translate-y-0.5;
-  @apply dark:border-primary-400 dark:bg-slate-800 dark:text-primary-300;
-  @apply dark:hover:border-primary-600 dark:hover:bg-primary-600 dark:hover:text-white;
+.hero-cta-icon {
+  @apply w-5 h-5 transition-transform duration-200;
+}
+
+.hero-cta-primary:hover .hero-cta-icon {
+  @apply translate-x-1;
+}
+
+.hero-cta-secondary {
+  @apply inline-flex items-center;
+  @apply px-4 py-2;
+  @apply text-base font-medium text-blue-600 dark:text-blue-400;
+  @apply hover:text-blue-800 dark:hover:text-blue-300;
+  @apply hover:underline;
+  @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
+  @apply transition-colors duration-200;
+}
+
+.hero-reassurance {
+  @apply flex flex-col gap-2 sm:flex-row sm:gap-6;
+  @apply text-sm text-slate-600 dark:text-slate-400;
+}
+
+.hero-reassurance__item {
+  @apply flex items-center gap-2;
+}
+
+.hero-reassurance__icon {
+  @apply w-5 h-5 text-green-500 flex-shrink-0;
 }
 
 .hero-stats {
@@ -337,10 +462,26 @@ const { locale } = useI18n();
   @apply text-xs font-medium text-slate-600 dark:text-slate-400;
 }
 
-/* Focus styles */
-.hero-cta:focus,
-.hero-secondary:focus {
-  @apply outline-none ring-2 ring-primary-500 ring-offset-2 dark:ring-offset-slate-800;
+/* Focus styles for keyboard navigation */
+.hero-cta-primary:focus-visible,
+.hero-cta-secondary:focus-visible {
+  @apply outline-2 outline-blue-500 outline-offset-2;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .hero-cta-primary,
+  .hero-cta-icon {
+    @apply transition-none transform-none;
+  }
+
+  .hero-cta-primary:hover {
+    @apply scale-100;
+  }
+
+  .hero-cta-primary:hover .hero-cta-icon {
+    @apply translate-x-0;
+  }
 }
 
 /* Responsive adjustments */

@@ -28,9 +28,23 @@
     "hero": {
       "badge": "🚀 Professional Interview Prep",
       "title": "Master Frontend Development Interviews",
+      "headline": {
+        "control": "Master Frontend Development Interviews",
+        "variant_a": "Land Your Dream Frontend Job With Confidence",
+        "variant_b": "Ace Your Next Frontend Interview"
+      },
       "description": "Prepare for your next frontend developer interview with 500+ curated questions covering Vue.js, React, Angular, and more. Interactive learning with real-time feedback.",
-      "cta": "Start Your Journey",
-      "register": "Sign Up Free",
+      "cta": {
+        "primary": "Start Your 7-Day Free Trial",
+        "secondary": "View All Plans",
+        "primaryAriaLabel": "Start your free 7-day trial with full access to all features",
+        "secondaryAriaLabel": "View all pricing plans and features"
+      },
+      "reassurance": {
+        "noCard": "No credit card required",
+        "fullAccess": "Full access for 7 days",
+        "cancelAnytime": "Cancel anytime, no questions asked"
+      },
       "stats": {
         "questions": "Questions",
         "frameworks": "Frameworks",
@@ -209,6 +223,97 @@
       "loading": "Loading...",
       "empty": "No data available",
       "error": "Something went wrong"
+    },
+    "socialProof": {
+      "trustedBy": "Trusted by {count} developers at",
+      "companies": "Google, Meta, Amazon, Microsoft, Apple"
+    },
+    "pricing": {
+      "title": "Choose the Plan That Fits Your Goals",
+      "subtitle": "No credit card required to start your free trial",
+      "monthly": "Monthly",
+      "yearly": "Yearly",
+      "perMonth": "/month",
+      "perYear": "/year",
+      "savingsMessage": "Save over 2 months with annual billing",
+      "popularBadge": "Most Popular",
+      "viewAllPlans": "View All Plans & Features",
+      "free": {
+        "name": "Free",
+        "description": "Perfect for beginners",
+        "features": {
+          "questions": "100 Easy questions",
+          "hints": "Basic hints",
+          "progress": "Progress tracking",
+          "community": "Community access"
+        },
+        "cta": "Get Started Free"
+      },
+      "pro": {
+        "name": "Pro",
+        "description": "Most popular for serious learners",
+        "features": {
+          "questions": "300+ Medium questions",
+          "explanations": "Detailed explanations",
+          "analytics": "Advanced analytics",
+          "bookmarks": "Bookmarks & Notes",
+          "support": "Priority email support"
+        },
+        "cta": "Start Free Trial"
+      },
+      "expert": {
+        "name": "Expert",
+        "description": "For advanced developers",
+        "features": {
+          "questions": "500+ Hard questions",
+          "systemDesign": "System design questions",
+          "mockInterviews": "Mock interview sessions",
+          "customPlans": "Custom study plans",
+          "mentoring": "1-on-1 mentoring"
+        },
+        "cta": "Start Free Trial"
+      }
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "subtitle": "Everything you need to know before you start",
+      "noCreditCard": {
+        "question": "Do I need a credit card for the free trial?",
+        "answer": "No! Start your 7-day free trial with just an email address. No credit card required. After the trial, you can choose to upgrade to a paid plan or continue with the free tier."
+      },
+      "cancelAnytime": {
+        "question": "Can I cancel my subscription anytime?",
+        "answer": "Yes, you can cancel your subscription at any time with a single click in your account settings. There are no cancellation fees or penalties. You'll retain access until the end of your current billing period."
+      },
+      "afterTrial": {
+        "question": "What happens after the free trial?",
+        "answer": "Your trial will automatically convert to a paid subscription. You'll receive an email 2 days before your trial ends as a reminder. You can cancel anytime before that to avoid charges, or continue with the free plan."
+      },
+      "refundPolicy": {
+        "question": "What is your refund policy?",
+        "answer": "We offer a 30-day money-back guarantee for all paid plans. If you're not satisfied for any reason, just contact our support team within 30 days of purchase for a full refund. No questions asked."
+      },
+      "whichPlan": {
+        "question": "Which plan is right for me?",
+        "answer": "Start with the Free plan to try our platform. If you're serious about interview prep, the Pro plan is our most popular choice. For advanced developers or those seeking personalized guidance, the Expert plan offers the most comprehensive features."
+      },
+      "studentDiscount": {
+        "question": "Do you offer student discounts?",
+        "answer": "Yes! Students get 50% off all paid plans. Simply email us your valid student ID or proof of enrollment, and we'll send you a discount code within 24 hours."
+      }
+    },
+    "mobileStickyBar": {
+      "message": "Ready to master frontend interviews?",
+      "cta": "Start Free Trial",
+      "ctaAriaLabel": "Start your free 7-day trial",
+      "dismissAriaLabel": "Dismiss this message"
+    },
+    "meta": {
+      "title": "q8m - Master Frontend Development Interviews",
+      "description": "Prepare for your next frontend developer interview with 500+ curated questions covering Vue.js, React, Angular, and more. Interactive learning with real-time feedback. Start your free trial today.",
+      "keywords": "frontend development, interview preparation, Vue.js, React, Angular, JavaScript, TypeScript, quiz platform, coding interview, frontend interview questions",
+      "ogTitle": "Master Frontend Development Interviews | q8m",
+      "ogDescription": "Ace your next frontend interview with 500+ curated questions, interactive learning, and real-time feedback. Trusted by developers at Google, Meta, and Microsoft."
     }
   },
   "footer": {

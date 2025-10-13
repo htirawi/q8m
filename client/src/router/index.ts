@@ -370,6 +370,22 @@ const routes: RouteRecordRaw[] = [
     "terms"
   ),
 
+  // Design System Page
+  createLocalizedRoute(
+    "/design-system",
+    () =>
+      import(
+        /* webpackChunkName: "design-system" */
+        "@/features/design-system/pages/DesignSystemPage.vue"
+      ),
+    {
+      title: "Design System - q8m",
+      description: "Explore our design system components and UI patterns",
+      layout: "default",
+    },
+    "design-system"
+  ),
+
   // Catch-all for localized routes (404)
   {
     path: "/:locale/:pathMatch(.*)*",

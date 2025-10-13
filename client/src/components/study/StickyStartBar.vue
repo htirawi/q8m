@@ -9,6 +9,7 @@
       class="fixed bottom-0 left-0 right-0 z-50 border-t border-gray-200 bg-white/95 shadow-2xl backdrop-blur-sm dark:border-gray-700 dark:bg-gray-900/95"
       role="region"
       aria-label="Study session start control"
+      data-testid="sticky-start-bar"
     >
       <div class="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
         <div class="flex flex-col items-center justify-between gap-4 sm:flex-row">
@@ -64,6 +65,7 @@
               type="button"
               class="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
               :aria-label="t('study.sticky.retryAriaLabel')"
+              data-testid="sticky-retry-button"
               @click="handleRetry"
             >
               {{ t('study.sticky.retry') }}
@@ -76,6 +78,7 @@
               :disabled="state === 'loading'"
               class="group relative overflow-hidden rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-2 text-sm font-bold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
               :aria-label="startButtonAriaLabel"
+              data-testid="sticky-start-button"
               @click="handleStart"
             >
               <span class="relative z-10 flex items-center gap-2">
@@ -108,6 +111,7 @@
         <div
           v-if="showKeyboardHint && state === 'idle'"
           class="mt-2 text-center text-xs text-gray-500 dark:text-gray-400"
+          data-testid="keyboard-hint"
         >
           {{ t('study.sticky.keyboardHint') }}
         </div>

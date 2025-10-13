@@ -5,6 +5,7 @@
     :disabled="isLocked && !canClickLocked"
     :aria-label="ariaLabel"
     :aria-pressed="isSelected"
+    :data-testid="`level-card-${difficulty}`"
     @click="handleClick"
   >
     <!-- Current Plan Badge (shown for user's active subscription) -->
