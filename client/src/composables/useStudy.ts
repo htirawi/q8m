@@ -17,6 +17,7 @@ import type { DifficultyLevel } from "@/types/plan/access";
 
 const AUTOSTART_KEY = "q8m_study_autostart";
 const LAST_SESSION_KEY = "q8m_study_last_session";
+const AB_TEST_VARIANT_KEY = "q8m_study_ab_variant";
 
 /**
  * Last session data stored in localStorage
@@ -31,6 +32,13 @@ interface ILastSession {
  * Loading states for session start
  */
 export type StudyLoadingState = "idle" | "loading" | "error";
+
+/**
+ * A/B test variants for study flow
+ * - autostart: Default, immediate start on Easy click
+ * - manual: Requires explicit Start button click (sticky bar)
+ */
+export type StudyFlowVariant = "autostart" | "manual";
 
 export function useStudy() {
   const router = useRouter();
@@ -69,6 +77,54 @@ export function useStudy() {
 
     trackGenericEvent("study_autostart_preference_changed", {
       enabled,
+      variant: getABTestVariant(),
+    });
+  };
+
+  /**
+   * Get A/B test variant for this user
+   * Assigns variant on first visit and persists in localStorage
+   *
+   * Distribution:
+   * - 50% autostart (default, immediate navigation)
+   * - 50% manual (requires explicit button click)
+   */
+  const getABTestVariant = (): StudyFlowVariant => {
+    if (typeof localStorage === "undefined") {
+      return "autostart"; // Default for SSR
+    }
+
+    // Check if user already has a variant assigned
+    const stored = localStorage.getItem(AB_TEST_VARIANT_KEY);
+    if (stored === "autostart" || stored === "manual") {
+      return stored;
+    }
+
+    // Assign variant randomly (50/50 split)
+    const variant: StudyFlowVariant = Math.random() < 0.5 ? "autostart" : "manual";
+    localStorage.setItem(AB_TEST_VARIANT_KEY, variant);
+
+    // Track variant assignment
+    trackGenericEvent("study_ab_test_assigned", {
+      variant,
+      timestamp: Date.now(),
+    });
+
+    return variant;
+  };
+
+  /**
+   * Override A/B test variant (for testing or user preference)
+   */
+  const setABTestVariant = (variant: StudyFlowVariant): void => {
+    if (typeof localStorage === "undefined") {
+      return;
+    }
+
+    localStorage.setItem(AB_TEST_VARIANT_KEY, variant);
+
+    trackGenericEvent("study_ab_test_variant_overridden", {
+      variant,
     });
   };
 
@@ -165,10 +221,18 @@ export function useStudy() {
         await new Promise((resolve) => setTimeout(resolve, MIN_LOADING_TIME - elapsed));
       }
 
-      // Track success
+      // Track success with A/B test variant
       trackStudyEvent("study_session_started", {
         mode: "easy",
         resumed: false,
+      });
+
+      trackGenericEvent("study_flow_conversion", {
+        variant: getABTestVariant(),
+        difficulty: "easy",
+        resumed: false,
+        success: true,
+        durationMs: Date.now() - startTime,
       });
 
       loadingState.value = "idle";
@@ -179,6 +243,7 @@ export function useStudy() {
       trackGenericEvent("study_start_error", {
         reason: errorMessage.value,
         difficulty: "easy",
+        variant: getABTestVariant(),
       });
 
       throw error;
@@ -221,10 +286,17 @@ export function useStudy() {
         },
       });
 
-      // Track success
+      // Track success with A/B test variant
       trackStudyEvent("study_session_started", {
         mode: lastSession.difficulty,
         resumed: true,
+      });
+
+      trackGenericEvent("study_flow_conversion", {
+        variant: getABTestVariant(),
+        difficulty: lastSession.difficulty,
+        resumed: true,
+        success: true,
       });
 
       loadingState.value = "idle";
@@ -236,6 +308,7 @@ export function useStudy() {
         reason: errorMessage.value,
         difficulty: lastSession.difficulty,
         resumed: true,
+        variant: getABTestVariant(),
       });
 
       throw error;
@@ -254,6 +327,7 @@ export function useStudy() {
   const isAutoStartEnabled = computed(() => getAutoStart());
   const hasLastSession = computed(() => getLastSession() !== null);
   const lastSessionDifficulty = computed(() => getLastSession()?.difficulty ?? null);
+  const abTestVariant = computed(() => getABTestVariant());
 
   return {
     // State
@@ -262,6 +336,7 @@ export function useStudy() {
     isAutoStartEnabled,
     hasLastSession,
     lastSessionDifficulty,
+    abTestVariant,
 
     // Methods
     getAutoStart,
@@ -272,5 +347,7 @@ export function useStudy() {
     startEasySession,
     resumeLastSession,
     retry,
+    getABTestVariant,
+    setABTestVariant,
   };
 }
