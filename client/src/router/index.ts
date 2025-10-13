@@ -386,6 +386,65 @@ const routes: RouteRecordRaw[] = [
     "design-system"
   ),
 
+  // Test Pages - API Testing Dashboard
+  createLocalizedRoute(
+    "/test",
+    () =>
+      import(
+        /* webpackChunkName: "test" */
+        "@/features/test/pages/TestIndex.vue"
+      ),
+    {
+      title: "API Test Dashboard - q8m",
+      description: "Test backend gamification and progress tracking APIs",
+      layout: "default",
+      requiresAuth: true,
+    },
+    "test-index"
+  ),
+  createLocalizedRoute(
+    "/test/progress",
+    () =>
+      import(
+        /* webpackChunkName: "test" */
+        "@/features/test/pages/TestProgressDashboard.vue"
+      ),
+    {
+      title: "Progress Test - q8m",
+      layout: "default",
+      requiresAuth: true,
+    },
+    "test-progress"
+  ),
+  createLocalizedRoute(
+    "/test/gamification",
+    () =>
+      import(
+        /* webpackChunkName: "test" */
+        "@/features/test/pages/TestGamification.vue"
+      ),
+    {
+      title: "Gamification Test - q8m",
+      layout: "default",
+      requiresAuth: true,
+    },
+    "test-gamification"
+  ),
+  createLocalizedRoute(
+    "/test/quiz-results",
+    () =>
+      import(
+        /* webpackChunkName: "test" */
+        "@/features/test/pages/TestQuizResults.vue"
+      ),
+    {
+      title: "Quiz Results Test - q8m",
+      layout: "default",
+      requiresAuth: true,
+    },
+    "test-quiz-results"
+  ),
+
   // Catch-all for localized routes (404)
   {
     path: "/:locale/:pathMatch(.*)*",
