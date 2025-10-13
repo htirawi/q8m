@@ -228,9 +228,9 @@ describe('Canonical Plan Registry', () => {
       }
     });
 
-    it('should include all 4 canonical plans', () => {
+    it('should include all 3 pricing plans (excludes free junior plan)', () => {
       const plans = getPricingPlans();
-      expect(plans).toHaveLength(4);
+      expect(plans).toHaveLength(3);
     });
   });
 
