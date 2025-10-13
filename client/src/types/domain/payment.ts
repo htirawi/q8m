@@ -70,7 +70,7 @@ export interface Subscription {
 export interface PaymentRequest {
   planType: "INTERMEDIATE" | "SENIOR" | "BUNDLE";
   currency: "USD" | "JOD" | "SAR";
-  billingCycle: "monthly" | "yearly";
+  billingCycle: "monthly" | "annual";
   billingAddress?: {
     street: string;
     city: string;

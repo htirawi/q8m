@@ -26,7 +26,7 @@ export function useCheckoutForm() {
   });
 
   const selectedPaymentMethod = ref("paypal");
-  const billingCycle = ref<"monthly" | "yearly">("monthly");
+  const billingCycle = ref<"monthly" | "annual">("monthly");
   const isProcessing = ref(false);
   const errors = reactive<Record<string, string>>({});
 
@@ -141,7 +141,7 @@ export function useCheckoutForm() {
   };
 
   const toggleBillingCycle = () => {
-    billingCycle.value = billingCycle.value === "monthly" ? "yearly" : "monthly";
+    billingCycle.value = billingCycle.value === "monthly" ? "annual" : "monthly";
   };
 
   const clearErrors = () => {

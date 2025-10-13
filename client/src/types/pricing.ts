@@ -6,12 +6,12 @@
 /**
  * Billing cycle options
  */
-export type BillingCycle = "monthly" | "yearly";
+export type BillingCycle = "monthly" | "annual";
 
 /**
  * Plan identifier
  */
-export type PlanId = "free" | "pro" | "expert" | "intermediate" | "senior";
+export type PlanId = "junior" | "intermediate" | "senior" | "bundle";
 
 /**
  * Full pricing plan details

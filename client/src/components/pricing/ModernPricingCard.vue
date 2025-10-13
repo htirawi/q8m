@@ -29,15 +29,15 @@ const isPayPalLoading = ref(false);
 
 // Computed
 const displayPrice = computed(() => {
-  return props.billingCycle === "yearly" ? props.priceYearly : props.priceMonthly;
+  return props.billingCycle === "annual" ? props.priceYearly : props.priceMonthly;
 });
 
 const billingText = computed(() => {
-  return props.billingCycle === "yearly" ? "billed annually" : "billed monthly";
+  return props.billingCycle === "annual" ? "billed annually" : "billed monthly";
 });
 
 const savingsText = computed(() => {
-  if (props.billingCycle === "yearly" && props.priceMonthly > 0) {
+  if (props.billingCycle === "annual" && props.priceMonthly > 0) {
     const monthlyTotal = props.priceMonthly * 12;
     const yearlyTotal = props.priceYearly;
     const savings = monthlyTotal - yearlyTotal;

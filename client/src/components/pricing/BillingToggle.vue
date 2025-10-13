@@ -28,11 +28,11 @@ defineOptions({
           {{ $t("pricing.billing.monthly") }}
         </button>
 
-        <button @click="setBillingCycle('yearly')" class="billing-toggle-option billing-toggle-option--yearly"
-          :class="{ 'billing-toggle-option--active': modelValue === 'yearly' }" :aria-pressed="modelValue === 'yearly'"
+        <button @click="setBillingCycle('annual')" class="billing-toggle-option billing-toggle-option--annual"
+          :class="{ 'billing-toggle-option--active': modelValue === 'annual' }" :aria-pressed="modelValue === 'annual'"
           type="button">
           {{ $t("pricing.billing.yearly") }}
-          <span v-if="modelValue === 'yearly'" class="billing-toggle-save-badge">
+          <span v-if="modelValue === 'annual'" class="billing-toggle-save-badge">
             {{ $t("pricing.billing.savePercent", { percent: 17 }) }}
           </span>
         </button>

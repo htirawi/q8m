@@ -36,7 +36,7 @@ const billingCycleText = computed(() => {
           </span>
         </div>
 
-        <div v-if="billingCycle === 'yearly'" class="summary-item">
+        <div v-if="billingCycle === 'annual'" class="summary-item">
           <span class="item-label">{{ $t("checkout.yearlyDiscount") }}
 
           </span>

@@ -579,9 +579,25 @@
       "label": "اختر دورة الفوترة الخاصة بك",
       "monthly": "شهري",
       "yearly": "سنوي",
+      "annual": "سنوي",
+      "perMonth": "/شهر",
+      "perYear": "/سنة",
       "savePercent": "وفر {percent}%",
+      "saveMonths": "وفر {months} أشهر",
+      "savingsMessage": "وفر حتى {percent}% مع الفوترة السنوية",
       "month": "شهر",
       "year": "سنة"
+    },
+    "reassurance": {
+      "noCreditCard": "لا حاجة لبطاقة ائتمان",
+      "cancelAnytime": "إلغاء في أي وقت",
+      "securePayments": "مدفوعات آمنة",
+      "noHiddenFees": "لا رسوم مخفية"
+    },
+    "trust": {
+      "secure": "مدفوعات آمنة",
+      "moneyBack": "ضمان استرداد الأموال لمدة 7 أيام",
+      "cancel": "إلغاء في أي وقت"
     },
     "plans": {
       "title": "اختر خطتك",
@@ -708,7 +724,7 @@
       "price": "من {price} د.أ",
       "cta": "ابدأ"
     },
-    "trust": {
+    "paymentProviders": {
       "paypal": "PayPal",
       "hyperpay": "HyperPay",
       "aps": "APS",
@@ -733,8 +749,70 @@
     "names": {
       "free": "مبتدئ",
       "intermediate": "متوسط",
-      "advanced": "خبير",
+      "advanced": "متقدم",
       "pro": "حزمة"
+    },
+    "junior": {
+      "name": "المبتدئ",
+      "description": "مثالي للمبتدئين",
+      "benefits": {
+        "studyItems": "50 عنصر في دليل الدراسة",
+        "quizQuestions": "50 سؤال اختبار",
+        "community": "منتدى دعم المجتمع",
+        "mobile": "الوصول عبر الجوال وسطح المكتب"
+      },
+      "cta": "ابدأ التعلم مجانًا"
+    },
+    "intermediate": {
+      "name": "متوسط",
+      "description": "طور مهاراتك",
+      "benefits": {
+        "studyItems": "200 عنصر في دليل الدراسة",
+        "quizQuestions": "250 سؤال اختبار تدريبي",
+        "analytics": "لوحة تحليلات مع تتبع التقدم",
+        "bookmarks": "إشارات مرجعية وملاحظات شخصية",
+        "priority": "دعم بريد إلكتروني ذو أولوية (رد خلال 24 ساعة)",
+        "guarantee": "ضمان استرداد الأموال لمدة 7 أيام"
+      },
+      "cta": "ترقية إلى متوسط"
+    },
+    "senior": {
+      "name": "متقدم",
+      "description": "أتقن الموضوعات المتقدمة مع الذكاء الاصطناعي",
+      "benefits": {
+        "studyItems": "300 عنصر دراسي على مستوى الخبراء",
+        "quizQuestions": "350 سؤال اختبار صعب",
+        "aiSupport": "شروحات وتلميحات مدعومة بالذكاء الاصطناعي",
+        "mockInterviews": "محاكاة مقابلات وهمية",
+        "expertReview": "مراجعة خبراء ذات أولوية (رد خلال 12 ساعة)",
+        "guarantee": "ضمان استرداد الأموال لمدة 7 أيام"
+      },
+      "cta": "ترقية إلى متقدم"
+    },
+    "bundle": {
+      "name": "الحزمة الشاملة",
+      "description": "كل شيء + وصول الفريق",
+      "benefits": {
+        "everything": "كل شيء في المتوسط + المتقدم",
+        "unlimitedAI": "استخدام غير محدود للذكاء الاصطناعي (بدون حدود)",
+        "customContent": "طلبات محتوى مخصصة",
+        "teamAccess": "وصول الفريق لما يصل إلى 5 أعضاء",
+        "lifetimeUpdates": "تحديثات المحتوى مدى الحياة",
+        "accountManager": "مدير حساب مخصص"
+      },
+      "cta": "احصل على الحزمة الكاملة"
+    },
+    "badges": {
+      "mostPopular": "الأكثر شعبية",
+      "bestValue": "أفضل قيمة"
+    },
+    "features": {
+      "studyItemsCount": "{count} عنصر دراسة",
+      "quizQuestionsCount": "{count} سؤال اختبار",
+      "studyItemsDelta": "+{delta} عنصر دراسة (إجمالي {total})",
+      "quizQuestionsDelta": "+{delta} سؤال اختبار (إجمالي {total})",
+      "studyItemsTotalsWithDeltas": "{count} عنصر دراسة (+{delta} مقابل المبتدئ)",
+      "quizQuestionsTotalsWithDeltas": "{count} سؤال اختبار (+{delta} مقابل المبتدئ)"
     },
     "free": {
       "welcomeBack": "مرحباً بعودتك! هل أنت مستعد لمتابعة الاختبارات السهلة؟",
