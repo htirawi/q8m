@@ -374,7 +374,7 @@ export class APSService {
     try {
       const purchase = await Purchase.findByPaymentId(data.id);
 
-      if (purchase && purchase.status === "pending") {
+      if (purchase?.status === "pending") {
         await purchase.markAsCompleted(data);
         await this.createSubscription(purchase);
       }
@@ -390,7 +390,7 @@ export class APSService {
     try {
       const purchase = await Purchase.findByPaymentId(data.id);
 
-      if (purchase && purchase.status === "pending") {
+      if (purchase?.status === "pending") {
         await purchase.markAsFailed(`APS status: ${data.status}`);
       }
     } catch (error) {

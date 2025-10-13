@@ -391,7 +391,7 @@ export class HyperPayService {
 
           // Optionally cancel associated subscription
           const subscription = await Subscription.findOne({ purchaseId: purchase._id });
-          if (subscription && subscription.status === "active") {
+          if (subscription?.status === "active") {
             await subscription.cancel("refunded");
             await entitlementService.revokeUserEntitlements(
               subscription.userId.toString(),

@@ -242,7 +242,7 @@ export class MockPaymentService {
    */
   private async processMockPaymentFailure(mockPayment: MockPayment): Promise<void> {
     const purchase = await Purchase.findById(mockPayment.purchaseId);
-    if (!purchase || purchase.status !== "pending") {
+    if (purchase?.status !== "pending") {
       return;
     }
 
@@ -267,7 +267,7 @@ export class MockPaymentService {
 
     // Cancel associated subscription
     const subscription = await Subscription.findOne({ purchaseId: purchase._id });
-    if (subscription && subscription.status === "active") {
+    if (subscription?.status === "active") {
       await subscription.cancel("refunded");
       await entitlementService.revokeUserEntitlements(subscription.userId.toString(), "refunded");
     }
@@ -366,7 +366,7 @@ export class MockPaymentService {
     }
 
     const mockPayment = this.mockPayments.get(paymentId);
-    if (mockPayment && mockPayment.status === "pending") {
+    if (mockPayment?.status === "pending") {
       mockPayment.status = "completed";
       this.processMockPaymentCompletion(mockPayment);
     }
