@@ -1,262 +1,106 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import { useRouter } from "vue-router";
-import { useAuthStore } from "@/stores/auth";
-import ModernPricingCard from "@/components/pricing/ModernPricingCard.vue";
-import type { BillingCycle } from "@/components/pricing/pricing.config";
+import PricingCards from '@/components/pricing/PricingCards.vue';
+import PricingTestimonials from '@/components/pricing/PricingTestimonials.vue';
+import RoiSection from '@/components/pricing/RoiSection.vue';
+import CompetitorComparison from '@/components/pricing/CompetitorComparison.vue';
+import ComparisonTable from '@/components/pricing/ComparisonTable.vue';
+import FaqAccordion from '@/components/pricing/FaqAccordion.vue';
+import GuaranteePanel from '@/components/pricing/GuaranteePanel.vue';
+import FinalCta from '@/components/pricing/FinalCta.vue';
+import { onMounted } from 'vue';
+import { useAnalytics } from '@/composables/useAnalytics';
+import { useRoute } from 'vue-router';
 
-const router = useRouter();
-const authStore = useAuthStore();
+const route = useRoute();
+const { trackGenericEvent } = useAnalytics();
 
-// State
-const billingCycle = ref<BillingCycle>("monthly");
-const isProcessingPayment = ref(false);
-
-// Toggle billing cycle
-const toggleBillingCycle = () => {
-  billingCycle.value = billingCycle.value === "monthly" ? "yearly" : "monthly";
-};
-
-// Sample pricing data (replace with your actual pricing tiers)
-const pricingPlans = [
-  {
-    id: "intermediate",
-    name: "Intermediate Plan",
-    priceMonthly: 18,
-    priceYearly: 180, // 2 months free
-    features: [
-      "300+ Advanced Questions",
-      "All Question Types",
-      "Detailed Explanations",
-      "Performance Analytics",
-      "Bookmarks & Notes",
-      "Priority Support",
-      "Mobile Access",
-      "Progress Tracking",
-      "Certificate of Completion",
-    ],
-    popular: true,
-  },
-  {
-    id: "senior",
-    name: "Senior Plan",
-    priceMonthly: 29,
-    priceYearly: 290,
-    features: [
-      "500+ Expert Questions",
-      "System Design Questions",
-      "Mock Interviews",
-      "Advanced Analytics",
-      "Custom Study Plans",
-      "Expert Reviews",
-      "Priority Support",
-      "1-on-1 Mentoring Sessions",
-      "Resume Review",
-    ],
-    popular: false,
-  },
-];
-
-// Methods
-const handleCreditCardPayment = async (planId: string, cycle: BillingCycle) => {
-  console.log("Credit card payment selected:", { planId, cycle });
-
-  // Check authentication
-  if (!authStore.isAuthenticated) {
-    router.push({
-      name: "login",
-      query: {
-        plan: planId,
-        billing: cycle,
-        redirect: "/checkout",
-      },
-    });
-    return;
-  }
-
-  // Redirect to checkout page with credit card form
-  router.push({
-    name: "checkout",
-    query: {
-      plan: planId,
-      billing: cycle,
-      method: "card",
-    },
+// Track page view
+onMounted(() => {
+  trackGenericEvent('pricing_viewed', {
+    source: (route.query.source as string) || 'direct',
+    locale: (route.params.locale as string) || 'en',
+    rtl: (route.params.locale as string) === 'ar',
+    device: window.innerWidth < 768 ? 'mobile' : 'desktop',
   });
-};
-
-const handlePayPalPayment = async (planId: string, cycle: BillingCycle) => {
-  console.log("PayPal payment selected:", { planId, cycle });
-
-  // Check authentication
-  if (!authStore.isAuthenticated) {
-    router.push({
-      name: "login",
-      query: {
-        plan: planId,
-        billing: cycle,
-        redirect: "/checkout",
-        method: "paypal",
-      },
-    });
-    return;
-  }
-
-  isProcessingPayment.value = true;
-
-  try {
-    // Create PayPal order
-    const response = await fetch("/api/payments/paypal/create-order", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify({
-        planType: planId.toUpperCase(),
-        currency: "USD",
-        billingCycle: cycle,
-      }),
-    });
-
-    const data = await response.json();
-
-    if (data.success && data.orderID) {
-      // Redirect to PayPal for approval
-      window.location.href = `https://www.sandbox.paypal.com/checkoutnow?token=${data.orderID}`;
-    } else {
-      throw new Error(data.error || "Failed to create PayPal order");
-    }
-  } catch (error) {
-    console.error("PayPal payment error:", error);
-    alert("Failed to initiate PayPal payment. Please try again.");
-  } finally {
-    isProcessingPayment.value = false;
-  }
-};
+});
 
 defineOptions({
-  name: "ModernPricingPage",
+  name: 'ModernPricingPage',
 });
 </script>
 
 <template>
-  <div class="modern-pricing-page">
+  <div class="modern-pricing-page" role="main" aria-labelledby="pricing-page-title">
+    <!-- Skip to main content for accessibility -->
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-blue-600 focus:px-4 focus:py-2 focus:text-white"
+    >
+      {{ $t('a11y.skipToMain') }}
+    </a>
+
     <!-- Header Section -->
     <div class="modern-pricing-page__header">
       <div class="modern-pricing-page__container">
-        <h1 class="modern-pricing-page__title">
-          Choose Your Perfect Plan
+        <h1 id="pricing-page-title" class="modern-pricing-page__title">
+          {{ $t('pricing.hero.title') }}
         </h1>
         <p class="modern-pricing-page__subtitle">
-          Unlock advanced features and accelerate your learning
+          {{ $t('pricing.hero.subtitle') }}
+        </p>
+        <!-- Trust badge -->
+        <p class="modern-pricing-page__trust">
+          {{ $t('pricing.hero.trustedBy') }}
         </p>
       </div>
     </div>
 
-    <!-- Billing Toggle -->
-    <div class="modern-pricing-page__toggle-section">
+    <!-- Pricing Cards Component (includes billing toggle + trust badges) -->
+    <section id="main-content" class="modern-pricing-page__cards-section" aria-labelledby="plans-title">
       <div class="modern-pricing-page__container">
-        <div class="modern-pricing-page__toggle-wrapper">
-          <!-- Monthly/Annual Toggle -->
-          <button
-            type="button"
-            class="modern-pricing-page__toggle"
-            :class="{ 'modern-pricing-page__toggle--active': billingCycle === 'monthly' }"
-            @click="billingCycle = 'monthly'"
-          >
-            MONTHLY BILLING
-          </button>
-
-          <!-- Toggle Switch -->
-          <div
-            class="modern-pricing-page__switch"
-            role="switch"
-            :aria-checked="billingCycle === 'yearly'"
-            tabindex="0"
-            @click="toggleBillingCycle"
-            @keydown.space.prevent="toggleBillingCycle"
-            @keydown.enter.prevent="toggleBillingCycle"
-          >
-            <div
-              class="modern-pricing-page__switch-thumb"
-              :class="{ 'modern-pricing-page__switch-thumb--yearly': billingCycle === 'yearly' }"
-            ></div>
-          </div>
-
-          <button
-            type="button"
-            class="modern-pricing-page__toggle"
-            :class="{ 'modern-pricing-page__toggle--active': billingCycle === 'yearly' }"
-            @click="billingCycle = 'yearly'"
-          >
-            ANNUAL BILLING
-          </button>
-        </div>
-
-        <!-- Savings Message -->
-        <p v-if="billingCycle === 'yearly'" class="modern-pricing-page__savings-message">
-          Choose <strong>annual billing</strong> and get <strong>over 2 months free</strong> every year.
-        </p>
+        <h2 id="plans-title" class="sr-only">
+          {{ $t('pricing.plans.title') }}
+        </h2>
+        <PricingCards />
       </div>
-    </div>
+    </section>
 
-    <!-- Pricing Cards -->
-    <div class="modern-pricing-page__cards-section">
-      <div class="modern-pricing-page__container">
-        <div class="modern-pricing-page__cards-grid">
-          <ModernPricingCard
-            v-for="plan in pricingPlans"
-            :key="plan.id"
-            :plan-id="plan.id"
-            :plan-name="plan.name"
-            :price-monthly="plan.priceMonthly"
-            :price-yearly="plan.priceYearly"
-            :billing-cycle="billingCycle"
-            :features="plan.features"
-            :popular="plan.popular"
-            @select-credit-card="handleCreditCardPayment"
-            @select-paypal="handlePayPalPayment"
-          />
-        </div>
-      </div>
-    </div>
+    <!-- Testimonials - Right after pricing cards -->
+    <PricingTestimonials />
 
-    <!-- Loading Overlay -->
-    <div v-if="isProcessingPayment" class="modern-pricing-page__loading-overlay">
-      <div class="modern-pricing-page__loading-spinner">
-        <svg
-          class="modern-pricing-page__spinner"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-        >
-          <circle
-            class="opacity-25"
-            cx="12"
-            cy="12"
-            r="10"
-            stroke="currentColor"
-            stroke-width="4"
-          ></circle>
-          <path
-            class="opacity-75"
-            fill="currentColor"
-            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-          ></path>
-        </svg>
-        <p class="modern-pricing-page__loading-text">
-          Redirecting to PayPal...
-        </p>
-      </div>
-    </div>
+    <!-- ROI Section - Show value proposition -->
+    <RoiSection />
+
+    <!-- Competitor Comparison -->
+    <CompetitorComparison />
+
+    <!-- Detailed Comparison Table -->
+    <ComparisonTable />
+
+    <!-- FAQ Section -->
+    <FaqAccordion />
+
+    <!-- Guarantee Panel -->
+    <GuaranteePanel />
+
+    <!-- Final CTA -->
+    <FinalCta />
   </div>
 </template>
 
 <style scoped>
 .modern-pricing-page {
-  @apply min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50;
-  @apply py-16;
+  @apply min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900;
+  @apply py-8 md:py-12;
+}
+
+/* Screen reader only class */
+.sr-only {
+  @apply absolute -m-px h-px w-px overflow-hidden whitespace-nowrap border-0 p-0;
+}
+
+.focus\:not-sr-only:focus {
+  @apply static m-0 h-auto w-auto overflow-visible whitespace-normal border p-2;
 }
 
 /* Header */
@@ -269,120 +113,75 @@ defineOptions({
 }
 
 .modern-pricing-page__title {
-  @apply mb-4 text-4xl font-bold text-gray-900;
-  @apply sm:text-5xl;
+  @apply mb-4 text-3xl font-bold text-gray-900 dark:text-white;
+  @apply sm:text-4xl lg:text-5xl;
   letter-spacing: -0.02em;
 }
 
 .modern-pricing-page__subtitle {
-  @apply text-xl text-gray-600;
+  @apply text-base text-gray-600 dark:text-gray-300;
+  @apply sm:text-lg lg:text-xl;
+  @apply max-w-3xl mx-auto;
 }
 
-/* Billing Toggle */
-.modern-pricing-page__toggle-section {
-  @apply mb-16;
+.modern-pricing-page__trust {
+  @apply mt-4 text-sm text-gray-500 dark:text-gray-400;
+  @apply font-medium;
 }
 
-.modern-pricing-page__toggle-wrapper {
-  @apply flex items-center justify-center gap-4;
-  @apply mb-4;
-}
-
-.modern-pricing-page__toggle {
-  @apply px-6 py-2 text-sm font-bold tracking-wider;
-  @apply text-gray-600 transition-colors duration-200;
-  @apply hover:text-gray-900;
-}
-
-.modern-pricing-page__toggle--active {
-  @apply text-gray-900;
-}
-
-.modern-pricing-page__switch {
-  @apply relative inline-flex h-10 w-20 cursor-pointer items-center;
-  @apply rounded-full bg-gray-900 transition-colors duration-300;
-  @apply focus:outline-none focus:ring-4 focus:ring-blue-300;
-}
-
-.modern-pricing-page__switch-thumb {
-  @apply h-8 w-8 transform rounded-full bg-white shadow-lg;
-  @apply transition-transform duration-300 ease-in-out;
-  @apply ml-1;
-}
-
-.modern-pricing-page__switch-thumb--yearly {
-  @apply translate-x-10;
-}
-
-.modern-pricing-page__savings-message {
-  @apply text-center text-base text-gray-700;
-}
-
-.modern-pricing-page__savings-message strong {
-  @apply font-bold text-gray-900;
-}
-
-/* Cards Grid */
+/* Cards Section */
 .modern-pricing-page__cards-section {
-  @apply mb-16;
+  @apply mb-16 lg:mb-24;
 }
 
-.modern-pricing-page__cards-grid {
-  @apply grid grid-cols-1 gap-8;
-  @apply lg:grid-cols-2;
-  @apply items-start justify-center;
+/* Section */
+.modern-pricing-page__section {
+  @apply py-12 lg:py-16;
+  @apply border-t border-gray-200 dark:border-gray-700;
 }
 
-/* Loading Overlay */
-.modern-pricing-page__loading-overlay {
-  @apply fixed inset-0 z-50 flex items-center justify-center;
-  @apply bg-black bg-opacity-50 backdrop-blur-sm;
+.modern-pricing-page__section--cta {
+  @apply bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20;
+  @apply border-t-2 border-blue-200 dark:border-blue-800;
 }
 
-.modern-pricing-page__loading-spinner {
-  @apply flex flex-col items-center gap-4;
-  @apply rounded-2xl bg-white p-8 shadow-2xl;
+.modern-pricing-page__section-title {
+  @apply text-2xl font-bold text-center text-gray-900 dark:text-white;
+  @apply sm:text-3xl lg:text-4xl;
+  @apply mb-3;
+  letter-spacing: -0.02em;
 }
 
-.modern-pricing-page__spinner {
-  @apply h-12 w-12 animate-spin text-blue-600;
-}
-
-.modern-pricing-page__loading-text {
-  @apply text-lg font-medium text-gray-900;
-}
-
-/* RTL Support */
-[dir="rtl"] .modern-pricing-page__toggle-wrapper {
-  @apply flex-row-reverse;
-}
-
-[dir="rtl"] .modern-pricing-page__switch-thumb {
-  @apply ml-0 mr-1;
-}
-
-[dir="rtl"] .modern-pricing-page__switch-thumb--yearly {
-  @apply -translate-x-10;
+.modern-pricing-page__section-subtitle {
+  @apply text-base text-center text-gray-600 dark:text-gray-300;
+  @apply sm:text-lg;
+  @apply mb-8 lg:mb-12;
+  @apply max-w-2xl mx-auto;
 }
 
 /* Responsive */
-@media (max-width: 1024px) {
-  .modern-pricing-page__cards-grid {
-    @apply max-w-2xl mx-auto;
-  }
-}
-
 @media (max-width: 640px) {
   .modern-pricing-page__title {
     @apply text-3xl;
   }
 
   .modern-pricing-page__subtitle {
-    @apply text-lg;
+    @apply text-base;
   }
 
-  .modern-pricing-page__toggle {
-    @apply px-3 py-1 text-xs;
+  .modern-pricing-page__section-title {
+    @apply text-2xl;
+  }
+
+  .modern-pricing-page__section {
+    @apply py-10;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .modern-pricing-page {
+    @apply transition-none;
   }
 }
 </style>

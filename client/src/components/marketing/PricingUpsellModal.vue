@@ -203,6 +203,7 @@ import { ref, computed, watch, onMounted, onUnmounted, nextTick } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 import { useAnalytics } from "@/composables/useAnalytics";
+import { getPlanByTier, DIFFICULTY_TO_PLAN_ID, getPlanById } from "@/config/plans";
 import type { DifficultyLevel } from "@/types/plan/access";
 import type { PlanTier } from "@shared/types/plan";
 
@@ -226,17 +227,18 @@ const { trackStudyEvent } = useAnalytics();
 const modalRef = ref<HTMLElement>();
 const headingId = "upsell-modal-title";
 
-const difficultyLabel = computed(() => t(`difficulty.${props.difficulty}.label`));
+// Use plan registry for consistent labeling
+const planConfig = computed(() => getPlanByTier(props.requiredPlan));
+const difficultyPlanId = computed(() => DIFFICULTY_TO_PLAN_ID[props.difficulty]);
+const difficultyPlanConfig = computed(() => getPlanById(difficultyPlanId.value));
 
-const targetPlanName = computed(() => {
-  const names: Record<PlanTier, string> = {
-    free: t("plans.names.free"),
-    intermediate: t("plans.names.intermediate"),
-    advanced: t("plans.names.advanced"),
-    pro: t("plans.names.pro"),
-  };
-  return names[props.requiredPlan];
-});
+const difficultyLabel = computed(() =>
+  difficultyPlanConfig.value ? t(difficultyPlanConfig.value.labelKey) : t(`difficulty.${props.difficulty}.label`)
+);
+
+const targetPlanName = computed(() =>
+  planConfig.value ? t(planConfig.value.labelKey) : t(`plans.names.${props.requiredPlan}`)
+);
 
 interface IComparisonFeature {
   label: string;

@@ -8,6 +8,7 @@ export interface Plan {
   id: string;
   tier: PlanTier;
   titleKey: string;
+  descriptionKey?: string;
   priceMonthly: number;
   priceYearly: number;
   currency: "USD" | "JOD" | "SAR";

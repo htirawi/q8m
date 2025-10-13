@@ -30,16 +30,16 @@
         <button
           type="button"
           class="pricing-teaser__toggle-button"
-          :class="{ 'pricing-teaser__toggle-button--active': billingCycle === 'yearly' }"
-          @click="handleToggle('yearly')"
-          data-testid="toggle-yearly"
+          :class="{ 'pricing-teaser__toggle-button--active': billingCycle === 'annual' }"
+          @click="handleToggle('annual')"
+          data-testid="toggle-annual"
         >
           {{ t('home.pricing.yearly') }}
         </button>
       </div>
 
-      <!-- Savings message for yearly -->
-      <p v-if="billingCycle === 'yearly'" class="pricing-teaser__savings-message">
+      <!-- Savings message for annual -->
+      <p v-if="billingCycle === 'annual'" class="pricing-teaser__savings-message">
         {{ t('home.pricing.savingsMessage') }}
       </p>
 
@@ -49,17 +49,17 @@
           v-for="plan in plans"
           :key="plan.id"
           class="pricing-card"
-          :class="{ 'pricing-card--popular': plan.popular }"
+          :class="{ 'pricing-card--popular': plan.badge?.textKey === 'plans.badges.mostPopular' }"
           :data-testid="`pricing-card-${plan.id}`"
         >
           <!-- Popular badge -->
-          <div v-if="plan.popular" class="pricing-card__badge">
-            {{ t('home.pricing.popularBadge') }}
+          <div v-if="plan.badge" class="pricing-card__badge">
+            {{ t(plan.badge.textKey) }}
           </div>
 
           <!-- Plan name -->
           <h3 class="pricing-card__name">
-            {{ t(plan.nameKey) }}
+            {{ t(plan.labelKey) }}
           </h3>
 
           <!-- Price -->
@@ -81,7 +81,7 @@
           <!-- Features list -->
           <ul class="pricing-card__features" role="list">
             <li
-              v-for="(feature, index) in plan.features"
+              v-for="(feature, index) in plan.features.benefits"
               :key="index"
               class="pricing-card__feature"
             >
@@ -106,13 +106,13 @@
             type="button"
             class="pricing-card__cta"
             :class="{
-              'pricing-card__cta--primary': plan.popular,
-              'pricing-card__cta--secondary': !plan.popular
+              'pricing-card__cta--primary': plan.badge?.textKey === 'plans.badges.mostPopular',
+              'pricing-card__cta--secondary': !plan.badge || plan.badge.textKey !== 'plans.badges.mostPopular'
             }"
             @click="handlePlanSelect(plan)"
             :data-testid="`pricing-cta-${plan.id}`"
           >
-            {{ t(plan.ctaKey) }}
+            {{ t(plan.cta.labelKey) }}
           </button>
         </div>
       </div>
@@ -150,7 +150,8 @@ import { ref, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter, useRoute } from 'vue-router';
 import { useHomepageAnalytics } from '@/composables/useHomepageAnalytics';
-import type { IHomepagePricingPlan } from '@/types/homepage';
+import { getHomepagePlans } from '@/config/plans';
+import type { IPlanConfig } from '@/config/plans';
 import type { BillingCycle } from '@/types/pricing';
 
 const { t, locale } = useI18n();
@@ -161,59 +162,14 @@ const { trackPricingInteraction } = useHomepageAnalytics();
 const billingCycle = ref<BillingCycle>('monthly');
 const currentLocale = computed(() => route.params.locale as string || locale.value);
 
-// Pricing plans
-const plans = computed<IHomepagePricingPlan[]>(() => [
-  {
-    id: 'free',
-    nameKey: 'home.pricing.free.name',
-    priceMonthly: 0,
-    priceYearly: 0,
-    descriptionKey: 'home.pricing.free.description',
-    features: [
-      'home.pricing.free.features.questions',
-      'home.pricing.free.features.hints',
-      'home.pricing.free.features.progress',
-      'home.pricing.free.features.community',
-    ],
-    popular: false,
-    ctaKey: 'home.pricing.free.cta',
-  },
-  {
-    id: 'pro',
-    nameKey: 'home.pricing.pro.name',
-    priceMonthly: 18,
-    priceYearly: 180,
-    descriptionKey: 'home.pricing.pro.description',
-    features: [
-      'home.pricing.pro.features.questions',
-      'home.pricing.pro.features.explanations',
-      'home.pricing.pro.features.analytics',
-      'home.pricing.pro.features.bookmarks',
-      'home.pricing.pro.features.support',
-    ],
-    popular: true,
-    ctaKey: 'home.pricing.pro.cta',
-  },
-  {
-    id: 'expert',
-    nameKey: 'home.pricing.expert.name',
-    priceMonthly: 29,
-    priceYearly: 290,
-    descriptionKey: 'home.pricing.expert.description',
-    features: [
-      'home.pricing.expert.features.questions',
-      'home.pricing.expert.features.systemDesign',
-      'home.pricing.expert.features.mockInterviews',
-      'home.pricing.expert.features.customPlans',
-      'home.pricing.expert.features.mentoring',
-    ],
-    popular: false,
-    ctaKey: 'home.pricing.expert.cta',
-  },
-]);
+// Get plans from canonical registry
+const canonicalPlans = getHomepagePlans();
+
+// Pricing plans (now using canonical registry)
+const plans = computed(() => canonicalPlans);
 
 // Computed
-const currentPrice = (plan: IHomepagePricingPlan): number => {
+const currentPrice = (plan: IPlanConfig): number => {
   return billingCycle.value === 'monthly' ? plan.priceMonthly : plan.priceYearly;
 };
 
@@ -227,7 +183,7 @@ const handleToggle = (cycle: BillingCycle): void => {
   });
 };
 
-const handlePlanSelect = (plan: IHomepagePricingPlan): void => {
+const handlePlanSelect = (plan: IPlanConfig): void => {
   trackPricingInteraction({
     action: 'select_plan',
     planId: plan.id,
@@ -236,7 +192,7 @@ const handlePlanSelect = (plan: IHomepagePricingPlan): void => {
   });
 
   // Navigate to signup/checkout
-  if (plan.id === 'free') {
+  if (plan.id === 'junior') {
     router.push({
       name: 'register',
       params: { locale: currentLocale.value },
@@ -312,23 +268,27 @@ defineOptions({
 }
 
 .pricing-teaser__cards {
-  @apply grid grid-cols-1 gap-8 mb-12;
-  @apply md:grid-cols-3;
+  @apply grid grid-cols-1 gap-6 mb-12;
+  @apply sm:grid-cols-2;
+  @apply lg:grid-cols-4;
+  @apply lg:gap-5;
 }
 
 /* Pricing card */
 .pricing-card {
   @apply relative rounded-2xl border-2 border-gray-200 dark:border-gray-700;
   @apply bg-white dark:bg-gray-800;
-  @apply p-8 transition-all duration-300;
+  @apply p-6 transition-all duration-300;
   @apply hover:border-gray-300 dark:hover:border-gray-600;
   @apply hover:shadow-xl;
+  @apply lg:p-7;
 }
 
 .pricing-card--popular {
   @apply border-blue-500 dark:border-blue-400;
   @apply shadow-lg;
-  @apply scale-105;
+  @apply lg:scale-105;
+  @apply lg:-my-4;
 }
 
 .pricing-card__badge {
@@ -340,46 +300,57 @@ defineOptions({
 }
 
 .pricing-card__name {
-  @apply text-xl font-bold text-gray-900 dark:text-white mb-4;
+  @apply text-lg font-bold text-gray-900 dark:text-white mb-3;
+  @apply lg:text-xl lg:mb-4;
 }
 
 .pricing-card__price-wrapper {
-  @apply flex items-baseline mb-4;
+  @apply flex items-baseline mb-3;
+  @apply lg:mb-4;
 }
 
 .pricing-card__currency {
-  @apply text-2xl font-semibold text-gray-900 dark:text-white;
+  @apply text-xl font-semibold text-gray-900 dark:text-white;
+  @apply lg:text-2xl;
 }
 
 .pricing-card__price {
-  @apply text-5xl font-bold text-gray-900 dark:text-white;
+  @apply text-4xl font-bold text-gray-900 dark:text-white;
+  @apply lg:text-5xl;
 }
 
 .pricing-card__period {
-  @apply ml-2 text-sm text-gray-600 dark:text-gray-400;
+  @apply ml-2 text-xs text-gray-600 dark:text-gray-400;
+  @apply lg:text-sm;
 }
 
 .pricing-card__description {
-  @apply text-sm text-gray-600 dark:text-gray-400 mb-6;
-  @apply min-h-[3rem];
+  @apply text-xs text-gray-600 dark:text-gray-400 mb-4;
+  @apply min-h-[2.5rem];
+  @apply lg:text-sm lg:mb-6 lg:min-h-[3rem];
 }
 
 .pricing-card__features {
-  @apply space-y-3 mb-8;
+  @apply space-y-2 mb-6;
+  @apply lg:space-y-3 lg:mb-8;
 }
 
 .pricing-card__feature {
-  @apply flex items-start gap-3;
+  @apply flex items-start gap-2;
+  @apply text-xs;
+  @apply lg:gap-3 lg:text-sm;
 }
 
 .pricing-card__feature-icon {
-  @apply w-5 h-5 text-green-500 flex-shrink-0 mt-0.5;
+  @apply w-4 h-4 text-green-500 flex-shrink-0 mt-0.5;
+  @apply lg:w-5 lg:h-5;
 }
 
 .pricing-card__cta {
-  @apply w-full py-3 px-6 rounded-lg font-medium;
+  @apply w-full py-2.5 px-4 rounded-lg font-medium text-sm;
   @apply transition-all duration-200;
   @apply focus:outline-none focus:ring-2 focus:ring-offset-2;
+  @apply lg:py-3 lg:px-6;
 }
 
 .pricing-card__cta--primary {

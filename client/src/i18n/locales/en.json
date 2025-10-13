@@ -655,59 +655,79 @@
       "label": "Choose your billing cycle",
       "monthly": "Monthly",
       "yearly": "Yearly",
+      "annual": "Annual",
+      "perMonth": "/month",
+      "perYear": "/year",
       "savePercent": "Save {percent}%",
+      "saveMonths": "Save {months} months",
+      "savingsMessage": "Save up to {percent}% with annual billing",
       "month": "month",
       "year": "year"
+    },
+    "reassurance": {
+      "noCreditCard": "No credit card required",
+      "cancelAnytime": "Cancel anytime",
+      "securePayments": "Secure payments",
+      "noHiddenFees": "No hidden fees"
+    },
+    "trust": {
+      "secure": "Secure Payments",
+      "moneyBack": "7-Day Money-Back Guarantee",
+      "cancel": "Cancel Anytime"
     },
     "plans": {
       "title": "Choose Your Plan",
       "junior": {
         "title": "Junior",
+        "description": "Perfect for beginners starting their journey",
         "cta": "Get Started Free",
         "features": {
-          "basic": "100+ Basic Questions",
-          "limited": "Limited AI Assistant Usage",
-          "community": "Community Support",
-          "mobile": "Mobile Access"
+          "basic": "100+ Fundamental Interview Questions",
+          "limited": "10 AI-Powered Hints Per Month",
+          "community": "Community Forum Access",
+          "mobile": "Mobile & Desktop Access"
         }
       },
       "intermediate": {
         "title": "Intermediate",
+        "description": "Land mid-level roles at top companies",
         "popular": "Most Popular",
-        "cta": "Upgrade Now",
+        "cta": "Start 7-Day Free Trial",
         "features": {
-          "advanced": "300+ Advanced Questions",
-          "allTypes": "All Question Types",
-          "explanations": "Detailed Explanations",
-          "analytics": "Performance Analytics",
-          "bookmarks": "Bookmarks & Notes",
-          "priority": "Priority Support"
+          "advanced": "300+ Mid-Level Questions (Vue, React, Angular)",
+          "allTypes": "All Question Types & Difficulty Levels",
+          "explanations": "Step-by-Step Solution Explanations",
+          "analytics": "Track Progress & Identify Weak Spots",
+          "bookmarks": "Bookmark & Review Your Mistakes",
+          "priority": "Priority Email Support (24h Response)"
         }
       },
       "senior": {
         "title": "Senior",
-        "cta": "Upgrade Now",
+        "description": "Ace senior roles at FAANG & startups",
+        "cta": "Start Free Trial - FAANG Ready",
         "features": {
-          "expert": "500+ Expert Questions",
-          "systemDesign": "System Design Questions",
-          "mockInterviews": "Mock Interviews",
-          "advancedAnalytics": "Advanced Analytics",
-          "customPlans": "Custom Study Plans",
-          "expertReviews": "Expert Reviews",
-          "priority": "Priority Support"
+          "expert": "500+ Senior-Level System Design Problems",
+          "systemDesign": "Scalability & Architecture Patterns",
+          "mockInterviews": "3 Live Mock Interviews Per Month",
+          "advancedAnalytics": "AI-Powered Performance Insights",
+          "customPlans": "Personalized 30/60/90-Day Study Roadmap",
+          "expertReviews": "Code Review by Senior Engineers",
+          "priority": "Priority Slack Support (2h Response)"
         }
       },
       "bundle": {
-        "title": "Bundle",
-        "recommended": "Recommended",
-        "cta": "Get Bundle",
+        "title": "All-Access",
+        "description": "Maximum results with unlimited features",
+        "recommended": "Best Value",
+        "cta": "Get Full Access - Save 40%",
         "features": {
-          "everything": "Everything in Senior",
-          "custom": "Custom Questions",
-          "support": "24/7 Support",
-          "team": "Team Management",
-          "lifetime": "Lifetime Updates",
-          "unlimitedAI": "Unlimited AI Assistant Usage"
+          "everything": "All Intermediate + Senior Features",
+          "coaching": "1-on-1 Career Coaching Session (Monthly)",
+          "resume": "Resume Review & Interview Strategy",
+          "support": "24/7 Priority Support (1h Response)",
+          "earlyAccess": "Early Access to New Content",
+          "unlimitedAI": "Unlimited AI Assistant & Code Analysis"
         }
       }
     },
@@ -779,12 +799,100 @@
       "subtitle": "Join thousands of developers who have successfully landed their dream jobs",
       "cta": "Get Started Free"
     },
+    "roi": {
+      "title": "Your Investment, Your Return",
+      "subtitle": "See the real-world impact on your career",
+      "stats": {
+        "salaryIncrease": {
+          "value": "$25K+",
+          "label": "Avg. Salary Increase"
+        },
+        "jobOfferRate": {
+          "value": "83%",
+          "label": "Job Offer Rate"
+        },
+        "timeToOffer": {
+          "value": "4.5 weeks",
+          "label": "Avg. Time to Offer"
+        },
+        "satisfaction": {
+          "value": "4.9/5",
+          "label": "Student Satisfaction"
+        }
+      }
+    },
+    "competitors": {
+      "title": "Why Choose q8m Over Competitors?",
+      "subtitle": "Compare and see the difference",
+      "features": {
+        "frontendFocus": "Frontend Specialization",
+        "mockInterviews": "Mock Interviews Included",
+        "liveSupport": "Live Support",
+        "price": "Monthly Price",
+        "moneyBack": "Money-Back Guarantee"
+      },
+      "q8m": {
+        "frontendFocus": "Vue, React, Angular Focused",
+        "mockInterviews": "3 per month included",
+        "liveSupport": "24/7 Priority support",
+        "price": "$15-30/mo",
+        "moneyBack": "7-day guarantee"
+      },
+      "leetcode": {
+        "name": "LeetCode",
+        "frontendFocus": "Generic (backend heavy)",
+        "mockInterviews": "$99 extra",
+        "liveSupport": "Email only",
+        "price": "$35/mo",
+        "moneyBack": "No refunds"
+      },
+      "algoexpert": {
+        "name": "AlgoExpert",
+        "frontendFocus": "Generic algorithms",
+        "mockInterviews": "Not offered",
+        "liveSupport": "Email only",
+        "price": "$99-164/year",
+        "moneyBack": "No refunds"
+      }
+    },
+    "testimonials": {
+      "title": "Success Stories from Developers Like You",
+      "subtitle": "Real results from real people",
+      "items": {
+        "sarah": {
+          "quote": "I went from struggling with React interviews to landing a senior role at Google in just 6 weeks. The mock interviews were game-changing.",
+          "name": "Sarah Chen",
+          "role": "Senior Frontend Developer",
+          "company": "Google",
+          "image": "/images/testimonials/sarah.jpg"
+        },
+        "michael": {
+          "quote": "The system design questions prepared me perfectly for my Meta interview. Worth every penny!",
+          "name": "Michael Rodriguez",
+          "role": "Frontend Engineer",
+          "company": "Meta",
+          "image": "/images/testimonials/michael.jpg"
+        },
+        "emma": {
+          "quote": "After failing 3 interviews, q8m helped me understand my weak spots. I got 2 offers within a month of upgrading to Senior plan.",
+          "name": "Emma Thompson",
+          "role": "Lead Frontend Developer",
+          "company": "Stripe",
+          "image": "/images/testimonials/emma.jpg"
+        }
+      }
+    },
+    "socialProof": {
+      "mostPurchased": "Most Purchased",
+      "recentPurchases": "{count} developers upgraded this week",
+      "liveCounter": "{count} studying now"
+    },
     "sticky": {
       "title": "Start your journey",
       "price": "From ${price}",
       "cta": "Get Started"
     },
-    "trust": {
+    "paymentProviders": {
       "paypal": "PayPal",
       "hyperpay": "HyperPay",
       "aps": "APS",
@@ -810,7 +918,69 @@
       "free": "Junior",
       "intermediate": "Intermediate",
       "advanced": "Senior",
-      "pro": "Bundle"
+      "pro": "All-Access"
+    },
+    "junior": {
+      "name": "Junior",
+      "description": "Perfect for beginners",
+      "benefits": {
+        "studyItems": "50 study guide items",
+        "quizQuestions": "50 quiz questions",
+        "community": "Community support forum",
+        "mobile": "Mobile & desktop access"
+      },
+      "cta": "Start Learning Free"
+    },
+    "intermediate": {
+      "name": "Intermediate",
+      "description": "Level up your skills",
+      "benefits": {
+        "studyItems": "200 study guide items",
+        "quizQuestions": "250 practice quiz questions",
+        "analytics": "Analytics dashboard with progress tracking",
+        "bookmarks": "Bookmarks & personal notes",
+        "priority": "Priority email support (24h response)",
+        "guarantee": "7-day money-back guarantee"
+      },
+      "cta": "Upgrade to Intermediate"
+    },
+    "senior": {
+      "name": "Senior",
+      "description": "Master advanced topics with AI",
+      "benefits": {
+        "studyItems": "300 expert-level study items",
+        "quizQuestions": "350 challenging quiz questions",
+        "aiSupport": "AI-powered explanations & hints",
+        "mockInterviews": "Mock interview simulations",
+        "expertReview": "Priority expert review (12h response)",
+        "guarantee": "7-day money-back guarantee"
+      },
+      "cta": "Upgrade to Senior"
+    },
+    "bundle": {
+      "name": "All-Access",
+      "description": "Maximum results with unlimited features",
+      "benefits": {
+        "everything": "All Intermediate + Senior Features",
+        "unlimitedAI": "Unlimited AI usage (no caps)",
+        "coaching": "Monthly 1-on-1 career coaching",
+        "resume": "Resume review & interview strategy",
+        "earlyAccess": "Early access to new content",
+        "priorityFeatures": "Priority feature requests"
+      },
+      "cta": "Get Full Access"
+    },
+    "badges": {
+      "mostPopular": "Most Popular",
+      "bestValue": "Best Value"
+    },
+    "features": {
+      "studyItemsCount": "{count} study items",
+      "quizQuestionsCount": "{count} quiz questions",
+      "studyItemsDelta": "+{delta} study items (total {total})",
+      "quizQuestionsDelta": "+{delta} quiz questions (total {total})",
+      "studyItemsTotalsWithDeltas": "{count} study items (+{delta} vs Junior)",
+      "quizQuestionsTotalsWithDeltas": "{count} quiz questions (+{delta} vs Junior)"
     },
     "free": {
       "welcomeBack": "Welcome back! Ready to continue with Easy quizzes?",

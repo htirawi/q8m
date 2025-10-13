@@ -59,15 +59,15 @@ const pricePeriod = computed(() => {
           {{ $t("checkout.monthly") }}
         </span>
         <button @click="$emit('toggle-billing-cycle')" class="toggle-switch"
-          :class="{ 'toggle-switch--active': billingCycle === 'yearly' }">
-          <span class="toggle-thumb" :class="{ 'toggle-thumb--active': billingCycle === 'yearly' }" />
+          :class="{ 'toggle-switch--active': billingCycle === 'annual' }">
+          <span class="toggle-thumb" :class="{ 'toggle-thumb--active': billingCycle === 'annual' }" />
         </button>
-        <span class="toggle-label" :class="{ 'toggle-label--active': billingCycle === 'yearly' }">
+        <span class="toggle-label" :class="{ 'toggle-label--active': billingCycle === 'annual' }">
           {{ $t("checkout.yearly") }}
 
         </span>
       </div>
-      <p v-if="billingCycle === 'yearly'" class="discount-note">
+      <p v-if="billingCycle === 'annual'" class="discount-note">
         {{ $t("checkout.savePercent", { percent: 17 }) }}
 
       </p>

@@ -121,6 +121,7 @@ import { computed, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useAnalytics } from "@/composables/useAnalytics";
 import LockedBadge from "@/components/paywall/LockedBadge.vue";
+import { DIFFICULTY_TO_PLAN_ID, getPlanById } from "@/config/plans";
 import type { DifficultyLevel } from "@/types/plan/access";
 import type { PlanTier } from "@shared/types/plan";
 
@@ -154,19 +155,23 @@ const emit = defineEmits<Emits>();
 const { t } = useI18n();
 const { trackStudyEvent } = useAnalytics();
 
-const iconMap: Record<DifficultyLevel, string> = {
-  easy: '🟢',
-  medium: '🟡',
-  hard: '🔴',
-};
+// Map difficulty to plan ID, then get display label from canonical registry
+const planId = computed(() => DIFFICULTY_TO_PLAN_ID[props.difficulty]);
+const planConfig = computed(() => getPlanById(planId.value));
 
-const icon = computed(() => iconMap[props.difficulty]);
+const icon = computed(() => planConfig.value?.visual.icon || '🟢');
 
-const difficultyIconLabel = computed(() => t(`difficulty.${props.difficulty}.label`));
+const difficultyIconLabel = computed(() =>
+  planConfig.value ? t(planConfig.value.labelKey) : t(`difficulty.${props.difficulty}.label`)
+);
 
-const title = computed(() => t(`difficulty.${props.difficulty}.label`));
+const title = computed(() =>
+  planConfig.value ? t(planConfig.value.labelKey) : t(`difficulty.${props.difficulty}.label`)
+);
 
-const description = computed(() => t(`difficulty.${props.difficulty}.description`));
+const description = computed(() =>
+  planConfig.value ? t(planConfig.value.descriptionKey) : t(`difficulty.${props.difficulty}.description`)
+);
 
 const ariaLabel = computed(() => {
   if (props.isLocked) {
