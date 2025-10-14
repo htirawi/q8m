@@ -193,14 +193,18 @@ export default async function questionRoutes(fastify: FastifyInstance) {
           ),
         },
       },
-      preHandler: [fastify.authenticate],
+      preHandler: [authenticate],
     },
     async (request, reply) => {
       try {
-        const { level, limit, framework } = request.query;
+        const { level, limit, framework } = request.query as {
+          level: "junior" | "intermediate" | "senior";
+          limit: number;
+          framework?: "angular" | "react" | "vue" | "nextjs" | "redux" | "random";
+        };
 
         // Map quiz levels to difficulty levels
-        const levelToDifficulty = {
+        const levelToDifficulty: Record<"junior" | "intermediate" | "senior", string> = {
           junior: "easy",
           intermediate: "medium",
           senior: "hard",
@@ -225,7 +229,7 @@ export default async function questionRoutes(fastify: FastifyInstance) {
         const total = await Question.countDocuments(query);
 
         return {
-          questions: questions.map((q) => ({
+          questions: questions.map((q: any) => ({
             _id: q._id.toString(),
             id: q.id,
             type: q.type,
