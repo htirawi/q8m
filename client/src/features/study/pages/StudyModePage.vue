@@ -18,7 +18,7 @@
         <button
           type="button"
           class="mt-4 rounded-lg bg-red-600 px-4 py-2 text-white hover:bg-red-700"
-          @click="loadQuestions"
+          @click="() => loadQuestions(false)"
         >
           {{ t('study.error.retry') }}
         </button>
@@ -46,7 +46,10 @@
             </div>
           </div>
           <div class="text-sm text-gray-600 dark:text-gray-400">
-            {{ currentIndex + 1 }} / {{ totalQuestions }}
+            {{ currentIndex + 1 }} / {{ loadedCount }}
+            <span v-if="totalAvailable > loadedCount" class="text-xs text-gray-500">
+              ({{ totalAvailable }} total)
+            </span>
           </div>
         </div>
 
@@ -87,6 +90,93 @@
             <div class="text-green-800 dark:text-green-300" v-html="getCurrentExplanation()"></div>
           </div>
 
+          <!-- Interactive Answer Options (Study Mode) -->
+          <div v-if="!showAnswer && hasInteractiveOptions && currentQuestion.type !== 'fill-blank'" class="mb-6">
+            <h3 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
+              {{ t('study.selectAnswer') }}
+            </h3>
+            
+            <!-- Multiple Choice Options -->
+            <div v-if="currentQuestion.type === 'multiple-choice'" class="space-y-3">
+              <button
+                v-for="option in getCurrentOptions()"
+                :key="option.id"
+                type="button"
+                :class="getStudyOptionClass(option.id)"
+                @click="selectStudyAnswer(option.id)"
+              >
+                <div class="flex items-center">
+                  <div class="flex-1 text-left">{{ option.text }}</div>
+                  <div v-if="selectedStudyAnswer === option.id" class="ml-4">
+                    <svg class="h-5 w-5 text-primary-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                    </svg>
+                  </div>
+                </div>
+              </button>
+            </div>
+
+            <!-- True/False Options -->
+            <div v-else-if="currentQuestion.type === 'true-false'" class="space-y-3">
+              <button
+                v-for="option in getCurrentOptions()"
+                :key="option.id"
+                type="button"
+                :class="getStudyOptionClass(option.id)"
+                @click="selectStudyAnswer(option.id)"
+              >
+                <div class="flex items-center">
+                  <div class="flex-1 text-left">{{ option.text }}</div>
+                  <div v-if="selectedStudyAnswer === option.id" class="ml-4">
+                    <svg class="h-5 w-5 text-primary-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                    </svg>
+                  </div>
+                </div>
+              </button>
+            </div>
+
+            <!-- Fill in the Blank -->
+            <div v-else-if="currentQuestion.type === 'fill-blank'" class="space-y-4">
+              <input
+                v-model="studyTextAnswer"
+                type="text"
+                class="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 focus:border-primary-500 focus:ring-2 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                :placeholder="t('study.fillBlankPlaceholder')"
+              />
+            </div>
+
+            <!-- Multiple Checkbox -->
+            <div v-else-if="currentQuestion.type === 'multiple-checkbox'" class="space-y-3">
+              <label
+                v-for="option in getCurrentOptions()"
+                :key="option.id"
+                :class="getStudyCheckboxClass(option.id)"
+              >
+                <input
+                  v-model="studyMultipleAnswers"
+                  type="checkbox"
+                  :value="option.id"
+                  class="h-5 w-5 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                />
+                <span class="ml-3 flex-1">{{ option.text }}</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Fill-in-blank Input (Study Mode) -->
+          <div v-if="!showAnswer && currentQuestion.type === 'fill-blank'" class="mb-6">
+            <h3 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
+              {{ t('study.typeAnswer') }}
+            </h3>
+            <input
+              v-model="studyTextAnswer"
+              type="text"
+              class="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 focus:border-primary-500 focus:ring-2 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+              :placeholder="t('study.fillBlankPlaceholder')"
+            />
+          </div>
+
           <!-- Actions -->
           <div class="flex flex-wrap gap-3">
             <button
@@ -111,9 +201,19 @@
               <button
                 type="button"
                 class="rounded-lg bg-primary-600 px-6 py-3 font-medium text-white hover:bg-primary-700"
+                :disabled="isLoadingMore"
                 @click="nextQuestion"
               >
-                {{ currentIndex < totalQuestions - 1 ? t('study.next') : t('study.finish') }} →
+                <span v-if="isLoadingMore">
+                  <svg class="inline h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  {{ t('study.loading') }}
+                </span>
+                <span v-else>
+                  {{ currentIndex < loadedCount - 1 ? t('study.next') : hasMore ? t('study.loadMore') : t('study.finish') }} →
+                </span>
               </button>
 
               <button
@@ -129,9 +229,14 @@
 
         <!-- Navigation -->
         <div class="mt-6 rounded-lg bg-white p-6 shadow-sm dark:bg-gray-800">
-          <h3 class="mb-4 font-semibold text-gray-900 dark:text-white">
-            {{ t('study.quickNavigation') }}
-          </h3>
+          <div class="mb-4 flex items-center justify-between">
+            <h3 class="font-semibold text-gray-900 dark:text-white">
+              {{ t('study.quickNavigation') }}
+            </h3>
+            <span class="text-sm text-gray-600 dark:text-gray-400">
+              {{ loadedCount }} / {{ totalAvailable }} loaded
+            </span>
+          </div>
           <div class="grid grid-cols-10 gap-2 sm:grid-cols-15 md:grid-cols-20">
             <button
               v-for="(q, idx) in questions"
@@ -143,6 +248,26 @@
               {{ idx + 1 }}
             </button>
           </div>
+          
+          <!-- Load More Button -->
+          <button
+            v-if="hasMore"
+            type="button"
+            class="mt-4 w-full rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 px-4 py-3 text-sm font-medium text-gray-700 hover:border-primary-500 hover:bg-primary-50 hover:text-primary-700 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-primary-400 dark:hover:bg-primary-900/20 dark:hover:text-primary-400"
+            :disabled="isLoadingMore"
+            @click="loadMore"
+          >
+            <span v-if="isLoadingMore" class="flex items-center justify-center gap-2">
+              <svg class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              {{ t('study.loading') }}
+            </span>
+            <span v-else>
+              {{ t('study.loadMore') }} ({{ totalAvailable - loadedCount }} {{ t('study.remaining') }})
+            </span>
+          </button>
         </div>
       </div>
     </div>
@@ -164,13 +289,30 @@ const difficulty = computed(() => route.params.difficulty as "easy" | "medium" |
 const questions = ref<Question[]>([]);
 const currentIndex = ref(0);
 const showAnswer = ref(false);
+const selectedStudyAnswer = ref<string | null>(null);
+const studyTextAnswer = ref("");
+const studyMultipleAnswers = ref<string[]>([]);
 const bookmarkedQuestions = ref<Set<string>>(new Set());
 const isLoading = ref(true);
+const isLoadingMore = ref(false);
 const error = ref<string | null>(null);
+const totalAvailable = ref(0); // Total in DB
+const hasMore = ref(false);
+const currentOffset = ref(0);
+const pageSize = 10; // Load 10 at a time
 
 const currentQuestion = computed(() => questions.value[currentIndex.value]);
-const totalQuestions = computed(() => questions.value.length);
-const progress = computed(() => ((currentIndex.value + 1) / totalQuestions.value) * 100);
+const loadedCount = computed(() => questions.value.length);
+const progress = computed(() => ((currentIndex.value + 1) / loadedCount.value) * 100);
+
+// Study mode specific computed properties
+const hasInteractiveOptions = computed(() => {
+  if (!currentQuestion.value) return false;
+  return currentQuestion.value.type === 'multiple-choice' || 
+         currentQuestion.value.type === 'true-false' ||
+         currentQuestion.value.type === 'fill-blank' ||
+         currentQuestion.value.type === 'multiple-checkbox';
+});
 const isBookmarked = computed(() => 
   currentQuestion.value ? bookmarkedQuestions.value.has(currentQuestion.value._id) : false
 );
@@ -199,6 +341,19 @@ const getCurrentExplanation = () => {
   return currentQuestion.value.content?.[locale.value as 'en' | 'ar']?.explanation ?? '';
 };
 
+const getCurrentOptions = () => {
+  if (!currentQuestion.value) return [];
+  
+  const options = currentQuestion.value.content?.[locale.value as 'en' | 'ar']?.options;
+  if (!options || !Array.isArray(options)) return [];
+  
+  return options.map((option: any) => ({
+    id: option.id || option._id || `option_${Math.random()}`,
+    text: option.text || option,
+    isCorrect: option.isCorrect || false
+  }));
+};
+
 const getQuestionNavClass = (idx: number) => {
   const baseClass = 'h-10 w-10 rounded text-sm font-medium transition-colors';
   
@@ -209,38 +364,63 @@ const getQuestionNavClass = (idx: number) => {
   return `${baseClass} bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600`;
 };
 
-const loadQuestions = async () => {
-  isLoading.value = true;
+const loadQuestions = async (append = false) => {
+  if (append) {
+    isLoadingMore.value = true;
+  } else {
+    isLoading.value = true;
+    currentOffset.value = 0;
+    questions.value = [];
+  }
+  
   error.value = null;
   
   try {
-    // TODO: Replace with actual API call
-    // For now, using mock data
-    const response = await fetch(`/api/questions?difficulty=${difficulty.value}`, {
-      credentials: 'include',
-    });
+    const response = await fetch(
+      `/api/questions?difficulty=${difficulty.value}&limit=${pageSize}&offset=${currentOffset.value}`,
+      {
+        credentials: 'include',
+      }
+    );
     
     if (!response.ok) {
       throw new Error('Failed to load questions');
     }
     
     const data = await response.json();
-    questions.value = data.questions || [];
     
-    if (questions.value.length === 0) {
+    if (append) {
+      questions.value = [...questions.value, ...(data.questions || [])];
+    } else {
+      questions.value = data.questions || [];
+    }
+    
+    totalAvailable.value = data.total || 0;
+    hasMore.value = data.hasMore || false;
+    currentOffset.value += (data.questions || []).length;
+    
+    if (questions.value.length === 0 && !append) {
       error.value = t('study.error.noQuestions');
     }
     
     // Load bookmarks from localStorage
-    const savedBookmarks = localStorage.getItem(`bookmarks_${difficulty.value}`);
-    if (savedBookmarks) {
-      bookmarkedQuestions.value = new Set(JSON.parse(savedBookmarks));
+    if (!append) {
+      const savedBookmarks = localStorage.getItem(`bookmarks_${difficulty.value}`);
+      if (savedBookmarks) {
+        bookmarkedQuestions.value = new Set(JSON.parse(savedBookmarks));
+      }
     }
   } catch (err) {
     error.value = err instanceof Error ? err.message : t('study.error.generic');
   } finally {
     isLoading.value = false;
+    isLoadingMore.value = false;
   }
+};
+
+const loadMore = () => {
+  if (!hasMore.value || isLoadingMore.value) return;
+  loadQuestions(true);
 };
 
 const revealAnswer = () => {
@@ -248,9 +428,17 @@ const revealAnswer = () => {
 };
 
 const nextQuestion = () => {
-  if (currentIndex.value < totalQuestions.value - 1) {
+  if (currentIndex.value < loadedCount.value - 1) {
     currentIndex.value++;
-    showAnswer.value = false;
+    resetStudyState();
+    
+    // Auto-load more when approaching end
+    if (hasMore.value && currentIndex.value >= loadedCount.value - 3 && !isLoadingMore.value) {
+      loadMore();
+    }
+  } else if (hasMore.value) {
+    // Load more questions
+    loadMore();
   } else {
     // Finished study session
     goBack();
@@ -260,13 +448,47 @@ const nextQuestion = () => {
 const previousQuestion = () => {
   if (currentIndex.value > 0) {
     currentIndex.value--;
-    showAnswer.value = false;
+    resetStudyState();
   }
 };
 
 const jumpToQuestion = (idx: number) => {
   currentIndex.value = idx;
+  resetStudyState();
+};
+
+// Study mode interactive functions
+const selectStudyAnswer = (optionId: string) => {
+  selectedStudyAnswer.value = optionId;
+};
+
+const getStudyOptionClass = (optionId: string) => {
+  const baseClass = "w-full rounded-lg border p-4 text-left transition-all hover:shadow-md";
+  const isSelected = selectedStudyAnswer.value === optionId;
+  
+  if (isSelected) {
+    return `${baseClass} border-primary-500 bg-primary-50 text-primary-900 dark:bg-primary-900/20 dark:text-primary-200`;
+  }
+  
+  return `${baseClass} border-gray-200 bg-white text-gray-900 hover:border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white`;
+};
+
+const getStudyCheckboxClass = (optionId: string) => {
+  const baseClass = "flex cursor-pointer items-center rounded-lg border p-4 transition-all hover:shadow-md";
+  const isSelected = studyMultipleAnswers.value.includes(optionId);
+  
+  if (isSelected) {
+    return `${baseClass} border-primary-500 bg-primary-50 dark:bg-primary-900/20`;
+  }
+  
+  return `${baseClass} border-gray-200 bg-white hover:border-gray-300 dark:border-gray-600 dark:bg-gray-700`;
+};
+
+const resetStudyState = () => {
   showAnswer.value = false;
+  selectedStudyAnswer.value = null;
+  studyTextAnswer.value = "";
+  studyMultipleAnswers.value = [];
 };
 
 const toggleBookmark = () => {

@@ -11,6 +11,7 @@ coverage/
 .nyc_output/
 src/__tests__/
 test-results/
+playwright-report/
 *.lcov
 
 # CI/CD - Exclude test workflows from builds
@@ -61,6 +62,18 @@ Thumbs.db
 # Fixtures folder - contains development data and scripts (excluded from production builds)
 fixtures/
 backups/
+
+# Local development data - contains test questions and study content (local only)
+local-data/
+
+# Local development workspace - contains experimental and temporary files (local only)
+local-development/
+
+# Generated reports and analysis files (development artifacts)
+migration-*.json
+knip-report.json
+*-report.json
+analysis-*.json
 
 # Internal development scripts and tools (moved to fixtures)
 scripts/internal/

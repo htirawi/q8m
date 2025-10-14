@@ -46,6 +46,14 @@ export function isBundlePlan(tier: PlanTier): boolean {
 }
 
 /**
+ * Get the default landing page (level selection) for all users
+ * This is the unified entry point where users choose their level and mode
+ */
+export function getDefaultLandingPage(locale: string = "en"): string {
+  return `/${locale}/select`;
+}
+
+/**
  * Get the Study target route for a given plan tier
  * Bundle (pro) yields medium by default, with UI also exposing Hard
  */
@@ -147,9 +155,7 @@ export function resolvePostLoginTarget(
   if (intent.desired === "bundle") {
     if (isBundlePlan(userTier)) {
       // Pro user accessing bundle: route to medium/intermediate with Bundle UI
-      return intent.mode === "study"
-        ? `/${locale}/study/medium`
-        : `/${locale}/quiz/intermediate`;
+      return intent.mode === "study" ? `/${locale}/study/medium` : `/${locale}/quiz/intermediate`;
     }
     // Non-bundle user: redirect to their plan's default
     return intent.mode === "study"
@@ -158,9 +164,10 @@ export function resolvePostLoginTarget(
   }
 
   // Specific intent: route to that target (guards will handle access control)
-  const targetPath = intent.mode === "study"
-    ? `/${locale}/study/${intent.desired}`
-    : `/${locale}/quiz/${intent.desired}`;
+  const targetPath =
+    intent.mode === "study"
+      ? `/${locale}/study/${intent.desired}`
+      : `/${locale}/quiz/${intent.desired}`;
 
   return targetPath;
 }

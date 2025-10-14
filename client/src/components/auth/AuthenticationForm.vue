@@ -7,14 +7,14 @@ import { ZodError } from "zod";
 
 import { useAuthStore } from "@/stores/auth";
 import { emailStepSchema, loginFormSchema, registerFormSchema, passwordSchema, nameSchema } from "@/schemas/auth";
-import type { UnifiedAuthFormData, FormErrors, UnifiedAuthFormEmits, PasswordRequirements, PasswordStrength } from "@/types/ui/component-props";
+import type { AuthenticationFormData, FormErrors, AuthenticationFormEmits, PasswordRequirements, PasswordStrength } from "@/types/ui/component-props";
 
-const emit = defineEmits<UnifiedAuthFormEmits>();
+const emit = defineEmits<AuthenticationFormEmits>();
 const { t } = useI18n();
 const authStore = useAuthStore();
 
 // Reactive data
-const formData = reactive<UnifiedAuthFormData>({
+const formData = reactive<AuthenticationFormData>({
   email: "",
   name: "",
   password: "",

@@ -232,6 +232,23 @@ const routes: RouteRecordRaw[] = [
     "dashboard"
   ),
 
+  // Level Selection (Main Landing Page)
+  createLocalizedRoute(
+    "/select",
+    () =>
+      import(
+        /* webpackChunkName: "level-selection" */
+        "@/features/home/pages/LevelSelectionPage.vue"
+      ),
+    {
+      title: "Choose Your Level - q8m",
+      requiresAuth: true,
+      access: "free",
+      layout: "default",
+    },
+    "level-selection"
+  ),
+
   // Study Mode Selection
   createLocalizedRoute(
     "/study",
@@ -392,7 +409,7 @@ const routes: RouteRecordRaw[] = [
     () =>
       import(
         /* webpackChunkName: "test" */
-        "@/features/test/pages/TestIndex.vue"
+        "@/features/test/pages/ApiTestDashboard.vue"
       ),
     {
       title: "API Test Dashboard - q8m",
@@ -407,7 +424,7 @@ const routes: RouteRecordRaw[] = [
     () =>
       import(
         /* webpackChunkName: "test" */
-        "@/features/test/pages/TestProgressDashboard.vue"
+        "@/features/test/pages/ProgressApiTestPage.vue"
       ),
     {
       title: "Progress Test - q8m",
@@ -421,7 +438,7 @@ const routes: RouteRecordRaw[] = [
     () =>
       import(
         /* webpackChunkName: "test" */
-        "@/features/test/pages/TestGamification.vue"
+        "@/features/test/pages/GamificationApiTestPage.vue"
       ),
     {
       title: "Gamification Test - q8m",
@@ -435,7 +452,7 @@ const routes: RouteRecordRaw[] = [
     () =>
       import(
         /* webpackChunkName: "test" */
-        "@/features/test/pages/TestQuizResults.vue"
+        "@/features/test/pages/QuizResultsApiTestPage.vue"
       ),
     {
       title: "Quiz Results Test - q8m",
@@ -610,9 +627,7 @@ router.beforeEach(async (to, _from, next) => {
       const difficulty = to.params.difficulty as string;
       const userTier = planStore.planTier;
 
-      if (
-        !canAccessStudyDifficulty(userTier, difficulty as "easy" | "medium" | "hard")
-      ) {
+      if (!canAccessStudyDifficulty(userTier, difficulty as "easy" | "medium" | "hard")) {
         const requiredTier = getRequiredStudyPlanTier(difficulty as "easy" | "medium" | "hard");
         const suggestedTier = getSuggestedUpgradeTier(requiredTier, userTier);
         showPaywall(to.fullPath, suggestedTier);
@@ -622,8 +637,9 @@ router.beforeEach(async (to, _from, next) => {
     }
 
     if (to.name === "quiz-take" && to.params.level) {
-      const { canAccessQuizLevel, getRequiredQuizPlanTier, getSuggestedUpgradeTier } =
-        await import("@/types/plan/access");
+      const { canAccessQuizLevel, getRequiredQuizPlanTier, getSuggestedUpgradeTier } = await import(
+        "@/types/plan/access"
+      );
       const level = to.params.level as string;
       const userTier = planStore.planTier;
 

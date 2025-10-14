@@ -6,7 +6,11 @@ import { useToast } from "./useToast";
 import { useI18n } from "vue-i18n";
 import { trackEvent } from "@/utils/telemetry";
 import type { PlanTier } from "@shared/types/plan";
-import { getStudyTargetFor, decodeIntentFromUrl, resolvePostLoginTarget } from "@/utils/planMapping";
+import {
+  getDefaultLandingPage,
+  decodeIntentFromUrl,
+  resolvePostLoginTarget,
+} from "@/utils/planMapping";
 
 /**
  * Post-Login Router Handler
@@ -23,13 +27,12 @@ export function usePostLoginRouter() {
   const { t } = useI18n();
 
   /**
-   * Get the default landing page for a given plan tier
-   * Uses canonical mapping from planMapping.ts
+   * Get the default landing page (level selection)
+   * All users go to the unified level selection page after login
    */
-  const getDefaultLandingPage = (tier: PlanTier): string => {
+  const getDefaultLanding = (): string => {
     const locale = getCurrentLocale();
-    // Use canonical mapping: Free→Easy, Intermediate→Medium, Advanced→Hard, Pro→Medium
-    return getStudyTargetFor(tier, locale);
+    return getDefaultLandingPage(locale);
   };
 
   /**
@@ -123,11 +126,11 @@ export function usePostLoginRouter() {
       return;
     }
 
-    // No redirect param - route by plan policy
-    const defaultPath = getDefaultLandingPage(tier);
+    // No redirect param - route to unified level selection
+    const defaultPath = getDefaultLanding();
 
     if (tier === "free") {
-      // Free plan: land on Easy Study with welcome toast
+      // Free plan: land on level selection with welcome toast
       trackEvent("free_entry_route", {
         fromRoute: route.path,
         toRoute: defaultPath,

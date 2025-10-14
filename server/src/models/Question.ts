@@ -2,7 +2,7 @@ import type { Document, ObjectId } from "mongoose";
 import { Schema, model } from "mongoose";
 
 export interface IQuestion extends Document {
-  framework: "angular" | "vue" | "nextjs" | "redux";
+  framework: "angular" | "react" | "vue" | "nextjs" | "redux" | "random";
   level: "junior" | "intermediate" | "senior";
   type: "multiple-choice" | "true-false" | "fill-blank" | "code-completion";
   category: string;
@@ -30,7 +30,7 @@ const questionSchema = new Schema(
   {
     framework: {
       type: String,
-      enum: ["angular", "vue", "nextjs", "redux"],
+      enum: ["angular", "react", "vue", "nextjs", "redux", "random"],
       required: true,
       index: true,
     },
@@ -80,15 +80,15 @@ const questionSchema = new Schema(
         explanation: { type: String, required: true },
       },
       ar: {
-        question: { type: String, required: true },
+        question: { type: String, required: false }, // Optional for gradual i18n rollout
         options: [
           {
-            id: { type: String, required: true },
-            text: { type: String, required: true },
-            isCorrect: { type: Boolean, required: true },
+            id: { type: String, required: false },
+            text: { type: String, required: false },
+            isCorrect: { type: Boolean, required: false },
           },
         ],
-        explanation: { type: String, required: true },
+        explanation: { type: String, required: false }, // Optional for gradual i18n rollout
       },
     },
     isActive: {

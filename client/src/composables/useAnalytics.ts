@@ -1,152 +1,351 @@
 /**
  * Analytics Composable
- * Provides type-safe analytics event tracking with automatic metadata injection
- *
- * Usage:
- * const { trackStudyEvent } = useAnalytics();
- * trackStudyEvent('study_cta_clicked', { hasSelection: true, difficulty: 'easy' });
+ * Tracks content viewing, quiz interactions, and user events
  */
 
-import { useRoute } from "vue-router";
-import { useI18n } from "vue-i18n";
-import { trackEvent, type TelemetryEvent } from "@/utils/telemetry";
+import { ref } from "vue";
+import type { AnalyticsEvent, ContentAnalyticsData } from "@shared/types/analytics";
+
+const events = ref<AnalyticsEvent[]>([]);
+const isEnabled = ref(true);
 
 /**
- * Study page specific analytics events
- * Note: locale, rtl, route, and timestamp are automatically injected by the composable
+ * Generic event tracking
  */
-export interface IStudyAnalyticsEvents {
-  study_cta_viewed: Record<string, never>; // No additional data needed
-  study_cta_clicked: {
-    hasSelection: boolean;
-    difficulty?: string;
-    source?: 'inline' | 'sticky';
+function trackEvent(
+  event: string,
+  category: string,
+  action: string,
+  label?: string,
+  value?: number,
+  metadata?: Record<string, unknown>
+) {
+  if (!isEnabled.value) return;
+
+  const analyticsEvent: AnalyticsEvent = {
+    event,
+    category,
+    action,
+    label,
+    value,
+    timestamp: new Date(),
+    metadata,
   };
-  study_cta_scroll_prompt: Record<string, never>; // No additional data needed
-  level_card_viewed: {
-    difficulty: string;
-    isLocked: boolean;
-    requiredPlan?: string;
-  };
-  level_card_clicked: {
-    difficulty: string;
-    isLocked: boolean;
-    requiredPlan?: string;
-  };
-  level_card_selected: {
-    difficulty: string;
-  };
-  // One-click start events
-  easy_card_clicked: {
-    source: 'study-page' | 'dashboard';
-  };
-  study_autostart_triggered: {
-    autostart: boolean;
-  };
-  study_session_started: {
-    mode: string;
-    resumed: boolean;
-  };
-  study_session_resumed: {
-    difficulty: string;
-    questionIndex: number;
-  };
-  sticky_start_shown: {
-    reason: 'autostart_disabled' | 'slow_network' | 'preference';
-  };
-  sticky_start_clicked: {
-    difficulty: string;
-  };
-  sticky_start_retry: {
-    difficulty: string;
-  };
-  keyboard_shortcut_used: {
-    key: string;
-    action: string;
-  };
-  // Upsell events
-  upsell_modal_opened: {
-    difficulty: string;
-    requiredPlan: string;
-    source: 'level_card' | 'feature_gate';
-  };
-  upsell_modal_viewed: {
-    difficulty: string;
-    requiredPlan: string;
-  };
-  upsell_cta_clicked: {
-    action: 'upgrade' | 'view_plans' | 'maybe_later';
-    difficulty: string;
-    requiredPlan: string;
-  };
-  upsell_modal_dismissed: {
-    difficulty: string;
-    requiredPlan: string;
-    method: 'esc' | 'backdrop' | 'close_button' | 'maybe_later_button';
-  };
+
+  events.value.push(analyticsEvent);
+
+  // Log to console in development
+  if (import.meta.env.DEV) {
+    console.warn("[Analytics]", analyticsEvent);
+  }
+
+  // Send to analytics service (Google Analytics, Plausible, etc.)
+  sendToAnalyticsProvider(analyticsEvent);
 }
 
 /**
- * Common metadata injected into all events
+ * Sends event to analytics provider
  */
-interface IEventMetadata {
-  locale: string;
-  rtl: boolean;
-  route: string;
-  timestamp: number;
-  userAgent?: string;
+function sendToAnalyticsProvider(event: AnalyticsEvent) {
+  // Google Analytics 4
+  if (typeof window !== "undefined" && (window as any).gtag) {
+    (window as any).gtag("event", event.event, {
+      event_category: event.category,
+      event_label: event.label,
+      value: event.value,
+      ...event.metadata,
+    });
+  }
+
+  // Plausible Analytics
+  if (typeof window !== "undefined" && (window as any).plausible) {
+    (window as any).plausible(event.event, {
+      props: {
+        category: event.category,
+        action: event.action,
+        label: event.label,
+        ...event.metadata,
+      },
+    });
+  }
+
+  // Custom backend endpoint (optional)
+  if (import.meta.env.VITE_ANALYTICS_ENDPOINT) {
+    fetch(import.meta.env.VITE_ANALYTICS_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(event),
+    }).catch(console.error);
+  }
 }
 
-export function useAnalytics() {
-  const route = useRoute();
-  const { locale } = useI18n();
+/**
+ * Content Events
+ */
 
-  /**
-   * Get common metadata for all events
-   */
-  const getMetadata = (): IEventMetadata => ({
-    locale: locale.value,
-    rtl: locale.value === 'ar',
-    route: route.fullPath,
-    timestamp: Date.now(),
-    userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : undefined,
+/**
+ * Tracks when a study item is viewed
+ */
+function trackStudyViewed(data: ContentAnalyticsData) {
+  trackEvent(
+    "content_study_viewed",
+    "content",
+    "study_viewed",
+    `${data.framework}:${data.topic}`,
+    undefined,
+    {
+      framework: data.framework,
+      topic: data.topic,
+      level: data.level,
+      contentId: data.contentId,
+    }
+  );
+}
+
+/**
+ * Tracks when a quiz is started
+ */
+function trackQuizViewed(data: ContentAnalyticsData) {
+  trackEvent(
+    "content_quiz_viewed",
+    "content",
+    "quiz_viewed",
+    `${data.framework}:${data.topic}`,
+    undefined,
+    {
+      framework: data.framework,
+      topic: data.topic,
+      level: data.level,
+      contentId: data.contentId,
+    }
+  );
+}
+
+/**
+ * Tracks when a question is answered
+ */
+function trackQuestionAnswered(
+  data: ContentAnalyticsData & { isCorrect: boolean; timeSpent: number }
+) {
+  trackEvent(
+    "content_question_answered",
+    "content",
+    "question_answered",
+    `${data.framework}:${data.topic}`,
+    data.timeSpent,
+    {
+      framework: data.framework,
+      topic: data.topic,
+      level: data.level,
+      contentId: data.contentId,
+      isCorrect: data.isCorrect,
+      timeSpent: data.timeSpent,
+    }
+  );
+}
+
+/**
+ * Tracks when an explanation is opened
+ */
+function trackExplanationOpened(data: ContentAnalyticsData) {
+  trackEvent(
+    "content_explanation_opened",
+    "content",
+    "explanation_opened",
+    `${data.framework}:${data.topic}`,
+    undefined,
+    {
+      framework: data.framework,
+      topic: data.topic,
+      level: data.level,
+      contentId: data.contentId,
+    }
+  );
+}
+
+/**
+ * Tracks quiz completion
+ */
+function trackQuizCompleted(
+  data: ContentAnalyticsData & {
+    score: number;
+    totalQuestions: number;
+    timeSpent: number;
+  }
+) {
+  trackEvent(
+    "content_quiz_completed",
+    "content",
+    "quiz_completed",
+    `${data.framework}:${data.topic}`,
+    data.score,
+    {
+      framework: data.framework,
+      topic: data.topic,
+      level: data.level,
+      contentId: data.contentId,
+      score: data.score,
+      totalQuestions: data.totalQuestions,
+      timeSpent: data.timeSpent,
+      percentage: Math.round((data.score / data.totalQuestions) * 100),
+    }
+  );
+}
+
+/**
+ * User Interaction Events
+ */
+
+/**
+ * Tracks content bookmarking
+ */
+function trackContentBookmarked(data: ContentAnalyticsData & { action: "add" | "remove" }) {
+  trackEvent(
+    "content_bookmarked",
+    "interaction",
+    `bookmark_${data.action}`,
+    `${data.framework}:${data.topic}`,
+    undefined,
+    {
+      framework: data.framework,
+      topic: data.topic,
+      contentId: data.contentId,
+      action: data.action,
+    }
+  );
+}
+
+/**
+ * Tracks content sharing
+ */
+function trackContentShared(data: ContentAnalyticsData & { method: string }) {
+  trackEvent(
+    "content_shared",
+    "interaction",
+    "share",
+    `${data.framework}:${data.topic}`,
+    undefined,
+    {
+      framework: data.framework,
+      topic: data.topic,
+      contentId: data.contentId,
+      method: data.method,
+    }
+  );
+}
+
+/**
+ * Tracks framework selection
+ */
+function trackFrameworkSelected(framework: string) {
+  trackEvent("framework_selected", "navigation", "select_framework", framework, undefined, {
+    framework,
   });
+}
 
-  /**
-   * Track a study-specific analytics event
-   */
-  const trackStudyEvent = <K extends keyof IStudyAnalyticsEvents>(
-    eventName: K,
-    eventData: IStudyAnalyticsEvents[K]
-  ): void => {
-    const metadata = getMetadata();
+/**
+ * Tracks level/tier selection
+ */
+function trackLevelSelected(level: string) {
+  trackEvent("level_selected", "navigation", "select_level", level, undefined, {
+    level,
+  });
+}
 
-    trackEvent(eventName, {
-      ...eventData,
-      ...metadata,
-    });
-  };
+/**
+ * Page View Events
+ */
 
-  /**
-   * Track a generic analytics event (bypasses type checking)
-   * Use trackStudyEvent for type-safe study events
-   */
-  const trackGenericEvent = (
-    eventName: string,
-    eventData: Record<string, unknown> = {}
-  ): void => {
-    const metadata = getMetadata();
+/**
+ * Tracks page views
+ */
+function trackPageView(path: string, title: string) {
+  trackEvent("page_view", "navigation", "page_view", path, undefined, {
+    path,
+    title,
+  });
+}
 
-    // Type assertion to bypass strict type checking for generic events
-    trackEvent(eventName as unknown as TelemetryEvent, {
-      ...eventData,
-      ...metadata,
-    });
-  };
+/**
+ * Utility Functions
+ */
 
+/**
+ * Enables or disables analytics tracking
+ */
+function setAnalyticsEnabled(enabled: boolean) {
+  isEnabled.value = enabled;
+}
+
+/**
+ * Gets all tracked events (for debugging)
+ */
+function getEvents(): AnalyticsEvent[] {
+  return events.value;
+}
+
+/**
+ * Clears all tracked events
+ */
+function clearEvents() {
+  events.value = [];
+}
+
+/**
+ * Legacy method aliases for backward compatibility
+ */
+
+/**
+ * Generic event tracking (legacy)
+ * Simplified signature: trackGenericEvent(action, metadata?)
+ */
+function trackGenericEvent(action: string, metadata?: Record<string, unknown>) {
+  trackEvent(action, "generic", action, undefined, undefined, metadata);
+}
+
+/**
+ * Study event tracking (legacy)
+ * Simplified signature: trackStudyEvent(action, metadata?)
+ */
+function trackStudyEvent(action: string, metadata?: Record<string, unknown>) {
+  trackEvent(`study_${action}`, "study", action, undefined, undefined, metadata);
+}
+
+/**
+ * useAnalytics Composable
+ */
+export function useAnalytics() {
   return {
-    trackStudyEvent,
+    // Content Events
+    trackStudyViewed,
+    trackQuizViewed,
+    trackQuestionAnswered,
+    trackExplanationOpened,
+    trackQuizCompleted,
+
+    // User Interaction Events
+    trackContentBookmarked,
+    trackContentShared,
+    trackFrameworkSelected,
+    trackLevelSelected,
+
+    // Page View Events
+    trackPageView,
+
+    // Generic Event Tracking
+    trackEvent,
+
+    // Legacy Compatibility
     trackGenericEvent,
-    getMetadata,
+    trackStudyEvent,
+
+    // Utility
+    setAnalyticsEnabled,
+    getEvents,
+    clearEvents,
+
+    // State
+    isEnabled,
+    events,
   };
 }

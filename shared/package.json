@@ -1,0 +1,20 @@
+{
+  "name": "@q8m/shared",
+  "private": true,
+  "version": "2.0.0",
+  "type": "module",
+  "description": "Shared types, schemas, and constants for Quiz 8 Mastery platform",
+  "author": "Hussein Tirawi",
+  "license": "MIT",
+  "exports": {
+    "./types/*": "./types/*.ts",
+    "./schemas/*": "./schemas/*.ts",
+    "./constants/*": "./constants/*.ts"
+  },
+  "dependencies": {
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.2"
+  }
+}

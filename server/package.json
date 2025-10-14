@@ -46,8 +46,10 @@
     "migrate": "tsx -r tsconfig-paths/register src/migrations/migrate.ts",
     "migrate:001": "tsx -r tsconfig-paths/register src/migrations/migrate.ts 001",
     "migrate:002": "tsx -r tsconfig-paths/register src/migrations/migrate.ts 002",
+    "migrate:003": "tsx -r tsconfig-paths/register src/migrations/migrate.ts 003",
     "db:migrate": "tsx -r tsconfig-paths/register src/migrations/migrate.ts",
     "db:seed": "tsx -r tsconfig-paths/register src/migrations/migrate.ts 002",
+    "db:seed:migrated": "tsx -r tsconfig-paths/register src/migrations/migrate.ts 003",
     "db:reset": "tsx -r tsconfig-paths/register scripts/reset.ts"
   },
   "dependencies": {

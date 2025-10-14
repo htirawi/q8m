@@ -238,7 +238,7 @@
             <!-- Collapsible comparison -->
             <Transition name="slide-down">
               <div v-if="showComparison" class="mt-6">
-                <PlanComparisonLite :target-plan="requiredPlan" />
+                <PlanComparisonCard :target-plan="requiredPlan" />
               </div>
             </Transition>
 
@@ -270,7 +270,7 @@ import { ref, computed, watch, onMounted, onUnmounted, nextTick } from "vue";
 import { useI18n } from "vue-i18n";
 import { useCheckout } from "@/composables/useCheckout";
 import { useAnalytics } from "@/composables/useAnalytics";
-import PlanComparisonLite from "./PlanComparisonLite.vue";
+import PlanComparisonCard from "./PlanComparisonCard.vue";
 import type { DifficultyLevel } from "@/types/plan/access";
 import type { PlanTier } from "@shared/types/plan";
 import type { BillingCycle } from "@/composables/useCheckout";
