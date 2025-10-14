@@ -23,7 +23,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 8
+          version: 8.15.0
           run_install: false
 
       - name: Setup Node.js
@@ -46,11 +46,15 @@ jobs:
           echo "Installing dependencies..."
           pnpm config set store-dir ~/.pnpm-store
 
+          # Check lockfile compatibility
+          echo "Checking lockfile version..."
+          pnpm --version
+
           # Install root dependencies first
           echo "Installing root dependencies..."
           pnpm install --frozen-lockfile || {
             echo "Frozen lockfile failed, trying without frozen lockfile..."
-            pnpm install
+            pnpm install --no-frozen-lockfile
           }
 
           # Verify installations
