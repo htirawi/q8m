@@ -8,39 +8,15 @@ import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 import { useAnalytics } from "./useAnalytics";
+import type {
+  BillingCycle,
+  CheckoutStep,
+  PaymentProvider,
+  PlanOption,
+  SavedPaymentMethod,
+  CheckoutSession,
+} from "@shared/types/checkout";
 import type { PlanTier } from "@shared/types/plan";
-
-export type BillingCycle = "monthly" | "annual";
-export type CheckoutStep = "plan_selection" | "checkout" | "processing" | "success" | "error";
-export type PaymentProvider = "stripe" | "paypal" | "aps" | "hyperpay";
-
-export interface IPlanOption {
-  tier: PlanTier;
-  cycle: BillingCycle;
-  price: number;
-  currency: string;
-  discountPercent?: number;
-  isRecommended?: boolean;
-}
-
-export interface ISavedPaymentMethod {
-  id: string;
-  provider: PaymentProvider;
-  last4: string;
-  type: "card" | "paypal";
-  expiryMonth?: number;
-  expiryYear?: number;
-}
-
-export interface ICheckoutSession {
-  sessionId: string;
-  planTier: PlanTier;
-  cycle: BillingCycle;
-  amount: number;
-  currency: string;
-  provider: PaymentProvider;
-  embedUrl?: string; // For iframe checkout
-}
 
 export function useCheckout() {
   const router = useRouter();
@@ -48,22 +24,22 @@ export function useCheckout() {
   const { trackGenericEvent } = useAnalytics();
 
   const currentStep = ref<CheckoutStep>("plan_selection");
-  const selectedPlan = ref<IPlanOption | null>(null);
+  const selectedPlan = ref<PlanOption | null>(null);
   const selectedCycle = ref<BillingCycle>("annual");
   const couponCode = ref("");
-  const checkoutSession = ref<ICheckoutSession | null>(null);
+  const checkoutSession = ref<CheckoutSession | null>(null);
   const errorMessage = ref<string | null>(null);
   const isProcessing = ref(false);
 
   // Mock: In real app, fetch from API
-  const savedPaymentMethods = ref<ISavedPaymentMethod[]>([]);
+  const savedPaymentMethods = ref<SavedPaymentMethod[]>([]);
   const hasSavedPayment = computed(() => savedPaymentMethods.value.length > 0);
 
   /**
    * Available plan options
    * Maps to difficulty levels: free (Junior), intermediate (Intermediate), advanced (Senior), pro (Bundle)
    */
-  const planOptions = computed((): IPlanOption[] => [
+  const planOptions = computed((): PlanOption[] => [
     {
       tier: "intermediate",
       cycle: "monthly",
@@ -111,7 +87,7 @@ export function useCheckout() {
   /**
    * Get plan option by tier and cycle
    */
-  const getPlanOption = (tier: PlanTier, cycle: BillingCycle): IPlanOption | undefined => {
+  const getPlanOption = (tier: PlanTier, cycle: BillingCycle): PlanOption | undefined => {
     return planOptions.value.find((p) => p.tier === tier && p.cycle === cycle);
   };
 

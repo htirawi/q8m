@@ -338,14 +338,14 @@ export interface LoginFormEmits {
   (e: "login-success"): void;
 }
 
-export interface UnifiedAuthFormData {
+export interface AuthenticationFormData {
   email: string;
   name: string;
   password: string;
   acceptTerms: boolean;
 }
 
-export interface UnifiedAuthFormEmits {
+export interface AuthenticationFormEmits {
   (e: "oauth-login", provider: "google"): void;
   (e: "show-forgot-password"): void;
   (e: "login-success"): void;

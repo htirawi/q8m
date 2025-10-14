@@ -3,10 +3,10 @@ import { Question } from "@models/Question.js";
 import type { FastifyInstance } from "fastify";
 import { z } from "zod";
 import { zodToJsonSchema } from "zod-to-json-schema";
-
+import { QuestionResponseSchema } from "@shared/schemas/question.schema.js";
 
 const getQuestionsSchema = z.object({
-  framework: z.enum(["angular", "react", "nextjs", "redux"]).optional(),
+  framework: z.enum(["angular", "react", "vue", "nextjs", "redux", "random"]).optional(),
   level: z.enum(["junior", "intermediate", "senior"]).optional(),
   category: z.string().optional(),
   difficulty: z.enum(["easy", "medium", "hard"]).optional(),
@@ -169,7 +169,87 @@ export default async function questionRoutes(fastify: FastifyInstance) {
     }
   );
 
-  // Submit quiz answer
+  // Quiz questions endpoint (for quiz mode)
+  fastify.get(
+    "/quiz/questions",
+    {
+      schema: {
+        description: "Get questions for quiz mode by level",
+        tags: ["questions"],
+        querystring: zodToJsonSchema(
+          z.object({
+            level: z.enum(["junior", "intermediate", "senior"]),
+            limit: z.coerce.number().min(1).max(50).default(10),
+            framework: z.enum(["angular", "react", "vue", "nextjs", "redux", "random"]).optional(),
+          })
+        ),
+        response: {
+          200: zodToJsonSchema(
+            z.object({
+              questions: z.array(QuestionResponseSchema),
+              total: z.number(),
+              hasMore: z.boolean(),
+            })
+          ),
+        },
+      },
+      preHandler: [fastify.authenticate],
+    },
+    async (request, reply) => {
+      try {
+        const { level, limit, framework } = request.query;
+
+        // Map quiz levels to difficulty levels
+        const levelToDifficulty = {
+          junior: "easy",
+          intermediate: "medium",
+          senior: "hard",
+        };
+
+        const difficulty = levelToDifficulty[level];
+
+        // Build query
+        const query: any = {
+          difficulty,
+          isActive: true,
+        };
+
+        if (framework) {
+          query.framework = framework;
+        }
+
+        // Get questions
+        const questions = await Question.find(query).sort({ createdAt: -1 }).limit(limit).lean();
+
+        // Get total count
+        const total = await Question.countDocuments(query);
+
+        return {
+          questions: questions.map((q) => ({
+            _id: q._id.toString(),
+            id: q.id,
+            type: q.type,
+            content: q.content,
+            difficulty: q.difficulty,
+            level: q.level,
+            framework: q.framework,
+            category: q.category,
+            tags: q.tags,
+            points: q.points,
+            createdAt: q.createdAt,
+            updatedAt: q.updatedAt,
+            isActive: q.isActive,
+          })),
+          total,
+          hasMore: questions.length < total,
+        };
+      } catch (error) {
+        fastify.log.error(error);
+        reply.status(500);
+        return { message: "Failed to fetch quiz questions" };
+      }
+    }
+  );
   fastify.post(
     "/submit",
     {

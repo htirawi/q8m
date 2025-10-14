@@ -112,7 +112,7 @@
     />
 
     <!-- Convert Modal -->
-    <ConvertModal
+    <PlanConversionModal
       v-if="upsellModalContext"
       :is-visible="isUpsellModalVisible"
       :difficulty="upsellModalContext.difficulty"
@@ -136,7 +136,7 @@ import { usePlanEntry } from "@/composables/usePlanEntry";
 import LevelCard from "@/components/study/LevelCard.vue";
 import StartStudyingCta from "@/components/study/StartStudyingCta.vue";
 import StickyStartBar from "@/components/study/StickyStartBar.vue";
-import ConvertModal from "@/components/marketing/ConvertModal.vue";
+import PlanConversionModal from "@/components/marketing/PlanConversionModal.vue";
 import type { DifficultyLevel } from "@/types/plan/access";
 import type { PlanTier } from "@shared/types/plan";
 

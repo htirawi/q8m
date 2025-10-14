@@ -24,6 +24,26 @@
     "privacy": "Privacy",
     "terms": "Terms"
   },
+  "levelSelection": {
+    "title": "Choose Your Learning Path",
+    "subtitle": "Select your experience level and preferred learning mode",
+    "chooseLevel": "Choose Your Level",
+    "chooseMode": "Choose Your Mode",
+    "studyMode": {
+      "title": "Study Mode",
+      "description": "Learn at your own pace with detailed explanations",
+      "feature1": "Self-paced learning",
+      "feature2": "Reveal answers anytime",
+      "feature3": "No time limit"
+    },
+    "quizMode": {
+      "title": "Quiz Mode",
+      "description": "Test your knowledge with timed challenges",
+      "feature1": "Timed questions",
+      "feature2": "Scored performance",
+      "feature3": "Final results & analytics"
+    }
+  },
   "home": {
     "hero": {
       "badge": "🚀 Professional Interview Prep",
@@ -238,6 +258,22 @@
       "savingsMessage": "Save over 2 months with annual billing",
       "popularBadge": "Most Popular",
       "viewAllPlans": "View All Plans & Features",
+      "billing": {
+        "perMonth": "/month",
+        "perYear": "/year"
+      },
+      "payment": {
+        "newCard": "New Credit Card",
+        "savedCard": "Use Saved Card",
+        "providerNote": "Secure payment processing powered by Stripe",
+        "processing": "Processing payment...",
+        "confirmSubscribe": "Subscribe Now"
+      },
+      "reassurance": {
+        "cancelAnytime": "Cancel anytime",
+        "securePayments": "Secure payments",
+        "noHiddenFees": "No hidden fees"
+      },
       "free": {
         "name": "Free",
         "description": "Perfect for beginners",
@@ -1028,7 +1064,8 @@
     },
     "loading": "Loading questions...",
     "backToSelection": "Back to Selection",
-    "answer": "Answer",
+    "typeAnswer": "Type your answer:",
+    "fillBlankPlaceholder": "Type your answer here...",
     "revealAnswer": "Reveal Answer",
     "previous": "Previous",
     "next": "Next",
@@ -1036,6 +1073,8 @@
     "bookmark": "Bookmark",
     "bookmarked": "Bookmarked",
     "quickNavigation": "Quick Navigation",
+    "loadMore": "Load More Questions",
+    "remaining": "remaining",
     "levelCard": {
       "currentPlan": "Current Plan",
       "clickToUnlock": "Click to unlock",

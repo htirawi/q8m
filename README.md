@@ -1,583 +1,149 @@
-# q8m (cue-eight-em)
+# Quiz Platform
 
-**Professional Vue 3 interview preparation platform with comprehensive question banks and advanced analytics**
+A modern, multilingual quiz and study platform built with Vue 3, TypeScript, and Node.js.
 
-منصة تحضير مهنية للمقابلات التقنية مبنية بـ Vue 3، تقدم بنوك أسئلة شاملة وأدوات تحليل متقدمة
+## 🚀 Features
 
-[![CI](https://github.com/htirawi/q8m/actions/workflows/ci.yml/badge.svg)](https://github.com/htirawi/q8m/actions/workflows/ci.yml)
-[![Test Coverage](https://img.shields.io/badge/coverage-95%25-brightgreen.svg)](https://github.com/htirawi/q8m/actions)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Last Commit](https://img.shields.io/github/last-commit/htirawi/q8m.svg)](https://github.com/htirawi/q8m/commits/main)
-[![Issues](https://img.shields.io/github/issues/htirawi/q8m.svg)](https://github.com/htirawi/q8m/issues)
-[![PRs](https://img.shields.io/github/issues-pr/htirawi/q8m.svg)](https://github.com/htirawi/q8m/pulls)
+- **Multi-Framework Support**: Angular, React, Vue.js, Next.js, Redux
+- **Multilingual**: English and Arabic (RTL) support
+- **Study & Quiz Modes**: Interactive learning with progress tracking
+- **Tiered Access**: Free, Intermediate, Senior, and Bundle tiers
+- **Payment Integration**: Stripe, PayPal, and regional payment providers
+- **PWA Support**: Progressive Web App capabilities
+- **Responsive Design**: Mobile-first approach with Tailwind CSS
 
-## Overview
+## 🏗️ Architecture
 
-q8m is a bilingual (English/Arabic) interview preparation platform built with Vue 3, featuring comprehensive question banks across Angular, Vue.js, Next.js, and Redux frameworks. The platform offers tiered access with server-side entitlements, localized pricing in JOD/SAR/USD, and secure payment processing through PayPal and APS gateways.
-
-### العربية | Arabic
-
-منصة تحضير مهنية للمقابلات التقنية مبنية بـ Vue 3، تقدم بنوك أسئلة شاملة عبر أطر Angular و Vue.js و Next.js و Redux. المنصة توفر وصول متدرج مع صلاحيات من جانب الخادم، وأسعار محلية بالدينار الأردني والريال السعودي والدولار الأمريكي، ومعالجة دفع آمنة عبر PayPal و APS.
-
-## Key Features
-
-- **Multi-Framework Support**: 500+ questions across Angular, Vue.js, Next.js, Redux
-- **Bilingual Interface**: Full English/Arabic support with RTL layout
-- **Tiered Access**: Junior (free), Intermediate ($5), Senior ($5), Bundle ($8)
-- **Localized Pricing**: Dynamic currency conversion (JOD/SAR/USD) with daily FX rates
-- **Secure Payments**: PayPal + APS/HyperPay integration with webhooks
-- **Legal Compliance**: Comprehensive Privacy Policy and Terms of Service (bilingual)
-- **Mobile-First Design**: Responsive PWA with offline capabilities
-- **Accessibility**: WCAG AA compliant with screen reader support
-- **Performance**: Optimized Core Web Vitals (LCP < 2.5s, CLS < 0.1)
-- **Code Quality**: Enforced destructuring patterns and optional chaining for safety
-
-## Screenshots
-
-<!-- Screenshots will be added as the platform develops -->
-
-![Desktop Light Mode](docs/screenshots/desktop-light.png "q8m Desktop Interface - Light Mode")
-![Desktop Dark Mode](docs/screenshots/desktop-dark.png "q8m Desktop Interface - Dark Mode")
-![Mobile Interface](docs/screenshots/mobile.png "q8m Mobile Interface")
-![Arabic RTL Layout](docs/screenshots/arabic-rtl.png "q8m Arabic RTL Layout")
-
-## Architecture & Stack
+### Monorepo Structure
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                        CLIENT (Vue 3)                          │
-├─────────────────────────────────────────────────────────────────┤
-│  Vue 3.4+ │ TypeScript │ Pinia │ Vue Router │ vue-i18n │ Vite  │
-│  Tailwind CSS │ vee-validate │ Zod │ Vitest │ Playwright     │
-└─────────────────────────────────────────────────────────────────┘
-                                │ HTTPS/WSS
-                                │
-┌─────────────────────────────────────────────────────────────────┐
-│                        SERVER (Fastify)                        │
-├─────────────────────────────────────────────────────────────────┤
-│  Fastify 4.24+ │ TypeScript │ MongoDB │ JWT │ OAuth │ Zod     │
-│  PayPal │ APS │ HyperPay │ Rate Limiting │ CSRF │ CSP        │
-└─────────────────────────────────────────────────────────────────┘
-                                │
-┌─────────────────────────────────────────────────────────────────┐
-│                    EXTERNAL SERVICES                           │
-├─────────────────────────────────────────────────────────────────┤
-│  MongoDB Atlas │ PayPal │ APS Gateway │ HyperPay │ Google OAuth │
-│  FX API │ Email Service │ Webhooks                             │
-└─────────────────────────────────────────────────────────────────┘
+├── client/          # Vue 3 frontend application
+├── server/          # Node.js/Express backend API
+├── shared/          # Shared types and schemas
+├── local-data/      # Local development content (git-ignored)
+└── docs/           # Documentation
 ```
 
 ### Tech Stack
 
-**Frontend:**
+- **Frontend**: Vue 3 + TypeScript + Vite + Tailwind CSS
+- **Backend**: Node.js + Express + MongoDB + Mongoose
+- **Testing**: Vitest + Playwright + Testing Library
+- **State Management**: Pinia
+- **Internationalization**: Vue I18n
+- **Payment**: Stripe + PayPal + Regional providers
 
-- Vue 3.4+ (Composition API)
-- TypeScript 5.6+ (strict mode)
-- Vite 5.4+ (build tool)
-- Pinia 2.1+ (state management)
-- Vue Router 4.2+ (routing)
-- vue-i18n 9.8+ (internationalization)
-- Tailwind CSS 3.4+ (styling)
-- vee-validate 4.11+ + Zod 3.22+ (validation)
-- Vitest 2.1+ (testing)
-- Playwright 1.40+ (E2E testing)
-
-**Backend:**
-
-- Fastify 4.24+ (web framework)
-- TypeScript 5.6+ (strict mode)
-- MongoDB Atlas + Mongoose 8.0+ (database)
-- JWT + OAuth (Google authentication)
-- PayPal + APS/HyperPay (payments)
-- Zod 3.22+ (validation)
-- Rate limiting, CSRF, CSP (security)
-
-## Project Structure
-
-```
-q8m/
-├── client/                          # Vue 3 Frontend
-│   ├── src/
-│   │   ├── components/              # Reusable UI components
-│   │   ├── features/                # Feature-based modules
-│   │   │   ├── auth/                # Authentication components
-│   │   │   ├── pricing/             # Pricing & checkout
-│   │   │   ├── quiz/                # Quiz interface
-│   │   │   ├── account/             # User account management
-│   │   │   └── legal/               # Legal pages (Privacy, Terms)
-│   │   ├── stores/                  # Pinia stores
-│   │   ├── composables/             # Vue composables
-│   │   ├── router/                  # Vue Router configuration
-│   │   ├── locales/                 # i18n translations (en.json, ar.json)
-│   │   ├── styles/                  # Global styles & tokens
-│   │   └── types/                   # TypeScript type definitions
-│   ├── tests/                       # Test files
-│   ├── package.json                 # Client dependencies
-│   └── vite.config.ts               # Vite configuration
-│
-├── server/                          # Fastify Backend
-│   ├── src/
-│   │   ├── routes/                  # API route handlers
-│   │   ├── services/                # Business logic services
-│   │   ├── schemas/                 # Zod validation schemas
-│   │   ├── middlewares/             # Fastify plugins/hooks
-│   │   ├── models/                  # MongoDB models
-│   │   └── utils/                   # Utility functions
-│   ├── package.json                 # Server dependencies
-│   └── tsconfig.json                # TypeScript configuration
-│
-├── shared/                          # Shared Types & Constants
-│   ├── types/                       # Shared TypeScript types
-│   ├── schemas/                     # Shared Zod schemas
-│   └── constants/                    # Shared constants
-│       ├── currencies.ts            # Currency definitions
-│       ├── entitlements.ts          # Access tier definitions
-│       └── locales.ts               # Locale configurations
-│
-├── docs/                           # Documentation
-├── scripts/                        # Build & deployment scripts
-├── docker-compose.yml              # Docker configuration
-└── package.json                    # Root package configuration
-```
-
-## Install & Run
+## 🚀 Quick Start
 
 ### Prerequisites
 
-- **Node.js**: >= 18.0.0
-- **PNPM**: >= 8.0.0 (recommended) or NPM
-- **MongoDB**: Atlas cluster or local MongoDB instance
+- Node.js 18+
+- pnpm (recommended)
+- MongoDB
 
-### Quick Start
+### Installation
 
 ```bash
-# Clone repository
-git clone https://github.com/htirawi/q8m.git
-cd q8m
+# Clone the repository
+git clone <repository-url>
+cd quiz-platform
 
 # Install dependencies
 pnpm install
 
-# Bootstrap both client and server
-pnpm run bootstrap
-
-# Set up environment variables
-cp client/.env.example client/.env
-cp server/.env.example server/.env
-# Configure your actual values in the .env files
-
-# Seed database with sample data
-cd server && pnpm run db:seed
-
 # Start development servers
-pnpm dev                    # Starts client on :5173
-cd server && pnpm dev       # Starts server on :3000
+pnpm dev
 ```
 
-### Common Scripts
+### Environment Setup
 
-| Command           | Description               | Location |
-| ----------------- | ------------------------- | -------- |
-| `pnpm dev`        | Start development server  | Client   |
-| `pnpm build`      | Build for production      | Client   |
-| `pnpm preview`    | Preview production build  | Client   |
-| `pnpm test`       | Run unit tests            | Client   |
-| `pnpm test:e2e`   | Run E2E tests             | Client   |
-| `pnpm lint`       | Lint code                 | Both     |
-| `pnpm type-check` | TypeScript type checking  | Both     |
-| `pnpm validate`   | Run all validation checks | Both     |
+1. Copy `.env.example` to `.env` in both `client/` and `server/` directories
+2. Configure your MongoDB connection and API keys
+3. Run database migrations: `pnpm migrate`
 
-## Environment Variables
+## 📁 Project Structure
 
-q8m uses comprehensive environment configuration templates for both client and server. Copy the example files and configure with your actual values:
+### Client (`/client`)
 
-### Quick Setup
-
-```bash
-# Copy environment templates
-cp client/.env.example client/.env
-cp server/.env.example server/.env
-
-# Generate secure secrets
-openssl rand -base64 32 | tr -d "=+/" | cut -c1-32  # For JWT_SECRET
-openssl rand -hex 32                                # For CSRF_SECRET
+```
+src/
+├── components/       # Reusable UI components
+├── features/         # Feature-based modules
+├── composables/      # Vue 3 composables
+├── stores/          # Pinia stores
+├── services/        # API services
+├── types/           # TypeScript type definitions
+├── utils/           # Utility functions
+├── config/          # Configuration files
+└── assets/          # Static assets
 ```
 
-### Configuration Files
+### Server (`/server`)
 
-- **[client/.env.example](client/.env.example)** - 25 VITE\_ prefixed variables for Vue 3 frontend
-- **[server/.env.example](server/.env.example)** - 104 environment variables for Fastify backend
+```
+src/
+├── routes/          # API route handlers
+├── models/          # MongoDB models
+├── middleware/      # Express middleware
+├── services/        # Business logic
+├── migrations/      # Database migrations
+└── utils/           # Server utilities
+```
 
-### Key Variables
-
-**Client (Vue 3):**
-
-- `VITE_CLIENT_URL` - Application URL (Required)
-- `VITE_API_BASE_URL` - API endpoint (Required)
-- `VITE_GOOGLE_CLIENT_ID` - Google OAuth (Required)
-- `VITE_PAYPAL_CLIENT_ID` - PayPal integration (Required)
-- `VITE_APS_MERCHANT_ID` - APS payment gateway (Required)
-
-**Server (Fastify):**
-
-- `NODE_ENV` - Environment (development|staging|production)
-- `MONGODB_URI` - Database connection (Required)
-- `JWT_SECRET` - Authentication secret (Required, 32+ chars)
-- `GOOGLE_CLIENT_ID` - Google OAuth (Required)
-- `PAYPAL_CLIENT_ID` - PayPal integration (Required)
-- `SMTP_HOST` - Email service (Required)
-
-### Provider Setup
-
-**Payment Gateways:**
-
-- **PayPal**: [Developer Console](https://developer.paypal.com/)
-- **APS**: [Amazon Payment Services](https://paymentservices.amazon.com/)
-- **HyperPay**: [HyperPay Portal](https://hyperpay.com/)
-
-**OAuth Providers:**
-
-- **Google**: [Google Cloud Console](https://console.developers.google.com/)
-
-**Email Service:**
-
-- **Gmail**: Use App Passwords (not regular password)
-- **SendGrid**: API key-based authentication
-- **Mailgun**: SMTP or API key
-
-**Currency Exchange:**
-
-- **ExchangeRate-API**: [Free tier available](https://exchangerate-api.com/)
-- **Fixer.io**: [Paid service](https://fixer.io/)
-- **CurrencyLayer**: [Free tier available](https://currencylayer.com/)
-
-> **Security Note**: Never commit actual `.env` files with real secrets. Only `.env.example` templates are tracked in git.
-
-## Usage
-
-### Language & Localization
-
-- **English**: Access via `/en` routes with LTR layout
-- **Arabic**: Access via `/ar` routes with RTL layout
-- **Language Toggle**: Available in navigation header
-- **RTL Support**: Automatic layout direction switching
-
-### Currency & Pricing
-
-- **Auto-Detection**: Geographic location determines default currency
-- **Manual Override**: Users can switch between USD/JOD/SAR
-- **Real-Time Rates**: Daily FX rate updates with price snapshots
-- **Localized Display**: Prices shown in user's preferred currency
-- **Settlement Notes**: Shows "Estimated X / Billed in Y" if settlement differs
-
-### Access Tiers
-
-| Tier             | Price | Features                                        | Questions |
-| ---------------- | ----- | ----------------------------------------------- | --------- |
-| **Junior**       | Free  | Basic questions, progress tracking              | 100+      |
-| **Intermediate** | $5    | Advanced questions, analytics, bookmarks        | 300+      |
-| **Senior**       | $5    | Expert questions, mock interviews, custom plans | 500+      |
-| **Bundle**       | $8    | Everything + lifetime access, mentorship        | Unlimited |
-
-### Demo Flows
-
-1. **Signup → Verify → Login**
-   - Email/password registration
-   - Email verification required
-   - OAuth (Google) support
-
-2. **Payment Flow**
-   - PayPal checkout with redirect
-   - APS/HyperPay integration (Jordan/MENA region)
-   - Webhook confirmation
-   - Entitlement activation
-
-3. **Account Management**
-   - Subscription status on `/account`
-   - Billing history
-   - Plan upgrades/downgrades
-
-## Security, A11y, SEO, Performance
-
-### Security
-
-- **CSP/HSTS/CSRF**: Comprehensive security headers
-- **Rate Limiting**: API endpoint protection
-- **Server-Side Gating**: Entitlement validation
-- **PCI Compliance**: Payment data never stored locally
-- **Session Security**: HttpOnly, Secure cookies (SameSite=Lax) stored in MongoDB
-- **Webhook Security**: Idempotency and signature verification
-
-### Accessibility (WCAG AA)
-
-- **Screen Reader Support**: Proper ARIA labels and roles
-- **Keyboard Navigation**: Full keyboard accessibility
-- **Focus Management**: Visible focus indicators
-- **Color Contrast**: Meets WCAG AA requirements
-- **RTL Support**: Proper Arabic text direction
-- **ARIA Live Regions**: Dynamic error announcements
-
-### SEO
-
-- **Multi-Language**: `/en` and `/ar` routes with hreflang
-- **Meta Tags**: Canonical URLs, sitemap, robots.txt
-- **Schema Markup**: Product/Offer structured data with multi-currency pricing
-- **Performance**: Optimized Core Web Vitals
-
-### Performance
-
-- **Core Web Vitals**: LCP < 2.5s, CLS < 0.1
-- **Code Splitting**: Route-based dynamic imports
-- **Image Optimization**: WebP support with lazy loading
-- **Caching**: Service worker for offline functionality
-- **Font Strategy**: Preconnect to font providers
-- **Bundle Analysis**: Regular size monitoring
-
-## Testing & CI
-
-### Unit Testing
+## 🧪 Testing
 
 ```bash
-# Run unit tests
+# Unit tests
 pnpm test
 
-# Run with coverage
-pnpm test:coverage
-
-# Watch mode
-pnpm test:watch
-```
-
-### E2E Testing
-
-```bash
-# Run Playwright tests
+# E2E tests
 pnpm test:e2e
 
-# Run specific test suite
-pnpm test:e2e --grep "payment flow"
+# Test coverage
+pnpm test:coverage
 ```
 
-### Payment Testing
+## 🚀 Deployment
 
-- **PayPal Sandbox**: Use sandbox credentials for testing
-- **APS Testing**: Test environment with mock responses
-- **HyperPay Testing**: Sandbox environment for Jordan/MENA
-- **Webhook Testing**: Use ngrok for local webhook testing
-
-### CI Pipeline
-
-- **Linting**: ESLint + Prettier validation with destructuring rules
-- **Type Checking**: TypeScript strict mode
-- **Code Quality**: Enforced destructuring and optional chaining patterns
-- **Unit Tests**: Vitest with coverage reporting
-- **E2E Tests**: Playwright cross-browser testing
-- **Security**: Dependency vulnerability scanning
-- **Visual Regression**: Workflow path to be defined
-- **Lighthouse/Axe**: Workflow path to be defined
-
-## Code Quality
-
-### Quality Standards
-
-q8m maintains high code quality through automated tooling and strict policies:
-
-- **Zero Tolerance**: No ESLint errors, TypeScript errors, or console statements in production
-- **Dependency Hygiene**: Automated unused dependency detection and removal
-- **TODO Management**: All TODOs must be tracked in [CLEANUP.md](CLEANUP.md) with tickets
-- **Type Safety**: Strict TypeScript with no `any` types (except narrow scopes with rationale)
-- **Performance**: Bundle size monitoring and Core Web Vitals tracking
-
-### Local Quality Checks
-
-Run these commands before committing:
+### Production Build
 
 ```bash
-# Full validation pipeline
-pnpm validate
-
-# Individual checks
-pnpm typecheck    # TypeScript compilation
-pnpm lint         # ESLint + Prettier
-pnpm test:unit    # Unit tests
-pnpm build        # Production build
+pnpm build
 ```
 
-### Automated Quality Gates
-
-- **Pre-commit**: Lint-staged runs ESLint + Prettier on staged files
-- **Pre-push**: Full validation pipeline (typecheck → lint → test → build)
-- **CI/CD**: GitHub Actions runs complete quality pipeline on every PR
-- **Dependency Scanning**: Automated detection of unused dependencies
-
-### TODO Policy
-
-**No raw TODOs allowed**. All TODO comments must follow this format:
-
-```typescript
-// TODO(q8m-XXX): Description
-// Owner: Team Name
-// Scope: Component/Feature
-// Acceptance Criteria: Specific requirements
-// Priority: High/Medium/Low
-// Sprint: Sprint X
-```
-
-See [CLEANUP.md](CLEANUP.md) for all tracked items and progress.
-
-### Code Quality Metrics
-
-- **Bundle Size**: ~15-20% reduction achieved through dependency cleanup
-- **Build Time**: ~10-15% faster builds after optimization
-- **Technical Debt**: Reduced by ~70% through systematic cleanup
-- **Dependencies**: Removed 37+ unused dependencies across client/server
-
-## Contributing
-
-### Development Workflow
-
-1. **Fork** the repository
-2. **Create** feature branch: `git checkout -b feature/your-feature`
-3. **Make** changes following code style guidelines
-4. **Run** validation: `pnpm validate`
-5. **Commit** with conventional commits: `git commit -m "feat: add new feature"`
-6. **Push** and create pull request
-
-### Code Style
-
-- **ESLint/Prettier**: Automated formatting with strict rules
-- **TypeScript Strict**: No `any` types allowed
-- **Destructuring Patterns**: Object destructuring for parameters and local variables
-- **Optional Chaining**: Safe property access with `?.` and nullish coalescing `??`
-- **Vue 3 Reactivity**: Proper use of `toRefs()`/`storeToRefs()` to maintain reactivity
-- **Component Guidelines**: Small, focused, accessible components
-- **i18n Rules**: All user-facing text must be translatable
-
-### Pre-Push Validation
+### Docker
 
 ```bash
-# Run all validation checks
-pnpm pre-push
-
-# Individual checks
-pnpm lint
-pnpm type-check
-pnpm test
+docker-compose up -d
 ```
 
-### Documentation
+## 📚 Documentation
 
-- **[CONTRIBUTING.md](CONTRIBUTING.md)** - Detailed contribution guidelines
-- **[DESTRUCTURING_POLICY.md](DESTRUCTURING_POLICY.md)** - Destructuring and optional chaining guidelines
-- **[SECURITY.md](SECURITY.md)** - Security policy and reporting
-- **[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)** - Community guidelines
+- [Architecture](./docs/architecture/)
+- [API Documentation](./docs/server/)
+- [Development Guide](./docs/development/)
+- [Deployment Guide](./docs/deployment/)
 
-## Recent Updates
+## 🤝 Contributing
 
-### Latest Improvements (January 2025)
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/amazing-feature`
+3. Commit your changes: `git commit -m 'Add amazing feature'`
+4. Push to the branch: `git push origin feature/amazing-feature`
+5. Open a Pull Request
 
-- **✅ Terms of Service Page**: Added comprehensive bilingual Terms of Service with 13 legal sections
-- **✅ Code Quality Enhancement**: Implemented destructuring patterns and optional chaining across entire codebase
-- **✅ ESLint Enforcement**: Added strict rules for destructuring and optional chaining with 100% compliance
-- **✅ Vue 3 Reactivity Safety**: Established guidelines for proper `toRefs()`/`storeToRefs()` usage
-- **✅ Legal Compliance**: Complete Privacy Policy and Terms of Service in English and Arabic
-- **✅ Documentation**: Comprehensive guides for destructuring patterns and Vue 3 reactivity safety
-
-### Key Technical Achievements
-
-- **Zero ESLint Violations**: Achieved 100% compliance with new code quality rules
-- **Production Ready**: All builds pass with TypeScript strict mode
-- **Vue 3 Optimized**: Proper reactivity preservation throughout refactoring
-- **Bilingual Legal Pages**: Professional legal content with RTL Arabic support
-- **Performance Maintained**: No regressions in build size or performance metrics
-
-## Roadmap & Changelog
-
-### Near-Term Milestones
-
-- **Q1 2025**: Auth polish, email verification improvements
-- **Q2 2025**: APS/HyperPay production deployment
-- **Q3 2025**: Admin console for content management
-- **Q4 2025**: Advanced analytics dashboard
-
-### Changelog
-
-- **[CHANGELOG.md](docs/changelog/CHANGELOG.md)** - Detailed version history
-- **SemVer**: Semantic versioning for releases
-- **Keep a Changelog**: Standard format compliance
-
-## License & Credits
-
-### License
+## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-### Credits
+## 🆘 Support
 
-- **Vue.js Team**: For the amazing Vue 3 framework
-- **Tailwind CSS**: For the utility-first CSS framework
-- **Fastify**: For the high-performance web framework
-- **MongoDB**: For the flexible document database
-- **PayPal & APS**: For secure payment processing
+For support and questions:
 
-### Trademarks
-
-- Vue.js is a trademark of Evan You
-- PayPal is a trademark of PayPal Holdings, Inc.
-- All other trademarks are property of their respective owners
+- Create an issue in this repository
+- Check the [documentation](./docs/)
+- Review [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines
 
 ---
 
-## العربية | Arabic
-
-### الاستخدام
-
-**اللغة والمحلية:**
-
-- **الإنجليزية**: الوصول عبر مسارات `/en` مع تخطيط من اليسار لليمين
-- **العربية**: الوصول عبر مسارات `/ar` مع تخطيط من اليمين لليسار
-- **تبديل اللغة**: متاح في شريط التنقل
-- **دعم RTL**: تبديل تلقائي لاتجاه التخطيط
-
-**العملة والأسعار:**
-
-- **الكشف التلقائي**: الموقع الجغرافي يحدد العملة الافتراضية
-- **التجاوز اليدوي**: يمكن للمستخدمين التبديل بين USD/JOD/SAR
-- **الأسعار الفورية**: تحديثات يومية لأسعار الصرف مع لقطات الأسعار
-- **العرض المحلي**: الأسعار تظهر بعملة المستخدم المفضلة
-
-### الميزات الأساسية
-
-- **دعم متعدد الأطر**: 500+ سؤال عبر Angular و Vue.js و Next.js و Redux
-- **واجهة ثنائية اللغة**: دعم كامل للإنجليزية والعربية مع تخطيط RTL
-- **وصول متدرج**: مبتدئ (مجاني)، متوسط (5$)، متقدم (5$)، حزمة (8$)
-- **أسعار محلية**: تحويل عملة ديناميكي (JOD/SAR/USD) مع أسعار صرف يومية
-- **مدفوعات آمنة**: تكامل PayPal + APS/HyperPay مع webhooks
-- **الامتثال القانوني**: سياسة خصوصية شاملة وشروط الخدمة (ثنائية اللغة)
-- **تصميم محمول أولاً**: PWA متجاوب مع قدرات غير متصلة
-- **إمكانية الوصول**: متوافق مع WCAG AA مع دعم قارئ الشاشة
-- **الأداء**: محسن Core Web Vitals (LCP < 2.5s، CLS < 0.1)
-- **جودة الكود**: أنماط إعادة الهيكلة المطبقة والربط الاختياري للأمان
-
-### التثبيت والتشغيل
-
-```bash
-# استنساخ المستودع
-git clone https://github.com/htirawi/q8m.git
-cd q8m
-
-# تثبيت التبعيات
-pnpm install
-
-# بدء خوادم التطوير
-pnpm dev                    # يبدأ العميل على :5173
-cd server && pnpm dev       # يبدأ الخادم على :3000
-```
-
----
-
-**Built with ❤️ for the frontend developer community by [Hussein Tirawi](https://github.com/htirawi)**
-
-## Topics
-
-vue3, vite, fastify, mongodb, paypal, aps, hyperpay, payments, i18n, rtl, a11y, seo, multicurrency, pricing, education, tiers, entitlements, jordan, mena, typescript, pwa, interview-preparation, quiz-platform, frontend-development, technical-interviews
+Built with ❤️ using Vue 3 and modern web technologies.

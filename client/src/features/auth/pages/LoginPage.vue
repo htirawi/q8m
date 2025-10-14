@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRouter, useRoute } from "vue-router";
 
-import UnifiedAuthForm from "@/components/auth/UnifiedAuthForm.vue";
+import AuthenticationForm from "@/components/auth/AuthenticationForm.vue";
 import { useAuthRedirect } from "@/composables/useAuthRedirect";
 import { usePostLoginRouter } from "@/composables/usePostLoginRouter";
 
@@ -78,7 +78,7 @@ function handleRegistrationSuccess(_email: string) {
       <!-- Form Section -->
       <div class="login-form-container">
         <div class="form-card">
-          <UnifiedAuthForm
+          <AuthenticationForm
             @oauth-login="handleOAuthLogin"
             @login-success="handleLoginSuccess"
             @registration-success="handleRegistrationSuccess"

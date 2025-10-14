@@ -52,36 +52,54 @@ export const questionSchema = z.object({
   updatedAt: z.date(),
 });
 
-// Question creation schema
-export const createQuestionSchema = z
-  .object({
-    legacyId: z.number().positive().optional(),
-    framework: frameworkSchema,
-    level: questionLevelSchema,
-    type: questionTypeSchema,
-    category: z.string().min(1).optional(),
-    difficulty: questionDifficultySchema,
-    tags: z.array(z.string().min(1)),
-    points: z.number().positive().max(10),
-    content: questionContentSchema,
-    isActive: z.boolean().default(true),
-  })
-  .refine(
-    (data) => {
-      // Validate that multiple choice and multiple checkbox questions have options
-      if (data.type === "multiple-choice" || data.type === "multiple-checkbox") {
-        return data.content.en.options && data.content.en.options.length >= 2;
-      }
-      return true;
-    },
-    {
-      message: "Multiple choice and multiple checkbox questions must have at least 2 options",
-      path: ["content", "en", "options"],
-    }
-  );
+// Question response schema (for API responses)
+export const QuestionResponseSchema = z.object({
+  _id: z.string(),
+  id: z.string(),
+  type: questionTypeSchema,
+  content: questionContentSchema,
+  difficulty: questionDifficultySchema,
+  level: questionLevelSchema,
+  framework: frameworkSchema,
+  category: z.string().optional(),
+  tags: z.array(z.string()),
+  points: z.number(),
+  createdAt: z.union([z.date(), z.string()]),
+  updatedAt: z.union([z.date(), z.string()]),
+  isActive: z.boolean(),
+});
 
-// Question update schema
-export const updateQuestionSchema = createQuestionSchema.partial();
+// Base question object schema (without refinements)
+const baseQuestionObjectSchema = z.object({
+  legacyId: z.number().positive().optional(),
+  framework: frameworkSchema,
+  level: questionLevelSchema,
+  type: questionTypeSchema,
+  category: z.string().min(1).optional(),
+  difficulty: questionDifficultySchema,
+  tags: z.array(z.string().min(1)),
+  points: z.number().positive().max(10),
+  content: questionContentSchema,
+  isActive: z.boolean().default(true),
+});
+
+// Question creation schema with validation
+export const createQuestionSchema = baseQuestionObjectSchema.refine(
+  (data) => {
+    // Validate that multiple choice and multiple checkbox questions have options
+    if (data.type === "multiple-choice" || data.type === "multiple-checkbox") {
+      return data.content.en.options && data.content.en.options.length >= 2;
+    }
+    return true;
+  },
+  {
+    message: "Multiple choice and multiple checkbox questions must have at least 2 options",
+    path: ["content", "en", "options"],
+  }
+);
+
+// Question update schema (partial, without strict validation)
+export const updateQuestionSchema = baseQuestionObjectSchema.partial();
 
 // Quiz session schema
 export const quizSessionSchema = z.object({
@@ -216,6 +234,7 @@ export type Framework = z.infer<typeof frameworkSchema>;
 export type QuizOption = z.infer<typeof quizOptionSchema>;
 export type QuestionContent = z.infer<typeof questionContentSchema>;
 export type Question = z.infer<typeof questionSchema>;
+export type QuestionResponse = z.infer<typeof QuestionResponseSchema>;
 export type CreateQuestionRequest = z.infer<typeof createQuestionSchema>;
 export type UpdateQuestionRequest = z.infer<typeof updateQuestionSchema>;
 export type QuizSession = z.infer<typeof quizSessionSchema>;

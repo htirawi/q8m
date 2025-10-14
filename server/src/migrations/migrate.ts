@@ -17,6 +17,7 @@ import { connect } from "mongoose";
 
 import { migrate001 } from "./001_update_user_schema.js";
 import { migrate002 } from "./002_seed_questions.js";
+import { migrate003 } from "./003_seed_migrated_questions.js";
 
 interface Migration {
   name: string;
@@ -34,6 +35,11 @@ const migrations: Migration[] = [
     name: "Seed Questions Database",
     version: "002",
     run: migrate002,
+  },
+  {
+    name: "Seed Migrated Questions from angular-test",
+    version: "003",
+    run: migrate003,
   },
 ];
 

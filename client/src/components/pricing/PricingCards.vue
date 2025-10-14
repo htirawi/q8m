@@ -7,7 +7,7 @@ import { usePricingRoute } from '@/composables/usePricingRoute';
 import { useAnalytics } from '@/composables/useAnalytics';
 import { useCheckout } from '@/composables/useCheckout';
 import PlanCard from '@/components/pricing/PlanCard.vue';
-import CheckoutModal from '@/components/marketing/CheckoutModal.vue';
+import PaymentCheckoutModal from '@/components/marketing/PaymentCheckoutModal.vue';
 import type { BillingCycle, PlanId } from '@/types/pricing';
 
 const router = useRouter();
@@ -73,11 +73,15 @@ const handlePlanSelect = (planId: PlanId, billing: BillingCycle) => {
     checkoutPlanId.value = planId;
     checkoutBilling.value = billing;
 
-    // Pre-select plan in checkout composable
-    selectCheckoutPlan(planId as any, billing);
+    // Convert PlanId to PlanTier for checkout
+    const plan = pricingPlans.value.find((p) => p.id === planId);
+    if (plan) {
+      // Pre-select plan in checkout composable using the backend tier
+      selectCheckoutPlan(plan.tier, billing);
 
-    // Show modal
-    showCheckoutModal.value = true;
+      // Show modal
+      showCheckoutModal.value = true;
+    }
   }
 };
 
@@ -128,25 +132,15 @@ defineOptions({
     <!-- Billing toggle -->
     <div class="pricing-cards__toggle-section">
       <div class="pricing-cards__toggle-wrapper">
-        <button
-          type="button"
-          class="pricing-cards__toggle-btn"
-          :class="{ 'pricing-cards__toggle-btn--active': billingCycle === 'monthly' }"
-          @click="toggleBilling('monthly')"
-          data-testid="toggle-monthly"
-          :aria-pressed="billingCycle === 'monthly'"
-        >
+        <button type="button" class="pricing-cards__toggle-btn"
+          :class="{ 'pricing-cards__toggle-btn--active': billingCycle === 'monthly' }" @click="toggleBilling('monthly')"
+          data-testid="toggle-monthly" :aria-pressed="billingCycle === 'monthly'">
           {{ t('pricing.billing.monthly') }}
         </button>
 
-        <button
-          type="button"
-          class="pricing-cards__toggle-btn"
-          :class="{ 'pricing-cards__toggle-btn--active': billingCycle === 'annual' }"
-          @click="toggleBilling('annual')"
-          data-testid="toggle-annual"
-          :aria-pressed="billingCycle === 'annual'"
-        >
+        <button type="button" class="pricing-cards__toggle-btn"
+          :class="{ 'pricing-cards__toggle-btn--active': billingCycle === 'annual' }" @click="toggleBilling('annual')"
+          data-testid="toggle-annual" :aria-pressed="billingCycle === 'annual'">
           {{ t('pricing.billing.yearly') }}
           <span v-if="savingsPercent > 0" class="pricing-cards__toggle-badge">
             {{ t('pricing.billing.savePercent', { percent: savingsPercent }) }}
@@ -162,16 +156,9 @@ defineOptions({
 
     <!-- Cards grid -->
     <div class="pricing-cards__grid">
-      <PlanCard
-        v-for="plan in pricingPlans"
-        :key="plan.id"
-        :plan="plan"
-        :billing="billingCycle"
-        :featured="plan.metadata.featured"
-        :selected="selectedPlan === plan.id"
-        :show-social-proof="plan.id === 'intermediate'"
-        @select="handlePlanSelect"
-      />
+      <PlanCard v-for="plan in pricingPlans" :key="plan.id" :plan="plan" :billing="billingCycle"
+        :featured="plan.metadata.featured" :selected="selectedPlan === plan.id"
+        :show-social-proof="plan.id === 'intermediate'" @select="handlePlanSelect" />
     </div>
 
     <!-- Social Proof Banner -->
@@ -191,34 +178,27 @@ defineOptions({
       <div class="pricing-cards__trust-items">
         <div class="pricing-cards__trust-item">
           <svg class="pricing-cards__trust-icon" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-            <path
-              fill-rule="evenodd"
+            <path fill-rule="evenodd"
               d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-              clip-rule="evenodd"
-            />
+              clip-rule="evenodd" />
           </svg>
           <span>{{ t('pricing.trust.secure') }}</span>
         </div>
         <div class="pricing-cards__trust-item">
           <svg class="pricing-cards__trust-icon" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
             <path
-              d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z"
-            />
-            <path
-              fill-rule="evenodd"
+              d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z" />
+            <path fill-rule="evenodd"
               d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z"
-              clip-rule="evenodd"
-            />
+              clip-rule="evenodd" />
           </svg>
           <span>{{ t('pricing.trust.moneyBack') }}</span>
         </div>
         <div class="pricing-cards__trust-item">
           <svg class="pricing-cards__trust-icon" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-            <path
-              fill-rule="evenodd"
+            <path fill-rule="evenodd"
               d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 100-2 1 1 0 000 2zm7-1a1 1 0 11-2 0 1 1 0 012 0zm-.464 5.535a1 1 0 10-1.415-1.414 3 3 0 01-4.242 0 1 1 0 00-1.415 1.414 5 5 0 007.072 0z"
-              clip-rule="evenodd"
-            />
+              clip-rule="evenodd" />
           </svg>
           <span>{{ t('pricing.trust.cancel') }}</span>
         </div>
@@ -226,13 +206,8 @@ defineOptions({
     </div>
 
     <!-- Checkout Modal -->
-    <CheckoutModal
-      :show="showCheckoutModal"
-      :plan-id="checkoutPlanId"
-      :billing="checkoutBilling"
-      @close="handleCheckoutClose"
-      @success="handleCheckoutSuccess"
-    />
+    <PaymentCheckoutModal :show="showCheckoutModal" :plan-id="checkoutPlanId" :billing="checkoutBilling"
+      @close="handleCheckoutClose" @success="handleCheckoutSuccess" />
   </div>
 </template>
 
@@ -301,7 +276,7 @@ defineOptions({
 }
 
 /* For exactly 3 items, use optimal spacing */
-.pricing-cards__grid > * {
+.pricing-cards__grid>* {
   @apply max-w-lg mx-auto w-full;
   @apply md:max-w-none;
 }
@@ -358,6 +333,7 @@ defineOptions({
     opacity: 0;
     transform: translateY(-4px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -387,7 +363,7 @@ defineOptions({
     @apply gap-6;
   }
 
-  .pricing-cards__grid > * {
+  .pricing-cards__grid>* {
     @apply max-w-xl;
   }
 
@@ -398,6 +374,7 @@ defineOptions({
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
+
   .pricing-cards__toggle-btn,
   .animate-fade-in {
     @apply transition-none;

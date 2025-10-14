@@ -4,11 +4,13 @@ import type { FastifyPluginAsync, FastifyRequest } from "fastify";
 import type { PlanTier } from "../../../shared/types/plan.js";
 
 interface AuthenticatedRequest extends FastifyRequest {
-  user: {
-    userId: string;
+  authUser: {
+    id: string;
     email: string;
+    name: string;
     role: string;
     entitlements: string[];
+    isEmailVerified: boolean;
   };
 }
 
@@ -24,7 +26,7 @@ const plansRoutes: FastifyPluginAsync = async (fastify) => {
     },
     async (request: FastifyRequest, reply) => {
       const authRequest = request as AuthenticatedRequest;
-      const { entitlements } = authRequest.user;
+      const { entitlements } = authRequest.authUser;
 
       // Map entitlements to plan tier
       // Entitlements: ["JUNIOR"] -> free, ["INTERMEDIATE"] -> intermediate, ["SENIOR"] -> advanced, ["BUNDLE"] -> pro
@@ -71,7 +73,7 @@ const plansRoutes: FastifyPluginAsync = async (fastify) => {
       return reply.code(200).send({
         success: true,
         plan: {
-          id: `plan-${authRequest.user.userId}`,
+          id: `plan-${authRequest.authUser.id}`,
           tier,
           name: tier,
           displayName,

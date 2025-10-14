@@ -43,10 +43,14 @@ const useNewPaymentMethod = ref(false);
 
 // Computed
 const formattedPrice = computed(() => {
-  if (!selectedPlan.value) return '$0';
+  if (!selectedPlan.value) {
+    return '$0';
+  }
+
   const price = selectedCycle.value === 'monthly'
     ? selectedPlan.value.price
     : Math.round(selectedPlan.value.price * 12 * (1 - (selectedPlan.value.discountPercent || 0) / 100));
+
   return `$${price}`;
 });
 
@@ -55,6 +59,17 @@ const billingLabel = computed(() => {
     ? t('pricing.billing.perMonth')
     : t('pricing.billing.perYear');
 });
+
+// Get display name for plan tier
+const getPlanDisplayName = (tier: string) => {
+  const tierMap: Record<string, string> = {
+    'intermediate': t('plans.intermediate.title'),
+    'advanced': t('plans.senior.title'),
+    'pro': t('plans.bundle.title'),
+    'free': t('plans.junior.title'),
+  };
+  return tierMap[tier] || tier;
+};
 
 // Methods
 const handleClose = () => {
@@ -101,49 +116,28 @@ watch(() => props.show, (isOpen) => {
 });
 
 defineOptions({
-  name: 'CheckoutModal',
+  name: 'PaymentCheckoutModal',
 });
 </script>
 
 <template>
   <Teleport to="body">
     <Transition name="modal-fade">
-      <div
-        v-if="show"
-        class="checkout-modal-overlay"
-        @click.self="handleClose"
-        role="dialog"
-        aria-modal="true"
-        :aria-label="t('plans.checkout.title')"
-      >
+      <div v-if="show" class="checkout-modal-overlay" @click.self="handleClose" role="dialog" aria-modal="true"
+        :aria-label="t('plans.checkout.title')">
         <div class="checkout-modal">
           <!-- Close button -->
-          <button
-            type="button"
-            class="checkout-modal__close"
-            @click="handleClose"
-            :aria-label="t('a11y.closeModal')"
-          >
-            <svg
-              class="checkout-modal__close-icon"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
+          <button type="button" class="checkout-modal__close" @click="handleClose" :aria-label="t('a11y.closeModal')">
+            <svg class="checkout-modal__close-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+              aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
 
           <!-- Header -->
           <div class="checkout-modal__header">
             <h2 class="checkout-modal__title">
-              {{ selectedPlan ? t(selectedPlan.tier) : t('pricing.plans.title') }}
+              {{ selectedPlan ? getPlanDisplayName(selectedPlan.tier) : t('plans.title') }}
             </h2>
             <p class="checkout-modal__price">
               <span class="checkout-modal__price-amount">{{ formattedPrice }}</span>
@@ -155,17 +149,10 @@ defineOptions({
           <div class="checkout-modal__content">
             <!-- Error message -->
             <div v-if="errorMessage" class="checkout-modal__error" role="alert">
-              <svg
-                class="checkout-modal__error-icon"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                aria-hidden="true"
-              >
-                <path
-                  fill-rule="evenodd"
+              <svg class="checkout-modal__error-icon" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                <path fill-rule="evenodd"
                   d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                  clip-rule="evenodd"
-                />
+                  clip-rule="evenodd" />
               </svg>
               <span>{{ errorMessage }}</span>
             </div>
@@ -175,13 +162,8 @@ defineOptions({
               <!-- Saved payment method -->
               <div v-if="hasSavedPayment && savedPaymentMethods.length > 0" class="checkout-modal__saved-payment">
                 <label class="checkout-modal__payment-option">
-                  <input
-                    type="radio"
-                    name="payment-method"
-                    :checked="!useNewPaymentMethod"
-                    @change="useNewPaymentMethod = false"
-                    class="checkout-modal__radio"
-                  />
+                  <input type="radio" name="payment-method" :checked="!useNewPaymentMethod"
+                    @change="useNewPaymentMethod = false" class="checkout-modal__radio" />
                   <div class="checkout-modal__payment-details">
                     <span class="checkout-modal__payment-label">
                       {{ t('pricing.payment.savedCard') }}
@@ -196,13 +178,8 @@ defineOptions({
               <!-- New payment method -->
               <div class="checkout-modal__new-payment">
                 <label class="checkout-modal__payment-option">
-                  <input
-                    type="radio"
-                    name="payment-method"
-                    :checked="useNewPaymentMethod || !hasSavedPayment"
-                    @change="useNewPaymentMethod = true"
-                    class="checkout-modal__radio"
-                  />
+                  <input type="radio" name="payment-method" :checked="useNewPaymentMethod || !hasSavedPayment"
+                    @change="useNewPaymentMethod = true" class="checkout-modal__radio" />
                   <span class="checkout-modal__payment-label">
                     {{ t('pricing.payment.newCard') }}
                   </span>
@@ -224,26 +201,12 @@ defineOptions({
             <!-- Processing state -->
             <div v-if="currentStep === 'processing'" class="checkout-modal__processing">
               <div class="checkout-modal__spinner" aria-live="polite" aria-busy="true">
-                <svg
-                  class="checkout-modal__spinner-icon"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <circle
-                    class="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    stroke-width="4"
-                  ></circle>
-                  <path
-                    class="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
+                <svg class="checkout-modal__spinner-icon" xmlns="http://www.w3.org/2000/svg" fill="none"
+                  viewBox="0 0 24 24" aria-hidden="true">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                  </path>
                 </svg>
               </div>
               <p class="checkout-modal__processing-text">
@@ -255,14 +218,11 @@ defineOptions({
           <!-- Footer -->
           <div class="checkout-modal__footer">
             <!-- CTA -->
-            <button
-              type="button"
-              class="checkout-modal__cta"
-              @click="handleCheckout"
-              :disabled="isProcessing"
-              data-testid="checkout-modal-cta"
-            >
-              {{ isProcessing ? t('pricing.payment.processing') : t('pricing.payment.confirmSubscribe', { amount: formattedPrice }) }}
+            <button type="button" class="checkout-modal__cta" @click="handleCheckout" :disabled="isProcessing"
+              data-testid="checkout-modal-cta">
+              {{ isProcessing ? t('pricing.payment.processing') : t('pricing.payment.confirmSubscribe', {
+                amount:
+              formattedPrice }) }}
             </button>
 
             <!-- Reassurance -->
@@ -491,6 +451,7 @@ defineOptions({
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
+
   .modal-fade-enter-active,
   .modal-fade-leave-active,
   .modal-fade-enter-active .checkout-modal,
