@@ -11,11 +11,13 @@ import { useAnalytics } from "./useAnalytics";
 import type {
   BillingCycle,
   CheckoutStep,
-  PaymentProvider,
   PlanOption,
   SavedPaymentMethod,
   CheckoutSession,
 } from "@shared/types/checkout";
+
+// Re-export BillingCycle for component usage
+export type { BillingCycle };
 import type { PlanTier } from "@shared/types/plan";
 
 export function useCheckout() {

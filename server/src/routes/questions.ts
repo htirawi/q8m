@@ -1,9 +1,9 @@
 import { authenticate } from "@middlewares/auth.middleware.js";
 import { Question } from "@models/Question.js";
+import { QuestionResponseSchema } from "@shared/schemas/question.schema.js";
 import type { FastifyInstance } from "fastify";
 import { z } from "zod";
 import { zodToJsonSchema } from "zod-to-json-schema";
-import { QuestionResponseSchema } from "@shared/schemas/question.schema.js";
 
 const getQuestionsSchema = z.object({
   framework: z.enum(["angular", "react", "vue", "nextjs", "redux", "random"]).optional(),
@@ -193,14 +193,18 @@ export default async function questionRoutes(fastify: FastifyInstance) {
           ),
         },
       },
-      preHandler: [fastify.authenticate],
+      preHandler: [authenticate],
     },
     async (request, reply) => {
       try {
-        const { level, limit, framework } = request.query;
+        const { level, limit, framework } = request.query as {
+          level: "junior" | "intermediate" | "senior";
+          limit: number;
+          framework?: "angular" | "react" | "vue" | "nextjs" | "redux" | "random";
+        };
 
         // Map quiz levels to difficulty levels
-        const levelToDifficulty = {
+        const levelToDifficulty: Record<"junior" | "intermediate" | "senior", string> = {
           junior: "easy",
           intermediate: "medium",
           senior: "hard",
@@ -209,7 +213,7 @@ export default async function questionRoutes(fastify: FastifyInstance) {
         const difficulty = levelToDifficulty[level];
 
         // Build query
-        const query: any = {
+        const query: Record<string, unknown> = {
           difficulty,
           isActive: true,
         };
@@ -225,8 +229,8 @@ export default async function questionRoutes(fastify: FastifyInstance) {
         const total = await Question.countDocuments(query);
 
         return {
-          questions: questions.map((q) => ({
-            _id: q._id.toString(),
+          questions: questions.map((q: Record<string, unknown>) => ({
+            _id: (q._id as { toString(): string }).toString(),
             id: q.id,
             type: q.type,
             content: q.content,

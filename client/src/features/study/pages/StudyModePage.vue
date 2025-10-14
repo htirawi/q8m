@@ -91,13 +91,13 @@
           </div>
 
           <!-- Interactive Answer Options (Study Mode) -->
-          <div v-if="!showAnswer && hasInteractiveOptions && currentQuestion.type !== 'fill-blank'" class="mb-6">
+          <div v-if="!showAnswer && hasInteractiveOptions && currentQuestion && currentQuestion.type !== 'fill-blank'" class="mb-6">
             <h3 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
               {{ t('study.selectAnswer') }}
             </h3>
             
             <!-- Multiple Choice Options -->
-            <div v-if="currentQuestion.type === 'multiple-choice'" class="space-y-3">
+            <div v-if="currentQuestion && currentQuestion.type === 'multiple-choice'" class="space-y-3">
               <button
                 v-for="option in getCurrentOptions()"
                 :key="option.id"
@@ -117,7 +117,7 @@
             </div>
 
             <!-- True/False Options -->
-            <div v-else-if="currentQuestion.type === 'true-false'" class="space-y-3">
+            <div v-else-if="currentQuestion && currentQuestion.type === 'true-false'" class="space-y-3">
               <button
                 v-for="option in getCurrentOptions()"
                 :key="option.id"
@@ -137,7 +137,7 @@
             </div>
 
             <!-- Fill in the Blank -->
-            <div v-else-if="currentQuestion.type === 'fill-blank'" class="space-y-4">
+            <div v-else-if="currentQuestion && (currentQuestion.type as string) === 'fill-blank'" class="space-y-4">
               <input
                 v-model="studyTextAnswer"
                 type="text"
@@ -147,7 +147,7 @@
             </div>
 
             <!-- Multiple Checkbox -->
-            <div v-else-if="currentQuestion.type === 'multiple-checkbox'" class="space-y-3">
+            <div v-else-if="currentQuestion && currentQuestion.type === 'multiple-checkbox'" class="space-y-3">
               <label
                 v-for="option in getCurrentOptions()"
                 :key="option.id"
@@ -165,7 +165,7 @@
           </div>
 
           <!-- Fill-in-blank Input (Study Mode) -->
-          <div v-if="!showAnswer && currentQuestion.type === 'fill-blank'" class="mb-6">
+          <div v-if="!showAnswer && currentQuestion && (currentQuestion.type as string) === 'fill-blank'" class="mb-6">
             <h3 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
               {{ t('study.typeAnswer') }}
             </h3>
