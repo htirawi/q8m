@@ -35,13 +35,21 @@ jobs:
       - name: Build
         run: pnpm build
 
+      - name: Verify build output
+        run: |
+          echo "Checking build output..."
+          ls -la client/dist/ || echo "Client dist not found"
+          ls -la client/dist/index.html || echo "index.html not found"
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
+        with:
+          enablement: true
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: "./dist"
+          path: "./client/dist"
 
   deploy:
     environment:
