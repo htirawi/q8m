@@ -5,20 +5,21 @@
  */
 
 import type { Question, QuizResult } from "@shared/types/quiz";
-import type { StudyDifficulty, QuizLevel } from "@/types/plan/access";
+import type { DifficultyLevel, ExperienceLevel } from "@/types/plan/access";
 
 const useMockAPI = import.meta.env.VITE_USE_MOCK_API === "true" || import.meta.env.DEV;
 
 /**
  * Generate mock questions for study mode
  */
-function generateMockStudyQuestions(difficulty: StudyDifficulty, count: number = 20): Question[] {
+function generateMockStudyQuestions(difficulty: DifficultyLevel, count: number = 20): Question[] {
   const questions: Question[] = [];
   const difficultyPoints = { easy: 5, medium: 10, hard: 15 };
 
   for (let i = 1; i <= count; i++) {
     questions.push({
-      id: `study-${difficulty}-${i}`,
+      _id: `study-${difficulty}-${i}`,
+      id: i,
       framework: "vue",
       level: "junior",
       difficulty,
@@ -27,28 +28,30 @@ function generateMockStudyQuestions(difficulty: StudyDifficulty, count: number =
         en: {
           question: `[${difficulty.toUpperCase()}] Sample Vue.js Question ${i}`,
           options: [
-            "Option A - Correct answer",
-            "Option B - Incorrect",
-            "Option C - Incorrect",
-            "Option D - Incorrect",
+            { id: "a", text: "Option A - Correct answer", isCorrect: true },
+            { id: "b", text: "Option B - Incorrect", isCorrect: false },
+            { id: "c", text: "Option C - Incorrect", isCorrect: false },
+            { id: "d", text: "Option D - Incorrect", isCorrect: false },
           ],
           explanation: `This is a ${difficulty} level explanation for question ${i}. The correct answer demonstrates fundamental Vue.js concepts.`,
         },
         ar: {
           question: `[${difficulty.toUpperCase()}] سؤال Vue.js نموذجي ${i}`,
           options: [
-            "الخيار أ - الإجابة الصحيحة",
-            "الخيار ب - غير صحيح",
-            "الخيار ج - غير صحيح",
-            "الخيار د - غير صحيح",
+            { id: "a", text: "الخيار أ - الإجابة الصحيحة", isCorrect: true },
+            { id: "b", text: "الخيار ب - غير صحيح", isCorrect: false },
+            { id: "c", text: "الخيار ج - غير صحيح", isCorrect: false },
+            { id: "d", text: "الخيار د - غير صحيح", isCorrect: false },
           ],
           explanation: `هذا شرح لمستوى ${difficulty} للسؤال ${i}. توضح الإجابة الصحيحة مفاهيم Vue.js الأساسية.`,
         },
       },
-      correctAnswer: "Option A - Correct answer",
       category: "fundamentals",
       tags: ["vue", difficulty],
       points: difficultyPoints[difficulty],
+      isActive: true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     });
   }
 
@@ -58,9 +61,9 @@ function generateMockStudyQuestions(difficulty: StudyDifficulty, count: number =
 /**
  * Generate mock questions for quiz mode
  */
-function generateMockQuizQuestions(level: QuizLevel, count: number): Question[] {
+function generateMockQuizQuestions(level: ExperienceLevel, count: number): Question[] {
   const questions: Question[] = [];
-  const levelDifficulty: Record<QuizLevel, StudyDifficulty> = {
+  const levelDifficulty: Record<ExperienceLevel, DifficultyLevel> = {
     junior: "easy",
     intermediate: "medium",
     senior: "hard",
@@ -78,11 +81,12 @@ function generateMockQuizQuestions(level: QuizLevel, count: number): Question[] 
   for (let i = 1; i <= count; i++) {
     const type = questionTypes[i % questionTypes.length];
     const baseQuestion: Question = {
-      id: `quiz-${level}-${i}`,
+      _id: `quiz-${level}-${i}`,
+      id: i,
       framework: "vue",
       level,
       difficulty,
-      type,
+      type: type || "multiple-choice",
       content: {
         en: {
           question: `[${level.toUpperCase()}] Question ${i}: What is the correct approach?`,
@@ -94,34 +98,37 @@ function generateMockQuizQuestions(level: QuizLevel, count: number): Question[] 
         },
       },
       category: "fundamentals",
-      tags: ["vue", level, type],
+      tags: ["vue", level, type || "multiple-choice"],
       points: levelPoints[level],
-      correctAnswer: "",
+      isActive: true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
 
     if (type === "multiple-choice" || type === "multiple-checkbox") {
       baseQuestion.content.en.options = [
-        "Correct answer option",
-        "Incorrect option B",
-        "Incorrect option C",
-        "Incorrect option D",
+        { id: "a", text: "Correct answer option", isCorrect: true },
+        { id: "b", text: "Incorrect option B", isCorrect: false },
+        { id: "c", text: "Incorrect option C", isCorrect: false },
+        { id: "d", text: "Incorrect option D", isCorrect: false },
       ];
       baseQuestion.content.ar.options = [
-        "خيار الإجابة الصحيحة",
-        "الخيار ب غير صحيح",
-        "الخيار ج غير صحيح",
-        "الخيار د غير صحيح",
+        { id: "a", text: "خيار الإجابة الصحيحة", isCorrect: true },
+        { id: "b", text: "الخيار ب غير صحيح", isCorrect: false },
+        { id: "c", text: "الخيار ج غير صحيح", isCorrect: false },
+        { id: "d", text: "الخيار د غير صحيح", isCorrect: false },
       ];
-      baseQuestion.correctAnswer =
-        type === "multiple-checkbox"
-          ? ["Correct answer option", "Incorrect option B"]
-          : "Correct answer option";
     } else if (type === "true-false") {
-      baseQuestion.content.en.options = ["True", "False"];
-      baseQuestion.content.ar.options = ["صحيح", "خطأ"];
-      baseQuestion.correctAnswer = "True";
+      baseQuestion.content.en.options = [
+        { id: "true", text: "True", isCorrect: true },
+        { id: "false", text: "False", isCorrect: false },
+      ];
+      baseQuestion.content.ar.options = [
+        { id: "true", text: "صحيح", isCorrect: true },
+        { id: "false", text: "خطأ", isCorrect: false },
+      ];
     } else if (type === "fill-blank") {
-      baseQuestion.correctAnswer = "reactive";
+      // No options for fill-blank questions
     }
 
     questions.push(baseQuestion);
@@ -133,7 +140,7 @@ function generateMockQuizQuestions(level: QuizLevel, count: number): Question[] 
 /**
  * Fetch questions for study mode
  */
-export async function fetchStudyQuestions(difficulty: StudyDifficulty): Promise<Question[]> {
+export async function fetchStudyQuestions(difficulty: DifficultyLevel): Promise<Question[]> {
   if (useMockAPI) {
     console.warn("[Mock API] Returning mock study questions for:", difficulty);
     await new Promise((resolve) => setTimeout(resolve, 800)); // Simulate network delay
@@ -154,8 +161,8 @@ export async function fetchStudyQuestions(difficulty: StudyDifficulty): Promise<
 /**
  * Fetch questions for quiz mode
  */
-export async function fetchQuizQuestions(level: QuizLevel): Promise<Question[]> {
-  const questionCounts: Record<QuizLevel, number> = {
+export async function fetchQuizQuestions(level: ExperienceLevel): Promise<Question[]> {
+  const questionCounts: Record<ExperienceLevel, number> = {
     junior: 30,
     intermediate: 40,
     senior: 50,
