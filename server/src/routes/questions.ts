@@ -230,7 +230,7 @@ export default async function questionRoutes(fastify: FastifyInstance) {
 
         return {
           questions: questions.map((q: Record<string, unknown>) => ({
-            _id: q._id.toString(),
+            _id: (q._id as { toString(): string }).toString(),
             id: q.id,
             type: q.type,
             content: q.content,
