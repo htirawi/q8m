@@ -15,6 +15,7 @@ export interface RequestOptions extends RequestInit {
   timeout?: number;
   requireAuth?: boolean;
   useBearer?: boolean;
+  silent?: boolean; // Don't throw errors, return null instead
 }
 
 export interface HttpClientConfig {
@@ -68,6 +69,7 @@ class HttpClient {
       timeout = this.config.timeout,
       requireAuth = false,
       useBearer = false,
+      silent = false,
       headers = {},
       ...fetchOptions
     } = options;
@@ -100,6 +102,11 @@ class HttpClient {
 
       if (error instanceof Error && error.name === "AbortError") {
         throw new Error("Request timeout");
+      }
+
+      // If silent mode, return null instead of throwing
+      if (silent) {
+        return null as T;
       }
 
       throw error;

@@ -342,16 +342,27 @@ export const useAuthStore = defineStore("auth", () => {
 
     try {
       // Try to get current user from server (will use httpOnly cookies)
-      const data = await httpClient.get<{ user: User }>(API_ENDPOINTS.auth.me());
+      // Use silent mode to avoid console errors when not logged in
+      const data = await httpClient.get<{ user: User }>(
+        API_ENDPOINTS.auth.me(),
+        { silent: true }
+      );
 
-      setUser(data.user);
+      // If we got a response (user is logged in)
+      if (data?.user) {
+        setUser(data.user);
 
-      // Set dummy tokens to indicate authenticated state
-      setTokens({
-        accessToken: AUTH_CONSTANTS.COOKIE_BASED_TOKEN,
-        refreshToken: AUTH_CONSTANTS.COOKIE_BASED_TOKEN,
-        expiresIn: AUTH_CONSTANTS.TOKEN_EXPIRY_SECONDS,
-      });
+        // Set dummy tokens to indicate authenticated state
+        setTokens({
+          accessToken: AUTH_CONSTANTS.COOKIE_BASED_TOKEN,
+          refreshToken: AUTH_CONSTANTS.COOKIE_BASED_TOKEN,
+          expiresIn: AUTH_CONSTANTS.TOKEN_EXPIRY_SECONDS,
+        });
+      } else {
+        // No user data - stay logged out
+        setUser(null);
+        setTokens(null);
+      }
     } catch (_err) {
       // Failed to get user - stay logged out
       setUser(null);
