@@ -45,11 +45,19 @@ const routes: RouteRecordRaw[] = [
     redirect: () => `/${DEFAULT_LOCALE}/subscribe`,
   },
   {
+    path: "/pricing",
+    redirect: () => `/${DEFAULT_LOCALE}/pricing`,
+  },
+  {
     path: "/login",
     redirect: () => `/${DEFAULT_LOCALE}/login`,
   },
   {
     path: "/register",
+    redirect: () => `/${DEFAULT_LOCALE}/register`,
+  },
+  {
+    path: "/signup",
     redirect: () => `/${DEFAULT_LOCALE}/register`,
   },
   {
@@ -61,7 +69,15 @@ const routes: RouteRecordRaw[] = [
     redirect: () => `/${DEFAULT_LOCALE}/quiz`,
   },
   {
+    path: "/quizzes",
+    redirect: () => `/${DEFAULT_LOCALE}/quiz`,
+  },
+  {
     path: "/account",
+    redirect: () => `/${DEFAULT_LOCALE}/account`,
+  },
+  {
+    path: "/profile",
     redirect: () => `/${DEFAULT_LOCALE}/account`,
   },
   {
@@ -69,11 +85,23 @@ const routes: RouteRecordRaw[] = [
     redirect: () => `/${DEFAULT_LOCALE}/admin`,
   },
   {
+    path: "/dashboard",
+    redirect: () => `/${DEFAULT_LOCALE}/dashboard`,
+  },
+  {
     path: "/privacy",
     redirect: () => `/${DEFAULT_LOCALE}/privacy`,
   },
   {
+    path: "/privacy-policy",
+    redirect: () => `/${DEFAULT_LOCALE}/privacy`,
+  },
+  {
     path: "/terms",
+    redirect: () => `/${DEFAULT_LOCALE}/terms`,
+  },
+  {
+    path: "/terms-of-service",
     redirect: () => `/${DEFAULT_LOCALE}/terms`,
   },
   // Redirect /auth/* to prevent it from being treated as a locale
@@ -247,6 +275,23 @@ const routes: RouteRecordRaw[] = [
       layout: "default",
     },
     "level-selection"
+  ),
+
+  // Mode Chooser (Study or Quiz)
+  createLocalizedRoute(
+    "/:difficulty/choose",
+    () =>
+      import(
+        /* webpackChunkName: "mode-chooser" */
+        "@/features/home/pages/ModeChooserPage.vue"
+      ),
+    {
+      title: "Choose Mode - q8m",
+      requiresAuth: true,
+      access: "free",
+      layout: "default",
+    },
+    "mode-chooser"
   ),
 
   // Study Mode Selection
@@ -627,6 +672,17 @@ router.beforeEach(async (to, _from, next) => {
       const difficulty = to.params.difficulty as string;
       const userTier = planStore.planTier;
 
+      // Validate difficulty is one of the allowed values
+      const validDifficulties = ["easy", "medium", "hard"];
+      if (!validDifficulties.includes(difficulty)) {
+        // Invalid difficulty - redirect to study selection
+        next({
+          name: "study",
+          params: { locale },
+        });
+        return;
+      }
+
       if (!canAccessStudyDifficulty(userTier, difficulty as "easy" | "medium" | "hard")) {
         const requiredTier = getRequiredStudyPlanTier(difficulty as "easy" | "medium" | "hard");
         const suggestedTier = getSuggestedUpgradeTier(requiredTier, userTier);
@@ -643,11 +699,36 @@ router.beforeEach(async (to, _from, next) => {
       const level = to.params.level as string;
       const userTier = planStore.planTier;
 
+      // Validate level is one of the allowed values
+      const validLevels = ["junior", "intermediate", "senior"];
+      if (!validLevels.includes(level)) {
+        // Invalid level - redirect to quiz selection
+        next({
+          name: "quiz",
+          params: { locale },
+        });
+        return;
+      }
+
       if (!canAccessQuizLevel(userTier, level as "junior" | "intermediate" | "senior")) {
         const requiredTier = getRequiredQuizPlanTier(level as "junior" | "intermediate" | "senior");
         const suggestedTier = getSuggestedUpgradeTier(requiredTier, userTier);
         showPaywall(to.fullPath, suggestedTier);
         next();
+        return;
+      }
+    }
+
+    // Validate mode-chooser difficulty parameter
+    if (to.name === "mode-chooser" && to.params.difficulty) {
+      const difficulty = to.params.difficulty as string;
+      const validDifficulties = ["easy", "medium", "hard"];
+      if (!validDifficulties.includes(difficulty)) {
+        // Invalid difficulty - redirect to level selection
+        next({
+          name: "level-selection",
+          params: { locale },
+        });
         return;
       }
     }

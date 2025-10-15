@@ -6,6 +6,7 @@
 
 import type { Question, QuizResult } from "@shared/types/quiz";
 import type { DifficultyLevel, ExperienceLevel } from "@/types/plan/access";
+import { API_ENDPOINTS } from "@/config/api";
 
 const useMockAPI = import.meta.env.VITE_USE_MOCK_API === "true" || import.meta.env.DEV;
 
@@ -147,7 +148,8 @@ export async function fetchStudyQuestions(difficulty: DifficultyLevel): Promise<
     return generateMockStudyQuestions(difficulty, 20);
   }
 
-  const response = await fetch(`/api/questions?difficulty=${difficulty}`, {
+  const params = new URLSearchParams({ difficulty });
+  const response = await fetch(`${API_ENDPOINTS.questions.list()}?${params.toString()}`, {
     credentials: "include",
   });
 
@@ -174,7 +176,8 @@ export async function fetchQuizQuestions(level: ExperienceLevel): Promise<Questi
     return generateMockQuizQuestions(level, questionCounts[level]);
   }
 
-  const response = await fetch(`/api/quiz/questions?level=${level}`, {
+  const params = new URLSearchParams({ level });
+  const response = await fetch(`${API_ENDPOINTS.questions.quiz()}?${params.toString()}`, {
     credentials: "include",
   });
 
@@ -195,7 +198,7 @@ export async function submitQuizResults(result: QuizResult): Promise<void> {
     return;
   }
 
-  const response = await fetch("/api/quiz/results", {
+  const response = await fetch(API_ENDPOINTS.quizResults.create(), {
     method: "POST",
     credentials: "include",
     headers: { "Content-Type": "application/json" },

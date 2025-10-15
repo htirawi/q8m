@@ -50,7 +50,7 @@ export interface IHomepageAnalyticsResult {
  * Homepage analytics composable
  */
 export function useHomepageAnalytics(): IHomepageAnalyticsResult {
-  const { trackGenericEvent } = useAnalytics();
+  const { track } = useAnalytics();
 
   const viewedSections = ref<Set<HomepageSection>>(new Set());
   const sectionStartTimes = ref<Map<HomepageSection, number>>(new Map());
@@ -72,35 +72,35 @@ export function useHomepageAnalytics(): IHomepageAnalyticsResult {
       scrollPosition: window.scrollY,
     };
 
-    trackGenericEvent("section_view", event);
+    track("section_view", event);
   };
 
   /**
    * Track CTA click event
    */
   const trackCTAClick = (event: ICTAClickEvent): void => {
-    trackGenericEvent("cta_click", event);
+    track("cta_click", event);
   };
 
   /**
    * Track pricing interaction event
    */
   const trackPricingInteraction = (event: IPricingInteractionEvent): void => {
-    trackGenericEvent("pricing_interaction", event);
+    track("pricing_interaction", event);
   };
 
   /**
    * Track FAQ interaction event
    */
   const trackFaqInteraction = (event: IFaqInteractionEvent): void => {
-    trackGenericEvent("faq_interaction", event);
+    track("faq_interaction", event);
   };
 
   /**
    * Track social proof interaction event
    */
   const trackSocialProofInteraction = (event: ISocialProofInteractionEvent): void => {
-    trackGenericEvent("social_proof_interaction", event);
+    track("social_proof_interaction", event);
   };
 
   /**
@@ -138,7 +138,7 @@ export function useHomepageAnalytics(): IHomepageAnalyticsResult {
               if (startTime) {
                 const viewDuration = Date.now() - startTime;
                 // Track with duration (optional enhancement)
-                trackGenericEvent("section_view_duration", {
+                track("section_view_duration", {
                   section,
                   viewDuration,
                 });

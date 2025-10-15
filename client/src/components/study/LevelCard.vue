@@ -153,7 +153,7 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<Emits>();
 
 const { t } = useI18n();
-const { trackStudyEvent } = useAnalytics();
+const { track } = useAnalytics();
 
 // Map difficulty to plan ID, then get display label from canonical registry
 const planId = computed(() => DIFFICULTY_TO_PLAN_ID[props.difficulty]);
@@ -244,7 +244,7 @@ const featureIconClass = computed(() => {
 const handleClick = () => {
   if (props.isLocked) {
     if (props.canClickLocked) {
-      trackStudyEvent('level_card_clicked', {
+      track('level_card_clicked', {
         difficulty: props.difficulty,
         isLocked: true,
         requiredPlan: props.requiredPlan,
@@ -257,13 +257,13 @@ const handleClick = () => {
 
     if (shouldAutoStart) {
       // One-click start: emit auto-start event
-      trackStudyEvent('level_card_selected', {
+      track('level_card_selected', {
         difficulty: props.difficulty,
       });
       emit('auto-start', props.difficulty);
     } else {
       // Traditional flow: emit select event
-      trackStudyEvent('level_card_selected', {
+      track('level_card_selected', {
         difficulty: props.difficulty,
       });
       emit('select', props.difficulty);
@@ -273,7 +273,7 @@ const handleClick = () => {
 
 onMounted(() => {
   // Track card view
-  trackStudyEvent('level_card_viewed', {
+  track('level_card_viewed', {
     difficulty: props.difficulty,
     isLocked: props.isLocked,
     requiredPlan: props.isLocked ? props.requiredPlan : undefined,

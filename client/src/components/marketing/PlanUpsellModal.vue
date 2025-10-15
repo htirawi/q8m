@@ -222,7 +222,7 @@ const emit = defineEmits<Emits>();
 
 const { t } = useI18n();
 const router = useRouter();
-const { trackStudyEvent } = useAnalytics();
+const { track } = useAnalytics();
 
 const modalRef = ref<HTMLElement>();
 const headingId = "upsell-modal-title";
@@ -308,7 +308,7 @@ const faqs = computed((): IFaq[] => [
 ]);
 
 const handleUpgrade = () => {
-  trackStudyEvent('upsell_cta_clicked', {
+  track('upsell_cta_clicked', {
     action: 'upgrade',
     difficulty: props.difficulty,
     requiredPlan: props.requiredPlan,
@@ -328,7 +328,7 @@ const handleUpgrade = () => {
 };
 
 const handleViewAllPlans = () => {
-  trackStudyEvent('upsell_cta_clicked', {
+  track('upsell_cta_clicked', {
     action: 'view_plans',
     difficulty: props.difficulty,
     requiredPlan: props.requiredPlan,
@@ -341,7 +341,7 @@ const handleViewAllPlans = () => {
 };
 
 const handleDismiss = (method: 'esc' | 'backdrop' | 'close_button' | 'maybe_later_button') => {
-  trackStudyEvent('upsell_cta_clicked', {
+  track('upsell_cta_clicked', {
     action: 'maybe_later',
     difficulty: props.difficulty,
     requiredPlan: props.requiredPlan,
@@ -378,7 +378,7 @@ watch(
   async (visible) => {
     if (visible) {
       // Track view
-      trackStudyEvent('upsell_modal_viewed', {
+      track('upsell_modal_viewed', {
         difficulty: props.difficulty,
         requiredPlan: props.requiredPlan,
       });

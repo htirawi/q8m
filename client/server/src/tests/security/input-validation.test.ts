@@ -210,7 +210,7 @@ describe("Input Validation Security Tests", () => {
 
   describe("Input Length Validation", () => {
     it("should reject excessively long email", async () => {
-      const longEmail = `${"a".repeat(500)  }@example.com`;
+      const longEmail = `${"a".repeat(500)}@example.com`;
       const response = await app.inject({
         method: "POST",
         url: "/api/v1/auth/register",

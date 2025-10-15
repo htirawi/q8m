@@ -132,9 +132,11 @@ const userSchema = new Schema(
     loginAttempts: {
       type: Number,
       default: 0,
+      select: false, // Don't expose login attempt count
     },
     lockUntil: {
       type: Date,
+      select: false, // Don't expose account lock details
     },
     // OAuth fields
     googleId: {
@@ -268,6 +270,7 @@ const userSchema = new Schema(
 userSchema.index({ email: 1 }, { unique: true, name: "uniq_email" });
 userSchema.index({ googleId: 1 }, { unique: true, sparse: true, name: "uniq_google_id" });
 userSchema.index({ role: 1 }, { name: "idx_role" });
+userSchema.index({ isEmailVerified: 1 }, { name: "idx_is_email_verified" });
 userSchema.index({ entitlements: 1 }, { name: "idx_entitlements" });
 userSchema.index({ permissions: 1 }, { name: "idx_permissions" });
 userSchema.index({ acceptTerms: 1 }, { name: "idx_accept_terms" });
@@ -330,9 +333,9 @@ userSchema.methods.generateAuthTokens = function () {
   };
 };
 
-// Static method to find user by email (including password)
+// Static method to find user by email (including password and login attempt fields)
 userSchema.statics.findByEmailWithPassword = function (email: string) {
-  return this.findOne({ email, isActive: true }).select("+password");
+  return this.findOne({ email, isActive: true }).select("+password +loginAttempts +lockUntil");
 };
 
 // Static method to find user by email verification token

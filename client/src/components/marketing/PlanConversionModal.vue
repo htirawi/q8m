@@ -301,7 +301,7 @@ const {
   startCheckout,
   applyCoupon,
 } = useCheckout();
-const { trackGenericEvent } = useAnalytics();
+const { track } = useAnalytics();
 
 const modalRef = ref<HTMLElement>();
 const headingId = "convert-modal-title";
@@ -375,7 +375,7 @@ const handleApplyCoupon = async () => {
 };
 
 const handleSubscribe = async () => {
-  trackGenericEvent("subscribe_click", {
+  track("subscribe_click", {
     difficulty: props.difficulty,
     plan: props.requiredPlan,
     cycle: selectedCycle.value,
@@ -389,7 +389,7 @@ const toggleComparison = () => {
   showComparison.value = !showComparison.value;
 
   if (showComparison.value) {
-    trackGenericEvent("comparison_expanded", {
+    track("comparison_expanded", {
       difficulty: props.difficulty,
       plan: props.requiredPlan,
     });
@@ -400,7 +400,7 @@ const toggleFaq = () => {
   showFaq.value = !showFaq.value;
 
   if (showFaq.value) {
-    trackGenericEvent("faq_expanded", {
+    track("faq_expanded", {
       difficulty: props.difficulty,
       plan: props.requiredPlan,
     });
@@ -408,7 +408,7 @@ const toggleFaq = () => {
 };
 
 const handleDismiss = () => {
-  trackGenericEvent("convert_modal_dismissed", {
+  track("convert_modal_dismissed", {
     difficulty: props.difficulty,
     plan: props.requiredPlan,
     hadInteraction: showComparison.value || showFaq.value || showCoupon.value,
@@ -448,7 +448,7 @@ watch(
       selectPlan(props.requiredPlan, 'annual');
 
       // Track view
-      trackGenericEvent("convert_modal_opened", {
+      track("convert_modal_opened", {
         difficulty: props.difficulty,
         plan: props.requiredPlan,
         variant: props.variant,

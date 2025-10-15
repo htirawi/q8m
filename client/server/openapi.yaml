@@ -1,0 +1,668 @@
+openapi: 3.0.3
+info:
+  title: Quiz 8 Mastery API
+  version: 1.0.0
+  description: |
+    Professional Vue 3 interview preparation platform with comprehensive question banks and advanced analytics.
+
+    ## Authentication
+    This API uses Bearer token authentication. Include the token in the Authorization header:
+    ```
+    Authorization: Bearer <your_token>
+    ```
+
+    ## Rate Limiting
+    All endpoints are rate-limited to prevent abuse. Limits vary by endpoint:
+    - Auth endpoints: 10-20 requests per 15 minutes
+    - Payment endpoints: 20-30 requests per 15 minutes
+    - Question endpoints: 100 requests per minute
+
+    ## Versioning
+    The API is versioned using URL path versioning: `/api/v1/`
+
+  contact:
+    name: Hussein Tirawi
+    url: https://github.com/htirawi/q8m
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: http://localhost:3000/api/v1
+    description: Development server
+  - url: https://api.quiz-platform.com/api/v1
+    description: Production server
+
+tags:
+  - name: Authentication
+    description: User registration, login, and session management
+  - name: Questions
+    description: Question management and retrieval
+  - name: Pricing
+    description: Pricing plans and rates
+  - name: Payments
+    description: Payment processing
+  - name: PayPal
+    description: PayPal payment integration
+  - name: Checkout
+    description: Checkout session management
+  - name: Progress
+    description: User progress tracking
+  - name: Quiz Results
+    description: Quiz result management
+  - name: Gamification
+    description: Badges, achievements, and leaderboards
+  - name: Admin
+    description: Administrative operations
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token obtained from /auth/login or /auth/register
+
+  schemas:
+    Error:
+      type: object
+      required:
+        - code
+        - error
+        - message
+      properties:
+        code:
+          type: integer
+          example: 400
+        error:
+          type: string
+          example: Bad Request
+        message:
+          type: string
+          example: Invalid input provided
+
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "507f1f77bcf86cd799439011"
+        email:
+          type: string
+          format: email
+          example: "user@example.com"
+        name:
+          type: string
+          example: "John Doe"
+        role:
+          type: string
+          enum: [user, admin, intermediate, senior]
+          example: "user"
+        entitlements:
+          type: array
+          items:
+            type: string
+            enum: [JUNIOR, INTERMEDIATE, SENIOR, BUNDLE]
+          example: ["JUNIOR"]
+        isEmailVerified:
+          type: boolean
+          example: false
+        createdAt:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00Z"
+
+    Question:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "507f1f77bcf86cd799439011"
+        type:
+          type: string
+          enum: [multiple-choice, true-false, code-completion]
+          example: "multiple-choice"
+        content:
+          type: string
+          example: "What is the Vue 3 Composition API?"
+        difficulty:
+          type: string
+          enum: [easy, medium, hard]
+          example: "medium"
+        level:
+          type: string
+          enum: [junior, intermediate, senior]
+          example: "intermediate"
+        framework:
+          type: string
+          enum: [vue, react, angular, general]
+          example: "vue"
+        category:
+          type: string
+          example: "Composition API"
+        points:
+          type: integer
+          example: 10
+        options:
+          type: array
+          items:
+            type: object
+          example: [{ "text": "Option A", "isCorrect": true }]
+
+    PlanFeatures:
+      type: object
+      properties:
+        planTier:
+          type: string
+          enum: [free, intermediate, advanced, pro]
+          example: "free"
+        study:
+          type: object
+          properties:
+            difficulties:
+              type: array
+              items:
+                type: string
+              example: ["easy"]
+            questionsPerDay:
+              type: integer
+              example: 20
+            aiHints:
+              type: integer
+              example: 0
+        quiz:
+          type: object
+          properties:
+            levels:
+              type: array
+              items:
+                type: string
+              example: ["junior"]
+            quizzesPerDay:
+              type: integer
+              example: 2
+            retries:
+              type: integer
+              example: 1
+
+paths:
+  /health:
+    get:
+      summary: Health check
+      description: Returns the health status of the API
+      tags:
+        - System
+      responses:
+        "200":
+          description: API is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "ok"
+                  timestamp:
+                    type: string
+                    format: date-time
+                  uptime:
+                    type: number
+                  environment:
+                    type: string
+                  version:
+                    type: string
+
+  /auth/register:
+    post:
+      summary: Register new user
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+                - name
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: "user@example.com"
+                password:
+                  type: string
+                  minLength: 8
+                  example: "SecurePass123!"
+                name:
+                  type: string
+                  minLength: 2
+                  maxLength: 50
+                  example: "John Doe"
+      responses:
+        "200":
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  user:
+                    $ref: "#/components/schemas/User"
+                  accessToken:
+                    type: string
+                  refreshToken:
+                    type: string
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /auth/login:
+    post:
+      summary: Login user
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  user:
+                    $ref: "#/components/schemas/User"
+                  accessToken:
+                    type: string
+                  refreshToken:
+                    type: string
+        "401":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /auth/logout:
+    post:
+      summary: Logout user
+      tags:
+        - Authentication
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Logout successful
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /auth/refresh:
+    post:
+      summary: Refresh access token
+      tags:
+        - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refreshToken:
+                  type: string
+      responses:
+        "200":
+          description: Token refreshed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+        "401":
+          description: Invalid refresh token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /auth/me:
+    get:
+      summary: Get current user
+      tags:
+        - Authentication
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: User details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /questions:
+    get:
+      summary: Get questions
+      tags:
+        - Questions
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: difficulty
+          schema:
+            type: string
+            enum: [easy, medium, hard]
+          description: Filter by difficulty
+        - in: query
+          name: framework
+          schema:
+            type: string
+            enum: [vue, react, angular, general]
+          description: Filter by framework
+        - in: query
+          name: category
+          schema:
+            type: string
+          description: Filter by category
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+          description: Number of questions to return
+      responses:
+        "200":
+          description: List of questions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  questions:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Question"
+                  total:
+                    type: integer
+                  page:
+                    type: integer
+        "403":
+          description: Access denied (plan upgrade required)
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Error"
+                  - type: object
+                    properties:
+                      requiredPlan:
+                        type: string
+                      suggestedPlan:
+                        type: string
+                      upgradeUrl:
+                        type: string
+
+  /questions/submit:
+    post:
+      summary: Submit answer
+      tags:
+        - Questions
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - questionId
+                - selectedAnswer
+              properties:
+                questionId:
+                  type: string
+                selectedAnswer:
+                  type: string
+      responses:
+        "200":
+          description: Answer submitted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isCorrect:
+                    type: boolean
+                  correctAnswer:
+                    type: string
+                  explanation:
+                    type: string
+
+  /pricing/plans:
+    get:
+      summary: Get pricing plans
+      tags:
+        - Pricing
+      responses:
+        "200":
+          description: List of pricing plans
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    planTier:
+                      type: string
+                    features:
+                      $ref: "#/components/schemas/PlanFeatures"
+
+  /payments/paypal/create-order:
+    post:
+      summary: Create PayPal order
+      tags:
+        - PayPal
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - userId
+                - planType
+                - billing_cycle
+                - currency_code
+              properties:
+                userId:
+                  type: string
+                planType:
+                  type: string
+                  enum: [INTERMEDIATE, SENIOR, BUNDLE]
+                billing_cycle:
+                  type: string
+                  enum: [monthly, yearly]
+                currency_code:
+                  type: string
+                  enum: [USD, JOD, SAR]
+      responses:
+        "200":
+          description: Order created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  orderID:
+                    type: string
+
+  /checkout/create:
+    post:
+      summary: Create checkout session
+      tags:
+        - Checkout
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - tier
+                - cycle
+              properties:
+                tier:
+                  type: string
+                  enum: [intermediate, advanced, pro]
+                cycle:
+                  type: string
+                  enum: [monthly, annual]
+                couponCode:
+                  type: string
+                currency:
+                  type: string
+                  enum: [USD, JOD, SAR]
+                  default: USD
+      responses:
+        "200":
+          description: Checkout session created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  session:
+                    type: object
+
+  /progress:
+    get:
+      summary: Get user progress
+      tags:
+        - Progress
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: User progress data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalQuestions:
+                    type: integer
+                  correctAnswers:
+                    type: integer
+                  accuracy:
+                    type: number
+                  streak:
+                    type: integer
+
+  /quiz/results:
+    get:
+      summary: Get quiz results
+      tags:
+        - Quiz Results
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: List of quiz results
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+
+    post:
+      summary: Create quiz result
+      tags:
+        - Quiz Results
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - level
+                - score
+                - totalQuestions
+              properties:
+                level:
+                  type: string
+                score:
+                  type: number
+                totalQuestions:
+                  type: integer
+      responses:
+        "200":
+          description: Quiz result created
+
+  /admin/users:
+    get:
+      summary: Get all users (Admin only)
+      tags:
+        - Admin
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: List of users
+        "403":
+          description: Forbidden (Admin access required)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"

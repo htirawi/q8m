@@ -43,7 +43,7 @@ export type StudyFlowVariant = "autostart" | "manual";
 export function useStudy() {
   const router = useRouter();
   const { handlePlanEntryClick } = usePlanEntry();
-  const { trackStudyEvent, trackGenericEvent } = useAnalytics();
+  const { track } = useAnalytics();
 
   const loadingState = ref<StudyLoadingState>("idle");
   const errorMessage = ref<string | null>(null);
@@ -75,7 +75,7 @@ export function useStudy() {
 
     localStorage.setItem(AUTOSTART_KEY, String(enabled));
 
-    trackGenericEvent("study_autostart_preference_changed", {
+    track("study_autostart_preference_changed", {
       enabled,
       variant: getABTestVariant(),
     });
@@ -105,7 +105,7 @@ export function useStudy() {
     localStorage.setItem(AB_TEST_VARIANT_KEY, variant);
 
     // Track variant assignment
-    trackGenericEvent("study_ab_test_assigned", {
+    track("study_ab_test_assigned", {
       variant,
       timestamp: Date.now(),
     });
@@ -123,7 +123,7 @@ export function useStudy() {
 
     localStorage.setItem(AB_TEST_VARIANT_KEY, variant);
 
-    trackGenericEvent("study_ab_test_variant_overridden", {
+    track("study_ab_test_variant_overridden", {
       variant,
     });
   };
@@ -200,11 +200,11 @@ export function useStudy() {
 
     try {
       // Track event
-      trackStudyEvent("easy_card_clicked", {
+      track("easy_card_clicked", {
         source: "study-page",
       });
 
-      trackStudyEvent("study_autostart_triggered", {
+      track("study_autostart_triggered", {
         autostart: getAutoStart(),
       });
 
@@ -222,12 +222,12 @@ export function useStudy() {
       }
 
       // Track success with A/B test variant
-      trackStudyEvent("study_session_started", {
+      track("study_session_started", {
         mode: "easy",
         resumed: false,
       });
 
-      trackGenericEvent("study_flow_conversion", {
+      track("study_flow_conversion", {
         variant: getABTestVariant(),
         difficulty: "easy",
         resumed: false,
@@ -240,7 +240,7 @@ export function useStudy() {
       loadingState.value = "error";
       errorMessage.value = error instanceof Error ? error.message : "Failed to start session";
 
-      trackGenericEvent("study_start_error", {
+      track("study_start_error", {
         reason: errorMessage.value,
         difficulty: "easy",
         variant: getABTestVariant(),
@@ -267,7 +267,7 @@ export function useStudy() {
 
     try {
       // Track event
-      trackStudyEvent("study_session_resumed", {
+      track("study_session_resumed", {
         difficulty: lastSession.difficulty,
         questionIndex: lastSession.questionIndex,
       });
@@ -287,12 +287,12 @@ export function useStudy() {
       });
 
       // Track success with A/B test variant
-      trackStudyEvent("study_session_started", {
+      track("study_session_started", {
         mode: lastSession.difficulty,
         resumed: true,
       });
 
-      trackGenericEvent("study_flow_conversion", {
+      track("study_flow_conversion", {
         variant: getABTestVariant(),
         difficulty: lastSession.difficulty,
         resumed: true,
@@ -304,7 +304,7 @@ export function useStudy() {
       loadingState.value = "error";
       errorMessage.value = error instanceof Error ? error.message : "Failed to resume session";
 
-      trackGenericEvent("study_start_error", {
+      track("study_start_error", {
         reason: errorMessage.value,
         difficulty: lastSession.difficulty,
         resumed: true,

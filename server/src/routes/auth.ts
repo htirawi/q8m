@@ -20,7 +20,6 @@ import type {
   RefreshTokenBody,
   RegisterBody,
   ResendVerificationBody,
-  ResetPasswordBody,
 } from "../types/routes/auth";
 
 // Validation schemas
@@ -59,7 +58,6 @@ const forgotPasswordSchema = z.object({
 });
 
 const resetPasswordSchema = z.object({
-  token: z.string().min(32, "Invalid reset token"),
   password: z
     .string()
     .min(8, "Password must be at least 8 characters")
@@ -629,8 +627,8 @@ export default async function authRoutes(fastify: FastifyInstance) {
           1 // 1 hour
         );
 
-        // Send password reset email
-        const resetUrl = `${env.CLIENT_URL}/reset-password?token=${resetToken.token}`;
+        // Send password reset email with secure backend URL (no token exposed in final URL)
+        const resetUrl = `${env.SERVER_URL}/api/auth/reset-password-init/${resetToken.token}`;
         await emailService.sendPasswordReset(user.email, user.name, resetUrl);
 
         reply.send({
@@ -652,9 +650,67 @@ export default async function authRoutes(fastify: FastifyInstance) {
     }
   );
 
-  // Reset password
+  // Secure password reset initiation (GET endpoint that creates session)
+  // User clicks this link from email - no sensitive data exposed in URL after redirect
+  fastify.get(
+    "/reset-password-init/:token",
+    {
+      rateLimit: {
+        max: 15,
+        timeWindow: "15m",
+        hook: "onRequest",
+        keyGenerator: ipKey,
+      },
+      config: {
+        rateLimit: {
+          max: 15,
+          timeWindow: "15m",
+          hook: "onRequest",
+          keyGenerator: ipKey,
+        },
+      },
+    },
+    async (request, reply) => {
+      try {
+        const { token } = request.params as { token: string };
+
+        // Verify token validity (throws error if invalid)
+        await VerificationToken.verifyToken(token, "password_reset");
+
+        // Store reset session in secure httpOnly cookie
+        // This allows frontend to complete reset without exposing token
+        secureCookieService.setSecureCookie(reply, "resetSession", token, {
+          maxAge: 15 * 60 * 1000, // 15 minutes - short-lived
+          httpOnly: true,
+          secure: env.NODE_ENV === "production",
+          sameSite: "lax", // Allow redirect from email
+          path: "/api/auth/reset-password-complete",
+        });
+
+        // Redirect to frontend reset password page (no token in URL)
+        const redirectUrl = new URL(env.CLIENT_URL);
+        redirectUrl.pathname = "/en/reset-password"; // Use localized route
+
+        reply.redirect(redirectUrl.toString());
+      } catch (error: unknown) {
+        request.log.error({
+          error: error instanceof Error ? error.message : "Invalid reset token",
+          message: "Password reset initiation error",
+        });
+
+        // Redirect to frontend with error indicator
+        const redirectUrl = new URL(env.CLIENT_URL);
+        redirectUrl.pathname = "/en/reset-password";
+        redirectUrl.searchParams.set("error", "invalid_token");
+
+        reply.redirect(redirectUrl.toString());
+      }
+    }
+  );
+
+  // Complete password reset using secure session cookie
   fastify.post(
-    "/reset-password",
+    "/reset-password-complete",
     {
       // Top-level rateLimit for CodeQL compliance
       rateLimit: {
@@ -678,7 +734,18 @@ export default async function authRoutes(fastify: FastifyInstance) {
     },
     async (request, reply) => {
       try {
-        const { token, password } = request.body as ResetPasswordBody;
+        // Retrieve token from secure session cookie
+        const token = request.cookies.resetSession;
+
+        if (!token) {
+          return reply.status(400).send({
+            code: 400,
+            error: "Bad Request",
+            message: "No reset session found. Please click the link in your email again.",
+          });
+        }
+
+        const { password } = request.body as { password: string };
 
         const resetToken = await VerificationToken.verifyToken(token, "password_reset");
         const user = await User.findById(resetToken.userId);
@@ -703,6 +770,11 @@ export default async function authRoutes(fastify: FastifyInstance) {
           { userId: user._id },
           { isRevoked: true, revokedAt: new Date(), revokedReason: "password_change" }
         );
+
+        // Clear the reset session cookie
+        reply.clearCookie("resetSession", {
+          path: "/api/auth/reset-password-complete",
+        });
 
         reply.send({
           message: "Password reset successfully",
@@ -1269,4 +1341,122 @@ export default async function authRoutes(fastify: FastifyInstance) {
       reply.redirect(redirectUrl.toString());
     }
   });
+
+  // Development-only login endpoint (bypasses password check)
+  // Only works in development mode for testing purposes
+  if (env.NODE_ENV === "development") {
+    fastify.post(
+      "/dev-login",
+      {
+        rateLimit: {
+          max: 20,
+          timeWindow: "15m",
+          hook: "onRequest",
+          keyGenerator: ipKey,
+        },
+        config: {
+          rateLimit: {
+            max: 20,
+            timeWindow: "15m",
+            hook: "onRequest",
+            keyGenerator: ipKey,
+          },
+        },
+        schema: {
+          body: zodToJsonSchema(
+            z.object({
+              email: z.string().email("Invalid email format"),
+            })
+          ),
+        },
+      },
+      async (request, reply) => {
+        try {
+          const { email } = request.body as { email: string };
+
+          // Find or create dev user
+          let user = await User.findOne({ email });
+
+          if (!user) {
+            // Create new dev user
+            user = new User({
+              email,
+              name: "Dev User",
+              password: "dev-password-123", // Default password for dev users
+              entitlements: ["JUNIOR"], // Default entitlement
+              permissions: [],
+              acceptTerms: true,
+              acceptTermsAt: new Date(),
+              acceptTermsVersion: "1.0",
+              isEmailVerified: true, // Skip email verification for dev
+            });
+            await user.save();
+            console.warn(`[DEV] Created new dev user: ${email}`);
+          }
+
+          // Reset login attempts on successful login
+          await user.resetLoginAttempts();
+
+          // Generate session
+          const session = new Session({
+            userId: user._id,
+            refreshToken: crypto.randomBytes(32).toString("hex"),
+            accessToken: crypto.randomBytes(32).toString("hex"),
+            expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+            userAgent: request.headers["user-agent"],
+            ipAddress: request.ip,
+            isActive: true,
+            lastUsed: new Date(),
+          });
+
+          await session.save();
+
+          // Generate JWT tokens
+          const tokenPair = jwtService.generateTokenPair(user, session._id.toString());
+
+          // Set secure cookies
+          secureCookieService.setSecureCookie(reply, "accessToken", tokenPair.accessToken, {
+            maxAge: 15 * 60 * 1000, // 15 minutes
+            httpOnly: true,
+            secure: false, // Development mode
+            sameSite: "strict",
+          });
+
+          secureCookieService.setSecureCookie(reply, "refreshToken", tokenPair.refreshToken, {
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+            httpOnly: true,
+            secure: false, // Development mode
+            sameSite: "strict",
+          });
+
+          console.warn(`[DEV] Dev login successful for: ${email}`);
+
+          reply.send({
+            message: "Dev login successful",
+            user: {
+              id: user._id.toString(),
+              email: user.email,
+              name: user.name,
+              role: user.role,
+              entitlements: user.entitlements,
+              isEmailVerified: user.isEmailVerified,
+            },
+            accessToken: tokenPair.accessToken,
+            refreshToken: tokenPair.refreshToken,
+          });
+        } catch (error: unknown) {
+          request.log.error({
+            error: error instanceof Error ? error.message : "Failed to dev login",
+            message: "Dev login error",
+          });
+          const errorMessage = error instanceof Error ? error.message : "Failed to dev login";
+          reply.status(500).send({
+            code: 500,
+            error: "Internal Server Error",
+            message: errorMessage,
+          });
+        }
+      }
+    );
+  }
 }

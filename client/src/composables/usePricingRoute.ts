@@ -56,7 +56,7 @@ const LEGACY_BILLING_MAP: Record<string, BillingCycle> = {
 export function usePricingRoute() {
   const route = useRoute();
   const router = useRouter();
-  const { trackGenericEvent } = useAnalytics();
+  const { track } = useAnalytics();
 
   /**
    * Resolve plan from query params (handles legacy URLs)
@@ -98,7 +98,7 @@ export function usePricingRoute() {
     if (!resolved || !resolved.isLegacy) return;
 
     // Track legacy redirect
-    trackGenericEvent('legacy_plan_redirected', {
+    track('legacy_plan_redirected', {
       from: resolved.originalParam,
       to: resolved.planId,
       billing: resolved.billing,

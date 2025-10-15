@@ -148,7 +148,7 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<Emits>();
 
 const { t } = useI18n();
-const { trackStudyEvent } = useAnalytics();
+const { track } = useAnalytics();
 
 const startButtonRef = ref<HTMLButtonElement>();
 const showKeyboardHint = ref(false);
@@ -186,7 +186,7 @@ const trustMessage = computed(() => {
 
 // Methods
 const handleStart = () => {
-  trackStudyEvent("sticky_start_clicked", {
+  track("sticky_start_clicked", {
     difficulty: props.selectedDifficulty ?? "easy",
   });
 
@@ -194,7 +194,7 @@ const handleStart = () => {
 };
 
 const handleRetry = () => {
-  trackStudyEvent("sticky_start_retry", {
+  track("sticky_start_retry", {
     difficulty: props.selectedDifficulty ?? "easy",
   });
 
@@ -208,7 +208,7 @@ const handleBeforeEnter = () => {
 const handleAfterEnter = () => {
   // Track view once after animation completes
   if (!hasTrackedView.value) {
-    trackStudyEvent("sticky_start_shown", {
+    track("sticky_start_shown", {
       reason: "autostart_disabled",
     });
     hasTrackedView.value = true;

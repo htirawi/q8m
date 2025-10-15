@@ -146,9 +146,9 @@ export function resolvePostLoginTarget(
   intent: PlanIntent | null,
   locale: string
 ): string {
-  // If no intent, use default landing based on plan
+  // If no intent, route to level selection page where user chooses difficulty and mode
   if (!intent) {
-    return getStudyTargetFor(userTier, locale);
+    return getDefaultLandingPage(locale);
   }
 
   // If intent is bundle, respect it for pro users, otherwise use plan default

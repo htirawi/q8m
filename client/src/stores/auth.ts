@@ -2,7 +2,10 @@ import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 import type { User } from "@shared/types/auth";
 import type { AuthTokens, LoginFormData, RegisterFormData } from "@/types/domain/auth";
-import { handleApiResponse, getErrorMessage } from "@/utils/apiHelpers";
+import { httpClient, getErrorMessage } from "@/utils/httpClient";
+import { API_ENDPOINTS } from "@/config/api";
+import { AUTH_CONSTANTS, STORAGE_KEYS } from "@/config/constants";
+import { storage } from "@/utils/storage";
 
 export const useAuthStore = defineStore("auth", () => {
   const user = ref<User | null>(null);
@@ -52,11 +55,11 @@ export const useAuthStore = defineStore("auth", () => {
     tokens.value = newTokens;
     if (newTokens) {
       // Tokens are now handled by httpOnly cookies
-      // No need to store in localStorage
+      // No need to store in storage
     } else {
       // Clear any existing tokens
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("refreshToken");
+      storage.remove(STORAGE_KEYS.ACCESS_TOKEN);
+      storage.remove(STORAGE_KEYS.REFRESH_TOKEN);
     }
   }
 
@@ -66,58 +69,33 @@ export const useAuthStore = defineStore("auth", () => {
     setError(null);
 
     try {
-      // Mock login for whitelisted dev emails
-      const DEV_WHITELIST = ["dev@example.com"];
+      // Use dev-login endpoint for whitelisted dev emails in development
       const isDev = import.meta.env.DEV;
+      const isDevEmail = AUTH_CONSTANTS.DEV_WHITELIST.includes(credentials.email.toLowerCase());
 
-      if (isDev && DEV_WHITELIST.includes(credentials.email.toLowerCase())) {
-        // Mock successful login with test user
-        console.warn(`[DEV] Mock login for whitelisted email: ${credentials.email}`);
+      // Note: dev-login not in API_ENDPOINTS, using manual construction for dev
+      const endpoint = isDev && isDevEmail
+        ? `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'}/api/v1/auth/dev-login`
+        : API_ENDPOINTS.auth.login();
 
-        // Simulate API delay
-        await new Promise(resolve => setTimeout(resolve, 500));
+      const body = isDev && isDevEmail
+        ? { email: credentials.email }
+        : credentials;
 
-        const mockUser: User = {
-          id: "dev-user-123",
-          email: credentials.email,
-          name: "Dev User",
-          role: "admin",
-          isEmailVerified: true,
-          permissions: ["read", "write", "admin"],
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        };
-
-        setUser(mockUser);
-        setTokens({
-          accessToken: "dev-mock-token",
-          refreshToken: "dev-mock-refresh-token",
-          expiresIn: 15 * 60,
-        });
-
-        return true;
+      if (isDev && isDevEmail) {
+        console.warn(`[DEV] Using dev-login endpoint for: ${credentials.email}`);
       }
 
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include", // Include cookies in request
-        body: JSON.stringify(credentials),
-      });
-
-      // Use safe JSON parsing to handle 500 errors
-      const data = await handleApiResponse<{ user: User }>(response);
+      const data = await httpClient.post<{ user: User }>(endpoint, body);
 
       setUser(data.user);
 
       // Tokens are now handled by httpOnly cookies
       // We still need to set a dummy token object for compatibility
       setTokens({
-        accessToken: "cookie-based", // Placeholder since token is in cookie
-        refreshToken: "cookie-based", // Placeholder since token is in cookie
-        expiresIn: 15 * 60, // 15 minutes
+        accessToken: AUTH_CONSTANTS.COOKIE_BASED_TOKEN,
+        refreshToken: AUTH_CONSTANTS.COOKIE_BASED_TOKEN,
+        expiresIn: AUTH_CONSTANTS.TOKEN_EXPIRY_SECONDS,
       });
 
       return true;
@@ -135,16 +113,7 @@ export const useAuthStore = defineStore("auth", () => {
     setError(null);
 
     try {
-      const response = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-      });
-
-      // Use safe JSON parsing to handle 500 errors
-      await handleApiResponse(response);
+      await httpClient.post(API_ENDPOINTS.auth.register(), userData);
 
       // Don't set user/tokens for registration - email verification required
       return true;
@@ -162,13 +131,7 @@ export const useAuthStore = defineStore("auth", () => {
     setError(null);
 
     try {
-      await fetch("/api/auth/logout", {
-        method: "POST",
-        credentials: "include", // Include cookies in request
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      await httpClient.post(API_ENDPOINTS.auth.logout());
 
       // Clear local state regardless of API response
       setUser(null);
@@ -192,12 +155,11 @@ export const useAuthStore = defineStore("auth", () => {
     setError(null);
 
     try {
-      await fetch("/api/auth/logout-all", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${tokens.value?.accessToken}`,
-        },
-      });
+      await httpClient.post(
+        `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'}/api/v1/auth/logout-all`,
+        {},
+        { requireAuth: true, useBearer: true }
+      );
 
       setUser(null);
       setTokens(null);
@@ -216,26 +178,14 @@ export const useAuthStore = defineStore("auth", () => {
 
   async function refreshToken(): Promise<boolean> {
     try {
-      const response = await fetch("/api/auth/refresh", {
-        method: "POST",
-        credentials: "include", // Include cookies in request
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message ?? "Token refresh failed");
-      }
+      await httpClient.post(API_ENDPOINTS.auth.refresh());
 
       // Tokens are now handled by httpOnly cookies
       // We still need to set a dummy token object for compatibility
       setTokens({
-        accessToken: "cookie-based", // Placeholder since token is in cookie
-        refreshToken: "cookie-based", // Placeholder since token is in cookie
-        expiresIn: 15 * 60, // 15 minutes
+        accessToken: AUTH_CONSTANTS.COOKIE_BASED_TOKEN,
+        refreshToken: AUTH_CONSTANTS.COOKIE_BASED_TOKEN,
+        expiresIn: AUTH_CONSTANTS.TOKEN_EXPIRY_SECONDS,
       });
 
       return true;
@@ -254,31 +204,30 @@ export const useAuthStore = defineStore("auth", () => {
 
     try {
       // If using cookie-based auth (OAuth), use cookies instead of Bearer token
-      const useCookies = tokens.value.accessToken === "cookie-based";
+      const useCookies = tokens.value.accessToken === AUTH_CONSTANTS.COOKIE_BASED_TOKEN;
+      const useBearer = !useCookies;
 
-      const response = await fetch("/api/auth/me", {
-        credentials: useCookies ? "include" : "same-origin",
-        headers: useCookies ? {
-          "Content-Type": "application/json",
-        } : {
-          Authorization: `Bearer ${tokens.value.accessToken}`,
-        },
-      });
+      try {
+        const data = await httpClient.get<{ user: User }>(
+          API_ENDPOINTS.auth.me(),
+          {
+            useBearer,
+            requireAuth: useBearer,
+          }
+        );
 
-      if (!response.ok) {
-        if (response.status === 401) {
-          // Try to refresh token
+        setUser(data.user);
+        return true;
+      } catch (err) {
+        // If 401, try to refresh token once
+        if (err instanceof Error && err.message.includes('401')) {
           const refreshed = await refreshToken();
           if (refreshed) {
             return getCurrentUser(); // Retry with new token
           }
         }
-        throw new Error("Failed to get user info");
+        throw err;
       }
-
-      const data = await response.json();
-      setUser(data.user);
-      return true;
     } catch (_err) {
       setUser(null);
       setTokens(null);
@@ -298,20 +247,7 @@ export const useAuthStore = defineStore("auth", () => {
     setError(null);
 
     try {
-      const response = await fetch("/api/auth/resend-verification", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message ?? "Failed to resend verification email");
-      }
-
+      await httpClient.post(API_ENDPOINTS.auth.resendVerification(), { email });
       return true;
     } catch (err) {
       const errorMessage =
@@ -328,20 +264,7 @@ export const useAuthStore = defineStore("auth", () => {
     setError(null);
 
     try {
-      const response = await fetch("/api/auth/forgot-password", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message ?? "Failed to send password reset email");
-      }
-
+      await httpClient.post(API_ENDPOINTS.auth.forgotPassword(), { email });
       return true;
     } catch (err) {
       const errorMessage =
@@ -353,25 +276,18 @@ export const useAuthStore = defineStore("auth", () => {
     }
   }
 
-  async function resetPassword(token: string, password: string): Promise<boolean> {
+  // Password reset is now handled via secure session cookies
+  // The reset flow is:
+  // 1. User clicks link in email -> hits backend /api/auth/reset-password-init/:token
+  // 2. Backend sets secure httpOnly cookie and redirects to frontend /reset-password
+  // 3. Frontend /reset-password calls /api/auth/reset-password-complete with cookie
+  // This ensures no tokens are exposed in URLs or browser history
+  async function resetPassword(password: string): Promise<boolean> {
     setLoading(true);
     setError(null);
 
     try {
-      const response = await fetch("/api/auth/reset-password", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ token, password }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message ?? "Password reset failed");
-      }
-
+      await httpClient.post(API_ENDPOINTS.auth.resetPassword(), { password });
       return true;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Password reset failed";
@@ -387,23 +303,11 @@ export const useAuthStore = defineStore("auth", () => {
     setError(null);
 
     try {
-      const response = await fetch("/api/auth/change-password", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${tokens.value?.accessToken}`,
-        },
-        body: JSON.stringify({
-          currentPassword,
-          newPassword,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message ?? "Password change failed");
-      }
+      await httpClient.post(
+        API_ENDPOINTS.auth.changePassword(),
+        { currentPassword, newPassword },
+        { requireAuth: true, useBearer: true }
+      );
 
       return true;
     } catch (err) {
@@ -416,32 +320,15 @@ export const useAuthStore = defineStore("auth", () => {
   }
 
   async function checkEmailExists(email: string): Promise<boolean> {
-    // Whitelist for development testing
-    const DEV_WHITELIST = ["dev@example.com"];
-    const isDev = import.meta.env.DEV;
-
-    if (isDev && DEV_WHITELIST.includes(email.toLowerCase())) {
-      console.warn(`[DEV] Whitelisted email detected: ${email} - treating as existing account`);
-      return true;
-    }
-
     try {
-      const response = await fetch("/api/auth/check-email", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }),
-      });
-
-      // Use safe JSON parsing
-      const data = await handleApiResponse<{ exists: boolean }>(response);
+      const data = await httpClient.post<{ exists: boolean }>(
+        `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'}/api/v1/auth/check-email`,
+        { email }
+      );
 
       return data.exists ?? false;
     } catch (err) {
-      // Fallback mock behavior for development
-      // In production, this should always hit the real API
-      console.warn("checkEmailExists: API not available, using mock behavior", getErrorMessage(err));
+      console.warn("checkEmailExists: API not available", getErrorMessage(err));
       return false;
     }
   }
@@ -455,24 +342,16 @@ export const useAuthStore = defineStore("auth", () => {
 
     try {
       // Try to get current user from server (will use httpOnly cookies)
-      const response = await fetch("/api/auth/me", {
-        credentials: "include", // Include httpOnly cookies
-        headers: {
-          "Content-Type": "application/json",
-        },
+      const data = await httpClient.get<{ user: User }>(API_ENDPOINTS.auth.me());
+
+      setUser(data.user);
+
+      // Set dummy tokens to indicate authenticated state
+      setTokens({
+        accessToken: AUTH_CONSTANTS.COOKIE_BASED_TOKEN,
+        refreshToken: AUTH_CONSTANTS.COOKIE_BASED_TOKEN,
+        expiresIn: AUTH_CONSTANTS.TOKEN_EXPIRY_SECONDS,
       });
-
-      if (response.ok) {
-        const data = await response.json();
-        setUser(data.user);
-
-        // Set dummy tokens to indicate authenticated state
-        setTokens({
-          accessToken: "cookie-based",
-          refreshToken: "cookie-based",
-          expiresIn: 15 * 60,
-        });
-      }
     } catch (_err) {
       // Failed to get user - stay logged out
       setUser(null);

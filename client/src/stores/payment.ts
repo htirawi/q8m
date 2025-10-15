@@ -1,6 +1,9 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 import { useErrorHandler } from "@/composables/useErrorHandler";
+import { API_ENDPOINTS } from "@/config/api";
+import { currencyStorage } from "@/utils/storage";
+import { SUPPORTED_CURRENCIES } from "@/config/constants";
 import type {
   PlanPricing,
   Purchase,
@@ -103,7 +106,7 @@ export const usePaymentStore = defineStore("payment", () => {
 
   const setCurrentCurrency = (currency: "USD" | "JOD" | "SAR") => {
     currentCurrency.value = currency;
-    localStorage.setItem("preferred_currency", currency);
+    currencyStorage.set(currency);
   };
 
   // Alias for setCurrentCurrency for backward compatibility
@@ -113,10 +116,10 @@ export const usePaymentStore = defineStore("payment", () => {
     setError(null);
   };
 
-  // Initialize currency from localStorage or detect from browser
+  // Initialize currency from storage or detect from browser
   const initializeCurrency = async () => {
-    const savedCurrency = localStorage.getItem("preferred_currency") as "USD" | "JOD" | "SAR";
-    if (savedCurrency && ["USD", "JOD", "SAR"].includes(savedCurrency)) {
+    const savedCurrency = currencyStorage.get() as "USD" | "JOD" | "SAR" | null;
+    if (savedCurrency && SUPPORTED_CURRENCIES.includes(savedCurrency)) {
       currentCurrency.value = savedCurrency;
     } else {
       // Auto-detect currency based on location (simplified)
@@ -143,7 +146,7 @@ export const usePaymentStore = defineStore("payment", () => {
       setError(null);
 
       const targetCurrency = currency || currentCurrency.value;
-      const response = await fetch(`/api/payments/pricing/${targetCurrency}`);
+      const response = await fetch(API_ENDPOINTS.payments.pricing(targetCurrency));
 
       if (!response.ok) {
         throw new Error("Failed to fetch pricing information");
@@ -170,7 +173,7 @@ export const usePaymentStore = defineStore("payment", () => {
       setLoading(true);
       setError(null);
 
-      const response = await fetch("/api/payments/pricing");
+      const response = await fetch(API_ENDPOINTS.payments.pricing());
 
       if (!response.ok) {
         throw new Error("Failed to fetch pricing information");
@@ -194,7 +197,7 @@ export const usePaymentStore = defineStore("payment", () => {
   // Get currency exchange rates
   const fetchCurrencyRates = async () => {
     try {
-      const response = await fetch("/api/payments/currencies/rates");
+      const response = await fetch(API_ENDPOINTS.payments.currencyRates());
 
       if (!response.ok) {
         throw new Error("Failed to fetch currency rates");
@@ -221,11 +224,11 @@ export const usePaymentStore = defineStore("payment", () => {
       setError(null);
       errorHandler.clearError();
 
-      const response = await fetch("/api/payments/create", {
+      const response = await fetch(API_ENDPOINTS.payments.create(), {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
         },
         body: JSON.stringify(paymentRequest),
       });
@@ -265,9 +268,10 @@ export const usePaymentStore = defineStore("payment", () => {
       setLoading(true);
       setError(null);
 
-      const response = await fetch(`/api/payments/history?limit=${limit}&skip=${skip}`, {
+      const response = await fetch(API_ENDPOINTS.payments.history(limit, skip), {
+        credentials: "include",
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+          "Content-Type": "application/json",
         },
       });
 
@@ -297,9 +301,10 @@ export const usePaymentStore = defineStore("payment", () => {
       setLoading(true);
       setError(null);
 
-      const response = await fetch("/api/payments/subscription", {
+      const response = await fetch(API_ENDPOINTS.payments.subscription(), {
+        credentials: "include",
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+          "Content-Type": "application/json",
         },
       });
 
@@ -332,11 +337,11 @@ export const usePaymentStore = defineStore("payment", () => {
       setLoading(true);
       setError(null);
 
-      const response = await fetch("/api/payments/subscription/cancel", {
+      const response = await fetch(API_ENDPOINTS.payments.cancelSubscription(), {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
         },
         body: JSON.stringify({ reason }),
       });
@@ -377,7 +382,7 @@ export const usePaymentStore = defineStore("payment", () => {
       setLoading(true);
       setError(null);
 
-      const response = await fetch(`/api/payments/callback/${gateway}`, {
+      const response = await fetch(API_ENDPOINTS.payments.callback(gateway), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -462,9 +467,10 @@ export const usePaymentStore = defineStore("payment", () => {
       setError(null);
       errorHandler.clearError();
 
-      const response = await fetch("/api/entitlements/me/entitlements", {
+      const response = await fetch(API_ENDPOINTS.entitlements.me(), {
+        credentials: "include",
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+          "Content-Type": "application/json",
         },
       });
 
@@ -501,11 +507,11 @@ export const usePaymentStore = defineStore("payment", () => {
   // Check specific entitlement
   const checkEntitlement = async (requiredEntitlement: string): Promise<EntitlementCheck> => {
     try {
-      const response = await fetch("/api/entitlements/check", {
+      const response = await fetch(API_ENDPOINTS.entitlements.check(), {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
         },
         body: JSON.stringify({ requiredEntitlement }),
       });
@@ -536,11 +542,11 @@ export const usePaymentStore = defineStore("payment", () => {
   // Check content access
   const checkContentAccess = async (contentLevel: string): Promise<ContentAccess> => {
     try {
-      const response = await fetch("/api/entitlements/check-content", {
+      const response = await fetch(API_ENDPOINTS.entitlements.checkContent(), {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
         },
         body: JSON.stringify({ contentLevel }),
       });
@@ -577,10 +583,11 @@ export const usePaymentStore = defineStore("payment", () => {
       setError(null);
 
       const response = await fetch(
-        `/api/downloads/generate/${category}/${filename}?expiresIn=${expiresIn}`,
+        API_ENDPOINTS.downloads.generate(category, filename, expiresIn),
         {
+          credentials: "include",
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+            "Content-Type": "application/json",
           },
         }
       );
@@ -620,9 +627,10 @@ export const usePaymentStore = defineStore("payment", () => {
       setLoading(true);
       setError(null);
 
-      const response = await fetch("/api/downloads/categories", {
+      const response = await fetch(API_ENDPOINTS.downloads.categories(), {
+        credentials: "include",
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+          "Content-Type": "application/json",
         },
       });
 

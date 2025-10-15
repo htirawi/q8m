@@ -4,7 +4,8 @@
  */
 
 import { ref } from "vue";
-import { handleApiResponse, getErrorMessage } from "@/utils/apiHelpers";
+import { httpClient, getErrorMessage } from "@/utils/httpClient";
+import { API_ENDPOINTS } from "@/config/api";
 import type { ExperienceLevel } from "@shared/types/plan";
 import type {
   IQuizStats,
@@ -96,16 +97,10 @@ export function useQuizResults() {
     error.value = null;
 
     try {
-      const response = await fetch("/api/quiz/results/submit", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-
-      const data = await handleApiResponse<ISubmitQuizResponse>(response);
+      const data = await httpClient.post<ISubmitQuizResponse>(
+        API_ENDPOINTS.quizResults.submit(),
+        payload
+      );
       return data;
     } catch (err) {
       error.value = getErrorMessage(err, "Failed to submit quiz");
@@ -132,19 +127,12 @@ export function useQuizResults() {
       if (options.limit) params.append("limit", String(options.limit));
       if (options.offset) params.append("offset", String(options.offset));
 
-      const response = await fetch(`/api/quiz/results/history?${params.toString()}`, {
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      const data = await handleApiResponse<{
+      const data = await httpClient.get<{
         results: IQuizResult[];
         count: number;
         limit: number;
         offset: number;
-      }>(response);
+      }>(API_ENDPOINTS.quizResults.history(params));
 
       quizHistory.value = data.results;
       return data.results;
@@ -167,14 +155,9 @@ export function useQuizResults() {
       const params = new URLSearchParams();
       if (options.level) params.append("level", options.level);
 
-      const response = await fetch(`/api/quiz/results/stats?${params.toString()}`, {
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      const data = await handleApiResponse<{ stats: IQuizStats }>(response);
+      const data = await httpClient.get<{ stats: IQuizStats }>(
+        API_ENDPOINTS.quizResults.stats(params)
+      );
       quizStats.value = data.stats;
       return data.stats;
     } catch (err) {
@@ -198,15 +181,8 @@ export function useQuizResults() {
       const params = new URLSearchParams();
       if (options.level) params.append("level", options.level);
 
-      const response = await fetch(`/api/quiz/results/weak-areas?${params.toString()}`, {
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      const data = await handleApiResponse<{ weakAreas: IWeakArea[]; count: number }>(
-        response
+      const data = await httpClient.get<{ weakAreas: IWeakArea[]; count: number }>(
+        API_ENDPOINTS.quizResults.weakAreas(params)
       );
 
       weakAreas.value = data.weakAreas;
@@ -227,15 +203,8 @@ export function useQuizResults() {
     error.value = null;
 
     try {
-      const response = await fetch(`/api/quiz/results/${quizId}/wrong-questions`, {
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      const data = await handleApiResponse<{ questionIds: string[]; count: number }>(
-        response
+      const data = await httpClient.get<{ questionIds: string[]; count: number }>(
+        API_ENDPOINTS.quizResults.wrongQuestions(quizId)
       );
 
       wrongQuestions.value = data.questionIds;
@@ -256,14 +225,9 @@ export function useQuizResults() {
     error.value = null;
 
     try {
-      const response = await fetch(`/api/quiz/results/${quizId}`, {
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      const data = await handleApiResponse<{ result: IQuizResult }>(response);
+      const data = await httpClient.get<{ result: IQuizResult }>(
+        API_ENDPOINTS.quizResults.byId(quizId)
+      );
       return data.result;
     } catch (err) {
       error.value = getErrorMessage(err, "Failed to fetch quiz result");

@@ -22,7 +22,7 @@ vi.mock('vue-router', () => ({
 const mockTrackGenericEvent = vi.fn();
 vi.mock('@/composables/useAnalytics', () => ({
   useAnalytics: () => ({
-    trackGenericEvent: mockTrackGenericEvent,
+    track: mockTrackGenericEvent,
   }),
 }));
 

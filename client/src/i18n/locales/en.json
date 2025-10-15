@@ -1053,7 +1053,98 @@
     },
     "yourPlan": "Your Plan",
     "manage": "Manage",
-    "vipChip": "VIP"
+    "vipChip": "VIP",
+    "progress": {
+      "title": "Your Progress",
+      "refresh": "Refresh",
+      "overallCompletion": "Overall Completion",
+      "questionsAnswered": "Questions Answered",
+      "outOf": "out of {total}",
+      "timeSpent": "Time Spent",
+      "thisWeek": "this week",
+      "currentStreak": "Current Streak",
+      "days": "days",
+      "bestStreak": "Best: {days} days",
+      "byDifficulty": "Progress by Difficulty",
+      "recentActivity": "Recent Activity",
+      "daysAgo": "{count} days ago | {count} day ago | {count} days ago",
+      "hoursAgo": "{count} hours ago | {count} hour ago | {count} hours ago",
+      "justNow": "Just now"
+    }
+  },
+  "analytics": {
+    "totalAttempts": "Total Attempts",
+    "averageScore": "Average Score",
+    "bestScore": "Best Score",
+    "improvement": "Improvement",
+    "scoreTrends": "Score Trends",
+    "performanceByLevel": "Performance by Level",
+    "attempts": "attempts",
+    "weakAreas": "Areas to Improve",
+    "strongAreas": "Strong Areas",
+    "correct": "correct",
+    "accuracy": "accuracy",
+    "weakAreasHint": "Focus on these topics to improve your overall performance",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "daysAgo": "{count} days ago | {count} day ago | {count} days ago"
+  },
+  "recommendations": {
+    "title": "Recommended for You",
+    "refresh": "Refresh",
+    "welcomeTitle": "Welcome to Your Learning Journey!",
+    "welcomeMessage": "Start with our Junior quiz to assess your current level and get personalized recommendations.",
+    "excellentTitle": "Excellent Progress!",
+    "excellentMessage": "You're doing great! Keep up the momentum and challenge yourself with harder questions.",
+    "goodTitle": "Good Work!",
+    "goodMessage": "You're making steady progress. Focus on your weak areas to improve further.",
+    "keepGoingTitle": "Keep Going!",
+    "keepGoingMessage": "Practice makes perfect. Review the explanations and try again to improve your scores.",
+    "recommendedQuizzes": "Recommended Quizzes",
+    "studyTopics": "Topics to Study",
+    "learningPath": "Your Learning Path",
+    "quickTips": "Quick Tips",
+    "reasons": {
+      "weak_area": "Needs Practice",
+      "next_level": "Next Challenge",
+      "practice": "Practice",
+      "new": "Start Here"
+    },
+    "priority": {
+      "high": "High Priority",
+      "medium": "Medium Priority",
+      "low": "Low Priority"
+    },
+    "startQuiz": "Start Quiz",
+    "study": "Study",
+    "continue": "Continue",
+    "current": "Current Step",
+    "accuracy": "Current",
+    "target": "Target",
+    "practiceQuiz": "Practice Quiz",
+    "practiceDesc": "Your average score is {score}%. Practice more to improve.",
+    "readyForNext": "You're ready for the next challenge!",
+    "newUserReason": "Start here to build a strong foundation",
+    "fundamentalsReason": "Focus on fundamentals to build a solid base",
+    "patternsReason": "Master common patterns and best practices",
+    "path": {
+      "step1": "Master Junior Level",
+      "step1Desc": "Build strong fundamentals with junior-level questions",
+      "step2": "Advance to Intermediate",
+      "step2Desc": "Learn advanced patterns and real-world scenarios",
+      "step3": "Reach Senior Level",
+      "step3Desc": "Master architecture, performance, and system design"
+    },
+    "tips": {
+      "startEasy": "Start with Easy Questions",
+      "startEasyDesc": "Build confidence by starting with fundamentals before moving to harder topics.",
+      "consistency": "Stay Consistent",
+      "consistencyDesc": "Practice regularly to retain knowledge and build momentum.",
+      "reviewWrong": "Review Wrong Answers",
+      "reviewWrongDesc": "Carefully review explanations for questions you got wrong to learn from mistakes.",
+      "takeMore": "Take More Quizzes",
+      "takeMoreDesc": "The more you practice, the better you'll perform. Aim for at least 5 quizzes per week."
+    }
   },
   "study": {
     "selection": {
@@ -1075,6 +1166,12 @@
     "quickNavigation": "Quick Navigation",
     "loadMore": "Load More Questions",
     "remaining": "remaining",
+    "sessionTimer": "Session Time",
+    "pauseTimer": "Pause timer",
+    "resumeTimer": "Resume timer",
+    "resetTimer": "Reset timer",
+    "selectAnswer": "Select your answer",
+    "answer": "Answer",
     "levelCard": {
       "currentPlan": "Current Plan",
       "clickToUnlock": "Click to unlock",
@@ -1185,10 +1282,30 @@
         "description": "Save questions for later review"
       }
     },
+    "practiceMode": {
+      "label": "Practice Mode",
+      "sequential": "Sequential",
+      "random": "Random",
+      "bookmarked": "Bookmarked"
+    },
+    "filters": {
+      "searchPlaceholder": "Search questions by text, category, or tag...",
+      "allTypes": "All Question Types",
+      "multipleChoice": "Multiple Choice",
+      "trueFalse": "True/False",
+      "fillBlank": "Fill in the Blank",
+      "multipleCheckbox": "Multiple Checkbox",
+      "allQuestions": "All Questions",
+      "answered": "Answered Only",
+      "unanswered": "Unanswered Only",
+      "clear": "Clear Filters",
+      "resultsCount": "Showing {count} of {total} questions"
+    },
     "error": {
       "title": "Error Loading Questions",
       "retry": "Try Again",
       "noQuestions": "No questions available for this difficulty level",
+      "noBookmarks": "No bookmarked questions yet. Bookmark some questions to use this mode!",
       "generic": "Something went wrong. Please try again."
     },
     "sticky": {
@@ -1306,7 +1423,13 @@
       "title": "Quiz Mode",
       "subtitle": "Test your knowledge with timed quizzes",
       "chooseLevel": "Choose Experience Level",
-      "startQuiz": "Start Quiz"
+      "startQuiz": "Start Quiz",
+      "searchPlaceholder": "Search by level or skill...",
+      "allDifficulties": "All Difficulties",
+      "sortDefault": "Default Order",
+      "sortDuration": "Sort by Duration",
+      "sortQuestions": "Sort by Questions",
+      "noResults": "No quizzes found matching your search"
     },
     "loading": "Loading quiz...",
     "exit": "Exit Quiz",
@@ -1317,6 +1440,27 @@
     "explanation": "Explanation",
     "fillBlankPlaceholder": "Type your answer here...",
     "confirmExit": "Are you sure you want to exit? Your progress will be lost.",
+    "countdown": "Time Remaining",
+    "timeWarning": "Hurry! Only {minutes} minutes remaining!",
+    "timeUp": "Time's up! Quiz submitted automatically.",
+    "metadata": {
+      "testedSkills": "Tested Skills",
+      "duration": "{minutes} minutes",
+      "questions": "{count} questions",
+      "startQuiz": "Start Quiz →",
+      "junior": {
+        "title": "Junior Developer Quiz",
+        "description": "Test your foundational knowledge of Vue.js, React, and Angular basics"
+      },
+      "intermediate": {
+        "title": "Intermediate Developer Quiz",
+        "description": "Challenge yourself with advanced patterns and real-world scenarios"
+      },
+      "senior": {
+        "title": "Senior Developer Quiz",
+        "description": "Master-level questions on architecture, performance, and system design"
+      }
+    },
     "features": {
       "multipleChoice": {
         "title": "Multiple Choice",
@@ -1380,6 +1524,64 @@
       "label": "Senior",
       "description": "Senior developer questions",
       "questionCount": "{count} questions"
+    }
+  },
+  "modeChooser": {
+    "title": "Choose Your Learning Mode",
+    "subtitle": "Select how you want to learn at {difficulty} level",
+    "backToLevels": "Back to Difficulty Selection",
+    "studyMode": {
+      "title": "Study Mode",
+      "description": "Learn at your own pace with detailed explanations and examples",
+      "cta": "Start Studying",
+      "features": {
+        "feature1": "Self-paced learning with no time pressure",
+        "feature2": "Reveal answers and explanations anytime",
+        "feature3": "Bookmark questions for later review",
+        "feature4": "Take notes on each question"
+      }
+    },
+    "quizMode": {
+      "title": "Quiz Mode",
+      "description": "Test your knowledge with timed challenges and instant feedback",
+      "cta": "Start Quiz",
+      "features": {
+        "feature1": "Timed questions to simulate real interviews",
+        "feature2": "Immediate feedback on your answers",
+        "feature3": "Track your score and accuracy",
+        "feature4": "Review incorrect answers with explanations"
+      }
+    },
+    "comparison": {
+      "title": "Compare Learning Modes",
+      "feature": "Feature",
+      "features": {
+        "selfPaced": "Self-Paced",
+        "timed": "Timed Challenges",
+        "revealAnswers": "Reveal Answers Anytime",
+        "immediateFeedback": "Immediate Feedback",
+        "scoring": "Score Tracking",
+        "bookmarks": "Bookmarks & Notes",
+        "analytics": "Progress Analytics"
+      }
+    }
+  },
+  "keyboard": {
+    "shortcuts": "Keyboard Shortcuts",
+    "quiz": {
+      "space": "Submit answer / Next question",
+      "enter": "Submit answer",
+      "arrowRight": "Next question",
+      "numbers": "Select answer option (1-4)",
+      "escape": "Exit quiz"
+    },
+    "study": {
+      "space": "Reveal answer / Next question",
+      "arrowLeft": "Previous question",
+      "arrowRight": "Next question",
+      "b": "Toggle bookmark",
+      "numbers": "Select answer option (1-4)",
+      "escape": "Go back"
     }
   }
 }

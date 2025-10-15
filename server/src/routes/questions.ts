@@ -1,4 +1,5 @@
 import { authenticate } from "@middlewares/auth.middleware.js";
+import { studyGuard, quizGuard } from "@middlewares/planGuard.middleware.js";
 import { Question } from "@models/Question.js";
 import { QuestionResponseSchema } from "@shared/schemas/question.schema.js";
 import type { FastifyInstance } from "fastify";
@@ -21,6 +22,13 @@ export default async function questionRoutes(fastify: FastifyInstance) {
   fastify.get(
     "/",
     {
+      preHandler: [authenticate, studyGuard()],
+      config: {
+        rateLimit: {
+          max: 100,
+          timeWindow: '1 minute',
+        },
+      },
       schema: {
         querystring: zodToJsonSchema(getQuestionsSchema),
       },
@@ -31,7 +39,7 @@ export default async function questionRoutes(fastify: FastifyInstance) {
         typeof getQuestionsSchema
       >;
 
-      // Fetch questions from database with filters
+      // Fetch questions from database with filters (with projection)
       const questions = await Question.findWithFilters({
         framework,
         level,
@@ -39,7 +47,7 @@ export default async function questionRoutes(fastify: FastifyInstance) {
         difficulty,
         limit,
         offset,
-      });
+      }).select('_id id type content difficulty level framework category tags points isActive createdAt updatedAt');
 
       const total = await Question.countDocuments({
         ...(framework && { framework }),
@@ -173,6 +181,13 @@ export default async function questionRoutes(fastify: FastifyInstance) {
   fastify.get(
     "/quiz/questions",
     {
+      preHandler: [authenticate, quizGuard()],
+      config: {
+        rateLimit: {
+          max: 50,
+          timeWindow: '1 minute',
+        },
+      },
       schema: {
         description: "Get questions for quiz mode by level",
         tags: ["questions"],
@@ -193,7 +208,6 @@ export default async function questionRoutes(fastify: FastifyInstance) {
           ),
         },
       },
-      preHandler: [authenticate],
     },
     async (request, reply) => {
       try {
@@ -222,8 +236,12 @@ export default async function questionRoutes(fastify: FastifyInstance) {
           query.framework = framework;
         }
 
-        // Get questions
-        const questions = await Question.find(query).sort({ createdAt: -1 }).limit(limit).lean();
+        // Get questions (with projection for lean response)
+        const questions = await Question.find(query)
+          .select('_id id type content difficulty level framework category tags points isActive createdAt updatedAt')
+          .sort({ createdAt: -1 })
+          .limit(limit)
+          .lean();
 
         // Get total count
         const total = await Question.countDocuments(query);

@@ -3,8 +3,8 @@
  * Centralized HTTP request handling with auth, headers, and error handling
  */
 
-import { HTTP_METHODS, JSON_HEADERS, AUTH_CONSTANTS, HTTP_HEADERS } from '@/config/constants';
-import { handleApiResponse, getErrorMessage } from './apiHelpers';
+import { HTTP_METHODS, JSON_HEADERS, AUTH_CONSTANTS, HTTP_HEADERS } from "@/config/constants";
+import { handleApiResponse, getErrorMessage } from "./apiHelpers";
 
 // ============================================
 // Types
@@ -63,10 +63,7 @@ class HttpClient {
   /**
    * Make HTTP request with common settings
    */
-  private async request<T>(
-    url: string,
-    options: RequestOptions = {}
-  ): Promise<T> {
+  private async request<T>(url: string, options: RequestOptions = {}): Promise<T> {
     const {
       timeout = this.config.timeout,
       requireAuth = false,
@@ -90,7 +87,7 @@ class HttpClient {
       const response = await fetch(url, {
         ...fetchOptions,
         headers: mergedHeaders,
-        credentials: 'include', // Always include cookies
+        credentials: "include", // Always include cookies
         signal: controller.signal,
       });
 
@@ -101,8 +98,8 @@ class HttpClient {
     } catch (error) {
       clearTimeout(timeoutId);
 
-      if (error instanceof Error && error.name === 'AbortError') {
-        throw new Error('Request timeout');
+      if (error instanceof Error && error.name === "AbortError") {
+        throw new Error("Request timeout");
       }
 
       throw error;
@@ -122,11 +119,7 @@ class HttpClient {
   /**
    * POST request
    */
-  async post<T>(
-    url: string,
-    body?: unknown,
-    options?: RequestOptions
-  ): Promise<T> {
+  async post<T>(url: string, body?: unknown, options?: RequestOptions): Promise<T> {
     return this.request<T>(url, {
       ...options,
       method: HTTP_METHODS.POST,
@@ -137,11 +130,7 @@ class HttpClient {
   /**
    * PUT request
    */
-  async put<T>(
-    url: string,
-    body?: unknown,
-    options?: RequestOptions
-  ): Promise<T> {
+  async put<T>(url: string, body?: unknown, options?: RequestOptions): Promise<T> {
     return this.request<T>(url, {
       ...options,
       method: HTTP_METHODS.PUT,
@@ -152,11 +141,7 @@ class HttpClient {
   /**
    * PATCH request
    */
-  async patch<T>(
-    url: string,
-    body?: unknown,
-    options?: RequestOptions
-  ): Promise<T> {
+  async patch<T>(url: string, body?: unknown, options?: RequestOptions): Promise<T> {
     return this.request<T>(url, {
       ...options,
       method: HTTP_METHODS.PATCH,

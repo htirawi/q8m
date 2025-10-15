@@ -113,91 +113,6 @@
                 </div>
             </div>
 
-            <!-- Mode Selection (shown when level is selected) -->
-            <div v-if="selectedLevel && canUserAccessLevel(selectedLevel)" class="mx-auto max-w-4xl">
-                <h2 class="mb-6 text-center text-2xl font-bold text-gray-900 dark:text-white">
-                    {{ t('levelSelection.chooseMode') }}
-                </h2>
-                <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-                    <!-- Study Mode -->
-                    <button type="button"
-                        class="group relative overflow-hidden rounded-2xl border-2 border-blue-200 bg-white p-8 text-left transition-all duration-300 hover:scale-105 hover:border-blue-500 hover:shadow-2xl dark:border-blue-800 dark:bg-gray-800 dark:hover:border-blue-600"
-                        @click="startMode('study')">
-                        <div class="mb-4 text-5xl">📚</div>
-                        <h3 class="mb-3 text-2xl font-bold text-gray-900 dark:text-white">
-                            {{ t('levelSelection.studyMode.title') }}
-                        </h3>
-                        <p class="mb-4 text-gray-600 dark:text-gray-400">
-                            {{ t('levelSelection.studyMode.description') }}
-                        </p>
-                        <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                            <li class="flex items-center gap-2">
-                                <svg class="h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd"
-                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                                {{ t('levelSelection.studyMode.feature1') }}
-                            </li>
-                            <li class="flex items-center gap-2">
-                                <svg class="h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd"
-                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                                {{ t('levelSelection.studyMode.feature2') }}
-                            </li>
-                            <li class="flex items-center gap-2">
-                                <svg class="h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd"
-                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                                {{ t('levelSelection.studyMode.feature3') }}
-                            </li>
-                        </ul>
-                    </button>
-
-                    <!-- Quiz Mode -->
-                    <button type="button"
-                        class="group relative overflow-hidden rounded-2xl border-2 border-purple-200 bg-white p-8 text-left transition-all duration-300 hover:scale-105 hover:border-purple-500 hover:shadow-2xl dark:border-purple-800 dark:bg-gray-800 dark:hover:border-purple-600"
-                        @click="startMode('quiz')">
-                        <div class="mb-4 text-5xl">🎯</div>
-                        <h3 class="mb-3 text-2xl font-bold text-gray-900 dark:text-white">
-                            {{ t('levelSelection.quizMode.title') }}
-                        </h3>
-                        <p class="mb-4 text-gray-600 dark:text-gray-400">
-                            {{ t('levelSelection.quizMode.description') }}
-                        </p>
-                        <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                            <li class="flex items-center gap-2">
-                                <svg class="h-5 w-5 text-purple-500" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd"
-                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                                {{ t('levelSelection.quizMode.feature1') }}
-                            </li>
-                            <li class="flex items-center gap-2">
-                                <svg class="h-5 w-5 text-purple-500" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd"
-                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                                {{ t('levelSelection.quizMode.feature2') }}
-                            </li>
-                            <li class="flex items-center gap-2">
-                                <svg class="h-5 w-5 text-purple-500" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd"
-                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                                {{ t('levelSelection.quizMode.feature3') }}
-                            </li>
-                        </ul>
-                    </button>
-                </div>
-            </div>
         </div>
     </div>
 </template>
@@ -225,10 +140,24 @@ const canUserAccessLevel = (level: ExperienceLevel): boolean => {
     return canAccessLevel(planStore.planTier, level);
 };
 
-const selectLevel = (level: ExperienceLevel) => {
-    if (canUserAccessLevel(level) || !authStore.isAuthenticated) {
-        selectedLevel.value = level;
+const selectLevel = async (level: ExperienceLevel) => {
+    if (!canUserAccessLevel(level)) {
+        return;
     }
+
+    selectedLevel.value = level;
+
+    // Map level to difficulty
+    const levelToDifficultyMap: Record<ExperienceLevel, 'easy' | 'medium' | 'hard'> = {
+        junior: 'easy',
+        intermediate: 'medium',
+        senior: 'hard',
+    };
+
+    const difficulty = levelToDifficultyMap[level];
+
+    // Navigate to mode chooser
+    await router.push(`/${locale.value}/${difficulty}/choose`);
 };
 
 const getLevelCardClass = (level: ExperienceLevel) => {
@@ -257,25 +186,5 @@ const getLevelDescriptionClass = (level: ExperienceLevel) => {
     }
 
     return "text-sm text-gray-600 dark:text-gray-400";
-};
-
-const startMode = async (mode: 'study' | 'quiz') => {
-    if (!selectedLevel.value) {
-        return;
-    }
-
-    // Map level to difficulty for study mode or keep level for quiz mode
-    const levelToDifficultyMap: Record<ExperienceLevel, 'easy' | 'medium' | 'hard'> = {
-        junior: 'easy',
-        intermediate: 'medium',
-        senior: 'hard',
-    };
-
-    if (mode === 'study') {
-        const difficulty = levelToDifficultyMap[selectedLevel.value];
-        await router.push(`/${locale.value}/study/${difficulty}`);
-    } else {
-        await router.push(`/${locale.value}/quiz/${selectedLevel.value}`);
-    }
 };
 </script>

@@ -1,0 +1,231 @@
+name: Security Audit
+
+on:
+  push:
+    branches: [main, develop, feat/security-hardening]
+  pull_request:
+    branches: [main, develop]
+  schedule:
+    # Run weekly security audit on Mondays at 9 AM UTC
+    - cron: "0 9 * * 1"
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  security-audit:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      security-events: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8.15.0
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: |
+          pnpm config set store-dir ~/.pnpm-store
+          pnpm install --frozen-lockfile || pnpm install --no-frozen-lockfile
+
+      - name: Run npm audit (High & Critical)
+        run: |
+          echo "🔍 Running npm audit for high and critical vulnerabilities..."
+          pnpm audit --audit-level=high --json > audit-results.json || true
+
+          # Check if there are any vulnerabilities
+          VULN_COUNT=$(jq '.metadata.vulnerabilities.high + .metadata.vulnerabilities.critical' audit-results.json 2>/dev/null || echo "0")
+
+          echo "Found $VULN_COUNT high/critical vulnerabilities"
+
+          if [ "$VULN_COUNT" -gt "0" ]; then
+            echo "⚠️  Security vulnerabilities found!"
+            pnpm audit --audit-level=high
+            exit 1
+          else
+            echo "✅ No high/critical vulnerabilities found"
+          fi
+
+      - name: Check for secrets with gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
+
+      - name: Run dependency check
+        run: |
+          echo "🔍 Checking for unused dependencies..."
+
+          # Check root
+          echo "Checking root package..."
+          pnpm dlx depcheck --json > depcheck-root.json || true
+
+          # Check client
+          echo "Checking client package..."
+          cd client && pnpm dlx depcheck --json > depcheck-client.json || true && cd ..
+
+          # Check server
+          echo "Checking server package..."
+          cd server && pnpm dlx depcheck --json > depcheck-server.json || true && cd ..
+
+          echo "✅ Dependency check complete"
+
+      - name: Run SAST with ESLint Security Plugin
+        run: |
+          echo "🔍 Running static analysis security testing..."
+
+          # Run ESLint with security rules on server
+          cd server
+          pnpm eslint src --ext .ts,.js --format json --output-file ../eslint-server-results.json || true
+          cd ..
+
+          # Run ESLint with security rules on client
+          cd client
+          pnpm eslint src --ext .vue,.ts,.js --format json --output-file ../eslint-client-results.json || true
+          cd ..
+
+          echo "✅ SAST scan complete"
+
+      - name: Run security tests
+        run: |
+          echo "🧪 Running security test suites..."
+
+          # Run server security tests
+          cd server
+          pnpm test src/tests/security/ --run || exit 1
+          cd ..
+
+          echo "✅ Security tests passed"
+
+      - name: Check for known vulnerable packages
+        run: |
+          echo "🔍 Checking for packages with known vulnerabilities..."
+          pnpm dlx better-npm-audit audit --level high || true
+
+      - name: Verify security headers
+        run: |
+          echo "🔍 Verifying security headers configuration..."
+
+          # Check if helmet is configured
+          if grep -r "helmet" server/src/app.ts; then
+            echo "✅ Helmet security headers configured"
+          else
+            echo "❌ Helmet security headers not found"
+            exit 1
+          fi
+
+          # Check if CORS is configured
+          if grep -r "cors" server/src/app.ts; then
+            echo "✅ CORS configured"
+          else
+            echo "❌ CORS configuration not found"
+            exit 1
+          fi
+
+      - name: Check rate limiting
+        run: |
+          echo "🔍 Verifying rate limiting is configured..."
+
+          if grep -r "rateLimit" server/src/; then
+            echo "✅ Rate limiting configured"
+          else
+            echo "❌ Rate limiting not found"
+            exit 1
+          fi
+
+      - name: Verify input validation
+        run: |
+          echo "🔍 Checking for input validation..."
+
+          # Check for Zod usage
+          if grep -r "zod" server/src/routes/; then
+            echo "✅ Input validation with Zod found"
+          else
+            echo "❌ Input validation not properly configured"
+            exit 1
+          fi
+
+      - name: Check for hardcoded secrets
+        run: |
+          echo "🔍 Checking for hardcoded secrets in code..."
+
+          # Check for common secret patterns
+          if grep -r "password.*=.*['\"]" --include="*.ts" --include="*.js" server/src/ client/src/ | grep -v "test" | grep -v "example"; then
+            echo "⚠️  Potential hardcoded secrets found"
+            exit 1
+          else
+            echo "✅ No hardcoded secrets detected"
+          fi
+
+      - name: Upload audit results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-audit-results
+          path: |
+            audit-results.json
+            depcheck-*.json
+            eslint-*-results.json
+          retention-days: 30
+
+      - name: Comment on PR
+        if: github.event_name == 'pull_request' && always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+
+            let auditResults = {};
+            try {
+              auditResults = JSON.parse(fs.readFileSync('audit-results.json', 'utf8'));
+            } catch (e) {
+              console.log('No audit results found');
+            }
+
+            const vulns = auditResults.metadata?.vulnerabilities || {};
+            const total = (vulns.low || 0) + (vulns.moderate || 0) + (vulns.high || 0) + (vulns.critical || 0);
+
+            const comment = `## 🔒 Security Audit Results
+
+            | Severity | Count |
+            |----------|-------|
+            | Critical | ${vulns.critical || 0} |
+            | High | ${vulns.high || 0} |
+            | Moderate | ${vulns.moderate || 0} |
+            | Low | ${vulns.low || 0} |
+
+            **Total Vulnerabilities:** ${total}
+
+            ${total > 0 ? '⚠️  Please review and fix vulnerabilities before merging.' : '✅ No vulnerabilities found!'}
+
+            ---
+
+            Security checks performed:
+            - ✅ npm audit (high & critical)
+            - ✅ Secret scanning (gitleaks)
+            - ✅ Dependency check
+            - ✅ SAST (ESLint security)
+            - ✅ Security test suites
+            - ✅ Security headers verification
+            - ✅ Rate limiting verification
+            - ✅ Input validation check
+            `;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });

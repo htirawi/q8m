@@ -3,6 +3,7 @@ import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import { useAuthRedirect } from "@/composables/useAuthRedirect";
+import { API_ENDPOINTS } from "@/config/api";
 
 const route = useRoute();
 const router = useRouter();
@@ -25,7 +26,7 @@ onMounted(async () => {
   try {
     // Call verification endpoint using secure session cookie
     // No token in URL - token is in httpOnly cookie set by backend
-    const response = await fetch("/api/auth/verify-email-complete", {
+    const response = await fetch(API_ENDPOINTS.auth.verifyEmail(), {
       method: "POST",
       credentials: "include", // Send httpOnly cookies
       headers: {

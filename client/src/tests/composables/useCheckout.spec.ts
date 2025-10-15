@@ -37,12 +37,12 @@ vi.mock("@/composables/useAnalytics", () => ({
 describe("useCheckout", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    
+
     // Mock successful fetch responses with both json() and text() methods
     (global.fetch as any).mockImplementation((url: string) => {
       let responseData: unknown;
-      
-      if (url.includes('/coupons/validate')) {
+
+      if (url.includes("/coupons/validate")) {
         responseData = {
           success: true,
           valid: true,
@@ -52,7 +52,7 @@ describe("useCheckout", () => {
             finalAmount: 90,
           },
         };
-      } else if (url.includes('/checkout/create')) {
+      } else if (url.includes("/checkout/create")) {
         responseData = {
           success: true,
           session: {
@@ -64,7 +64,7 @@ describe("useCheckout", () => {
             embedUrl: "https://example.com/checkout",
           },
         };
-      } else if (url.includes('/checkout/one-click')) {
+      } else if (url.includes("/checkout/one-click")) {
         responseData = {
           success: true,
           subscription: {
@@ -74,9 +74,9 @@ describe("useCheckout", () => {
       } else {
         responseData = { success: true };
       }
-      
+
       const responseText = JSON.stringify(responseData);
-      
+
       return Promise.resolve({
         ok: true,
         text: async () => responseText,
@@ -172,9 +172,7 @@ describe("useCheckout", () => {
 
       checkout.selectPlan("invalid" as any, "monthly");
 
-      expect(consoleSpy).toHaveBeenCalledWith(
-        expect.stringContaining("Plan not found")
-      );
+      expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining("Plan not found"));
       consoleSpy.mockRestore();
     });
   });
@@ -183,7 +181,7 @@ describe("useCheckout", () => {
     it("should apply coupon and return success", async () => {
       const checkout = useCheckout();
       checkout.selectPlan("intermediate", "annual");
-      
+
       const result = await checkout.applyCoupon("SAVE10");
 
       expect(checkout.couponCode.value).toBe("SAVE10");
@@ -200,7 +198,7 @@ describe("useCheckout", () => {
         valid: false,
         error: "Invalid coupon",
       };
-      
+
       (global.fetch as any).mockResolvedValueOnce({
         ok: false,
         text: async () => JSON.stringify(errorResponse),
@@ -254,14 +252,15 @@ describe("useCheckout", () => {
       // Skip: Router mock override not working properly in this context
       // This behavior is tested in e2e tests
       const mockPush = vi.fn();
-      vi.mocked(await import("vue-router")).useRouter = () => ({
-        push: mockPush,
-        currentRoute: {
-          value: {
-            params: { locale: "en" },
+      vi.mocked(await import("vue-router")).useRouter = () =>
+        ({
+          push: mockPush,
+          currentRoute: {
+            value: {
+              params: { locale: "en" },
+            },
           },
-        },
-      } as any);
+        }) as any;
 
       const checkout = useCheckout();
       checkout.selectPlan("intermediate", "monthly");
@@ -445,12 +444,12 @@ describe("useCheckout", () => {
 
       expect(options).toHaveLength(6);
 
-      const tiers = options.map(o => o.tier);
+      const tiers = options.map((o) => o.tier);
       expect(tiers).toContain("intermediate");
       expect(tiers).toContain("advanced");
       expect(tiers).toContain("pro");
 
-      const cycles = options.map(o => o.cycle);
+      const cycles = options.map((o) => o.cycle);
       expect(cycles).toContain("monthly");
       expect(cycles).toContain("annual");
     });

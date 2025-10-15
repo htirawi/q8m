@@ -36,7 +36,7 @@ const {
   savedPaymentMethods,
 } = useCheckout();
 
-const { trackGenericEvent } = useAnalytics();
+const { track } = useAnalytics();
 
 // Local state
 const useNewPaymentMethod = ref(false);
@@ -73,7 +73,7 @@ const getPlanDisplayName = (tier: string) => {
 
 // Methods
 const handleClose = () => {
-  trackGenericEvent('checkout_abandoned', {
+  track('checkout_abandoned', {
     plan: selectedPlan.value?.tier,
     billing: selectedCycle.value,
     step: currentStep.value,
@@ -105,7 +105,7 @@ watch(() => [props.planId, props.billing], ([planId, billing]) => {
 // Track modal opened
 watch(() => props.show, (isOpen) => {
   if (isOpen) {
-    trackGenericEvent('checkout_opened', {
+    track('checkout_opened', {
       plan: props.planId,
       billing: props.billing,
       method: 'modal',

@@ -9,12 +9,12 @@ import {
   getRequiredPlanForDifficulty,
   getRequiredPlanForLevel,
   getSuggestedUpgradePlan,
-} from '@shared/config/features';
-import type { PlanTier } from '@shared/types/plan';
-import type { FastifyRequest, FastifyReply } from 'fastify';
+} from "@shared/config/features";
+import type { PlanTier } from "@shared/types/plan";
+import type { FastifyRequest, FastifyReply } from "fastify";
 
 export interface PlanGuardOptions {
-  feature: 'study' | 'quiz';
+  feature: "study" | "quiz";
   allowAnonymous?: boolean; // For public previews
 }
 
@@ -37,13 +37,13 @@ interface AuthenticatedRequest extends FastifyRequest {
  * Helper to determine user's plan tier from entitlements
  */
 function getUserPlanTier(entitlements: string[]): PlanTier {
-  if (entitlements.includes('SENIOR') || entitlements.includes('BUNDLE')) {
-    return 'advanced';
+  if (entitlements.includes("SENIOR") || entitlements.includes("BUNDLE")) {
+    return "advanced";
   }
-  if (entitlements.includes('INTERMEDIATE')) {
-    return 'intermediate';
+  if (entitlements.includes("INTERMEDIATE")) {
+    return "intermediate";
   }
-  return 'free';
+  return "free";
 }
 
 /**
@@ -57,8 +57,8 @@ export function createPlanGuard(options: PlanGuardOptions) {
     if (!request.authUser && !allowAnonymous) {
       return reply.status(401).send({
         code: 401,
-        error: 'Unauthorized',
-        message: 'Authentication required',
+        error: "Unauthorized",
+        message: "Authentication required",
       });
     }
 
@@ -69,35 +69,35 @@ export function createPlanGuard(options: PlanGuardOptions) {
 
     const userTier: PlanTier = request.authUser
       ? getUserPlanTier(request.authUser.entitlements)
-      : 'free';
+      : "free";
 
     // Study feature guard
-    if (feature === 'study') {
+    if (feature === "study") {
       const { difficulty } = request.query as { difficulty?: string };
 
-      if (difficulty && !['easy', 'medium', 'hard'].includes(difficulty)) {
+      if (difficulty && !["easy", "medium", "hard"].includes(difficulty)) {
         return reply.status(400).send({
           code: 400,
-          error: 'Bad Request',
-          message: 'Invalid difficulty level',
+          error: "Bad Request",
+          message: "Invalid difficulty level",
         });
       }
 
       if (difficulty) {
         const hasAccess = canAccessStudyDifficulty(
           userTier,
-          difficulty as 'easy' | 'medium' | 'hard'
+          difficulty as "easy" | "medium" | "hard"
         );
 
         if (!hasAccess) {
           const requiredPlan = getRequiredPlanForDifficulty(
-            difficulty as 'easy' | 'medium' | 'hard'
+            difficulty as "easy" | "medium" | "hard"
           );
           const suggestedPlan = getSuggestedUpgradePlan(requiredPlan, userTier);
 
           return reply.status(403).send({
             code: 403,
-            error: 'Forbidden',
+            error: "Forbidden",
             message: `Access to ${difficulty} difficulty requires ${requiredPlan} plan or higher`,
             requiredPlan,
             suggestedPlan,
@@ -109,32 +109,32 @@ export function createPlanGuard(options: PlanGuardOptions) {
     }
 
     // Quiz feature guard
-    if (feature === 'quiz') {
+    if (feature === "quiz") {
       const { level } = request.query as { level?: string };
 
-      if (level && !['junior', 'intermediate', 'senior'].includes(level)) {
+      if (level && !["junior", "intermediate", "senior"].includes(level)) {
         return reply.status(400).send({
           code: 400,
-          error: 'Bad Request',
-          message: 'Invalid quiz level',
+          error: "Bad Request",
+          message: "Invalid quiz level",
         });
       }
 
       if (level) {
         const hasAccess = canAccessQuizLevel(
           userTier,
-          level as 'junior' | 'intermediate' | 'senior'
+          level as "junior" | "intermediate" | "senior"
         );
 
         if (!hasAccess) {
           const requiredPlan = getRequiredPlanForLevel(
-            level as 'junior' | 'intermediate' | 'senior'
+            level as "junior" | "intermediate" | "senior"
           );
           const suggestedPlan = getSuggestedUpgradePlan(requiredPlan, userTier);
 
           return reply.status(403).send({
             code: 403,
-            error: 'Forbidden',
+            error: "Forbidden",
             message: `Access to ${level} level requires ${requiredPlan} plan or higher`,
             requiredPlan,
             suggestedPlan,
@@ -153,9 +153,9 @@ export function createPlanGuard(options: PlanGuardOptions) {
 /**
  * Convenience wrapper for study guard
  */
-export const studyGuard = () => createPlanGuard({ feature: 'study' });
+export const studyGuard = () => createPlanGuard({ feature: "study" });
 
 /**
  * Convenience wrapper for quiz guard
  */
-export const quizGuard = () => createPlanGuard({ feature: 'quiz' });
+export const quizGuard = () => createPlanGuard({ feature: "quiz" });

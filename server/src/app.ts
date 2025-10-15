@@ -93,9 +93,18 @@ fastify.addHook("onSend", async (request, reply, payload) => {
 
 // Register plugins
 async function registerPlugins() {
-  // CORS
+  // CORS - fail fast in production if CORS_ORIGIN not configured
+  if (env.NODE_ENV === "production" && !env.CORS_ORIGIN) {
+    throw new Error(
+      "CORS_ORIGIN must be set in production environment. " +
+      "Set it to a comma-separated list of allowed origins (e.g., 'https://example.com,https://www.example.com')"
+    );
+  }
+
   await fastify.register(cors, {
-    origin: env.CORS_ORIGIN?.split(",") || true,
+    // In development, fallback to localhost:5173 if not set
+    // In production, CORS_ORIGIN is required (checked above)
+    origin: env.CORS_ORIGIN?.split(",") || (env.NODE_ENV === "development" ? ["http://localhost:5173"] : true),
     credentials: env.CORS_CREDENTIALS === "true",
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
@@ -200,7 +209,7 @@ async function registerPlugins() {
       },
     },
     startRedirectPath: "/api/auth/google",
-    callbackUri: `${env.API_BASE_URL}/api/auth/google/callback`,
+    callbackUri: `${env.API_BASE_URL}/api/v1/auth/google/callback`,
     scope: ["profile", "email"],
   });
 
@@ -304,25 +313,25 @@ async function registerRoutes() {
     };
   });
 
-  // API routes
-  await fastify.register(authRoutes, { prefix: "/api/auth" });
-  await fastify.register(pricingRoutes, { prefix: "/api/pricing" });
-  await fastify.register(paymentRoutes, { prefix: "/api/payments" });
-  await fastify.register(paypalRoutes, { prefix: "/api/payments/paypal" });
-  await fastify.register(checkoutRoutes, { prefix: "/api/checkout" });
-  await fastify.register(couponRoutes, { prefix: "/api/coupons" });
-  await fastify.register(questionRoutes, { prefix: "/api/questions" });
-  await fastify.register(progressRoutes, { prefix: "/api/progress" });
-  await fastify.register(quizResultsRoutes, { prefix: "/api/quiz/results" });
-  await fastify.register(gamificationRoutes, { prefix: "/api/gamification" });
-  await fastify.register(adminRoutes, { prefix: "/api/admin" });
-  await fastify.register(entitlementRoutes, { prefix: "/api/entitlements" });
-  await fastify.register(plansRoutes, { prefix: "/api/plans" });
+  // API routes (v1)
+  await fastify.register(authRoutes, { prefix: "/api/v1/auth" });
+  await fastify.register(pricingRoutes, { prefix: "/api/v1/pricing" });
+  await fastify.register(paymentRoutes, { prefix: "/api/v1/payments" });
+  await fastify.register(paypalRoutes, { prefix: "/api/v1/payments/paypal" });
+  await fastify.register(checkoutRoutes, { prefix: "/api/v1/checkout" });
+  await fastify.register(couponRoutes, { prefix: "/api/v1/coupons" });
+  await fastify.register(questionRoutes, { prefix: "/api/v1/questions" });
+  await fastify.register(progressRoutes, { prefix: "/api/v1/progress" });
+  await fastify.register(quizResultsRoutes, { prefix: "/api/v1/quiz/results" });
+  await fastify.register(gamificationRoutes, { prefix: "/api/v1/gamification" });
+  await fastify.register(adminRoutes, { prefix: "/api/v1/admin" });
+  await fastify.register(entitlementRoutes, { prefix: "/api/v1/entitlements" });
+  await fastify.register(plansRoutes, { prefix: "/api/v1/plans" });
   await fastify.register(seoRoutes);
 
   // Development routes (only in dev mode)
   if (env.NODE_ENV === "development") {
-    await fastify.register(devEmailRoutes, { prefix: "/api/dev/emails" });
+    await fastify.register(devEmailRoutes, { prefix: "/api/v1/dev/emails" });
   }
 }
 
@@ -517,8 +526,8 @@ export const buildApp = async () => {
           },
           auth: oauth2.GOOGLE_CONFIGURATION,
         },
-        startRedirectPath: "/auth/google",
-        callbackUri: `${env.API_BASE_URL}/auth/google/callback`,
+        startRedirectPath: "/api/v1/auth/google",
+        callbackUri: `${env.API_BASE_URL}/api/v1/auth/google/callback`,
         scope: ["profile", "email"],
       });
     } catch (error) {
@@ -572,20 +581,20 @@ export const buildApp = async () => {
     return { message: "Quiz Platform API" };
   });
 
-  // Register routes
-  await testApp.register(authRoutes, { prefix: "/api/auth" });
-  await testApp.register(pricingRoutes, { prefix: "/api/pricing" });
-  await testApp.register(paymentRoutes, { prefix: "/api/payments" });
-  await testApp.register(paypalRoutes, { prefix: "/api/payments/paypal" });
-  await testApp.register(checkoutRoutes, { prefix: "/api/checkout" });
-  await testApp.register(couponRoutes, { prefix: "/api/coupons" });
-  await testApp.register(questionRoutes, { prefix: "/api/questions" });
-  await testApp.register(progressRoutes, { prefix: "/api/progress" });
-  await testApp.register(quizResultsRoutes, { prefix: "/api/quiz/results" });
-  await testApp.register(gamificationRoutes, { prefix: "/api/gamification" });
-  await testApp.register(adminRoutes, { prefix: "/api/admin" });
-  await testApp.register(entitlementRoutes, { prefix: "/api/entitlements" });
-  await testApp.register(plansRoutes, { prefix: "/api/plans" });
+  // Register routes (v1)
+  await testApp.register(authRoutes, { prefix: "/api/v1/auth" });
+  await testApp.register(pricingRoutes, { prefix: "/api/v1/pricing" });
+  await testApp.register(paymentRoutes, { prefix: "/api/v1/payments" });
+  await testApp.register(paypalRoutes, { prefix: "/api/v1/payments/paypal" });
+  await testApp.register(checkoutRoutes, { prefix: "/api/v1/checkout" });
+  await testApp.register(couponRoutes, { prefix: "/api/v1/coupons" });
+  await testApp.register(questionRoutes, { prefix: "/api/v1/questions" });
+  await testApp.register(progressRoutes, { prefix: "/api/v1/progress" });
+  await testApp.register(quizResultsRoutes, { prefix: "/api/v1/quiz/results" });
+  await testApp.register(gamificationRoutes, { prefix: "/api/v1/gamification" });
+  await testApp.register(adminRoutes, { prefix: "/api/v1/admin" });
+  await testApp.register(entitlementRoutes, { prefix: "/api/v1/entitlements" });
+  await testApp.register(plansRoutes, { prefix: "/api/v1/plans" });
   await testApp.register(seoRoutes);
 
   return testApp;

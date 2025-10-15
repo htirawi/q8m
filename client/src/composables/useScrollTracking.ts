@@ -45,7 +45,7 @@ export function useScrollTracking(
     trackingEnabled = true,
   } = config;
 
-  const { trackGenericEvent } = useAnalytics();
+  const { track } = useAnalytics();
 
   const scrollDepth = ref<number>(0);
   const scrollY = ref<number>(0);
@@ -90,7 +90,7 @@ export function useScrollTracking(
       timeToMilestone: Date.now() - startTime.value,
     };
 
-    trackGenericEvent("scroll_depth", event);
+    track("scroll_depth", event);
   };
 
   /**

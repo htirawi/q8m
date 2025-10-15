@@ -6,7 +6,7 @@ import { DIFFICULTY_TO_PLAN_ID, getPlanById } from "@/config/plans";
 // Mock analytics composable
 vi.mock("@/composables/useAnalytics", () => ({
   useAnalytics: () => ({
-    trackStudyEvent: vi.fn(),
+    track: vi.fn(),
   }),
 }));
 

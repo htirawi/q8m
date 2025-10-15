@@ -12,11 +12,11 @@ import { useAnalytics } from '@/composables/useAnalytics';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
-const { trackGenericEvent } = useAnalytics();
+const { track } = useAnalytics();
 
 // Track page view
 onMounted(() => {
-  trackGenericEvent('pricing_viewed', {
+  track('pricing_viewed', {
     source: (route.query.source as string) || 'direct',
     locale: (route.params.locale as string) || 'en',
     rtl: (route.params.locale as string) === 'ar',

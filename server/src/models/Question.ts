@@ -4,7 +4,7 @@ import { Schema, model } from "mongoose";
 export interface IQuestion extends Document {
   framework: "angular" | "react" | "vue" | "nextjs" | "redux" | "random";
   level: "junior" | "intermediate" | "senior";
-  type: "multiple-choice" | "true-false" | "fill-blank" | "code-completion";
+  type: "multiple-choice" | "true-false" | "fill-blank" | "multiple-checkbox";
   category: string;
   difficulty: "easy" | "medium" | "hard";
   tags: string[];
@@ -42,7 +42,7 @@ const questionSchema = new Schema(
     },
     type: {
       type: String,
-      enum: ["multiple-choice", "true-false", "fill-blank", "code-completion"],
+      enum: ["multiple-choice", "true-false", "fill-blank", "multiple-checkbox"],
       required: true,
     },
     category: {
@@ -114,6 +114,8 @@ const questionSchema = new Schema(
 questionSchema.index({ framework: 1, level: 1, isActive: 1 });
 questionSchema.index({ framework: 1, category: 1, isActive: 1 });
 questionSchema.index({ framework: 1, difficulty: 1, isActive: 1 });
+questionSchema.index({ difficulty: 1, isActive: 1, createdAt: -1 }); // For study mode
+questionSchema.index({ level: 1, isActive: 1, createdAt: -1 }); // For quiz mode
 questionSchema.index({ tags: 1, isActive: 1 });
 
 // Static method to find questions with filters

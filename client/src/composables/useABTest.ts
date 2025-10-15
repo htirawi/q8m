@@ -58,7 +58,7 @@ export function useABTest(config: IABTestConfig): IABTestResult {
     }
   }
 
-  const { trackGenericEvent } = useAnalytics();
+  const { track } = useAnalytics();
 
   const STORAGE_KEY_PREFIX = "q8m_ab_test_";
   const finalStorageKey = storageKey ?? `${STORAGE_KEY_PREFIX}${testId}`;
@@ -122,7 +122,7 @@ export function useABTest(config: IABTestConfig): IABTestResult {
       timestamp: Date.now(),
     };
 
-    trackGenericEvent("ab_test_assignment", event);
+    track("ab_test_assignment", event);
     hasTrackedAssignment.value = true;
   };
 
@@ -133,7 +133,7 @@ export function useABTest(config: IABTestConfig): IABTestResult {
     outcome: "conversion" | "bounce" | "continue",
     value?: number
   ): void => {
-    trackGenericEvent("ab_test_outcome", {
+    track("ab_test_outcome", {
       testId,
       variant: variant.value,
       outcome,

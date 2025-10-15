@@ -1,359 +1,127 @@
 /**
  * Analytics Composable
- * Tracks content viewing, quiz interactions, and user events
+ * Type-safe analytics tracking with automatic metadata injection
  */
 
-import { ref } from "vue";
-import type { AnalyticsEvent, ContentAnalyticsData } from "@shared/types/analytics";
+import { useI18n } from 'vue-i18n';
+import { usePlanStore } from '@/stores/plan';
+import type { DeviceType } from '@shared/types/analytics';
 
-const events = ref<AnalyticsEvent[]>([]);
-const isEnabled = ref(true);
+// Generate a unique session ID that persists for the session
+let sessionId = '';
+if (typeof window !== 'undefined') {
+  sessionId = sessionStorage.getItem('analytics_session_id') || generateSessionId();
+  sessionStorage.setItem('analytics_session_id', sessionId);
+}
 
-/**
- * Generic event tracking
- */
-function trackEvent(
-  event: string,
-  category: string,
-  action: string,
-  label?: string,
-  value?: number,
-  metadata?: Record<string, unknown>
-) {
-  if (!isEnabled.value) return;
+function generateSessionId(): string {
+  return `${Date.now()}-${Math.random().toString(36).substring(2, 15)}`;
+}
 
-  const analyticsEvent: AnalyticsEvent = {
-    event,
-    category,
-    action,
-    label,
-    value,
-    timestamp: new Date(),
-    metadata,
+export function useAnalytics() {
+  const { locale } = useI18n();
+  const planStore = usePlanStore();
+
+  /**
+   * Get device type based on viewport width
+   */
+  const getDevice = (): DeviceType => {
+    if (typeof window === 'undefined') return 'desktop';
+    if (window.innerWidth < 768) return 'mobile';
+    if (window.innerWidth < 1024) return 'tablet';
+    return 'desktop';
   };
 
-  events.value.push(analyticsEvent);
+  /**
+   * Get base properties that are automatically added to every event
+   */
+  const getBaseProperties = () => ({
+    plan: planStore.planTier,
+    locale: locale.value as 'en' | 'ar',
+    rtl: locale.value === 'ar',
+    device: getDevice(),
+    sessionId,
+    timestamp: Date.now(),
+  });
 
-  // Log to console in development
-  if (import.meta.env.DEV) {
-    console.warn("[Analytics]", analyticsEvent);
-  }
+  /**
+   * Track an analytics event
+   * @param event - Event name
+   * @param properties - Event-specific properties
+   */
+  const track = (event: string, properties: Record<string, unknown> = {}) => {
+    const payload = {
+      ...getBaseProperties(),
+      ...properties,
+    };
 
-  // Send to analytics service (Google Analytics, Plausible, etc.)
-  sendToAnalyticsProvider(analyticsEvent);
-}
+    // Send to Google Analytics (production only)
+    if (import.meta.env.PROD && typeof window !== 'undefined' && 'gtag' in window) {
+      try {
+        const {gtag} = (window as Window & { gtag?: (...args: unknown[]) => void });
+        if (gtag) {
+          gtag('event', event, payload);
+        }
+      } catch (error) {
+        console.error('[Analytics] Failed to send event to GA:', error);
+      }
+    }
 
-/**
- * Sends event to analytics provider
- */
-// Extend Window interface for analytics providers
-declare global {
-  interface Window {
-    gtag?: (command: string, eventName: string, parameters: Record<string, unknown>) => void;
-    plausible?: (eventName: string, options: { props: Record<string, unknown> }) => void;
-  }
-}
+    // Console log in development
+    if (import.meta.env.DEV) {
+      // eslint-disable-next-line no-console
+      console.log(`[Analytics] ${event}`, payload);
+    }
 
-function sendToAnalyticsProvider(event: AnalyticsEvent) {
-  // Google Analytics 4
-  if (typeof window !== "undefined" && window.gtag) {
-    window.gtag("event", event.event, {
-      event_category: event.category,
-      event_label: event.label,
-      value: event.value,
-      ...event.metadata,
+    // You can add more analytics providers here (Mixpanel, Amplitude, etc.)
+  };
+
+  /**
+   * Track a page view
+   * @param path - Page path
+   * @param title - Page title
+   */
+  const trackPageView = (path: string, title?: string) => {
+    track('page_view', {
+      page_path: path,
+      page_title: title,
     });
-  }
+  };
 
-  // Plausible Analytics
-  if (typeof window !== "undefined" && window.plausible) {
-    window.plausible(event.event, {
-      props: {
-        category: event.category,
-        action: event.action,
-        label: event.label,
-        ...event.metadata,
-      },
+  /**
+   * Track a conversion event (checkout completed)
+   */
+  const trackConversion = (
+    targetPlan: string,
+    billingCycle: 'monthly' | 'annual',
+    price: number,
+    paymentMethod: string
+  ) => {
+    track('checkout_completed', {
+      targetPlan,
+      billingCycle,
+      price,
+      paymentMethod,
+      value: price, // For GA conversion value
+      currency: 'USD',
     });
-  }
+  };
 
-  // Custom backend endpoint (optional)
-  if (import.meta.env.VITE_ANALYTICS_ENDPOINT) {
-    fetch(import.meta.env.VITE_ANALYTICS_ENDPOINT, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(event),
-    }).catch(console.error);
-  }
-}
+  /**
+   * Track an error
+   */
+  const trackError = (errorMessage: string, errorContext?: Record<string, unknown>) => {
+    track('error', {
+      error_message: errorMessage,
+      ...errorContext,
+    });
+  };
 
-/**
- * Content Events
- */
-
-/**
- * Tracks when a study item is viewed
- */
-function trackStudyViewed(data: ContentAnalyticsData) {
-  trackEvent(
-    "content_study_viewed",
-    "content",
-    "study_viewed",
-    `${data.framework}:${data.topic}`,
-    undefined,
-    {
-      framework: data.framework,
-      topic: data.topic,
-      level: data.level,
-      contentId: data.contentId,
-    }
-  );
-}
-
-/**
- * Tracks when a quiz is started
- */
-function trackQuizViewed(data: ContentAnalyticsData) {
-  trackEvent(
-    "content_quiz_viewed",
-    "content",
-    "quiz_viewed",
-    `${data.framework}:${data.topic}`,
-    undefined,
-    {
-      framework: data.framework,
-      topic: data.topic,
-      level: data.level,
-      contentId: data.contentId,
-    }
-  );
-}
-
-/**
- * Tracks when a question is answered
- */
-function trackQuestionAnswered(
-  data: ContentAnalyticsData & { isCorrect: boolean; timeSpent: number }
-) {
-  trackEvent(
-    "content_question_answered",
-    "content",
-    "question_answered",
-    `${data.framework}:${data.topic}`,
-    data.timeSpent,
-    {
-      framework: data.framework,
-      topic: data.topic,
-      level: data.level,
-      contentId: data.contentId,
-      isCorrect: data.isCorrect,
-      timeSpent: data.timeSpent,
-    }
-  );
-}
-
-/**
- * Tracks when an explanation is opened
- */
-function trackExplanationOpened(data: ContentAnalyticsData) {
-  trackEvent(
-    "content_explanation_opened",
-    "content",
-    "explanation_opened",
-    `${data.framework}:${data.topic}`,
-    undefined,
-    {
-      framework: data.framework,
-      topic: data.topic,
-      level: data.level,
-      contentId: data.contentId,
-    }
-  );
-}
-
-/**
- * Tracks quiz completion
- */
-function trackQuizCompleted(
-  data: ContentAnalyticsData & {
-    score: number;
-    totalQuestions: number;
-    timeSpent: number;
-  }
-) {
-  trackEvent(
-    "content_quiz_completed",
-    "content",
-    "quiz_completed",
-    `${data.framework}:${data.topic}`,
-    data.score,
-    {
-      framework: data.framework,
-      topic: data.topic,
-      level: data.level,
-      contentId: data.contentId,
-      score: data.score,
-      totalQuestions: data.totalQuestions,
-      timeSpent: data.timeSpent,
-      percentage: Math.round((data.score / data.totalQuestions) * 100),
-    }
-  );
-}
-
-/**
- * User Interaction Events
- */
-
-/**
- * Tracks content bookmarking
- */
-function trackContentBookmarked(data: ContentAnalyticsData & { action: "add" | "remove" }) {
-  trackEvent(
-    "content_bookmarked",
-    "interaction",
-    `bookmark_${data.action}`,
-    `${data.framework}:${data.topic}`,
-    undefined,
-    {
-      framework: data.framework,
-      topic: data.topic,
-      contentId: data.contentId,
-      action: data.action,
-    }
-  );
-}
-
-/**
- * Tracks content sharing
- */
-function trackContentShared(data: ContentAnalyticsData & { method: string }) {
-  trackEvent(
-    "content_shared",
-    "interaction",
-    "share",
-    `${data.framework}:${data.topic}`,
-    undefined,
-    {
-      framework: data.framework,
-      topic: data.topic,
-      contentId: data.contentId,
-      method: data.method,
-    }
-  );
-}
-
-/**
- * Tracks framework selection
- */
-function trackFrameworkSelected(framework: string) {
-  trackEvent("framework_selected", "navigation", "select_framework", framework, undefined, {
-    framework,
-  });
-}
-
-/**
- * Tracks level/tier selection
- */
-function trackLevelSelected(level: string) {
-  trackEvent("level_selected", "navigation", "select_level", level, undefined, {
-    level,
-  });
-}
-
-/**
- * Page View Events
- */
-
-/**
- * Tracks page views
- */
-function trackPageView(path: string, title: string) {
-  trackEvent("page_view", "navigation", "page_view", path, undefined, {
-    path,
-    title,
-  });
-}
-
-/**
- * Utility Functions
- */
-
-/**
- * Enables or disables analytics tracking
- */
-function setAnalyticsEnabled(enabled: boolean) {
-  isEnabled.value = enabled;
-}
-
-/**
- * Gets all tracked events (for debugging)
- */
-function getEvents(): AnalyticsEvent[] {
-  return events.value;
-}
-
-/**
- * Clears all tracked events
- */
-function clearEvents() {
-  events.value = [];
-}
-
-/**
- * Legacy method aliases for backward compatibility
- */
-
-/**
- * Generic event tracking (legacy)
- * Simplified signature: trackGenericEvent(action, metadata?)
- */
-function trackGenericEvent(action: string, metadata?: Record<string, unknown>) {
-  trackEvent(action, "generic", action, undefined, undefined, metadata);
-}
-
-/**
- * Study event tracking (legacy)
- * Simplified signature: trackStudyEvent(action, metadata?)
- */
-function trackStudyEvent(action: string, metadata?: Record<string, unknown>) {
-  trackEvent(`study_${action}`, "study", action, undefined, undefined, metadata);
-}
-
-/**
- * useAnalytics Composable
- */
-export function useAnalytics() {
   return {
-    // Content Events
-    trackStudyViewed,
-    trackQuizViewed,
-    trackQuestionAnswered,
-    trackExplanationOpened,
-    trackQuizCompleted,
-
-    // User Interaction Events
-    trackContentBookmarked,
-    trackContentShared,
-    trackFrameworkSelected,
-    trackLevelSelected,
-
-    // Page View Events
+    track,
     trackPageView,
-
-    // Generic Event Tracking
-    trackEvent,
-
-    // Legacy Compatibility
-    trackGenericEvent,
-    trackStudyEvent,
-
-    // Utility
-    setAnalyticsEnabled,
-    getEvents,
-    clearEvents,
-
-    // State
-    isEnabled,
-    events,
+    trackConversion,
+    trackError,
+    sessionId,
   };
 }
