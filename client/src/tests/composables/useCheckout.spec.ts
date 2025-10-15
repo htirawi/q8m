@@ -30,7 +30,7 @@ vi.mock("@/stores/auth", () => ({
 
 vi.mock("@/composables/useAnalytics", () => ({
   useAnalytics: () => ({
-    trackGenericEvent: vi.fn(),
+    track: vi.fn(),
   }),
 }));
 
@@ -38,55 +38,49 @@ describe("useCheckout", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     
-    // Mock successful fetch responses
+    // Mock successful fetch responses with both json() and text() methods
     (global.fetch as any).mockImplementation((url: string) => {
+      let responseData: unknown;
+      
       if (url.includes('/coupons/validate')) {
-        return Promise.resolve({
-          ok: true,
-          json: async () => ({
-            success: true,
-            valid: true,
-            coupon: {
-              code: "SAVE10",
-              discountAmount: 10,
-              finalAmount: 90,
-            },
-          }),
-        });
+        responseData = {
+          success: true,
+          valid: true,
+          coupon: {
+            code: "SAVE10",
+            discountAmount: 10,
+            finalAmount: 90,
+          },
+        };
+      } else if (url.includes('/checkout/create')) {
+        responseData = {
+          success: true,
+          session: {
+            sessionId: "session_123",
+            planTier: "intermediate",
+            cycle: "annual",
+            amount: 100,
+            currency: "USD",
+            embedUrl: "https://example.com/checkout",
+          },
+        };
+      } else if (url.includes('/checkout/one-click')) {
+        responseData = {
+          success: true,
+          subscription: {
+            id: "sub_123",
+          },
+        };
+      } else {
+        responseData = { success: true };
       }
       
-      if (url.includes('/checkout/create')) {
-        return Promise.resolve({
-          ok: true,
-          json: async () => ({
-            success: true,
-            session: {
-              sessionId: "session_123",
-              planTier: "intermediate",
-              cycle: "annual",
-              amount: 100,
-              currency: "USD",
-              embedUrl: "https://example.com/checkout",
-            },
-          }),
-        });
-      }
-      
-      if (url.includes('/checkout/one-click')) {
-        return Promise.resolve({
-          ok: true,
-          json: async () => ({
-            success: true,
-            subscription: {
-              id: "sub_123",
-            },
-          }),
-        });
-      }
+      const responseText = JSON.stringify(responseData);
       
       return Promise.resolve({
         ok: true,
-        json: async () => ({ success: true }),
+        text: async () => responseText,
+        json: async () => responseData,
       });
     });
   });
@@ -201,13 +195,16 @@ describe("useCheckout", () => {
       checkout.selectPlan("intermediate", "monthly");
 
       // Mock failed response
+      const errorResponse = {
+        success: false,
+        valid: false,
+        error: "Invalid coupon",
+      };
+      
       (global.fetch as any).mockResolvedValueOnce({
         ok: false,
-        json: async () => ({
-          success: false,
-          valid: false,
-          error: "Invalid coupon",
-        }),
+        text: async () => JSON.stringify(errorResponse),
+        json: async () => errorResponse,
       });
 
       const result = await checkout.applyCoupon("INVALID");
