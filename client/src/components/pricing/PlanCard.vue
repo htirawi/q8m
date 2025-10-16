@@ -19,15 +19,16 @@ const emit = defineEmits<IEmits>();
 const { t } = useI18n();
 
 const currentPrice = computed(() => {
+  if (!props.plan) return 0;
   return props.billing === 'monthly'
-    ? props.plan?.priceMonthly
-    : props.plan.priceYearly;
+    ? (props.plan.priceMonthly ?? 0)
+    : (props.plan.priceYearly ?? 0);
 });
 
 const savingsPercent = computed(() => {
-  if (props.billing !== 'annual' || props.plan?.priceMonthly === 0) return 0;
-  const monthlyCost = props.plan?.priceMonthly * 12;
-  const annualCost = props.plan.priceYearly;
+  if (!props.plan || props.billing !== 'annual' || (props.plan.priceMonthly ?? 0) === 0) return 0;
+  const monthlyCost = (props.plan.priceMonthly ?? 0) * 12;
+  const annualCost = props.plan.priceYearly ?? 0;
   const savings = monthlyCost - annualCost;
   return Math.round((savings / monthlyCost) * 100);
 });
