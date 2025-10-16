@@ -5,9 +5,9 @@
 import type { PlanId, BillingCycle } from "@/types/domain/pricing";
 
 export interface IPaymentCheckoutModalProps {
-  open: boolean;
+  show: boolean;
   planId?: PlanId;
-  billingCycle?: BillingCycle;
+  billing?: BillingCycle;
 }
 
 export interface IPaymentCheckoutModalEmits {

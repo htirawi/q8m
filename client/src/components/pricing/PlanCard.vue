@@ -43,15 +43,11 @@ defineOptions({
 </script>
 
 <template>
-  <div
-    class="plan-card"
-    :class="{
-      'plan-card--featured': featured || plan?.metadata?.featured,
-      'plan-card--free': plan?.priceMonthly === 0,
-      'plan-card--selected': selected,
-    }"
-    :data-testid="`plan-card-${plan?.id}`"
-  >
+  <div class="plan-card" :class="{
+    'plan-card--featured': featured || plan?.metadata?.featured,
+    'plan-card--free': plan?.priceMonthly === 0,
+    'plan-card--selected': selected,
+  }" :data-testid="`plan-card-${plan?.id}`">
     <!-- IBadge -->
     <div v-if="plan?.badge" class="plan-card-badge" :class="`plan-card-badge--${plan?.badge.color}`">
       {{ plan?.badge?.textKey ? t(plan.badge.textKey) : '' }}
@@ -86,33 +82,21 @@ defineOptions({
 
     <!-- Features -->
     <ul class="plan-card-features" role="list">
-      <li
-        v-for="(benefitKey, idx) in plan?.features.benefits"
-        :key="idx"
-        class="plan-card-feature"
-      >
+      <li v-for="(benefitKey, idx) in plan?.features.benefits" :key="idx" class="plan-card-feature">
         <svg class="plan-card-check-icon" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-          <path
-            fill-rule="evenodd"
+          <path fill-rule="evenodd"
             d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-            clip-rule="evenodd"
-          />
+            clip-rule="evenodd" />
         </svg>
         <span>{{ t(benefitKey) }}</span>
       </li>
     </ul>
 
     <!-- CTA -->
-    <button
-      type="button"
-      class="plan-card-cta"
-      :class="{
-        'plan-card-cta--primary': featured || plan?.metadata?.featured,
-        'plan-card-cta--secondary': !featured && !plan?.metadata?.featured,
-      }"
-      @click="handleSelect"
-      :data-testid="`plan-cta-${plan?.id}`"
-    >
+    <button type="button" class="plan-card-cta" :class="{
+      'plan-card-cta--primary': featured || plan?.metadata?.featured,
+      'plan-card-cta--secondary': !featured && !plan?.metadata?.featured,
+    }" @click="handleSelect" :data-testid="`plan-cta-${plan?.id}`">
       {{ plan?.cta?.labelKey ? t(plan.cta.labelKey) : '' }}
     </button>
   </div>

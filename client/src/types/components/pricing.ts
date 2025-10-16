@@ -28,16 +28,37 @@ export interface IModernPricingCardProps {
 }
 
 export interface IPlanCardProps {
-  planId: PlanId;
-  title: string;
-  price: number;
-  billingCycle: BillingCycle;
-  features: string[];
-  popular?: boolean;
+  plan: {
+    id: PlanId;
+    tier: string;
+    labelKey: string;
+    descriptionKey: string;
+    priceMonthly: number;
+    priceYearly: number;
+    features?: Array<{ labelKey: string; included: boolean }>;
+    badge?: {
+      textKey: string;
+      color: string;
+    };
+    cta: {
+      labelKey: string;
+    };
+    visual?: {
+      icon: string;
+      color: string;
+    };
+    metadata?: {
+      featured?: boolean;
+    };
+  };
+  billing: BillingCycle;
+  featured?: boolean;
+  selected?: boolean;
+  showSocialProof?: boolean;
 }
 
 export interface IPlanCardEmits {
-  (e: "select", planId: PlanId): void;
+  (e: "select", planId: PlanId, billing: BillingCycle): void;
 }
 
 export interface ITestimonial {
