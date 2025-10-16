@@ -4,13 +4,13 @@
  * List of supported countries for billing and payment processing.
  */
 
-export interface Country {
+export interface ICountry {
   code: string;
   name: string;
   currency?: string;
 }
 
-export const COUNTRIES: Country[] = [
+export const COUNTRIES: ICountry[] = [
   { code: "US", name: "United States", currency: "USD" },
   { code: "JO", name: "Jordan", currency: "JOD" },
   { code: "SA", name: "Saudi Arabia", currency: "SAR" },
@@ -26,10 +26,10 @@ export const COUNTRIES: Country[] = [
   { code: "YE", name: "Yemen", currency: "YER" },
 ];
 
-export const getCountryByCode = (code: string): Country | undefined => {
+export const getCountryByCode = (code: string): ICountry | undefined => {
   return COUNTRIES.find((country) => country.code === code);
 };
 
-export const getCountriesByCurrency = (currency: string): Country[] => {
+export const getCountriesByCurrency = (currency: string): ICountry[] => {
   return COUNTRIES.filter((country) => country.currency === currency);
 };

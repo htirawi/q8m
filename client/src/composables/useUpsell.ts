@@ -11,12 +11,8 @@ import { ref } from "vue";
 import { useAnalytics } from "./useAnalytics";
 import type { DifficultyLevel } from "@/types/plan/access";
 import type { PlanTier } from "@shared/types/plan";
+import type { IUpsellModalContext } from '@shared/types/composables';
 
-export interface IUpsellModalContext {
-  difficulty: DifficultyLevel;
-  requiredPlan: PlanTier;
-  source: 'level_card' | 'feature_gate';
-}
 
 export function useUpsell() {
   const { track } = useAnalytics();

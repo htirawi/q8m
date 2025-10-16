@@ -16,6 +16,10 @@ export const useAuthStore = defineStore("auth", () => {
   const isInitialized = ref(false);
 
   // Computed properties
+  const token = computed(() => {
+    return tokens.value?.accessToken ?? null;
+  });
+
   const hasEntitlement = computed(() => {
     return (entitlement: string) => {
       return user.value?.permissions?.includes(entitlement) ?? false;
@@ -382,6 +386,7 @@ export const useAuthStore = defineStore("auth", () => {
     isInitialized,
 
     // Computed
+    token,
     hasEntitlement,
     isEmailVerified,
     userRole,

@@ -2,7 +2,7 @@
  * API Helper utilities for robust error handling
  */
 
-export interface ApiError {
+export interface IApiError {
   message: string;
   status: number;
   data?: unknown;
@@ -51,7 +51,7 @@ export async function handleApiResponse<T = unknown>(response: Response): Promis
       errorMessage = `Server error: ${errorMessage}`;
     }
 
-    const error: ApiError = {
+    const error: IApiError = {
       message: errorMessage,
       status: response.status,
       data,
@@ -79,7 +79,7 @@ export function getErrorMessage(error: unknown, fallback: string = "An error occ
   }
 
   if (error && typeof error === "object" && "message" in error) {
-    return (error as ApiError).message;
+    return (error as IApiError).message;
   }
 
   if (error instanceof Error) {

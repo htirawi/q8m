@@ -54,20 +54,15 @@
 </template>
 
 <script setup lang="ts">
+import type { IStartStudyingCtaProps as Props, IStartStudyingCtaEmits as Emits } from "@/types/components/study";
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useAnalytics } from "@/composables/useAnalytics";
 import type { DifficultyLevel } from "@/types/plan/access";
 
-interface Props {
-  selectedDifficulty: DifficultyLevel | null;
-  disabled?: boolean;
-  scrollTargetSelector?: string;
-}
 
-interface Emits {
-  (e: "click", difficulty: DifficultyLevel | null): void;
-}
+
+
 
 const props = withDefaults(defineProps<Props>(), {
   disabled: false,

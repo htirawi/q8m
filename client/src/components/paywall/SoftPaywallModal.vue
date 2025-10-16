@@ -122,21 +122,16 @@
 </template>
 
 <script setup lang="ts">
+import type { ISoftPaywallModalProps as Props, ISoftPaywallModalEmits as Emits } from "@/types/components/paywall";
 import { ref, computed, watch, onMounted, onUnmounted, nextTick } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 import { trackEvent } from "@/utils/telemetry";
 import type { PlanTier } from "@shared/types/plan";
 
-interface Props {
-  isVisible: boolean;
-  targetRoute: string;
-  suggestedPlan: PlanTier;
-}
 
-interface Emits {
-  (e: "dismiss"): void;
-}
+
+
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();

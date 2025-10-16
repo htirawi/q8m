@@ -1,27 +1,50 @@
 <template>
-  <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
-    <div class="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
+  <div class="relative min-h-screen overflow-hidden bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+    <!-- Animated Background Blobs -->
+    <div class="pointer-events-none absolute inset-0 overflow-hidden">
+      <div class="absolute -left-4 top-20 h-72 w-72 animate-blob rounded-full bg-blue-300 opacity-20 mix-blend-multiply blur-xl filter dark:bg-blue-600 dark:opacity-10"></div>
+      <div class="animation-delay-2000 absolute right-4 top-40 h-72 w-72 animate-blob rounded-full bg-purple-300 opacity-20 mix-blend-multiply blur-xl filter dark:bg-purple-600 dark:opacity-10"></div>
+      <div class="animation-delay-4000 absolute -bottom-8 left-1/3 h-72 w-72 animate-blob rounded-full bg-pink-300 opacity-20 mix-blend-multiply blur-xl filter dark:bg-pink-600 dark:opacity-10"></div>
+    </div>
+
+    <div class="relative mx-auto max-w-5xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
       <!-- Loading State -->
-      <div v-if="isLoading" class="flex min-h-[400px] items-center justify-center">
+      <div v-if="isLoading" class="flex min-h-[500px] items-center justify-center">
         <div class="text-center">
-          <div class="mb-4 inline-block h-12 w-12 animate-spin rounded-full border-4 border-primary-200 border-t-primary-600"></div>
-          <p class="text-gray-600 dark:text-gray-400">{{ t('quiz.loading') }}</p>
+          <div class="mb-6 inline-block h-16 w-16 animate-spin rounded-full border-4 border-purple-200 border-t-purple-600 dark:border-purple-800 dark:border-t-purple-400"></div>
+          <p class="text-lg font-medium text-gray-700 dark:text-gray-300">{{ t('quiz.loading') }}</p>
+          <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Preparing your quiz questions...</p>
         </div>
       </div>
 
       <!-- Error State -->
-      <div v-else-if="error" class="rounded-lg bg-red-50 p-6 dark:bg-red-900/20">
-        <h3 class="mb-2 text-lg font-semibold text-red-900 dark:text-red-200">
-          {{ t('quiz.error.title') }}
-        </h3>
-        <p class="text-red-700 dark:text-red-300">{{ error }}</p>
-        <button
-          type="button"
-          class="mt-4 rounded-lg bg-red-600 px-4 py-2 text-white hover:bg-red-700"
-          @click="loadQuiz"
-        >
-          {{ t('quiz.error.retry') }}
-        </button>
+      <div v-else-if="error" class="flex min-h-[500px] items-center justify-center">
+        <div class="mx-auto max-w-md rounded-2xl border-2 border-red-200 bg-white/80 p-8 text-center backdrop-blur-sm dark:border-red-800 dark:bg-gray-800/80">
+          <!-- Error Icon -->
+          <div class="mb-4 flex justify-center">
+            <div class="rounded-full bg-red-100 p-4 dark:bg-red-900/30">
+              <svg class="h-12 w-12 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+            </div>
+          </div>
+
+          <h3 class="mb-3 text-2xl font-bold text-gray-900 dark:text-white">
+            {{ t('quiz.error.title') }}
+          </h3>
+          <p class="mb-6 text-sm leading-relaxed text-gray-600 dark:text-gray-400">{{ error }}</p>
+
+          <button
+            type="button"
+            class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-red-500 to-pink-600 px-6 py-3 font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:from-red-600 hover:to-pink-700 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-red-500 focus:ring-offset-2"
+            @click="loadQuiz"
+          >
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            {{ t('quiz.error.retry') }}
+          </button>
+        </div>
       </div>
 
       <!-- Results Screen -->
@@ -29,6 +52,7 @@
         v-else-if="showResults"
         :level="level"
         :score="score"
+        :quiz-result-data="quizResultData"
         @retry="retryQuiz"
         @exit="goBack"
       />
@@ -59,6 +83,89 @@
         />
       </div>
     </div>
+
+    <!-- Level Up Celebration Modal -->
+    <LevelUpCelebration
+      v-if="showLevelUpModal && levelUpData"
+      :show="showLevelUpModal"
+      :new-level="levelUpData.newLevel"
+      :previous-level="levelUpData.previousLevel"
+      :level-title="getLevelTitle(levelUpData.newLevel)"
+      :xp-earned="levelUpData.xpEarned"
+      :rewards="[]"
+      :shareable="true"
+      @close="showLevelUpModal = false"
+    />
+
+    <!-- IBadge Unlock Notifications -->
+    <BadgeUnlockNotification
+      ref="badgeNotificationRef"
+      position="top-right"
+      :duration="5000"
+      :max-visible="3"
+    />
+
+    <!-- Resume Quiz Modal -->
+    <Teleport to="body">
+      <div
+        v-if="showResumeModal"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+        @click.self="dismissResume"
+      >
+        <div class="mx-4 w-full max-w-md animate-fade-in-up rounded-2xl bg-white p-8 shadow-2xl dark:bg-gray-800">
+          <!-- Icon -->
+          <div class="mb-6 flex justify-center">
+            <div class="rounded-full bg-blue-100 p-4 dark:bg-blue-900/30">
+              <svg class="h-12 w-12 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+          </div>
+
+          <!-- Content -->
+          <h3 class="mb-3 text-center text-2xl font-bold text-gray-900 dark:text-white">
+            {{ t('quiz.resume.title', 'Resume Quiz?') }}
+          </h3>
+          <p class="mb-6 text-center text-gray-600 dark:text-gray-400">
+            {{ t('quiz.resume.message', 'You have an incomplete quiz. Would you like to continue where you left off?') }}
+          </p>
+
+          <!-- Quiz Info -->
+          <div v-if="preferencesStore.incompleteQuiz" class="mb-6 rounded-lg bg-gray-50 p-4 dark:bg-gray-700/50">
+            <div class="flex items-center justify-between text-sm">
+              <span class="text-gray-600 dark:text-gray-400">{{ t('quiz.resume.progress', 'Progress:') }}</span>
+              <span class="font-semibold text-gray-900 dark:text-white">
+                {{ preferencesStore.incompleteQuiz.currentQuestionIndex + 1 }} / {{ preferencesStore.incompleteQuiz.totalQuestions }}
+              </span>
+            </div>
+            <div class="mt-2 flex items-center justify-between text-sm">
+              <span class="text-gray-600 dark:text-gray-400">{{ t('quiz.resume.answered', 'Answered:') }}</span>
+              <span class="font-semibold text-gray-900 dark:text-white">
+                {{ preferencesStore.incompleteQuiz.answers.length }} {{ t('quiz.resume.questions', 'questions') }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="flex flex-col gap-3 sm:flex-row">
+            <button
+              type="button"
+              class="flex-1 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-3 font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:from-blue-700 hover:to-purple-700 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-offset-2"
+              @click="resumeQuiz"
+            >
+              {{ t('quiz.resume.continue', 'Continue Quiz') }}
+            </button>
+            <button
+              type="button"
+              class="flex-1 rounded-xl border-2 border-gray-300 bg-white px-6 py-3 font-semibold text-gray-700 transition-all duration-300 hover:border-gray-400 hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-gray-500 focus:ring-offset-2 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+              @click="dismissResume"
+            >
+              {{ t('quiz.resume.startNew', 'Start New') }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </Teleport>
   </div>
 </template>
 
@@ -67,15 +174,45 @@ import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter, useRoute } from "vue-router";
 import type { Question } from "@shared/types/quiz";
+import { useAuthStore } from "@/stores/auth";
+import { usePreferencesStore } from "@/stores/preferences";
+import { useQuizResults, type IQuizAnswer } from "@/composables/useQuizResults";
+import { useStreakStore } from "@/stores/streak";
 import QuizResults from "../components/QuizResults.vue";
 import QuizHeader from "../components/QuizHeader.vue";
 import QuizQuestion from "../components/QuizQuestion.vue";
+import LevelUpCelebration from "@/features/gamification/components/LevelUpCelebration.vue";
+import BadgeUnlockNotification from "@/features/gamification/components/BadgeUnlockNotification.vue";
 
 const { t, locale } = useI18n();
 const router = useRouter();
 const route = useRoute();
+const authStore = useAuthStore();
+const preferencesStore = usePreferencesStore();
+const { submitQuiz, isLoading: isSubmitting } = useQuizResults();
+const streakStore = useStreakStore();
 
 const level = computed(() => route.params.level as "junior" | "intermediate" | "senior");
+
+// Gamification state
+const quizResultData = ref<{
+  xpEarned: number;
+  badgesEarned: string[];
+  leveledUp?: boolean;
+  newLevel?: number;
+  previousLevel?: number;
+  weakCategories: string[];
+  strongCategories?: string[];
+} | null>(null);
+
+const showLevelUpModal = ref(false);
+const levelUpData = ref<{
+  newLevel: number;
+  previousLevel: number;
+  xpEarned: number;
+} | null>(null);
+
+const badgeNotificationRef = ref<InstanceType<typeof BadgeUnlockNotification> | null>(null);
 
 const questions = ref<Question[]>([]);
 const currentIndex = ref(0);
@@ -88,6 +225,7 @@ const userAnswers = ref<Record<number, { answer: string | string[]; isCorrect: b
 const isLoading = ref(true);
 const error = ref<string | null>(null);
 const showResults = ref(false);
+const showResumeModal = ref(false);
 
 const startTime = ref(Date.now());
 const questionStartTime = ref(Date.now());
@@ -147,6 +285,82 @@ const submitAnswer = () => {
 
   userAnswers.value[currentIndex.value] = { answer, isCorrect, timeSpent };
   hasAnswered.value = true;
+
+  // Save progress after each answer
+  saveQuizProgress();
+};
+
+const saveQuizProgress = () => {
+  // Don't save if quiz is finished or no questions loaded
+  if (showResults.value || questions.value.length === 0) return;
+
+  const answers = Object.entries(userAnswers.value).map(([index, answer]) => ({
+    questionId: questions.value[parseInt(index)]?._id || `temp_${index}`,
+    selectedAnswer: Array.isArray(answer.answer) ? answer.answer.join(',') : String(answer.answer),
+    isCorrect: answer.isCorrect,
+  }));
+
+  preferencesStore.saveIncompleteQuiz({
+    quizId: `quiz_${level.value}_${startTime.value}`,
+    framework: 'general', // Could be enhanced to track specific framework
+    difficulty: level.value,
+    mode: 'quiz',
+    currentQuestionIndex: currentIndex.value,
+    totalQuestions: totalQuestions.value,
+    answers,
+    startedAt: new Date(startTime.value),
+    lastUpdatedAt: new Date(),
+  });
+};
+
+const checkForIncompleteQuiz = () => {
+  if (preferencesStore.hasIncompleteQuiz()) {
+    const incomplete = preferencesStore.incompleteQuiz;
+
+    // Check if it matches current quiz (same level/difficulty)
+    if (incomplete?.difficulty === level.value && incomplete?.mode === 'quiz') {
+      showResumeModal.value = true;
+    }
+  }
+};
+
+const resumeQuiz = () => {
+  const incomplete = preferencesStore.incompleteQuiz;
+  if (!incomplete) return;
+
+  // Restore quiz state
+  currentIndex.value = incomplete.currentQuestionIndex;
+
+  // Restore answers
+  const restoredAnswers: Record<number, { answer: string | string[]; isCorrect: boolean; timeSpent: number }> = {};
+  incomplete.answers.forEach((answer, index) => {
+    restoredAnswers[index] = {
+      answer: answer.selectedAnswer.includes(',')
+        ? answer.selectedAnswer.split(',')
+        : answer.selectedAnswer,
+      isCorrect: answer.isCorrect ?? false,
+      timeSpent: 0, // We don't track individual time in saved state
+    };
+  });
+  userAnswers.value = restoredAnswers;
+
+  // Adjust remaining time
+  const savedTime = new Date(incomplete.lastUpdatedAt).getTime();
+  const timeElapsed = Math.floor((savedTime - new Date(incomplete.startedAt).getTime()) / 1000);
+  remainingTime.value = Math.max(0, quizDuration.value - timeElapsed);
+
+  showResumeModal.value = false;
+
+  // Start the timer after resuming
+  startTimer();
+};
+
+const dismissResume = () => {
+  preferencesStore.clearIncompleteQuiz();
+  showResumeModal.value = false;
+
+  // Start the timer for new quiz
+  startTimer();
 };
 
 const nextQuestion = () => {
@@ -243,13 +457,121 @@ const updateStreak = () => {
   }
 };
 
-const finishQuiz = () => {
-  showResults.value = true;
+const finishQuiz = async () => {
   if (timerInterval) {
     clearInterval(timerInterval);
     timerInterval = null;
   }
+
+  // Clear incomplete quiz since we're finishing
+  preferencesStore.clearIncompleteQuiz();
+
+  // Save locally first (fallback)
   saveQuizHistory();
+
+  // Submit to server if authenticated
+  if (authStore.isAuthenticated) {
+    try {
+      const endTime = new Date().toISOString();
+      const answers: IQuizAnswer[] = questions.value.map((question, index) => {
+        const userAnswer = userAnswers.value[index];
+        const qType = question.type;
+        const options = question.content?.[locale.value as 'en' | 'ar']?.options ?? [];
+
+        // Get correct answer
+        let correctAnswer: string | string[];
+        if (qType === 'select-multiple') {
+          correctAnswer = options.filter(o => o.isCorrect).map(o => o.id);
+        } else {
+          const correctOption = options.find(o => o.isCorrect);
+          correctAnswer = correctOption?.id || correctOption?.text || '';
+        }
+
+        // Map difficulty
+        const difficultyMap: Record<string, 'easy' | 'medium' | 'hard'> = {
+          junior: 'easy',
+          intermediate: 'medium',
+          senior: 'hard',
+        };
+
+        return {
+          questionId: question._id || `temp_${index}`,
+          userAnswer: userAnswer?.answer || '',
+          correctAnswer,
+          isCorrect: userAnswer?.isCorrect || false,
+          timeSpentSeconds: userAnswer?.timeSpent || 0,
+          difficultyLevel: difficultyMap[level.value] || 'medium',
+          category: question.category || 'general',
+          tags: question.tags || [],
+          points: 10,
+          pointsEarned: userAnswer?.isCorrect ? 10 : 0,
+        };
+      });
+
+      const payload = {
+        quizType: 'practice' as const,
+        level: level.value,
+        answers,
+        startTime: new Date(startTime.value).toISOString(),
+        endTime,
+      };
+
+      const result = await submitQuiz(payload);
+
+      if (result) {
+        quizResultData.value = result;
+
+        // Update streak store
+        await streakStore.fetchStreak();
+
+        // Show badge notifications if badges were earned
+        if (result.badgesEarned && result.badgesEarned.length > 0 && badgeNotificationRef.value) {
+          const badgeObjects = result.badgesEarned.map(badgeName => ({
+            id: `badge_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+            name: badgeName,
+            description: getBadgeDescription(badgeName),
+            icon: getBadgeIcon(badgeName),
+            rarity: getBadgeRarity(badgeName),
+            xpReward: getBadgeXP(badgeName),
+            shareable: true,
+          }));
+
+          // Show badges with slight delay after quiz results
+          setTimeout(() => {
+            badgeNotificationRef.value?.showBadges(badgeObjects);
+          }, 500);
+        }
+
+        // Show level-up celebration if leveled up
+        if (result.leveledUp && result.newLevel) {
+          const currentLevel = authStore.user?.gamification?.level || 1;
+          levelUpData.value = {
+            newLevel: result.newLevel,
+            previousLevel: currentLevel,
+            xpEarned: result.xpEarned,
+          };
+          // Delay level-up modal to show after badge notifications
+          setTimeout(() => {
+            showLevelUpModal.value = true;
+          }, result.badgesEarned && result.badgesEarned.length > 0 ? 2000 : 500);
+
+          // Update auth store with new level
+          if (authStore.user) {
+            authStore.user.gamification = {
+              ...authStore.user.gamification,
+              level: result.newLevel,
+              xp: (authStore.user.gamification?.xp || 0) + result.xpEarned,
+            };
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Failed to submit quiz to server:', error);
+      // Continue to show results even if server submission fails
+    }
+  }
+
+  showResults.value = true;
 };
 
 const retryQuiz = () => {
@@ -271,7 +593,14 @@ const confirmExit = () => {
 
 const goBack = () => {
   const currentLocale = route.params.locale || 'en';
-  router.push(`/${currentLocale}/quiz`);
+  // Map quiz level back to difficulty for mode chooser: /:locale/:difficulty/choose
+  const levelToDifficulty = {
+    'junior': 'easy',
+    'intermediate': 'medium',
+    'senior': 'hard',
+  } as const;
+  const difficulty = levelToDifficulty[level.value];
+  router.push(`/${currentLocale}/${difficulty}/choose`);
 };
 
 const startTimer = () => {
@@ -309,11 +638,21 @@ const loadQuiz = async () => {
   error.value = null;
 
   try {
-    const response = await fetch(`/api/questions/quiz/questions?level=${level.value}&limit=10`, {
+    const response = await fetch(`/api/v1/questions/quiz/questions?level=${level.value}&limit=10`, {
       credentials: 'include',
     });
 
     if (!response.ok) {
+      if (response.status === 401) {
+        // User not authenticated - redirect to login
+        const currentLocale = route.params.locale || 'en';
+        await router.push(`/${currentLocale}/login?redirect=${route.fullPath}`);
+        return;
+      }
+      if (response.status === 403) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Access denied: Upgrade your plan to access this level');
+      }
       throw new Error('Failed to load quiz');
     }
 
@@ -322,9 +661,16 @@ const loadQuiz = async () => {
 
     if (questions.value.length === 0) {
       error.value = t('quiz.error.noQuestions');
+      return;
     }
 
-    startTimer();
+    // Check for incomplete quiz before starting timer
+    checkForIncompleteQuiz();
+
+    // Only start timer if not resuming
+    if (!showResumeModal.value) {
+      startTimer();
+    }
   } catch (err) {
     error.value = err instanceof Error ? err.message : t('quiz.error.generic');
   } finally {
@@ -372,6 +718,76 @@ const handleScroll = () => {
     return;
   }
   isMobileTimerSticky.value = window.scrollY > 100;
+};
+
+const getLevelTitle = (level: number): string => {
+  const levelTitles = [
+    { min: 1, max: 5, title: 'Beginner' },
+    { min: 6, max: 10, title: 'Learner' },
+    { min: 11, max: 20, title: 'Apprentice' },
+    { min: 21, max: 30, title: 'Practitioner' },
+    { min: 31, max: 40, title: 'Skilled' },
+    { min: 41, max: 50, title: 'Expert' },
+    { min: 51, max: 75, title: 'Master' },
+    { min: 76, max: 100, title: 'Grandmaster' },
+    { min: 101, max: Infinity, title: 'Legend' },
+  ];
+
+  const titleObj = levelTitles.find((t) => level >= t.min && level <= t.max);
+  return titleObj ? titleObj.title : 'Legend';
+};
+
+// IBadge helper functions
+const getBadgeDescription = (badgeName: string): string => {
+  const descriptions: Record<string, string> = {
+    'First Steps': 'Complete your first quiz',
+    'Perfect Score': 'Get 100% on a quiz',
+    'Speed Demon': 'Complete a quiz in under 5 minutes',
+    'Week Warrior': 'Maintain a 7-day streak',
+    'Study Master': 'Complete 50 study sessions',
+    'Quiz Champion': 'Complete 100 quizzes',
+    'Dedication': 'Maintain a 30-day streak',
+  };
+  return descriptions[badgeName] || 'IAchievement unlocked!';
+};
+
+const getBadgeIcon = (badgeName: string): string => {
+  const icons: Record<string, string> = {
+    'First Steps': '🎯',
+    'Perfect Score': '💯',
+    'Speed Demon': '⚡',
+    'Week Warrior': '🔥',
+    'Study Master': '📚',
+    'Quiz Champion': '🏆',
+    'Dedication': '💎',
+  };
+  return icons[badgeName] || '🎖️';
+};
+
+const getBadgeRarity = (badgeName: string): 'common' | 'rare' | 'epic' | 'legendary' => {
+  const rarities: Record<string, 'common' | 'rare' | 'epic' | 'legendary'> = {
+    'First Steps': 'common',
+    'Perfect Score': 'epic',
+    'Speed Demon': 'rare',
+    'Week Warrior': 'rare',
+    'Study Master': 'rare',
+    'Quiz Champion': 'epic',
+    'Dedication': 'legendary',
+  };
+  return rarities[badgeName] || 'common';
+};
+
+const getBadgeXP = (badgeName: string): number => {
+  const xpRewards: Record<string, number> = {
+    'First Steps': 50,
+    'Perfect Score': 200,
+    'Speed Demon': 100,
+    'Week Warrior': 150,
+    'Study Master': 100,
+    'Quiz Champion': 300,
+    'Dedication': 1000,
+  };
+  return xpRewards[badgeName] || 50;
 };
 
 const handleKeyboard = (event: KeyboardEvent) => {

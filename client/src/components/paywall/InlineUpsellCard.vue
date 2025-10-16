@@ -88,18 +88,13 @@
 </template>
 
 <script setup lang="ts">
+import type { IInlineUpsellCardProps as Props } from "@/types/components/paywall";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { trackEvent } from "@/utils/telemetry";
 import type { PlanTier } from "@shared/types/plan";
 
-interface Props {
-  title: string;
-  subtitle: string;
-  benefits: string[];
-  ctaText: string;
-  targetPlan: PlanTier;
-}
+
 
 const props = defineProps<Props>();
 

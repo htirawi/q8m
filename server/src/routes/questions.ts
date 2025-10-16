@@ -1,7 +1,9 @@
 import { authenticate } from "@middlewares/auth.middleware.js";
-import { studyGuard, quizGuard } from "@middlewares/planGuard.middleware.js";
+import { studyGuard, quizGuard } from "@middlewares/plan-guard.middleware.js";
+import { FrameworkAccess } from "@models/FrameworkAccess.js";
 import { Question } from "@models/Question.js";
 import { QuestionResponseSchema } from "@shared/schemas/question.schema.js";
+import type { PlanTier } from "@shared/types/plan.js";
 import type { FastifyInstance } from "fastify";
 import { z } from "zod";
 import { zodToJsonSchema } from "zod-to-json-schema";
@@ -26,7 +28,7 @@ export default async function questionRoutes(fastify: FastifyInstance) {
       config: {
         rateLimit: {
           max: 100,
-          timeWindow: '1 minute',
+          timeWindow: "1 minute",
         },
       },
       schema: {
@@ -39,21 +41,23 @@ export default async function questionRoutes(fastify: FastifyInstance) {
         typeof getQuestionsSchema
       >;
 
-      // Fetch questions from database with filters (with projection)
+      // Fetch questions from database with filters (study mode - get open-ended questions)
       const questions = await Question.findWithFilters({
         framework,
         level,
         category,
         difficulty,
+        mode: "study", // Only get study mode questions (open-ended, explanatory)
         limit,
         offset,
-      }).select('_id id type content difficulty level framework category tags points isActive createdAt updatedAt');
+      });
 
       const total = await Question.countDocuments({
         ...(framework && { framework }),
         ...(level && { level }),
         ...(category && { category }),
         ...(difficulty && { difficulty }),
+        mode: { $in: ["study", "both"] }, // Count study mode questions only
         isActive: true,
       });
 
@@ -115,6 +119,112 @@ export default async function questionRoutes(fastify: FastifyInstance) {
       const categories = await Question.distinct("category", { isActive: true });
 
       reply.send({ categories });
+    }
+  );
+
+  // Get framework access rules (from database)
+  fastify.get(
+    "/framework-access",
+    {
+      preHandler: [authenticate],
+      schema: {
+        description: "Get framework access rules based on user's plan",
+        tags: ["questions"],
+      },
+    },
+    async (request, reply) => {
+      try {
+        // User is guaranteed to exist due to authenticate middleware
+        const user = request.authUser;
+        if (!user) {
+          return reply.status(401).send({ success: false, message: "Unauthorized" });
+        }
+        const userTier = "free" as PlanTier; // Default to free plan
+
+        // Get all active framework access rules from database
+        fastify.log.info("Fetching framework access rules...");
+        const allRules = await FrameworkAccess.find({ isActive: true })
+          .sort({ "metadata.order": 1 })
+          .lean();
+
+        fastify.log.info(`Found ${allRules.length} framework access rules`);
+
+        // Determine access for each framework
+        const tierHierarchy: Record<PlanTier, number> = {
+          free: 0,
+          intermediate: 1,
+          advanced: 2,
+          pro: 3,
+        };
+
+        const userLevel = tierHierarchy[userTier];
+
+        type RuleData = {
+          framework: string;
+          displayName: string;
+          description: string;
+          requiredPlanTier: PlanTier;
+          metadata: Record<string, unknown>;
+        };
+
+        const frameworkAccess = (allRules as RuleData[]).map((rule) => ({
+          framework: rule.framework,
+          displayName: rule.displayName,
+          description: rule.description,
+          requiredPlanTier: rule.requiredPlanTier,
+          isLocked: userLevel < tierHierarchy[rule.requiredPlanTier],
+          metadata: rule.metadata,
+        }));
+
+        reply.send({
+          userTier,
+          frameworks: frameworkAccess,
+        });
+      } catch (error) {
+        fastify.log.error(error);
+        reply.status(500).send({
+          message: "Failed to fetch framework access rules",
+        });
+      }
+    }
+  );
+
+  // Get framework counts by difficulty
+  fastify.get(
+    "/framework-counts",
+    {
+      schema: {
+        querystring: zodToJsonSchema(
+          z.object({
+            difficulty: z.enum(["easy", "medium", "hard"]),
+          })
+        ),
+      },
+    },
+    async (request, reply) => {
+      const { difficulty } = request.query as { difficulty: string };
+
+      // Get counts by framework for the specified difficulty
+      const byFramework = await Question.aggregate([
+        { $match: { isActive: true, difficulty } },
+        { $group: { _id: "$framework", count: { $sum: 1 } } },
+      ]);
+
+      // Calculate total for "random" option
+      const total = await Question.countDocuments({ isActive: true, difficulty });
+
+      const counts = byFramework.reduce(
+        (acc: Record<string, number>, item: { _id: string; count: number }) => {
+          acc[item._id] = item.count;
+          return acc;
+        },
+        {}
+      );
+
+      // Add random count (all questions for this difficulty)
+      counts.random = total;
+
+      reply.send({ counts });
     }
   );
 
@@ -185,7 +295,7 @@ export default async function questionRoutes(fastify: FastifyInstance) {
       config: {
         rateLimit: {
           max: 50,
-          timeWindow: '1 minute',
+          timeWindow: "1 minute",
         },
       },
       schema: {
@@ -226,9 +336,10 @@ export default async function questionRoutes(fastify: FastifyInstance) {
 
         const difficulty = levelToDifficulty[level];
 
-        // Build query
+        // Build query (quiz mode - get questions with options for testing)
         const query: Record<string, unknown> = {
           difficulty,
+          mode: { $in: ["quiz", "both"] }, // Only quiz-mode questions (multiple-choice, etc.)
           isActive: true,
         };
 
@@ -236,12 +347,8 @@ export default async function questionRoutes(fastify: FastifyInstance) {
           query.framework = framework;
         }
 
-        // Get questions (with projection for lean response)
-        const questions = await Question.find(query)
-          .select('_id id type content difficulty level framework category tags points isActive createdAt updatedAt')
-          .sort({ createdAt: -1 })
-          .limit(limit)
-          .lean();
+        // Get questions (full content for quiz mode)
+        const questions = await Question.find(query).sort({ createdAt: -1 }).limit(limit).lean();
 
         // Get total count
         const total = await Question.countDocuments(query);

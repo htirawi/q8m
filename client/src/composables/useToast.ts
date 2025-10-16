@@ -9,7 +9,7 @@ export function useToast() {
   const addToast = (
     type: Toast["type"],
     title: string,
-    message: string,
+    message: string = "",
     options: ToastOptions = {}
   ): string => {
     const id = `toast-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
@@ -50,16 +50,16 @@ export function useToast() {
   };
 
   // Convenience methods
-  const success = (title: string, message: string, options?: ToastOptions) =>
+  const success = (title: string, message?: string, options?: ToastOptions) =>
     addToast("success", title, message, options);
 
-  const error = (title: string, message: string, options?: ToastOptions) =>
+  const error = (title: string, message?: string, options?: ToastOptions) =>
     addToast("error", title, message, options);
 
-  const warning = (title: string, message: string, options?: ToastOptions) =>
+  const warning = (title: string, message?: string, options?: ToastOptions) =>
     addToast("warning", title, message, options);
 
-  const info = (title: string, message: string, options?: ToastOptions) =>
+  const info = (title: string, message?: string, options?: ToastOptions) =>
     addToast("info", title, message, options);
 
   // Predefined common toasts

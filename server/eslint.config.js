@@ -15,6 +15,7 @@ export default [
       "*.config.ts",
       "**/*.d.ts",
       "src/migrations/**",
+      "src/scripts/**",
       "src/tests/**",
       "tests/**",
       "src/models/User.ts",

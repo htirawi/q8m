@@ -11,12 +11,12 @@ import { STORAGE_KEYS } from '@/config/constants';
 
 type StorageKey = typeof STORAGE_KEYS[keyof typeof STORAGE_KEYS];
 
-interface StorageOptions {
+interface IStorageOptions {
   encrypt?: boolean;
   expiresIn?: number; // milliseconds
 }
 
-interface StorageItem<T> {
+interface IStorageItem<T> {
   value: T;
   expiresAt?: number;
 }
@@ -42,7 +42,7 @@ class StorageService {
   /**
    * Check if item is expired
    */
-  private isExpired(item: StorageItem<unknown>): boolean {
+  private isExpired(item: IStorageItem<unknown>): boolean {
     if (!item.expiresAt) return false;
     return Date.now() > item.expiresAt;
   }
@@ -50,9 +50,9 @@ class StorageService {
   /**
    * Set item in storage
    */
-  set<T>(key: StorageKey, value: T, options: StorageOptions = {}): void {
+  set<T>(key: StorageKey, value: T, options: IStorageOptions = {}): void {
     try {
-      const item: StorageItem<T> = {
+      const item: IStorageItem<T> = {
         value,
         expiresAt: options.expiresIn ? Date.now() + options.expiresIn : undefined,
       };
@@ -75,7 +75,7 @@ class StorageService {
         return defaultValue ?? null;
       }
 
-      const item: StorageItem<T> = JSON.parse(serialized);
+      const item: IStorageItem<T> = JSON.parse(serialized);
 
       // Check expiration
       if (this.isExpired(item)) {

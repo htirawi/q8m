@@ -8,7 +8,7 @@
     :data-testid="`level-card-${difficulty}`"
     @click="handleClick"
   >
-    <!-- Current Plan Badge (shown for user's active subscription) -->
+    <!-- Current Plan IBadge (shown for user's active subscription) -->
     <div
       v-if="isCurrentPlan && !isLocked"
       class="absolute top-4 right-4 z-10"
@@ -57,14 +57,14 @@
 
       <!-- Status badge -->
       <div class="mt-4">
-        <!-- Current Plan Badge -->
+        <!-- Current Plan IBadge -->
         <span
           v-if="!isLocked && isCurrentPlan"
           class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
         >
           {{ t('study.levelCard.currentPlan') }}
         </span>
-        <!-- Available Badge -->
+        <!-- Available IBadge -->
         <span
           v-else-if="!isLocked"
           class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium"
@@ -72,7 +72,7 @@
         >
           {{ t('plans.access.available') }}
         </span>
-        <!-- Locked Badge -->
+        <!-- Locked IBadge -->
         <LockedBadge v-else :required-plan="requiredPlan" />
       </div>
 
@@ -117,6 +117,7 @@
 </template>
 
 <script setup lang="ts">
+import type { ILevelCardProps as Props, ILevelCardEmits as Emits } from "@/types/components/study";
 import { computed, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useAnalytics } from "@/composables/useAnalytics";
@@ -125,22 +126,9 @@ import { DIFFICULTY_TO_PLAN_ID, getPlanById } from "@/config/plans";
 import type { DifficultyLevel } from "@/types/plan/access";
 import type { PlanTier } from "@shared/types/plan";
 
-interface Props {
-  difficulty: DifficultyLevel;
-  isLocked: boolean;
-  isSelected: boolean;
-  isCurrentPlan?: boolean; // User's active subscription plan
-  features?: string[];
-  requiredPlan?: PlanTier;
-  canClickLocked?: boolean;
-  autoStartEnabled?: boolean; // Enable one-click start for Easy
-}
 
-interface Emits {
-  (e: "select", difficulty: DifficultyLevel): void;
-  (e: "unlock-click", difficulty: DifficultyLevel, requiredPlan: PlanTier): void;
-  (e: "auto-start", difficulty: DifficultyLevel): void; // New: for instant Easy start
-}
+
+
 
 const props = withDefaults(defineProps<Props>(), {
   features: () => [],

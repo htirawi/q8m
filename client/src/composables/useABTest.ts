@@ -20,22 +20,12 @@
  * ```
  */
 
-import { ref, computed, onMounted, type ComputedRef } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { useAnalytics } from "@/composables/useAnalytics";
 import type { IABTestAssignmentEvent } from "@/types/analytics";
+import type { IABTestConfig, IABTestResult } from '@shared/types/composables';
 
-export interface IABTestConfig {
-  testId: string;
-  variants: string[];
-  weights?: number[];
-  storageKey?: string;
-}
 
-export interface IABTestResult {
-  variant: ComputedRef<string>;
-  trackAssignment: () => void;
-  trackOutcome: (outcome: "conversion" | "bounce" | "continue", value?: number) => void;
-}
 
 /**
  * A/B test composable for variant assignment and tracking

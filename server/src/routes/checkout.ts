@@ -10,7 +10,7 @@ import { authenticate } from "@middlewares/auth.middleware.js";
 import { Coupon } from "@models/Coupon.js";
 import { safeLogFields } from "@server/security/logging.js";
 import { comboKey, ipKey } from "@server/security/rateLimit.js";
-import { pricingService } from "@services/pricing.service.js";
+import { pricingService } from "@services/pricing.js";
 import type { FastifyInstance } from "fastify";
 import { z } from "zod";
 import { zodToJsonSchema } from "zod-to-json-schema";

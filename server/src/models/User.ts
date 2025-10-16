@@ -46,6 +46,18 @@ export interface IUser
       newFeatures: boolean;
     };
   };
+  onboarding?: {
+    isCompleted: boolean;
+    completedAt?: Date;
+    preferences?: {
+      goal?: string;
+      experienceLevel?: string;
+      frameworks?: string[];
+      dailyGoal?: number;
+      availableDaysPerWeek?: number;
+      preferredStudyTime?: string;
+    };
+  };
   subscription: {
     status: "active" | "canceled" | "past_due" | "incomplete";
     currentPeriodEnd?: Date;
@@ -56,6 +68,24 @@ export interface IUser
     totalScore: number;
     averageScore: number;
     lastQuizDate?: Date;
+  };
+  streak?: {
+    currentStreak: number;
+    longestStreak: number;
+    lastActivityDate: Date | null;
+    streakStartDate: Date | null;
+    freezesUsed: number;
+    freezesAvailable: number;
+  };
+  coins?: {
+    total: number;
+    earned: number;
+    spent: number;
+  };
+  gamification?: {
+    xp: number;
+    level: number;
+    badges: string[];
   };
   twoFactorEnabled: boolean;
   twoFactorSecret?: string;
@@ -198,6 +228,34 @@ const userSchema = new Schema(
         },
       },
     },
+    // Onboarding
+    onboarding: {
+      isCompleted: {
+        type: Boolean,
+        default: false,
+      },
+      completedAt: Date,
+      preferences: {
+        goal: {
+          type: String,
+          enum: ["get-job", "learn-framework", "interview-prep", "skill-improvement", "certification"],
+        },
+        experienceLevel: {
+          type: String,
+          enum: ["junior", "mid", "senior"],
+        },
+        frameworks: {
+          type: [String],
+          enum: ["react", "vue", "angular", "nextjs", "redux", "typescript", "javascript", "node", "express"],
+        },
+        dailyGoal: Number,
+        availableDaysPerWeek: Number,
+        preferredStudyTime: {
+          type: String,
+          enum: ["morning", "afternoon", "evening", "night"],
+        },
+      },
+    },
     // Subscription and billing
     subscription: {
       status: {
@@ -230,6 +288,64 @@ const userSchema = new Schema(
         default: 0,
       },
       lastQuizDate: Date,
+    },
+    // Streak tracking (detailed)
+    streak: {
+      currentStreak: {
+        type: Number,
+        default: 0,
+      },
+      longestStreak: {
+        type: Number,
+        default: 0,
+      },
+      lastActivityDate: {
+        type: Date,
+        default: null,
+      },
+      streakStartDate: {
+        type: Date,
+        default: null,
+      },
+      freezesUsed: {
+        type: Number,
+        default: 0,
+      },
+      freezesAvailable: {
+        type: Number,
+        default: 2, // Users start with 2 free freezes
+      },
+    },
+    // Virtual currency (coins)
+    coins: {
+      total: {
+        type: Number,
+        default: 0,
+        min: [0, "Coin balance cannot be negative"],
+      },
+      earned: {
+        type: Number,
+        default: 0,
+      },
+      spent: {
+        type: Number,
+        default: 0,
+      },
+    },
+    // Gamification (XP, level, badges)
+    gamification: {
+      xp: {
+        type: Number,
+        default: 0,
+      },
+      level: {
+        type: Number,
+        default: 1,
+      },
+      badges: {
+        type: [String],
+        default: [],
+      },
     },
     // Security
     twoFactorEnabled: {
@@ -277,6 +393,12 @@ userSchema.index({ acceptTerms: 1 }, { name: "idx_accept_terms" });
 userSchema.index({ acceptTermsAt: 1 }, { name: "idx_accept_terms_at" });
 userSchema.index({ isActive: 1 }, { name: "idx_is_active" });
 userSchema.index({ createdAt: -1 }, { name: "idx_created_at" });
+// Gamification indexes
+userSchema.index({ "streak.currentStreak": -1 }, { name: "idx_streak_current" });
+userSchema.index({ "streak.lastActivityDate": -1 }, { name: "idx_streak_last_activity" });
+userSchema.index({ "gamification.xp": -1 }, { name: "idx_gamification_xp" });
+userSchema.index({ "gamification.level": -1 }, { name: "idx_gamification_level" });
+userSchema.index({ "coins.total": -1 }, { name: "idx_coins_total" });
 
 // Virtual for account lock status
 userSchema.virtual("isLocked").get(function () {

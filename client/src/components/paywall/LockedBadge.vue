@@ -22,13 +22,12 @@
 </template>
 
 <script setup lang="ts">
+import type { ILockedBadgeProps as Props } from "@/types/components/paywall";
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import type { PlanTier } from "@shared/types/plan";
 
-interface Props {
-  requiredPlan?: PlanTier;
-}
+
 
 const props = withDefaults(defineProps<Props>(), {
   requiredPlan: "intermediate",

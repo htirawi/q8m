@@ -4,24 +4,69 @@
       <!-- Loading State -->
       <div v-if="isLoading" class="flex min-h-[400px] items-center justify-center">
         <div class="text-center">
-          <div class="mb-4 inline-block h-12 w-12 animate-spin rounded-full border-4 border-primary-200 border-t-primary-600"></div>
-          <p class="text-gray-600 dark:text-gray-400">{{ t('study.loading') }}</p>
+          <!-- Animated loader -->
+          <div class="relative mb-6">
+            <div class="h-16 w-16 rounded-full border-4 border-primary-200 dark:border-primary-900"></div>
+            <div class="absolute left-0 top-0 h-16 w-16 animate-spin rounded-full border-4 border-transparent border-t-primary-600 dark:border-t-primary-400"></div>
+          </div>
+          <!-- Loading text with pulse animation -->
+          <p class="animate-pulse text-lg font-medium text-gray-700 dark:text-gray-300">{{ t('study.loading') }}</p>
+          <p class="mt-2 text-sm text-gray-500 dark:text-gray-500">Preparing your questions...</p>
         </div>
       </div>
 
       <!-- Error State -->
-      <div v-else-if="error" class="rounded-lg bg-red-50 p-6 dark:bg-red-900/20">
-        <h3 class="mb-2 text-lg font-semibold text-red-900 dark:text-red-200">
-          {{ t('study.error.title') }}
-        </h3>
-        <p class="text-red-700 dark:text-red-300">{{ error }}</p>
-        <button
-          type="button"
-          class="mt-4 rounded-lg bg-red-600 px-4 py-2 text-white hover:bg-red-700"
-          @click="() => loadQuestions(false)"
-        >
-          {{ t('study.error.retry') }}
-        </button>
+      <div v-else-if="error" class="rounded-xl border border-red-200 bg-red-50 p-8 shadow-lg dark:border-red-800 dark:bg-red-900/20">
+        <div class="flex flex-col items-center text-center">
+          <!-- Error icon -->
+          <div class="mb-4 rounded-full bg-red-100 p-3 dark:bg-red-900/50">
+            <svg class="h-12 w-12 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          </div>
+          <h3 class="mb-2 text-xl font-bold text-red-900 dark:text-red-200">
+            {{ t('study.error.title') }}
+          </h3>
+          <p class="mb-6 max-w-md text-red-700 dark:text-red-300">{{ error }}</p>
+          <button
+            type="button"
+            class="rounded-lg bg-red-600 px-6 py-3 font-medium text-white shadow-sm transition-all duration-200 hover:bg-red-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+            @click="() => loadQuestions(false)"
+          >
+            <span class="flex items-center gap-2">
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              {{ t('study.error.retry') }}
+            </span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Empty State - No Questions Available -->
+      <div v-else-if="!isLoading && !error && allQuestions.length === 0">
+        <EmptyState
+          variant="default"
+          icon="📚"
+          :title="t('study.empty.title', 'No Questions Available')"
+          :description="t('study.empty.description', 'There are no questions available for this difficulty and framework combination. Try selecting a different framework or difficulty level.')"
+          :primary-action="t('study.empty.changeFramework', 'Change Framework')"
+          :secondary-action="t('study.empty.goBack', 'Go Back')"
+          @primary-action="changeFramework"
+          @secondary-action="goBack"
+        />
+      </div>
+
+      <!-- Empty State - No Results After Filtering -->
+      <div v-else-if="!isLoading && !error && allQuestions.length > 0 && filteredQuestions.length === 0">
+        <EmptyState
+          variant="compact"
+          icon="🔍"
+          :title="t('study.emptyFiltered.title', 'No Questions Match Your Filters')"
+          :description="t('study.emptyFiltered.description', 'Try adjusting your search query or filter settings to see more questions.')"
+          :primary-action="t('study.emptyFiltered.clearFilters', 'Clear Filters')"
+          @primary-action="clearFilters"
+        />
       </div>
 
       <!-- Study Content -->
@@ -31,13 +76,7 @@
           :current-index="currentIndex"
           :loaded-count="loadedCount"
           :total-available="totalAvailable"
-          :session-time="sessionElapsedTime"
-          :is-paused="isTimerPaused"
-          :is-sticky="isMobileTimerSticky"
           @back="goBack"
-          @pause="pauseSessionTimer"
-          @resume="resumeSessionTimer"
-          @reset="resetSessionTimer"
         />
 
         <StudyFilters
@@ -77,8 +116,15 @@
           :total-available="totalAvailable"
           :has-more="hasMore"
           :is-loading-more="isLoadingMore"
+          :session-time="sessionElapsedTime"
+          :is-paused="isTimerPaused"
           @jump="jumpToQuestion"
           @load-more="loadMore"
+          @previous="previousQuestion"
+          @next="nextQuestion"
+          @pause="pauseSessionTimer"
+          @resume="resumeSessionTimer"
+          @reset="resetSessionTimer"
         />
       </div>
     </div>
@@ -91,6 +137,7 @@ import { useI18n } from "vue-i18n";
 import { useRouter, useRoute } from "vue-router";
 import type { Question } from "@shared/types/quiz";
 import { useAnalytics } from "@/composables/useAnalytics";
+import EmptyState from "@/components/EmptyState.vue";
 import StudyHeader from "../components/StudyHeader.vue";
 import StudyFilters from "../components/StudyFilters.vue";
 import StudyQuestion from "../components/StudyQuestion.vue";
@@ -102,6 +149,7 @@ const route = useRoute();
 const { track } = useAnalytics();
 
 const difficulty = computed(() => route.params.difficulty as "easy" | "medium" | "hard");
+const framework = computed(() => route.params.framework as string);
 
 const allQuestions = ref<Question[]>([]);
 const currentIndex = ref(0);
@@ -241,14 +289,32 @@ const loadQuestions = async (append = false) => {
   error.value = null;
 
   try {
+    // Build query params
+    const params = new URLSearchParams({
+      difficulty: difficulty.value,
+      limit: pageSize.toString(),
+      offset: currentOffset.value.toString(),
+    });
+
+    // Add framework if not random
+    if (framework.value && framework.value !== 'random') {
+      params.append('framework', framework.value);
+    }
+
     const response = await fetch(
-      `/api/questions?difficulty=${difficulty.value}&limit=${pageSize}&offset=${currentOffset.value}`,
+      `/api/v1/questions?${params.toString()}`,
       {
         credentials: 'include',
       }
     );
 
     if (!response.ok) {
+      if (response.status === 401) {
+        // User not authenticated - redirect to login
+        const currentLocale = route.params.locale || 'en';
+        await router.push(`/${currentLocale}/login?redirect=${route.fullPath}`);
+        return;
+      }
       if (response.status === 403) {
         const errorData = await response.json();
         track('study_gate_shown', {
@@ -396,7 +462,15 @@ const toggleBookmark = () => {
 const goBack = () => {
   const currentLocale = route.params.locale || 'en';
   saveSessionState();
-  router.push(`/${currentLocale}/study`);
+  // Go back to framework selection page: /:locale/study/:difficulty
+  router.push(`/${currentLocale}/study/${difficulty.value}`);
+};
+
+const changeFramework = () => {
+  const currentLocale = route.params.locale || 'en';
+  saveSessionState();
+  // Navigate to framework selection page
+  router.push(`/${currentLocale}/study/${difficulty.value}`);
 };
 
 // Session timer functions

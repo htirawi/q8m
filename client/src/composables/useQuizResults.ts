@@ -7,78 +7,10 @@ import { ref } from "vue";
 import { httpClient, getErrorMessage } from "@/utils/httpClient";
 import { API_ENDPOINTS } from "@/config/api";
 import type { ExperienceLevel } from "@shared/types/plan";
+import type { ISubmitQuizPayload, ISubmitQuizResponse, IQuizResult, IWeakArea } from '@shared/types/composables';
 import type {
   IQuizStats,
-  ICategoryPerformance,
-  IDifficultyPerformance,
 } from "@shared/types/quiz-result";
-
-export interface IQuizAnswer {
-  questionId: string;
-  userAnswer: string | string[];
-  correctAnswer: string | string[];
-  isCorrect: boolean;
-  timeSpentSeconds: number;
-  difficultyLevel: "easy" | "medium" | "hard";
-  category: string;
-  tags: string[];
-  points: number;
-  pointsEarned: number;
-}
-
-export interface ISubmitQuizPayload {
-  quizType: "practice" | "exam" | "retry_wrong" | "review";
-  level: ExperienceLevel;
-  framework?: "vue" | "react" | "angular" | "nextjs";
-  answers: IQuizAnswer[];
-  startTime: string;
-  endTime: string;
-  originalQuizId?: string;
-}
-
-export interface ISubmitQuizResponse {
-  success: boolean;
-  quizResultId: string;
-  score: number;
-  xpEarned: number;
-  xpBreakdown?: Record<string, number>;
-  badgesEarned: string[];
-  leveledUp?: boolean;
-  newLevel?: number;
-  weakCategories: string[];
-  strongCategories?: string[];
-  categoryPerformance?: ICategoryPerformance[];
-  difficultyPerformance?: IDifficultyPerformance[];
-  streakMaintained: boolean;
-}
-
-export interface IQuizResult {
-  id: string;
-  userId: string;
-  quizType: string;
-  level: ExperienceLevel;
-  framework?: string;
-  score: number;
-  correctAnswers: number;
-  incorrectAnswers: number;
-  totalQuestions: number;
-  startTime: Date;
-  endTime: Date;
-  totalTimeSeconds: number;
-  xpEarned: number;
-  badgesEarned: string[];
-  weakCategories: string[];
-  createdAt: Date;
-}
-
-export interface IWeakArea {
-  category: string;
-  accuracy: number;
-  questionsAttempted: number;
-  questionsCorrect: number;
-  lastAttemptDate: Date;
-}
-
 export function useQuizResults() {
   const isLoading = ref(false);
   const error = ref<string | null>(null);

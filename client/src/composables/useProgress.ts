@@ -6,79 +6,15 @@
 import { ref } from "vue";
 import { httpClient, getErrorMessage } from "@/utils/httpClient";
 import { API_ENDPOINTS } from "@/config/api";
-import type { IUserProgress, IMasteryStats } from "@shared/types/progress";
 import type { Question } from "@shared/types/quiz";
-
-export interface IUpdateQuestionProgressPayload {
-  isCorrect: boolean;
-  timeSpentSeconds: number;
-  difficulty: "easy" | "medium" | "hard";
-}
-
-export interface IUpdateQuestionProgressResponse {
-  success: boolean;
-  xpEarned: number;
-  newMasteryLevel: string;
-  nextReviewDate: string;
-  badgesEarned: string[];
-  leveledUp?: boolean;
-  newLevel?: number;
-}
-
-export interface ICompleteSessionPayload {
-  questionsCompleted: number;
-  correctAnswers: number;
-  sessionDurationMinutes: number;
-  startTime: string;
-  endTime: string;
-}
-
-export interface ICompleteSessionResponse {
-  success: boolean;
-  xpEarned: number;
-  breakdown: Record<string, number>;
-  leveledUp?: boolean;
-  newLevel?: number;
-  badgesEarned: string[];
-  streakMaintained: boolean;
-  currentStreak: number;
-}
-
-export interface IProgressWithMastery extends IUserProgress {
-  masteryStats: IMasteryStats;
-}
-
-export interface IProgressStats {
-  totalStudyTime: number;
-  totalStudyTimeMinutes: number;
-  totalQuestions: number;
-  totalQuestionsAttempted: number;
-  totalQuestionsCorrect: number;
-  accuracy: number;
-  overallAccuracy: number;
-  currentStreak: number;
-  longestStreak: number;
-  xpEarned: number;
-  level: number;
-  badgesEarned: number;
-  totalStudySessions: number;
-  averageSessionDurationMinutes: number;
-  categoryBreakdown: {
-    category: string;
-    questionsAttempted: number;
-    accuracy: number;
-  }[];
-  difficultyBreakdown: {
-    difficulty: "easy" | "medium" | "hard";
-    questionsAttempted: number;
-    accuracy: number;
-  }[];
-  recentActivity: {
-    date: Date;
-    questionsCompleted: number;
-    xpEarned: number;
-  }[];
-}
+import type {
+  IProgressWithMastery,
+  IProgressStats,
+  IUpdateQuestionProgressPayload,
+  IUpdateQuestionProgressResponse,
+  ICompleteSessionPayload,
+  ICompleteSessionResponse,
+} from "@shared/types/composables";
 
 export function useProgress() {
   const isLoading = ref(false);
@@ -134,11 +70,13 @@ export function useProgress() {
   /**
    * Get next question(s) using adaptive algorithm
    */
-  async function getNextQuestions(options: {
-    difficulty?: "easy" | "medium" | "hard";
-    category?: string;
-    count?: number;
-  } = {}): Promise<Question[] | null> {
+  async function getNextQuestions(
+    options: {
+      difficulty?: "easy" | "medium" | "hard";
+      category?: string;
+      count?: number;
+    } = {}
+  ): Promise<Question[] | null> {
     isLoading.value = true;
     error.value = null;
 
@@ -191,9 +129,7 @@ export function useProgress() {
     error.value = null;
 
     try {
-      const data = await httpClient.get<{ stats: IProgressStats }>(
-        API_ENDPOINTS.progress.stats()
-      );
+      const data = await httpClient.get<{ stats: IProgressStats }>(API_ENDPOINTS.progress.stats());
       stats.value = data.stats;
       return data.stats;
     } catch (err) {

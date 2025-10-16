@@ -8,41 +8,11 @@ import { httpClient, getErrorMessage } from "@/utils/httpClient";
 import { API_ENDPOINTS } from "@/config/api";
 import type { IBadge, ILeaderboard, IStreakData } from "@shared/types/gamification";
 import type { PlanTier } from "@shared/types/plan";
+import type { IBadgeWithProgress, IXPInfo, IGamificationSummary, ILeaderboardRank } from '@shared/types/composables';
 
-export interface IBadgeWithProgress extends IBadge {
-  earned: boolean;
-  earnedAt?: Date;
-  progress: number;
-}
 
-export interface IXPInfo {
-  xp: number;
-  level: number;
-  levelTitle: string;
-  xpToNextLevel: number;
-  levelProgress: number;
-}
 
-export interface IGamificationSummary {
-  xp: number;
-  level: number;
-  levelTitle: string;
-  xpToNextLevel: number;
-  xpProgress: number;
-  totalBadges: number;
-  rareBadges: number;
-  currentStreak: number;
-  longestStreak: number;
-  leaderboardRank?: number;
-  leaderboardPercentile?: number;
-}
 
-export interface ILeaderboardRank {
-  rank: number;
-  score: number;
-  totalEntries: number;
-  percentile: number;
-}
 
 export function useGamification() {
   const isLoading = ref(false);

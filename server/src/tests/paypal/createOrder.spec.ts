@@ -9,7 +9,7 @@
 import { paypalController } from "@controllers/paypal.controller.js";
 import * as paypalClient from "@lib/paypalClient.js";
 import { paymentRepository } from "@repositories/payment.repository.js";
-import { pricingService } from "@services/pricing.service.js";
+import { pricingService } from "@services/pricing.js";
 import type { FastifyRequest, FastifyReply } from "fastify";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 
@@ -25,7 +25,7 @@ vi.mock("@lib/paypalClient.js", () => ({
 
 // Mock repositories and services
 vi.mock("@repositories/payment.repository.js");
-vi.mock("@services/pricing.service.js");
+vi.mock("@services/pricing.js");
 vi.mock("@models/User.js");
 
 describe.skip("PayPal Create Order", () => {

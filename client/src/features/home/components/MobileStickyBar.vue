@@ -58,16 +58,14 @@
 </template>
 
 <script setup lang="ts">
+import type { IMobileStickyBarEmits as Emits } from "@/types/components/home";
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter, useRoute } from 'vue-router';
 import { useScrollTracking } from '@/composables/useScrollTracking';
 import { useHomepageAnalytics } from '@/composables/useHomepageAnalytics';
 
-interface Emits {
-  (e: 'cta-click'): void;
-  (e: 'dismiss'): void;
-}
+
 
 const emit = defineEmits<Emits>();
 

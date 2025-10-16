@@ -1,19 +1,13 @@
 <script setup lang="ts">
+import type { IPlanCardProps as IProps, IPlanCardEmits as IEmits } from "@/types/components/pricing";
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import type { IPlanConfig } from '@/config/plans';
 import type { BillingCycle, PlanId } from '@/types/pricing';
 
-interface IProps {
-  plan: IPlanConfig;
-  billing: BillingCycle;
-  featured?: boolean;
-  selected?: boolean;
-}
 
-interface IEmits {
-  (e: 'select', planId: PlanId, billing: BillingCycle): void;
-}
+
+
 
 const props = withDefaults(defineProps<IProps>(), {
   featured: false,
@@ -57,7 +51,7 @@ defineOptions({
     }"
     :data-testid="`plan-card-${plan.id}`"
   >
-    <!-- Badge -->
+    <!-- IBadge -->
     <div v-if="plan.badge" class="plan-card-badge" :class="`plan-card-badge--${plan.badge.color}`">
       {{ t(plan.badge.textKey) }}
     </div>

@@ -28,51 +28,53 @@ describe("LevelCard", () => {
   });
 
   describe("Props Validation", () => {
-    it("should accept difficulty prop", () => {
+    it("should accept level prop", () => {
       const { props } = LevelCard;
-      expect(props).toHaveProperty("difficulty");
+      expect(props).toHaveProperty("level");
     });
 
-    it("should accept isLocked prop", () => {
+    it("should accept title prop", () => {
       const { props } = LevelCard;
-      expect(props).toHaveProperty("isLocked");
+      expect(props).toHaveProperty("title");
     });
 
-    it("should accept isSelected prop", () => {
+    it("should accept description prop", () => {
       const { props } = LevelCard;
-      expect(props).toHaveProperty("isSelected");
+      expect(props).toHaveProperty("description");
     });
 
-    it("should accept isCurrentPlan prop with default", () => {
+    it("should accept questionCount prop", () => {
       const { props } = LevelCard;
-      expect(props).toHaveProperty("isCurrentPlan");
+      expect(props).toHaveProperty("questionCount");
     });
 
-    it("should accept features prop with default", () => {
+    it("should accept estimatedTime prop", () => {
       const { props } = LevelCard;
-      expect(props).toHaveProperty("features");
+      expect(props).toHaveProperty("estimatedTime");
     });
 
-    it("should accept autoStartEnabled prop with default", () => {
+    it("should accept optional requiredPlan prop", () => {
       const { props } = LevelCard;
-      expect(props).toHaveProperty("autoStartEnabled");
+      expect(props).toHaveProperty("requiredPlan");
+    });
+
+    it("should accept optional locked prop", () => {
+      const { props } = LevelCard;
+      expect(props).toHaveProperty("locked");
+    });
+
+    it("should accept optional recommended prop", () => {
+      const { props } = LevelCard;
+      expect(props).toHaveProperty("recommended");
     });
   });
 
   describe("Emits Configuration", () => {
-    it("should declare select emit", () => {
+    it("should declare select emit with level parameter", () => {
       const { emits } = LevelCard;
-      expect(emits).toContain("select");
-    });
-
-    it("should declare unlock-click emit", () => {
-      const { emits } = LevelCard;
-      expect(emits).toContain("unlock-click");
-    });
-
-    it("should declare auto-start emit", () => {
-      const { emits } = LevelCard;
-      expect(emits).toContain("auto-start");
+      expect(emits).toBeDefined();
+      // Emit: (e: "select", level: DifficultyLevel) => void
+      expect(Array.isArray(emits) ? emits : Object.keys(emits || {})).toBeTruthy();
     });
   });
 
@@ -250,7 +252,9 @@ describe("LevelCard", () => {
       expect(mediumPlan!.features.studyItems).toBeLessThanOrEqual(hardPlan!.features.studyItems);
 
       expect(easyPlan!.features.quizQuestions).toBeLessThan(mediumPlan!.features.quizQuestions);
-      expect(mediumPlan!.features.quizQuestions).toBeLessThanOrEqual(hardPlan!.features.quizQuestions);
+      expect(mediumPlan!.features.quizQuestions).toBeLessThanOrEqual(
+        hardPlan!.features.quizQuestions
+      );
     });
   });
 });

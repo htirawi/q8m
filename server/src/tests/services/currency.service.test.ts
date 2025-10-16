@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { FxRate } from "@models/FxRate.js";
-import { currencyService, CurrencyService } from "@services/currency.service.js";
+import { currencyService, CurrencyService } from "@services/currency.js";
 import { describe, it, expect, beforeEach, vi, afterEach } from "vitest";
 
 // Mock FxRate model

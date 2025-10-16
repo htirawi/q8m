@@ -204,6 +204,7 @@
 </template>
 
 <script setup lang="ts">
+import type { ILearningStep, ILearningPath, IQuickTip } from "@/types/components/recommendations";
 import { ref, computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
@@ -212,29 +213,17 @@ import type { QuizAttempt, RecommendedQuiz, StudyTopic, LevelStatsMap } from '@/
 const { t } = useI18n();
 const router = useRouter();
 
-interface LearningStep {
-  title: string;
-  description: string;
-  completed: boolean;
-  current: boolean;
-  action: string;
-}
 
-interface LearningPath {
-  steps: LearningStep[];
-}
 
-interface QuickTip {
-  id: string;
-  title: string;
-  tip: string;
-}
+
+
+
 
 const history = ref<QuizAttempt[]>([]);
 const recommendedQuizzes = ref<RecommendedQuiz[]>([]);
 const studyTopics = ref<StudyTopic[]>([]);
-const learningPath = ref<LearningPath | null>(null);
-const quickTips = ref<QuickTip[]>([]);
+const learningPath = ref<ILearningPath | null>(null);
+const quickTips = ref<IQuickTip[]>([]);
 
 const personalizedMessage = computed(() => {
   if (history.value.length === 0) {
@@ -466,7 +455,7 @@ const generateRecommendations = () => {
   };
 
   // Quick tips based on performance
-  const tips: QuickTip[] = [];
+  const tips: IQuickTip[] = [];
 
   const recentScores = history.value.slice(0, 3).map(h => h.score);
   const avgRecentScore = recentScores.reduce((sum, s) => sum + s, 0) / recentScores.length;
@@ -514,7 +503,7 @@ const startStudying = (difficulty: string) => {
   router.push(`/en/study/${difficulty}`);
 };
 
-const startLearningStep = (step: LearningStep) => {
+const startLearningStep = (step: ILearningStep) => {
   if (step.action.includes('quiz')) {
     const level = step.action.replace('_quiz', '');
     startQuiz(level);

@@ -9,7 +9,8 @@ export interface Question {
   id: number; // legacy ID
   framework: string; // 'angular', 'react', 'nextjs', 'redux'
   level: "junior" | "intermediate" | "senior";
-  type: "multiple-choice" | "fill-blank" | "true-false" | "multiple-checkbox";
+  type: "multiple-choice" | "fill-blank" | "true-false" | "multiple-checkbox" | "open-ended";
+  mode?: "study" | "quiz" | "both"; // study = explanatory only, quiz = testing, both = can be used in either
   category?: string;
   difficulty: "easy" | "medium" | "hard";
   tags: string[];

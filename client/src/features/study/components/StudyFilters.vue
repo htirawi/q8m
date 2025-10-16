@@ -119,19 +119,11 @@
 </template>
 
 <script setup lang="ts">
+import type { IStudyFiltersProps as Props } from "@/types/components/study";
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-interface Props {
-  searchQuery: string;
-  questionTypeFilter: string;
-  answeredFilter: string;
-  practiceMode: 'sequential' | 'random' | 'bookmarked';
-  bookmarkCount: number;
-  filteredCount: number;
-  totalCount: number;
-  progress: number;
-}
+
 
 const props = defineProps<Props>();
 

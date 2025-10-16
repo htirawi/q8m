@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { IUser } from "@models/User.js";
-import { jwtService, JWTService } from "@services/jwt.service.js";
+import { jwtService, JWTService } from "@services/jwt.js";
 import * as jwt from "jsonwebtoken";
 import { describe, it, expect } from "vitest";
 

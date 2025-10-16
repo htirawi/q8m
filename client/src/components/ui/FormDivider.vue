@@ -1,15 +1,14 @@
 <script setup lang="ts">
+import type { IFormDividerProps } from "@/types/components/ui";
 /**
  * FormDivider Component
  * Displays a horizontal divider with centered text (e.g., "Or continue with")
  * Commonly used in auth forms to separate primary and secondary actions.
  */
 
-interface FormDividerProps {
-  text?: string;
-}
 
-withDefaults(defineProps<FormDividerProps>(), {
+
+withDefaults(defineProps<IFormDividerProps>(), {
   text: "",
 });
 </script>

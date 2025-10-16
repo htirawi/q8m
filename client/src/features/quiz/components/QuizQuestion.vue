@@ -7,7 +7,7 @@
 
       <!-- Question Metadata -->
       <div class="flex flex-wrap gap-2">
-        <!-- Difficulty Badge -->
+        <!-- Difficulty IBadge -->
         <span
           class="inline-flex items-center rounded px-2.5 py-0.5 text-xs font-bold uppercase tracking-wide"
           :class="levelBadgeClass"
@@ -15,17 +15,17 @@
           {{ t(`level.${level}.label`) }}
         </span>
 
-        <!-- Question Type Badge -->
+        <!-- Question Type IBadge -->
         <span class="inline-flex items-center rounded bg-purple-100 px-2.5 py-0.5 text-xs font-bold uppercase tracking-wide text-purple-800 dark:bg-purple-900 dark:text-purple-200">
           {{ questionTypeBadge }}
         </span>
 
-        <!-- Category Badge -->
+        <!-- Category IBadge -->
         <span v-if="question.category" class="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900 dark:text-blue-200">
           {{ question.category }}
         </span>
 
-        <!-- Points Badge -->
+        <!-- Points IBadge -->
         <span class="inline-flex items-center rounded-full bg-indigo-100 px-2.5 py-0.5 text-xs font-semibold text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200">
           {{ question.points }}pt
         </span>
@@ -126,20 +126,12 @@
 </template>
 
 <script setup lang="ts">
+import type { IQuizQuestionProps as Props } from "@/types/components/quiz";
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import type { Question, QuizOption } from '@shared/types/quiz';
 
-interface Props {
-  question: Question;
-  level: 'junior' | 'intermediate' | 'senior';
-  locale: string;
-  selectedAnswer: string | null;
-  textAnswer: string;
-  multipleAnswers: string[];
-  hasAnswered: boolean;
-  isLastQuestion: boolean;
-}
+
 
 const props = defineProps<Props>();
 

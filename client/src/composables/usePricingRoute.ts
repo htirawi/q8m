@@ -8,13 +8,8 @@ import { computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import type { PlanId, BillingCycle } from '@/types/pricing';
 import { useAnalytics } from '@/composables/useAnalytics';
+import type { IResolvedPlan } from '@shared/types/composables';
 
-export interface IResolvedPlan {
-  planId: PlanId;
-  billing: BillingCycle;
-  isLegacy: boolean; // true if URL had legacy param
-  originalParam?: string; // Original query param for analytics
-}
 
 /**
  * Legacy plan mapping

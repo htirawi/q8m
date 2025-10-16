@@ -80,6 +80,9 @@ scripts/internal/
 scripts/backups/
 scripts/tools/
 
+# Server seed/utility scripts (local development only - contains question seeding scripts)
+server/src/scripts/
+
 # Documentation files (keep local, not pushed to git)
 # Keep only essential docs in root: README.md, CONTRIBUTING.md, SECURITY.md, LICENSE
 docs/
@@ -88,6 +91,9 @@ docs/
 !CONTRIBUTING.md
 !SECURITY.md
 !LICENSE
+
+# Development scripts (local only - refactoring, migration, utility scripts)
+scripts-local/
 
 # Backup and temporary files
 *-backup.*
@@ -115,6 +121,10 @@ sample-questions.json
 *.pem
 *.key
 *.crt
+
+# Firebase credentials (never commit)
+firebase-service-account.json
+**/firebase-service-account*.json
 
 # Performance monitoring data
 monitoring-data/

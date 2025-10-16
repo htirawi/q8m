@@ -266,6 +266,7 @@
 </template>
 
 <script setup lang="ts">
+import type { IPlanConversionModalProps as Props, IPlanConversionModalEmits as Emits, IFaq } from "@/types/components/marketing";
 import { ref, computed, watch, onMounted, onUnmounted, nextTick } from "vue";
 import { useI18n } from "vue-i18n";
 import { useCheckout } from "@/composables/useCheckout";
@@ -275,16 +276,9 @@ import type { DifficultyLevel } from "@/types/plan/access";
 import type { PlanTier } from "@shared/types/plan";
 import type { BillingCycle } from "@/composables/useCheckout";
 
-interface Props {
-  isVisible: boolean;
-  difficulty: DifficultyLevel;
-  requiredPlan: PlanTier;
-  variant?: 'a' | 'b' | 'c'; // A/B test variant
-}
 
-interface Emits {
-  (e: "dismiss"): void;
-}
+
+
 
 const props = withDefaults(defineProps<Props>(), {
   variant: 'a',
@@ -326,10 +320,7 @@ const ctaText = computed(() => {
   return t('convert.cta.primary');
 });
 
-interface IFaq {
-  question: string;
-  answer: string;
-}
+
 
 const faqs = computed((): IFaq[] => [
   {

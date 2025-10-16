@@ -17,21 +17,12 @@
  * ```
  */
 
-import { ref, onMounted, onUnmounted, type Ref } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import { useAnalytics } from "@/composables/useAnalytics";
 import type { IScrollDepthEvent } from "@/types/analytics";
+import type { IScrollTrackingConfig, IScrollTrackingResult } from '@shared/types/composables';
 
-export interface IScrollTrackingConfig {
-  milestones?: number[];
-  debounceMs?: number;
-  trackingEnabled?: boolean;
-}
 
-export interface IScrollTrackingResult {
-  scrollDepth: Ref<number>;
-  scrollY: Ref<number>;
-  hasReachedMilestone: (milestone: number) => boolean;
-}
 
 /**
  * Scroll tracking composable for analytics

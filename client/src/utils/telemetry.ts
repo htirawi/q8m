@@ -73,7 +73,7 @@ export type TelemetryEvent =
   | "auth_gate_success_redirect"
   | "bundle_entry_resolved";
 
-export interface TelemetryEventData {
+export interface ITelemetryEventData {
   [key: string]: string | number | boolean | undefined | null;
 }
 
@@ -81,7 +81,7 @@ export interface TelemetryEventData {
  * Track an analytics event
  * Non-blocking, fails silently
  */
-export function trackEvent(event: TelemetryEvent, data?: TelemetryEventData): void {
+export function trackEvent(event: TelemetryEvent, data?: ITelemetryEventData): void {
   try {
     // In production, this would send to your analytics service
     // For now, we'll use console.warn in dev and gtag in prod if available

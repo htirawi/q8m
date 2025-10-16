@@ -1,30 +1,70 @@
 <template>
-  <div class="rounded-lg bg-white p-8 shadow-sm dark:bg-gray-800">
+  <div class="rounded-xl bg-white p-6 shadow-lg transition-shadow duration-300 hover:shadow-xl dark:bg-gray-800 sm:p-8">
     <div class="mb-6">
-      <h2 class="mb-4 text-2xl font-bold text-gray-900 dark:text-white">
+      <!-- Question Metadata Header -->
+      <div class="mb-4 flex flex-wrap items-center gap-3">
+        <!-- Category IBadge -->
+        <span
+          v-if="question.category"
+          :class="getCategoryBadgeClass(question.category)"
+          class="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold shadow-sm transition-all duration-200 hover:scale-105"
+        >
+          <svg class="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z" />
+          </svg>
+          {{ question.category }}
+        </span>
+
+        <!-- Difficulty Indicator -->
+        <span
+          v-if="question.difficulty"
+          :class="getDifficultyBadgeClass(question.difficulty)"
+          class="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold shadow-sm"
+        >
+          <span class="flex gap-0.5">
+            <span v-for="i in getDifficultyDots(question.difficulty)" :key="i" class="h-1.5 w-1.5 rounded-full bg-current"></span>
+          </span>
+          {{ question.difficulty.charAt(0).toUpperCase() + question.difficulty.slice(1) }}
+        </span>
+
+        <!-- Question Type IBadge -->
+        <span class="inline-flex items-center gap-1.5 rounded-lg bg-purple-50 px-3 py-1.5 text-xs font-medium text-purple-700 dark:bg-purple-900/20 dark:text-purple-300">
+          <svg class="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+          </svg>
+          {{ getQuestionTypeLabel(question.type) }}
+        </span>
+      </div>
+
+      <!-- Question Text -->
+      <h2 class="mb-4 text-xl font-bold leading-tight text-gray-900 dark:text-white sm:text-2xl">
         {{ questionText }}
       </h2>
 
-      <!-- Question Metadata -->
-      <div class="flex flex-wrap gap-2">
-        <span v-if="question.category" class="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900 dark:text-blue-200">
-          {{ question.category }}
-        </span>
-        <span v-for="tag in question.tags" :key="tag" class="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-800 dark:bg-gray-700 dark:text-gray-300">
+      <!-- Tags -->
+      <div v-if="question.tags && question.tags.length > 0" class="flex flex-wrap gap-2">
+        <span
+          v-for="tag in question.tags"
+          :key="tag"
+          class="group inline-flex items-center gap-1 rounded-md bg-gradient-to-r from-gray-50 to-gray-100 px-2.5 py-1 text-xs font-medium text-gray-700 transition-all duration-200 hover:from-gray-100 hover:to-gray-200 hover:shadow-sm dark:from-gray-700 dark:to-gray-600 dark:text-gray-300 dark:hover:from-gray-600 dark:hover:to-gray-500"
+        >
+          <svg class="h-3 w-3 opacity-50 transition-opacity group-hover:opacity-100" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M17.707 9.293a1 1 0 010 1.414l-7 7a1 1 0 01-1.414 0l-7-7A.997.997 0 012 10V5a3 3 0 013-3h5c.256 0 .512.098.707.293l7 7zM5 6a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+          </svg>
           {{ tag }}
         </span>
       </div>
     </div>
 
     <!-- Answer Section -->
-    <div v-if="showAnswer" class="mb-6 rounded-lg bg-green-50 p-6 dark:bg-green-900/20">
-      <h3 class="mb-2 flex items-center gap-2 font-semibold text-green-900 dark:text-green-200">
+    <div v-if="showAnswer" ref="answerSection" class="mb-6 rounded-lg bg-green-50 p-6 dark:bg-green-900/20">
+      <h3 class="mb-4 flex items-center gap-2 font-semibold text-green-900 dark:text-green-200">
         <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
         </svg>
         {{ t('study.answer') }}
       </h3>
-      <div class="text-green-800 dark:text-green-300" v-html="explanation"></div>
+      <MarkdownRenderer :content="explanation" />
     </div>
 
     <!-- Interactive Answer Options (Study Mode) -->
@@ -135,23 +175,15 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import type { IStudyQuestionProps as Props } from "@/types/components/study";
+import { computed, ref, watch, nextTick } from 'vue';
 import { useI18n } from 'vue-i18n';
 import type { Question } from '@shared/types/quiz';
+import MarkdownRenderer from '@/components/common/MarkdownRenderer.vue';
 
-interface Props {
-  question: Question;
-  locale: string;
-  showAnswer: boolean;
-  selectedAnswer: string | null;
-  textAnswer: string;
-  multipleAnswers: string[];
-  isBookmarked: boolean;
-  canGoPrevious: boolean;
-  isLoadingMore: boolean;
-  isLastQuestion: boolean;
-  hasMore: boolean;
-}
+const answerSection = ref<HTMLDivElement | null>(null);
+
+
 
 const props = defineProps<Props>();
 
@@ -237,4 +269,71 @@ const getCheckboxClass = (optionId: string) => {
 
   return `${baseClass} border-gray-200 bg-white hover:border-gray-300 dark:border-gray-600 dark:bg-gray-700`;
 };
+
+// Category badge colors
+const getCategoryBadgeClass = (category: string) => {
+  const categoryColors: Record<string, string> = {
+    'Components': 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
+    'State Management': 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300',
+    'Routing': 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
+    'Forms': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300',
+    'HTTP & API': 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
+    'Testing': 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-300',
+    'Performance': 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300',
+    'Security': 'bg-pink-100 text-pink-800 dark:bg-pink-900/30 dark:text-pink-300',
+    'Architecture': 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900/30 dark:text-cyan-300',
+    'Hooks': 'bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-300',
+    'Redux': 'bg-violet-100 text-violet-800 dark:bg-violet-900/30 dark:text-violet-300',
+    'Next.js': 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300',
+  };
+
+  return categoryColors[category] || 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300';
+};
+
+// Difficulty badge colors
+const getDifficultyBadgeClass = (difficulty: string) => {
+  const difficultyColors: Record<string, string> = {
+    'easy': 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
+    'medium': 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
+    'hard': 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
+  };
+
+  return difficultyColors[difficulty] || difficultyColors.easy;
+};
+
+// Difficulty dots (visual indicator)
+const getDifficultyDots = (difficulty: string) => {
+  const dots: Record<string, number> = {
+    'easy': 1,
+    'medium': 2,
+    'hard': 3,
+  };
+
+  return dots[difficulty] || 1;
+};
+
+// Question type labels
+const getQuestionTypeLabel = (type: string) => {
+  const labels: Record<string, string> = {
+    'multiple-choice': 'Multiple Choice',
+    'true-false': 'True/False',
+    'fill-blank': 'Fill in the Blank',
+    'multiple-checkbox': 'Multiple Select',
+    'open-ended': 'Explanatory',
+  };
+
+  return labels[type] || 'Question';
+};
+
+// Auto-scroll to answer when revealed
+watch(() => props.showAnswer, (newValue) => {
+  if (newValue && answerSection.value) {
+    nextTick(() => {
+      answerSection.value?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    });
+  }
+});
 </script>

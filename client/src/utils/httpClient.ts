@@ -11,14 +11,14 @@ import { handleApiResponse, getErrorMessage } from "./apiHelpers";
 // ============================================
 
 // eslint-disable-next-line no-undef
-export interface RequestOptions extends RequestInit {
+export interface IRequestOptions extends RequestInit {
   timeout?: number;
   requireAuth?: boolean;
   useBearer?: boolean;
   silent?: boolean; // Don't throw errors, return null instead
 }
 
-export interface HttpClientConfig {
+export interface IHttpClientConfig {
   baseURL?: string;
   defaultHeaders?: Record<string, string>;
   timeout?: number;
@@ -51,9 +51,9 @@ export function getAuthHeaders(useBearer: boolean = false, token?: string): Head
 // ============================================
 
 class HttpClient {
-  private config: HttpClientConfig;
+  private config: IHttpClientConfig;
 
-  constructor(config: HttpClientConfig = {}) {
+  constructor(config: IHttpClientConfig = {}) {
     this.config = {
       defaultHeaders: JSON_HEADERS,
       timeout: 30000,
@@ -64,7 +64,7 @@ class HttpClient {
   /**
    * Make HTTP request with common settings
    */
-  private async request<T>(url: string, options: RequestOptions = {}): Promise<T> {
+  private async request<T>(url: string, options: IRequestOptions = {}): Promise<T> {
     const {
       timeout = this.config.timeout,
       requireAuth = false,
@@ -116,7 +116,7 @@ class HttpClient {
   /**
    * GET request
    */
-  async get<T>(url: string, options?: RequestOptions): Promise<T> {
+  async get<T>(url: string, options?: IRequestOptions): Promise<T> {
     return this.request<T>(url, {
       ...options,
       method: HTTP_METHODS.GET,
@@ -126,7 +126,7 @@ class HttpClient {
   /**
    * POST request
    */
-  async post<T>(url: string, body?: unknown, options?: RequestOptions): Promise<T> {
+  async post<T>(url: string, body?: unknown, options?: IRequestOptions): Promise<T> {
     return this.request<T>(url, {
       ...options,
       method: HTTP_METHODS.POST,
@@ -137,7 +137,7 @@ class HttpClient {
   /**
    * PUT request
    */
-  async put<T>(url: string, body?: unknown, options?: RequestOptions): Promise<T> {
+  async put<T>(url: string, body?: unknown, options?: IRequestOptions): Promise<T> {
     return this.request<T>(url, {
       ...options,
       method: HTTP_METHODS.PUT,
@@ -148,7 +148,7 @@ class HttpClient {
   /**
    * PATCH request
    */
-  async patch<T>(url: string, body?: unknown, options?: RequestOptions): Promise<T> {
+  async patch<T>(url: string, body?: unknown, options?: IRequestOptions): Promise<T> {
     return this.request<T>(url, {
       ...options,
       method: HTTP_METHODS.PATCH,
@@ -159,7 +159,7 @@ class HttpClient {
   /**
    * DELETE request
    */
-  async delete<T>(url: string, options?: RequestOptions): Promise<T> {
+  async delete<T>(url: string, options?: IRequestOptions): Promise<T> {
     return this.request<T>(url, {
       ...options,
       method: HTTP_METHODS.DELETE,

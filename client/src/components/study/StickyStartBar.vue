@@ -121,24 +121,16 @@
 </template>
 
 <script setup lang="ts">
+import type { IStickyStartBarProps as Props, IStickyStartBarEmits as Emits } from "@/types/components/study";
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useAnalytics } from "@/composables/useAnalytics";
 import type { StudyLoadingState } from "@/composables/useStudy";
 import type { DifficultyLevel } from "@/types/plan/access";
 
-interface Props {
-  isVisible: boolean;
-  selectedDifficulty: DifficultyLevel | null;
-  state: StudyLoadingState;
-  errorMessage?: string | null;
-  hasLastSession?: boolean;
-}
 
-interface Emits {
-  (e: "start", difficulty: DifficultyLevel | null): void;
-  (e: "retry"): void;
-}
+
+
 
 const props = withDefaults(defineProps<Props>(), {
   errorMessage: null,

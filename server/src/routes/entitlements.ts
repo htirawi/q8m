@@ -1,5 +1,5 @@
 import { authenticate } from "@middlewares/auth.middleware.js";
-import { entitlementService } from "@services/entitlement.service.js";
+import { entitlementService } from "@services/entitlement.js";
 import type { FastifyInstance } from "fastify";
 import { z } from "zod";
 import { zodToJsonSchema } from "zod-to-json-schema";

@@ -37,7 +37,7 @@ function navigateTo(path: string) {
         <h2>Gamification</h2>
         <p>Badges, leaderboards, XP, and achievements system</p>
         <ul class="feature-list">
-          <li>Badge collection with progress</li>
+          <li>IBadge collection with progress</li>
           <li>Leaderboards (weekly/monthly/all-time)</li>
           <li>XP & level information</li>
           <li>Streak tracking</li>

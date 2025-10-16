@@ -3,34 +3,32 @@
  * Endpoints for badges, leaderboards, XP tracking, and achievements
  */
 
-import type { FastifyInstance } from 'fastify';
-import { z } from 'zod';
-import { zodToJsonSchema } from 'zod-to-json-schema';
+import type { FastifyInstance } from "fastify";
+import { z } from "zod";
+import { zodToJsonSchema } from "zod-to-json-schema";
 
-import type { IBadgeDoc } from '../models/Badge';
-import { Badge } from '../models/Badge';
-import { Leaderboard } from '../models/Leaderboard';
-import type { IEarnedBadgeDoc } from '../models/UserProgress';
-import { UserProgress } from '../models/UserProgress';
-import {
-  getUserBadgesWithProgress,
-  getUnlockedSecretBadges,
-} from '../utils/badgeEngine';
-import { getXPForNextLevel, getLevelProgress, getLevelTitle } from '../utils/xpEngine';
+import { authenticate } from "../middlewares/auth.middleware.js";
+import type { IBadgeDoc } from "../models/Badge";
+import { Badge } from "../models/Badge";
+import { Leaderboard } from "../models/Leaderboard";
+import type { IEarnedBadgeDoc } from "../models/UserProgress";
+import { UserProgress } from "../models/UserProgress";
+import { getUserBadgesWithProgress, getUnlockedSecretBadges } from "../utils/badgeEngine";
+import { getXPForNextLevel, getLevelProgress, getLevelTitle } from "../utils/xpEngine";
 
 export default async function gamificationRoutes(fastify: FastifyInstance) {
   // Get all badges with user progress
   fastify.get(
-    '/badges',
+    "/badges",
     {
       onRequest: [fastify.authenticate()],
       schema: {
-        description: 'Get all badges with user progress',
-        tags: ['gamification'],
+        description: "Get all badges with user progress",
+        tags: ["gamification"],
         querystring: zodToJsonSchema(
           z.object({
-            category: z.enum(['study', 'quiz', 'streak', 'social', 'milestone']).optional(),
-            rarity: z.enum(['common', 'rare', 'epic', 'legendary']).optional(),
+            category: z.enum(["study", "quiz", "streak", "social", "milestone"]).optional(),
+            rarity: z.enum(["common", "rare", "epic", "legendary"]).optional(),
           })
         ),
       },
@@ -73,8 +71,8 @@ export default async function gamificationRoutes(fastify: FastifyInstance) {
         fastify.log.error(error);
         reply.status(500).send({
           code: 500,
-          error: 'Internal Server Error',
-          message: 'Failed to fetch badges',
+          error: "Internal Server Error",
+          message: "Failed to fetch badges",
         });
       }
     }
@@ -82,12 +80,12 @@ export default async function gamificationRoutes(fastify: FastifyInstance) {
 
   // Get user's earned badges
   fastify.get(
-    '/badges/earned',
+    "/badges/earned",
     {
       onRequest: [fastify.authenticate()],
       schema: {
-        description: 'Get badges earned by current user',
-        tags: ['gamification'],
+        description: "Get badges earned by current user",
+        tags: ["gamification"],
       },
     },
     async (request, reply) => {
@@ -121,8 +119,8 @@ export default async function gamificationRoutes(fastify: FastifyInstance) {
         fastify.log.error(error);
         reply.status(500).send({
           code: 500,
-          error: 'Internal Server Error',
-          message: 'Failed to fetch earned badges',
+          error: "Internal Server Error",
+          message: "Failed to fetch earned badges",
         });
       }
     }
@@ -130,12 +128,12 @@ export default async function gamificationRoutes(fastify: FastifyInstance) {
 
   // Get secret badges unlocked
   fastify.get(
-    '/badges/secret',
+    "/badges/secret",
     {
       onRequest: [fastify.authenticate()],
       schema: {
-        description: 'Get secret badges unlocked by user',
-        tags: ['gamification'],
+        description: "Get secret badges unlocked by user",
+        tags: ["gamification"],
       },
     },
     async (request, reply) => {
@@ -160,8 +158,8 @@ export default async function gamificationRoutes(fastify: FastifyInstance) {
         fastify.log.error(error);
         reply.status(500).send({
           code: 500,
-          error: 'Internal Server Error',
-          message: 'Failed to fetch secret badges',
+          error: "Internal Server Error",
+          message: "Failed to fetch secret badges",
         });
       }
     }
@@ -169,30 +167,30 @@ export default async function gamificationRoutes(fastify: FastifyInstance) {
 
   // Get leaderboard
   fastify.get(
-    '/leaderboard/:type',
+    "/leaderboard/:type",
     {
       schema: {
-        description: 'Get leaderboard rankings',
-        tags: ['gamification'],
+        description: "Get leaderboard rankings",
+        tags: ["gamification"],
         params: zodToJsonSchema(
           z.object({
-            type: z.enum(['weekly', 'monthly', 'all_time']),
+            type: z.enum(["weekly", "monthly", "all_time"]),
           })
         ),
         querystring: zodToJsonSchema(
           z.object({
-            scope: z.enum(['global', 'plan_tier']).default('global'),
-            planTier: z.enum(['free', 'intermediate', 'advanced', 'pro']).optional(),
+            scope: z.enum(["global", "plan_tier"]).default("global"),
+            planTier: z.enum(["free", "intermediate", "advanced", "pro"]).optional(),
           })
         ),
       },
     },
     async (request, reply) => {
       try {
-        const { type } = request.params as { type: 'weekly' | 'monthly' | 'all_time' };
+        const { type } = request.params as { type: "weekly" | "monthly" | "all_time" };
         const { scope, planTier } = request.query as {
-          scope: 'global' | 'plan_tier';
-          planTier?: 'free' | 'intermediate' | 'advanced' | 'pro';
+          scope: "global" | "plan_tier";
+          planTier?: "free" | "intermediate" | "advanced" | "pro";
         };
 
         const leaderboard = await Leaderboard.getCurrent(type, { scope, planTier });
@@ -200,8 +198,8 @@ export default async function gamificationRoutes(fastify: FastifyInstance) {
         if (!leaderboard) {
           return reply.status(404).send({
             code: 404,
-            error: 'Not Found',
-            message: 'Leaderboard not found',
+            error: "Not Found",
+            message: "Leaderboard not found",
           });
         }
 
@@ -219,8 +217,8 @@ export default async function gamificationRoutes(fastify: FastifyInstance) {
         fastify.log.error(error);
         reply.status(500).send({
           code: 500,
-          error: 'Internal Server Error',
-          message: 'Failed to fetch leaderboard',
+          error: "Internal Server Error",
+          message: "Failed to fetch leaderboard",
         });
       }
     }
@@ -228,21 +226,21 @@ export default async function gamificationRoutes(fastify: FastifyInstance) {
 
   // Get user's leaderboard rank
   fastify.get(
-    '/leaderboard/:type/rank',
+    "/leaderboard/:type/rank",
     {
       onRequest: [fastify.authenticate()],
       schema: {
-        description: 'Get current user leaderboard rank',
-        tags: ['gamification'],
+        description: "Get current user leaderboard rank",
+        tags: ["gamification"],
         params: zodToJsonSchema(
           z.object({
-            type: z.enum(['weekly', 'monthly', 'all_time']),
+            type: z.enum(["weekly", "monthly", "all_time"]),
           })
         ),
         querystring: zodToJsonSchema(
           z.object({
-            scope: z.enum(['global', 'plan_tier']).default('global'),
-            planTier: z.enum(['free', 'intermediate', 'advanced', 'pro']).optional(),
+            scope: z.enum(["global", "plan_tier"]).default("global"),
+            planTier: z.enum(["free", "intermediate", "advanced", "pro"]).optional(),
           })
         ),
       },
@@ -250,10 +248,10 @@ export default async function gamificationRoutes(fastify: FastifyInstance) {
     async (request, reply) => {
       try {
         const userId = request.authUser!.id;
-        const { type } = request.params as { type: 'weekly' | 'monthly' | 'all_time' };
+        const { type } = request.params as { type: "weekly" | "monthly" | "all_time" };
         const { scope, planTier } = request.query as {
-          scope: 'global' | 'plan_tier';
-          planTier?: 'free' | 'intermediate' | 'advanced' | 'pro';
+          scope: "global" | "plan_tier";
+          planTier?: "free" | "intermediate" | "advanced" | "pro";
         };
 
         const rankInfo = await Leaderboard.getUserRank(type, userId, { scope, planTier });
@@ -261,8 +259,8 @@ export default async function gamificationRoutes(fastify: FastifyInstance) {
         if (!rankInfo) {
           return reply.status(404).send({
             code: 404,
-            error: 'Not Found',
-            message: 'User not found in leaderboard',
+            error: "Not Found",
+            message: "User not found in leaderboard",
           });
         }
 
@@ -271,8 +269,8 @@ export default async function gamificationRoutes(fastify: FastifyInstance) {
         fastify.log.error(error);
         reply.status(500).send({
           code: 500,
-          error: 'Internal Server Error',
-          message: 'Failed to fetch user rank',
+          error: "Internal Server Error",
+          message: "Failed to fetch user rank",
         });
       }
     }
@@ -280,12 +278,12 @@ export default async function gamificationRoutes(fastify: FastifyInstance) {
 
   // Get XP info
   fastify.get(
-    '/xp',
+    "/xp",
     {
       onRequest: [fastify.authenticate()],
       schema: {
-        description: 'Get XP and level information',
-        tags: ['gamification'],
+        description: "Get XP and level information",
+        tags: ["gamification"],
       },
     },
     async (request, reply) => {
@@ -297,7 +295,7 @@ export default async function gamificationRoutes(fastify: FastifyInstance) {
           return reply.send({
             xp: 0,
             level: 1,
-            levelTitle: 'Beginner',
+            levelTitle: "Beginner",
             xpToNextLevel: 100,
             levelProgress: 0,
           });
@@ -318,8 +316,8 @@ export default async function gamificationRoutes(fastify: FastifyInstance) {
         fastify.log.error(error);
         reply.status(500).send({
           code: 500,
-          error: 'Internal Server Error',
-          message: 'Failed to fetch XP information',
+          error: "Internal Server Error",
+          message: "Failed to fetch XP information",
         });
       }
     }
@@ -327,12 +325,12 @@ export default async function gamificationRoutes(fastify: FastifyInstance) {
 
   // Get gamification summary
   fastify.get(
-    '/summary',
+    "/summary",
     {
       onRequest: [fastify.authenticate()],
       schema: {
-        description: 'Get complete gamification summary',
-        tags: ['gamification'],
+        description: "Get complete gamification summary",
+        tags: ["gamification"],
       },
     },
     async (request, reply) => {
@@ -352,12 +350,12 @@ export default async function gamificationRoutes(fastify: FastifyInstance) {
         const earnedBadgeIds = progress.badges.map((b: IEarnedBadgeDoc) => b.badgeId);
         const earnedBadges = await Badge.find({ _id: { $in: earnedBadgeIds } });
         const rareBadges = earnedBadges.filter(
-          (b: IBadgeDoc) => b.rarity === 'rare' || b.rarity === 'epic' || b.rarity === 'legendary'
+          (b: IBadgeDoc) => b.rarity === "rare" || b.rarity === "epic" || b.rarity === "legendary"
         ).length;
 
         // Get leaderboard rank (all-time global)
-        const leaderboardRank = await Leaderboard.getUserRank('all_time', userId, {
-          scope: 'global',
+        const leaderboardRank = await Leaderboard.getUserRank("all_time", userId, {
+          scope: "global",
         });
 
         reply.send({
@@ -377,8 +375,8 @@ export default async function gamificationRoutes(fastify: FastifyInstance) {
         fastify.log.error(error);
         reply.status(500).send({
           code: 500,
-          error: 'Internal Server Error',
-          message: 'Failed to fetch gamification summary',
+          error: "Internal Server Error",
+          message: "Failed to fetch gamification summary",
         });
       }
     }
@@ -386,12 +384,12 @@ export default async function gamificationRoutes(fastify: FastifyInstance) {
 
   // Get streak information
   fastify.get(
-    '/streak',
+    "/streak",
     {
       onRequest: [fastify.authenticate()],
       schema: {
-        description: 'Get streak information',
-        tags: ['gamification'],
+        description: "Get streak information",
+        tags: ["gamification"],
       },
     },
     async (request, reply) => {
@@ -405,6 +403,8 @@ export default async function gamificationRoutes(fastify: FastifyInstance) {
             longestStreak: 0,
             lastActivityDate: null,
             streakStartDate: null,
+            freezesUsed: 0,
+            freezesAvailable: 2,
           });
         }
 
@@ -414,13 +414,323 @@ export default async function gamificationRoutes(fastify: FastifyInstance) {
           lastActivityDate: progress.streaks.lastActivityDate,
           streakStartDate: progress.streaks.streakStartDate,
           missedDays: progress.streaks.missedDays,
+          freezesUsed: progress.streaks.freezesUsed || 0,
+          freezesAvailable: progress.streaks.freezesAvailable || 2,
         });
       } catch (error) {
         fastify.log.error(error);
         reply.status(500).send({
           code: 500,
-          error: 'Internal Server Error',
-          message: 'Failed to fetch streak information',
+          error: "Internal Server Error",
+          message: "Failed to fetch streak information",
+        });
+      }
+    }
+  );
+
+  // Use streak freeze (streak saver)
+  fastify.post(
+    "/streak/freeze",
+    {
+      onRequest: [fastify.authenticate()],
+      rateLimit: {
+        max: 10,
+        timeWindow: "15 minutes",
+      },
+      schema: {
+        description: "Use streak freeze to save streak",
+        tags: ["gamification"],
+        body: zodToJsonSchema(
+          z.object({
+            useCoins: z.boolean().default(true),
+            useXP: z.boolean().default(false),
+          })
+        ),
+      },
+    },
+    async (request, reply) => {
+      try {
+        const userId = request.authUser!.id;
+        const { useCoins, useXP } = request.body as { useCoins: boolean; useXP: boolean };
+
+        const { User } = await import("../models/User");
+        const user = await User.findById(userId);
+
+        if (!user) {
+          return reply.status(404).send({
+            code: 404,
+            error: "Not Found",
+            message: "User not found",
+          });
+        }
+
+        // Check if user needs a freeze (missed yesterday's activity)
+        const now = new Date();
+        const lastActivity = user.streak?.lastActivityDate;
+
+        if (!lastActivity) {
+          return reply.status(400).send({
+            code: 400,
+            error: "Bad Request",
+            message: "No streak to save",
+          });
+        }
+
+        const daysSinceLastActivity = Math.floor(
+          (now.getTime() - lastActivity.getTime()) / (1000 * 60 * 60 * 24)
+        );
+
+        if (daysSinceLastActivity <= 1) {
+          return reply.status(400).send({
+            code: 400,
+            error: "Bad Request",
+            message: "Streak is not broken, no freeze needed",
+          });
+        }
+
+        if (daysSinceLastActivity > 2) {
+          return reply.status(400).send({
+            code: 400,
+            error: "Bad Request",
+            message: "Streak is already lost (more than 1 day missed)",
+          });
+        }
+
+        // Check freeze availability and cost
+        const STREAK_SAVER_CONFIG = {
+          COST_IN_COINS: 100,
+          COST_IN_XP: 100,
+          MAX_FREEZES_PER_WEEK: 2,
+        };
+
+        const freezesUsed = user.streak?.freezesUsed || 0;
+        const freezesAvailable = user.streak?.freezesAvailable || 2;
+
+        if (freezesAvailable > 0) {
+          // Use free freeze
+          user.streak = {
+            ...user.streak,
+            currentStreak: user.streak?.currentStreak || 0,
+            longestStreak: user.streak?.longestStreak || 0,
+            lastActivityDate: now,
+            streakStartDate: user.streak?.streakStartDate || null,
+            freezesUsed,
+            freezesAvailable: freezesAvailable - 1,
+          };
+
+          await user.save();
+
+          return reply.send({
+            success: true,
+            message: "Free freeze used successfully",
+            streak: user.streak,
+            costType: "free",
+          });
+        }
+
+        // Check weekly limit
+        if (freezesUsed >= STREAK_SAVER_CONFIG.MAX_FREEZES_PER_WEEK) {
+          return reply.status(400).send({
+            code: 400,
+            error: "Bad Request",
+            message: "Weekly freeze limit reached",
+          });
+        }
+
+        // Use paid freeze
+        if (useCoins) {
+          if (!user.coins || user.coins.total < STREAK_SAVER_CONFIG.COST_IN_COINS) {
+            return reply.status(400).send({
+              code: 400,
+              error: "Bad Request",
+              message: "Insufficient coins",
+              required: STREAK_SAVER_CONFIG.COST_IN_COINS,
+              available: user.coins?.total || 0,
+            });
+          }
+
+          user.coins = {
+            total: (user.coins?.total || 0) - STREAK_SAVER_CONFIG.COST_IN_COINS,
+            earned: user.coins?.earned || 0,
+            spent: (user.coins?.spent || 0) + STREAK_SAVER_CONFIG.COST_IN_COINS,
+          };
+
+          user.streak = {
+            ...user.streak,
+            currentStreak: user.streak?.currentStreak || 0,
+            longestStreak: user.streak?.longestStreak || 0,
+            lastActivityDate: now,
+            streakStartDate: user.streak?.streakStartDate || null,
+            freezesUsed: freezesUsed + 1,
+            freezesAvailable,
+          };
+
+          await user.save();
+
+          return reply.send({
+            success: true,
+            message: "Streak frozen with coins",
+            streak: user.streak,
+            coins: user.coins,
+            costType: "coins",
+            cost: STREAK_SAVER_CONFIG.COST_IN_COINS,
+          });
+        } else if (useXP) {
+          if (!user.gamification || user.gamification.xp < STREAK_SAVER_CONFIG.COST_IN_XP) {
+            return reply.status(400).send({
+              code: 400,
+              error: "Bad Request",
+              message: "Insufficient XP",
+              required: STREAK_SAVER_CONFIG.COST_IN_XP,
+              available: user.gamification?.xp || 0,
+            });
+          }
+
+          user.gamification = {
+            xp: (user.gamification?.xp || 0) - STREAK_SAVER_CONFIG.COST_IN_XP,
+            level: user.gamification?.level || 1,
+            badges: user.gamification?.badges || [],
+          };
+
+          user.streak = {
+            ...user.streak,
+            currentStreak: user.streak?.currentStreak || 0,
+            longestStreak: user.streak?.longestStreak || 0,
+            lastActivityDate: now,
+            streakStartDate: user.streak?.streakStartDate || null,
+            freezesUsed: freezesUsed + 1,
+            freezesAvailable,
+          };
+
+          await user.save();
+
+          return reply.send({
+            success: true,
+            message: "Streak frozen with XP",
+            streak: user.streak,
+            xp: user.gamification.xp,
+            costType: "xp",
+            cost: STREAK_SAVER_CONFIG.COST_IN_XP,
+          });
+        }
+
+        return reply.status(400).send({
+          code: 400,
+          error: "Bad Request",
+          message: "Must specify payment method (coins or XP)",
+        });
+      } catch (error) {
+        fastify.log.error(error);
+        reply.status(500).send({
+          code: 500,
+          error: "Internal Server Error",
+          message: "Failed to freeze streak",
+        });
+      }
+    }
+  );
+
+  // Get coins balance
+  fastify.get(
+    "/coins",
+    {
+      onRequest: [fastify.authenticate()],
+      schema: {
+        description: "Get coin balance",
+        tags: ["gamification"],
+      },
+    },
+    async (request, reply) => {
+      try {
+        const userId = request.authUser!.id;
+
+        const { User } = await import("../models/User");
+        const user = await User.findById(userId);
+
+        if (!user) {
+          return reply.status(404).send({
+            code: 404,
+            error: "Not Found",
+            message: "User not found",
+          });
+        }
+
+        reply.send({
+          total: user.coins?.total || 0,
+          earned: user.coins?.earned || 0,
+          spent: user.coins?.spent || 0,
+        });
+      } catch (error) {
+        fastify.log.error(error);
+        reply.status(500).send({
+          code: 500,
+          error: "Internal Server Error",
+          message: "Failed to fetch coin balance",
+        });
+      }
+    }
+  );
+
+  // Award coins (admin only)
+  fastify.post(
+    "/coins/award",
+    {
+      preHandler: [authenticate],
+      // TODO: Add role-based authorization for admin
+      rateLimit: {
+        max: 100,
+        timeWindow: "15 minutes",
+      },
+      schema: {
+        description: "Award coins to a user (admin only)",
+        tags: ["gamification"],
+        body: zodToJsonSchema(
+          z.object({
+            userId: z.string(),
+            amount: z.number().positive(),
+            reason: z.string(),
+          })
+        ),
+      },
+    },
+    async (request, reply) => {
+      try {
+        const { userId, amount, reason } = request.body as {
+          userId: string;
+          amount: number;
+          reason: string;
+        };
+
+        const { User } = await import("../models/User");
+        const user = await User.findById(userId);
+
+        if (!user) {
+          return reply.status(404).send({
+            code: 404,
+            error: "Not Found",
+            message: "User not found",
+          });
+        }
+
+        user.coins = {
+          total: (user.coins?.total || 0) + amount,
+          earned: (user.coins?.earned || 0) + amount,
+          spent: user.coins?.spent || 0,
+        };
+
+        await user.save();
+
+        reply.send({
+          success: true,
+          message: `Awarded ${amount} coins for: ${reason}`,
+          coins: user.coins,
+        });
+      } catch (error) {
+        fastify.log.error(error);
+        reply.status(500).send({
+          code: 500,
+          error: "Internal Server Error",
+          message: "Failed to award coins",
         });
       }
     }

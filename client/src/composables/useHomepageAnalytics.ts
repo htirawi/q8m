@@ -28,6 +28,7 @@
 import { ref, onUnmounted } from "vue";
 import { useAnalytics } from "@/composables/useAnalytics";
 import type { HomepageSection } from "@/types/homepage";
+import type { IHomepageAnalyticsResult } from '@shared/types/composables';
 import type {
   ISectionViewEvent,
   ICTAClickEvent,
@@ -36,15 +37,6 @@ import type {
   ISocialProofInteractionEvent,
 } from "@/types/analytics";
 
-export interface IHomepageAnalyticsResult {
-  trackSectionView: (section: HomepageSection, viewDuration?: number) => void;
-  trackCTAClick: (event: ICTAClickEvent) => void;
-  trackPricingInteraction: (event: IPricingInteractionEvent) => void;
-  trackFaqInteraction: (event: IFaqInteractionEvent) => void;
-  trackSocialProofInteraction: (event: ISocialProofInteractionEvent) => void;
-  setupSectionObserver: () => IntersectionObserver | null;
-  cleanupObserver: () => void;
-}
 
 /**
  * Homepage analytics composable
