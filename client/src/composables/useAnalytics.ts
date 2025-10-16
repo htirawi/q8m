@@ -15,7 +15,10 @@ if (typeof window !== 'undefined') {
 }
 
 function generateSessionId(): string {
-  return `${Date.now()}-${Math.random().toString(36).substring(2, 15)}`;
+  // Use crypto.getRandomValues for cryptographically secure randomness
+  const array = new Uint32Array(2);
+  crypto.getRandomValues(array);
+  return `${Date.now()}-${array[0].toString(36)}${array[1].toString(36)}`;
 }
 
 export function useAnalytics() {
