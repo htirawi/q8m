@@ -20,20 +20,20 @@ const { t } = useI18n();
 
 const currentPrice = computed(() => {
   return props.billing === 'monthly'
-    ? props.plan.priceMonthly
+    ? props.plan?.priceMonthly
     : props.plan.priceYearly;
 });
 
 const savingsPercent = computed(() => {
-  if (props.billing !== 'annual' || props.plan.priceMonthly === 0) return 0;
-  const monthlyCost = props.plan.priceMonthly * 12;
+  if (props.billing !== 'annual' || props.plan?.priceMonthly === 0) return 0;
+  const monthlyCost = props.plan?.priceMonthly * 12;
   const annualCost = props.plan.priceYearly;
   const savings = monthlyCost - annualCost;
   return Math.round((savings / monthlyCost) * 100);
 });
 
 const handleSelect = () => {
-  emit('select', props.plan.id, props.billing);
+  emit('select', props.plan?.id, props.billing);
 };
 
 defineOptions({
@@ -49,11 +49,11 @@ defineOptions({
       'plan-card--free': plan?.priceMonthly === 0,
       'plan-card--selected': selected,
     }"
-    :data-testid="`plan-card-${plan.id}`"
+    :data-testid="`plan-card-${plan?.id}`"
   >
     <!-- IBadge -->
-    <div v-if="plan.badge" class="plan-card-badge" :class="`plan-card-badge--${plan.badge.color}`">
-      {{ t(plan.badge.textKey) }}
+    <div v-if="plan?.badge" class="plan-card-badge" :class="`plan-card-badge--${plan?.badge.color}`">
+      {{ t(plan?.badge.textKey) }}
     </div>
 
     <!-- Header -->
@@ -86,7 +86,7 @@ defineOptions({
     <!-- Features -->
     <ul class="plan-card-features" role="list">
       <li
-        v-for="(benefitKey, idx) in plan.features.benefits"
+        v-for="(benefitKey, idx) in plan?.features.benefits"
         :key="idx"
         class="plan-card-feature"
       >
@@ -110,9 +110,9 @@ defineOptions({
         'plan-card-cta--secondary': !featured && !plan?.metadata?.featured,
       }"
       @click="handleSelect"
-      :data-testid="`plan-cta-${plan.id}`"
+      :data-testid="`plan-cta-${plan?.id}`"
     >
-      {{ t(plan.cta.labelKey) }}
+      {{ t(plan?.cta.labelKey) }}
     </button>
   </div>
 </template>
