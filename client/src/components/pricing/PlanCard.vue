@@ -53,7 +53,7 @@ defineOptions({
   >
     <!-- IBadge -->
     <div v-if="plan?.badge" class="plan-card-badge" :class="`plan-card-badge--${plan?.badge.color}`">
-      {{ t(plan?.badge.textKey) }}
+      {{ plan?.badge?.textKey ? t(plan.badge.textKey) : '' }}
     </div>
 
     <!-- Header -->
@@ -62,10 +62,10 @@ defineOptions({
         {{ plan?.visual.icon }}
       </div>
       <h3 class="plan-card-title">
-        {{ t(plan?.labelKey) }}
+        {{ plan?.labelKey ? t(plan.labelKey) : '' }}
       </h3>
       <p class="plan-card-description">
-        {{ t(plan?.descriptionKey) }}
+        {{ plan?.descriptionKey ? t(plan.descriptionKey) : '' }}
       </p>
     </div>
 
@@ -112,7 +112,7 @@ defineOptions({
       @click="handleSelect"
       :data-testid="`plan-cta-${plan?.id}`"
     >
-      {{ t(plan?.cta.labelKey) }}
+      {{ plan?.cta?.labelKey ? t(plan.cta.labelKey) : '' }}
     </button>
   </div>
 </template>
