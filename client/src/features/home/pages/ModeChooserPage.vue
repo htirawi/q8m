@@ -64,8 +64,8 @@
           :description="t('modeChooser.studyMode.description')"
           :features="studyFeatures"
           :cta="t('modeChooser.studyMode.cta')"
-          :gradient="'from-blue-500 to-cyan-500'"
-          :hover-gradient="'from-blue-50 to-cyan-50'"
+          :gradient="'from-blue-600 to-cyan-600'"
+          :hover-gradient="'from-blue-100 to-cyan-100'"
           @select="handleModeSelect('study')"
         />
 
@@ -78,8 +78,8 @@
           :description="t('modeChooser.quizMode.description')"
           :features="quizFeatures"
           :cta="t('modeChooser.quizMode.cta')"
-          :gradient="'from-purple-500 to-pink-500'"
-          :hover-gradient="'from-purple-50 to-pink-50'"
+          :gradient="'from-purple-600 to-pink-600'"
+          :hover-gradient="'from-purple-100 to-pink-100'"
           @select="handleModeSelect('quiz')"
         />
       </div>

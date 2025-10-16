@@ -27,4 +27,3 @@ export interface ISoftPaywallModalEmits {
   (e: "close"): void;
   (e: "upgrade"): void;
 }
-

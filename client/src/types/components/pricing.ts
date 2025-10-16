@@ -76,4 +76,3 @@ export interface ITestimonialCarouselProps {
   autoPlay?: boolean;
   interval?: number;
 }
-
