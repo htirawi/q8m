@@ -295,6 +295,11 @@ onMounted(() => {
 
 /* Ensure smooth transitions between tabs */
 .tab-content {
-  @apply animate-in fade-in duration-200;
+  animation: fadeIn 200ms ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 </style>
