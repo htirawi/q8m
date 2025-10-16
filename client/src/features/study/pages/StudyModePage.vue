@@ -74,8 +74,7 @@
         <StudyHeader
           :difficulty="difficulty"
           :current-index="currentIndex"
-          :loaded-count="loadedCount"
-          :total-available="totalAvailable"
+          :total-questions="loadedCount"
           @back="goBack"
         />
 
@@ -94,11 +93,14 @@
 
         <StudyQuestion
           :question="currentQuestion"
+          :current-index="currentIndex"
+          :total-questions="loadedCount"
+          :show-answer="showAnswer"
           :locale="locale"
+          :selected-answer="selectedStudyAnswer"
           v-model:selected-answer="selectedStudyAnswer"
           v-model:text-answer="studyTextAnswer"
           v-model:multiple-answers="studyMultipleAnswers"
-          :show-answer="showAnswer"
           :is-bookmarked="isBookmarked"
           :can-go-previous="currentIndex > 0"
           :is-loading-more="isLoadingMore"
@@ -112,12 +114,15 @@
 
         <StudyNavigation
           :current-index="currentIndex"
+          :total-questions="loadedCount"
+          :answered-questions="answeredQuestions"
+          :marked-questions="bookmarkedQuestions"
           :loaded-count="loadedCount"
           :total-available="totalAvailable"
-          :has-more="hasMore"
-          :is-loading-more="isLoadingMore"
           :session-time="sessionElapsedTime"
           :is-paused="isTimerPaused"
+          :has-more="hasMore"
+          :is-loading-more="isLoadingMore"
           @jump="jumpToQuestion"
           @load-more="loadMore"
           @previous="previousQuestion"
