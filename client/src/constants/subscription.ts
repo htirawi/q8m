@@ -4,13 +4,13 @@
  * Subscription plans and cancellation-related constants.
  */
 
-export interface CancelReason {
+export interface ICancelReason {
   id: string;
   label: string;
   requiresComment?: boolean;
 }
 
-export const CANCEL_REASONS: CancelReason[] = [
+export const CANCEL_REASONS: ICancelReason[] = [
   {
     id: "too-expensive",
     label: "Too expensive",

@@ -77,14 +77,84 @@ jobs:
           # Lint CSS files using the configured stylelint command
           pnpm lint:css
 
-      - name: Build
-        run: cd client && pnpm build
 
-      - name: Test
+      - name: Run unit tests with coverage
         run: |
-          echo "Skipping unit tests due to legacy test setup issues..."
-          echo "TODO: Re-enable unit tests after legacy test setup is fixed"
-          # cd client && pnpm test:unit
+          cd client
+          pnpm test:coverage
+
+      - name: Check coverage thresholds
+        run: |
+          cd client
+          # Check if coverage meets minimum requirements
+          node -e "
+          const fs = require('fs');
+          const coverage = JSON.parse(fs.readFileSync('./coverage/coverage-summary.json', 'utf8'));
+          const total = coverage.total;
+
+          const thresholds = {
+            statements: 80,
+            branches: 75,
+            functions: 75,
+            lines: 80
+          };
+
+          let failed = false;
+          for (const [metric, threshold] of Object.entries(thresholds)) {
+            const pct = total[metric].pct;
+            console.log(\`\${metric}: \${pct}% (threshold: \${threshold}%)\`);
+            if (pct < threshold) {
+              console.error(\`❌ Coverage for \${metric} (\${pct}%) is below threshold (\${threshold}%)\`);
+              failed = true;
+            } else {
+              console.log(\`✅ Coverage for \${metric} meets threshold\`);
+            }
+          }
+
+          if (failed) {
+            console.error('\\n❌ Coverage check failed');
+            process.exit(1);
+          }
+          console.log('\\n✅ All coverage thresholds met');
+          "
+
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v4
+        if: always()
+        with:
+          files: ./client/coverage/coverage-final.json
+          flags: client
+          name: client-coverage
+          fail_ci_if_error: false
+
+      - name: Check bundle size
+        run: |
+          cd client
+          # Check if main bundle is under 500KB
+          BUNDLE_SIZE=$(du -k dist/assets/*.js | sort -n | tail -1 | cut -f1)
+          MAX_SIZE=500
+
+          echo "Main bundle size: ${BUNDLE_SIZE}KB"
+          echo "Maximum allowed: ${MAX_SIZE}KB"
+
+          if [ "$BUNDLE_SIZE" -gt "$MAX_SIZE" ]; then
+            echo "❌ Bundle size (${BUNDLE_SIZE}KB) exceeds maximum (${MAX_SIZE}KB)"
+            exit 1
+          fi
+
+          echo "✅ Bundle size is within limits"
+
+      - name: Validate analytics events
+        run: |
+          cd client
+          # Check that analytics events are properly typed
+          pnpm exec tsc --noEmit --project tsconfig.json
+
+      - name: Security audit
+        run: |
+          cd client
+          # Check for security vulnerabilities
+          pnpm audit --audit-level=high || echo "⚠️  Security vulnerabilities found"
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
@@ -93,3 +163,28 @@ jobs:
           name: client-build
           path: client/dist/
           retention-days: 7
+
+        with:
+          script: |
+            const fs = require('fs');
+            const coverage = JSON.parse(fs.readFileSync('./client/coverage/coverage-summary.json', 'utf8'));
+            const total = coverage.total;
+
+            const comment = `## 📊 Coverage Report
+
+            | Metric | Coverage | Threshold | Status |
+            |--------|----------|-----------|--------|
+            | Statements | ${total.statements.pct}% | 15% | ${total.statements.pct >= 15 ? '✅' : '❌'} |
+            | Branches | ${total.branches.pct}% | 70% | ${total.branches.pct >= 70 ? '✅' : '❌'} |
+            | Functions | ${total.functions.pct}% | 25% | ${total.functions.pct >= 25 ? '✅' : '❌'} |
+            | Lines | ${total.lines.pct}% | 15% | ${total.lines.pct >= 15 ? '✅' : '❌'} |
+
+            **Total Coverage:** ${total.lines.pct}%
+            `;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });

@@ -17,20 +17,26 @@ import { errorHandler } from "@middlewares/error.middleware";
 import { requestLogger } from "@middlewares/logger.middleware";
 import adminRoutes from "@routes/admin";
 import authRoutes from "@routes/auth";
+import challengeRoutes from "@routes/challenges";
 import checkoutRoutes from "@routes/checkout";
 import couponRoutes from "@routes/coupons";
 import devEmailRoutes from "@routes/dev-emails";
+import discussionRoutes from "@routes/discussions";
 import entitlementRoutes from "@routes/entitlements";
-import gamificationRoutes from "@routes/gamification";
+import friendsRoutes from "@routes/friends";
+// import gamificationRoutes from "@routes/gamification"; // TODO: Fix fastify.authorize
+// Notification routes removed - was using Express controllers (dead code)
 import paymentRoutes from "@routes/payments";
-import paypalRoutes from "@routes/paypal.routes";
+import paypalRoutes from "@routes/paypal";
 import plansRoutes from "@routes/plans";
 import pricingRoutes from "@routes/pricing";
 import progressRoutes from "@routes/progress";
 import questionRoutes from "@routes/questions";
 import quizResultsRoutes from "@routes/quiz-results";
 import seoRoutes from "@routes/seo";
+import usersRoutes from "@routes/users";
 import rateLimitPlugin from "@server/security/rateLimit";
+import { notificationScheduler } from "@services/notification-scheduler";
 import Fastify, { type FastifyRequest, type FastifyReply } from "fastify";
 
 // Create Fastify instance
@@ -93,9 +99,20 @@ fastify.addHook("onSend", async (request, reply, payload) => {
 
 // Register plugins
 async function registerPlugins() {
-  // CORS
+  // CORS - fail fast in production if CORS_ORIGIN not configured
+  if (env.NODE_ENV === "production" && !env.CORS_ORIGIN) {
+    throw new Error(
+      "CORS_ORIGIN must be set in production environment. " +
+        "Set it to a comma-separated list of allowed origins (e.g., 'https://example.com,https://www.example.com')"
+    );
+  }
+
   await fastify.register(cors, {
-    origin: env.CORS_ORIGIN?.split(",") || true,
+    // In development, fallback to localhost:5173 if not set
+    // In production, CORS_ORIGIN is required (checked above)
+    origin:
+      env.CORS_ORIGIN?.split(",") ||
+      (env.NODE_ENV === "development" ? ["http://localhost:5173"] : true),
     credentials: env.CORS_CREDENTIALS === "true",
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
@@ -109,11 +126,7 @@ async function registerPlugins() {
       directives: {
         "default-src": ["'self'"],
         // Allow PayPal SDK scripts
-        "script-src": [
-          "'self'",
-          "https://www.paypal.com",
-          "https://www.sandbox.paypal.com",
-        ],
+        "script-src": ["'self'", "https://www.paypal.com", "https://www.sandbox.paypal.com"],
         "style-src": [
           "'self'",
           "'unsafe-inline'", // Required for Tailwind & PayPal
@@ -136,21 +149,20 @@ async function registerPlugins() {
           "https://api.sandbox.paypal.com",
         ],
         // Allow PayPal checkout iframe
-        "frame-src": [
-          "'self'",
-          "https://www.paypal.com",
-          "https://www.sandbox.paypal.com",
-        ],
+        "frame-src": ["'self'", "https://www.paypal.com", "https://www.sandbox.paypal.com"],
         "frame-ancestors": ["'none'"],
       },
     },
     xssFilter: true,
     // HSTS for production
-    strictTransportSecurity: env.NODE_ENV === "production" ? {
-      maxAge: 31536000, // 1 year
-      includeSubDomains: true,
-      preload: true,
-    } : false,
+    strictTransportSecurity:
+      env.NODE_ENV === "production"
+        ? {
+            maxAge: 31536000, // 1 year
+            includeSubDomains: true,
+            preload: true,
+          }
+        : false,
     // Allow PayPal popup windows
     crossOriginOpenerPolicy: { policy: "same-origin-allow-popups" },
     crossOriginEmbedderPolicy: false,
@@ -199,11 +211,10 @@ async function registerPlugins() {
         tokenPath: "/oauth2/v4/token",
       },
     },
-    startRedirectPath: "/api/auth/google",
-    callbackUri: `${env.API_BASE_URL}/api/auth/google/callback`,
+    startRedirectPath: "/api/v1/auth/google",
+    callbackUri: `${env.API_BASE_URL}/api/v1/auth/google/callback`,
     scope: ["profile", "email"],
   });
-
 
   // Multipart (for file uploads)
   await fastify.register(multipart, {
@@ -304,25 +315,30 @@ async function registerRoutes() {
     };
   });
 
-  // API routes
-  await fastify.register(authRoutes, { prefix: "/api/auth" });
-  await fastify.register(pricingRoutes, { prefix: "/api/pricing" });
-  await fastify.register(paymentRoutes, { prefix: "/api/payments" });
-  await fastify.register(paypalRoutes, { prefix: "/api/payments/paypal" });
-  await fastify.register(checkoutRoutes, { prefix: "/api/checkout" });
-  await fastify.register(couponRoutes, { prefix: "/api/coupons" });
-  await fastify.register(questionRoutes, { prefix: "/api/questions" });
-  await fastify.register(progressRoutes, { prefix: "/api/progress" });
-  await fastify.register(quizResultsRoutes, { prefix: "/api/quiz/results" });
-  await fastify.register(gamificationRoutes, { prefix: "/api/gamification" });
-  await fastify.register(adminRoutes, { prefix: "/api/admin" });
-  await fastify.register(entitlementRoutes, { prefix: "/api/entitlements" });
-  await fastify.register(plansRoutes, { prefix: "/api/plans" });
+  // API routes (v1)
+  await fastify.register(authRoutes, { prefix: "/api/v1/auth" });
+  await fastify.register(usersRoutes, { prefix: "/api/v1/users" });
+  await fastify.register(pricingRoutes, { prefix: "/api/v1/pricing" });
+  await fastify.register(paymentRoutes, { prefix: "/api/v1/payments" });
+  await fastify.register(paypalRoutes, { prefix: "/api/v1/payments/paypal" });
+  await fastify.register(checkoutRoutes, { prefix: "/api/v1/checkout" });
+  await fastify.register(couponRoutes, { prefix: "/api/v1/coupons" });
+  await fastify.register(questionRoutes, { prefix: "/api/v1/questions" });
+  await fastify.register(discussionRoutes, { prefix: "/api/v1/discussions" });
+  await fastify.register(friendsRoutes, { prefix: "/api/v1/friends" });
+  await fastify.register(challengeRoutes, { prefix: "/api/v1/challenges" });
+  await fastify.register(progressRoutes, { prefix: "/api/v1/progress" });
+  await fastify.register(quizResultsRoutes, { prefix: "/api/v1/quiz/results" });
+  // await fastify.register(gamificationRoutes, { prefix: "/api/v1/gamification" }); // TODO: Fix fastify.authorize
+  // Notification routes removed - need to be rebuilt with Fastify when needed
+  await fastify.register(adminRoutes, { prefix: "/api/v1/admin" });
+  await fastify.register(entitlementRoutes, { prefix: "/api/v1/entitlements" });
+  await fastify.register(plansRoutes, { prefix: "/api/v1/plans" });
   await fastify.register(seoRoutes);
 
   // Development routes (only in dev mode)
   if (env.NODE_ENV === "development") {
-    await fastify.register(devEmailRoutes, { prefix: "/api/dev/emails" });
+    await fastify.register(devEmailRoutes, { prefix: "/api/v1/dev/emails" });
   }
 }
 
@@ -348,9 +364,32 @@ async function start() {
     fastify.log.info(`Environment: ${env.NODE_ENV}`);
     fastify.log.info(`API Documentation: http://${host}:${port}/docs`);
 
+    // Start notification scheduler
+    try {
+      notificationScheduler.start();
+      fastify.log.info("Notification scheduler started");
+    } catch (error) {
+      fastify.log.warn("Failed to start notification scheduler");
+      if (error instanceof Error) {
+        fastify.log.warn(error.message);
+      }
+    }
+
     // Graceful shutdown
     const gracefulShutdown = async (signal: string) => {
       fastify.log.info(`Received ${signal}, shutting down gracefully...`);
+
+      // Stop notification scheduler
+      try {
+        notificationScheduler.stop();
+        fastify.log.info("Notification scheduler stopped");
+      } catch (error) {
+        fastify.log.warn("Failed to stop notification scheduler");
+        if (error instanceof Error) {
+          fastify.log.warn(error.message);
+        }
+      }
+
       await fastify.close();
       process.exit(0);
     };
@@ -433,11 +472,7 @@ export const buildApp = async () => {
       useDefaults: true,
       directives: {
         "default-src": ["'self'"],
-        "script-src": [
-          "'self'",
-          "https://www.paypal.com",
-          "https://www.sandbox.paypal.com",
-        ],
+        "script-src": ["'self'", "https://www.paypal.com", "https://www.sandbox.paypal.com"],
         "style-src": [
           "'self'",
           "'unsafe-inline'",
@@ -458,11 +493,7 @@ export const buildApp = async () => {
           "https://api.paypal.com",
           "https://api.sandbox.paypal.com",
         ],
-        "frame-src": [
-          "'self'",
-          "https://www.paypal.com",
-          "https://www.sandbox.paypal.com",
-        ],
+        "frame-src": ["'self'", "https://www.paypal.com", "https://www.sandbox.paypal.com"],
         "frame-ancestors": ["'none'"],
       },
     },
@@ -515,17 +546,21 @@ export const buildApp = async () => {
             id: env.GOOGLE_CLIENT_ID,
             secret: env.GOOGLE_CLIENT_SECRET,
           },
-          auth: oauth2.GOOGLE_CONFIGURATION,
+          auth: {
+            authorizeHost: "https://accounts.google.com",
+            authorizePath: "/o/oauth2/v2/auth",
+            tokenHost: "https://www.googleapis.com",
+            tokenPath: "/oauth2/v4/token",
+          },
         },
-        startRedirectPath: "/auth/google",
-        callbackUri: `${env.API_BASE_URL}/auth/google/callback`,
+        startRedirectPath: "/api/v1/auth/google",
+        callbackUri: `${env.API_BASE_URL}/api/v1/auth/google/callback`,
         scope: ["profile", "email"],
       });
     } catch (error) {
       console.warn("Google OAuth2 registration failed:", error);
     }
   }
-
 
   // Multipart (for file uploads)
   await testApp.register(multipart, {
@@ -572,20 +607,25 @@ export const buildApp = async () => {
     return { message: "Quiz Platform API" };
   });
 
-  // Register routes
-  await testApp.register(authRoutes, { prefix: "/api/auth" });
-  await testApp.register(pricingRoutes, { prefix: "/api/pricing" });
-  await testApp.register(paymentRoutes, { prefix: "/api/payments" });
-  await testApp.register(paypalRoutes, { prefix: "/api/payments/paypal" });
-  await testApp.register(checkoutRoutes, { prefix: "/api/checkout" });
-  await testApp.register(couponRoutes, { prefix: "/api/coupons" });
-  await testApp.register(questionRoutes, { prefix: "/api/questions" });
-  await testApp.register(progressRoutes, { prefix: "/api/progress" });
-  await testApp.register(quizResultsRoutes, { prefix: "/api/quiz/results" });
-  await testApp.register(gamificationRoutes, { prefix: "/api/gamification" });
-  await testApp.register(adminRoutes, { prefix: "/api/admin" });
-  await testApp.register(entitlementRoutes, { prefix: "/api/entitlements" });
-  await testApp.register(plansRoutes, { prefix: "/api/plans" });
+  // Register routes (v1)
+  await testApp.register(authRoutes, { prefix: "/api/v1/auth" });
+  await testApp.register(usersRoutes, { prefix: "/api/v1/users" });
+  await testApp.register(pricingRoutes, { prefix: "/api/v1/pricing" });
+  await testApp.register(paymentRoutes, { prefix: "/api/v1/payments" });
+  await testApp.register(paypalRoutes, { prefix: "/api/v1/payments/paypal" });
+  await testApp.register(checkoutRoutes, { prefix: "/api/v1/checkout" });
+  await testApp.register(couponRoutes, { prefix: "/api/v1/coupons" });
+  await testApp.register(questionRoutes, { prefix: "/api/v1/questions" });
+  await testApp.register(discussionRoutes, { prefix: "/api/v1/discussions" });
+  await testApp.register(friendsRoutes, { prefix: "/api/v1/friends" });
+  await testApp.register(challengeRoutes, { prefix: "/api/v1/challenges" });
+  await testApp.register(progressRoutes, { prefix: "/api/v1/progress" });
+  await testApp.register(quizResultsRoutes, { prefix: "/api/v1/quiz/results" });
+  // await testApp.register(gamificationRoutes, { prefix: "/api/v1/gamification" }); // TODO: Fix fastify.authorize
+  // Notification routes removed - need to be rebuilt with Fastify when needed
+  await testApp.register(adminRoutes, { prefix: "/api/v1/admin" });
+  await testApp.register(entitlementRoutes, { prefix: "/api/v1/entitlements" });
+  await testApp.register(plansRoutes, { prefix: "/api/v1/plans" });
   await testApp.register(seoRoutes);
 
   return testApp;

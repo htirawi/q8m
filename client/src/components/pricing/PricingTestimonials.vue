@@ -19,7 +19,7 @@ defineOptions({
       </div>
 
       <div class="pricing-testimonials__grid">
-        <!-- Sarah's Testimonial -->
+        <!-- Sarah's ITestimonial -->
         <div class="testimonial-card">
           <div class="testimonial-card__rating">
             <StarIcon v-for="i in 5" :key="i" class="testimonial-card__star" aria-hidden="true" />
@@ -41,7 +41,7 @@ defineOptions({
           </div>
         </div>
 
-        <!-- Michael's Testimonial -->
+        <!-- Michael's ITestimonial -->
         <div class="testimonial-card testimonial-card--featured">
           <div class="testimonial-card__badge">Featured</div>
           <div class="testimonial-card__rating">
@@ -64,7 +64,7 @@ defineOptions({
           </div>
         </div>
 
-        <!-- Emma's Testimonial -->
+        <!-- Emma's ITestimonial -->
         <div class="testimonial-card">
           <div class="testimonial-card__rating">
             <StarIcon v-for="i in 5" :key="i" class="testimonial-card__star" aria-hidden="true" />

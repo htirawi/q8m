@@ -5,7 +5,7 @@
 
 
 import type { JWTPayload } from "@server/types/common";
-import { jwtService } from "@services/jwt.service.js";
+import { jwtService } from "@services/jwt.js";
 import type { FastifyRequest } from "fastify";
 
 export interface TokenExtractionResult {

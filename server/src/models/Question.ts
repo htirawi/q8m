@@ -2,9 +2,10 @@ import type { Document, ObjectId } from "mongoose";
 import { Schema, model } from "mongoose";
 
 export interface IQuestion extends Document {
-  framework: "angular" | "react" | "vue" | "nextjs" | "redux" | "random";
+  framework: "angular" | "react" | "vue" | "nextjs" | "redux" | "random" | "typescript" | "testing" | "svelte";
   level: "junior" | "intermediate" | "senior";
-  type: "multiple-choice" | "true-false" | "fill-blank" | "code-completion";
+  type: "multiple-choice" | "true-false" | "fill-blank" | "multiple-checkbox" | "open-ended" | "debugging" | "interview";
+  mode: "study" | "quiz" | "both"; // study = explanatory only, quiz = testing, both = can be used in either
   category: string;
   difficulty: "easy" | "medium" | "hard";
   tags: string[];
@@ -30,7 +31,7 @@ const questionSchema = new Schema(
   {
     framework: {
       type: String,
-      enum: ["angular", "react", "vue", "nextjs", "redux", "random"],
+      enum: ["angular", "react", "vue", "nextjs", "redux", "random", "typescript", "testing", "svelte"],
       required: true,
       index: true,
     },
@@ -42,8 +43,15 @@ const questionSchema = new Schema(
     },
     type: {
       type: String,
-      enum: ["multiple-choice", "true-false", "fill-blank", "code-completion"],
+      enum: ["multiple-choice", "true-false", "fill-blank", "multiple-checkbox", "open-ended", "debugging", "interview"],
       required: true,
+    },
+    mode: {
+      type: String,
+      enum: ["study", "quiz", "both"],
+      default: "quiz", // Default to quiz for backward compatibility
+      required: true,
+      index: true,
     },
     category: {
       type: String,
@@ -114,7 +122,10 @@ const questionSchema = new Schema(
 questionSchema.index({ framework: 1, level: 1, isActive: 1 });
 questionSchema.index({ framework: 1, category: 1, isActive: 1 });
 questionSchema.index({ framework: 1, difficulty: 1, isActive: 1 });
+questionSchema.index({ difficulty: 1, mode: 1, isActive: 1, createdAt: -1 }); // For study mode
+questionSchema.index({ level: 1, mode: 1, isActive: 1, createdAt: -1 }); // For quiz mode
 questionSchema.index({ tags: 1, isActive: 1 });
+questionSchema.index({ mode: 1, isActive: 1 });
 
 // Static method to find questions with filters
 questionSchema.statics.findWithFilters = function (filters: {
@@ -122,6 +133,7 @@ questionSchema.statics.findWithFilters = function (filters: {
   level?: string;
   category?: string;
   difficulty?: string;
+  mode?: "study" | "quiz" | "both";
   limit?: number;
   offset?: number;
 }) {
@@ -131,6 +143,11 @@ questionSchema.statics.findWithFilters = function (filters: {
   if (filters.level) query.level = filters.level;
   if (filters.category) query.category = filters.category;
   if (filters.difficulty) query.difficulty = filters.difficulty;
+
+  // Filter by mode: if mode is specified, get questions that match that mode or are "both"
+  if (filters.mode) {
+    query.mode = { $in: [filters.mode, "both"] };
+  }
 
   return this.find({ ...query, isActive: true })
     .skip(filters.offset || 0)

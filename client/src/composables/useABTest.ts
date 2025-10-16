@@ -20,22 +20,12 @@
  * ```
  */
 
-import { ref, computed, onMounted, type ComputedRef } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { useAnalytics } from "@/composables/useAnalytics";
 import type { IABTestAssignmentEvent } from "@/types/analytics";
+import type { IABTestConfig, IABTestResult } from '@shared/types/composables';
 
-export interface IABTestConfig {
-  testId: string;
-  variants: string[];
-  weights?: number[];
-  storageKey?: string;
-}
 
-export interface IABTestResult {
-  variant: ComputedRef<string>;
-  trackAssignment: () => void;
-  trackOutcome: (outcome: "conversion" | "bounce" | "continue", value?: number) => void;
-}
 
 /**
  * A/B test composable for variant assignment and tracking
@@ -58,7 +48,7 @@ export function useABTest(config: IABTestConfig): IABTestResult {
     }
   }
 
-  const { trackGenericEvent } = useAnalytics();
+  const { track } = useAnalytics();
 
   const STORAGE_KEY_PREFIX = "q8m_ab_test_";
   const finalStorageKey = storageKey ?? `${STORAGE_KEY_PREFIX}${testId}`;
@@ -122,7 +112,7 @@ export function useABTest(config: IABTestConfig): IABTestResult {
       timestamp: Date.now(),
     };
 
-    trackGenericEvent("ab_test_assignment", event);
+    track("ab_test_assignment", event);
     hasTrackedAssignment.value = true;
   };
 
@@ -133,7 +123,7 @@ export function useABTest(config: IABTestConfig): IABTestResult {
     outcome: "conversion" | "bounce" | "continue",
     value?: number
   ): void => {
-    trackGenericEvent("ab_test_outcome", {
+    track("ab_test_outcome", {
       testId,
       variant: variant.value,
       outcome,

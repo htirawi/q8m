@@ -1,4 +1,4 @@
-import { entitlementService } from "@services/entitlement.service.js";
+import { entitlementService } from "@services/entitlement.js";
 import type { FastifyReply, FastifyRequest } from "fastify";
 
 import type { EntitlementOptions } from "../types/middleware";

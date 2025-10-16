@@ -15,7 +15,7 @@ const route = useRoute();
 const { t } = useI18n();
 const { pricingPlans } = usePlans();
 const { resolvedPlan, redirectToCanonical } = usePricingRoute();
-const { trackGenericEvent } = useAnalytics();
+const { track } = useAnalytics();
 const { selectPlan: selectCheckoutPlan } = useCheckout();
 
 const billingCycle = ref<BillingCycle>('monthly');
@@ -46,7 +46,7 @@ const toggleBilling = (cycle: BillingCycle) => {
   const previousCycle = billingCycle.value;
   billingCycle.value = cycle;
 
-  trackGenericEvent('billing_cycle_toggled', {
+  track('billing_cycle_toggled', {
     from: previousCycle,
     to: cycle,
   });
@@ -55,7 +55,7 @@ const toggleBilling = (cycle: BillingCycle) => {
 const handlePlanSelect = (planId: PlanId, billing: BillingCycle) => {
   selectedPlan.value = planId;
 
-  trackGenericEvent('plan_card_clicked', {
+  track('plan_card_clicked', {
     plan: planId,
     billing,
     source: 'pricing_page',
@@ -88,7 +88,7 @@ const handlePlanSelect = (planId: PlanId, billing: BillingCycle) => {
 const handleCheckoutClose = () => {
   showCheckoutModal.value = false;
 
-  trackGenericEvent('checkout_modal_closed', {
+  track('checkout_modal_closed', {
     plan: checkoutPlanId.value,
     billing: checkoutBilling.value,
   });
@@ -97,7 +97,7 @@ const handleCheckoutClose = () => {
 const handleCheckoutSuccess = (subscriptionId: string) => {
   showCheckoutModal.value = false;
 
-  trackGenericEvent('checkout_completed_modal', {
+  track('checkout_completed_modal', {
     plan: checkoutPlanId.value,
     billing: checkoutBilling.value,
     subscriptionId,

@@ -11,15 +11,11 @@ import { ref } from "vue";
 import { useAnalytics } from "./useAnalytics";
 import type { DifficultyLevel } from "@/types/plan/access";
 import type { PlanTier } from "@shared/types/plan";
+import type { IUpsellModalContext } from '@shared/types/composables';
 
-export interface IUpsellModalContext {
-  difficulty: DifficultyLevel;
-  requiredPlan: PlanTier;
-  source: 'level_card' | 'feature_gate';
-}
 
 export function useUpsell() {
-  const { trackStudyEvent } = useAnalytics();
+  const { track } = useAnalytics();
 
   const isModalVisible = ref(false);
   const modalContext = ref<IUpsellModalContext | null>(null);
@@ -41,7 +37,7 @@ export function useUpsell() {
     isModalVisible.value = true;
 
     // Track modal opened event
-    trackStudyEvent('upsell_modal_opened', {
+    track('upsell_modal_opened', {
       difficulty,
       requiredPlan,
       source,
@@ -55,7 +51,7 @@ export function useUpsell() {
     method: 'esc' | 'backdrop' | 'close_button' | 'maybe_later_button' = 'close_button'
   ): void => {
     if (modalContext.value) {
-      trackStudyEvent('upsell_modal_dismissed', {
+      track('upsell_modal_dismissed', {
         difficulty: modalContext.value.difficulty,
         requiredPlan: modalContext.value.requiredPlan,
         method,

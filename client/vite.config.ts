@@ -104,7 +104,7 @@ export default defineConfig({
           vendor: ["vue", "vue-router", "pinia"],
           ui: ["@headlessui/vue", "@heroicons/vue"],
           validation: ["vee-validate", "@vee-validate/zod", "zod"],
-          utils: ["axios", "@vueuse/core"],
+          utils: ["@vueuse/core"],
         },
         chunkFileNames: (chunkInfo) => {
           const facadeModuleId = chunkInfo.facadeModuleId;

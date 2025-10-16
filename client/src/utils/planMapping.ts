@@ -9,7 +9,7 @@ import type { DifficultyLevel, ExperienceLevel } from "@/types/plan/access";
 
 export type IntentMode = "study" | "quiz";
 
-export interface PlanIntent {
+export interface IPlanIntent {
   mode: IntentMode;
   desired: DifficultyLevel | ExperienceLevel | "bundle";
   locale: string;
@@ -114,7 +114,7 @@ export function buildIntentRedirectUrl(
  * Decode intent from signInSuccessUrl
  * Returns parsed intent or null if invalid
  */
-export function decodeIntentFromUrl(url: string): PlanIntent | null {
+export function decodeIntentFromUrl(url: string): IPlanIntent | null {
   // Must be relative path
   if (!url.startsWith("/")) return null;
 
@@ -143,12 +143,12 @@ export function decodeIntentFromUrl(url: string): PlanIntent | null {
  */
 export function resolvePostLoginTarget(
   userTier: PlanTier,
-  intent: PlanIntent | null,
+  intent: IPlanIntent | null,
   locale: string
 ): string {
-  // If no intent, use default landing based on plan
+  // If no intent, route to level selection page where user chooses difficulty and mode
   if (!intent) {
-    return getStudyTargetFor(userTier, locale);
+    return getDefaultLandingPage(locale);
   }
 
   // If intent is bundle, respect it for pro users, otherwise use plan default

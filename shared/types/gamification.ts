@@ -250,4 +250,163 @@ export interface IStreakData {
   lastActivityDate: Date | null;
   streakStartDate: Date | null;
   missedDays?: number;
+  freezesUsed?: number;
+  freezesAvailable?: number;
 }
+
+/**
+ * Streak freeze record
+ */
+export interface IStreakFreeze {
+  id: string;
+  userId: string;
+  usedAt: Date;
+  expiresAt: Date;
+  type: 'manual' | 'grace_period';
+  costInCoins?: number;
+  costInXP?: number;
+}
+
+/**
+ * Coin balance and transactions
+ */
+export interface ICoinBalance {
+  total: number;
+  earned: number;
+  spent: number;
+}
+
+export interface ICoinTransaction {
+  id: string;
+  userId: string;
+  amount: number; // Positive for earn, negative for spend
+  type: 'earn' | 'spend';
+  source: CoinSource | CoinSpend;
+  description: string;
+  metadata?: Record<string, unknown>;
+  createdAt: Date;
+}
+
+export type CoinSource =
+  | 'quiz_completion'
+  | 'quiz_perfect'
+  | 'daily_login'
+  | 'streak_milestone'
+  | 'achievement'
+  | 'level_up'
+  | 'referral'
+  | 'admin';
+
+export type CoinSpend =
+  | 'streak_freeze'
+  | 'hint'
+  | 'unlock_content'
+  | 'profile_customization'
+  | 'admin';
+
+/**
+ * Streak saver configuration constants
+ */
+export const STREAK_SAVER_CONFIG = {
+  COST_IN_COINS: 100,
+  COST_IN_XP: 100,
+  GRACE_PERIOD_HOURS: 2,
+  MAX_FREEZES_PER_WEEK: 2,
+} as const;
+
+/**
+ * Coin earning rates
+ */
+export const COIN_RATES = {
+  QUIZ_COMPLETION_BASE: 10,
+  QUIZ_COMPLETION_PERFECT: 25,
+  DAILY_LOGIN: 5,
+  STREAK_MILESTONE_7: 50,
+  STREAK_MILESTONE_14: 100,
+  STREAK_MILESTONE_30: 200,
+  STREAK_MILESTONE_60: 400,
+  STREAK_MILESTONE_90: 600,
+  STREAK_MILESTONE_180: 1000,
+  STREAK_MILESTONE_365: 2500,
+} as const;
+
+/**
+ * Quiz milestones
+ */
+export const QUIZ_MILESTONES = [10, 25, 50, 100, 250, 500, 1000] as const;
+export const STREAK_MILESTONES = [7, 14, 30, 60, 90, 180, 365] as const;
+
+export type QuizMilestone = typeof QUIZ_MILESTONES[number];
+export type StreakMilestone = typeof STREAK_MILESTONES[number];
+
+/**
+ * Onboarding wizard types
+ */
+export type OnboardingStepType =
+  | 'welcome'
+  | 'experience_level'
+  | 'goals'
+  | 'study_preferences'
+  | 'notifications'
+  | 'complete';
+
+export type ExperienceLevel = 'beginner' | 'intermediate' | 'advanced' | 'expert';
+
+export type StudyGoal =
+  | 'exam_prep'
+  | 'skill_building'
+  | 'career_advancement'
+  | 'personal_interest'
+  | 'certification'
+  | 'other';
+
+export type StudyPreference = {
+  preferredDifficulty: 'easy' | 'medium' | 'hard' | 'mixed';
+  questionsPerSession: 5 | 10 | 15 | 20;
+  studyReminders: boolean;
+  dailyGoalMinutes: number;
+};
+
+export interface IOnboardingStep {
+  type: OnboardingStepType;
+  title: string;
+  description: string;
+  icon: string;
+  isCompleted: boolean;
+  isOptional?: boolean;
+}
+
+export interface IOnboardingData {
+  userId: string;
+  isCompleted: boolean;
+  currentStep: number;
+  totalSteps: number;
+  steps: IOnboardingStep[];
+  responses: {
+    experienceLevel?: ExperienceLevel;
+    goals?: StudyGoal[];
+    studyPreferences?: StudyPreference;
+    notificationsEnabled?: boolean;
+  };
+  startedAt: Date;
+  completedAt?: Date;
+  lastUpdatedAt: Date;
+}
+
+export interface IOnboardingProgress {
+  currentStep: number;
+  totalSteps: number;
+  completionPercentage: number;
+  canGoBack: boolean;
+  canSkip: boolean;
+}
+
+/**
+ * Onboarding rewards configuration
+ */
+export const ONBOARDING_REWARDS = {
+  COMPLETION_XP: 100,
+  COMPLETION_COINS: 50,
+  FIRST_QUIZ_BONUS_XP: 50,
+  PROFILE_SETUP_BONUS_XP: 25,
+} as const;

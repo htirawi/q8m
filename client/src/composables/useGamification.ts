@@ -4,44 +4,15 @@
  */
 
 import { ref } from "vue";
-import { handleApiResponse, getErrorMessage } from "@/utils/apiHelpers";
+import { httpClient, getErrorMessage } from "@/utils/httpClient";
+import { API_ENDPOINTS } from "@/config/api";
 import type { IBadge, ILeaderboard, IStreakData } from "@shared/types/gamification";
 import type { PlanTier } from "@shared/types/plan";
+import type { IBadgeWithProgress, IXPInfo, IGamificationSummary, ILeaderboardRank } from '@shared/types/composables';
 
-export interface IBadgeWithProgress extends IBadge {
-  earned: boolean;
-  earnedAt?: Date;
-  progress: number;
-}
 
-export interface IXPInfo {
-  xp: number;
-  level: number;
-  levelTitle: string;
-  xpToNextLevel: number;
-  levelProgress: number;
-}
 
-export interface IGamificationSummary {
-  xp: number;
-  level: number;
-  levelTitle: string;
-  xpToNextLevel: number;
-  xpProgress: number;
-  totalBadges: number;
-  rareBadges: number;
-  currentStreak: number;
-  longestStreak: number;
-  leaderboardRank?: number;
-  leaderboardPercentile?: number;
-}
 
-export interface ILeaderboardRank {
-  rank: number;
-  score: number;
-  totalEntries: number;
-  percentile: number;
-}
 
 export function useGamification() {
   const isLoading = ref(false);
@@ -70,18 +41,11 @@ export function useGamification() {
       if (options.category) params.append("category", options.category);
       if (options.rarity) params.append("rarity", options.rarity);
 
-      const response = await fetch(`/api/gamification/badges?${params.toString()}`, {
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      const data = await handleApiResponse<{
+      const data = await httpClient.get<{
         badges: IBadgeWithProgress[];
         totalBadges: number;
         earnedCount: number;
-      }>(response);
+      }>(API_ENDPOINTS.gamification.badges(params));
 
       badges.value = data.badges;
       return data.badges;
@@ -101,14 +65,9 @@ export function useGamification() {
     error.value = null;
 
     try {
-      const response = await fetch("/api/gamification/badges/earned", {
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      const data = await handleApiResponse<{ badges: IBadge[]; count: number }>(response);
+      const data = await httpClient.get<{ badges: IBadge[]; count: number }>(
+        API_ENDPOINTS.gamification.badgesEarned()
+      );
       earnedBadges.value = data.badges;
       return data.badges;
     } catch (err) {
@@ -127,14 +86,9 @@ export function useGamification() {
     error.value = null;
 
     try {
-      const response = await fetch("/api/gamification/badges/secret", {
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      const data = await handleApiResponse<{ badges: IBadge[]; count: number }>(response);
+      const data = await httpClient.get<{ badges: IBadge[]; count: number }>(
+        API_ENDPOINTS.gamification.badgesSecret()
+      );
       secretBadges.value = data.badges;
       return data.badges;
     } catch (err) {
@@ -163,20 +117,10 @@ export function useGamification() {
       if (options.scope) params.append("scope", options.scope);
       if (options.planTier) params.append("planTier", options.planTier);
 
-      const response = await fetch(
-        `/api/gamification/leaderboard/${type}?${params.toString()}`,
-        {
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      const data = await handleApiResponse<{
+      const data = await httpClient.get<{
         leaderboard: ILeaderboard;
         userRank?: ILeaderboardRank;
-      }>(response);
+      }>(API_ENDPOINTS.gamification.leaderboardByType(type, params));
 
       leaderboard.value = data.leaderboard;
       userRank.value = data.userRank || null;
@@ -207,17 +151,9 @@ export function useGamification() {
       if (options.scope) params.append("scope", options.scope);
       if (options.planTier) params.append("planTier", options.planTier);
 
-      const response = await fetch(
-        `/api/gamification/leaderboard/${type}/rank?${params.toString()}`,
-        {
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
+      const data = await httpClient.get<ILeaderboardRank>(
+        API_ENDPOINTS.gamification.leaderboardRank(type, params)
       );
-
-      const data = await handleApiResponse<ILeaderboardRank>(response);
       userRank.value = data;
       return data;
     } catch (err) {
@@ -236,14 +172,7 @@ export function useGamification() {
     error.value = null;
 
     try {
-      const response = await fetch("/api/gamification/xp", {
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      const data = await handleApiResponse<IXPInfo>(response);
+      const data = await httpClient.get<IXPInfo>(API_ENDPOINTS.gamification.xp());
       xpInfo.value = data;
       return data;
     } catch (err) {
@@ -262,14 +191,9 @@ export function useGamification() {
     error.value = null;
 
     try {
-      const response = await fetch("/api/gamification/summary", {
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      const data = await handleApiResponse<IGamificationSummary>(response);
+      const data = await httpClient.get<IGamificationSummary>(
+        API_ENDPOINTS.gamification.summary()
+      );
       summary.value = data;
       return data;
     } catch (err) {
@@ -288,14 +212,7 @@ export function useGamification() {
     error.value = null;
 
     try {
-      const response = await fetch("/api/gamification/streak", {
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      const data = await handleApiResponse<IStreakData>(response);
+      const data = await httpClient.get<IStreakData>(API_ENDPOINTS.gamification.streak());
       streak.value = data;
       return data;
     } catch (err) {

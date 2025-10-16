@@ -8,6 +8,8 @@ import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 import { useAnalytics } from "./useAnalytics";
+import { httpClient } from "@/utils/httpClient";
+import { API_ENDPOINTS } from "@/config/api";
 import type {
   BillingCycle,
   CheckoutStep,
@@ -23,7 +25,7 @@ import type { PlanTier } from "@shared/types/plan";
 export function useCheckout() {
   const router = useRouter();
   const authStore = useAuthStore();
-  const { trackGenericEvent } = useAnalytics();
+  const { track } = useAnalytics();
 
   const currentStep = ref<CheckoutStep>("plan_selection");
   const selectedPlan = ref<PlanOption | null>(null);
@@ -106,7 +108,7 @@ export function useCheckout() {
     selectedPlan.value = plan;
     selectedCycle.value = cycle;
 
-    trackGenericEvent("plan_changed", {
+    track("plan_changed", {
       tier,
       cycle,
       price: plan.price,
@@ -123,25 +125,24 @@ export function useCheckout() {
     }
 
     try {
-      const response = await fetch("/api/coupons/validate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          code,
-          tier: selectedPlan.value.tier,
-          cycle: selectedPlan.value.cycle,
-          amount: selectedPlan.value.price,
-          currency: selectedPlan.value.currency,
-        }),
+      const data = await httpClient.post<{
+        success: boolean;
+        valid: boolean;
+        error?: string;
+        coupon: {
+          discountAmount: number;
+          finalAmount: number;
+        };
+      }>(API_ENDPOINTS.coupons.validate(), {
+        code,
+        tier: selectedPlan.value.tier,
+        cycle: selectedPlan.value.cycle,
+        amount: selectedPlan.value.price,
+        currency: selectedPlan.value.currency,
       });
 
-      const data = await response.json();
-
-      if (!response.ok || !data.success || !data.valid) {
-        trackGenericEvent("coupon_failed", {
+      if (!data.success || !data.valid) {
+        track("coupon_failed", {
           code,
           error: data.error || "Invalid coupon",
         });
@@ -150,7 +151,7 @@ export function useCheckout() {
 
       // Update coupon code and track success
       couponCode.value = code;
-      trackGenericEvent("coupon_applied", {
+      track("coupon_applied", {
         code,
         discountAmount: data.coupon.discountAmount,
         finalAmount: data.coupon.finalAmount,
@@ -158,7 +159,7 @@ export function useCheckout() {
 
       return true;
     } catch (error) {
-      trackGenericEvent("coupon_failed", {
+      track("coupon_failed", {
         code,
         error: error instanceof Error ? error.message : "Unknown error",
       });
@@ -179,7 +180,7 @@ export function useCheckout() {
     currentStep.value = "processing";
 
     try {
-      trackGenericEvent("subscribe_click", {
+      track("subscribe_click", {
         tier: selectedPlan.value.tier,
         cycle: selectedPlan.value.cycle,
         price: selectedPlan.value.price,
@@ -188,25 +189,27 @@ export function useCheckout() {
       });
 
       // Call backend to create checkout session
-      const response = await fetch("/api/checkout/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          tier: selectedPlan.value.tier,
-          cycle: selectedPlan.value.cycle,
-          couponCode: couponCode.value || undefined,
-          currency: selectedPlan.value.currency,
-          embedUrl: false, // Request embedded checkout URL if supported
-          source,
-        }),
+      const data = await httpClient.post<{
+        success: boolean;
+        error?: string;
+        session: {
+          sessionId: string;
+          planTier: PlanTier;
+          cycle: BillingCycle;
+          amount: number;
+          currency: string;
+          embedUrl?: string;
+        };
+      }>(API_ENDPOINTS.checkout.create(), {
+        tier: selectedPlan.value.tier,
+        cycle: selectedPlan.value.cycle,
+        couponCode: couponCode.value || undefined,
+        currency: selectedPlan.value.currency,
+        embedUrl: false, // Request embedded checkout URL if supported
+        source,
       });
 
-      const data = await response.json();
-
-      if (!response.ok || !data.success) {
+      if (!data.success) {
         throw new Error(data.error || "Failed to create checkout session");
       }
 
@@ -223,7 +226,7 @@ export function useCheckout() {
 
       currentStep.value = "checkout";
 
-      trackGenericEvent("checkout_view", {
+      track("checkout_view", {
         sessionId: checkoutSession.value.sessionId,
         provider: checkoutSession.value.provider,
       });
@@ -244,7 +247,7 @@ export function useCheckout() {
       errorMessage.value = error instanceof Error ? error.message : "Failed to start checkout";
       currentStep.value = "error";
 
-      trackGenericEvent("checkout_error", {
+      track("checkout_error", {
         error: errorMessage.value,
         step: "start",
       });
@@ -266,7 +269,7 @@ export function useCheckout() {
     currentStep.value = "processing";
 
     try {
-      trackGenericEvent("one_click_confirm", {
+      track("one_click_confirm", {
         tier: selectedPlan.value.tier,
         cycle: selectedPlan.value.cycle,
         price: selectedPlan.value.price,
@@ -279,25 +282,22 @@ export function useCheckout() {
       }
 
       // Call API to process with saved payment
-      const response = await fetch("/api/checkout/one-click", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          tier: selectedPlan.value.tier,
-          cycle: selectedPlan.value.cycle,
-          couponCode: couponCode.value || undefined,
-          currency: selectedPlan.value.currency,
-          paymentMethodId: paymentMethod.id,
-          source: "one_click",
-        }),
+      const data = await httpClient.post<{
+        success: boolean;
+        error?: string;
+        subscription: {
+          id: string;
+        };
+      }>(API_ENDPOINTS.checkout.oneClick(), {
+        tier: selectedPlan.value.tier,
+        cycle: selectedPlan.value.cycle,
+        couponCode: couponCode.value || undefined,
+        currency: selectedPlan.value.currency,
+        paymentMethodId: paymentMethod.id,
+        source: "one_click",
       });
 
-      const data = await response.json();
-
-      if (!response.ok || !data.success) {
+      if (!data.success) {
         throw new Error(data.error || "Payment processing failed");
       }
 
@@ -310,7 +310,7 @@ export function useCheckout() {
       errorMessage.value = error instanceof Error ? error.message : "Payment failed";
       currentStep.value = "error";
 
-      trackGenericEvent("one_click_failed", {
+      track("one_click_failed", {
         error: errorMessage.value,
       });
     } finally {
@@ -324,7 +324,7 @@ export function useCheckout() {
   const handleSuccess = (data: { subscriptionId: string; tier: PlanTier; cycle: BillingCycle }) => {
     currentStep.value = "success";
 
-    trackGenericEvent("checkout_completed", {
+    track("checkout_completed", {
       subscriptionId: data.subscriptionId,
       tier: data.tier,
       cycle: data.cycle,
@@ -345,7 +345,7 @@ export function useCheckout() {
     currentStep.value = "error";
     errorMessage.value = error;
 
-    trackGenericEvent("checkout_failed", {
+    track("checkout_failed", {
       error,
       step: currentStep.value,
     });

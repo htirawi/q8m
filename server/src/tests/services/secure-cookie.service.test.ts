@@ -1,4 +1,4 @@
-import { secureCookieService } from "@services/secure-cookie.service.js";
+import { secureCookieService } from "@services/secure-cookie.js";
 import type { FastifyReply } from "fastify";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 

@@ -9,8 +9,8 @@ import { buildPayPalRequestId } from "@lib/idempotency.js";
 import { User } from "@models/User.js";
 import { paymentRepository } from "@repositories/payment.repository.js";
 import type { CreateOrderRequest } from "@schemas/paypal.schemas.js";
-import { paypalService } from "@services/paypal.service.js";
-import { pricingService } from "@services/pricing.service.js";
+import { paypalService } from "@services/paypal.js";
+import { pricingService } from "@services/pricing.js";
 
 export class PayPalOrderService {
   /**

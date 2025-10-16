@@ -42,13 +42,12 @@
 </template>
 
 <script setup lang="ts">
+import type { IPlanComparisonCardProps as Props, IComparisonFeature } from "@/types/components/marketing";
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import type { PlanTier } from "@shared/types/plan";
 
-interface Props {
-  targetPlan: PlanTier;
-}
+
 
 const props = defineProps<Props>();
 
@@ -64,11 +63,7 @@ const targetPlanName = computed(() => {
   return names[props.targetPlan];
 });
 
-interface IComparisonFeature {
-  label: string;
-  free: boolean;
-  target: boolean;
-}
+
 
 const comparisonFeatures = computed((): IComparisonFeature[] => {
   return [

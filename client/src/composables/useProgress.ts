@@ -4,80 +4,17 @@
  */
 
 import { ref } from "vue";
-import { handleApiResponse, getErrorMessage } from "@/utils/apiHelpers";
-import type { IUserProgress, IMasteryStats } from "@shared/types/progress";
+import { httpClient, getErrorMessage } from "@/utils/httpClient";
+import { API_ENDPOINTS } from "@/config/api";
 import type { Question } from "@shared/types/quiz";
-
-export interface IUpdateQuestionProgressPayload {
-  isCorrect: boolean;
-  timeSpentSeconds: number;
-  difficulty: "easy" | "medium" | "hard";
-}
-
-export interface IUpdateQuestionProgressResponse {
-  success: boolean;
-  xpEarned: number;
-  newMasteryLevel: string;
-  nextReviewDate: string;
-  badgesEarned: string[];
-  leveledUp?: boolean;
-  newLevel?: number;
-}
-
-export interface ICompleteSessionPayload {
-  questionsCompleted: number;
-  correctAnswers: number;
-  sessionDurationMinutes: number;
-  startTime: string;
-  endTime: string;
-}
-
-export interface ICompleteSessionResponse {
-  success: boolean;
-  xpEarned: number;
-  breakdown: Record<string, number>;
-  leveledUp?: boolean;
-  newLevel?: number;
-  badgesEarned: string[];
-  streakMaintained: boolean;
-  currentStreak: number;
-}
-
-export interface IProgressWithMastery extends IUserProgress {
-  masteryStats: IMasteryStats;
-}
-
-export interface IProgressStats {
-  totalStudyTime: number;
-  totalStudyTimeMinutes: number;
-  totalQuestions: number;
-  totalQuestionsAttempted: number;
-  totalQuestionsCorrect: number;
-  accuracy: number;
-  overallAccuracy: number;
-  currentStreak: number;
-  longestStreak: number;
-  xpEarned: number;
-  level: number;
-  badgesEarned: number;
-  totalStudySessions: number;
-  averageSessionDurationMinutes: number;
-  categoryBreakdown: {
-    category: string;
-    questionsAttempted: number;
-    accuracy: number;
-  }[];
-  difficultyBreakdown: {
-    difficulty: "easy" | "medium" | "hard";
-    questionsAttempted: number;
-    accuracy: number;
-  }[];
-  recentActivity: {
-    date: Date;
-    questionsCompleted: number;
-    xpEarned: number;
-  }[];
-}
+import type {
+  IProgressWithMastery,
+  IProgressStats,
+  IUpdateQuestionProgressPayload,
+  IUpdateQuestionProgressResponse,
+  ICompleteSessionPayload,
+  ICompleteSessionResponse,
+} from "@shared/types/composables";
 
 export function useProgress() {
   const isLoading = ref(false);
@@ -93,14 +30,9 @@ export function useProgress() {
     error.value = null;
 
     try {
-      const response = await fetch("/api/progress", {
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      const data = await handleApiResponse<{ progress: IProgressWithMastery }>(response);
+      const data = await httpClient.get<{ progress: IProgressWithMastery }>(
+        API_ENDPOINTS.progress.get()
+      );
       progress.value = data.progress;
       return data.progress;
     } catch (err) {
@@ -122,16 +54,10 @@ export function useProgress() {
     error.value = null;
 
     try {
-      const response = await fetch(`/api/progress/question/${questionId}`, {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-
-      const data = await handleApiResponse<IUpdateQuestionProgressResponse>(response);
+      const data = await httpClient.post<IUpdateQuestionProgressResponse>(
+        API_ENDPOINTS.progress.question(questionId),
+        payload
+      );
       return data;
     } catch (err) {
       error.value = getErrorMessage(err, "Failed to update question progress");
@@ -144,11 +70,13 @@ export function useProgress() {
   /**
    * Get next question(s) using adaptive algorithm
    */
-  async function getNextQuestions(options: {
-    difficulty?: "easy" | "medium" | "hard";
-    category?: string;
-    count?: number;
-  } = {}): Promise<Question[] | null> {
+  async function getNextQuestions(
+    options: {
+      difficulty?: "easy" | "medium" | "hard";
+      category?: string;
+      count?: number;
+    } = {}
+  ): Promise<Question[] | null> {
     isLoading.value = true;
     error.value = null;
 
@@ -158,14 +86,9 @@ export function useProgress() {
       if (options.category) params.append("category", options.category);
       if (options.count) params.append("count", String(options.count));
 
-      const response = await fetch(`/api/progress/next-question?${params.toString()}`, {
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      const data = await handleApiResponse<{ questions: Question[]; count: number }>(response);
+      const data = await httpClient.get<{ questions: Question[]; count: number }>(
+        API_ENDPOINTS.progress.nextQuestion(params)
+      );
       return data.questions;
     } catch (err) {
       error.value = getErrorMessage(err, "Failed to get next questions");
@@ -185,16 +108,10 @@ export function useProgress() {
     error.value = null;
 
     try {
-      const response = await fetch("/api/progress/session/complete", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-
-      const data = await handleApiResponse<ICompleteSessionResponse>(response);
+      const data = await httpClient.post<ICompleteSessionResponse>(
+        API_ENDPOINTS.progress.sessionComplete(),
+        payload
+      );
       return data;
     } catch (err) {
       error.value = getErrorMessage(err, "Failed to complete session");
@@ -212,14 +129,7 @@ export function useProgress() {
     error.value = null;
 
     try {
-      const response = await fetch("/api/progress/stats", {
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      const data = await handleApiResponse<{ stats: IProgressStats }>(response);
+      const data = await httpClient.get<{ stats: IProgressStats }>(API_ENDPOINTS.progress.stats());
       stats.value = data.stats;
       return data.stats;
     } catch (err) {

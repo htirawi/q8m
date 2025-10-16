@@ -16,16 +16,8 @@ import {
 } from '@/config/plans';
 import type { PlanId, BillingCycle } from '@/types/pricing';
 import type { PlanTier } from '@shared/types/plan';
+import type { NumberCopyMode, IPlanPrice } from '@shared/types/composables';
 
-export type NumberCopyMode = 'totals' | 'deltas' | 'totals-with-deltas';
-
-export interface IPlanPrice {
-  monthly: number;
-  annual: number;
-  currency: string;
-  annualSavings: number;
-  annualSavingsPercent: number;
-}
 
 export function usePlans() {
   const { t } = useI18n();

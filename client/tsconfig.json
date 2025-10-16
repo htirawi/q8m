@@ -50,6 +50,12 @@
     "vitest.setup.ts",
     "src/tests/**"
   ],
+  "ts-node": {
+    "transpileOnly": true,
+    "compilerOptions": {
+      "module": "commonjs"
+    }
+  },
   "references": [
     {
       "path": "./tsconfig.node.json"

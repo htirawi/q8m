@@ -1,20 +1,12 @@
 <script setup lang="ts">
+import type { IModernPricingCardProps } from "@/types/components/pricing";
 import { ref, computed } from "vue";
 import { CheckIcon } from "@heroicons/vue/24/solid";
 import type { BillingCycle } from "@/components/pricing/pricing.config";
 
-interface ModernPricingCardProps {
-  planName: string;
-  priceMonthly: number;
-  priceYearly: number;
-  billingCycle: BillingCycle;
-  currency?: string;
-  features: string[];
-  planId: string;
-  popular?: boolean;
-}
 
-const props = withDefaults(defineProps<ModernPricingCardProps>(), {
+
+const props = withDefaults(defineProps<IModernPricingCardProps>(), {
   currency: "USD",
   popular: false,
 });
@@ -74,7 +66,7 @@ defineOptions({
     class="modern-pricing-card"
     :class="{ 'modern-pricing-card--popular': popular }"
   >
-    <!-- Popular Badge -->
+    <!-- Popular IBadge -->
     <div v-if="popular" class="modern-pricing-card__badge">
       Most Popular
     </div>

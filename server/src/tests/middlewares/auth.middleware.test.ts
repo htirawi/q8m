@@ -2,12 +2,12 @@
 import { createAuthMiddleware, optionalAuth } from "@middlewares/auth.middleware.js";
 import { Session } from "@models/Session.js";
 import { User } from "@models/User.js";
-import { jwtService } from "@services/jwt.service.js";
+import { jwtService } from "@services/jwt.js";
 import type { FastifyRequest, FastifyReply } from "fastify";
 import { describe, it, expect, beforeEach, vi, afterEach } from "vitest";
 
 // Mock dependencies
-vi.mock("@services/jwt.service.js");
+vi.mock("@services/jwt.js");
 vi.mock("@models/Session.js");
 vi.mock("@models/User.js");
 

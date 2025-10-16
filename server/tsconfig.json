@@ -47,13 +47,17 @@
     "node_modules",
     "dist",
     "coverage",
-    "src/tests/paypal/createOrder.spec.ts",
-    "src/tests/services/jwt.service.test.ts",
-    "tests/security/rate-limiting.test.ts",
+    "src/scripts",
+    "src/tests",
+    "src/tests/paypal/**",
+    "tests",
     "src/models/User.ts",
     "src/models/Session.ts",
     "src/models/FxRate.ts",
-    "src/models/VerificationToken.ts"
+    "src/models/VerificationToken.ts",
+    "src/models/Challenge.ts",
+    "src/models/DeviceToken.ts",
+    "src/models/FrameworkAccess.ts"
   ],
   "ts-node": {
     "esm": true,

@@ -9,7 +9,7 @@ import type { Level, Difficulty } from "./contentValidationSchemas";
 // Level Definitions (Canonical Business Rules)
 // ─────────────────────────────────────────────────────────────
 
-export interface LevelConfig {
+export interface ILevelConfig {
   id: Level;
   name: {
     en: string;
@@ -27,7 +27,7 @@ export interface LevelConfig {
   };
 }
 
-export const LEVELS: Record<Level, LevelConfig> = {
+export const LEVELS: Record<Level, ILevelConfig> = {
   junior: {
     id: "junior",
     name: {
@@ -185,7 +185,7 @@ export function mapSourceDifficultyToLevel(sourceDifficulty?: string): Level {
 // Level Utilities
 // ─────────────────────────────────────────────────────────────
 
-export function getLevelConfig(level: Level): LevelConfig {
+export function getLevelConfig(level: Level): ILevelConfig {
   return LEVELS[level];
 }
 

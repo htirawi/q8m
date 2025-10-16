@@ -1,0 +1,21 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Run lint-staged for changed files
+pnpm lint-staged
+
+# Run type checking on both client and server
+echo "🔍 Type checking..."
+pnpm typecheck || {
+  echo "❌ Type check failed. Please fix type errors before committing."
+  exit 1
+}
+
+# Run linting
+echo "🧹 Linting..."
+pnpm lint || {
+  echo "❌ Lint check failed. Please fix lint errors before committing."
+  exit 1
+}
+
+echo "✅ Pre-commit checks passed!"

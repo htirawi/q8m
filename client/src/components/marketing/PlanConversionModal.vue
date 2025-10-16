@@ -266,6 +266,7 @@
 </template>
 
 <script setup lang="ts">
+import type { IPlanConversionModalProps as Props, IPlanConversionModalEmits as Emits, IFaq } from "@/types/components/marketing";
 import { ref, computed, watch, onMounted, onUnmounted, nextTick } from "vue";
 import { useI18n } from "vue-i18n";
 import { useCheckout } from "@/composables/useCheckout";
@@ -275,16 +276,9 @@ import type { DifficultyLevel } from "@/types/plan/access";
 import type { PlanTier } from "@shared/types/plan";
 import type { BillingCycle } from "@/composables/useCheckout";
 
-interface Props {
-  isVisible: boolean;
-  difficulty: DifficultyLevel;
-  requiredPlan: PlanTier;
-  variant?: 'a' | 'b' | 'c'; // A/B test variant
-}
 
-interface Emits {
-  (e: "dismiss"): void;
-}
+
+
 
 const props = withDefaults(defineProps<Props>(), {
   variant: 'a',
@@ -301,7 +295,7 @@ const {
   startCheckout,
   applyCoupon,
 } = useCheckout();
-const { trackGenericEvent } = useAnalytics();
+const { track } = useAnalytics();
 
 const modalRef = ref<HTMLElement>();
 const headingId = "convert-modal-title";
@@ -326,10 +320,7 @@ const ctaText = computed(() => {
   return t('convert.cta.primary');
 });
 
-interface IFaq {
-  question: string;
-  answer: string;
-}
+
 
 const faqs = computed((): IFaq[] => [
   {
@@ -375,7 +366,7 @@ const handleApplyCoupon = async () => {
 };
 
 const handleSubscribe = async () => {
-  trackGenericEvent("subscribe_click", {
+  track("subscribe_click", {
     difficulty: props.difficulty,
     plan: props.requiredPlan,
     cycle: selectedCycle.value,
@@ -389,7 +380,7 @@ const toggleComparison = () => {
   showComparison.value = !showComparison.value;
 
   if (showComparison.value) {
-    trackGenericEvent("comparison_expanded", {
+    track("comparison_expanded", {
       difficulty: props.difficulty,
       plan: props.requiredPlan,
     });
@@ -400,7 +391,7 @@ const toggleFaq = () => {
   showFaq.value = !showFaq.value;
 
   if (showFaq.value) {
-    trackGenericEvent("faq_expanded", {
+    track("faq_expanded", {
       difficulty: props.difficulty,
       plan: props.requiredPlan,
     });
@@ -408,7 +399,7 @@ const toggleFaq = () => {
 };
 
 const handleDismiss = () => {
-  trackGenericEvent("convert_modal_dismissed", {
+  track("convert_modal_dismissed", {
     difficulty: props.difficulty,
     plan: props.requiredPlan,
     hadInteraction: showComparison.value || showFaq.value || showCoupon.value,
@@ -448,7 +439,7 @@ watch(
       selectPlan(props.requiredPlan, 'annual');
 
       // Track view
-      trackGenericEvent("convert_modal_opened", {
+      track("convert_modal_opened", {
         difficulty: props.difficulty,
         plan: props.requiredPlan,
         variant: props.variant,

@@ -9,7 +9,7 @@ import type { Framework } from "./contentValidationSchemas";
 // Framework Definitions
 // ─────────────────────────────────────────────────────────────
 
-export interface FrameworkConfig {
+export interface IFrameworkConfig {
   id: Framework;
   name: {
     en: string;
@@ -27,7 +27,7 @@ export interface FrameworkConfig {
   order: number;
 }
 
-export const FRAMEWORKS: Record<Framework, FrameworkConfig> = {
+export const FRAMEWORKS: Record<Framework, IFrameworkConfig> = {
   angular: {
     id: "angular",
     name: {
@@ -238,7 +238,7 @@ export const FRAMEWORKS: Record<Framework, FrameworkConfig> = {
 // Category Mapping (Source → Canonical)
 // ─────────────────────────────────────────────────────────────
 
-export interface CategoryMapping {
+export interface ICategoryMapping {
   source: string; // Original category from angular-test
   canonical: string; // Normalized category
   topic: string; // Parent topic
@@ -249,7 +249,7 @@ export interface CategoryMapping {
  * Maps source categories to canonical taxonomy
  * Built from migration analysis
  */
-export const CATEGORY_MAPPINGS: CategoryMapping[] = [
+export const CATEGORY_MAPPINGS: ICategoryMapping[] = [
   // Angular
   { source: "HTTP", canonical: "http", topic: "http", framework: "angular" },
   { source: "RxJS", canonical: "rxjs", topic: "rxjs", framework: "angular" },
@@ -373,7 +373,7 @@ export function getCategoryTopic(category: string, framework: Framework): string
 // Framework Utilities
 // ─────────────────────────────────────────────────────────────
 
-export function getFrameworkConfig(framework: Framework): FrameworkConfig {
+export function getFrameworkConfig(framework: Framework): IFrameworkConfig {
   return FRAMEWORKS[framework];
 }
 

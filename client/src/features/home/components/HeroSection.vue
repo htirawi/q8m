@@ -1,12 +1,11 @@
 <script setup lang="ts">
+import type { IHeroSectionProps as Props } from "@/types/components/home";
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter, useRoute } from 'vue-router';
 import { useHomepageAnalytics } from '@/composables/useHomepageAnalytics';
 
-interface Props {
-  headlineVariant?: string;
-}
+
 
 const props = withDefaults(defineProps<Props>(), {
   headlineVariant: 'control',
@@ -64,7 +63,7 @@ const handleSecondaryCTA = (): void => {
   <section class="hero-section" aria-labelledby="hero-title">
     <div class="hero-container">
       <div class="hero-content">
-        <!-- Badge -->
+        <!-- IBadge -->
         <div class="hero-badge">
           <span class="badge-text">{{ $t("home.hero.badge") }}</span>
         </div>

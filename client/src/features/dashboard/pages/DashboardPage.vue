@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
     <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-      <!-- Header with Plan Badge -->
+      <!-- Header with Plan IBadge -->
       <div class="mb-8 flex items-center justify-between">
         <div>
           <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
@@ -33,13 +33,15 @@
       </div>
 
       <!-- Resume Section -->
-      <div class="mb-8 rounded-lg bg-white p-6 shadow-sm dark:bg-gray-800">
-        <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
-          {{ t('dashboard.resume.title') }}
-        </h2>
-        <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
-          {{ t('dashboard.resume.noneAvailable') }}
-        </p>
+      <div class="mb-8">
+        <EmptyState
+          variant="compact"
+          icon="📚"
+          :title="t('dashboard.resume.title', 'Continue Learning')"
+          :description="t('dashboard.resume.noneAvailable', 'No incomplete quizzes or study sessions found. Start a new quiz to begin!')"
+          :primary-action="t('dashboard.resume.startQuiz', 'Start New Quiz')"
+          @primary-action="goToQuiz"
+        />
       </div>
 
       <!-- Stats Grid -->
@@ -72,10 +74,21 @@
         </div>
       </div>
 
-      <!-- Placeholder for future dashboard features -->
-      <div class="mt-8 text-center text-gray-500 dark:text-gray-400">
-        <p>Dashboard features coming soon...</p>
-        <p class="mt-2 text-sm">This is a scaffold for paid plan dashboard</p>
+      <!-- Recent Activity Section -->
+      <div class="mt-8">
+        <h2 class="mb-4 text-xl font-semibold text-gray-900 dark:text-white">
+          {{ t('dashboard.recentActivity', 'Recent Activity') }}
+        </h2>
+        <EmptyState
+          variant="default"
+          icon="📊"
+          :title="t('dashboard.noActivity.title', 'No Activity Yet')"
+          :description="t('dashboard.noActivity.description', 'Your quiz history, study sessions, and achievements will appear here once you start learning.')"
+          :primary-action="t('dashboard.noActivity.startLearning', 'Start Learning')"
+          :secondary-action="t('dashboard.noActivity.viewProgress', 'View Progress')"
+          @primary-action="goToQuiz"
+          @secondary-action="goToProgress"
+        />
       </div>
     </div>
   </div>
@@ -85,6 +98,7 @@
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 import { usePlanStore } from "@/stores/plan";
+import EmptyState from "@/components/EmptyState.vue";
 
 const { t } = useI18n();
 const router = useRouter();
@@ -93,6 +107,16 @@ const planStore = usePlanStore();
 const planDisplayName = planStore.planDisplayName;
 
 const goToBilling = () => {
+  const locale = router.currentRoute.value.params.locale || "en";
+  router.push(`/${locale}/account`);
+};
+
+const goToQuiz = () => {
+  const locale = router.currentRoute.value.params.locale || "en";
+  router.push(`/${locale}/select`);
+};
+
+const goToProgress = () => {
   const locale = router.currentRoute.value.params.locale || "en";
   router.push(`/${locale}/account`);
 };

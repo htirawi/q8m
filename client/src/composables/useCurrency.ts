@@ -6,6 +6,7 @@
 
 import { ref, computed, onMounted } from "vue";
 import { usePaymentStore } from "@/stores/payment";
+import { currencyStorage } from "@/utils/storage";
 import type { CurrencyInfo, GeoLocationInfo } from "@/types/composables/currency";
 
 export function useCurrency() {
@@ -73,8 +74,8 @@ export function useCurrency() {
     isDetecting.value = true;
 
     try {
-      // Method 1: Check localStorage for saved preference
-      const savedCurrency = localStorage.getItem("preferred_currency");
+      // Method 1: Check storage for saved preference
+      const savedCurrency = currencyStorage.get();
       if (savedCurrency && supportedCurrencies.some((c) => c.code === savedCurrency)) {
         detectedCurrency.value = savedCurrency;
         return savedCurrency;
@@ -222,7 +223,7 @@ export function useCurrency() {
   // Set user's preferred currency
   const setPreferredCurrency = (currency: string) => {
     if (supportedCurrencies.some((c) => c.code === currency)) {
-      localStorage.setItem("preferred_currency", currency);
+      currencyStorage.set(currency);
       paymentStore.setCurrentCurrency(currency as "USD" | "JOD" | "SAR");
       detectedCurrency.value = currency;
     }

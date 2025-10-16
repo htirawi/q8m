@@ -121,24 +121,16 @@
 </template>
 
 <script setup lang="ts">
+import type { IStickyStartBarProps as Props, IStickyStartBarEmits as Emits } from "@/types/components/study";
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useAnalytics } from "@/composables/useAnalytics";
 import type { StudyLoadingState } from "@/composables/useStudy";
 import type { DifficultyLevel } from "@/types/plan/access";
 
-interface Props {
-  isVisible: boolean;
-  selectedDifficulty: DifficultyLevel | null;
-  state: StudyLoadingState;
-  errorMessage?: string | null;
-  hasLastSession?: boolean;
-}
 
-interface Emits {
-  (e: "start", difficulty: DifficultyLevel | null): void;
-  (e: "retry"): void;
-}
+
+
 
 const props = withDefaults(defineProps<Props>(), {
   errorMessage: null,
@@ -148,7 +140,7 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<Emits>();
 
 const { t } = useI18n();
-const { trackStudyEvent } = useAnalytics();
+const { track } = useAnalytics();
 
 const startButtonRef = ref<HTMLButtonElement>();
 const showKeyboardHint = ref(false);
@@ -186,7 +178,7 @@ const trustMessage = computed(() => {
 
 // Methods
 const handleStart = () => {
-  trackStudyEvent("sticky_start_clicked", {
+  track("sticky_start_clicked", {
     difficulty: props.selectedDifficulty ?? "easy",
   });
 
@@ -194,7 +186,7 @@ const handleStart = () => {
 };
 
 const handleRetry = () => {
-  trackStudyEvent("sticky_start_retry", {
+  track("sticky_start_retry", {
     difficulty: props.selectedDifficulty ?? "easy",
   });
 
@@ -208,7 +200,7 @@ const handleBeforeEnter = () => {
 const handleAfterEnter = () => {
   // Track view once after animation completes
   if (!hasTrackedView.value) {
-    trackStudyEvent("sticky_start_shown", {
+    track("sticky_start_shown", {
       reason: "autostart_disabled",
     });
     hasTrackedView.value = true;

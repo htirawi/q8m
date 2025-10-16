@@ -5,7 +5,7 @@
  */
 
 import { env } from "@config/env.js";
-import { emailLoggerService } from "@services/email-logger.service.js";
+import { emailLoggerService } from "@services/email-logger.js";
 import type { FastifyInstance } from "fastify";
 
 export default async function devEmailRoutes(fastify: FastifyInstance) {

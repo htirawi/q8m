@@ -10,7 +10,7 @@ export default defineConfig({
     setupFiles: [resolve(__dirname, "./vitest.setup.ts")],
     coverage: {
       provider: "v8",
-      reporter: ["text", "json", "html", "lcov"],
+      reporter: ["text", "json", "html", "lcov", "json-summary"],
       exclude: [
         "node_modules/",
         "src/**/*.test.{ts,tsx}",
@@ -25,17 +25,14 @@ export default defineConfig({
       "node_modules/",
       "dist/",
       "coverage/",
-      "src/tests/composables/useToast.test.ts", // Requires Vue component setup context
       "src/tests/composables/usePerformance.test.ts", // Requires Vue lifecycle context
       "src/tests/composables/useSEO.test.ts", // JSDOM environment issue with title element
       "src/tests/composables/useErrorHandler.test.ts", // Uses useI18n - requires setup context
       "src/tests/components/CheckoutForm.test.ts", // Component integration test - skip for now
-      "src/tests/stores/payment.store.test.ts", // Requires proper fetch mocking
-      "src/tests/stores/payment.test.ts", // Integration test - skip for now
-      "src/tests/stores/auth.store.test.ts", // Integration test - skip for now
       "src/tests/composables/useAuth.test.ts", // Integration test - skip for now
       "src/tests/composables/usePayment.test.ts", // Integration test - skip for now
       "src/tests/composables/usePricing.test.ts", // Integration test - skip for now
+      "src/utils/storage.ts", // Complex localStorage mocking - skip for now
     ],
     testTimeout: 10000,
     hookTimeout: 10000,

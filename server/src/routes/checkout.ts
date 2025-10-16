@@ -9,7 +9,8 @@ import { env } from "@config/env.js";
 import { authenticate } from "@middlewares/auth.middleware.js";
 import { Coupon } from "@models/Coupon.js";
 import { safeLogFields } from "@server/security/logging.js";
-import { pricingService } from "@services/pricing.service.js";
+import { comboKey, ipKey } from "@server/security/rateLimit.js";
+import { pricingService } from "@services/pricing.js";
 import type { FastifyInstance } from "fastify";
 import { z } from "zod";
 import { zodToJsonSchema } from "zod-to-json-schema";
@@ -49,6 +50,22 @@ export default async function checkoutRoutes(fastify: FastifyInstance) {
     "/create",
     {
       preHandler: [authenticate],
+      // Top-level rateLimit for CodeQL compliance
+      rateLimit: {
+        max: 30,
+        timeWindow: "15m",
+        hook: "onRequest",
+        keyGenerator: comboKey,
+      },
+      // config.rateLimit for plugin compliance
+      config: {
+        rateLimit: {
+          max: 30,
+          timeWindow: "15m",
+          hook: "onRequest",
+          keyGenerator: comboKey,
+        },
+      },
       schema: {
         body: zodToJsonSchema(createCheckoutSessionSchema),
       },
@@ -205,6 +222,22 @@ export default async function checkoutRoutes(fastify: FastifyInstance) {
     "/one-click",
     {
       preHandler: [authenticate],
+      // Top-level rateLimit for CodeQL compliance
+      rateLimit: {
+        max: 20,
+        timeWindow: "15m",
+        hook: "onRequest",
+        keyGenerator: comboKey,
+      },
+      // config.rateLimit for plugin compliance
+      config: {
+        rateLimit: {
+          max: 20,
+          timeWindow: "15m",
+          hook: "onRequest",
+          keyGenerator: comboKey,
+        },
+      },
       schema: {
         body: zodToJsonSchema(oneClickCheckoutSchema),
       },
@@ -361,6 +394,22 @@ export default async function checkoutRoutes(fastify: FastifyInstance) {
     "/session/:sessionId",
     {
       preHandler: [authenticate],
+      // Top-level rateLimit for CodeQL compliance
+      rateLimit: {
+        max: 50,
+        timeWindow: "15m",
+        hook: "onRequest",
+        keyGenerator: ipKey,
+      },
+      // config.rateLimit for plugin compliance
+      config: {
+        rateLimit: {
+          max: 50,
+          timeWindow: "15m",
+          hook: "onRequest",
+          keyGenerator: ipKey,
+        },
+      },
       schema: {
         params: zodToJsonSchema(
           z.object({
@@ -410,6 +459,22 @@ export default async function checkoutRoutes(fastify: FastifyInstance) {
     "/abandon",
     {
       preHandler: [authenticate],
+      // Top-level rateLimit for CodeQL compliance
+      rateLimit: {
+        max: 50,
+        timeWindow: "15m",
+        hook: "onRequest",
+        keyGenerator: ipKey,
+      },
+      // config.rateLimit for plugin compliance
+      config: {
+        rateLimit: {
+          max: 50,
+          timeWindow: "15m",
+          hook: "onRequest",
+          keyGenerator: ipKey,
+        },
+      },
       schema: {
         body: zodToJsonSchema(
           z.object({

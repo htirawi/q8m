@@ -6,15 +6,21 @@
   "description": "Shared types, schemas, and constants for Quiz 8 Mastery platform",
   "author": "Hussein Tirawi",
   "license": "MIT",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
   "exports": {
     "./types/*": "./types/*.ts",
     "./schemas/*": "./schemas/*.ts",
-    "./constants/*": "./constants/*.ts"
+    "./constants/*": "./constants/*.ts",
+    "./config/*": "./config/*.ts"
   },
   "dependencies": {
     "zod": "^3.22.0"
   },
   "devDependencies": {
-    "typescript": "^5.6.2"
+    "typescript": "^5.6.2",
+    "vitest": "^2.1.9"
   }
 }

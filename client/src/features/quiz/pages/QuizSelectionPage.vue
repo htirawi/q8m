@@ -11,140 +11,168 @@
         </p>
       </div>
 
-      <!-- Level Selection -->
+      <!-- Search & Filter Bar -->
+      <div class="mb-8 flex flex-col gap-4 sm:flex-row">
+        <!-- Search -->
+        <div class="relative flex-1">
+          <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+          <input
+            v-model="searchQuery"
+            type="text"
+            class="block w-full rounded-lg border border-gray-300 bg-white py-3 pl-10 pr-3 text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400"
+            :placeholder="t('quiz.selection.searchPlaceholder')"
+          />
+        </div>
+
+        <!-- Difficulty Filter -->
+        <select
+          v-model="difficultyFilter"
+          class="rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
+        >
+          <option value="all">{{ t('quiz.selection.allDifficulties') }}</option>
+          <option value="junior">{{ t('level.junior.label') }}</option>
+          <option value="intermediate">{{ t('level.intermediate.label') }}</option>
+          <option value="senior">{{ t('level.senior.label') }}</option>
+        </select>
+
+        <!-- Sort Options -->
+        <select
+          v-model="sortBy"
+          class="rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
+        >
+          <option value="default">{{ t('quiz.selection.sortDefault') }}</option>
+          <option value="duration">{{ t('quiz.selection.sortDuration') }}</option>
+          <option value="questions">{{ t('quiz.selection.sortQuestions') }}</option>
+        </select>
+      </div>
+
+      <!-- Level Selection - Professional Cards -->
       <div class="mb-12">
         <h2 class="mb-8 text-center text-2xl font-bold text-gray-900 dark:text-white">
           {{ t('quiz.selection.chooseLevel') }}
         </h2>
-        <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
-          <!-- Junior -->
-          <button
-            type="button"
-            :disabled="!canUserAccessLevel('junior')"
-            :class="getLevelCardClass('junior')"
-            @click="selectLevel('junior')"
-          >
-            <div class="relative z-10">
-              <div class="mb-4 flex items-center gap-3">
-                <span class="text-3xl">🟢</span>
-                <h3 class="text-xl font-bold">{{ t('level.junior.label') }}</h3>
-              </div>
-              <p :class="getLevelDescriptionClass('junior')">
-                {{ t('level.junior.description') }}
-              </p>
-              <div class="mt-2 text-sm">
-                <p :class="getLevelDescriptionClass('junior')">
-                  {{ t('level.junior.questionCount', { count: 30 }) }}
-                </p>
-              </div>
-              <div class="mt-4">
-                <span v-if="canUserAccessLevel('junior')" class="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800 dark:bg-green-900 dark:text-green-200">
-                  {{ t('plans.access.available') }}
-                </span>
-                <LockedBadge v-else required-plan="free" />
-              </div>
-            </div>
-            <div
-              v-if="selectedLevel === 'junior' && canUserAccessLevel('junior')"
-              class="absolute right-4 top-4"
-            >
-              <div class="flex h-8 w-8 items-center justify-center rounded-full bg-white/20">
-                <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    fill-rule="evenodd"
-                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-              </div>
-            </div>
-          </button>
 
-          <!-- Intermediate -->
-          <button
-            type="button"
-            :disabled="!canUserAccessLevel('intermediate')"
-            :class="getLevelCardClass('intermediate')"
-            @click="selectLevel('intermediate')"
-          >
-            <div class="relative z-10">
-              <div class="mb-4 flex items-center gap-3">
-                <span class="text-3xl">🟡</span>
-                <h3 class="text-xl font-bold">{{ t('level.intermediate.label') }}</h3>
-              </div>
-              <p :class="getLevelDescriptionClass('intermediate')">
-                {{ t('level.intermediate.description') }}
-              </p>
-              <div class="mt-2 text-sm">
-                <p :class="getLevelDescriptionClass('intermediate')">
-                  {{ t('level.intermediate.questionCount', { count: 40 }) }}
-                </p>
-              </div>
-              <div class="mt-4">
-                <span v-if="canUserAccessLevel('intermediate')" class="inline-flex items-center rounded-full bg-yellow-100 px-2.5 py-0.5 text-xs font-medium text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
-                  {{ t('plans.access.available') }}
-                </span>
-                <LockedBadge v-else required-plan="intermediate" />
-              </div>
-            </div>
-            <div
-              v-if="selectedLevel === 'intermediate' && canUserAccessLevel('intermediate')"
-              class="absolute right-4 top-4"
-            >
-              <div class="flex h-8 w-8 items-center justify-center rounded-full bg-white/20">
-                <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    fill-rule="evenodd"
-                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-              </div>
-            </div>
-          </button>
+        <!-- No Results Message -->
+        <div v-if="filteredQuizzes.length === 0" class="py-16 text-center">
+          <svg class="mx-auto h-16 w-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <p class="mt-4 text-lg text-gray-600 dark:text-gray-400">
+            {{ t('quiz.selection.noResults') }}
+          </p>
+        </div>
 
-          <!-- Senior -->
-          <button
-            type="button"
-            :disabled="!canUserAccessLevel('senior')"
-            :class="getLevelCardClass('senior')"
-            @click="selectLevel('senior')"
+        <!-- Quiz Cards Grid -->
+        <div v-else class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+          <div
+            v-for="quiz in filteredQuizzes"
+            :key="quiz.level"
+            :class="[
+              'group relative overflow-hidden rounded-2xl border-2 bg-white transition-all duration-300 dark:bg-gray-800',
+              selectedLevel === quiz.level && canUserAccessLevel(quiz.level)
+                ? `border-${getLevelColor(quiz.level)}-500 shadow-2xl ring-4 ring-${getLevelColor(quiz.level)}-200 dark:ring-${getLevelColor(quiz.level)}-900`
+                : 'border-gray-200 hover:border-' + getLevelColor(quiz.level) + '-400 hover:shadow-xl dark:border-gray-700',
+              !canUserAccessLevel(quiz.level) && authStore.isAuthenticated
+                ? 'opacity-60 cursor-not-allowed'
+                : 'cursor-pointer'
+            ]"
+            @click="selectLevel(quiz.level)"
           >
-            <div class="relative z-10">
-              <div class="mb-4 flex items-center gap-3">
-                <span class="text-3xl">🔴</span>
-                <h3 class="text-xl font-bold">{{ t('level.senior.label') }}</h3>
-              </div>
-              <p :class="getLevelDescriptionClass('senior')">
-                {{ t('level.senior.description') }}
-              </p>
-              <div class="mt-2 text-sm">
-                <p :class="getLevelDescriptionClass('senior')">
-                  {{ t('level.senior.questionCount', { count: 50 }) }}
-                </p>
-              </div>
-              <div class="mt-4">
-                <span v-if="canUserAccessLevel('senior')" class="inline-flex items-center rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-800 dark:bg-red-900 dark:text-red-200">
-                  {{ t('plans.access.available') }}
+            <!-- Header with Badges -->
+            <div :class="[
+              'border-b border-gray-100 p-4 dark:border-gray-700',
+              'bg-gradient-to-r',
+              quiz.level === 'junior' ? 'from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20' :
+              quiz.level === 'intermediate' ? 'from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20' :
+              'from-red-50 to-purple-50 dark:from-red-900/20 dark:to-purple-900/20'
+            ]">
+              <div class="mb-2 flex items-center justify-between">
+                <span :class="[
+                  'inline-flex items-center rounded px-2 py-0.5 text-xs font-bold uppercase tracking-wide',
+                  quiz.level === 'junior' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
+                  quiz.level === 'intermediate' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' :
+                  'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+                ]">
+                  {{ t(`level.${quiz.level}.label`) }}
                 </span>
-                <LockedBadge v-else required-plan="advanced" />
+                <span v-if="canUserAccessLevel(quiz.level)" :class="[
+                  quiz.level === 'junior' ? 'text-green-600 dark:text-green-400' :
+                  quiz.level === 'intermediate' ? 'text-yellow-600 dark:text-yellow-400' :
+                  'text-red-600 dark:text-red-400'
+                ]">
+                  <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                  </svg>
+                </span>
+                <LockedBadge
+                  v-else-if="authStore.isAuthenticated"
+                  :required-plan="quiz.level === 'junior' ? 'free' : quiz.level === 'intermediate' ? 'intermediate' : 'advanced'"
+                />
               </div>
+              <h3 class="text-lg font-bold text-gray-900 dark:text-white">
+                {{ t(`quiz.metadata.${quiz.level}.title`) }}
+              </h3>
             </div>
-            <div
-              v-if="selectedLevel === 'senior' && canUserAccessLevel('senior')"
-              class="absolute right-4 top-4"
-            >
-              <div class="flex h-8 w-8 items-center justify-center rounded-full bg-white/20">
-                <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    fill-rule="evenodd"
-                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
+
+            <!-- Body -->
+            <div class="p-6">
+              <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">
+                {{ t(`quiz.metadata.${quiz.level}.description`) }}
+              </p>
+
+              <!-- Tested Skills -->
+              <div class="mb-4">
+                <h4 class="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                  {{ t('quiz.metadata.testedSkills') }}
+                </h4>
+                <div class="flex flex-wrap gap-2">
+                  <span
+                    v-for="skill in quiz.skills"
+                    :key="skill"
+                    class="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900 dark:text-blue-200"
+                  >
+                    {{ skill }}
+                  </span>
+                </div>
               </div>
+
+              <!-- Metadata -->
+              <div class="mb-4 flex flex-wrap gap-4 text-sm text-gray-600 dark:text-gray-400">
+                <div class="flex items-center gap-1">
+                  <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span>{{ t('quiz.metadata.duration', { minutes: quiz.duration }) }}</span>
+                </div>
+                <div class="flex items-center gap-1">
+                  <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                  </svg>
+                  <span>{{ t('quiz.metadata.questions', { count: quiz.questions }) }}</span>
+                </div>
+              </div>
+
+              <!-- CTA Button -->
+              <button
+                v-if="canUserAccessLevel(quiz.level)"
+                type="button"
+                :class="[
+                  'w-full rounded-lg px-4 py-3 text-sm font-semibold text-white transition-all hover:shadow-lg',
+                  'bg-gradient-to-r',
+                  quiz.level === 'junior' ? 'from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700' :
+                  quiz.level === 'intermediate' ? 'from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700' :
+                  'from-red-600 to-purple-600 hover:from-red-700 hover:to-purple-700'
+                ]"
+                @click.stop="selectLevel(quiz.level)"
+              >
+                {{ t('quiz.metadata.startQuiz') }}
+              </button>
             </div>
-          </button>
+          </div>
         </div>
       </div>
 
@@ -230,7 +258,6 @@ import { usePlanStore } from "@/stores/plan";
 import { useAuthStore } from "@/stores/auth";
 import LockedBadge from "@/components/paywall/LockedBadge.vue";
 import { canAccessLevel } from "@/types/plan/access";
-import { isBundlePlan } from "@/utils/planMapping";
 import { usePlanEntry } from "@/composables/usePlanEntry";
 import type { ExperienceLevel } from "@/types/plan/access";
 
@@ -242,11 +269,63 @@ const { handlePlanEntryClick } = usePlanEntry();
 
 const selectedLevel = ref<ExperienceLevel | null>(null);
 
+// Search & Filter state
+const searchQuery = ref('');
+const difficultyFilter = ref<'all' | ExperienceLevel>('all');
+const sortBy = ref<'default' | 'duration' | 'questions'>('default');
+
 const locale = computed(() => (router.currentRoute.value.params.locale as string) || "en");
 
-// Get accessible levels for current plan (for Bundle visibility)
-// Check if user has Bundle plan (Pro tier with Intermediate+Senior visibility)
-const hasBundle = computed(() => isBundlePlan(planStore.planTier));
+// Quiz data structure
+const quizzes = computed(() => [
+  {
+    level: 'junior' as ExperienceLevel,
+    duration: 30,
+    questions: 30,
+    skills: ['Vue Basics', 'Components', 'Templates'],
+  },
+  {
+    level: 'intermediate' as ExperienceLevel,
+    duration: 45,
+    questions: 40,
+    skills: ['State Management', 'Composition API', 'Routing'],
+  },
+  {
+    level: 'senior' as ExperienceLevel,
+    duration: 60,
+    questions: 50,
+    skills: ['Architecture', 'Performance', 'System Design'],
+  },
+]);
+
+// Filtered and sorted quizzes
+const filteredQuizzes = computed(() => {
+  let filtered = quizzes.value;
+
+  // Apply difficulty filter
+  if (difficultyFilter.value !== 'all') {
+    filtered = filtered.filter(q => q.level === difficultyFilter.value);
+  }
+
+  // Apply search filter
+  if (searchQuery.value.trim()) {
+    const query = searchQuery.value.toLowerCase();
+    filtered = filtered.filter(q => {
+      const levelLabel = t(`level.${q.level}.label`).toLowerCase();
+      const skillsText = q.skills.join(' ').toLowerCase();
+      return levelLabel.includes(query) || skillsText.includes(query);
+    });
+  }
+
+  // Apply sorting
+  if (sortBy.value === 'duration') {
+    filtered = [...filtered].sort((a, b) => a.duration - b.duration);
+  } else if (sortBy.value === 'questions') {
+    filtered = [...filtered].sort((a, b) => a.questions - b.questions);
+  }
+
+  return filtered;
+});
 
 const canUserAccessLevel = (level: ExperienceLevel): boolean => {
   return canAccessLevel(planStore.planTier, level);
@@ -258,38 +337,13 @@ const selectLevel = (level: ExperienceLevel) => {
   }
 };
 
-const getLevelCardClass = (level: ExperienceLevel) => {
-  const isSelected = selectedLevel.value === level;
-  const canAccess = canUserAccessLevel(level);
-  const isPrimaryForBundle = hasBundle.value && (level === "intermediate" || level === "senior");
-
-  const baseClass = "group relative overflow-hidden rounded-2xl border-2 p-6 text-left transition-all duration-300";
-
-  if (!canAccess && authStore.isAuthenticated) {
-    return `${baseClass} cursor-not-allowed opacity-60 border-gray-300 bg-gray-100 dark:border-gray-600 dark:bg-gray-700`;
-  }
-
-  if (isSelected) {
-    return `${baseClass} scale-105 border-blue-500 bg-gradient-to-br from-blue-500 to-purple-600 text-white shadow-2xl`;
-  }
-
-  // Highlight Bundle cards with special border
-  if (isPrimaryForBundle) {
-    return `${baseClass} cursor-pointer border-purple-300 bg-white hover:border-purple-500 hover:shadow-xl dark:border-purple-700 dark:bg-gray-800 dark:hover:border-purple-500`;
-  }
-
-  return `${baseClass} cursor-pointer border-gray-200 bg-white hover:border-blue-400 hover:shadow-xl dark:border-gray-700 dark:bg-gray-800 dark:hover:border-blue-600`;
-};
-
-const getLevelDescriptionClass = (level: ExperienceLevel) => {
-  const isSelected = selectedLevel.value === level;
-  const canAccess = canUserAccessLevel(level);
-
-  if (isSelected && canAccess) {
-    return "text-sm text-white/90";
-  }
-
-  return "text-sm text-gray-600 dark:text-gray-400";
+const getLevelColor = (level: ExperienceLevel): string => {
+  const colors: Record<ExperienceLevel, string> = {
+    junior: 'green',
+    intermediate: 'yellow',
+    senior: 'red',
+  };
+  return colors[level];
 };
 
 const startQuiz = async () => {

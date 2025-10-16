@@ -45,12 +45,24 @@ const routes: RouteRecordRaw[] = [
     redirect: () => `/${DEFAULT_LOCALE}/subscribe`,
   },
   {
+    path: "/pricing",
+    redirect: () => `/${DEFAULT_LOCALE}/pricing`,
+  },
+  {
     path: "/login",
     redirect: () => `/${DEFAULT_LOCALE}/login`,
   },
   {
     path: "/register",
     redirect: () => `/${DEFAULT_LOCALE}/register`,
+  },
+  {
+    path: "/signup",
+    redirect: () => `/${DEFAULT_LOCALE}/register`,
+  },
+  {
+    path: "/onboarding",
+    redirect: () => `/${DEFAULT_LOCALE}/onboarding`,
   },
   {
     path: "/study",
@@ -61,7 +73,15 @@ const routes: RouteRecordRaw[] = [
     redirect: () => `/${DEFAULT_LOCALE}/quiz`,
   },
   {
+    path: "/quizzes",
+    redirect: () => `/${DEFAULT_LOCALE}/quiz`,
+  },
+  {
     path: "/account",
+    redirect: () => `/${DEFAULT_LOCALE}/account`,
+  },
+  {
+    path: "/profile",
     redirect: () => `/${DEFAULT_LOCALE}/account`,
   },
   {
@@ -69,17 +89,49 @@ const routes: RouteRecordRaw[] = [
     redirect: () => `/${DEFAULT_LOCALE}/admin`,
   },
   {
+    path: "/dashboard",
+    redirect: () => `/${DEFAULT_LOCALE}/dashboard`,
+  },
+  {
+    path: "/progress",
+    redirect: () => `/${DEFAULT_LOCALE}/progress`,
+  },
+  {
+    path: "/gamification",
+    redirect: () => `/${DEFAULT_LOCALE}/progress`,
+  },
+  {
     path: "/privacy",
+    redirect: () => `/${DEFAULT_LOCALE}/privacy`,
+  },
+  {
+    path: "/privacy-policy",
     redirect: () => `/${DEFAULT_LOCALE}/privacy`,
   },
   {
     path: "/terms",
     redirect: () => `/${DEFAULT_LOCALE}/terms`,
   },
+  {
+    path: "/terms-of-service",
+    redirect: () => `/${DEFAULT_LOCALE}/terms`,
+  },
   // Redirect /auth/* to prevent it from being treated as a locale
   {
     path: "/auth/study",
     redirect: () => `/${DEFAULT_LOCALE}/study`,
+  },
+  {
+    path: "/discussions/:questionId",
+    redirect: (to) => `/${DEFAULT_LOCALE}/discussions/${to.params.questionId}`,
+  },
+  {
+    path: "/friends",
+    redirect: () => `/${DEFAULT_LOCALE}/friends`,
+  },
+  {
+    path: "/challenges",
+    redirect: () => `/${DEFAULT_LOCALE}/challenges`,
   },
 
   // Localized routes
@@ -181,6 +233,20 @@ const routes: RouteRecordRaw[] = [
     },
     "verify-email"
   ),
+  createLocalizedRoute(
+    "/onboarding",
+    () =>
+      import(
+        /* webpackChunkName: "onboarding" */
+        "@/features/onboarding/pages/OnboardingPage.vue"
+      ),
+    {
+      title: "Welcome - Setup Your Learning - q8m",
+      requiresAuth: true,
+      layout: "minimal",
+    },
+    "onboarding"
+  ),
   // Easy Study Guide (Free plan)
   createLocalizedRoute(
     "/guide/easy",
@@ -232,6 +298,23 @@ const routes: RouteRecordRaw[] = [
     "dashboard"
   ),
 
+  // Gamification Dashboard
+  createLocalizedRoute(
+    "/progress",
+    () =>
+      import(
+        /* webpackChunkName: "gamification" */
+        "@/features/gamification/pages/GamificationDashboard.vue"
+      ),
+    {
+      title: "Your Progress - q8m",
+      requiresAuth: true,
+      access: "free",
+      layout: "default",
+    },
+    "progress"
+  ),
+
   // Level Selection (Main Landing Page)
   createLocalizedRoute(
     "/select",
@@ -249,7 +332,24 @@ const routes: RouteRecordRaw[] = [
     "level-selection"
   ),
 
-  // Study Mode Selection
+  // Mode Chooser (Study or Quiz)
+  createLocalizedRoute(
+    "/:difficulty/choose",
+    () =>
+      import(
+        /* webpackChunkName: "mode-chooser" */
+        "@/features/home/pages/ModeChooserPage.vue"
+      ),
+    {
+      title: "Choose Mode - q8m",
+      requiresAuth: true,
+      access: "free",
+      layout: "default",
+    },
+    "mode-chooser"
+  ),
+
+  // Study Mode Selection (deprecated - redirects to level selection)
   createLocalizedRoute(
     "/study",
     () =>
@@ -266,9 +366,25 @@ const routes: RouteRecordRaw[] = [
     "study"
   ),
 
-  // Study Mode by Difficulty
+  // Framework Selection for Study Mode
   createLocalizedRoute(
     "/study/:difficulty",
+    () =>
+      import(
+        /* webpackChunkName: "framework-selection" */
+        "@/features/study/pages/FrameworkSelectionPage.vue"
+      ),
+    {
+      title: "Choose Framework - q8m",
+      requiresAuth: true,
+      layout: "default",
+    },
+    "framework-selection"
+  ),
+
+  // Study Mode by Difficulty and Framework
+  createLocalizedRoute(
+    "/study/:difficulty/:framework",
     () =>
       import(
         /* webpackChunkName: "study" */
@@ -314,6 +430,56 @@ const routes: RouteRecordRaw[] = [
     },
     "quiz-take"
   ),
+  // Question Discussions
+  createLocalizedRoute(
+    "/discussions/:questionId",
+    () =>
+      import(
+        /* webpackChunkName: "discussions" */
+        "@/features/discussions/pages/DiscussionsPage.vue"
+      ),
+    {
+      title: "Discussion - q8m",
+      requiresAuth: false,
+      layout: "default",
+    },
+    "discussions"
+  ),
+
+  // Friends
+  createLocalizedRoute(
+    "/friends",
+    () =>
+      import(
+        /* webpackChunkName: "friends" */
+        "@/features/friends/pages/FriendsPage.vue"
+      ),
+    {
+      title: "Friends - q8m",
+      requiresAuth: true,
+      access: "free",
+      layout: "default",
+    },
+    "friends"
+  ),
+
+  // Challenges
+  createLocalizedRoute(
+    "/challenges",
+    () =>
+      import(
+        /* webpackChunkName: "challenges" */
+        "@/features/challenges/pages/ChallengePage.vue"
+      ),
+    {
+      title: "Challenges - q8m",
+      requiresAuth: true,
+      access: "free",
+      layout: "default",
+    },
+    "challenges"
+  ),
+
   createLocalizedRoute(
     "/account",
     () =>
@@ -625,13 +791,50 @@ router.beforeEach(async (to, _from, next) => {
       const { canAccessStudyDifficulty, getRequiredStudyPlanTier, getSuggestedUpgradeTier } =
         await import("@/types/plan/access");
       const difficulty = to.params.difficulty as string;
+      const framework = to.params.framework as string;
       const userTier = planStore.planTier;
+
+      // Validate difficulty is one of the allowed values
+      const validDifficulties = ["easy", "medium", "hard"];
+      if (!validDifficulties.includes(difficulty)) {
+        // Invalid difficulty - redirect to level selection
+        next({
+          name: "level-selection",
+          params: { locale },
+        });
+        return;
+      }
+
+      // Validate framework is one of the allowed values
+      const validFrameworks = ["angular", "react", "nextjs", "redux", "random"];
+      if (!framework || !validFrameworks.includes(framework)) {
+        // Invalid or missing framework - redirect to framework selection
+        next({
+          name: "framework-selection",
+          params: { locale, difficulty },
+        });
+        return;
+      }
 
       if (!canAccessStudyDifficulty(userTier, difficulty as "easy" | "medium" | "hard")) {
         const requiredTier = getRequiredStudyPlanTier(difficulty as "easy" | "medium" | "hard");
         const suggestedTier = getSuggestedUpgradeTier(requiredTier, userTier);
         showPaywall(to.fullPath, suggestedTier);
         next();
+        return;
+      }
+    }
+
+    // Validate framework-selection difficulty parameter
+    if (to.name === "framework-selection" && to.params.difficulty) {
+      const difficulty = to.params.difficulty as string;
+      const validDifficulties = ["easy", "medium", "hard"];
+      if (!validDifficulties.includes(difficulty)) {
+        // Invalid difficulty - redirect to level selection
+        next({
+          name: "level-selection",
+          params: { locale },
+        });
         return;
       }
     }
@@ -643,11 +846,36 @@ router.beforeEach(async (to, _from, next) => {
       const level = to.params.level as string;
       const userTier = planStore.planTier;
 
+      // Validate level is one of the allowed values
+      const validLevels = ["junior", "intermediate", "senior"];
+      if (!validLevels.includes(level)) {
+        // Invalid level - redirect to quiz selection
+        next({
+          name: "quiz",
+          params: { locale },
+        });
+        return;
+      }
+
       if (!canAccessQuizLevel(userTier, level as "junior" | "intermediate" | "senior")) {
         const requiredTier = getRequiredQuizPlanTier(level as "junior" | "intermediate" | "senior");
         const suggestedTier = getSuggestedUpgradeTier(requiredTier, userTier);
         showPaywall(to.fullPath, suggestedTier);
         next();
+        return;
+      }
+    }
+
+    // Validate mode-chooser difficulty parameter
+    if (to.name === "mode-chooser" && to.params.difficulty) {
+      const difficulty = to.params.difficulty as string;
+      const validDifficulties = ["easy", "medium", "hard"];
+      if (!validDifficulties.includes(difficulty)) {
+        // Invalid difficulty - redirect to level selection
+        next({
+          name: "level-selection",
+          params: { locale },
+        });
         return;
       }
     }

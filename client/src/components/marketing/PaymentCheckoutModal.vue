@@ -1,20 +1,14 @@
 <script setup lang="ts">
+import type { IPaymentCheckoutModalProps as IProps, IPaymentCheckoutModalEmits as IEmits } from "@/types/components/marketing";
 import { ref, computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useCheckout } from '@/composables/useCheckout';
 import { useAnalytics } from '@/composables/useAnalytics';
 import type { PlanId, BillingCycle } from '@/types/pricing';
 
-interface IProps {
-  show: boolean;
-  planId?: PlanId;
-  billing?: BillingCycle;
-}
 
-interface IEmits {
-  (e: 'close'): void;
-  (e: 'success', subscriptionId: string): void;
-}
+
+
 
 const props = withDefaults(defineProps<IProps>(), {
   billing: 'annual',
@@ -36,7 +30,7 @@ const {
   savedPaymentMethods,
 } = useCheckout();
 
-const { trackGenericEvent } = useAnalytics();
+const { track } = useAnalytics();
 
 // Local state
 const useNewPaymentMethod = ref(false);
@@ -73,7 +67,7 @@ const getPlanDisplayName = (tier: string) => {
 
 // Methods
 const handleClose = () => {
-  trackGenericEvent('checkout_abandoned', {
+  track('checkout_abandoned', {
     plan: selectedPlan.value?.tier,
     billing: selectedCycle.value,
     step: currentStep.value,
@@ -105,7 +99,7 @@ watch(() => [props.planId, props.billing], ([planId, billing]) => {
 // Track modal opened
 watch(() => props.show, (isOpen) => {
   if (isOpen) {
-    trackGenericEvent('checkout_opened', {
+    track('checkout_opened', {
       plan: props.planId,
       billing: props.billing,
       method: 'modal',

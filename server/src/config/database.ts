@@ -1,6 +1,34 @@
 import { env } from "@config/env";
 import mongoose from "mongoose";
 
+// Global plugin to add query timeouts
+// This prevents long-running queries from degrading performance (5 second max)
+// Individual queries can override this by calling .maxTimeMS() explicitly
+function queryTimeoutPlugin(schema: mongoose.Schema) {
+  // Apply to all find queries
+  schema.pre(/^find/, function (this: mongoose.Query<unknown, unknown>) {
+    this.maxTimeMS(5000);
+  });
+
+  // Apply to all count queries
+  schema.pre(/^count/, function (this: mongoose.Query<unknown, unknown>) {
+    this.maxTimeMS(5000);
+  });
+
+  // Apply to all update queries
+  schema.pre(/^update/, function (this: mongoose.Query<unknown, unknown>) {
+    this.maxTimeMS(5000);
+  });
+
+  // Apply to all delete queries
+  schema.pre(/^delete/, function (this: mongoose.Query<unknown, unknown>) {
+    this.maxTimeMS(5000);
+  });
+}
+
+// Register plugin globally before any models are created
+mongoose.plugin(queryTimeoutPlugin);
+
 
 export const connectDatabase = async (): Promise<void> => {
   try {

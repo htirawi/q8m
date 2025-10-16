@@ -54,20 +54,15 @@
 </template>
 
 <script setup lang="ts">
+import type { IStartStudyingCtaProps as Props, IStartStudyingCtaEmits as Emits } from "@/types/components/study";
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useAnalytics } from "@/composables/useAnalytics";
 import type { DifficultyLevel } from "@/types/plan/access";
 
-interface Props {
-  selectedDifficulty: DifficultyLevel | null;
-  disabled?: boolean;
-  scrollTargetSelector?: string;
-}
 
-interface Emits {
-  (e: "click", difficulty: DifficultyLevel | null): void;
-}
+
+
 
 const props = withDefaults(defineProps<Props>(), {
   disabled: false,
@@ -77,7 +72,7 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<Emits>();
 
 const { t } = useI18n();
-const { trackStudyEvent } = useAnalytics();
+const { track } = useAnalytics();
 
 const ctaButtonRef = ref<HTMLButtonElement>();
 const difficultyRef = ref<HTMLDivElement>();
@@ -100,7 +95,7 @@ const ariaLabel = computed(() => {
 });
 
 const handleClick = () => {
-  trackStudyEvent('study_cta_clicked', {
+  track('study_cta_clicked', {
     hasSelection: !!props.selectedDifficulty,
     difficulty: props.selectedDifficulty ?? undefined,
     source: 'inline',
@@ -124,7 +119,7 @@ const scrollToDifficultySelection = () => {
   }
 
   if (targetElement) {
-    trackStudyEvent('study_cta_scroll_prompt', {});
+    track('study_cta_scroll_prompt', {});
 
     // Smooth scroll to the difficulty selection
     targetElement.scrollIntoView({
@@ -144,7 +139,7 @@ const scrollToDifficultySelection = () => {
 const handleIntersection: IntersectionObserverCallback = (entries) => {
   entries.forEach((entry) => {
     if (entry.isIntersecting && !hasTrackedView.value) {
-      trackStudyEvent('study_cta_viewed', {});
+      track('study_cta_viewed', {});
       hasTrackedView.value = true;
     }
   });

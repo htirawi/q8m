@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useSoftPaywall } from "@/composables/useSoftPaywall";
 import SoftPaywallModal from "@/components/paywall/SoftPaywallModal.vue";
+import ConvertModal from "@/components/marketing/ConvertModal.vue";
 
 const { isVisible, targetRoute, suggestedPlan, hide } = useSoftPaywall();
 </script>
@@ -16,6 +17,9 @@ const { isVisible, targetRoute, suggestedPlan, hide } = useSoftPaywall();
       :suggested-plan="suggestedPlan"
       @dismiss="hide"
     />
+
+    <!-- Conversion Modal (Embedded Checkout) -->
+    <ConvertModal />
   </div>
 </template>
 

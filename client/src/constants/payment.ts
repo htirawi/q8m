@@ -4,7 +4,7 @@
  * Payment gateway configurations and constants.
  */
 
-export interface PaymentMethodConfig {
+export interface IPaymentMethodConfig {
   id: string;
   name: string;
   description: string;
@@ -13,7 +13,7 @@ export interface PaymentMethodConfig {
   isDefault?: boolean;
 }
 
-export const PAYMENT_METHODS: PaymentMethodConfig[] = [
+export const PAYMENT_METHODS: IPaymentMethodConfig[] = [
   {
     id: "paypal",
     name: "PayPal",
@@ -38,13 +38,13 @@ export const PAYMENT_METHODS: PaymentMethodConfig[] = [
   },
 ];
 
-export const getAvailablePaymentMethods = (currency: string): PaymentMethodConfig[] => {
+export const getAvailablePaymentMethods = (currency: string): IPaymentMethodConfig[] => {
   return PAYMENT_METHODS.filter((method) =>
     method.availableForCurrencies.includes(currency)
   );
 };
 
-export const getDefaultPaymentMethod = (currency: string): PaymentMethodConfig | undefined => {
+export const getDefaultPaymentMethod = (currency: string): IPaymentMethodConfig | undefined => {
   const available = getAvailablePaymentMethods(currency);
   return available.find((method) => method.isDefault) || available[0];
 };

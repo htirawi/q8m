@@ -110,7 +110,7 @@
               </ul>
             </div>
 
-            <!-- Testimonial -->
+            <!-- ITestimonial -->
             <div class="mb-6 rounded-lg bg-primary-50 p-4 dark:bg-primary-900/20">
               <div class="mb-2 flex items-center gap-1">
                 <svg v-for="i in 5" :key="i" class="h-4 w-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
@@ -199,6 +199,7 @@
 </template>
 
 <script setup lang="ts">
+import type { IPlanUpsellModalProps as Props, IPlanUpsellModalEmits as Emits, IComparisonFeature, IFaq } from "@/types/components/marketing";
 import { ref, computed, watch, onMounted, onUnmounted, nextTick } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
@@ -207,22 +208,16 @@ import { getPlanByTier, DIFFICULTY_TO_PLAN_ID, getPlanById } from "@/config/plan
 import type { DifficultyLevel } from "@/types/plan/access";
 import type { PlanTier } from "@shared/types/plan";
 
-interface Props {
-  isVisible: boolean;
-  difficulty: DifficultyLevel;
-  requiredPlan: PlanTier;
-}
 
-interface Emits {
-  (e: "dismiss", method: 'esc' | 'backdrop' | 'close_button' | 'maybe_later_button'): void;
-}
+
+
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
 const { t } = useI18n();
 const router = useRouter();
-const { trackStudyEvent } = useAnalytics();
+const { track } = useAnalytics();
 
 const modalRef = ref<HTMLElement>();
 const headingId = "upsell-modal-title";
@@ -240,11 +235,7 @@ const targetPlanName = computed(() =>
   planConfig.value ? t(planConfig.value.labelKey) : t(`plans.names.${props.requiredPlan}`)
 );
 
-interface IComparisonFeature {
-  label: string;
-  free: boolean;
-  target: boolean;
-}
+
 
 const comparisonFeatures = computed((): IComparisonFeature[] => {
   return [
@@ -287,10 +278,7 @@ const benefits = computed(() => {
   ];
 });
 
-interface IFaq {
-  question: string;
-  answer: string;
-}
+
 
 const faqs = computed((): IFaq[] => [
   {
@@ -308,7 +296,7 @@ const faqs = computed((): IFaq[] => [
 ]);
 
 const handleUpgrade = () => {
-  trackStudyEvent('upsell_cta_clicked', {
+  track('upsell_cta_clicked', {
     action: 'upgrade',
     difficulty: props.difficulty,
     requiredPlan: props.requiredPlan,
@@ -328,7 +316,7 @@ const handleUpgrade = () => {
 };
 
 const handleViewAllPlans = () => {
-  trackStudyEvent('upsell_cta_clicked', {
+  track('upsell_cta_clicked', {
     action: 'view_plans',
     difficulty: props.difficulty,
     requiredPlan: props.requiredPlan,
@@ -341,7 +329,7 @@ const handleViewAllPlans = () => {
 };
 
 const handleDismiss = (method: 'esc' | 'backdrop' | 'close_button' | 'maybe_later_button') => {
-  trackStudyEvent('upsell_cta_clicked', {
+  track('upsell_cta_clicked', {
     action: 'maybe_later',
     difficulty: props.difficulty,
     requiredPlan: props.requiredPlan,
@@ -378,7 +366,7 @@ watch(
   async (visible) => {
     if (visible) {
       // Track view
-      trackStudyEvent('upsell_modal_viewed', {
+      track('upsell_modal_viewed', {
         difficulty: props.difficulty,
         requiredPlan: props.requiredPlan,
       });

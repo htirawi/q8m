@@ -1,18 +1,40 @@
 <script setup lang="ts">
-import { onMounted } from "vue";
+import { onMounted, computed } from "vue";
 
 // Components
 import PricingHero from "@/components/pricing/PricingHero.vue";
+import CountdownTimer from "@/components/pricing/CountdownTimer.vue";
 import PricingCards from "@/components/pricing/PricingCards.vue";
 import FeatureGrid from "@/components/pricing/FeatureGrid.vue";
 import ComparisonTable from "@/components/pricing/ComparisonTable.vue";
+import TestimonialCarousel from "@/components/pricing/TestimonialCarousel.vue";
 import FaqAccordion from "@/components/pricing/FaqAccordion.vue";
 import GuaranteePanel from "@/components/pricing/GuaranteePanel.vue";
 import FinalCta from "@/components/pricing/FinalCta.vue";
 
+
 const trackAnalytics = (event: string, properties: Record<string, unknown>) => {
   // Track with your analytics service
   console.log("Analytics:", event, properties);
+};
+
+// Countdown timer end date (e.g., end of month sale)
+const saleEndDate = computed(() => {
+  const now = new Date();
+  const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
+  return endOfMonth;
+});
+
+// Methods
+const handleCountdownCTA = () => {
+  // Scroll to pricing cards
+  const cardsSection = document.getElementById('main-content');
+  if (cardsSection) {
+    cardsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  trackAnalytics("countdown_cta_clicked", {
+    source: "pricing_banner",
+  });
 };
 
 // Lifecycle
@@ -41,6 +63,20 @@ defineOptions({
     <!-- Hero Section -->
     <PricingHero />
 
+    <!-- Countdown Timer Banner (Limited Time Offer) -->
+    <CountdownTimer
+      variant="banner"
+      :target-date="saleEndDate"
+      title="Limited Time Offer!"
+      message="Get 30% off all annual plans"
+      cta-text="Claim Your Discount"
+      @cta-click="handleCountdownCTA"
+      :show-days="true"
+      :show-hours="true"
+      :show-minutes="true"
+      :show-seconds="false"
+    />
+
     <!-- Pricing Cards Section (uses canonical registry) -->
     <section id="main-content" class="pricing-page-cards" aria-labelledby="plans-title">
       <div class="pricing-page-cards-container">
@@ -56,6 +92,12 @@ defineOptions({
 
     <!-- Comparison Table -->
     <ComparisonTable />
+
+    <!-- Testimonials -->
+    <TestimonialCarousel
+      :autoplay="true"
+      :autoplay-interval="6000"
+    />
 
     <!-- FAQ Section -->
     <FaqAccordion />

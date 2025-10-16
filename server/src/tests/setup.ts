@@ -10,8 +10,8 @@ import { FxRate } from "@models/FxRate.js";
 import { Purchase } from "@models/Purchase.js";
 import { Subscription } from "@models/Subscription.js";
 import { User } from "@models/User.js";
-import { entitlementService } from "@services/entitlement.service.js";
-import { mockPaymentService } from "@services/mock-payment.service.js";
+import { entitlementService } from "@services/entitlement.js";
+import { mockPaymentService } from "@services/mock-payment.js";
 import { afterAll, afterEach, beforeAll, beforeEach, vi } from "vitest";
 
 // Mock external packages and services (Vitest automatically hoists these)
@@ -30,7 +30,7 @@ vi.mock("paypal-rest-sdk", () => ({
   },
 }));
 
-vi.mock("@services/email.service.js", () => ({
+vi.mock("@services/email.js", () => ({
   emailService: {
     sendEmailVerification: vi.fn().mockResolvedValue(undefined),
     sendPasswordReset: vi.fn().mockResolvedValue(undefined),

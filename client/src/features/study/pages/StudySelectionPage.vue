@@ -146,7 +146,7 @@ const planStore = usePlanStore();
 const authStore = useAuthStore();
 const { handlePlanEntryClick } = usePlanEntry();
 const { isModalVisible: isUpsellModalVisible, modalContext: upsellModalContext, openUpsellModal, closeUpsellModal } = useUpsell();
-const { trackStudyEvent } = useAnalytics();
+const { track } = useAnalytics();
 
 // Study composable with auto-start logic
 const {
@@ -311,7 +311,7 @@ const handleKeyboardShortcut = (event: KeyboardEvent) => {
     event.preventDefault();
 
     // Track event
-    trackStudyEvent('keyboard_shortcut_used', {
+    track('keyboard_shortcut_used', {
       key: 'S',
       action: 'start_resume_study',
     });

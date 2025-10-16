@@ -2,6 +2,8 @@ import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 import type { Plan, PlanTier } from "@shared/types/plan";
 import { useAuthStore } from "./auth";
+import { API_ENDPOINTS } from "@/config/api";
+import { httpClient, getErrorMessage } from "@/utils/httpClient";
 
 /**
  * Plan Store
@@ -70,37 +72,10 @@ export const usePlanStore = defineStore("plan", () => {
     error.value = null;
 
     try {
-      // Mock for dev
-      if (import.meta.env.DEV && authStore.user?.email === "dev@example.com") {
-        currentPlan.value = {
-          id: "dev-plan-1",
-          tier: "free",
-          name: "free",
-          displayName: "Free Plan",
-          description: "Access to Easy content",
-          features: ["Easy Study Guide", "Easy Quizzes", "Community Support"],
-          isActive: true,
-          startedAt: new Date(),
-        };
-        return;
-      }
-
-      const response = await fetch("/api/plans/current", {
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch plan");
-      }
-
-      const data = await response.json();
+      const data = await httpClient.get<{ plan: Plan }>(API_ENDPOINTS.plans.list());
       currentPlan.value = data.plan;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Failed to fetch plan";
-      error.value = errorMessage;
+      error.value = getErrorMessage(err, "Failed to fetch plan");
       // Default to free on error
       currentPlan.value = {
         id: "default-free",

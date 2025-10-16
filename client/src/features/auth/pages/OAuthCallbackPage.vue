@@ -4,11 +4,13 @@ import { ref, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 
 import { useAuthStore } from "@/stores/auth";
+import { usePostLoginRouter } from "@/composables/usePostLoginRouter";
 import { useAuthRedirect } from "@/composables/useAuthRedirect";
 
 const router = useRouter();
 const route = useRoute();
 const authStore = useAuthStore();
+const { routeAfterLogin } = usePostLoginRouter();
 const { getCurrentLocale } = useAuthRedirect();
 
 const isLoading = ref(true);
@@ -36,15 +38,10 @@ onMounted(async () => {
 
       await authStore.getCurrentUser();
 
-      // Get the redirect path from session storage or default to quiz with locale
-      const locale = getCurrentLocale();
-      const defaultRedirect = `/${locale}/quiz`;
-      const redirectPath = sessionStorage.getItem("oauth_redirect") || defaultRedirect;
-      sessionStorage.removeItem("oauth_redirect");
-
-      // Redirect to the original page or quiz selection
-      setTimeout(() => {
-        router.push(redirectPath);
+      // Use the same post-login routing logic as regular login
+      // This will route to level selection or handle redirect params properly
+      setTimeout(async () => {
+        await routeAfterLogin();
       }, 1500);
     } else {
       error.value = "Authentication failed. Please try again.";

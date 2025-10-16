@@ -4,6 +4,7 @@ import { useRouter, useRoute } from "vue-router";
 import AuthenticationForm from "@/components/auth/AuthenticationForm.vue";
 import { useAuthRedirect } from "@/composables/useAuthRedirect";
 import { usePostLoginRouter } from "@/composables/usePostLoginRouter";
+import { useAuthStore } from "@/stores/auth";
 
 const router = useRouter();
 const route = useRoute();
@@ -12,8 +13,8 @@ const { routeAfterLogin } = usePostLoginRouter();
 
 function handleOAuthLogin(provider: "google") {
   // Redirect to OAuth endpoint on the backend
-  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api";
-  const oauthUrl = `${apiBaseUrl}/auth/${provider}`;
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
+  const oauthUrl = `${apiBaseUrl}/api/v1/auth/${provider}`;
 
   // Store the intended redirect URL (from signInSuccessUrl query param) or default to study
   const signInSuccessUrl = route.query.signInSuccessUrl as string | undefined;
@@ -26,7 +27,17 @@ function handleOAuthLogin(provider: "google") {
 }
 
 async function handleLoginSuccess() {
-  // Use plan-based post-login routing
+  // Check if user needs onboarding
+  const authStore = useAuthStore();
+  const locale = getCurrentLocale();
+
+  // If user hasn't completed onboarding, redirect there
+  if (authStore.user && !authStore.user.onboarding?.isCompleted) {
+    router.push(`/${locale}/onboarding`);
+    return;
+  }
+
+  // Otherwise, use plan-based post-login routing
   await routeAfterLogin();
 }
 

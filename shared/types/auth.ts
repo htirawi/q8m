@@ -1,7 +1,10 @@
 import type { PlanTier } from "./plan";
+import type { OnboardingPreferences } from "./onboarding";
 
 export interface User {
   id: string;
+  _id?: string; // Backward compatibility alias for id
+  userId?: string; // Another backward compatibility alias
   email: string;
   name: string;
   avatar?: string;
@@ -13,6 +16,35 @@ export interface User {
   lastLoginAt?: Date;
   planTier?: PlanTier;
   planExpiresAt?: Date;
+  subscription?: {
+    status: 'active' | 'inactive' | 'cancelled' | 'expired';
+    plan: PlanTier;
+    startedAt?: Date;
+    expiresAt?: Date;
+  };
+  gamification?: {
+    level: number;
+    totalXP: number;
+    currentXP: number;
+    xp?: number; // Backward compatibility alias for currentXP
+    xpToNextLevel: number;
+    streak: number;
+    coins: number;
+    badges: Array<{
+      id: string;
+      name: string;
+      description: string;
+      icon: string;
+      rarity: string;
+      earned: boolean;
+      earnedAt?: Date;
+    }>;
+  };
+  onboarding?: {
+    isCompleted: boolean;
+    completedAt?: Date;
+    preferences?: OnboardingPreferences;
+  };
 }
 
 export interface Account {

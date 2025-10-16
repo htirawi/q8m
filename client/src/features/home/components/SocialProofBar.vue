@@ -42,17 +42,13 @@
 </template>
 
 <script setup lang="ts">
+import type { ISocialProofBarProps as Props } from "@/types/components/home";
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useHomepageAnalytics } from '@/composables/useHomepageAnalytics';
 import type { ISocialProofCompany } from '@/types/homepage';
 
-interface Props {
-  userCount?: string;
-  showLogos?: boolean;
-  logoWidth?: number;
-  logoHeight?: number;
-}
+
 
 withDefaults(defineProps<Props>(), {
   userCount: '12,000+',
