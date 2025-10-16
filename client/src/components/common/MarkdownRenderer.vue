@@ -262,7 +262,15 @@ function extractTableRows(html: string): string[][] {
     let cellMatch;
 
     while ((cellMatch = cellRegex.exec(rowHtml)) !== null) {
-      cells.push(cellMatch[1]?.replace(/<[^>]+>/g, '').trim() || '');
+      // Robust HTML tag sanitization - iteratively remove until no tags remain
+      let cellContent = cellMatch[1] || '';
+      let previousContent;
+      do {
+        previousContent = cellContent;
+        cellContent = cellContent.replace(/<[^>]+>/g, '');
+      } while (cellContent !== previousContent && /<[^>]+>/.test(cellContent));
+      
+      cells.push(cellContent.trim());
     }
 
     if (cells.length > 0) {
