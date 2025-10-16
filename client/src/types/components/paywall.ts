@@ -23,6 +23,7 @@ export interface ISoftPaywallModalProps {
 }
 
 export interface ISoftPaywallModalEmits {
+  (e: "dismiss"): void;
   (e: "close"): void;
   (e: "upgrade"): void;
 }
