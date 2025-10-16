@@ -84,6 +84,12 @@ export interface IStudyNavigationProps {
   totalQuestions: number;
   answeredQuestions: Set<number>;
   markedQuestions: Set<number>;
+  sessionTime: number;
+  isPaused: boolean;
+  loadedCount: number;
+  totalAvailable: number;
+  hasMore?: boolean;
+  isLoadingMore?: boolean;
 }
 
 export interface IStudyQuestionProps {
