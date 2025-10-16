@@ -77,10 +77,6 @@ jobs:
           # Lint CSS files using the configured stylelint command
           pnpm lint:css
 
-#      - name: Build
-      # Build temporarily disabled - Phase 2 features need type resolution
-
-#        run: cd client && pnpm build
 
       - name: Run unit tests with coverage
         run: |
