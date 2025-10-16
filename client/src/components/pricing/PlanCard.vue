@@ -59,13 +59,13 @@ defineOptions({
     <!-- Header -->
     <div class="plan-card-header">
       <div class="plan-card-icon" :aria-hidden="true">
-        {{ plan.visual.icon }}
+        {{ plan?.visual.icon }}
       </div>
       <h3 class="plan-card-title">
-        {{ t(plan.labelKey) }}
+        {{ t(plan?.labelKey) }}
       </h3>
       <p class="plan-card-description">
-        {{ t(plan.descriptionKey) }}
+        {{ t(plan?.descriptionKey) }}
       </p>
     </div>
 
