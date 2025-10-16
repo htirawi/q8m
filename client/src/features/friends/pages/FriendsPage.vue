@@ -137,43 +137,31 @@ onMounted(() => {
       <!-- Tabs Navigation -->
       <div class="mb-8 border-b border-gray-200 dark:border-gray-700 overflow-x-auto">
         <nav class="flex space-x-1 min-w-max" aria-label="Tabs">
-          <button
-            v-for="tab in tabs"
-            :key="tab.id"
-            @click="switchTab(tab.id)"
-            :class="[
-              'flex items-center gap-2 px-4 py-3 font-medium text-sm transition-colors relative whitespace-nowrap',
-              activeTab === tab.id
-                ? 'text-indigo-600 dark:text-indigo-400'
-                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white',
-            ]"
-          >
+          <button v-for="tab in tabs" :key="tab.id" @click="switchTab(tab.id)" :class="[
+            'flex items-center gap-2 px-4 py-3 font-medium text-sm transition-colors relative whitespace-nowrap',
+            activeTab === tab.id
+              ? 'text-indigo-600 dark:text-indigo-400'
+              : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white',
+          ]">
             <span>{{ tab.icon }}</span>
             <span>{{ tab.label }}</span>
-            <span
-              v-if="tab.showCount && tab.count > 0"
-              :class="[
-                'px-2 py-0.5 rounded-full text-xs font-bold',
-                tab.highlight
-                  ? 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400'
-                  : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400',
-              ]"
-            >
+            <span v-if="tab.showCount && tab.count > 0" :class="[
+              'px-2 py-0.5 rounded-full text-xs font-bold',
+              tab.highlight
+                ? 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400'
+                : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400',
+            ]">
               {{ tab.count }}
             </span>
-            <div
-              v-if="activeTab === tab.id"
-              class="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-600 dark:bg-indigo-400"
-            ></div>
+            <div v-if="activeTab === tab.id"
+              class="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-600 dark:bg-indigo-400"></div>
           </button>
         </nav>
       </div>
 
       <!-- Error State -->
-      <div
-        v-if="error"
-        class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6"
-      >
+      <div v-if="error"
+        class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6">
         <p class="text-red-700 dark:text-red-400">{{ error }}</p>
       </div>
 
@@ -181,39 +169,23 @@ onMounted(() => {
       <div class="tab-content">
         <!-- Friends Tab -->
         <div v-if="activeTab === 'friends'">
-          <FriendList
-            :show-search="true"
-            :show-filters="true"
-            initial-sort="recent"
-            @view-friend="handleViewFriend"
-          />
+          <FriendList :show-search="true" :show-filters="true" initial-sort="recent" @view-friend="handleViewFriend" />
         </div>
 
         <!-- Requests Tab -->
         <div v-else-if="activeTab === 'requests'">
-          <FriendRequests
-            initial-tab="received"
-            :show-counts="true"
-          />
+          <FriendRequests initial-tab="received" :show-counts="true" />
         </div>
 
         <!-- Find Friends Tab -->
         <div v-else-if="activeTab === 'search'">
-          <UserSearch
-            placeholder="Search users by name or email..."
-            :auto-focus="true"
-            :show-suggestions="true"
-          />
+          <UserSearch placeholder="Search users by name or email..." :auto-focus="true" :show-suggestions="true" />
         </div>
 
         <!-- Suggestions Tab -->
         <div v-else-if="activeTab === 'suggestions'">
-          <FriendSuggestions
-            :limit="12"
-            layout="grid"
-            :show-mutual-friends="true"
-            @view-all="handleViewAllSuggestions"
-          />
+          <FriendSuggestions :limit="12" layout="grid" :show-mutual-friends="true"
+            @view-all="handleViewAllSuggestions" />
         </div>
 
         <!-- Blocked Tab -->
@@ -230,11 +202,7 @@ onMounted(() => {
 
             <!-- Loading State -->
             <div v-if="loading" class="space-y-4">
-              <div
-                v-for="i in 3"
-                :key="i"
-                class="bg-white dark:bg-gray-800 rounded-lg p-4 animate-pulse"
-              >
+              <div v-for="i in 3" :key="i" class="bg-white dark:bg-gray-800 rounded-lg p-4 animate-pulse">
                 <div class="flex items-center gap-4">
                   <div class="w-12 h-12 bg-gray-300 dark:bg-gray-700 rounded-full"></div>
                   <div class="flex-1 space-y-2">
@@ -246,10 +214,7 @@ onMounted(() => {
             </div>
 
             <!-- Empty State -->
-            <div
-              v-else-if="blockedUsers.length === 0"
-              class="bg-gray-50 dark:bg-gray-800 rounded-lg p-12 text-center"
-            >
+            <div v-else-if="blockedUsers.length === 0" class="bg-gray-50 dark:bg-gray-800 rounded-lg p-12 text-center">
               <div class="text-6xl mb-4">✅</div>
               <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">
                 No blocked users
@@ -261,21 +226,12 @@ onMounted(() => {
 
             <!-- Blocked Users List -->
             <div v-else class="space-y-4">
-              <div
-                v-for="user in blockedUsers"
-                :key="user._id"
-                class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4"
-              >
+              <div v-for="user in blockedUsers" :key="user._id"
+                class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
                 <div class="flex items-center justify-between">
-                  <FriendCard
-                    :friend="user"
-                    :show-actions="false"
-                    :compact="true"
-                  />
-                  <button
-                    @click="handleUnblock(user._id)"
-                    class="ml-4 px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium transition-colors"
-                  >
+                  <FriendCard :friend="user" :show-actions="false" :compact="true" />
+                  <button @click="handleUnblock(user._id)"
+                    class="ml-4 px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium transition-colors">
                     Unblock
                   </button>
                 </div>
@@ -299,7 +255,12 @@ onMounted(() => {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 </style>

@@ -88,11 +88,11 @@
 </template>
 
 <script setup lang="ts">
-import type { IInlineUpsellCardProps as Props } from "@/types/components/paywall";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
 import { trackEvent } from "@/utils/telemetry";
 import type { PlanTier } from "@shared/types/plan";
+import type { IInlineUpsellCardProps as Props } from "@/types/components/paywall";
 
 
 
