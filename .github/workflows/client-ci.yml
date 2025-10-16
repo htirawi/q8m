@@ -166,9 +166,6 @@ jobs:
           path: client/dist/
           retention-days: 7
 
-      - name: Comment coverage on PR
-        if: github.event_name == 'pull_request'
-        uses: actions/github-script@v7
         with:
           script: |
             const fs = require('fs');
