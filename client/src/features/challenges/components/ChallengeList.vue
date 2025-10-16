@@ -130,11 +130,6 @@ import type { Challenge } from '@/stores/challenges';
 import { useChallenges } from '@/composables/useChallenges';
 import ChallengeCard from './ChallengeCard.vue';
 
-;
-  emptyStateTitle?: string;
-  emptyStateMessage?: string;
-  showCreateButton?: boolean;
-}
 
 const props = withDefaults(defineProps<Props>(), {
   loading: false,
