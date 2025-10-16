@@ -66,6 +66,7 @@ export interface IStickyStartBarEmits {
 export interface IStudyHeaderProps {
   currentIndex: number;
   totalQuestions: number;
+  difficulty: DifficultyLevel;
 }
 
 export interface IStudyFiltersProps {
@@ -74,6 +75,9 @@ export interface IStudyFiltersProps {
   answeredFilter: string;
   filteredCount: number;
   totalCount: number;
+  practiceMode: string;
+  bookmarkCount: number;
+  progress: number;
   difficulty?: DifficultyLevel;
   category?: string;
   tags?: string[];
@@ -96,4 +100,7 @@ export interface IStudyQuestionProps {
   question: Record<string, unknown>;
   currentIndex: number;
   totalQuestions: number;
+  showAnswer: boolean;
+  locale: string;
+  selectedAnswer: unknown;
 }
