@@ -31,10 +31,14 @@ export interface ILevelCardEmits {
 
 export interface IModeCardProps {
   mode: "study" | "quiz";
+  difficulty: DifficultyLevel;
   title: string;
   description: string;
   icon: string;
   features: string[];
+  cta: string;
+  gradient: string;
+  hoverGradient: string;
   recommended?: boolean;
 }
 
