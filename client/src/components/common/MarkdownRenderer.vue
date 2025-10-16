@@ -1,11 +1,6 @@
 <template>
   <div class="markdown-content space-y-4">
-    <component
-      v-for="(block, index) in parsedBlocks"
-      :key="index"
-      :is="block.component"
-      v-bind="block.props"
-    />
+    <component v-for="(block, index) in parsedBlocks" :key="index" :is="block.component" v-bind="block.props" />
   </div>
 </template>
 
@@ -269,7 +264,7 @@ function extractTableRows(html: string): string[][] {
         previousContent = cellContent;
         cellContent = cellContent.replace(/<[^>]+>/g, '');
       } while (cellContent !== previousContent && /<[^>]+>/.test(cellContent));
-      
+
       cells.push(cellContent.trim());
     }
 
