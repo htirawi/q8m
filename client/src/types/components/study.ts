@@ -69,6 +69,11 @@ export interface IStudyHeaderProps {
 }
 
 export interface IStudyFiltersProps {
+  searchQuery: string;
+  questionTypeFilter: string;
+  answeredFilter: string;
+  filteredCount: number;
+  totalCount: number;
   difficulty?: DifficultyLevel;
   category?: string;
   tags?: string[];
@@ -86,4 +91,3 @@ export interface IStudyQuestionProps {
   currentIndex: number;
   totalQuestions: number;
 }
-
