@@ -45,8 +45,8 @@ defineOptions({
   <div
     class="plan-card"
     :class="{
-      'plan-card--featured': featured || plan.metadata.featured,
-      'plan-card--free': plan.priceMonthly === 0,
+      'plan-card--featured': featured || plan?.metadata?.featured,
+      'plan-card--free': plan?.priceMonthly === 0,
       'plan-card--selected': selected,
     }"
     :data-testid="`plan-card-${plan.id}`"
@@ -106,8 +106,8 @@ defineOptions({
       type="button"
       class="plan-card-cta"
       :class="{
-        'plan-card-cta--primary': featured || plan.metadata.featured,
-        'plan-card-cta--secondary': !featured && !plan.metadata.featured,
+        'plan-card-cta--primary': featured || plan?.metadata?.featured,
+        'plan-card-cta--secondary': !featured && !plan?.metadata?.featured,
       }"
       @click="handleSelect"
       :data-testid="`plan-cta-${plan.id}`"
