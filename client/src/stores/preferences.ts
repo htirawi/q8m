@@ -29,12 +29,25 @@ export const usePreferencesStore = defineStore('preferences', () => {
 
     const storedIncompleteQuiz = storage.get<IncompleteQuiz>(STORAGE_KEYS.USER_INCOMPLETE_QUIZ);
     if (storedIncompleteQuiz) {
-      // Convert date strings back to Date objects
-      storedIncompleteQuiz.startedAt = new Date(storedIncompleteQuiz.startedAt);
-      if (storedIncompleteQuiz.lastUpdatedAt) {
-        storedIncompleteQuiz.lastUpdatedAt = new Date(storedIncompleteQuiz.lastUpdatedAt);
+      // Validate that storedIncompleteQuiz is actually an object and has the expected structure
+      if (typeof storedIncompleteQuiz === 'object' && storedIncompleteQuiz !== null && 'startedAt' in storedIncompleteQuiz) {
+        try {
+          // Convert date strings back to Date objects
+          storedIncompleteQuiz.startedAt = new Date(storedIncompleteQuiz.startedAt);
+          if (storedIncompleteQuiz.lastUpdatedAt) {
+            storedIncompleteQuiz.lastUpdatedAt = new Date(storedIncompleteQuiz.lastUpdatedAt);
+          }
+          incompleteQuiz.value = storedIncompleteQuiz;
+        } catch (error) {
+          // If date conversion fails, clear the corrupted data
+          console.warn('Corrupted incomplete quiz data detected, clearing...', error);
+          storage.remove(STORAGE_KEYS.USER_INCOMPLETE_QUIZ);
+        }
+      } else {
+        // Data is corrupted (not an object), clear it
+        console.warn('Invalid incomplete quiz data detected, clearing...');
+        storage.remove(STORAGE_KEYS.USER_INCOMPLETE_QUIZ);
       }
-      incompleteQuiz.value = storedIncompleteQuiz;
     }
 
     const storedUIPrefs = storage.get<UIPreferences>(STORAGE_KEYS.USER_UI_PREFERENCES);
