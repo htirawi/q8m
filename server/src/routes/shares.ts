@@ -98,12 +98,7 @@ export default async function shareRoutes(fastify: FastifyInstance) {
         };
         const userId = (request as AuthenticatedRequest).user._id;
 
-        let previewData: SharePreviewData = {
-          title: '',
-          description: '',
-          imageUrl: '',
-          metadata: {},
-        };
+        let previewData: SharePreviewData;
 
         switch (shareType) {
           case 'quiz_result': {
