@@ -105,7 +105,10 @@ const userSchema = new Schema(
       required: [true, "Email is required"],
       lowercase: true,
       trim: true,
-      match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, "Please enter a valid email"],
+      // ✅ SECURITY FIX (CodeQL #17, #16): Replaced inefficient regex with safe pattern
+      // Old regex had nested quantifiers causing catastrophic backtracking
+      // New regex is safe and follows RFC 5322 simplified pattern
+      match: [/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, "Please enter a valid email"],
     },
     name: {
       type: String,
@@ -238,7 +241,13 @@ const userSchema = new Schema(
       preferences: {
         goal: {
           type: String,
-          enum: ["get-job", "learn-framework", "interview-prep", "skill-improvement", "certification"],
+          enum: [
+            "get-job",
+            "learn-framework",
+            "interview-prep",
+            "skill-improvement",
+            "certification",
+          ],
         },
         experienceLevel: {
           type: String,
@@ -246,7 +255,17 @@ const userSchema = new Schema(
         },
         frameworks: {
           type: [String],
-          enum: ["react", "vue", "angular", "nextjs", "redux", "typescript", "javascript", "node", "express"],
+          enum: [
+            "react",
+            "vue",
+            "angular",
+            "nextjs",
+            "redux",
+            "typescript",
+            "javascript",
+            "node",
+            "express",
+          ],
         },
         dailyGoal: Number,
         availableDaysPerWeek: Number,

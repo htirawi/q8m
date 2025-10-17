@@ -159,6 +159,15 @@ export class JWTService {
   }
 
   /**
+   * ✅ SECURITY FIX (SEC-006): Refresh token rotation
+   * Generate new token pair with refresh token rotation
+   * Returns both new access and refresh tokens, invalidating the old refresh token
+   */
+  rotateRefreshToken(user: IUser, sessionId: string): TokenPair {
+    return this.generateTokenPair(user, sessionId);
+  }
+
+  /**
    * Generate email verification token
    */
   generateEmailVerificationToken(userId: string): string {

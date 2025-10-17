@@ -9,7 +9,7 @@
  * clients to migrate without service disruption.
  */
 
-import { createHash, timingSafeEqual } from "crypto";
+import { pbkdf2Sync, timingSafeEqual } from "crypto";
 
 import type { FastifyRequest, FastifyReply } from "fastify";
 
@@ -34,9 +34,18 @@ const apiKeyUsageStore = new Map<string, ApiKeyMetadata>();
 
 /**
  * Hash an API key for secure comparison
+ * ✅ SECURITY FIX (CodeQL #728): Use password-based key derivation with sufficient computational effort
+ * SHA256 is not sufficient for API key hashing - using PBKDF2 with high iterations
  */
 function hashApiKey(key: string): string {
-  return createHash("sha256").update(key).digest("hex");
+  // Using PBKDF2 with 100,000 iterations for adequate computational effort
+  // This prevents brute-force attacks on API keys
+  const salt = "api-key-salt-q8m-platform"; // In production, use unique salt per key
+  const iterations = 100000;
+  const keylen = 32;
+  const digest = "sha256";
+  
+  return pbkdf2Sync(key, salt, iterations, keylen, digest).toString("hex");
 }
 
 /**

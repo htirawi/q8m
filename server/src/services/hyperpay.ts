@@ -269,7 +269,9 @@ export class HyperPayService {
 
       const { data } = paymentData;
       const { status } = data;
-      let purchaseStatus = "pending";
+      // ✅ FIX (CodeQL #722): Removed useless assignment
+      // Initialize with default value only, switch will set actual value
+      let purchaseStatus: string;
 
       switch (status) {
         case "captured":

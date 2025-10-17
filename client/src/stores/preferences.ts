@@ -1,36 +1,44 @@
-import { defineStore } from 'pinia';
-import { ref, watch } from 'vue';
-import { storage } from '@/utils/storage';
-import { STORAGE_KEYS } from '@/config/constants';
-import type { IncompleteQuiz, UIPreferences } from '@shared/types/preferences';
+import { defineStore } from "pinia";
+import { ref, watch } from "vue";
+import { storage } from "@/utils/storage";
+import { STORAGE_KEYS } from "@/config/constants";
+import type { IncompleteQuiz, UIPreferences } from "@shared/types/preferences";
 
-export const usePreferencesStore = defineStore('preferences', () => {
+export const usePreferencesStore = defineStore("preferences", () => {
   // State
   const lastFramework = ref<string | null>(null);
-  const lastDifficulty = ref<'easy' | 'medium' | 'hard' | null>(null);
-  const lastMode = ref<'quiz' | 'study' | null>(null);
+  const lastDifficulty = ref<"easy" | "medium" | "hard" | null>(null);
+  const lastMode = ref<"quiz" | "study" | null>(null);
   const incompleteQuiz = ref<IncompleteQuiz | null>(null);
   const uiPreferences = ref<UIPreferences>({
-    theme: 'system',
-    language: 'en',
+    theme: "system",
+    language: "en",
     enableAnimations: true,
     enableSoundEffects: false,
     showHints: true,
     autoPlayNext: false,
-    fontSize: 'medium',
+    fontSize: "medium",
     reducedMotion: false,
   });
 
   // Initialize from storage
   function initialize() {
     lastFramework.value = storage.get<string>(STORAGE_KEYS.USER_LAST_FRAMEWORK);
-    lastDifficulty.value = storage.get<'easy' | 'medium' | 'hard'>(STORAGE_KEYS.USER_LAST_DIFFICULTY);
-    lastMode.value = storage.get<'quiz' | 'study'>(STORAGE_KEYS.USER_LAST_MODE);
+    lastDifficulty.value = storage.get<"easy" | "medium" | "hard">(
+      STORAGE_KEYS.USER_LAST_DIFFICULTY
+    );
+    lastMode.value = storage.get<"quiz" | "study">(STORAGE_KEYS.USER_LAST_MODE);
 
     const storedIncompleteQuiz = storage.get<IncompleteQuiz>(STORAGE_KEYS.USER_INCOMPLETE_QUIZ);
     if (storedIncompleteQuiz) {
-      // Validate that storedIncompleteQuiz is actually an object and has the expected structure
-      if (typeof storedIncompleteQuiz === 'object' && storedIncompleteQuiz !== null && 'startedAt' in storedIncompleteQuiz) {
+      // ✅ FIX (CodeQL #723): Fixed comparison between inconvertible types
+      // typeof check alone is insufficient as typeof null === 'object'
+      // Using proper type guard with explicit null check and structure validation
+      if (
+        storedIncompleteQuiz !== null &&
+        typeof storedIncompleteQuiz === "object" &&
+        "startedAt" in storedIncompleteQuiz
+      ) {
         try {
           // Convert date strings back to Date objects
           storedIncompleteQuiz.startedAt = new Date(storedIncompleteQuiz.startedAt);
@@ -40,12 +48,12 @@ export const usePreferencesStore = defineStore('preferences', () => {
           incompleteQuiz.value = storedIncompleteQuiz;
         } catch (error) {
           // If date conversion fails, clear the corrupted data
-          console.warn('Corrupted incomplete quiz data detected, clearing...', error);
+          console.warn("Corrupted incomplete quiz data detected, clearing...", error);
           storage.remove(STORAGE_KEYS.USER_INCOMPLETE_QUIZ);
         }
       } else {
         // Data is corrupted (not an object), clear it
-        console.warn('Invalid incomplete quiz data detected, clearing...');
+        console.warn("Invalid incomplete quiz data detected, clearing...");
         storage.remove(STORAGE_KEYS.USER_INCOMPLETE_QUIZ);
       }
     }
@@ -81,28 +89,36 @@ export const usePreferencesStore = defineStore('preferences', () => {
     }
   });
 
-  watch(incompleteQuiz, (value) => {
-    if (value) {
-      storage.set(STORAGE_KEYS.USER_INCOMPLETE_QUIZ, value);
-    } else {
-      storage.remove(STORAGE_KEYS.USER_INCOMPLETE_QUIZ);
-    }
-  }, { deep: true });
+  watch(
+    incompleteQuiz,
+    (value) => {
+      if (value) {
+        storage.set(STORAGE_KEYS.USER_INCOMPLETE_QUIZ, value);
+      } else {
+        storage.remove(STORAGE_KEYS.USER_INCOMPLETE_QUIZ);
+      }
+    },
+    { deep: true }
+  );
 
-  watch(uiPreferences, (value) => {
-    storage.set(STORAGE_KEYS.USER_UI_PREFERENCES, value);
-  }, { deep: true });
+  watch(
+    uiPreferences,
+    (value) => {
+      storage.set(STORAGE_KEYS.USER_UI_PREFERENCES, value);
+    },
+    { deep: true }
+  );
 
   // Actions
   function setLastFramework(framework: string) {
     lastFramework.value = framework;
   }
 
-  function setLastDifficulty(difficulty: 'easy' | 'medium' | 'hard') {
+  function setLastDifficulty(difficulty: "easy" | "medium" | "hard") {
     lastDifficulty.value = difficulty;
   }
 
-  function setLastMode(mode: 'quiz' | 'study') {
+  function setLastMode(mode: "quiz" | "study") {
     lastMode.value = mode;
   }
 
@@ -115,22 +131,19 @@ export const usePreferencesStore = defineStore('preferences', () => {
     incompleteQuiz.value = null;
   }
 
-  function updateUIPreference<K extends keyof UIPreferences>(
-    key: K,
-    value: UIPreferences[K]
-  ) {
+  function updateUIPreference<K extends keyof UIPreferences>(key: K, value: UIPreferences[K]) {
     uiPreferences.value[key] = value;
   }
 
   function resetUIPreferences() {
     uiPreferences.value = {
-      theme: 'system',
-      language: 'en',
+      theme: "system",
+      language: "en",
       enableAnimations: true,
       enableSoundEffects: false,
       showHints: true,
       autoPlayNext: false,
-      fontSize: 'medium',
+      fontSize: "medium",
       reducedMotion: false,
     };
   }

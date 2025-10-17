@@ -582,13 +582,19 @@ export class IntrusionDetectionService {
     const userAgent = headers["user-agent"];
 
     // XSS patterns
+    // ✅ SECURITY FIX (CodeQL #729): Fixed bad HTML filtering regexp
+    // Replaced .*? with safer patterns to avoid catastrophic backtracking
     const xssPatterns = [
-      /<script[^>]*>.*?<\/script>/i,
+      /<script[\s\S]{0,1000}?<\/script>/i, // Limited length to prevent backtracking
       /javascript:/i,
       /onerror\s*=/i,
       /onload\s*=/i,
-      /<iframe/i,
+      /<iframe[\s>]/i, // More specific pattern
       /eval\s*\(/i,
+      /<object/i,
+      /<embed/i,
+      /vbscript:/i,
+      /on\w+\s*=/i, // Generic event handler detection
     ];
 
     const bodyStr = JSON.stringify(body);
