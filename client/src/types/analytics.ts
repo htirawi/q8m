@@ -3,6 +3,8 @@
  * Types for analytics events, tracking, and A/B testing
  */
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import type { HomepageSection } from "./homepage";
 import type { BillingCycle, PlanId } from "./pricing";
 

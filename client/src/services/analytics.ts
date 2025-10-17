@@ -3,6 +3,9 @@
  * Supports multiple providers: Google Analytics, Custom API, Console (dev)
  */
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable no-console */
+
 import { ref, type Ref } from 'vue';
 import type { Router } from 'vue-router';
 

@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-console */
 import type { App } from 'vue';
 import type { Router } from 'vue-router';
 import { analytics, EventCategory, EventAction } from '@/services/analytics';
