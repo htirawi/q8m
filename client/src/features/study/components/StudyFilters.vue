@@ -138,7 +138,7 @@ const emit = defineEmits<{
 const { t } = useI18n();
 
 const hasActiveFilters = computed(() => {
-  return props.searchQuery.trim() !== '' ||
+  return (props.searchQuery?.trim() ?? '') !== '' ||
          props.questionTypeFilter !== 'all' ||
          props.answeredFilter !== 'all';
 });

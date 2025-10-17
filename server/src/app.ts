@@ -24,7 +24,7 @@ import devEmailRoutes from "@routes/dev-emails";
 import discussionRoutes from "@routes/discussions";
 import entitlementRoutes from "@routes/entitlements";
 import friendsRoutes from "@routes/friends";
-// import gamificationRoutes from "@routes/gamification"; // TODO: Fix fastify.authorize
+import gamificationRoutes from "@routes/gamification";
 // Notification routes removed - was using Express controllers (dead code)
 import paymentRoutes from "@routes/payments";
 import paypalRoutes from "@routes/paypal";
@@ -329,7 +329,7 @@ async function registerRoutes() {
   await fastify.register(challengeRoutes, { prefix: "/api/v1/challenges" });
   await fastify.register(progressRoutes, { prefix: "/api/v1/progress" });
   await fastify.register(quizResultsRoutes, { prefix: "/api/v1/quiz/results" });
-  // await fastify.register(gamificationRoutes, { prefix: "/api/v1/gamification" }); // TODO: Fix fastify.authorize
+  await fastify.register(gamificationRoutes, { prefix: "/api/v1/gamification" });
   // Notification routes removed - need to be rebuilt with Fastify when needed
   await fastify.register(adminRoutes, { prefix: "/api/v1/admin" });
   await fastify.register(entitlementRoutes, { prefix: "/api/v1/entitlements" });
@@ -621,7 +621,7 @@ export const buildApp = async () => {
   await testApp.register(challengeRoutes, { prefix: "/api/v1/challenges" });
   await testApp.register(progressRoutes, { prefix: "/api/v1/progress" });
   await testApp.register(quizResultsRoutes, { prefix: "/api/v1/quiz/results" });
-  // await testApp.register(gamificationRoutes, { prefix: "/api/v1/gamification" }); // TODO: Fix fastify.authorize
+  await testApp.register(gamificationRoutes, { prefix: "/api/v1/gamification" });
   // Notification routes removed - need to be rebuilt with Fastify when needed
   await testApp.register(adminRoutes, { prefix: "/api/v1/admin" });
   await testApp.register(entitlementRoutes, { prefix: "/api/v1/entitlements" });

@@ -64,7 +64,7 @@
     <!-- CTA Button -->
     <div class="relative mt-auto">
       <div
-        class="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r px-8 py-4 text-lg font-bold text-white shadow-lg transition-all duration-300 group-hover:scale-105 group-hover:shadow-xl"
+        class="flex items-center justify-center gap-2 rounded-xl border border-white/20 bg-gradient-to-r px-8 py-4 text-lg font-bold text-white shadow-xl transition-all duration-300 group-hover:scale-105 group-hover:shadow-2xl group-hover:brightness-110 group-hover:border-white/40"
         :class="gradient"
       >
         <span>{{ cta }}</span>

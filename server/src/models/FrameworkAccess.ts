@@ -28,7 +28,17 @@ const FrameworkAccessSchema = new Schema(
       type: String,
       required: true,
       unique: true,
-      enum: ["angular", "react", "nextjs", "redux", "vue", "random"],
+      enum: [
+        "angular",
+        "react",
+        "nextjs",
+        "redux",
+        "vue",
+        "random",
+        "svelte",
+        "testing",
+        "typescript",
+      ],
       index: true,
     },
     requiredPlanTier: {
@@ -53,7 +63,7 @@ const FrameworkAccessSchema = new Schema(
       color: {
         type: String,
         required: true,
-        enum: ["red", "black", "blue", "purple", "gray", "gradient"],
+        enum: ["red", "black", "blue", "purple", "gray", "gradient", "green", "orange"],
       },
       order: {
         type: Number,

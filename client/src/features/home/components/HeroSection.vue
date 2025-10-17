@@ -20,7 +20,8 @@ const currentLocale = computed(() => route.params.locale as string || locale.val
 
 // Headline text based on A/B test variant
 const headlineText = computed(() => {
-  const key = `home.hero.headline.${props.headlineVariant}`;
+  const variant = props.headlineVariant ?? 'control';
+  const key = `home.hero.headline.${variant}`;
   return t(key);
 });
 

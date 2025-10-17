@@ -10,8 +10,11 @@ export interface IFrameworkCardProps {
   description: string;
   icon: string;
   questionCount: number;
-  requiredPlan?: PlanTier;
-  locked?: boolean;
+  color: "red" | "black" | "blue" | "purple" | "gray" | "gradient";
+  difficulty: DifficultyLevel;
+  progressPercent?: number;
+  isLocked?: boolean;
+  requiredPlan?: string;
 }
 
 export interface ILevelCardProps {
@@ -31,10 +34,14 @@ export interface ILevelCardEmits {
 
 export interface IModeCardProps {
   mode: "study" | "quiz";
+  difficulty: DifficultyLevel;
   title: string;
   description: string;
   icon: string;
   features: string[];
+  cta: string;
+  gradient: string;
+  hoverGradient: string;
   recommended?: boolean;
 }
 
@@ -62,9 +69,18 @@ export interface IStickyStartBarEmits {
 export interface IStudyHeaderProps {
   currentIndex: number;
   totalQuestions: number;
+  difficulty: DifficultyLevel;
 }
 
 export interface IStudyFiltersProps {
+  searchQuery: string;
+  questionTypeFilter: string;
+  answeredFilter: string;
+  filteredCount: number;
+  totalCount: number;
+  practiceMode: string;
+  bookmarkCount: number;
+  progress: number;
   difficulty?: DifficultyLevel;
   category?: string;
   tags?: string[];
@@ -73,13 +89,28 @@ export interface IStudyFiltersProps {
 export interface IStudyNavigationProps {
   currentIndex: number;
   totalQuestions: number;
-  answeredQuestions: Set<number>;
-  markedQuestions: Set<number>;
+  answeredQuestions: Set<string>;
+  markedQuestions: Set<string>;
+  sessionTime: number;
+  isPaused: boolean;
+  loadedCount: number;
+  totalAvailable: number;
+  hasMore?: boolean;
+  isLoadingMore?: boolean;
 }
 
 export interface IStudyQuestionProps {
   question: Record<string, unknown>;
   currentIndex: number;
   totalQuestions: number;
+  showAnswer: boolean;
+  locale: string;
+  selectedAnswer: unknown;
+  textAnswer?: string;
+  multipleAnswers?: string[];
+  isBookmarked?: boolean;
+  canGoPrevious?: boolean;
+  isLoadingMore?: boolean;
+  isLastQuestion?: boolean;
+  hasMore?: boolean;
 }
-

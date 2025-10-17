@@ -6,6 +6,7 @@ export interface IHeroSectionProps {
   title?: string;
   subtitle?: string;
   ctaText?: string;
+  headlineVariant?: 'control' | 'variant-a' | 'variant-b';
 }
 
 export interface IMobileStickyBarEmits {

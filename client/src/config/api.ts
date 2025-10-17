@@ -137,6 +137,6 @@ export const API_ENDPOINTS = {
     stats: () => apiUrl('admin/stats'),
   },
   plans: {
-    list: () => apiUrl('plans'),
+    list: () => apiUrl('plans/current'),
   },
 } as const;

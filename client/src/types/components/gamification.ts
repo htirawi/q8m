@@ -50,8 +50,7 @@ export interface IBadgeUnlockNotificationBadge {
 }
 
 export interface ICoinBalanceProps {
-  coins: number;
-  showAnimation?: boolean;
+  variant?: "compact" | "badge" | "card" | "detailed";
 }
 
 export interface ILeaderboardEntry {
@@ -110,9 +109,7 @@ export interface IMilestoneCelebrationProps {
 }
 
 export interface IStreakDisplayProps {
-  currentStreak: number;
-  longestStreak?: number;
-  showDetails?: boolean;
+  variant?: "compact" | "card" | "detailed";
 }
 
 export interface IXPSource {
@@ -139,4 +136,3 @@ export interface IXPDisplayProps {
   level: number;
   showProgress?: boolean;
 }
-

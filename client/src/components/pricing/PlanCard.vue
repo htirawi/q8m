@@ -19,21 +19,22 @@ const emit = defineEmits<IEmits>();
 const { t } = useI18n();
 
 const currentPrice = computed(() => {
+  if (!props.plan) return 0;
   return props.billing === 'monthly'
-    ? props.plan.priceMonthly
-    : props.plan.priceYearly;
+    ? (props.plan.priceMonthly ?? 0)
+    : (props.plan.priceYearly ?? 0);
 });
 
 const savingsPercent = computed(() => {
-  if (props.billing !== 'annual' || props.plan.priceMonthly === 0) return 0;
-  const monthlyCost = props.plan.priceMonthly * 12;
-  const annualCost = props.plan.priceYearly;
+  if (!props.plan || props.billing !== 'annual' || (props.plan.priceMonthly ?? 0) === 0) return 0;
+  const monthlyCost = (props.plan.priceMonthly ?? 0) * 12;
+  const annualCost = props.plan.priceYearly ?? 0;
   const savings = monthlyCost - annualCost;
   return Math.round((savings / monthlyCost) * 100);
 });
 
 const handleSelect = () => {
-  emit('select', props.plan.id, props.billing);
+  emit('select', props.plan?.id, props.billing);
 };
 
 defineOptions({
@@ -42,30 +43,26 @@ defineOptions({
 </script>
 
 <template>
-  <div
-    class="plan-card"
-    :class="{
-      'plan-card--featured': featured || plan?.metadata?.featured,
-      'plan-card--free': plan?.priceMonthly === 0,
-      'plan-card--selected': selected,
-    }"
-    :data-testid="`plan-card-${plan.id}`"
-  >
+  <div class="plan-card" :class="{
+    'plan-card--featured': featured || plan?.metadata?.featured,
+    'plan-card--free': plan?.priceMonthly === 0,
+    'plan-card--selected': selected,
+  }" :data-testid="`plan-card-${plan?.id}`">
     <!-- IBadge -->
-    <div v-if="plan.badge" class="plan-card-badge" :class="`plan-card-badge--${plan.badge.color}`">
-      {{ t(plan.badge.textKey) }}
+    <div v-if="plan?.badge" class="plan-card-badge" :class="`plan-card-badge--${plan?.badge.color}`">
+      {{ plan?.badge?.textKey ? t(plan.badge.textKey) : '' }}
     </div>
 
     <!-- Header -->
     <div class="plan-card-header">
       <div class="plan-card-icon" :aria-hidden="true">
-        {{ plan.visual.icon }}
+        {{ plan?.visual.icon }}
       </div>
       <h3 class="plan-card-title">
-        {{ t(plan.labelKey) }}
+        {{ plan?.labelKey ? t(plan.labelKey) : '' }}
       </h3>
       <p class="plan-card-description">
-        {{ t(plan.descriptionKey) }}
+        {{ plan?.descriptionKey ? t(plan.descriptionKey) : '' }}
       </p>
     </div>
 
@@ -85,34 +82,22 @@ defineOptions({
 
     <!-- Features -->
     <ul class="plan-card-features" role="list">
-      <li
-        v-for="(benefitKey, idx) in plan.features.benefits"
-        :key="idx"
-        class="plan-card-feature"
-      >
+      <li v-for="(benefitKey, idx) in plan?.features.benefits" :key="idx" class="plan-card-feature">
         <svg class="plan-card-check-icon" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-          <path
-            fill-rule="evenodd"
+          <path fill-rule="evenodd"
             d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-            clip-rule="evenodd"
-          />
+            clip-rule="evenodd" />
         </svg>
         <span>{{ t(benefitKey) }}</span>
       </li>
     </ul>
 
     <!-- CTA -->
-    <button
-      type="button"
-      class="plan-card-cta"
-      :class="{
-        'plan-card-cta--primary': featured || plan?.metadata?.featured,
-        'plan-card-cta--secondary': !featured && !plan?.metadata?.featured,
-      }"
-      @click="handleSelect"
-      :data-testid="`plan-cta-${plan.id}`"
-    >
-      {{ t(plan.cta.labelKey) }}
+    <button type="button" class="plan-card-cta" :class="{
+      'plan-card-cta--primary': featured || plan?.metadata?.featured,
+      'plan-card-cta--secondary': !featured && !plan?.metadata?.featured,
+    }" @click="handleSelect" :data-testid="`plan-cta-${plan?.id}`">
+      {{ plan?.cta?.labelKey ? t(plan.cta.labelKey) : '' }}
     </button>
   </div>
 </template>

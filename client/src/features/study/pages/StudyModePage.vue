@@ -7,7 +7,9 @@
           <!-- Animated loader -->
           <div class="relative mb-6">
             <div class="h-16 w-16 rounded-full border-4 border-primary-200 dark:border-primary-900"></div>
-            <div class="absolute left-0 top-0 h-16 w-16 animate-spin rounded-full border-4 border-transparent border-t-primary-600 dark:border-t-primary-400"></div>
+            <div
+              class="absolute left-0 top-0 h-16 w-16 animate-spin rounded-full border-4 border-transparent border-t-primary-600 dark:border-t-primary-400">
+            </div>
           </div>
           <!-- Loading text with pulse animation -->
           <p class="animate-pulse text-lg font-medium text-gray-700 dark:text-gray-300">{{ t('study.loading') }}</p>
@@ -16,26 +18,27 @@
       </div>
 
       <!-- Error State -->
-      <div v-else-if="error" class="rounded-xl border border-red-200 bg-red-50 p-8 shadow-lg dark:border-red-800 dark:bg-red-900/20">
+      <div v-else-if="error"
+        class="rounded-xl border border-red-200 bg-red-50 p-8 shadow-lg dark:border-red-800 dark:bg-red-900/20">
         <div class="flex flex-col items-center text-center">
           <!-- Error icon -->
           <div class="mb-4 rounded-full bg-red-100 p-3 dark:bg-red-900/50">
             <svg class="h-12 w-12 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
           </div>
           <h3 class="mb-2 text-xl font-bold text-red-900 dark:text-red-200">
             {{ t('study.error.title') }}
           </h3>
           <p class="mb-6 max-w-md text-red-700 dark:text-red-300">{{ error }}</p>
-          <button
-            type="button"
+          <button type="button"
             class="rounded-lg bg-red-600 px-6 py-3 font-medium text-white shadow-sm transition-all duration-200 hover:bg-red-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-            @click="() => loadQuestions(false)"
-          >
+            @click="() => loadQuestions(false)">
             <span class="flex items-center gap-2">
               <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
               </svg>
               {{ t('study.error.retry') }}
             </span>
@@ -45,87 +48,46 @@
 
       <!-- Empty State - No Questions Available -->
       <div v-else-if="!isLoading && !error && allQuestions.length === 0">
-        <EmptyState
-          variant="default"
-          icon="📚"
-          :title="t('study.empty.title', 'No Questions Available')"
+        <EmptyState variant="default" icon="📚" :title="t('study.empty.title', 'No Questions Available')"
           :description="t('study.empty.description', 'There are no questions available for this difficulty and framework combination. Try selecting a different framework or difficulty level.')"
           :primary-action="t('study.empty.changeFramework', 'Change Framework')"
-          :secondary-action="t('study.empty.goBack', 'Go Back')"
-          @primary-action="changeFramework"
-          @secondary-action="goBack"
-        />
+          :secondary-action="t('study.empty.goBack', 'Go Back')" @primary-action="changeFramework"
+          @secondary-action="goBack" />
       </div>
 
       <!-- Empty State - No Results After Filtering -->
       <div v-else-if="!isLoading && !error && allQuestions.length > 0 && filteredQuestions.length === 0">
-        <EmptyState
-          variant="compact"
-          icon="🔍"
+        <EmptyState variant="compact" icon="🔍"
           :title="t('study.emptyFiltered.title', 'No Questions Match Your Filters')"
           :description="t('study.emptyFiltered.description', 'Try adjusting your search query or filter settings to see more questions.')"
-          :primary-action="t('study.emptyFiltered.clearFilters', 'Clear Filters')"
-          @primary-action="clearFilters"
-        />
+          :primary-action="t('study.emptyFiltered.clearFilters', 'Clear Filters')" @primary-action="clearFilters" />
       </div>
 
       <!-- Study Content -->
       <div v-else-if="currentQuestion">
-        <StudyHeader
-          :difficulty="difficulty"
-          :current-index="currentIndex"
-          :loaded-count="loadedCount"
-          :total-available="totalAvailable"
-          @back="goBack"
-        />
+        <StudyHeader :difficulty="difficulty" :current-index="currentIndex" :total-questions="questions.length"
+          @back="goBack" />
 
-        <StudyFilters
-          v-model:search-query="searchQuery"
-          v-model:question-type-filter="questionTypeFilter"
-          v-model:answered-filter="answeredFilter"
-          :practice-mode="practiceMode"
-          :bookmark-count="bookmarkedQuestions.size"
-          :filtered-count="filteredQuestions.length"
-          :total-count="allQuestions.length"
-          :progress="progress"
-          @mode-change="setPracticeMode"
-          @clear="clearFilters"
-        />
+        <StudyFilters v-model:search-query="searchQuery" v-model:question-type-filter="questionTypeFilter"
+          v-model:answered-filter="answeredFilter" :practice-mode="practiceMode" :bookmark-count="bookmarkCount"
+          :filtered-count="filteredQuestions.length" :total-count="getDisplayTotal()" :progress="progress"
+          @mode-change="setPracticeMode" @clear="clearFilters" />
 
-        <StudyQuestion
-          :question="currentQuestion"
-          :locale="locale"
-          v-model:selected-answer="selectedStudyAnswer"
-          v-model:text-answer="studyTextAnswer"
-          v-model:multiple-answers="studyMultipleAnswers"
-          :show-answer="showAnswer"
-          :is-bookmarked="isBookmarked"
-          :can-go-previous="currentIndex > 0"
-          :is-loading-more="isLoadingMore"
-          :is-last-question="currentIndex >= loadedCount - 1"
-          :has-more="hasMore"
-          @reveal="revealAnswer"
-          @previous="previousQuestion"
-          @next="nextQuestion"
-          @toggle-bookmark="toggleBookmark"
-        />
+        <StudyQuestion :question="currentQuestion" :current-index="currentIndex" :total-questions="questions.length"
+          :show-answer="showAnswer" :locale="locale" :selected-answer="selectedStudyAnswer"
+          :text-answer="studyTextAnswer" :multiple-answers="studyMultipleAnswers" :is-bookmarked="isBookmarked"
+          :can-go-previous="currentIndex > 0" :is-loading-more="isLoadingMore"
+          :is-last-question="currentIndex >= questions.length - 1" :has-more="hasMore" @reveal="revealAnswer"
+          @previous="previousQuestion" @next="nextQuestion" @toggle-bookmark="toggleBookmark"
+          @update:selected-answer="onAnswerSelected" @update:text-answer="onTextAnswerChanged"
+          @update:multiple-answers="onMultipleAnswersChanged" />
 
-        <StudyNavigation
-          :current-index="currentIndex"
-          :loaded-count="loadedCount"
-          :total-available="totalAvailable"
-          :has-more="hasMore"
-          :is-loading-more="isLoadingMore"
-          :session-time="sessionElapsedTime"
-          :is-paused="isTimerPaused"
-          @jump="jumpToQuestion"
-          @load-more="loadMore"
-          @previous="previousQuestion"
-          @next="nextQuestion"
-          @pause="pauseSessionTimer"
-          @resume="resumeSessionTimer"
-          @reset="resetSessionTimer"
-        />
+        <StudyNavigation :current-index="currentIndex" :total-questions="questions.length"
+          :answered-questions="answeredQuestions" :marked-questions="new Set(bookmarkedQuestions)"
+          :loaded-count="allQuestions.length" :total-available="getDisplayTotal()" :session-time="sessionElapsedTime"
+          :is-paused="isTimerPaused" :has-more="hasMore" :is-loading-more="isLoadingMore" @jump="jumpToQuestion"
+          @load-more="loadMore" @previous="previousQuestion" @next="nextQuestion" @pause="pauseSessionTimer"
+          @resume="resumeSessionTimer" @reset="resetSessionTimer" />
       </div>
     </div>
   </div>
@@ -137,6 +99,7 @@ import { useI18n } from "vue-i18n";
 import { useRouter, useRoute } from "vue-router";
 import type { Question } from "@shared/types/quiz";
 import { useAnalytics } from "@/composables/useAnalytics";
+import { useBookmarks } from "@/composables/useBookmarks";
 import EmptyState from "@/components/EmptyState.vue";
 import StudyHeader from "../components/StudyHeader.vue";
 import StudyFilters from "../components/StudyFilters.vue";
@@ -147,17 +110,27 @@ const { t, locale } = useI18n();
 const router = useRouter();
 const route = useRoute();
 const { track } = useAnalytics();
+const {
+  bookmarkedQuestions,
+  bookmarkCount,
+  hasBookmarks,
+  isQuestionBookmarked,
+  toggleBookmark: toggleBookmarkAPI,
+  loadBookmarkedQuestions: loadBookmarksFromAPI,
+  loadBookmarkStatuses
+} = useBookmarks();
 
 const difficulty = computed(() => route.params.difficulty as "easy" | "medium" | "hard");
 const framework = computed(() => route.params.framework as string);
 
 const allQuestions = ref<Question[]>([]);
+const originalQuestions = ref<Question[]>([]); // Store original questions for filtering
+const originalTotalAvailable = ref(0); // Store original total from API for sequential mode
 const currentIndex = ref(0);
 const showAnswer = ref(false);
 const selectedStudyAnswer = ref<string | null>(null);
 const studyTextAnswer = ref("");
 const studyMultipleAnswers = ref<string[]>([]);
-const bookmarkedQuestions = ref<Set<string>>(new Set());
 const answeredQuestions = ref<Set<string>>(new Set());
 const isLoading = ref(true);
 const isLoadingMore = ref(false);
@@ -176,6 +149,8 @@ const answeredFilter = ref<'all' | 'answered' | 'unanswered'>('all');
 const sessionStartTime = ref(Date.now());
 const sessionElapsedTime = ref(0);
 const isTimerPaused = ref(false);
+const isExplicitlyLeaving = ref(false);
+const lastActiveTime = ref(Date.now()); // Track when user was last active in this framework
 let sessionTimerInterval: ReturnType<typeof setInterval> | null = null;
 
 // Practice modes
@@ -221,7 +196,7 @@ const currentQuestion = computed(() => questions.value[currentIndex.value]);
 const loadedCount = computed(() => questions.value.length);
 const progress = computed(() => ((currentIndex.value + 1) / loadedCount.value) * 100);
 const isBookmarked = computed(() =>
-  currentQuestion.value ? bookmarkedQuestions.value.has(currentQuestion.value._id) : false
+  currentQuestion.value ? isQuestionBookmarked(currentQuestion.value._id) : false
 );
 
 const clearFilters = () => {
@@ -230,41 +205,114 @@ const clearFilters = () => {
   answeredFilter.value = 'all';
 };
 
-const setPracticeMode = (mode: PracticeMode) => {
-  if (mode === 'bookmarked' && bookmarkedQuestions.value.size === 0) {
-    return;
+const getDisplayTotal = () => {
+  // For bookmarked mode, show bookmark count
+  if (practiceMode.value === 'bookmarked') {
+    return bookmarkCount.value;
+  }
+  // For other modes, show total available
+  return totalAvailable.value;
+};
+
+const getLevelFromDifficulty = (diff: string): string => {
+  const levelMap: Record<string, string> = {
+    easy: 'junior',
+    medium: 'intermediate',
+    hard: 'senior'
+  };
+  return levelMap[diff] || 'junior';
+};
+
+const setPracticeMode = async (mode: PracticeMode) => {
+  // Always allow switching to bookmarked mode, even if no bookmarks yet
+  // (user might have bookmarked questions in other modes)
+  if (mode === 'bookmarked' && !hasBookmarks.value) {
+    // Try to load bookmarks from API first
+    try {
+      await loadBookmarksFromAPI({
+        difficulty: difficulty.value,
+        framework: framework.value
+      });
+      if (!hasBookmarks.value) {
+        return; // No bookmarks at all
+      }
+    } catch (err) {
+      console.error('Failed to load bookmarks:', err);
+      return;
+    }
   }
 
   track('practice_mode_changed', {
     difficulty: difficulty.value,
     fromMode: practiceMode.value,
     toMode: mode,
-    bookmarkCount: bookmarkedQuestions.value.size,
+    bookmarkCount: bookmarkCount.value,
   });
 
   practiceMode.value = mode;
   currentIndex.value = 0;
 
   if (mode === 'bookmarked') {
-    filterBookmarkedQuestions();
+    // Load bookmarked questions from API
+    await loadBookmarkedQuestions();
   } else if (mode === 'random') {
     shuffleQuestions();
   } else {
-    loadQuestions();
+    // Sequential mode - reset to original questions and restore original total
+    allQuestions.value = [...originalQuestions.value];
+    // Restore the original totalAvailable value for sequential mode
+    // This ensures the Quick Navigation shows correct counts when switching back from bookmarked mode
+    totalAvailable.value = originalTotalAvailable.value;
   }
 };
 
-const filterBookmarkedQuestions = () => {
-  const bookmarkedIds = Array.from(bookmarkedQuestions.value);
-  allQuestions.value = allQuestions.value.filter(q => bookmarkedIds.includes(q._id));
-
-  if (allQuestions.value.length === 0) {
+const loadBookmarkedQuestions = async () => {
+  if (bookmarkCount.value === 0) {
     error.value = t('study.error.noBookmarks');
+    return;
+  }
+
+  try {
+    isLoading.value = true;
+    error.value = null;
+    currentOffset.value = 0;
+
+    // Use the new bookmark API
+    const questions = await loadBookmarksFromAPI({
+      difficulty: difficulty.value,
+      framework: framework.value
+    });
+
+    // Only update allQuestions, DO NOT overwrite originalQuestions
+    // originalQuestions should always contain the full dataset
+    allQuestions.value = questions || [];
+    // For bookmarked mode, totalAvailable should be the number of bookmarked questions
+    totalAvailable.value = questions.length;
+    hasMore.value = false; // No pagination for bookmarked questions
+    currentOffset.value = questions.length;
+
+    if (allQuestions.value.length === 0) {
+      error.value = t('study.error.noBookmarks');
+    }
+  } catch (err) {
+    const errorMessage = err instanceof Error ? err.message : t('study.error.generic');
+    error.value = errorMessage;
+
+    track('error', {
+      error_message: errorMessage,
+      context: 'study_load_bookmarked_questions',
+      difficulty: difficulty.value,
+    });
+  } finally {
+    isLoading.value = false;
   }
 };
 
 const shuffleQuestions = () => {
-  const shuffled = [...allQuestions.value];
+  // Use originalQuestions if available, otherwise use allQuestions
+  const questionsToShuffle = originalQuestions.value.length > 0 ? originalQuestions.value : allQuestions.value;
+  const shuffled = [...questionsToShuffle];
+
   for (let i = shuffled.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     const temp = shuffled[i];
@@ -292,6 +340,7 @@ const loadQuestions = async (append = false) => {
     // Build query params
     const params = new URLSearchParams({
       difficulty: difficulty.value,
+      level: getLevelFromDifficulty(difficulty.value), // Add level mapping
       limit: pageSize.toString(),
       offset: currentOffset.value.toString(),
     });
@@ -332,13 +381,26 @@ const loadQuestions = async (append = false) => {
 
     if (append) {
       allQuestions.value = [...allQuestions.value, ...(data.questions || [])];
+      originalQuestions.value = [...originalQuestions.value, ...(data.questions || [])];
     } else {
       allQuestions.value = data.questions || [];
+      originalQuestions.value = data.questions || [];
     }
 
     totalAvailable.value = data.total || 0;
+    // Store the original total for sequential mode restoration
+    if (!append) {
+      originalTotalAvailable.value = data.total || 0;
+    }
     hasMore.value = data.hasMore || false;
-    currentOffset.value += (data.questions || []).length;
+
+    if (append) {
+      // For append, update offset to current total loaded
+      currentOffset.value = allQuestions.value.length;
+    } else {
+      // For initial load, offset should be the number of questions loaded
+      currentOffset.value = (data.questions || []).length;
+    }
 
     if (allQuestions.value.length === 0 && !append) {
       error.value = t('study.error.noQuestions');
@@ -353,9 +415,10 @@ const loadQuestions = async (append = false) => {
     }
 
     if (!append) {
-      const savedBookmarks = localStorage.getItem(`bookmarks_${difficulty.value}`);
-      if (savedBookmarks) {
-        bookmarkedQuestions.value = new Set(JSON.parse(savedBookmarks));
+      // Load bookmark statuses for all questions
+      const questionIds = data.questions?.map((q: Question) => q._id) || [];
+      if (questionIds.length > 0) {
+        await loadBookmarkStatuses(questionIds);
       }
 
       const savedAnswered = localStorage.getItem(`answered_${difficulty.value}`);
@@ -367,7 +430,8 @@ const loadQuestions = async (append = false) => {
     if (!append && practiceMode.value === 'random') {
       shuffleQuestions();
     } else if (!append && practiceMode.value === 'bookmarked') {
-      filterBookmarkedQuestions();
+      // Load bookmarked questions from API instead of filtering locally
+      loadBookmarkedQuestions();
     }
   } catch (err) {
     const errorMessage = err instanceof Error ? err.message : t('study.error.generic');
@@ -390,10 +454,60 @@ const loadMore = () => {
   loadQuestions(true);
 };
 
-const revealAnswer = () => {
-  showAnswer.value = true;
+const revealAnswer = async () => {
+  if (!currentQuestion.value) return;
 
-  if (currentQuestion.value) {
+  const questionId = currentQuestion.value._id;
+
+  try {
+    // Call secure API to get the answer
+    const response = await fetch(`/api/v1/questions/${questionId}/reveal`, {
+      method: 'POST',
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to reveal answer');
+    }
+
+    const data = await response.json();
+
+    // Update the current question with the revealed answer and explanation
+    const updatedQuestions = [...allQuestions.value];
+    const questionIndex = updatedQuestions.findIndex(q => q._id === questionId);
+
+    if (questionIndex !== -1) {
+      const question = updatedQuestions[questionIndex];
+
+      // Add the explanation to the question
+      if (question && question.content) {
+        question.content.en = {
+          ...question.content.en,
+          explanation: data.explanation.en,
+        };
+
+        if (question.content.ar && data.explanation.ar) {
+          question.content.ar = {
+            ...question.content.ar,
+            explanation: data.explanation.ar,
+          };
+        }
+
+        // Mark correct answers in options
+        if (question.content.en.options && data.correctAnswers) {
+          question.content.en.options = question.content.en.options.map((opt: any) => ({
+            ...opt,
+            isCorrect: data.correctAnswers.includes(opt.id),
+          }));
+        }
+
+        allQuestions.value = updatedQuestions;
+      }
+    }
+
+    // Now show the answer
+    showAnswer.value = true;
+
     track('reveal_clicked', {
       difficulty: difficulty.value,
       questionId: currentQuestion.value._id,
@@ -406,15 +520,20 @@ const revealAnswer = () => {
     newAnswered.add(currentQuestion.value._id);
     answeredQuestions.value = newAnswered;
     localStorage.setItem(`answered_${difficulty.value}`, JSON.stringify([...newAnswered]));
+  } catch (err) {
+    console.error('Failed to reveal answer:', err);
+    error.value = t('study.error.revealFailed');
   }
 };
 
 const nextQuestion = () => {
-  if (currentIndex.value < loadedCount.value - 1) {
+  lastActiveTime.value = Date.now(); // Update activity time
+  if (currentIndex.value < questions.value.length - 1) {
     currentIndex.value++;
     resetStudyState();
 
-    if (hasMore.value && currentIndex.value >= loadedCount.value - 3 && !isLoadingMore.value) {
+    // Load more questions when approaching the end of loaded questions
+    if (hasMore.value && currentIndex.value >= allQuestions.value.length - 3 && !isLoadingMore.value) {
       loadMore();
     }
   } else if (hasMore.value) {
@@ -425,6 +544,7 @@ const nextQuestion = () => {
 };
 
 const previousQuestion = () => {
+  lastActiveTime.value = Date.now(); // Update activity time
   if (currentIndex.value > 0) {
     currentIndex.value--;
     resetStudyState();
@@ -432,6 +552,7 @@ const previousQuestion = () => {
 };
 
 const jumpToQuestion = (idx: number) => {
+  lastActiveTime.value = Date.now(); // Update activity time
   currentIndex.value = idx;
   resetStudyState();
 };
@@ -443,32 +564,81 @@ const resetStudyState = () => {
   studyMultipleAnswers.value = [];
 };
 
-const toggleBookmark = () => {
+const toggleBookmark = async () => {
   if (!currentQuestion.value) return;
 
+  lastActiveTime.value = Date.now(); // Update activity time
+
   const id = currentQuestion.value._id;
-  const newBookmarks = new Set(bookmarkedQuestions.value);
 
-  if (newBookmarks.has(id)) {
-    newBookmarks.delete(id);
-  } else {
-    newBookmarks.add(id);
+  try {
+    // Use the new bookmark API
+    await toggleBookmarkAPI(id);
+
+    // If we're in bookmarked mode, refresh the questions list to reflect the changes
+    if (practiceMode.value === 'bookmarked') {
+      // If we removed a bookmark and no bookmarks remain, show error
+      if (bookmarkCount.value === 0) {
+        error.value = t('study.error.noBookmarks');
+        allQuestions.value = [];
+        return;
+      }
+
+      // Store current question ID to maintain position after reload
+      const currentQuestionId = currentQuestion.value._id;
+
+      // Reload bookmarked questions to reflect the changes
+      await loadBookmarkedQuestions();
+
+      // Try to find the same question in the new list and set index
+      const newIndex = allQuestions.value.findIndex(q => q._id === currentQuestionId);
+      if (newIndex !== -1) {
+        currentIndex.value = newIndex;
+      } else {
+        // If current question was removed, go to the first question
+        currentIndex.value = 0;
+      }
+    }
+  } catch (err) {
+    console.error('Failed to toggle bookmark:', err);
+    error.value = t('study.error.generic');
   }
+};
 
-  bookmarkedQuestions.value = newBookmarks;
-  localStorage.setItem(`bookmarks_${difficulty.value}`, JSON.stringify([...newBookmarks]));
+// Answer activity tracking
+const onAnswerSelected = (value: string | null) => {
+  lastActiveTime.value = Date.now(); // Update activity time
+  selectedStudyAnswer.value = value;
+};
+
+const onTextAnswerChanged = (value: string) => {
+  lastActiveTime.value = Date.now(); // Update activity time
+  studyTextAnswer.value = value;
+};
+
+const onMultipleAnswersChanged = (value: string[]) => {
+  lastActiveTime.value = Date.now(); // Update activity time
+  studyMultipleAnswers.value = value;
 };
 
 const goBack = () => {
   const currentLocale = route.params.locale || 'en';
-  saveSessionState();
+  // Mark as explicitly leaving and clear session state
+  isExplicitlyLeaving.value = true;
+  if (framework.value) {
+    localStorage.removeItem(`study_session_${difficulty.value}_${framework.value}`);
+  }
   // Go back to framework selection page: /:locale/study/:difficulty
   router.push(`/${currentLocale}/study/${difficulty.value}`);
 };
 
 const changeFramework = () => {
   const currentLocale = route.params.locale || 'en';
-  saveSessionState();
+  // Mark as explicitly leaving and clear session state
+  isExplicitlyLeaving.value = true;
+  if (framework.value) {
+    localStorage.removeItem(`study_session_${difficulty.value}_${framework.value}`);
+  }
   // Navigate to framework selection page
   router.push(`/${currentLocale}/study/${difficulty.value}`);
 };
@@ -480,6 +650,9 @@ const startSessionTimer = () => {
   sessionTimerInterval = setInterval(() => {
     if (!isTimerPaused.value) {
       sessionElapsedTime.value = Math.floor((Date.now() - sessionStartTime.value) / 1000);
+
+      // Update last active time every second when timer is running
+      lastActiveTime.value = Date.now();
 
       if (sessionElapsedTime.value % 10 === 0) {
         saveSessionState();
@@ -504,30 +677,72 @@ const resetSessionTimer = () => {
   sessionStartTime.value = Date.now();
   sessionElapsedTime.value = 0;
   isTimerPaused.value = false;
+  lastActiveTime.value = Date.now();
   saveSessionState();
 };
 
 const saveSessionState = () => {
+  // Don't save if framework is undefined
+  if (!framework.value) {
+    return;
+  }
+
   const sessionState = {
     startTime: sessionStartTime.value,
     elapsedTime: sessionElapsedTime.value,
     isPaused: isTimerPaused.value,
     difficulty: difficulty.value,
+    framework: framework.value,
+    lastActiveTime: lastActiveTime.value,
   };
-  localStorage.setItem(`study_session_${difficulty.value}`, JSON.stringify(sessionState));
+  localStorage.setItem(`study_session_${difficulty.value}_${framework.value}`, JSON.stringify(sessionState));
 };
 
 const loadSessionState = () => {
-  const saved = localStorage.getItem(`study_session_${difficulty.value}`);
+  // Don't load if framework is undefined
+  if (!framework.value) {
+    resetSessionTimer();
+    return;
+  }
+
+  const saved = localStorage.getItem(`study_session_${difficulty.value}_${framework.value}`);
   if (saved) {
     try {
       const state = JSON.parse(saved);
-      sessionStartTime.value = state.startTime;
-      sessionElapsedTime.value = state.elapsedTime;
-      isTimerPaused.value = state.isPaused;
+
+      // Validate state matches current context
+      const isMatchingContext = state.difficulty === difficulty.value && state.framework === framework.value;
+
+      if (isMatchingContext) {
+        // Calculate time away from this framework
+        const timeAway = Date.now() - (state.lastActiveTime || state.startTime);
+        const fiveMinutes = 5 * 60 * 1000;
+
+        if (timeAway < fiveMinutes) {
+          // User was away for less than 5 minutes - restore session
+          sessionStartTime.value = state.startTime;
+          sessionElapsedTime.value = state.elapsedTime;
+          isTimerPaused.value = state.isPaused ?? false;
+          lastActiveTime.value = Date.now(); // Update last active time
+
+          // Save the updated state
+          saveSessionState();
+        } else {
+          // User was away for more than 5 minutes - start fresh
+          localStorage.removeItem(`study_session_${difficulty.value}_${framework.value}`);
+          resetSessionTimer();
+        }
+      } else {
+        // Mismatched context - start fresh
+        resetSessionTimer();
+      }
     } catch (e) {
       console.error('Failed to load session state:', e);
+      resetSessionTimer();
     }
+  } else {
+    // No saved session - start fresh
+    resetSessionTimer();
   }
 };
 
@@ -640,7 +855,26 @@ const handleKeyboard = (event: KeyboardEvent) => {
   }
 };
 
+// Clean up localStorage keys with undefined values
+const cleanupInvalidKeys = () => {
+  const keysToRemove: string[] = [];
+
+  // Check all localStorage keys for undefined values
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key && (key.includes('undefined') || key.includes('_undefined'))) {
+      keysToRemove.push(key);
+    }
+  }
+
+  // Remove invalid keys
+  keysToRemove.forEach(key => localStorage.removeItem(key));
+};
+
 onMounted(() => {
+  // Clean up any existing invalid keys
+  cleanupInvalidKeys();
+
   loadQuestions();
   loadSessionState();
   startSessionTimer();
@@ -655,7 +889,10 @@ onUnmounted(() => {
     clearInterval(sessionTimerInterval);
     sessionTimerInterval = null;
   }
-  saveSessionState();
+  // Only save session state if user is not explicitly leaving
+  if (!isExplicitlyLeaving.value) {
+    saveSessionState();
+  }
   window.removeEventListener('keydown', handleKeyboard);
   window.removeEventListener('touchstart', handleTouchStart);
   window.removeEventListener('touchend', handleTouchEnd);

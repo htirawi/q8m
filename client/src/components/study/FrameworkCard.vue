@@ -1,31 +1,23 @@
 <template>
-  <button
-    type="button"
+  <button type="button"
     class="group relative flex h-full min-h-[320px] flex-col overflow-hidden rounded-2xl border-2 bg-white p-6 text-center shadow-lg transition-all duration-500 focus:outline-none focus-visible:ring-4 focus-visible:ring-offset-2 dark:bg-gray-800 sm:min-h-[340px]"
     :class="[
-      getBorderClass(color),
-      getFocusRingClass(color),
-      isLocked ? 'cursor-not-allowed opacity-75' : 'hover:-translate-y-3 hover:scale-105 hover:shadow-2xl active:scale-100 cursor-pointer'
+      getBorderClass(props.color),
+      getFocusRingClass(props.color),
+      props.isLocked ? 'cursor-not-allowed opacity-75' : 'hover:-translate-y-3 hover:scale-105 hover:shadow-2xl active:scale-100 cursor-pointer'
     ]"
-    :aria-label="isLocked ? `${title} - Locked. Upgrade to ${requiredPlan} plan to access` : `Study ${title} ${getDifficultyLabel()} questions. Press Enter to select`"
-    :tabindex="isLocked ? -1 : 0"
-    :disabled="isLocked"
-    @click="!isLocked && $emit('select', framework)"
-    @keydown.enter="!isLocked && $emit('select', framework)"
-    @keydown.space.prevent="!isLocked && $emit('select', framework)"
-  >
+    :aria-label="props.isLocked ? `${props.title} - Locked. Upgrade to ${props.requiredPlan} plan to access` : `Study ${props.title} ${getDifficultyLabel()} questions. Press Enter to select`"
+    :tabindex="props.isLocked ? -1 : 0" :disabled="props.isLocked"
+    @click="!props.isLocked && $emit('select', props.framework)"
+    @keydown.enter="!props.isLocked && $emit('select', props.framework)"
+    @keydown.space.prevent="!props.isLocked && $emit('select', props.framework)">
     <!-- Animated Background Gradient -->
-    <div
-      class="absolute inset-0 -z-10 opacity-0 transition-opacity duration-500 group-hover:opacity-10"
-      :class="getGradientClass(color)"
-    ></div>
+    <div class="absolute inset-0 -z-10 opacity-0 transition-opacity duration-500 group-hover:opacity-10"
+      :class="getGradientClass(props.color)"></div>
 
     <!-- Decorative Corner Accent -->
     <div class="absolute right-0 top-0 h-24 w-24 opacity-5 transition-opacity duration-500 group-hover:opacity-10">
-      <div
-        class="h-full w-full rounded-bl-full"
-        :class="getGradientClass(color)"
-      ></div>
+      <div class="h-full w-full rounded-bl-full" :class="getGradientClass(props.color)"></div>
     </div>
 
     <!-- Top Section: Icon & IBadge -->
@@ -33,32 +25,28 @@
       <!-- Pulsing Background Effect -->
       <div
         class="absolute left-1/2 top-1/2 h-20 w-20 -translate-x-1/2 -translate-y-1/2 animate-pulse rounded-full opacity-20 blur-xl transition-all duration-500 group-hover:h-24 group-hover:w-24"
-        :class="getGradientClass(color)"
-      ></div>
+        :class="getGradientClass(props.color)"></div>
 
       <!-- Icon Container -->
       <div class="relative flex justify-center">
         <div
           class="flex h-20 w-20 items-center justify-center rounded-2xl shadow-xl transition-all duration-500 group-hover:rotate-6 group-hover:scale-110 group-hover:shadow-2xl"
-          :class="getIconBgClass(color)"
-        >
-          <span class="text-4xl" role="img" :aria-label="`${title} icon`">{{ icon }}</span>
+          :class="getIconBgClass(props.color)">
+          <span class="text-4xl" role="img" :aria-label="`${props.title} icon`">{{ props.icon }}</span>
         </div>
       </div>
     </div>
 
     <!-- Framework Name -->
-    <h3
-      class="mb-3 text-xl font-bold transition-colors duration-300"
-      :class="getTitleClass(color)"
-    >
-      {{ title }}
+    <h3 class="mb-3 text-xl font-bold transition-colors duration-300" :class="getTitleClass(props.color)">
+      {{ props.title }}
     </h3>
 
     <!-- Question Count -->
     <div class="mb-4 flex-1">
-      <div class="mb-1 text-3xl font-extrabold text-gray-900 transition-all duration-300 group-hover:scale-110 dark:text-white">
-        {{ count }}
+      <div
+        class="mb-1 text-3xl font-extrabold text-gray-900 transition-all duration-300 group-hover:scale-110 dark:text-white">
+        {{ props.questionCount }}
       </div>
       <div class="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
         {{ getDifficultyLabel() }} Questions
@@ -66,30 +54,29 @@
     </div>
 
     <!-- Progress Bar (if user has started) -->
-    <div v-if="progressPercent > 0" class="mb-4">
+    <div v-if="(props.progressPercent ?? 0) > 0" class="mb-4">
       <div class="mb-1 flex items-center justify-between text-xs font-medium">
         <span class="text-gray-600 dark:text-gray-400">Progress</span>
-        <span :class="getProgressTextClass(color)">{{ progressPercent }}%</span>
+        <span :class="getProgressTextClass(props.color)">{{ props.progressPercent }}%</span>
       </div>
       <div class="h-2 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
-        <div
-          class="h-full transition-all duration-500"
-          :class="getProgressBarClass(color)"
-          :style="{ width: `${progressPercent}%` }"
-        ></div>
+        <div class="h-full transition-all duration-500" :class="getProgressBarClass(props.color)"
+          :style="{ width: `${props.progressPercent}%` }"></div>
       </div>
     </div>
 
     <!-- Lock Overlay (if locked) -->
-    <div v-if="isLocked" class="absolute inset-0 z-10 flex flex-col items-center justify-center bg-gray-900/80 backdrop-blur-sm">
+    <div v-if="props.isLocked"
+      class="absolute inset-0 z-10 flex flex-col items-center justify-center bg-gray-900/80 backdrop-blur-sm">
       <div class="mb-4 rounded-full bg-gray-800 p-4">
         <svg class="h-10 w-10 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
         </svg>
       </div>
       <div class="mb-2 text-sm font-bold text-white">Upgrade Required</div>
       <div class="mb-4 px-4 text-xs text-gray-300">
-        {{ requiredPlan }} Plan or higher
+        {{ props.requiredPlan }} Plan or higher
       </div>
       <div class="rounded-lg bg-gradient-to-r from-yellow-500 to-orange-600 px-4 py-2 text-xs font-semibold text-white">
         Upgrade Now
@@ -100,31 +87,26 @@
     <div v-else class="relative mt-auto">
       <div
         class="flex items-center justify-center gap-2 rounded-xl px-6 py-3 text-sm font-bold text-white shadow-lg transition-all duration-300 group-hover:scale-105 group-hover:shadow-xl"
-        :class="getButtonClass(color)"
-      >
+        :class="getButtonClass(props.color)">
         <span>Start Learning</span>
-        <svg
-          class="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2.5"
-            d="M13 7l5 5m0 0l-5 5m5-5H6"
-          />
+        <svg class="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" fill="none"
+          stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6" />
         </svg>
       </div>
     </div>
 
     <!-- Shine Effect on Hover -->
-    <div class="absolute inset-0 -z-10 translate-x-[-100%] bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-1000 group-hover:translate-x-[100%]"></div>
+    <div
+      class="absolute inset-0 -z-10 translate-x-[-100%] bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-1000 group-hover:translate-x-[100%]">
+    </div>
 
     <!-- Keyboard Shortcut Hint (shown on focus) -->
-    <div class="absolute -top-2 left-1/2 -translate-x-1/2 opacity-0 transition-opacity duration-300 group-focus-visible:opacity-100" role="tooltip">
-      <div class="rounded-lg bg-gray-900 px-2 py-1 text-xs font-medium text-white shadow-lg dark:bg-white dark:text-gray-900">
+    <div
+      class="absolute -top-2 left-1/2 -translate-x-1/2 opacity-0 transition-opacity duration-300 group-focus-visible:opacity-100"
+      role="tooltip">
+      <div
+        class="rounded-lg bg-gray-900 px-2 py-1 text-xs font-medium text-white shadow-lg dark:bg-white dark:text-gray-900">
         Press Enter or Space
       </div>
     </div>
@@ -133,7 +115,7 @@
 
 <script setup lang="ts">
 import type { IFrameworkCardProps as Props } from "@/types/components/study";
-import {} from 'vue';
+import { } from 'vue';
 import type { DifficultyLevel } from '@/types/plan/access';
 
 

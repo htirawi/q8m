@@ -17,13 +17,13 @@ export interface ILockedBadgeProps {
 }
 
 export interface ISoftPaywallModalProps {
-  open: boolean;
-  feature?: string;
-  requiredPlan?: PlanTier;
+  isVisible: boolean;
+  targetRoute?: string;
+  suggestedPlan?: PlanTier;
 }
 
 export interface ISoftPaywallModalEmits {
+  (e: "dismiss"): void;
   (e: "close"): void;
   (e: "upgrade"): void;
 }
-
