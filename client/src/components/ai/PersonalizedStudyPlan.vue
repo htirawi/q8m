@@ -653,7 +653,7 @@ onMounted(() => {
 }
 
 .adaptive-alert__icon svg {
-  @apply w-6 h-6 text-primary-DEFAULT;
+  @apply w-6 h-6 text-primary;
 }
 
 .adaptive-alert__content {
@@ -671,7 +671,7 @@ onMounted(() => {
 .adaptive-alert__settings {
   @apply px-3 py-1.5 rounded-lg;
   @apply bg-white dark:bg-gray-800;
-  @apply text-sm font-medium text-primary-DEFAULT;
+  @apply text-sm font-medium text-primary;
   @apply hover:bg-gray-50 dark:hover:bg-gray-700;
   @apply transition-colors duration-fast;
 }
@@ -762,7 +762,7 @@ onMounted(() => {
 }
 
 .timeline-module--current .timeline-module__dot {
-  @apply bg-primary-DEFAULT border-primary-DEFAULT;
+  @apply bg-primary border-primary;
   @apply animate-pulse;
 }
 
@@ -813,8 +813,8 @@ onMounted(() => {
 }
 
 .timeline-module__progress-fill {
-  @apply h-full bg-gradient-to-r from-primary-DEFAULT to-secondary-DEFAULT;
-  @apply transition-width duration-moderate;
+  @apply h-full bg-gradient-to-r from-primary to-secondary;
+  @apply transition-[width] duration-moderate;
 }
 
 .timeline-module__progress-text {
@@ -890,7 +890,7 @@ onMounted(() => {
 
 .topic-item__start {
   @apply px-2 py-1 rounded text-xs font-medium;
-  @apply bg-primary-DEFAULT text-white;
+  @apply bg-primary text-white;
   @apply hover:bg-primary-700;
   @apply transition-colors duration-fast;
 }
@@ -977,7 +977,7 @@ onMounted(() => {
 }
 
 .milestone-card__reward-value {
-  @apply font-medium text-primary-DEFAULT;
+  @apply font-medium text-primary;
 }
 
 /* Footer */
@@ -1006,7 +1006,7 @@ onMounted(() => {
 }
 
 .footer-btn--primary {
-  @apply bg-primary-DEFAULT text-white;
+  @apply bg-primary text-white;
   @apply hover:bg-primary-700;
 }
 

@@ -711,7 +711,7 @@ onMounted(() => {
 }
 
 .smart-explanation__learn-more {
-  @apply text-sm font-medium text-primary-DEFAULT;
+  @apply text-sm font-medium text-primary;
   @apply hover:text-primary-700;
   @apply transition-colors duration-fast;
 }
@@ -728,7 +728,7 @@ onMounted(() => {
 }
 
 .smart-explanation__loading-spinner {
-  @apply w-8 h-8 border-2 border-primary-DEFAULT border-t-transparent;
+  @apply w-8 h-8 border-2 border-primary border-t-transparent;
   @apply rounded-full animate-spin mb-3;
 }
 
@@ -747,7 +747,7 @@ onMounted(() => {
 }
 
 .explanation-section__title svg {
-  @apply w-5 h-5 text-primary-DEFAULT;
+  @apply w-5 h-5 text-primary;
 }
 
 .explanation-section__content {
@@ -1026,7 +1026,7 @@ onMounted(() => {
 }
 
 .action-btn--primary {
-  @apply bg-primary-DEFAULT text-white border-primary-DEFAULT;
+  @apply bg-primary text-white border-primary;
   @apply hover:bg-primary-700;
 }
 

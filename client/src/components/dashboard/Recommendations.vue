@@ -266,7 +266,7 @@ const handleRefresh = async () => {
 }
 
 .recommendation-card__badge--featured {
-  @apply bg-primary-DEFAULT text-white;
+  @apply bg-primary text-white;
 }
 
 /* Visual */
@@ -343,8 +343,8 @@ const handleRefresh = async () => {
 }
 
 .recommendation-card__progress-fill {
-  @apply h-full bg-gradient-to-r from-primary-DEFAULT to-secondary-DEFAULT;
-  @apply transition-width duration-moderate;
+  @apply h-full bg-gradient-to-r from-primary to-secondary;
+  @apply transition-[width] duration-moderate;
 }
 
 .recommendation-card__progress-text {
@@ -391,7 +391,7 @@ const handleRefresh = async () => {
 
 .recommendations__empty-button {
   @apply px-4 py-2 rounded-lg;
-  @apply bg-primary-DEFAULT text-white;
+  @apply bg-primary text-white;
   @apply hover:bg-primary-700;
   @apply transition-colors duration-fast;
 }

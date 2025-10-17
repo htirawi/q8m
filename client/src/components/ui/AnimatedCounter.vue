@@ -72,6 +72,6 @@ onMounted(() => {
 }
 
 .animated-counter--animating {
-  @apply text-primary-DEFAULT;
+  @apply text-primary;
 }
 </style>
