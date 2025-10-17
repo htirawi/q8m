@@ -55,8 +55,9 @@
       </div>
     </div>
 
-    <!-- Answer Section -->
-    <div v-if="showAnswer" ref="answerSection" class="mb-6 rounded-lg bg-green-50 p-6 dark:bg-green-900/20">
+    <!-- Answer Section (Only for Quiz Mode questions) -->
+    <div v-if="showAnswer && question.type !== 'open-ended'" ref="answerSection"
+      class="mb-6 rounded-lg bg-green-50 p-6 dark:bg-green-900/20">
       <h3 class="mb-4 flex items-center gap-2 font-semibold text-green-900 dark:text-green-200">
         <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd"
@@ -68,10 +69,20 @@
       <MarkdownRenderer :content="explanation" />
     </div>
 
-    <!-- Interactive Answer Options (Study Mode) -->
-    <div v-if="!showAnswer && hasInteractiveOptions" class="mb-6">
+    <!-- Study Mode: Show explanation directly (no answer options) -->
+    <div v-if="showAnswer && question.type === 'open-ended'" class="mb-6">
       <h3 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
-        {{ question.type === 'fill-blank' ? t('study.typeAnswer') : t('study.selectAnswer') }}
+        {{ t('study.explanation') }}
+      </h3>
+      <div class="prose prose-sm dark:prose-invert max-w-none">
+        <MarkdownRenderer :content="explanation" />
+      </div>
+    </div>
+
+    <!-- Quiz Mode: Interactive Answer Options (Only show AFTER reveal) -->
+    <div v-else-if="showAnswer && hasInteractiveOptions && question.type !== 'open-ended'" class="mb-6">
+      <h3 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
+        {{ question.type === 'fill-blank' ? t('study.correctAnswer') : t('study.correctAnswer') }}
       </h3>
 
       <!-- Multiple Choice / True-False Options -->

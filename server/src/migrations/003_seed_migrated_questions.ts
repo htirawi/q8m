@@ -137,7 +137,8 @@ function transformStudyItemToQuestion(item: MigratedStudyItem): any {
   return {
     framework: item.framework,
     level: item.level,
-    type: "multiple-choice", // Study items are treated as explanatory content
+    type: "open-ended", // Study items are explanatory content, not multiple choice
+    mode: "study", // Explicitly mark as Study Mode
     category: item.category || "General",
     difficulty: item.difficulty,
     tags: item.tags.length > 0 ? item.tags : ["general"],
@@ -146,10 +147,12 @@ function transformStudyItemToQuestion(item: MigratedStudyItem): any {
       en: {
         question: item.title.en,
         explanation: item.bodyMdx.en || "No explanation provided.",
+        options: [], // Study Mode questions don't have answer options
       },
       ar: {
         question: item.title.ar || item.title.en, // Fallback to EN if AR missing
         explanation: item.bodyMdx.ar || item.bodyMdx.en || "No explanation provided.", // Fallback to EN
+        options: [], // Study Mode questions don't have answer options
       },
     },
     isActive: item.isActive,
@@ -164,6 +167,7 @@ function transformInteractiveQuestion(item: MigratedQuestion): any {
     framework: item.framework,
     level: item.level,
     type: mapQuestionType(item.type),
+    mode: "quiz", // Interactive quiz questions are for Quiz Mode
     category: item.category || "General",
     difficulty: item.difficulty,
     tags: item.tags.length > 0 ? item.tags : ["general"],

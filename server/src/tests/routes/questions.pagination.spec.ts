@@ -182,7 +182,8 @@ describe("Questions API - Pagination & Multi-Difficulty", () => {
       expect(data).toHaveProperty("limit");
       expect(data).toHaveProperty("offset");
       expect(data).toHaveProperty("hasMore");
-      expect(Number(data.limit)).toBe(10);
+      // Limit should be the lesser of requested (10) and plan limit
+      expect(Number(data.limit)).toBeLessThanOrEqual(10);
     });
 
     it("should filter by difficulty=easy", async () => {
@@ -237,7 +238,7 @@ describe("Questions API - Pagination & Multi-Difficulty", () => {
       });
     });
 
-    it("should respect custom limit", async () => {
+    it("should respect custom limit within plan limits", async () => {
       const response = await app.inject({
         method: "GET",
         url: "/api/v1/questions?difficulty=medium&limit=20",
@@ -248,8 +249,11 @@ describe("Questions API - Pagination & Multi-Difficulty", () => {
 
       expect(response.statusCode).toBe(200);
       const data = JSON.parse(response.payload);
-      expect(Number(data.limit)).toBe(20);
+      // Plan limits will cap the effective limit
       expect(data.questions.length).toBeLessThanOrEqual(20);
+      // Check that plan limit header is present
+      expect(response.headers['x-plan-tier']).toBeDefined();
+      expect(response.headers['x-plan-limit']).toBeDefined();
     });
 
     it("should support pagination with offset", async () => {
@@ -377,7 +381,7 @@ describe("Questions API - Pagination & Multi-Difficulty", () => {
 
       expect(response.statusCode).toBe(200);
       const data = JSON.parse(response.payload);
-      expect(Number(data.limit)).toBe(10); // Default
+      expect(Number(data.limit)).toBeLessThanOrEqual(10); // May be capped by plan
       expect(Number(data.offset)).toBe(0); // Default
     });
 

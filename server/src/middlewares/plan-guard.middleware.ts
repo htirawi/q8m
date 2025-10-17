@@ -3,6 +3,7 @@
  * Enforces plan-based access control for study and quiz features
  */
 
+import { monitoringService } from "@services/monitoring.service.js";
 import {
   canAccessStudyDifficulty,
   canAccessQuizLevel,
@@ -10,6 +11,7 @@ import {
   getRequiredPlanForLevel,
   getSuggestedUpgradePlan,
 } from "@shared/config/features";
+import { getQuestionLimits } from "@shared/config/plan-limits";
 import type { PlanTier } from "@shared/types/plan";
 import type { FastifyRequest, FastifyReply } from "fastify";
 
@@ -35,9 +37,13 @@ interface AuthenticatedRequest extends FastifyRequest {
 
 /**
  * Helper to determine user's plan tier from entitlements
+ * FIXED: Properly map BUNDLE to "pro" tier and SENIOR to "advanced"
  */
-function getUserPlanTier(entitlements: string[]): PlanTier {
-  if (entitlements.includes("SENIOR") || entitlements.includes("BUNDLE")) {
+export function getUserPlanTier(entitlements: string[]): PlanTier {
+  if (entitlements.includes("BUNDLE")) {
+    return "pro";
+  }
+  if (entitlements.includes("SENIOR")) {
     return "advanced";
   }
   if (entitlements.includes("INTERMEDIATE")) {
@@ -67,6 +73,7 @@ export function createPlanGuard(options: PlanGuardOptions) {
       return;
     }
 
+    // For quiz feature, allow free tier access if no user is authenticated
     const userTier: PlanTier = request.authUser
       ? getUserPlanTier(request.authUser.entitlements)
       : "free";
@@ -94,6 +101,17 @@ export function createPlanGuard(options: PlanGuardOptions) {
             difficulty as "easy" | "medium" | "hard"
           );
           const suggestedPlan = getSuggestedUpgradePlan(requiredPlan, userTier);
+
+          // Log violation
+          if (request.authUser) {
+            monitoringService.logUnauthorizedAccess(
+              request.authUser.id,
+              userTier,
+              request.url,
+              request.method,
+              { difficulty, requiredPlan }
+            );
+          }
 
           return reply.status(403).send({
             code: 403,
@@ -132,6 +150,17 @@ export function createPlanGuard(options: PlanGuardOptions) {
           );
           const suggestedPlan = getSuggestedUpgradePlan(requiredPlan, userTier);
 
+          // Log violation
+          if (request.authUser) {
+            monitoringService.logUnauthorizedAccess(
+              request.authUser.id,
+              userTier,
+              request.url,
+              request.method,
+              { level, requiredPlan }
+            );
+          }
+
           return reply.status(403).send({
             code: 403,
             error: "Forbidden",
@@ -158,4 +187,39 @@ export const studyGuard = () => createPlanGuard({ feature: "study" });
 /**
  * Convenience wrapper for quiz guard
  */
-export const quizGuard = () => createPlanGuard({ feature: "quiz" });
+export const quizGuard = (options?: { allowAnonymous?: boolean }) =>
+  createPlanGuard({ feature: "quiz", allowAnonymous: options?.allowAnonymous });
+
+/**
+ * Enforce question limits based on user's plan and framework
+ * Returns the maximum number of questions allowed
+ */
+export function enforceQuestionLimit(
+  userTier: PlanTier,
+  framework: string = "other",
+  mode: "study" | "quiz"
+): number {
+  return getQuestionLimits(userTier, framework, mode);
+}
+
+/**
+ * Check if user has exceeded their question limit
+ */
+export function checkQuestionLimit(
+  userTier: PlanTier,
+  framework: string = "other",
+  mode: "study" | "quiz",
+  requestedCount: number
+): { allowed: boolean; limit: number; message?: string } {
+  const limit = getQuestionLimits(userTier, framework, mode);
+
+  if (requestedCount > limit) {
+    return {
+      allowed: false,
+      limit,
+      message: `Your ${userTier} plan allows ${limit} ${mode} questions for ${framework}. Upgrade to access more.`,
+    };
+  }
+
+  return { allowed: true, limit };
+}

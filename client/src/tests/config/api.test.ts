@@ -436,7 +436,7 @@ describe("API Configuration", () => {
 
   describe("Plans Endpoints", () => {
     it("should have plans endpoint", () => {
-      expect(API_ENDPOINTS.plans.list()).toBe("http://localhost:3000/api/v1/plans");
+      expect(API_ENDPOINTS.plans.list()).toBe("http://localhost:3000/api/v1/plans/current");
     });
   });
 

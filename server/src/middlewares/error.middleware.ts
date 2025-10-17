@@ -99,12 +99,19 @@ export const errorHandler = (error: FastifyError, request: FastifyRequest, reply
   const statusCode = error.statusCode || 500;
   const message = error.message || "Internal Server Error";
 
+  // Never expose stack traces to the client - log them server-side only
+  if (process.env.NODE_ENV === "development" && error.stack) {
+    // In development, log stack trace to console for debugging
+    log.error({
+      message: "Development stack trace (not sent to client)",
+      stack: error.stack,
+      statusCode,
+    });
+  }
+
   return reply.status(statusCode).send({
     code: statusCode,
     error: statusCode === 500 ? "Internal Server Error" : error.name,
     message: statusCode === 500 ? "Something went wrong" : message,
-    ...(process.env.NODE_ENV === "development" && {
-      stack: error.stack,
-    }),
   });
 };

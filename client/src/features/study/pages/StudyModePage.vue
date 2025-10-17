@@ -66,7 +66,7 @@
       <!-- Study Content -->
       <div v-else-if="currentQuestion">
         <StudyHeader :difficulty="difficulty" :current-index="currentIndex" :total-questions="questions.length"
-          @back="goBack" />
+          :loaded-count="questions.length" @back="goBack" />
 
         <StudyFilters v-model:search-query="searchQuery" v-model:question-type-filter="questionTypeFilter"
           v-model:answered-filter="answeredFilter" :practice-mode="practiceMode" :bookmark-count="bookmarkCount"
@@ -84,10 +84,9 @@
 
         <StudyNavigation :current-index="currentIndex" :total-questions="questions.length"
           :answered-questions="answeredQuestions" :marked-questions="new Set(bookmarkedQuestions)"
-          :loaded-count="allQuestions.length" :total-available="getDisplayTotal()" :session-time="sessionElapsedTime"
-          :is-paused="isTimerPaused" :has-more="hasMore" :is-loading-more="isLoadingMore" @jump="jumpToQuestion"
-          @load-more="loadMore" @previous="previousQuestion" @next="nextQuestion" @pause="pauseSessionTimer"
-          @resume="resumeSessionTimer" @reset="resetSessionTimer" />
+          :loaded-count="allQuestions.length" :total-available="getDisplayTotal()" :has-more="hasMore"
+          :is-loading-more="isLoadingMore" @jump="jumpToQuestion" @load-more="loadMore" @previous="previousQuestion"
+          @next="nextQuestion" />
       </div>
     </div>
   </div>
@@ -341,6 +340,7 @@ const loadQuestions = async (append = false) => {
     const params = new URLSearchParams({
       difficulty: difficulty.value,
       level: getLevelFromDifficulty(difficulty.value), // Add level mapping
+      mode: 'study', // Explicitly request Study Mode questions
       limit: pageSize.toString(),
       offset: currentOffset.value.toString(),
     });
@@ -460,7 +460,27 @@ const revealAnswer = async () => {
   const questionId = currentQuestion.value._id;
 
   try {
-    // Call secure API to get the answer
+    // For Study Mode questions (open-ended), explanation is already available
+    if (currentQuestion.value.type === 'open-ended') {
+      // Just show the answer - no API call needed
+      showAnswer.value = true;
+
+      track('study_reveal_clicked', {
+        difficulty: difficulty.value,
+        questionId: currentQuestion.value._id,
+        questionType: currentQuestion.value.type,
+        hadSelectedAnswer: false, // Study Mode questions don't have user selections
+        timeOnQuestion: sessionElapsedTime.value,
+      });
+
+      const newAnswered = new Set(answeredQuestions.value);
+      newAnswered.add(currentQuestion.value._id);
+      answeredQuestions.value = newAnswered;
+      localStorage.setItem(`answered_${difficulty.value}`, JSON.stringify([...newAnswered]));
+      return;
+    }
+
+    // For Quiz Mode questions, call API to get the answer
     const response = await fetch(`/api/v1/questions/${questionId}/reveal`, {
       method: 'POST',
       credentials: 'include',
@@ -508,7 +528,7 @@ const revealAnswer = async () => {
     // Now show the answer
     showAnswer.value = true;
 
-    track('reveal_clicked', {
+    track('study_reveal_clicked', {
       difficulty: difficulty.value,
       questionId: currentQuestion.value._id,
       questionType: currentQuestion.value.type,

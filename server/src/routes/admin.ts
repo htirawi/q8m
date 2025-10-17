@@ -1,3 +1,4 @@
+import { authenticate } from "@middlewares/auth.middleware.js";
 import { sanitizeForDisplay } from "@server/security/escape.js";
 import { safeUpdateFields, adminFieldValidators, isPlainObject } from "@server/security/safe-object.js";
 import type { FastifyInstance } from "fastify";
@@ -45,7 +46,7 @@ export default async function adminRoutes(fastify: FastifyInstance) {
   fastify.get(
     "/dashboard",
     {
-      preHandler: [fastify.requireRole("admin")],
+      preHandler: [authenticate, fastify.requireRole("admin")],
     },
     async (_request, reply) => {
       // Fetch admin dashboard statistics from database
@@ -81,6 +82,7 @@ export default async function adminRoutes(fastify: FastifyInstance) {
   fastify.get(
     "/users",
     {
+      preHandler: [authenticate, fastify.requireRole("admin")],
       schema: {
         querystring: zodToJsonSchema(
           z.object({
@@ -119,6 +121,7 @@ export default async function adminRoutes(fastify: FastifyInstance) {
   fastify.get(
     "/users/:userId",
     {
+      preHandler: [authenticate, fastify.requireRole("admin")],
       schema: {
         params: zodToJsonSchema(
           z.object({
@@ -147,6 +150,7 @@ export default async function adminRoutes(fastify: FastifyInstance) {
   fastify.patch(
     "/users/:userId/role",
     {
+      preHandler: [authenticate, fastify.requireRole("admin")],
       schema: {
         params: zodToJsonSchema(
           z.object({
@@ -177,6 +181,7 @@ export default async function adminRoutes(fastify: FastifyInstance) {
   fastify.patch(
     "/users/:userId",
     {
+      preHandler: [authenticate, fastify.requireRole("admin")],
       schema: {
         params: zodToJsonSchema(
           z.object({
@@ -234,6 +239,7 @@ export default async function adminRoutes(fastify: FastifyInstance) {
   fastify.get(
     "/questions",
     {
+      preHandler: [authenticate, fastify.requireRole("admin")],
       schema: {
         querystring: zodToJsonSchema(
           z.object({
@@ -263,6 +269,7 @@ export default async function adminRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/questions",
     {
+      preHandler: [authenticate, fastify.requireRole("admin")],
       schema: {
         body: zodToJsonSchema(
           z.object({
@@ -323,6 +330,7 @@ export default async function adminRoutes(fastify: FastifyInstance) {
   fastify.patch(
     "/questions/:questionId",
     {
+      preHandler: [authenticate, fastify.requireRole("admin")],
       schema: {
         params: zodToJsonSchema(
           z.object({
@@ -442,6 +450,7 @@ export default async function adminRoutes(fastify: FastifyInstance) {
   fastify.delete(
     "/questions/:questionId",
     {
+      preHandler: [authenticate, fastify.requireRole("admin")],
       schema: {
         params: zodToJsonSchema(
           z.object({
@@ -465,6 +474,7 @@ export default async function adminRoutes(fastify: FastifyInstance) {
   fastify.get(
     "/analytics/payments",
     {
+      preHandler: [authenticate, fastify.requireRole("admin")],
       schema: {
         querystring: zodToJsonSchema(
           z.object({
@@ -501,6 +511,7 @@ export default async function adminRoutes(fastify: FastifyInstance) {
   fastify.get(
     "/analytics/users",
     {
+      preHandler: [authenticate, fastify.requireRole("admin")],
       schema: {
         querystring: zodToJsonSchema(
           z.object({
