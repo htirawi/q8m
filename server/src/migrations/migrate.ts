@@ -15,11 +15,11 @@
 
 import { connect } from "mongoose";
 
-import { migrate001 } from "./001_update_user_schema.js";
-import { migrate002 } from "./002_seed_questions.js";
-import { migrate003 } from "./003_seed_migrated_questions.js";
-import { migrate004 } from "./004_fix_framework_data.js";
-import { migrate005 } from "./005_populate_framework_access.js";
+import { migrate001 } from "./001_update_user_schema.ts";
+import { migrate002 } from "./002_seed_questions.ts";
+import { migrate003 } from "./003_seed_migrated_questions.ts";
+import { migrate004 } from "./004_fix_framework_data.ts";
+import { migrate005 } from "./005_populate_framework_access.ts";
 
 interface Migration {
   name: string;
