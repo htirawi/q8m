@@ -30,9 +30,6 @@
     "hoursAgo": "{count} hours ago",
     "daysAgo": "{count} days ago"
   },
-  "dashboard": {
-    "recommendations": "Recommendations for you"
-  },
   "greetings": {
     "morning": "Good morning",
     "afternoon": "Good afternoon",
@@ -1135,6 +1132,7 @@
   },
   "dashboard": {
     "welcome": "Welcome back",
+    "recommendations": "Recommendations for you",
     "resume": {
       "title": "Continue where you left off",
       "startQuiz": "Start Quiz",
