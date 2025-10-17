@@ -4,8 +4,6 @@ import { defineStore } from 'pinia';
 import { useToast } from '@/composables/useToast';
 import { getErrorMessage as extractErrorMessage, httpClient } from '@/utils/httpClient';
 
-import { useAuthStore } from './auth';
-
 // Types
 export type ShareType = 'quiz_result' | 'achievement' | 'streak' | 'challenge_victory' | 'profile' | 'badge';
 export type SharePlatform = 'twitter' | 'facebook' | 'linkedin' | 'whatsapp' | 'email' | 'copy_link';
@@ -37,7 +35,6 @@ function getErrorMessage(error: unknown, defaultMessage: string): string {
 }
 
 export const useSharesStore = defineStore('shares', () => {
-  const authStore = useAuthStore();
   const toast = useToast();
 
   // State

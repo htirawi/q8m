@@ -403,7 +403,18 @@ class AnalyticsService {
   }
 
   private generateSessionId(): string {
-    return `sess_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    // Use crypto.randomUUID() for secure random session ID
+    if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+      return `sess_${Date.now()}_${crypto.randomUUID()}`;
+    }
+    // Fallback for older browsers - use Web Crypto API
+    if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
+      const array = new Uint32Array(2);
+      crypto.getRandomValues(array);
+      return `sess_${Date.now()}_${array[0].toString(36)}${array[1].toString(36)}`;
+    }
+    // Last resort fallback (should rarely be needed in modern browsers)
+    return `sess_${Date.now()}_${Date.now().toString(36)}`;
   }
 
   private initializeCommonProperties() {
