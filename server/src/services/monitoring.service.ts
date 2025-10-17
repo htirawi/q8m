@@ -97,7 +97,7 @@ export class MonitoringService {
     planTier: PlanTier,
     endpoint: string,
     method: string,
-    details?: Record<string, any>
+    details?: Record<string, unknown>
   ): void {
     this.logViolation({
       userId,

@@ -162,7 +162,14 @@ UsageTrackingSchema.statics.getUserUsageStats = async function (
   aiHintsUsed: number;
   mockInterviewsUsed: number;
 }> {
-  const query: any = { userId, period };
+  type UsageQuery = {
+    userId: string;
+    period: string;
+    framework?: string;
+    date?: { $gte: Date; $lte: Date };
+  };
+
+  const query: UsageQuery = { userId, period };
 
   if (framework) {
     query.framework = framework;
