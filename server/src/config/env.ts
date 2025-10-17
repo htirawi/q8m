@@ -88,8 +88,18 @@ const EnvSchema = z.object({
   npm_package_version: z.string().optional(),
 
   // Development security (only for development environment)
-  DEV_LOGIN_SECRET: z.string().min(32, "Dev login secret must be at least 32 characters").optional(),
+  DEV_LOGIN_SECRET: z
+    .string()
+    .min(32, "Dev login secret must be at least 32 characters")
+    .optional(),
   DEV_LOGIN_WHITELIST: z.string().optional(),
+
+  // API Key Configuration (for external integrations)
+  API_KEY_ACTIVE: z.string().optional(),
+  API_KEY_NEXT: z.string().optional(),
+  API_KEY_ROTATION_GRACE_PERIOD_DAYS: z.coerce.number().default(7),
+  API_KEY_ACTIVE_ID: z.string().optional(),
+  API_KEY_NEXT_ID: z.string().optional(),
 });
 
 export type Env = z.infer<typeof EnvSchema>;
