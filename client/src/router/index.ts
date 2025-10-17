@@ -321,7 +321,7 @@ const routes: RouteRecordRaw[] = [
     () =>
       import(
         /* webpackChunkName: "level-selection" */
-        "@/features/home/pages/LevelSelectionPage.vue"
+        "@/features/home/pages/EnhancedLevelSelectionPage.vue"
       ),
     {
       title: "Choose Your Level - q8m",

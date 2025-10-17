@@ -93,7 +93,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, h } from 'vue';
+import { ref, computed, h, onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import type { ILevelCard } from '@/types/design-system';
 
@@ -517,7 +517,4 @@ onUnmounted(() => {
 .dark .level-card__hover-glow {
   background: radial-gradient(circle at center, rgba(var(--color-primary-rgb), 0.05) 0%, transparent 70%);
 }
-
-/* Import necessary functions */
-import { onUnmounted } from 'vue';
 </style>
