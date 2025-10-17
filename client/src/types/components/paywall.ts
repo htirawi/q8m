@@ -13,6 +13,7 @@ export interface InlineUpsellCardProps {
 }
 
 // Alias for backwards compatibility
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface IInlineUpsellCardProps extends InlineUpsellCardProps {}
 
 export interface ILockedBadgeProps {

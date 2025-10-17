@@ -205,7 +205,7 @@ export const useSharesStore = defineStore('shares', () => {
             await navigator.clipboard.writeText(shareUrl);
             toast.success('Success', 'Link copied to clipboard!');
             return true;
-          } catch (clipboardErr) {
+          } catch (_clipboardErr) {
             toast.error('Error', 'Failed to copy link');
             return false;
           }
