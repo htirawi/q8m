@@ -6,10 +6,32 @@
     "selected": "selected",
     "notSelected": "not selected",
     "new": "New",
-    "retry": "Retry"
+    "retry": "Retry",
+    "refresh": "Refresh",
+    "complete": "Complete"
   },
   "errors": {
     "logoutFailed": "Failed to log out. Please try again."
+  },
+  "actions": {
+    "continue": "Continue",
+    "skipForNow": "Skip for now",
+    "learn": "Learn More"
+  },
+  "stats": {
+    "streak": "Streak",
+    "days": "Days",
+    "dayStreak": "{count} day streak",
+    "coins": "Coins",
+    "level": "Level",
+    "streakWeekWarrior": "Week Warrior"
+  },
+  "time": {
+    "hoursAgo": "{count} hours ago",
+    "daysAgo": "{count} days ago"
+  },
+  "dashboard": {
+    "recommendations": "Recommendations for you"
   },
   "greetings": {
     "morning": "Good morning",
@@ -18,6 +40,7 @@
     "night": "Good night"
   },
   "motivation": {
+    "message0": "Let's get started!",
     "message1": "Keep up the great work!",
     "message2": "You're making excellent progress!",
     "message3": "Every question brings you closer to your goals!",
@@ -26,8 +49,10 @@
   },
   "levels": {
     "subtitleDefault": "Choose your difficulty level to get started",
+    "subtitleWithStreak": "You're on a {streak} day streak! Keep it going!",
     "chooseYourPath": "Choose Your Learning Path",
     "selectDifficultyDescription": "Select the difficulty level that matches your experience and start your journey",
+    "requiresPlan": "Requires {plan} plan",
     "junior": {
       "title": "Junior",
       "subtitle": "Perfect for beginners",
