@@ -15,6 +15,7 @@ import swaggerUi from "@fastify/swagger-ui";
 import authPlugin, { createAuthMiddleware, type AuthOptions } from "@middlewares/auth.middleware";
 import { errorHandler } from "@middlewares/error.middleware";
 import { requestLogger } from "@middlewares/logger.middleware";
+import { permissionsPolicyMiddleware } from "@middlewares/permissions-policy.middleware";
 import adminRoutes from "@routes/admin";
 import authRoutes from "@routes/auth";
 import challengeRoutes from "@routes/challenges";
@@ -81,6 +82,9 @@ fastify.setErrorHandler((error, request, reply) => {
 // Register request logger
 fastify.addHook("onRequest", requestLogger);
 
+// Register Permissions-Policy middleware
+fastify.addHook("onRequest", permissionsPolicyMiddleware);
+
 // Register response logger
 fastify.addHook("onSend", async (request, reply, payload) => {
   const { startTime } = request as FastifyRequest & { startTime?: number };
@@ -120,8 +124,9 @@ async function registerPlugins() {
     allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
   });
 
-  // Security headers
+  // Security headers (Enhanced)
   // ✅ SECURITY FIX (SEC-002): PayPal domains whitelisted in CSP
+  // ✅ SECURITY ENHANCEMENT (SEC-003): Comprehensive security headers
   await fastify.register(helmet, {
     contentSecurityPolicy: {
       useDefaults: true,
@@ -165,6 +170,10 @@ async function registerPlugins() {
             preload: true,
           }
         : false,
+    // ✅ NEW: X-Content-Type-Options
+    noSniff: true,
+    // ✅ NEW: Referrer-Policy (Helmet uses "no-referrer" by default which is more secure)
+    referrerPolicy: { policy: "no-referrer" },
     // Allow PayPal popup windows
     crossOriginOpenerPolicy: { policy: "same-origin-allow-popups" },
     crossOriginEmbedderPolicy: false,
@@ -443,6 +452,9 @@ export const buildApp = async () => {
 
   // Register request logger
   testApp.addHook("onRequest", requestLogger);
+
+  // Register Permissions-Policy middleware
+  testApp.addHook("onRequest", permissionsPolicyMiddleware);
 
   // Register response logger
   testApp.addHook("onSend", async (request, reply, payload) => {
