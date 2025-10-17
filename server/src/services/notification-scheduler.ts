@@ -2,6 +2,7 @@ import * as cron from "node-cron";
 
 import { Subscription } from "../models/Subscription";
 import { User } from "../models/User";
+import { logger } from "../utils/logger";
 
 import { NotificationService } from "./notification";
 
@@ -17,35 +18,35 @@ export class NotificationScheduler {
    * Initialize and start all scheduled tasks
    */
   start(): void {
-    console.log("🚀 Starting notification scheduler...");
+    logger.info("🚀 Starting notification scheduler...");
 
     // Daily streak reminders - Run at 8 PM every day
     const streakReminderTask = cron.schedule("0 20 * * *", async () => {
-      console.log("⏰ Running daily streak reminder task...");
+      logger.info("⏰ Running daily streak reminder task...");
       await this.sendStreakReminders();
     });
 
     // Trial ending reminders - Run at 10 AM every day
     const trialReminderTask = cron.schedule("0 10 * * *", async () => {
-      console.log("⏰ Running trial ending reminder task...");
+      logger.info("⏰ Running trial ending reminder task...");
       await this.sendTrialEndingReminders();
     });
 
     // Subscription expiry reminders - Run at 10 AM every day
     const subscriptionReminderTask = cron.schedule("0 10 * * *", async () => {
-      console.log("⏰ Running subscription expiry reminder task...");
+      logger.info("⏰ Running subscription expiry reminder task...");
       await this.sendSubscriptionExpiryReminders();
     });
 
     // Weekly progress summary - Run at 9 AM every Monday
     const weeklyProgressTask = cron.schedule("0 9 * * 1", async () => {
-      console.log("⏰ Running weekly progress summary task...");
+      logger.info("⏰ Running weekly progress summary task...");
       await this.sendWeeklyProgressSummaries();
     });
 
     // Achievement notifications - Run every hour
     const achievementTask = cron.schedule("0 * * * *", async () => {
-      console.log("⏰ Running achievement notification task...");
+      logger.info("⏰ Running achievement notification task...");
       await this.sendAchievementNotifications();
     });
 
@@ -58,22 +59,22 @@ export class NotificationScheduler {
       achievementTask,
     ];
 
-    console.log("✅ Notification scheduler started successfully");
-    console.log("   - Streak reminders: 8 PM daily");
-    console.log("   - Trial reminders: 10 AM daily");
-    console.log("   - Subscription reminders: 10 AM daily");
-    console.log("   - Weekly progress: 9 AM Monday");
-    console.log("   - Achievement checks: Every hour");
+    logger.info("✅ Notification scheduler started successfully");
+    logger.info("   - Streak reminders: 8 PM daily");
+    logger.info("   - Trial reminders: 10 AM daily");
+    logger.info("   - Subscription reminders: 10 AM daily");
+    logger.info("   - Weekly progress: 9 AM Monday");
+    logger.info("   - Achievement checks: Every hour");
   }
 
   /**
    * Stop all scheduled tasks
    */
   stop(): void {
-    console.log("🛑 Stopping notification scheduler...");
+    logger.info("🛑 Stopping notification scheduler...");
     this.tasks.forEach((task) => task.stop());
     this.tasks = [];
-    console.log("✅ Notification scheduler stopped");
+    logger.info("✅ Notification scheduler stopped");
   }
 
   /**
@@ -92,11 +93,11 @@ export class NotificationScheduler {
       }).select("_id email name streak");
 
       if (users.length === 0) {
-        console.log("📋 No users need streak reminders");
+        logger.info("📋 No users need streak reminders");
         return;
       }
 
-      console.log(`📤 Sending streak reminders to ${users.length} users...`);
+      logger.info(`📤 Sending streak reminders to ${users.length} users...`);
 
       const userIds = users.map((user: { _id: string }) => user._id);
 
@@ -113,9 +114,9 @@ export class NotificationScheduler {
         clickAction: "/quiz",
       });
 
-      console.log(`✅ Streak reminders sent to ${users.length} users`);
+      logger.info(`✅ Streak reminders sent to ${users.length} users`);
     } catch (error) {
-      console.error("Error sending streak reminders:", error);
+      logger.error("Error sending streak reminders:", String(error));
     }
   }
 
@@ -140,11 +141,11 @@ export class NotificationScheduler {
       }).populate("userId", "_id email name");
 
       if (expiringSubscriptions.length === 0) {
-        console.log("📋 No trial ending reminders needed");
+        logger.info("📋 No trial ending reminders needed");
         return;
       }
 
-      console.log(`📤 Sending trial ending reminders to ${expiringSubscriptions.length} users...`);
+      logger.info(`📤 Sending trial ending reminders to ${expiringSubscriptions.length} users...`);
 
       for (const subscription of expiringSubscriptions) {
         const daysLeft = Math.ceil(
@@ -182,9 +183,9 @@ export class NotificationScheduler {
         });
       }
 
-      console.log(`✅ Trial ending reminders sent to ${expiringSubscriptions.length} users`);
+      logger.info(`✅ Trial ending reminders sent to ${expiringSubscriptions.length} users`);
     } catch (error) {
-      console.error("Error sending trial ending reminders:", error);
+      logger.error("Error sending trial ending reminders:", String(error));
     }
   }
 
@@ -210,11 +211,11 @@ export class NotificationScheduler {
       }).populate("userId", "_id email name");
 
       if (expiringSubscriptions.length === 0) {
-        console.log("📋 No subscription expiry reminders needed");
+        logger.info("📋 No subscription expiry reminders needed");
         return;
       }
 
-      console.log(
+      logger.info(
         `📤 Sending subscription expiry reminders to ${expiringSubscriptions.length} users...`
       );
 
@@ -252,9 +253,9 @@ export class NotificationScheduler {
         });
       }
 
-      console.log(`✅ Subscription expiry reminders sent to ${expiringSubscriptions.length} users`);
+      logger.info(`✅ Subscription expiry reminders sent to ${expiringSubscriptions.length} users`);
     } catch (error) {
-      console.error("Error sending subscription expiry reminders:", error);
+      logger.error("Error sending subscription expiry reminders:", String(error));
     }
   }
 
@@ -270,11 +271,11 @@ export class NotificationScheduler {
       }).select("_id email name stats streak");
 
       if (users.length === 0) {
-        console.log("📋 No users for weekly progress summaries");
+        logger.info("📋 No users for weekly progress summaries");
         return;
       }
 
-      console.log(`📤 Sending weekly progress summaries to ${users.length} users...`);
+      logger.info(`📤 Sending weekly progress summaries to ${users.length} users...`);
 
       for (const user of users) {
         const streak = (user.streak as { currentStreak?: number })?.currentStreak || 0;
@@ -297,9 +298,9 @@ export class NotificationScheduler {
         });
       }
 
-      console.log(`✅ Weekly progress summaries sent to ${users.length} users`);
+      logger.info(`✅ Weekly progress summaries sent to ${users.length} users`);
     } catch (error) {
-      console.error("Error sending weekly progress summaries:", error);
+      logger.error("Error sending weekly progress summaries:", String(error));
     }
   }
 
@@ -320,11 +321,11 @@ export class NotificationScheduler {
         .limit(100); // Limit to prevent overwhelming the system
 
       if (users.length === 0) {
-        console.log("📋 No new achievements to notify");
+        logger.info("📋 No new achievements to notify");
         return;
       }
 
-      console.log(`📤 Checking achievements for ${users.length} users...`);
+      logger.info(`📤 Checking achievements for ${users.length} users...`);
 
       let notificationsSent = 0;
 
@@ -350,9 +351,9 @@ export class NotificationScheduler {
         }
       }
 
-      console.log(`✅ Achievement notifications sent: ${notificationsSent}`);
+      logger.info(`✅ Achievement notifications sent: ${notificationsSent}`);
     } catch (error) {
-      console.error("Error sending achievement notifications:", error);
+      logger.error("Error sending achievement notifications:", String(error));
     }
   }
 
@@ -369,11 +370,11 @@ export class NotificationScheduler {
       const users = await User.find({ isActive: true }).select("_id");
 
       if (users.length === 0) {
-        console.log("📋 No users to notify about new content");
+        logger.info("📋 No users to notify about new content");
         return;
       }
 
-      console.log(`📤 Sending new content notification to ${users.length} users...`);
+      logger.info(`📤 Sending new content notification to ${users.length} users...`);
 
       const userIds = users.map((user: { _id: string }) => user._id);
 
@@ -389,9 +390,9 @@ export class NotificationScheduler {
         clickAction: clickAction || "/explore",
       });
 
-      console.log(`✅ New content notification sent to ${users.length} users`);
+      logger.info(`✅ New content notification sent to ${users.length} users`);
     } catch (error) {
-      console.error("Error sending new content notification:", error);
+      logger.error("Error sending new content notification:", String(error));
     }
   }
 }

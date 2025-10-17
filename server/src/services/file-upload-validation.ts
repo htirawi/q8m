@@ -5,8 +5,8 @@
  * Prevents file upload attacks by verifying actual file content
  */
 
-import { fileTypeFromBuffer } from "file-type";
 import type { MultipartFile } from "@fastify/multipart";
+import { fileTypeFromBuffer } from "file-type";
 
 /**
  * Allowed MIME types for file uploads

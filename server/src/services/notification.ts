@@ -11,6 +11,7 @@ import {
   type INotificationPreferences,
 } from "../models/NotificationPreferences";
 import type { NotificationPayload, NotificationMetadata, SendResult } from "../types/notification";
+import { logger } from "../utils/logger";
 
 // Initialize Firebase Admin SDK (singleton)
 let firebaseApp: admin.app.App | null = null;
@@ -59,10 +60,10 @@ function initializeFirebase(): admin.app.App {
       );
     }
 
-    console.log("✅ Firebase Admin SDK initialized successfully");
+    logger.info("✅ Firebase Admin SDK initialized successfully");
     return firebaseApp;
   } catch (error) {
-    console.error("❌ Failed to initialize Firebase Admin SDK:", error);
+    logger.error("❌ Failed to initialize Firebase Admin SDK:", String(error));
     throw error;
   }
 }
@@ -107,9 +108,9 @@ export class NotificationService {
         });
       }
 
-      console.log(`✅ FCM token registered for user ${userId}`);
+      logger.info(`✅ FCM token registered for user ${userId}`);
     } catch (error) {
-      console.error("Error registering FCM token:", error);
+      logger.error("Error registering FCM token:", String(error));
       throw error;
     }
   }
@@ -121,9 +122,9 @@ export class NotificationService {
     try {
       await DeviceToken.findOneAndUpdate({ userId, token }, { isActive: false }, { new: true });
 
-      console.log(`✅ FCM token unregistered for user ${userId}`);
+      logger.info(`✅ FCM token unregistered for user ${userId}`);
     } catch (error) {
-      console.error("Error unregistering FCM token:", error);
+      logger.error("Error unregistering FCM token:", String(error));
       throw error;
     }
   }
@@ -159,7 +160,7 @@ export class NotificationService {
 
       return preferences;
     } catch (error) {
-      console.error("Error getting notification preferences:", error);
+      logger.error("Error getting notification preferences:", String(error));
       throw error;
     }
   }
@@ -178,9 +179,9 @@ export class NotificationService {
         { upsert: true, new: true }
       );
 
-      console.log(`✅ Notification preferences updated for user ${userId}`);
+      logger.info(`✅ Notification preferences updated for user ${userId}`);
     } catch (error) {
-      console.error("Error updating notification preferences:", error);
+      logger.error("Error updating notification preferences:", String(error));
       throw error;
     }
   }
@@ -230,7 +231,7 @@ export class NotificationService {
 
       // Check if notifications are enabled
       if (!preferences.enabled) {
-        console.log(`⏭️  Notifications disabled for user ${userId}`);
+        logger.info(`⏭️  Notifications disabled for user ${userId}`);
         return { success: false, successCount: 0, failureCount: 0 };
       }
 
@@ -241,13 +242,13 @@ export class NotificationService {
         notificationType in preferences.types &&
         !(preferences.types as Record<string, boolean>)[notificationType]
       ) {
-        console.log(`⏭️  Notification type ${notificationType} disabled for user ${userId}`);
+        logger.info(`⏭️  Notification type ${notificationType} disabled for user ${userId}`);
         return { success: false, successCount: 0, failureCount: 0 };
       }
 
       // Check quiet hours
       if (this.isInQuietHours(preferences)) {
-        console.log(`🔕 User ${userId} is in quiet hours, notification skipped`);
+        logger.info(`🔕 User ${userId} is in quiet hours, notification skipped`);
         return { success: false, successCount: 0, failureCount: 0 };
       }
 
@@ -258,7 +259,7 @@ export class NotificationService {
       });
 
       if (deviceTokens.length === 0) {
-        console.log(`⚠️  No active device tokens found for user ${userId}`);
+        logger.info(`⚠️  No active device tokens found for user ${userId}`);
         return { success: false, successCount: 0, failureCount: 0 };
       }
 
@@ -300,7 +301,7 @@ export class NotificationService {
         response.responses.forEach((resp, idx) => {
           if (!resp.success) {
             failedTokens.push(deviceTokens[idx].token);
-            console.error(`Failed to send to token: ${resp.error?.message}`);
+            logger.error(`Failed to send to token: ${resp.error?.message ?? "Unknown error"}`);
           }
         });
 
@@ -323,7 +324,7 @@ export class NotificationService {
         clicked: false,
       });
 
-      console.log(
+      logger.info(
         `✅ Notification sent to user ${userId}: ${response.successCount} succeeded, ${response.failureCount} failed`
       );
 
@@ -333,7 +334,7 @@ export class NotificationService {
         failureCount: response.failureCount,
       };
     } catch (error) {
-      console.error("Error sending notification:", error);
+      logger.error("Error sending notification:", String(error));
 
       // Save failed notification to history
       await NotificationHistory.create({
@@ -398,7 +399,7 @@ export class NotificationService {
         hasMore: skip + notifications.length < total,
       };
     } catch (error) {
-      console.error("Error getting notification history:", error);
+      logger.error("Error getting notification history:", String(error));
       throw error;
     }
   }
@@ -413,7 +414,7 @@ export class NotificationService {
         clickedAt: new Date(),
       });
     } catch (error) {
-      console.error("Error marking notification as clicked:", error);
+      logger.error("Error marking notification as clicked:", String(error));
       throw error;
     }
   }
@@ -437,12 +438,12 @@ export class NotificationService {
           failed++;
         }
       } catch (error) {
-        console.error(`Failed to send notification to user ${userId}:`, error);
+        logger.error(`Failed to send notification to user ${userId}:`, String(error));
         failed++;
       }
     }
 
-    console.log(`📊 Bulk notifications: ${sent} sent, ${failed} failed`);
+    logger.info(`📊 Bulk notifications: ${sent} sent, ${failed} failed`);
 
     return { sent, failed };
   }

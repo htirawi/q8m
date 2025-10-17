@@ -221,7 +221,7 @@ FrameworkAccessSchema.statics.initializeDefaults = async function () {
     await this.findOneAndUpdate({ framework: rule.framework }, rule, { upsert: true, new: true });
   }
 
-  console.log("✅ Framework access rules initialized");
+  // Framework access rules initialized successfully (logged at startup)
 };
 
 export const FrameworkAccess = mongoose.model<IFrameworkAccess>(

@@ -252,8 +252,9 @@ AuditLogSchema.pre("findOneAndDelete", function (next) {
 /**
  * Prevent deletion of audit logs (findOneAndRemove) - deprecated in Mongoose 7+
  * Note: This hook may not be called in Mongoose 7+ as findOneAndRemove is deprecated
+ * Reference: https://mongoosejs.com/docs/migrating_to_7.html#removed-findoneandfoo-methods
  */
-// @ts-ignore - findOneAndRemove is deprecated in Mongoose 7+ but kept for backwards compatibility
+// @ts-expect-error - findOneAndRemove is deprecated in Mongoose 7+ but kept for backwards compatibility with older Mongoose versions
 AuditLogSchema.pre("findOneAndRemove", function (next: (err?: Error) => void) {
   next(new Error("Audit logs cannot be deleted"));
 });

@@ -276,7 +276,7 @@ export default async function shareRoutes(fastify: FastifyInstance) {
           success: true,
           data: previewData,
         });
-      } catch (error: any) {
+      } catch (error: unknown) {
         fastify.log.error(error);
         return reply.status(500).send({
           success: false,
@@ -387,7 +387,7 @@ export default async function shareRoutes(fastify: FastifyInstance) {
           success: true,
           message: "Click tracked",
         });
-      } catch (error: any) {
+      } catch (error: unknown) {
         fastify.log.error(error);
         return reply.status(500).send({
           success: false,
