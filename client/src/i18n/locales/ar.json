@@ -314,9 +314,6 @@
     "hoursAgo": "منذ {count} ساعة",
     "daysAgo": "منذ {count} يوم"
   },
-  "dashboard": {
-    "recommendations": "توصيات لك"
-  },
   "greetings": {
     "morning": "صباح الخير",
     "afternoon": "مساء الخير",
@@ -967,6 +964,7 @@
   },
   "dashboard": {
     "welcome": "مرحباً بعودتك",
+    "recommendations": "توصيات لك",
     "resume": {
       "title": "تابع من حيث توقفت",
       "startQuiz": "ابدأ الاختبار",
