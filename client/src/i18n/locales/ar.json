@@ -4,7 +4,9 @@
     "currency": "د.أ",
     "perMonth": "/شهر",
     "new": "جديد",
-    "retry": "إعادة المحاولة"
+    "retry": "إعادة المحاولة",
+    "refresh": "تحديث",
+    "complete": "مكتمل"
   },
   "navigation": {
     "home": "الرئيسية",
@@ -295,6 +297,26 @@
   "errors": {
     "logoutFailed": "فشل تسجيل الخروج. يرجى المحاولة مرة أخرى."
   },
+  "actions": {
+    "continue": "متابعة",
+    "skipForNow": "تخطي الآن",
+    "learn": "اعرف المزيد"
+  },
+  "stats": {
+    "streak": "السلسلة",
+    "days": "أيام",
+    "dayStreak": "سلسلة {count} يوم",
+    "coins": "العملات",
+    "level": "المستوى",
+    "streakWeekWarrior": "محارب الأسبوع"
+  },
+  "time": {
+    "hoursAgo": "منذ {count} ساعة",
+    "daysAgo": "منذ {count} يوم"
+  },
+  "dashboard": {
+    "recommendations": "توصيات لك"
+  },
   "greetings": {
     "morning": "صباح الخير",
     "afternoon": "مساء الخير",
@@ -302,6 +324,7 @@
     "night": "تصبح على خير"
   },
   "motivation": {
+    "message0": "لنبدأ!",
     "message1": "استمر في العمل الرائع!",
     "message2": "أنت تحرز تقدمًا ممتازًا!",
     "message3": "كل سؤال يقربك من أهدافك!",
@@ -310,8 +333,10 @@
   },
   "levels": {
     "subtitleDefault": "اختر مستوى الصعوبة للبدء",
+    "subtitleWithStreak": "أنت على سلسلة {streak} يوم! استمر!",
     "chooseYourPath": "اختر مسارك التعليمي",
     "selectDifficultyDescription": "حدد مستوى الصعوبة الذي يتناسب مع خبرتك وابدأ رحلتك",
+    "requiresPlan": "يتطلب خطة {plan}",
     "junior": {
       "title": "مبتدئ",
       "subtitle": "مثالي للمبتدئين",
