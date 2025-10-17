@@ -582,19 +582,20 @@ export class IntrusionDetectionService {
     const userAgent = headers["user-agent"];
 
     // XSS patterns
-    // ✅ SECURITY FIX (CodeQL #729): Fixed bad HTML filtering regexp
-    // Properly matches script tags with whitespace variations (e.g., </script >, </script  >)
+    // ✅ SECURITY FIX (CodeQL #735): Fixed bad HTML filtering regexp
+    // Split into separate patterns to avoid complex matching
     const xssPatterns = [
-      /<script[\s\S]{0,1000}?<\s*\/\s*script\s*>/i, // Matches </script>, </script >, etc.
-      /<script[^>]{0,1000}?>/i, // Opening script tag variations
+      /<\s*script[\s>]/i, // Opening script tag (with any whitespace/attributes)
+      /<\s*\/\s*script[^>]*>/i, // Closing script tag with any content before >
       /javascript:/i,
       /onerror\s*=/i,
       /onload\s*=/i,
-      /<iframe[\s>]/i, // More specific pattern
+      /<\s*iframe[\s>]/i, // iframe opening tag
       /eval\s*\(/i,
-      /<object[\s>]/i,
-      /<embed[\s>]/i,
+      /<\s*object[\s>]/i,
+      /<\s*embed[\s>]/i,
       /vbscript:/i,
+      /data:text\/html/i, // Data URI with HTML
       /on\w+\s*=/i, // Generic event handler detection
     ];
 
