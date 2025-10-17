@@ -1,10 +1,15 @@
 import { authenticate } from "@middlewares/auth.middleware.js";
 import { sanitizeForDisplay } from "@server/security/escape.js";
-import { safeUpdateFields, adminFieldValidators, isPlainObject } from "@server/security/safe-object.js";
+import { adminRateLimits } from "@server/security/rate-limit-profiles.js";
+import {
+  safeUpdateFields,
+  adminFieldValidators,
+  isPlainObject,
+} from "@server/security/safe-object.js";
+import { auditLogService } from "@services/audit-log.service.js";
 import type { FastifyInstance } from "fastify";
 import { z } from "zod";
 import { zodToJsonSchema } from "zod-to-json-schema";
-
 
 /**
  * Sanitize update data to prevent XSS attacks
@@ -46,8 +51,10 @@ export default async function adminRoutes(fastify: FastifyInstance) {
   fastify.get(
     "/dashboard",
     {
+
+      ...(adminRateLimits.analytics() as unknown as Record<string, never>),
       preHandler: [authenticate, fastify.requireRole("admin")],
-    },
+    } as never,
     async (_request, reply) => {
       // Fetch admin dashboard statistics from database
       reply.type("application/json; charset=utf-8");
@@ -82,6 +89,8 @@ export default async function adminRoutes(fastify: FastifyInstance) {
   fastify.get(
     "/users",
     {
+
+      ...(adminRateLimits.userManagement() as unknown as Record<string, never>),
       preHandler: [authenticate, fastify.requireRole("admin")],
       schema: {
         querystring: zodToJsonSchema(
@@ -121,6 +130,8 @@ export default async function adminRoutes(fastify: FastifyInstance) {
   fastify.get(
     "/users/:userId",
     {
+
+      ...(adminRateLimits.userManagement() as unknown as Record<string, never>),
       preHandler: [authenticate, fastify.requireRole("admin")],
       schema: {
         params: zodToJsonSchema(
@@ -150,6 +161,8 @@ export default async function adminRoutes(fastify: FastifyInstance) {
   fastify.patch(
     "/users/:userId/role",
     {
+
+      ...(adminRateLimits.userManagement() as unknown as Record<string, never>),
       preHandler: [authenticate, fastify.requireRole("admin")],
       schema: {
         params: zodToJsonSchema(
@@ -168,6 +181,21 @@ export default async function adminRoutes(fastify: FastifyInstance) {
       const { userId } = request.params as { userId: string };
       const { role } = request.body as { role: string };
 
+      // Audit log: User role change
+      await auditLogService.writeFromRequest(request, {
+        action: "user.role.change",
+        severity: "warning",
+        targetType: "user",
+        targetId: userId,
+        changes: {
+          before: { role: "unknown" }, // In real implementation, fetch current role
+          after: { role },
+        },
+        metadata: {
+          endpoint: "/admin/users/:userId/role",
+        },
+      });
+
       // Update user role in database
       reply.send({
         id: userId,
@@ -181,6 +209,8 @@ export default async function adminRoutes(fastify: FastifyInstance) {
   fastify.patch(
     "/users/:userId",
     {
+
+      ...(adminRateLimits.userManagement() as unknown as Record<string, never>),
       preHandler: [authenticate, fastify.requireRole("admin")],
       schema: {
         params: zodToJsonSchema(
@@ -219,6 +249,22 @@ export default async function adminRoutes(fastify: FastifyInstance) {
         const safeUpdate: Record<string, unknown> = {};
         safeUpdateFields(safeUpdate, updateData, allowedUserFields);
 
+        // Audit log: User update
+        await auditLogService.writeFromRequest(request, {
+          action: "user.update",
+          severity: "info",
+          targetType: "user",
+          targetId: userId,
+          changes: {
+            before: {}, // In real implementation, fetch current values
+            after: safeUpdate,
+          },
+          metadata: {
+            endpoint: "/admin/users/:userId",
+            fieldsUpdated: Object.keys(safeUpdate),
+          },
+        });
+
         // Update user data in database
         reply.send({
           id: userId,
@@ -239,6 +285,8 @@ export default async function adminRoutes(fastify: FastifyInstance) {
   fastify.get(
     "/questions",
     {
+
+      ...(adminRateLimits.contentManagement() as unknown as Record<string, never>),
       preHandler: [authenticate, fastify.requireRole("admin")],
       schema: {
         querystring: zodToJsonSchema(
@@ -269,6 +317,8 @@ export default async function adminRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/questions",
     {
+
+      ...(adminRateLimits.contentManagement() as unknown as Record<string, never>),
       preHandler: [authenticate, fastify.requireRole("admin")],
       schema: {
         body: zodToJsonSchema(
@@ -315,9 +365,24 @@ export default async function adminRoutes(fastify: FastifyInstance) {
     async (request, reply) => {
       const questionData = request.body as unknown;
 
+      const newQuestionId = "new-question-id"; // In real implementation, get actual ID
+
+      // Audit log: Question create
+      await auditLogService.writeFromRequest(request, {
+        action: "question.create",
+        severity: "info",
+        targetType: "question",
+        targetId: newQuestionId,
+        metadata: {
+          endpoint: "/admin/questions",
+          framework: (questionData as { framework?: string }).framework,
+          level: (questionData as { level?: string }).level,
+        },
+      });
+
       // Create new question in database
       reply.status(201).send({
-        id: "new-question-id",
+        id: newQuestionId,
         ...(questionData as Record<string, unknown>),
         isActive: true,
         createdAt: new Date(),
@@ -330,6 +395,8 @@ export default async function adminRoutes(fastify: FastifyInstance) {
   fastify.patch(
     "/questions/:questionId",
     {
+
+      ...(adminRateLimits.contentManagement() as unknown as Record<string, never>),
       preHandler: [authenticate, fastify.requireRole("admin")],
       schema: {
         params: zodToJsonSchema(
@@ -429,6 +496,22 @@ export default async function adminRoutes(fastify: FastifyInstance) {
         const safeUpdate: Record<string, unknown> = {};
         safeUpdateFields(safeUpdate, updateData, allowedQuestionFields);
 
+        // Audit log: Question update
+        await auditLogService.writeFromRequest(request, {
+          action: "question.update",
+          severity: "info",
+          targetType: "question",
+          targetId: questionId,
+          changes: {
+            before: {}, // In real implementation, fetch current values
+            after: safeUpdate,
+          },
+          metadata: {
+            endpoint: "/admin/questions/:questionId",
+            fieldsUpdated: Object.keys(safeUpdate),
+          },
+        });
+
         // Update question in database
         reply.type("application/json; charset=utf-8");
         reply.send({
@@ -450,6 +533,8 @@ export default async function adminRoutes(fastify: FastifyInstance) {
   fastify.delete(
     "/questions/:questionId",
     {
+
+      ...(adminRateLimits.contentManagement() as unknown as Record<string, never>),
       preHandler: [authenticate, fastify.requireRole("admin")],
       schema: {
         params: zodToJsonSchema(
@@ -461,6 +546,17 @@ export default async function adminRoutes(fastify: FastifyInstance) {
     },
     async (request, reply) => {
       const { questionId } = request.params as { questionId: string };
+
+      // Audit log: Question delete
+      await auditLogService.writeFromRequest(request, {
+        action: "question.delete",
+        severity: "warning",
+        targetType: "question",
+        targetId: questionId,
+        metadata: {
+          endpoint: "/admin/questions/:questionId",
+        },
+      });
 
       // Delete question from database
       reply.send({
@@ -474,6 +570,8 @@ export default async function adminRoutes(fastify: FastifyInstance) {
   fastify.get(
     "/analytics/payments",
     {
+
+      ...(adminRateLimits.analytics() as unknown as Record<string, never>),
       preHandler: [authenticate, fastify.requireRole("admin")],
       schema: {
         querystring: zodToJsonSchema(
@@ -511,6 +609,8 @@ export default async function adminRoutes(fastify: FastifyInstance) {
   fastify.get(
     "/analytics/users",
     {
+
+      ...(adminRateLimits.analytics() as unknown as Record<string, never>),
       preHandler: [authenticate, fastify.requireRole("admin")],
       schema: {
         querystring: zodToJsonSchema(

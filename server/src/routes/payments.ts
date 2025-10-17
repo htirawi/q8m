@@ -1,11 +1,12 @@
-
 import { features } from "@config/appConfig.js";
 import { env } from "@config/env.js";
 import { authenticate, optionalAuth } from "@middlewares/auth.middleware.js";
 import { Purchase, type IPurchase } from "@models/Purchase.js";
 import { Subscription } from "@models/Subscription.js";
 import { safeLogFields } from "@server/security/logging.js";
+import { webhookRateLimits, paymentRateLimits } from "@server/security/rate-limit-profiles.js";
 import { apsService, type APSWebhookData } from "@services/aps.js";
+import { auditLogService } from "@services/audit-log.service.js";
 import { currencyService } from "@services/currency.js";
 import { hyperpayService, type HyperPayWebhookData } from "@services/hyperpay.js";
 import { pricingService } from "@services/pricing.js";
@@ -136,6 +137,8 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/create",
     {
+
+      ...(paymentRateLimits.create() as unknown as Record<string, never>),
       preHandler: [authenticate],
       schema: {
         body: zodToJsonSchema(createPaymentSchema),
@@ -303,6 +306,8 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/callback/:gateway",
     {
+
+      ...(paymentRateLimits.callback() as unknown as Record<string, never>),
       schema: {
         params: zodToJsonSchema(
           z.object({
@@ -524,6 +529,19 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
 
         await subscription.cancel(reason);
 
+        // Audit log: Subscription cancel
+        await auditLogService.writeFromRequest(request, {
+          action: "subscription.cancel",
+          severity: "info",
+          targetType: "subscription",
+          targetId: subscription._id.toString(),
+          metadata: {
+            endpoint: "/payments/subscription/cancel",
+            reason,
+            planType: subscription.planId,
+          },
+        });
+
         reply.send({
           success: true,
           message: "Subscription cancelled successfully",
@@ -550,81 +568,96 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
   fastify.post("/webhooks/paypal", async (_request, reply) => {
     reply.status(410).send({
       success: false,
-      error: "This endpoint is deprecated. Use /api/payments/paypal/webhook for PayPal Orders v2 API",
+      error:
+        "This endpoint is deprecated. Use /api/payments/paypal/webhook for PayPal Orders v2 API",
     });
   });
 
   // APS webhook
-  fastify.post("/webhooks/aps", async (request, reply) => {
-    try {
-      const webhookData = request.body as APSWebhookData;
+  fastify.post(
+    "/webhooks/aps",
+    {
 
-      const result = await apsService.handleWebhook(webhookData);
-      if ("ok" in result && !result.ok) {
-        return reply.status(503).send({
+      ...(webhookRateLimits.aps() as unknown as Record<string, never>),
+    },
+    async (request, reply) => {
+      try {
+        const webhookData = request.body as APSWebhookData;
+
+        const result = await apsService.handleWebhook(webhookData);
+        if ("ok" in result && !result.ok) {
+          return reply.status(503).send({
+            success: false,
+            error: "APS service not configured",
+          });
+        }
+
+        if ("success" in result && result.success) {
+          reply.send({ success: true });
+        } else {
+          reply.status(400).send({
+            success: false,
+            error: "success" in result ? result.error : "Service not configured",
+          });
+        }
+      } catch (error: unknown) {
+        request.log.error(
+          safeLogFields({
+            event: "aps_webhook_error",
+            error: error instanceof Error ? error.message : "Unknown error",
+            stack: error instanceof Error ? error.stack : undefined,
+          })
+        );
+        reply.status(500).send({
           success: false,
-          error: "APS service not configured",
+          error: "Webhook processing failed",
         });
       }
-
-      if ("success" in result && result.success) {
-        reply.send({ success: true });
-      } else {
-        reply.status(400).send({
-          success: false,
-          error: "success" in result ? result.error : "Service not configured",
-        });
-      }
-    } catch (error: unknown) {
-      request.log.error(
-        safeLogFields({
-          event: "aps_webhook_error",
-          error: error instanceof Error ? error.message : "Unknown error",
-          stack: error instanceof Error ? error.stack : undefined,
-        })
-      );
-      reply.status(500).send({
-        success: false,
-        error: "Webhook processing failed",
-      });
     }
-  });
+  );
 
   // HyperPay webhook
-  fastify.post("/webhooks/hyperpay", async (request, reply) => {
-    try {
-      const webhookData = request.body as HyperPayWebhookData;
+  fastify.post(
+    "/webhooks/hyperpay",
+    {
 
-      const result = await hyperpayService.handleWebhook(webhookData);
-      if ("ok" in result && !result.ok) {
-        return reply.status(503).send({
+      ...(webhookRateLimits.hyperpay() as unknown as Record<string, never>),
+    },
+    async (request, reply) => {
+      try {
+        const webhookData = request.body as HyperPayWebhookData;
+
+        const result = await hyperpayService.handleWebhook(webhookData);
+        if ("ok" in result && !result.ok) {
+          return reply.status(503).send({
+            success: false,
+            error: "HyperPay service not configured",
+          });
+        }
+
+        if ("success" in result && result.success) {
+          reply.send({ success: true });
+        } else {
+          reply.status(400).send({
+            success: false,
+            error: "success" in result ? result.error : "Service not configured",
+          });
+        }
+      } catch (error: unknown) {
+        request.log.error(
+          safeLogFields({
+            event: "hyperpay_webhook_error",
+            error: error instanceof Error ? error.message : "Unknown error",
+            stack: error instanceof Error ? error.stack : undefined,
+          })
+        );
+        reply.status(500).send({
           success: false,
-          error: "HyperPay service not configured",
+          error: "Webhook processing failed",
         });
       }
-
-      if ("success" in result && result.success) {
-        reply.send({ success: true });
-      } else {
-        reply.status(400).send({
-          success: false,
-          error: "success" in result ? result.error : "Service not configured",
-        });
-      }
-    } catch (error: unknown) {
-      request.log.error(
-        safeLogFields({
-          event: "hyperpay_webhook_error",
-          error: error instanceof Error ? error.message : "Unknown error",
-          stack: error instanceof Error ? error.stack : undefined,
-        })
-      );
-      reply.status(500).send({
-        success: false,
-        error: "Webhook processing failed",
-      });
     }
-  });
+  );
 
   // Get payment gateway status (secured - requires authentication)
   fastify.get(
@@ -690,6 +723,8 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/refund/:purchaseId",
     {
+
+      ...(paymentRateLimits.refund() as unknown as Record<string, never>),
       preHandler: [authenticate, fastify.requireRole("admin")], // Fixed: require admin role
       schema: {
         params: zodToJsonSchema(
@@ -750,6 +785,21 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
         }
 
         if ("success" in result && result.success) {
+          // Audit log: Payment refund
+          await auditLogService.writeFromRequest(request, {
+            action: "payment.refund",
+            severity: "warning",
+            targetType: "purchase",
+            targetId: purchaseId,
+            metadata: {
+              endpoint: "/payments/refund/:purchaseId",
+              refundAmount,
+              reason,
+              gateway: purchase.gateway,
+              refundId: result.refundId,
+            },
+          });
+
           reply.send({
             success: true,
             message: "Refund processed successfully",
