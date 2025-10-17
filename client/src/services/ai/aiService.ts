@@ -135,8 +135,8 @@ export class AIService {
       } else {
         return await this.getResponse(requestBody, session);
       }
-    } catch (error: any) {
-      this.error.value = error.message;
+    } catch (error: unknown) {
+      this.error.value = error instanceof Error ? error.message : String(error);
       analytics.trackError(error, { context: 'ai_send_message' });
       throw error;
     } finally {
@@ -175,8 +175,8 @@ export class AIService {
       });
 
       return explanation;
-    } catch (error: any) {
-      this.error.value = error.message;
+    } catch (error: unknown) {
+      this.error.value = error instanceof Error ? error.message : String(error);
       throw error;
     } finally {
       this.isLoading.value = false;
@@ -191,7 +191,7 @@ export class AIService {
     goal: string,
     timeCommitment: { weeks: number; hoursPerWeek: number },
     currentLevel: string,
-    preferences?: any
+    preferences?: Record<string, unknown>
   ): Promise<IStudyPlan> {
     this.isLoading.value = true;
 
@@ -217,8 +217,8 @@ export class AIService {
       });
 
       return studyPlan;
-    } catch (error: any) {
-      this.error.value = error.message;
+    } catch (error: unknown) {
+      this.error.value = error instanceof Error ? error.message : String(error);
       throw error;
     } finally {
       this.isLoading.value = false;
@@ -255,8 +255,8 @@ export class AIService {
       });
 
       return analysis;
-    } catch (error: any) {
-      this.error.value = error.message;
+    } catch (error: unknown) {
+      this.error.value = error instanceof Error ? error.message : String(error);
       throw error;
     } finally {
       this.isLoading.value = false;
@@ -270,7 +270,7 @@ export class AIService {
     question: string,
     userAnswer: string,
     correctAnswer: string,
-    context?: any
+    context?: Record<string, unknown>
   ): Promise<IAIFeedback> {
     this.isLoading.value = true;
 
@@ -307,8 +307,8 @@ Please provide detailed feedback on the user's answer including:
         feedback: response.content,
         timestamp: new Date()
       };
-    } catch (error: any) {
-      this.error.value = error.message;
+    } catch (error: unknown) {
+      this.error.value = error instanceof Error ? error.message : String(error);
       throw error;
     } finally {
       this.isLoading.value = false;
@@ -317,7 +317,7 @@ Please provide detailed feedback on the user's answer including:
 
   // Private helper methods
 
-  private async callAPI(params: any): Promise<any> {
+  private async callAPI(params: Record<string, unknown>): Promise<Record<string, unknown>> {
     const endpoint = this.getEndpoint();
     const headers = this.getHeaders();
 
@@ -347,7 +347,7 @@ Please provide detailed feedback on the user's answer including:
     };
   }
 
-  private async streamResponse(requestBody: any, session: IChatSession): Promise<IChatMessage> {
+  private async streamResponse(requestBody: Record<string, unknown>, session: IChatSession): Promise<IChatMessage> {
     const endpoint = this.getEndpoint();
     const headers = this.getHeaders();
 
@@ -399,7 +399,7 @@ Please provide detailed feedback on the user's answer including:
                 const content = parsed.choices[0]?.delta?.content || '';
                 assistantMessage.content += content;
                 this.streamingMessage.value = assistantMessage.content;
-              } catch (e) {
+              } catch (_e) {
                 // Skip invalid JSON
               }
             }
@@ -416,7 +416,7 @@ Please provide detailed feedback on the user's answer including:
     return assistantMessage;
   }
 
-  private async getResponse(requestBody: any, session: IChatSession): Promise<IChatMessage> {
+  private async getResponse(requestBody: Record<string, unknown>, session: IChatSession): Promise<IChatMessage> {
     const response = await this.callAPI(requestBody);
 
     const assistantMessage: IChatMessage = {
@@ -436,7 +436,7 @@ Please provide detailed feedback on the user's answer including:
     return assistantMessage;
   }
 
-  private buildRequestBody(session: IChatSession, context?: IChatContext): any {
+  private buildRequestBody(session: IChatSession, context?: IChatContext): Record<string, unknown> {
     const messages = [
       { role: 'system', content: this.getSystemPrompt(context) },
       ...session.messages.map(m => ({
@@ -499,7 +499,7 @@ Format the response in markdown with code blocks.
     goal: string,
     timeCommitment: { weeks: number; hoursPerWeek: number },
     currentLevel: string,
-    preferences?: any
+    preferences?: Record<string, unknown>
   ): string {
     return `
 Create a personalized study plan with the following requirements:
@@ -551,7 +551,7 @@ Be specific with line numbers and provide actionable feedback.
   }
 
   private parseExplanationResponse(
-    response: any,
+    response: Record<string, unknown>,
     concept: string,
     questionId: string,
     difficulty: 'beginner' | 'intermediate' | 'advanced'
@@ -574,7 +574,7 @@ Be specific with line numbers and provide actionable feedback.
   }
 
   private parseStudyPlanResponse(
-    response: any,
+    response: Record<string, unknown>,
     userId: string,
     goal: string,
     timeCommitment: { weeks: number; hoursPerWeek: number }
@@ -635,7 +635,7 @@ Be specific with line numbers and provide actionable feedback.
     };
   }
 
-  private parseCodeAnalysisResponse(response: any, code: string, language: string): ICodeAnalysis {
+  private parseCodeAnalysisResponse(response: Record<string, unknown>, code: string, language: string): ICodeAnalysis {
     // Parse the AI response into structured code analysis
     return {
       id: this.generateId(),
@@ -754,7 +754,7 @@ Be specific with line numbers and provide actionable feedback.
         ],
         maxTokens: 10
       });
-    } catch (error) {
+    } catch (_error) {
       throw new Error('Failed to connect to AI service. Please check your API key.');
     }
   }
