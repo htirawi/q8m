@@ -257,20 +257,20 @@ onMounted(() => {
 
 .hero-section__orb--1 {
   @apply w-96 h-96 -top-48 -left-48;
-  @apply bg-gradient-to-br from-primary-DEFAULT to-secondary-DEFAULT;
+  @apply bg-gradient-to-br from-primary to-secondary;
   animation-duration: 25s;
 }
 
 .hero-section__orb--2 {
   @apply w-64 h-64 top-0 right-0;
-  @apply bg-gradient-to-br from-secondary-DEFAULT to-success-DEFAULT;
+  @apply bg-gradient-to-br from-secondary to-success;
   animation-duration: 20s;
   animation-delay: -5s;
 }
 
 .hero-section__orb--3 {
   @apply w-80 h-80 -bottom-40 right-1/3;
-  @apply bg-gradient-to-br from-warning-DEFAULT to-primary-DEFAULT;
+  @apply bg-gradient-to-br from-warning to-primary;
   animation-duration: 30s;
   animation-delay: -10s;
 }
@@ -472,7 +472,7 @@ onMounted(() => {
 .hero-section__fab {
   @apply fixed bottom-6 right-6 z-50;
   @apply w-14 h-14 rounded-full;
-  @apply bg-gradient-to-r from-primary-DEFAULT to-secondary-DEFAULT;
+  @apply bg-gradient-to-r from-primary to-secondary;
   @apply text-white shadow-lg;
   @apply flex items-center justify-center;
   @apply hover:shadow-xl hover:scale-110;

@@ -215,7 +215,7 @@ onUnmounted(() => {
   @apply border-2 border-gray-200 dark:border-gray-700;
   @apply transition-all duration-fast ease-out;
   @apply cursor-pointer select-none;
-  @apply focus:outline-none focus:ring-4 focus:ring-primary-DEFAULT/20;
+  @apply focus:outline-none focus:ring-4 focus:ring-primary/20;
   min-height: 320px;
   transform-style: preserve-3d;
   transform: translateZ(0);
@@ -223,7 +223,7 @@ onUnmounted(() => {
 
 /* Hover state */
 .level-card:hover:not(.level-card--locked) {
-  @apply border-primary-DEFAULT/30 shadow-lg;
+  @apply border-primary/30 shadow-lg;
   transform: translateY(-4px) scale(1.02);
 }
 
@@ -233,7 +233,7 @@ onUnmounted(() => {
 
 /* Selected state */
 .level-card--selected {
-  @apply border-primary-DEFAULT shadow-xl;
+  @apply border-primary shadow-xl;
   @apply bg-gradient-to-br from-primary-50 to-secondary-50;
   @apply dark:from-primary-900/20 dark:to-secondary-900/20;
   transform: scale(1.02);
@@ -285,15 +285,15 @@ onUnmounted(() => {
 }
 
 .level-card__badge--primary {
-  @apply bg-primary-DEFAULT text-white;
+  @apply bg-primary text-white;
 }
 
 .level-card__badge--success {
-  @apply bg-success-DEFAULT text-white;
+  @apply bg-success text-white;
 }
 
 .level-card__badge--warning {
-  @apply bg-warning-DEFAULT text-white;
+  @apply bg-warning text-white;
 }
 
 /* Content */
@@ -398,8 +398,8 @@ onUnmounted(() => {
 }
 
 .level-card__progress-fill {
-  @apply h-full bg-gradient-to-r from-primary-DEFAULT to-secondary-DEFAULT;
-  @apply transition-width duration-moderate;
+  @apply h-full bg-gradient-to-r from-primary to-secondary;
+  @apply transition-[width] duration-moderate;
 }
 
 .level-card__progress-text {
@@ -410,7 +410,7 @@ onUnmounted(() => {
 .level-card__selected-indicator {
   @apply absolute top-4 left-4 z-20;
   @apply w-8 h-8 rounded-full;
-  @apply bg-primary-DEFAULT text-white;
+  @apply bg-primary text-white;
   @apply flex items-center justify-center;
   @apply shadow-lg;
 }
@@ -437,7 +437,7 @@ onUnmounted(() => {
 
 /* Particles animation */
 .level-card__particle {
-  @apply absolute w-1 h-1 bg-primary-DEFAULT rounded-full;
+  @apply absolute w-1 h-1 bg-primary rounded-full;
   @apply opacity-0;
   animation: particle-float 2s ease-out infinite;
   animation-delay: calc(var(--particle-index) * 0.2s);

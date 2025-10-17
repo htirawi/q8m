@@ -166,7 +166,7 @@ const handleAction = (activity: Activity) => {
 }
 
 .recent-activity__toggle {
-  @apply text-sm font-medium text-primary-DEFAULT hover:text-primary-700;
+  @apply text-sm font-medium text-primary hover:text-primary-700;
   @apply transition-colors duration-fast;
 }
 
@@ -244,8 +244,8 @@ const handleAction = (activity: Activity) => {
 }
 
 .activity-item__progress-fill {
-  @apply h-full bg-gradient-to-r from-primary-DEFAULT to-secondary-DEFAULT;
-  @apply transition-width duration-moderate;
+  @apply h-full bg-gradient-to-r from-primary to-secondary;
+  @apply transition-[width] duration-moderate;
 }
 
 .activity-item__progress-text {

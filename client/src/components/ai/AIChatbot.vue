@@ -860,7 +860,7 @@ watch(() => props.context, (newContext) => {
 .ai-chatbot__fab {
   @apply fixed bottom-6 right-6 z-[9999];
   @apply w-14 h-14 rounded-full;
-  @apply bg-gradient-to-r from-primary-DEFAULT to-secondary-DEFAULT;
+  @apply bg-gradient-to-r from-primary to-secondary;
   @apply text-white shadow-lg;
   @apply flex items-center justify-center;
   @apply hover:shadow-xl hover:scale-110;
@@ -879,7 +879,7 @@ watch(() => props.context, (newContext) => {
 
 .ai-chatbot__fab-pulse {
   @apply absolute inset-0 rounded-full;
-  @apply bg-gradient-to-r from-primary-DEFAULT to-secondary-DEFAULT;
+  @apply bg-gradient-to-r from-primary to-secondary;
   @apply animate-ping opacity-75;
 }
 
@@ -912,7 +912,7 @@ watch(() => props.context, (newContext) => {
 .ai-chatbot__header {
   @apply flex items-center justify-between;
   @apply px-4 py-3;
-  @apply bg-gradient-to-r from-primary-DEFAULT to-secondary-DEFAULT;
+  @apply bg-gradient-to-r from-primary to-secondary;
   @apply text-white;
 }
 
@@ -990,7 +990,7 @@ watch(() => props.context, (newContext) => {
   @apply bg-white dark:bg-gray-800;
   @apply border border-gray-200 dark:border-gray-700;
   @apply text-sm whitespace-nowrap;
-  @apply hover:border-primary-DEFAULT hover:text-primary-DEFAULT;
+  @apply hover:border-primary hover:text-primary;
   @apply transition-all duration-fast;
 }
 
@@ -1027,7 +1027,7 @@ watch(() => props.context, (newContext) => {
   @apply p-4 rounded-xl;
   @apply bg-white dark:bg-gray-800;
   @apply border border-gray-200 dark:border-gray-700;
-  @apply hover:border-primary-DEFAULT hover:shadow-md;
+  @apply hover:border-primary hover:shadow-md;
   @apply transition-all duration-fast;
   @apply text-left;
 }
@@ -1081,7 +1081,7 @@ watch(() => props.context, (newContext) => {
 }
 
 .ai-chatbot__message--assistant .ai-chatbot__message-avatar {
-  @apply bg-gradient-to-r from-primary-DEFAULT to-secondary-DEFAULT;
+  @apply bg-gradient-to-r from-primary to-secondary;
 }
 
 .ai-chatbot__message--assistant .ai-chatbot__message-avatar svg {
@@ -1103,7 +1103,7 @@ watch(() => props.context, (newContext) => {
 }
 
 .ai-chatbot__message--user .ai-chatbot__message-text {
-  @apply bg-gradient-to-r from-primary-DEFAULT to-secondary-DEFAULT;
+  @apply bg-gradient-to-r from-primary to-secondary;
   @apply text-white border-0;
 }
 
@@ -1164,7 +1164,7 @@ watch(() => props.context, (newContext) => {
 }
 
 .ai-chatbot__message-btn.active {
-  @apply text-primary-DEFAULT bg-primary-100 dark:bg-primary-900/30;
+  @apply text-primary bg-primary-100 dark:bg-primary-900/30;
 }
 
 /* Loading */
@@ -1174,7 +1174,7 @@ watch(() => props.context, (newContext) => {
 }
 
 .ai-chatbot__loading-spinner {
-  @apply w-5 h-5 border-2 border-primary-DEFAULT border-t-transparent;
+  @apply w-5 h-5 border-2 border-primary border-t-transparent;
   @apply rounded-full animate-spin;
 }
 
@@ -1207,7 +1207,7 @@ watch(() => props.context, (newContext) => {
   @apply rounded-xl resize-none;
   @apply text-sm text-gray-900 dark:text-white;
   @apply placeholder-gray-500;
-  @apply focus:outline-none focus:ring-2 focus:ring-primary-DEFAULT/50;
+  @apply focus:outline-none focus:ring-2 focus:ring-primary/50;
   @apply transition-all duration-fast;
   min-height: 40px;
   max-height: 120px;
@@ -1221,7 +1221,7 @@ watch(() => props.context, (newContext) => {
 .ai-chatbot__voice-btn,
 .ai-chatbot__send {
   @apply w-9 h-9 rounded-lg;
-  @apply bg-primary-DEFAULT text-white;
+  @apply bg-primary text-white;
   @apply hover:bg-primary-700;
   @apply disabled:opacity-50 disabled:cursor-not-allowed;
   @apply transition-all duration-fast;

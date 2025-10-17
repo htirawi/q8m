@@ -486,10 +486,10 @@ watch(selectedLevel, (newLevel) => {
 }
 
 .btn--primary {
-  @apply bg-gradient-to-r from-primary-DEFAULT to-secondary-DEFAULT;
+  @apply bg-gradient-to-r from-primary to-secondary;
   @apply text-white shadow-lg;
   @apply hover:shadow-xl hover:scale-105;
-  @apply focus:ring-primary-DEFAULT/50;
+  @apply focus:ring-primary/50;
 }
 
 .btn--primary:not(:disabled):hover {

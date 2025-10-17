@@ -592,7 +592,7 @@ const deleteAllData = () => {
 
 .settings-tab--active {
   @apply bg-white dark:bg-gray-800;
-  @apply text-primary-DEFAULT;
+  @apply text-primary;
   @apply shadow-sm;
 }
 
@@ -631,7 +631,7 @@ const deleteAllData = () => {
   @apply border border-gray-200 dark:border-gray-700;
   @apply rounded-lg;
   @apply text-sm text-gray-900 dark:text-white;
-  @apply focus:outline-none focus:ring-2 focus:ring-primary-DEFAULT/50;
+  @apply focus:outline-none focus:ring-2 focus:ring-primary/50;
   @apply transition-all duration-fast;
 }
 
@@ -647,9 +647,9 @@ const deleteAllData = () => {
 
 .settings-toggle input[type="checkbox"] {
   @apply w-4 h-4 rounded;
-  @apply text-primary-DEFAULT;
+  @apply text-primary;
   @apply border-gray-300 dark:border-gray-600;
-  @apply focus:ring-2 focus:ring-primary-DEFAULT/50;
+  @apply focus:ring-2 focus:ring-primary/50;
 }
 
 .settings-toggle__label {
@@ -679,13 +679,13 @@ const deleteAllData = () => {
   @apply flex flex-col items-center gap-2;
   @apply p-3 rounded-lg;
   @apply border-2 border-gray-200 dark:border-gray-700;
-  @apply hover:border-primary-DEFAULT;
+  @apply hover:border-primary;
   @apply transition-all duration-fast;
   @apply cursor-pointer;
 }
 
 .theme-option--active {
-  @apply border-primary-DEFAULT bg-primary-50 dark:bg-primary-900/20;
+  @apply border-primary bg-primary-50 dark:bg-primary-900/20;
 }
 
 .theme-option__preview {
@@ -701,14 +701,14 @@ const deleteAllData = () => {
   @apply px-4 py-2 rounded-lg;
   @apply border border-gray-200 dark:border-gray-700;
   @apply text-sm font-medium text-gray-700 dark:text-gray-300;
-  @apply hover:border-primary-DEFAULT;
+  @apply hover:border-primary;
   @apply transition-all duration-fast;
   @apply cursor-pointer;
 }
 
 .size-option--active {
-  @apply border-primary-DEFAULT bg-primary-50 dark:bg-primary-900/20;
-  @apply text-primary-DEFAULT;
+  @apply border-primary bg-primary-50 dark:bg-primary-900/20;
+  @apply text-primary;
 }
 
 /* Buttons */
@@ -754,7 +754,7 @@ const deleteAllData = () => {
 }
 
 .modal-button--primary {
-  @apply bg-primary-DEFAULT text-white;
+  @apply bg-primary text-white;
   @apply hover:bg-primary-700;
 }
 
