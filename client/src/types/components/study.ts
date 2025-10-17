@@ -10,8 +10,11 @@ export interface IFrameworkCardProps {
   description: string;
   icon: string;
   questionCount: number;
-  requiredPlan?: PlanTier;
-  locked?: boolean;
+  color: "red" | "black" | "blue" | "purple" | "gray" | "gradient";
+  difficulty: DifficultyLevel;
+  progressPercent?: number;
+  isLocked?: boolean;
+  requiredPlan?: string;
 }
 
 export interface ILevelCardProps {
@@ -86,8 +89,8 @@ export interface IStudyFiltersProps {
 export interface IStudyNavigationProps {
   currentIndex: number;
   totalQuestions: number;
-  answeredQuestions: Set<number>;
-  markedQuestions: Set<number>;
+  answeredQuestions: Set<string>;
+  markedQuestions: Set<string>;
   sessionTime: number;
   isPaused: boolean;
   loadedCount: number;
@@ -103,4 +106,11 @@ export interface IStudyQuestionProps {
   showAnswer: boolean;
   locale: string;
   selectedAnswer: unknown;
+  textAnswer?: string;
+  multipleAnswers?: string[];
+  isBookmarked?: boolean;
+  canGoPrevious?: boolean;
+  isLoadingMore?: boolean;
+  isLastQuestion?: boolean;
+  hasMore?: boolean;
 }

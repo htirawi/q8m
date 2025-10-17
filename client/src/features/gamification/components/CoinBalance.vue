@@ -1,11 +1,9 @@
 <template>
   <div class="coin-balance">
     <!-- Compact view (for header) -->
-    <div v-if="variant === 'compact'" class="compact-view">
-      <button
-        @click="$emit('click')"
-        class="flex items-center gap-2 px-3 py-2 rounded-lg bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 transition-all shadow-md hover:shadow-lg"
-      >
+    <div v-if="props.variant === 'compact'" class="compact-view">
+      <button @click="$emit('click')"
+        class="flex items-center gap-2 px-3 py-2 rounded-lg bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 transition-all shadow-md hover:shadow-lg">
         <span class="text-2xl">🪙</span>
         <div class="text-white font-bold">
           {{ formatNumber(coins.total) }}
@@ -14,16 +12,18 @@
     </div>
 
     <!-- IBadge view (inline display) -->
-    <div v-else-if="variant === 'badge'" class="badge-view">
-      <div class="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full shadow-md">
+    <div v-else-if="props.variant === 'badge'" class="badge-view">
+      <div
+        class="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full shadow-md">
         <span class="text-xl">🪙</span>
         <span class="text-white font-bold">{{ formatNumber(coins.total) }}</span>
       </div>
     </div>
 
     <!-- Card view (for dashboard) -->
-    <div v-else-if="variant === 'card'" class="card-view">
-      <div class="bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-xl shadow-lg p-6 border-2 border-yellow-300 dark:border-yellow-700">
+    <div v-else-if="props.variant === 'card'" class="card-view">
+      <div
+        class="bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-xl shadow-lg p-6 border-2 border-yellow-300 dark:border-yellow-700">
         <!-- Header -->
         <div class="flex items-center justify-between mb-4">
           <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
@@ -89,19 +89,22 @@
 
         <!-- Stats Grid -->
         <div class="grid grid-cols-3 gap-4">
-          <div class="text-center p-4 bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-lg border-2 border-yellow-200 dark:border-yellow-800">
+          <div
+            class="text-center p-4 bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-lg border-2 border-yellow-200 dark:border-yellow-800">
             <div class="text-3xl font-bold text-yellow-600 dark:text-yellow-400">
               {{ formatNumber(coins.total) }}
             </div>
             <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">Total</div>
           </div>
-          <div class="text-center p-4 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-lg border-2 border-green-200 dark:border-green-800">
+          <div
+            class="text-center p-4 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-lg border-2 border-green-200 dark:border-green-800">
             <div class="text-3xl font-bold text-green-600 dark:text-green-400">
               +{{ formatNumber(coins.earned) }}
             </div>
             <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">Earned</div>
           </div>
-          <div class="text-center p-4 bg-gradient-to-br from-red-50 to-rose-50 dark:from-red-900/20 dark:to-rose-900/20 rounded-lg border-2 border-red-200 dark:border-red-800">
+          <div
+            class="text-center p-4 bg-gradient-to-br from-red-50 to-rose-50 dark:from-red-900/20 dark:to-rose-900/20 rounded-lg border-2 border-red-200 dark:border-red-800">
             <div class="text-3xl font-bold text-red-600 dark:text-red-400">
               -{{ formatNumber(coins.spent) }}
             </div>

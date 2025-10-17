@@ -18,6 +18,8 @@ import { connect } from "mongoose";
 import { migrate001 } from "./001_update_user_schema.js";
 import { migrate002 } from "./002_seed_questions.js";
 import { migrate003 } from "./003_seed_migrated_questions.js";
+import { migrate004 } from "./004_fix_framework_data.js";
+import { migrate005 } from "./005_populate_framework_access.js";
 
 interface Migration {
   name: string;
@@ -40,6 +42,16 @@ const migrations: Migration[] = [
     name: "Seed Migrated Questions from angular-test",
     version: "003",
     run: migrate003,
+  },
+  {
+    name: "Fix Framework Data",
+    version: "004",
+    run: migrate004,
+  },
+  {
+    name: "Populate Framework Access",
+    version: "005",
+    run: migrate005,
   },
 ];
 

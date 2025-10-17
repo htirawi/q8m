@@ -3,9 +3,9 @@
  * Tracks user's mastery levels, spaced repetition, and learning analytics
  */
 
-import type { MasteryLevel } from '@shared/types/progress';
-import type { Document, ObjectId } from 'mongoose';
-import { Schema, model } from 'mongoose';
+import type { MasteryLevel } from "@shared/types/progress";
+import type { Document, ObjectId } from "mongoose";
+import { Schema, model } from "mongoose";
 
 /**
  * Question progress sub-document
@@ -22,6 +22,7 @@ export interface IQuestionProgressDoc {
   struggledOn: string[];
   firstAttemptDate?: Date;
   lastCorrectDate?: Date;
+  isBookmarked?: boolean;
 }
 
 /**
@@ -45,6 +46,17 @@ export interface IStreakDataDoc {
   lastActivityDate: Date;
   streakStartDate?: Date;
   missedDays: number;
+  freezesUsed: number;
+  freezesAvailable: number;
+}
+
+/**
+ * Coins data sub-document
+ */
+export interface ICoinsDataDoc {
+  balance: number;
+  earned: number;
+  spent: number;
 }
 
 /**
@@ -62,7 +74,7 @@ export interface IEarnedBadgeDoc {
 export interface IConversionInteractionDoc {
   surfaceId: string;
   shownAt: Date;
-  action?: 'clicked' | 'dismissed';
+  action?: "clicked" | "dismissed";
 }
 
 /**
@@ -75,6 +87,7 @@ export interface IUserProgressDoc extends Document {
   level: number;
   badges: IEarnedBadgeDoc[];
   streaks: IStreakDataDoc;
+  coins: ICoinsDataDoc;
   totalStudyTimeMinutes: number;
   totalQuestionsAttempted: number;
   totalQuestionsCorrect: number;
@@ -107,9 +120,9 @@ const questionProgressSchema = new Schema<IQuestionProgressDoc>(
     questionId: { type: String, required: true },
     masteryLevel: {
       type: String,
-      enum: ['new', 'learning', 'familiar', 'mastered'],
+      enum: ["new", "learning", "familiar", "mastered"],
       required: true,
-      default: 'new',
+      default: "new",
     },
     attempts: { type: Number, required: true, default: 0, min: 0 },
     correctCount: { type: Number, required: true, default: 0, min: 0 },
@@ -120,6 +133,7 @@ const questionProgressSchema = new Schema<IQuestionProgressDoc>(
     struggledOn: { type: [String], default: [] },
     firstAttemptDate: { type: Date },
     lastCorrectDate: { type: Date },
+    isBookmarked: { type: Boolean, default: false },
   },
   { _id: false }
 );
@@ -145,6 +159,18 @@ const streakDataSchema = new Schema<IStreakDataDoc>(
     lastActivityDate: { type: Date, required: true, default: Date.now },
     streakStartDate: { type: Date },
     missedDays: { type: Number, required: true, default: 0, min: 0 },
+    freezesUsed: { type: Number, required: true, default: 0, min: 0 },
+    freezesAvailable: { type: Number, required: true, default: 2, min: 0 },
+  },
+  { _id: false }
+);
+
+// Coins data sub-schema
+const coinsDataSchema = new Schema<ICoinsDataDoc>(
+  {
+    balance: { type: Number, required: true, default: 0, min: 0 },
+    earned: { type: Number, required: true, default: 0, min: 0 },
+    spent: { type: Number, required: true, default: 0, min: 0 },
   },
   { _id: false }
 );
@@ -164,7 +190,7 @@ const conversionInteractionSchema = new Schema<IConversionInteractionDoc>(
   {
     surfaceId: { type: String, required: true },
     shownAt: { type: Date, required: true, default: Date.now },
-    action: { type: String, enum: ['clicked', 'dismissed'] },
+    action: { type: String, enum: ["clicked", "dismissed"] },
   },
   { _id: false }
 );
@@ -174,7 +200,7 @@ const userProgressSchema = new Schema<IUserProgressDoc>(
   {
     userId: {
       type: Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "User",
       required: true,
       unique: true,
       index: true,
@@ -188,6 +214,7 @@ const userProgressSchema = new Schema<IUserProgressDoc>(
     level: { type: Number, required: true, default: 1, min: 1 },
     badges: { type: [earnedBadgeSchema], default: [] },
     streaks: { type: streakDataSchema, required: true, default: () => ({}) },
+    coins: { type: coinsDataSchema, required: true, default: () => ({}) },
     totalStudyTimeMinutes: { type: Number, required: true, default: 0, min: 0 },
     totalQuestionsAttempted: { type: Number, required: true, default: 0, min: 0 },
     totalQuestionsCorrect: { type: Number, required: true, default: 0, min: 0 },
@@ -234,9 +261,9 @@ const userProgressSchema = new Schema<IUserProgressDoc>(
 // Indexes for efficient querying
 userProgressSchema.index({ xp: -1 }); // Leaderboard queries
 userProgressSchema.index({ level: -1 }); // Level-based queries
-userProgressSchema.index({ 'streaks.currentStreak': -1 }); // Streak leaderboard
+userProgressSchema.index({ "streaks.currentStreak": -1 }); // Streak leaderboard
 userProgressSchema.index({ updatedAt: -1 }); // Recent activity
-userProgressSchema.index({ 'badges.badgeId': 1 }); // Badge queries
+userProgressSchema.index({ "badges.badgeId": 1 }); // Badge queries
 
 // Static method: Find user progress or create if doesn't exist
 userProgressSchema.statics.findOrCreate = async function (userId: string | ObjectId) {
@@ -254,6 +281,13 @@ userProgressSchema.statics.findOrCreate = async function (userId: string | Objec
         longestStreak: 0,
         lastActivityDate: new Date(),
         missedDays: 0,
+        freezesUsed: 0,
+        freezesAvailable: 2,
+      },
+      coins: {
+        balance: 0,
+        earned: 0,
+        spent: 0,
       },
       totalStudyTimeMinutes: 0,
       totalQuestionsAttempted: 0,
@@ -284,7 +318,7 @@ userProgressSchema.statics.findOrCreate = async function (userId: string | Objec
 userProgressSchema.statics.getLeaderboard = function (options: {
   limit?: number;
   offset?: number;
-  timeFrame?: 'weekly' | 'monthly' | 'all_time';
+  timeFrame?: "weekly" | "monthly" | "all_time";
 }) {
   const { limit = 100, offset = 0 } = options;
 
@@ -294,8 +328,8 @@ userProgressSchema.statics.getLeaderboard = function (options: {
     .sort({ xp: -1 })
     .skip(offset)
     .limit(limit)
-    .select('userId xp level streaks.currentStreak badges')
-    .populate('userId', 'displayName email');
+    .select("userId xp level streaks.currentStreak badges")
+    .populate("userId", "displayName email");
 };
 
 // Static method: Get user rank
@@ -326,16 +360,16 @@ userProgressSchema.methods.getMasteryStats = function () {
     stats.totalQuestions++;
 
     switch (progress.masteryLevel) {
-      case 'mastered':
+      case "mastered":
         stats.mastered++;
         break;
-      case 'familiar':
+      case "familiar":
         stats.familiar++;
         break;
-      case 'learning':
+      case "learning":
         stats.learning++;
         break;
-      case 'new':
+      case "new":
         stats.new++;
         break;
     }
@@ -360,4 +394,46 @@ userProgressSchema.methods.getMasteryStats = function () {
   return stats;
 };
 
-export const UserProgress = model<IUserProgressDoc>('UserProgress', userProgressSchema);
+// Bookmark management methods
+userProgressSchema.methods.toggleBookmark = async function (questionId: string) {
+  const progress = this.questions.get(questionId);
+
+  if (progress) {
+    // Question progress exists, toggle bookmark
+    progress.isBookmarked = !progress.isBookmarked;
+    this.questions.set(questionId, progress);
+  } else {
+    // No progress exists, create new with bookmark
+    this.questions.set(questionId, {
+      questionId,
+      masteryLevel: "new" as MasteryLevel,
+      attempts: 0,
+      correctCount: 0,
+      wrongCount: 0,
+      lastAttemptDate: new Date(),
+      nextReviewDate: new Date(),
+      averageTimeSeconds: 0,
+      struggledOn: [],
+      isBookmarked: true,
+    });
+  }
+
+  return await this.save();
+};
+
+userProgressSchema.methods.getBookmarkedQuestionIds = function () {
+  const bookmarkedIds: string[] = [];
+  for (const [questionId, progress] of this.questions) {
+    if (progress.isBookmarked) {
+      bookmarkedIds.push(questionId);
+    }
+  }
+  return bookmarkedIds;
+};
+
+userProgressSchema.methods.isQuestionBookmarked = function (questionId: string) {
+  const progress = this.questions.get(questionId);
+  return progress?.isBookmarked || false;
+};
+
+export const UserProgress = model<IUserProgressDoc>("UserProgress", userProgressSchema);

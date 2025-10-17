@@ -1,12 +1,10 @@
 <template>
   <div class="streak-display">
     <!-- Compact view (for header) -->
-    <div v-if="variant === 'compact'" class="compact-view">
-      <button
-        @click="$emit('click')"
+    <div v-if="props.variant === 'compact'" class="compact-view">
+      <button @click="$emit('click')"
         class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-        :class="statusColorClass"
-      >
+        :class="statusColorClass">
         <span class="text-2xl">{{ streakIcon }}</span>
         <div class="text-left">
           <div class="text-sm font-bold text-gray-900 dark:text-white">
@@ -20,7 +18,7 @@
     </div>
 
     <!-- Card view (for dashboard) -->
-    <div v-else-if="variant === 'card'" class="card-view">
+    <div v-else-if="props.variant === 'card'" class="card-view">
       <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border-2" :class="borderColorClass">
         <!-- Header -->
         <div class="flex items-center justify-between mb-4">
@@ -30,7 +28,9 @@
           </h3>
           <div v-if="isStreakInDanger" class="flex items-center gap-1 text-orange-600 dark:text-orange-400">
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+              <path fill-rule="evenodd"
+                d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                clip-rule="evenodd" />
             </svg>
             <span class="text-sm font-medium">At Risk</span>
           </div>
@@ -53,10 +53,8 @@
             <span>{{ daysUntilNextMilestone }} to go</span>
           </div>
           <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 overflow-hidden">
-            <div
-              class="bg-gradient-to-r from-orange-500 to-red-500 h-2.5 rounded-full transition-all duration-500"
-              :style="{ width: `${progressToNextMilestone}%` }"
-            />
+            <div class="bg-gradient-to-r from-orange-500 to-red-500 h-2.5 rounded-full transition-all duration-500"
+              :style="{ width: `${progressToNextMilestone}%` }" />
           </div>
         </div>
 
@@ -82,12 +80,16 @@
         </div>
 
         <!-- Streak Saver Info -->
-        <div v-if="isStreakInDanger && canUseFreeFreeze" class="mt-4 p-3 bg-orange-50 dark:bg-orange-900/20 rounded-lg border border-orange-200 dark:border-orange-800">
+        <div v-if="isStreakInDanger && canUseFreeFreeze"
+          class="mt-4 p-3 bg-orange-50 dark:bg-orange-900/20 rounded-lg border border-orange-200 dark:border-orange-800">
           <div class="flex items-center gap-2 text-sm text-orange-800 dark:text-orange-200">
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+              <path fill-rule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                clip-rule="evenodd" />
             </svg>
-            <span>You have {{ streak.freezesAvailable }} free freeze{{ streak.freezesAvailable !== 1 ? 's' : '' }} available!</span>
+            <span>You have {{ streak.freezesAvailable }} free freeze{{ streak.freezesAvailable !== 1 ? 's' : '' }}
+              available!</span>
           </div>
         </div>
       </div>
@@ -133,18 +135,15 @@
         <div>
           <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">Milestones</h3>
           <div class="space-y-2">
-            <div
-              v-for="milestone in milestones"
-              :key="milestone"
-              class="flex items-center gap-3 p-3 rounded-lg"
-              :class="achievedMilestones.includes(milestone) ? 'bg-green-50 dark:bg-green-900/20' : 'bg-gray-50 dark:bg-gray-800'"
-            >
-              <div
-                class="w-8 h-8 rounded-full flex items-center justify-center"
-                :class="achievedMilestones.includes(milestone) ? 'bg-green-500' : 'bg-gray-300 dark:bg-gray-700'"
-              >
-                <svg v-if="achievedMilestones.includes(milestone)" class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+            <div v-for="milestone in milestones" :key="milestone" class="flex items-center gap-3 p-3 rounded-lg"
+              :class="achievedMilestones.includes(milestone) ? 'bg-green-50 dark:bg-green-900/20' : 'bg-gray-50 dark:bg-gray-800'">
+              <div class="w-8 h-8 rounded-full flex items-center justify-center"
+                :class="achievedMilestones.includes(milestone) ? 'bg-green-500' : 'bg-gray-300 dark:bg-gray-700'">
+                <svg v-if="achievedMilestones.includes(milestone)" class="w-5 h-5 text-white" fill="currentColor"
+                  viewBox="0 0 20 20">
+                  <path fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd" />
                 </svg>
                 <span v-else class="text-xs text-gray-600 dark:text-gray-400">{{ milestone }}</span>
               </div>
