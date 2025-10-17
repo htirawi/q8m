@@ -9,13 +9,14 @@
       >
         ← {{ t('study.backToSelection') }}
       </button>
-      <div class="flex items-center gap-2">
+      <div class="flex items-center gap-3">
         <span
           class="inline-flex items-center rounded-full px-3 py-1 text-sm font-medium"
           :class="difficultyBadgeClass"
         >
           {{ difficultyIcon }} {{ t(`difficulty.${difficulty}.label`) }}
         </span>
+        <UserMenu />
       </div>
     </div>
 
@@ -33,6 +34,7 @@
 import type { IStudyHeaderProps as Props } from "@/types/components/study";
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+import UserMenu from '@/components/layout/UserMenu.vue';
 
 
 

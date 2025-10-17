@@ -25,6 +25,7 @@ import discussionRoutes from "@routes/discussions";
 import entitlementRoutes from "@routes/entitlements";
 import friendsRoutes from "@routes/friends";
 import gamificationRoutes from "@routes/gamification";
+import learningPathRoutes from "@routes/learning-paths";
 // Notification routes removed - was using Express controllers (dead code)
 import paymentRoutes from "@routes/payments";
 import paypalRoutes from "@routes/paypal";
@@ -34,6 +35,7 @@ import progressRoutes from "@routes/progress";
 import questionRoutes from "@routes/questions";
 import quizResultsRoutes from "@routes/quiz-results";
 import seoRoutes from "@routes/seo";
+import shareRoutes from "@routes/shares";
 import usersRoutes from "@routes/users";
 import rateLimitPlugin from "@server/security/rateLimit";
 import { notificationScheduler } from "@services/notification-scheduler";
@@ -327,9 +329,11 @@ async function registerRoutes() {
   await fastify.register(discussionRoutes, { prefix: "/api/v1/discussions" });
   await fastify.register(friendsRoutes, { prefix: "/api/v1/friends" });
   await fastify.register(challengeRoutes, { prefix: "/api/v1/challenges" });
+  await fastify.register(shareRoutes);
   await fastify.register(progressRoutes, { prefix: "/api/v1/progress" });
   await fastify.register(quizResultsRoutes, { prefix: "/api/v1/quiz/results" });
   await fastify.register(gamificationRoutes, { prefix: "/api/v1/gamification" });
+  await fastify.register(learningPathRoutes, { prefix: "/api/v1/learning-paths" });
   // Notification routes removed - need to be rebuilt with Fastify when needed
   await fastify.register(adminRoutes, { prefix: "/api/v1/admin" });
   await fastify.register(entitlementRoutes, { prefix: "/api/v1/entitlements" });
@@ -619,9 +623,11 @@ export const buildApp = async () => {
   await testApp.register(discussionRoutes, { prefix: "/api/v1/discussions" });
   await testApp.register(friendsRoutes, { prefix: "/api/v1/friends" });
   await testApp.register(challengeRoutes, { prefix: "/api/v1/challenges" });
+  await testApp.register(shareRoutes);
   await testApp.register(progressRoutes, { prefix: "/api/v1/progress" });
   await testApp.register(quizResultsRoutes, { prefix: "/api/v1/quiz/results" });
   await testApp.register(gamificationRoutes, { prefix: "/api/v1/gamification" });
+  await testApp.register(learningPathRoutes, { prefix: "/api/v1/learning-paths" });
   // Notification routes removed - need to be rebuilt with Fastify when needed
   await testApp.register(adminRoutes, { prefix: "/api/v1/admin" });
   await testApp.register(entitlementRoutes, { prefix: "/api/v1/entitlements" });

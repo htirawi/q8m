@@ -4,6 +4,7 @@ import { useRouter } from "vue-router";
 
 import PerformanceMonitor from "@/components/ui/PerformanceMonitor.vue";
 import ToastContainer from "@/components/ui/ToastContainer.vue";
+import UserMenu from "@/components/layout/UserMenu.vue";
 import { usePWA } from "@/composables/usePWA";
 import { useSEO } from "@/composables/useSEO";
 import { useAuthStore } from "@/stores/auth";
@@ -33,10 +34,7 @@ const skipToMain = (event: Event) => {
   }
 };
 
-const handleLogout = async () => {
-  await authStore.logout();
-  router.push("/");
-};
+// Logout is now handled by UserMenu component
 
 // Initialize app
 onMounted(async () => {
@@ -119,24 +117,9 @@ onMounted(async () => {
           </div>
 
           <!-- User Menu -->
-          <div class="nav-user" role="menubar">
+          <div class="nav-user">
             <template v-if="authStore.isAuthenticated">
-              <RouterLink
-                to="/account"
-                class="nav-link"
-                :class="{ 'nav-link--active': $route.name === 'account' }"
-                role="menuitem"
-              >
-                {{ $t("navigation.account") }}
-              </RouterLink>
-              <button
-                @click="handleLogout"
-                class="nav-link nav-link--button"
-                role="menuitem"
-                :aria-label="$t('a11y.logout')"
-              >
-                {{ $t("navigation.logout") }}
-              </button>
+              <UserMenu />
             </template>
             <template v-else>
               <RouterLink to="/login" class="nav-link" role="menuitem">

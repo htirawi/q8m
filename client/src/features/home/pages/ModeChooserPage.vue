@@ -10,21 +10,24 @@
     <div class="relative mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
       <!-- Header -->
       <div class="mb-10 text-center">
-        <button
-          type="button"
-          class="mb-6 inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white/80 px-5 py-2.5 text-sm font-medium text-gray-700 backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:border-purple-300 hover:bg-white hover:shadow-lg dark:border-gray-700 dark:bg-gray-800/80 dark:text-gray-300 dark:hover:border-purple-600 dark:hover:bg-gray-800"
-          @click="goBack"
-        >
-          <svg class="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M10 19l-7-7m0 0l7-7m-7 7h18"
-            />
-          </svg>
-          {{ t('modeChooser.backToLevels') }}
-        </button>
+        <div class="mb-6 flex items-center justify-between">
+          <button
+            type="button"
+            class="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white/80 px-5 py-2.5 text-sm font-medium text-gray-700 backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:border-purple-300 hover:bg-white hover:shadow-lg dark:border-gray-700 dark:bg-gray-800/80 dark:text-gray-300 dark:hover:border-purple-600 dark:hover:bg-gray-800"
+            @click="goBack"
+          >
+            <svg class="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M10 19l-7-7m0 0l7-7m-7 7h18"
+              />
+            </svg>
+            {{ t('modeChooser.backToLevels') }}
+          </button>
+          <UserMenu v-if="authStore.isAuthenticated" />
+        </div>
 
         <div class="mb-4 flex items-center justify-center">
           <div class="animate-fade-in-up rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 p-3 shadow-xl shadow-purple-500/30 dark:shadow-purple-500/20">
@@ -164,6 +167,7 @@ import { useAnalytics } from '@/composables/useAnalytics';
 import { useAuthStore } from '@/stores/auth';
 import { usePreferencesStore } from '@/stores/preferences';
 import ModeCard from '@/components/study/ModeCard.vue';
+import UserMenu from '@/components/layout/UserMenu.vue';
 import type { DifficultyLevel } from '@/types/plan/access';
 
 const { t } = useI18n();

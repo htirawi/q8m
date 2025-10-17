@@ -33,18 +33,12 @@
       <!-- Actions -->
       <div v-if="showActions" class="empty-state-actions">
         <slot name="actions">
-          <button
-            v-if="primaryAction"
-            class="empty-state-btn empty-state-btn--primary"
-            @click="$emit('primary-action')"
-          >
+          <button v-if="primaryAction" class="empty-state-btn empty-state-btn--primary"
+            @click="$emit('primary-action')">
             {{ primaryAction }}
           </button>
-          <button
-            v-if="secondaryAction"
-            class="empty-state-btn empty-state-btn--secondary"
-            @click="$emit('secondary-action')"
-          >
+          <button v-if="secondaryAction" class="empty-state-btn empty-state-btn--secondary"
+            @click="$emit('secondary-action')">
             {{ secondaryAction }}
           </button>
         </slot>
@@ -62,9 +56,18 @@
 import type { IEmptyStateProps as Props } from "@/types/components/ui";
 import { computed } from 'vue';
 
-
-
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<{
+  icon?: string;
+  title?: string;
+  description?: string;
+  illustration?: string;
+  variant?: 'default' | 'compact' | 'large' | 'error' | 'info';
+  showIcon?: boolean;
+  showActions?: boolean;
+  primaryAction?: string;
+  secondaryAction?: string;
+  helpText?: string;
+}>(), {
   showIcon: true,
   showActions: true,
   variant: 'default',
@@ -229,9 +232,12 @@ const defaultIcon = computed(() => {
 
 /* Animations */
 @keyframes bounce-subtle {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(-10px);
   }

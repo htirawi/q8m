@@ -21,6 +21,19 @@
                     <StreakDisplay variant="compact" @click="showStreakModal = true" />
                     <CoinBalance variant="compact" @click="showCoinsModal = true" />
                 </div>
+                <div class="flex items-center gap-3">
+                    <button
+                        type="button"
+                        class="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-purple-600 to-blue-600 px-4 py-2 text-sm font-medium text-white shadow-lg transition-all hover:from-purple-700 hover:to-blue-700 hover:shadow-xl"
+                        @click="goToLearningPaths"
+                    >
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                        </svg>
+                        <span>Learning Paths</span>
+                    </button>
+                    <UserMenu />
+                </div>
             </div>
 
             <!-- Streak Saver Warning (if applicable) -->
@@ -350,6 +363,7 @@ import LockedBadge from "@/components/paywall/LockedBadge.vue";
 import StreakDisplay from "@/features/gamification/components/StreakDisplay.vue";
 import CoinBalance from "@/features/gamification/components/CoinBalance.vue";
 import StreakSaver from "@/features/gamification/components/StreakSaver.vue";
+import UserMenu from "@/components/layout/UserMenu.vue";
 import { canAccessLevel } from "@/types/plan/access";
 import type { ExperienceLevel } from "@/types/plan/access";
 
@@ -469,5 +483,9 @@ const getLevelIconClass = (level: ExperienceLevel) => {
     };
 
     return `${baseClass} ${colorMap[level]} group-hover:scale-110 group-hover:shadow-lg`;
+};
+
+const goToLearningPaths = () => {
+    router.push(`/${locale.value}/paths`);
 };
 </script>

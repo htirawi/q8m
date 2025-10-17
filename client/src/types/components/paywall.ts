@@ -5,11 +5,15 @@
 import type { PlanTier } from "@shared/types/plan";
 
 export interface InlineUpsellCardProps {
-  feature: string;
-  requiredPlan: PlanTier;
+  title: string;
+  subtitle: string;
+  targetPlan: PlanTier;
   benefits?: string[];
   ctaText?: string;
 }
+
+// Alias for backwards compatibility
+export interface IInlineUpsellCardProps extends InlineUpsellCardProps {}
 
 export interface ILockedBadgeProps {
   requiredPlan: PlanTier;

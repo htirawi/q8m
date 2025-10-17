@@ -4,7 +4,12 @@
     "currency": "$",
     "perMonth": "/month",
     "selected": "selected",
-    "notSelected": "not selected"
+    "notSelected": "not selected",
+    "new": "New",
+    "retry": "Retry"
+  },
+  "errors": {
+    "logoutFailed": "Failed to log out. Please try again."
   },
   "navigation": {
     "home": "Home",
@@ -14,10 +19,14 @@
     "account": "Account",
     "profile": "Profile",
     "settings": "Settings",
+    "dashboard": "Dashboard",
+    "learningPaths": "Learning Paths",
+    "upgrade": "Upgrade to Premium",
     "userMenu": "User menu",
     "login": "Login",
     "register": "Register",
     "logout": "Logout",
+    "loggingOut": "Logging out...",
     "about": "About",
     "contact": "Contact",
     "help": "Help",
@@ -945,6 +954,12 @@
     "followOnLinkedIn": "Follow us on LinkedIn",
     "followOnGitHub": "Follow us on GitHub",
     "logout": "Logout",
+    "userMenu": "User menu - Click to open account options",
+    "menuOpened": "User menu opened. {count} options available. Signed in as {name}, {email}, {plan} plan.",
+    "menuClosed": "User menu closed",
+    "loggingOut": "Signing you out...",
+    "loggedOut": "You have been signed out successfully",
+    "logoutFailed": "Logout failed. Please try again.",
     "switchLanguage": "Switch language",
     "closeModal": "Close modal",
     "dismissNotification": "Dismiss notification"
@@ -1049,7 +1064,15 @@
     "welcome": "Welcome back",
     "resume": {
       "title": "Continue where you left off",
+      "startQuiz": "Start Quiz",
       "noneAvailable": "No recent activity. Start a new quiz!"
+    },
+    "recentActivity": "Recent Activity",
+    "noActivity": {
+      "title": "No Activity Yet",
+      "description": "Start your learning journey by taking a quiz or exploring study materials.",
+      "startLearning": "Start Learning",
+      "viewProgress": "View Progress"
     },
     "yourPlan": "Your Plan",
     "manage": "Manage",
@@ -1572,6 +1595,9 @@
   },
   "keyboard": {
     "shortcuts": "Keyboard Shortcuts",
+    "navigate": "Navigate",
+    "quickSelect": "Quick select",
+    "close": "Close",
     "quiz": {
       "space": "Submit answer / Next question",
       "enter": "Submit answer",

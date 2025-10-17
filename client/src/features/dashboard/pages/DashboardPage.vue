@@ -29,6 +29,7 @@
           >
             {{ t('dashboard.manage') }}
           </button>
+          <UserMenu />
         </div>
       </div>
 
@@ -99,6 +100,7 @@ import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 import { usePlanStore } from "@/stores/plan";
 import EmptyState from "@/components/EmptyState.vue";
+import UserMenu from "@/components/layout/UserMenu.vue";
 
 const { t } = useI18n();
 const router = useRouter();
