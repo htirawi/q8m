@@ -1,14 +1,14 @@
-import rateLimit from '@fastify/rate-limit';
-import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
-import type mongoose from 'mongoose';
-import { z } from 'zod';
+import rateLimit from "@fastify/rate-limit";
+import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
+import type mongoose from "mongoose";
+import { z } from "zod";
 
-import { authenticate } from '../middlewares/auth.middleware.js';
-import { Badge } from '../models/Badge.js';
-import { Challenge } from '../models/Challenge.js';
-import { QuizResult } from '../models/QuizResult.js';
-import { Share } from '../models/Share.js';
-import { User } from '../models/User.js';
+import { authenticate } from "../middlewares/auth.middleware.js";
+import { Badge } from "../models/Badge.js";
+import { Challenge } from "../models/Challenge.js";
+import { QuizResult } from "../models/QuizResult.js";
+import { Share } from "../models/Share.js";
+import { User } from "../models/User.js";
 
 interface AuthenticatedRequest extends FastifyRequest {
   user: {
@@ -26,26 +26,33 @@ interface SharePreviewData {
 }
 
 const createShareSchema = z.object({
-  shareType: z.enum(['quiz_result', 'achievement', 'streak', 'challenge_victory', 'profile', 'badge']),
-  entityId: z.string().regex(/^[0-9a-fA-F]{24}$/, 'Invalid entity ID'),
-  platform: z.enum(['twitter', 'facebook', 'linkedin', 'whatsapp', 'email', 'copy_link']),
+  shareType: z.enum([
+    "quiz_result",
+    "achievement",
+    "streak",
+    "challenge_victory",
+    "profile",
+    "badge",
+  ]),
+  entityId: z.string().regex(/^[0-9a-fA-F]{24}$/, "Invalid entity ID"),
+  platform: z.enum(["twitter", "facebook", "linkedin", "whatsapp", "email", "copy_link"]),
   metadata: z.record(z.any()).optional(),
 });
 
 const shareStatsSchema = z.object({
-  period: z.enum(['day', 'week', 'month', 'all']).optional().default('all'),
+  period: z.enum(["day", "week", "month", "all"]).optional().default("all"),
 });
 
 export default async function shareRoutes(fastify: FastifyInstance) {
   // Apply rate limiting to share creation
   await fastify.register(rateLimit, {
     max: 50,
-    timeWindow: '15 minutes',
+    timeWindow: "15 minutes",
   });
 
   // Create/track a share
   fastify.post(
-    '/api/v1/shares',
+    "/api/v1/shares",
     {
       preHandler: [authenticate],
     },
@@ -71,14 +78,14 @@ export default async function shareRoutes(fastify: FastifyInstance) {
         if (error instanceof z.ZodError) {
           return reply.status(400).send({
             success: false,
-            message: 'Invalid request data',
+            message: "Invalid request data",
             errors: error.errors,
           });
         }
         fastify.log.error(error);
         return reply.status(500).send({
           success: false,
-          message: 'Failed to create share',
+          message: "Failed to create share",
         });
       }
     }
@@ -86,7 +93,7 @@ export default async function shareRoutes(fastify: FastifyInstance) {
 
   // Get share preview data
   fastify.get(
-    '/api/v1/shares/preview/:shareType/:entityId',
+    "/api/v1/shares/preview/:shareType/:entityId",
     {
       preHandler: [authenticate],
     },
@@ -101,27 +108,31 @@ export default async function shareRoutes(fastify: FastifyInstance) {
         let previewData: SharePreviewData;
 
         switch (shareType) {
-          case 'quiz_result': {
+          case "quiz_result": {
             const result = await QuizResult.findOne({
               _id: entityId,
               userId,
-            }).populate('quizId', 'title framework difficulty');
+            }).populate("quizId", "title framework difficulty");
 
             if (!result) {
               return reply.status(404).send({
                 success: false,
-                message: 'Quiz result not found',
+                message: "Quiz result not found",
               });
             }
 
-            const user = await User.findById(userId, 'username profilePicture');
+            const user = await User.findById(userId, "username profilePicture");
             const percentage = Math.round((result.score / result.totalQuestions) * 100);
 
-            const quizData = result.quizId as unknown as { title?: string; framework?: string; difficulty?: string };
+            const quizData = result.quizId as unknown as {
+              title?: string;
+              framework?: string;
+              difficulty?: string;
+            };
             previewData = {
-              title: `I scored ${percentage}% on ${quizData.title || 'a quiz'}!`,
+              title: `I scored ${percentage}% on ${quizData.title || "a quiz"}!`,
               description: `${result.correctAnswers}/${result.totalQuestions} correct answers in ${Math.round(result.totalTimeSeconds / 60)}min. Can you beat my score?`,
-              imageUrl: user?.avatar || '/default-avatar.png',
+              imageUrl: user?.avatar || "/default-avatar.png",
               metadata: {
                 score: result.score,
                 totalQuestions: result.totalQuestions,
@@ -134,8 +145,8 @@ export default async function shareRoutes(fastify: FastifyInstance) {
             break;
           }
 
-          case 'achievement':
-          case 'badge': {
+          case "achievement":
+          case "badge": {
             const badge = await Badge.findOne({
               _id: entityId,
               userId,
@@ -144,16 +155,16 @@ export default async function shareRoutes(fastify: FastifyInstance) {
             if (!badge) {
               return reply.status(404).send({
                 success: false,
-                message: 'Badge not found',
+                message: "Badge not found",
               });
             }
 
-            const user = await User.findById(userId, 'name avatar');
+            const user = await User.findById(userId, "name avatar");
 
             previewData = {
               title: `I just unlocked the "${badge.name}" badge!`,
               description: badge.description || `Achievement unlocked on Quiz8Master!`,
-              imageUrl: badge.icon || user?.avatar || '/default-badge.png',
+              imageUrl: badge.icon || user?.avatar || "/default-badge.png",
               metadata: {
                 badgeName: badge.name,
                 badgeCategory: badge.category,
@@ -163,13 +174,13 @@ export default async function shareRoutes(fastify: FastifyInstance) {
             break;
           }
 
-          case 'streak': {
-            const user = await User.findById(userId, 'name avatar streak');
+          case "streak": {
+            const user = await User.findById(userId, "name avatar streak");
 
             if (!user) {
               return reply.status(404).send({
                 success: false,
-                message: 'User not found',
+                message: "User not found",
               });
             }
 
@@ -178,7 +189,7 @@ export default async function shareRoutes(fastify: FastifyInstance) {
             previewData = {
               title: `I'm on a ${streakDays}-day learning streak!`,
               description: `Join me on Quiz8Master and build your coding knowledge daily!`,
-              imageUrl: user.avatar || '/default-avatar.png',
+              imageUrl: user.avatar || "/default-avatar.png",
               metadata: {
                 streakDays,
                 username: user.name,
@@ -187,19 +198,19 @@ export default async function shareRoutes(fastify: FastifyInstance) {
             break;
           }
 
-          case 'challenge_victory': {
+          case "challenge_victory": {
             const challenge = await Challenge.findOne({
               _id: entityId,
               $or: [{ challengerId: userId }, { challengedUserId: userId }],
-              status: 'completed',
+              status: "completed",
             })
-              .populate('challengerId', 'name')
-              .populate('challengedUserId', 'name');
+              .populate("challengerId", "name")
+              .populate("challengedUserId", "name");
 
             if (!challenge) {
               return reply.status(404).send({
                 success: false,
-                message: 'Challenge not found',
+                message: "Challenge not found",
               });
             }
 
@@ -216,7 +227,7 @@ export default async function shareRoutes(fastify: FastifyInstance) {
                 ? `I beat ${opponent} in a quiz challenge!`
                 : `Great challenge with ${opponent}!`,
               description: `${challenge.challengerScore} - ${challenge.challengedScore} in ${challenge.framework} quiz`,
-              imageUrl: '/challenge-victory.png',
+              imageUrl: "/challenge-victory.png",
               metadata: {
                 challengerScore: challenge.challengerScore,
                 challengedScore: challenge.challengedScore,
@@ -228,13 +239,13 @@ export default async function shareRoutes(fastify: FastifyInstance) {
             break;
           }
 
-          case 'profile': {
-            const user = await User.findById(userId, 'name avatar gamification bio');
+          case "profile": {
+            const user = await User.findById(userId, "name avatar gamification bio");
 
             if (!user) {
               return reply.status(404).send({
                 success: false,
-                message: 'User not found',
+                message: "User not found",
               });
             }
 
@@ -243,7 +254,7 @@ export default async function shareRoutes(fastify: FastifyInstance) {
               description:
                 user.bio ||
                 `Level ${user.gamification?.level || 1} | ${user.gamification?.xp || 0} XP | Join me in mastering coding!`,
-              imageUrl: user.avatar || '/default-avatar.png',
+              imageUrl: user.avatar || "/default-avatar.png",
               metadata: {
                 username: user.name,
                 level: user.gamification?.level,
@@ -257,7 +268,7 @@ export default async function shareRoutes(fastify: FastifyInstance) {
           default:
             return reply.status(400).send({
               success: false,
-              message: 'Invalid share type',
+              message: "Invalid share type",
             });
         }
 
@@ -269,7 +280,7 @@ export default async function shareRoutes(fastify: FastifyInstance) {
         fastify.log.error(error);
         return reply.status(500).send({
           success: false,
-          message: 'Failed to generate share preview',
+          message: "Failed to generate share preview",
         });
       }
     }
@@ -277,7 +288,7 @@ export default async function shareRoutes(fastify: FastifyInstance) {
 
   // Get user's share statistics
   fastify.get(
-    '/api/v1/shares/stats',
+    "/api/v1/shares/stats",
     {
       preHandler: [authenticate],
     },
@@ -290,17 +301,17 @@ export default async function shareRoutes(fastify: FastifyInstance) {
         const now = new Date();
 
         switch (query.period) {
-          case 'day':
+          case "day":
             dateFilter.createdAt = {
               $gte: new Date(now.setHours(0, 0, 0, 0)),
             };
             break;
-          case 'week':
+          case "week":
             dateFilter.createdAt = {
               $gte: new Date(now.setDate(now.getDate() - 7)),
             };
             break;
-          case 'month':
+          case "month":
             dateFilter.createdAt = {
               $gte: new Date(now.setMonth(now.getMonth() - 1)),
             };
@@ -311,15 +322,15 @@ export default async function shareRoutes(fastify: FastifyInstance) {
           Share.countDocuments({ userId, ...dateFilter }),
           Share.aggregate([
             { $match: { userId, ...dateFilter } },
-            { $group: { _id: '$shareType', count: { $sum: 1 } } },
+            { $group: { _id: "$shareType", count: { $sum: 1 } } },
           ]),
           Share.aggregate([
             { $match: { userId, ...dateFilter } },
-            { $group: { _id: '$platform', count: { $sum: 1 } } },
+            { $group: { _id: "$platform", count: { $sum: 1 } } },
           ]),
           Share.aggregate([
             { $match: { userId, ...dateFilter } },
-            { $group: { _id: null, totalClicks: { $sum: '$clicks' } } },
+            { $group: { _id: null, totalClicks: { $sum: "$clicks" } } },
           ]),
         ]);
 
@@ -348,14 +359,14 @@ export default async function shareRoutes(fastify: FastifyInstance) {
         if (error instanceof z.ZodError) {
           return reply.status(400).send({
             success: false,
-            message: 'Invalid request data',
+            message: "Invalid request data",
             errors: error.errors,
           });
         }
         fastify.log.error(error);
         return reply.status(500).send({
           success: false,
-          message: 'Failed to get share statistics',
+          message: "Failed to get share statistics",
         });
       }
     }
@@ -363,7 +374,7 @@ export default async function shareRoutes(fastify: FastifyInstance) {
 
   // Track share click (public endpoint)
   fastify.post(
-    '/api/v1/shares/:shareId/click',
+    "/api/v1/shares/:shareId/click",
     async (request: FastifyRequest, reply: FastifyReply) => {
       try {
         const { shareId } = request.params as { shareId: string };
@@ -374,13 +385,13 @@ export default async function shareRoutes(fastify: FastifyInstance) {
 
         return reply.send({
           success: true,
-          message: 'Click tracked',
+          message: "Click tracked",
         });
       } catch (error: any) {
         fastify.log.error(error);
         return reply.status(500).send({
           success: false,
-          message: 'Failed to track click',
+          message: "Failed to track click",
         });
       }
     }
