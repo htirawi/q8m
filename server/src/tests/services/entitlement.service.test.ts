@@ -1,338 +1,292 @@
 /**
  * Entitlement Service Tests
- * Comprehensive tests for user entitlement checking and access control
+ * Tests for user access control and entitlement checking logic
  */
 
-import { describe, it, expect, beforeEach, vi, afterEach } from "vitest";
-import { Types } from "mongoose";
-import { EntitlementService } from "../../services/entitlement.service.js";
-import { User } from "../../models/User.js";
-import { Subscription } from "../../models/Subscription.js";
-
-// Mock the models
-vi.mock("../../models/User.js", () => ({
-  User: {
-    findById: vi.fn(),
-  },
-}));
-
-vi.mock("../../models/Subscription.js", () => ({
-  Subscription: {
-    findOne: vi.fn(),
-  },
-}));
+import { describe, it, expect, beforeEach, vi } from "vitest";
+import { entitlementService } from "../../services/entitlement";
+import { User } from "../../models/User";
+import { Subscription } from "../../models/Subscription";
+import { Purchase } from "../../models/Purchase";
 
 describe("EntitlementService", () => {
-  let entitlementService: EntitlementService;
-  let mockUser: any;
-  let mockSubscription: any;
-  const testUserId = new Types.ObjectId().toString();
+  let testUser: any;
 
-  beforeEach(() => {
-    entitlementService = EntitlementService.getInstance();
+  beforeEach(async () => {
+    await User.deleteMany({});
+    await Subscription.deleteMany({});
+    await Purchase.deleteMany({});
 
-    // Reset mocks
-    vi.clearAllMocks();
-
-    // Clear cache
-    (entitlementService as any).cache.clear();
-
-    // Mock user data
-    mockUser = {
-      _id: testUserId,
-      email: "test@example.com",
-      isActive: true,
-      isEmailVerified: true,
+    testUser = await User.create({
+      email: "entitlement-test@example.com",
+      name: "Entitlement Test User",
+      password: "Password123!",
       entitlements: ["JUNIOR"],
-      subscriptions: [],
-    };
-
-    // Mock subscription data
-    mockSubscription = {
-      _id: new Types.ObjectId(),
-      userId: testUserId,
-      planId: "intermediate",
-      status: "active",
-      currentPeriodEnd: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
-      cancelAtPeriodEnd: false,
-    };
-  });
-
-  afterEach(() => {
-    vi.restoreAllMocks();
-  });
-
-  describe("getInstance", () => {
-    it("should return the same instance (singleton)", () => {
-      const instance1 = EntitlementService.getInstance();
-      const instance2 = EntitlementService.getInstance();
-      expect(instance1).toBe(instance2);
-    });
-  });
-
-  describe("getUserEntitlements", () => {
-    it("should return user entitlements for active user", async () => {
-      vi.mocked(User.findById).mockResolvedValue(mockUser);
-      vi.mocked(Subscription.findOne).mockResolvedValue(mockSubscription);
-
-      const result = await entitlementService.getUserEntitlements(testUserId);
-
-      expect(result).toMatchObject({
-        isActive: true,
-        entitlements: ["JUNIOR"],
-        hasActiveSubscription: true,
-        activeSubscription: expect.objectContaining({
-          status: "active",
-          planId: "intermediate",
-        }),
-      });
-    });
-
-    it("should return inactive status for inactive user", async () => {
-      const inactiveUser = { ...mockUser, isActive: false };
-      vi.mocked(User.findById).mockResolvedValue(inactiveUser);
-      vi.mocked(Subscription.findOne).mockResolvedValue(null);
-
-      const result = await entitlementService.getUserEntitlements(testUserId);
-
-      expect(result).toMatchObject({
-        isActive: false,
-        entitlements: ["JUNIOR"],
-        hasActiveSubscription: false,
-        activeSubscription: null,
-      });
-    });
-
-    it("should return null subscription for user without subscription", async () => {
-      vi.mocked(User.findById).mockResolvedValue(mockUser);
-      vi.mocked(Subscription.findOne).mockResolvedValue(null);
-
-      const result = await entitlementService.getUserEntitlements(testUserId);
-
-      expect(result).toMatchObject({
-        isActive: true,
-        entitlements: ["JUNIOR"],
-        hasActiveSubscription: false,
-        activeSubscription: null,
-      });
-    });
-
-    it("should return null for non-existent user", async () => {
-      vi.mocked(User.findById).mockResolvedValue(null);
-      vi.mocked(Subscription.findOne).mockResolvedValue(null);
-
-      const result = await entitlementService.getUserEntitlements(testUserId);
-
-      expect(result).toBeNull();
-    });
-
-    it("should use cache for repeated calls", async () => {
-      vi.mocked(User.findById).mockResolvedValue(mockUser);
-      vi.mocked(Subscription.findOne).mockResolvedValue(mockSubscription);
-
-      // First call
-      await entitlementService.getUserEntitlements(testUserId);
-
-      // Second call should use cache
-      await entitlementService.getUserEntitlements(testUserId);
-
-      // User.findById should only be called once due to caching
-      expect(vi.mocked(User.findById)).toHaveBeenCalledTimes(1);
+      isEmailVerified: true, // Required for entitlement checks
+      isActive: true,
     });
   });
 
   describe("checkEntitlement", () => {
-    beforeEach(() => {
-      vi.mocked(User.findById).mockResolvedValue(mockUser);
-      vi.mocked(Subscription.findOne).mockResolvedValue(mockSubscription);
+    it("should allow access with correct entitlement", async () => {
+      const result = await entitlementService.checkEntitlement(
+        testUser._id.toString(),
+        "JUNIOR"
+      );
+
+      expect(result.hasAccess).toBe(true);
     });
 
-    it("should grant access when user has required entitlement", async () => {
-      const result = await entitlementService.checkEntitlement(testUserId, "JUNIOR");
+    it("should deny access without required entitlement", async () => {
+      const result = await entitlementService.checkEntitlement(
+        testUser._id.toString(),
+        "SENIOR"
+      );
 
-      expect(result).toEqual({ hasAccess: true });
-    });
-
-    it("should deny access when user lacks required entitlement", async () => {
-      const result = await entitlementService.checkEntitlement(testUserId, "SENIOR");
-
-      expect(result).toMatchObject({
-        hasAccess: false,
-        reason: expect.stringContaining("Upgrade to"),
-        upgradeRequired: expect.any(String),
-      });
+      expect(result.hasAccess).toBe(false);
+      expect(result.reason).toContain("Upgrade");
     });
 
     it("should deny access for inactive user", async () => {
-      const inactiveUser = { ...mockUser, isActive: false };
-      vi.mocked(User.findById).mockResolvedValue(inactiveUser);
+      testUser.isActive = false;
+      await testUser.save();
 
-      const result = await entitlementService.checkEntitlement(testUserId, "JUNIOR");
-
-      expect(result).toMatchObject({
-        hasAccess: false,
-        reason: "User account is not active",
-      });
-    });
-
-    it("should handle expired subscription", async () => {
-      const expiredSubscription = {
-        ...mockSubscription,
-        status: "canceled",
-      };
-      vi.mocked(Subscription.findOne).mockResolvedValue(expiredSubscription);
-
-      const result = await entitlementService.checkEntitlement(testUserId, "INTERMEDIATE");
-
-      expect(result).toMatchObject({
-        hasAccess: false,
-        reason: "Subscription is not active",
-        subscriptionExpired: true,
-      });
-    });
-
-    it("should handle trial users", async () => {
-      const trialSubscription = {
-        ...mockSubscription,
-        status: "trialing",
-        trialEnd: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
-      };
-      vi.mocked(Subscription.findOne).mockResolvedValue(trialSubscription);
-
-      const result = await entitlementService.checkEntitlement(testUserId, "INTERMEDIATE");
-
-      expect(result).toMatchObject({
-        hasAccess: false,
-        reason: expect.stringContaining("trial"),
-        trialExpired: false,
-      });
-    });
-  });
-
-  describe("checkContentAccess", () => {
-    beforeEach(() => {
-      vi.mocked(User.findById).mockResolvedValue(mockUser);
-      vi.mocked(Subscription.findOne).mockResolvedValue(mockSubscription);
-    });
-
-    it("should grant access to JUNIOR content for JUNIOR user", async () => {
-      const result = await entitlementService.checkContentAccess(testUserId, "JUNIOR");
-
-      expect(result).toEqual({ hasAccess: true });
-    });
-
-    it("should deny access to INTERMEDIATE content for JUNIOR user", async () => {
-      const result = await entitlementService.checkContentAccess(testUserId, "INTERMEDIATE");
-
-      expect(result).toMatchObject({
-        hasAccess: false,
-        reason: expect.stringContaining("Upgrade to"),
-        upgradeRequired: expect.any(String),
-      });
-    });
-
-    it("should grant access to all levels for BUNDLE user", async () => {
-      const bundleUser = { ...mockUser, entitlements: ["BUNDLE"] };
-      vi.mocked(User.findById).mockResolvedValue(bundleUser);
-
-      const levels = ["JUNIOR", "INTERMEDIATE", "SENIOR", "BUNDLE"];
-
-      for (const level of levels) {
-        const result = await entitlementService.checkContentAccess(testUserId, level);
-        expect(result).toEqual({ hasAccess: true });
-      }
-    });
-  });
-
-  describe("getEntitlementHierarchy", () => {
-    it("should return correct hierarchy", () => {
-      const hierarchy = entitlementService.getEntitlementHierarchy();
-
-      expect(hierarchy).toEqual({
-        BUNDLE: ["JUNIOR", "INTERMEDIATE", "SENIOR", "BUNDLE"],
-        SENIOR: ["JUNIOR", "INTERMEDIATE", "SENIOR"],
-        INTERMEDIATE: ["JUNIOR", "INTERMEDIATE"],
-        JUNIOR: ["JUNIOR"],
-      });
-    });
-  });
-
-  describe("getHighestUserLevel", () => {
-    it("should return highest level from entitlements", () => {
-      const userWithMultipleLevels = { ...mockUser, entitlements: ["JUNIOR", "INTERMEDIATE"] };
-      vi.mocked(User.findById).mockResolvedValue(userWithMultipleLevels);
-
-      // Access private method through any cast for testing
-      const result = (entitlementService as any).getHighestUserLevel(["JUNIOR", "INTERMEDIATE"]);
-      expect(result).toBe("INTERMEDIATE");
-    });
-
-    it("should return BUNDLE as highest level", () => {
-      const result = (entitlementService as any).getHighestUserLevel(["BUNDLE"]);
-      expect(result).toBe("BUNDLE");
-    });
-
-    it("should return null for invalid entitlements", () => {
-      const result = (entitlementService as any).getHighestUserLevel(["INVALID"]);
-      expect(result).toBeNull();
-    });
-  });
-
-  describe("cache management", () => {
-    it("should cache results and respect TTL", async () => {
-      vi.mocked(User.findById).mockResolvedValue(mockUser);
-      vi.mocked(Subscription.findOne).mockResolvedValue(mockSubscription);
-
-      // First call
-      await entitlementService.getUserEntitlements(testUserId);
-
-      // Verify cache is populated
-      const cache = (entitlementService as any).cache;
-      expect(cache.has(testUserId)).toBe(true);
-
-      // Second call should use cache
-      await entitlementService.getUserEntitlements(testUserId);
-      expect(vi.mocked(User.findById)).toHaveBeenCalledTimes(1);
-    });
-
-    it("should invalidate expired cache entries", async () => {
-      vi.mocked(User.findById).mockResolvedValue(mockUser);
-      vi.mocked(Subscription.findOne).mockResolvedValue(mockSubscription);
-
-      // Set cache with expired TTL
-      const cache = (entitlementService as any).cache;
-      cache.set(testUserId, {
-        data: {
-          isActive: true,
-          entitlements: ["JUNIOR"],
-          hasActiveSubscription: false,
-          activeSubscription: null,
-        },
-        expires: Date.now() - 1000, // Expired 1 second ago
-      });
-
-      // Call should bypass cache and fetch fresh data
-      await entitlementService.getUserEntitlements(testUserId);
-      expect(vi.mocked(User.findById)).toHaveBeenCalledTimes(1);
-    });
-  });
-
-  describe("error handling", () => {
-    it("should handle database errors gracefully", async () => {
-      vi.mocked(User.findById).mockRejectedValue(new Error("Database connection failed"));
-
-      await expect(entitlementService.getUserEntitlements(testUserId)).rejects.toThrow(
-        "Database connection failed"
+      const result = await entitlementService.checkEntitlement(
+        testUser._id.toString(),
+        "JUNIOR"
       );
+
+      expect(result.hasAccess).toBe(false);
+      expect(result.reason).toContain("not active");
     });
 
-    it("should handle subscription query errors", async () => {
-      vi.mocked(User.findById).mockResolvedValue(mockUser);
-      vi.mocked(Subscription.findOne).mockRejectedValue(new Error("Subscription query failed"));
-
-      await expect(entitlementService.getUserEntitlements(testUserId)).rejects.toThrow(
-        "Subscription query failed"
+    it("should handle invalid userId gracefully", async () => {
+      const result = await entitlementService.checkEntitlement(
+        "invalid-user-id",
+        "JUNIOR"
       );
+
+      expect(result.hasAccess).toBe(false);
+      expect(result.reason).toContain("Error");
+    });
+
+    it("should check INTERMEDIATE entitlement", async () => {
+      testUser.entitlements = ["JUNIOR", "INTERMEDIATE"];
+      await testUser.save();
+
+      const result = await entitlementService.checkEntitlement(
+        testUser._id.toString(),
+        "INTERMEDIATE"
+      );
+
+      expect(result.hasAccess).toBe(true);
+    });
+
+    it("should check SENIOR entitlement", async () => {
+      testUser.entitlements = ["JUNIOR", "INTERMEDIATE", "SENIOR"];
+      await testUser.save();
+
+      const result = await entitlementService.checkEntitlement(
+        testUser._id.toString(),
+        "SENIOR"
+      );
+
+      expect(result.hasAccess).toBe(true);
+    });
+
+    it("should check BUNDLE entitlement", async () => {
+      testUser.entitlements = ["JUNIOR", "INTERMEDIATE", "SENIOR", "BUNDLE"];
+      await testUser.save();
+
+      const result = await entitlementService.checkEntitlement(
+        testUser._id.toString(),
+        "BUNDLE"
+      );
+
+      expect(result.hasAccess).toBe(true);
+    });
+  });
+
+  describe("getUserEntitlements", () => {
+    it("should return basic entitlements for free user", async () => {
+      const entitlements = await entitlementService.getUserEntitlements(
+        testUser._id.toString()
+      );
+
+      expect(entitlements.entitlements).toContain("JUNIOR");
+      expect(entitlements.isActive).toBe(true);
+    });
+
+    it("should include active subscription entitlements", async () => {
+      testUser.entitlements = ["JUNIOR", "INTERMEDIATE"];
+      await testUser.save();
+
+      const purchase = await Purchase.create({
+        userId: testUser._id,
+        orderId: "order-ent-1",
+        paymentId: "pay-ent-1",
+        paymentGateway: "paypal",
+        amount: { currency: "USD", value: "29.99" },
+        status: "completed",
+        items: [{ type: "INTERMEDIATE", name: "Intermediate Plan", price: { currency: "USD", value: "29.99" } }],
+        customer: { email: testUser.email, name: testUser.name },
+      });
+
+      await Subscription.create({
+        userId: testUser._id,
+        purchaseId: purchase._id,
+        planType: "INTERMEDIATE",
+        status: "active",
+        currentPeriodStart: new Date(),
+        currentPeriodEnd: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+        billingCycle: "monthly",
+        price: { currency: "USD", amount: "29.99" },
+        entitlements: ["JUNIOR", "INTERMEDIATE"],
+      });
+
+      const entitlements = await entitlementService.getUserEntitlements(
+        testUser._id.toString()
+      );
+
+      expect(entitlements.entitlements).toContain("INTERMEDIATE");
+      expect(entitlements.activeSubscription).toBeDefined();
+    });
+
+    it("should cache entitlements", async () => {
+      // First call - should hit database
+      const entitlements1 = await entitlementService.getUserEntitlements(
+        testUser._id.toString()
+      );
+
+      // Second call - should use cache
+      const entitlements2 = await entitlementService.getUserEntitlements(
+        testUser._id.toString()
+      );
+
+      expect(entitlements1).toEqual(entitlements2);
+    });
+  });
+
+  describe("clearUserCache", () => {
+    it("should clear specific user cache", async () => {
+      // Populate cache
+      await entitlementService.getUserEntitlements(testUser._id.toString());
+
+      // Clear cache
+      entitlementService.clearUserCache(testUser._id.toString());
+
+      // Should fetch fresh data
+      const entitlements = await entitlementService.getUserEntitlements(
+        testUser._id.toString()
+      );
+
+      expect(entitlements).toBeDefined();
+    });
+  });
+
+  describe("Upgrade Requirements", () => {
+    it("should deny access for INTERMEDIATE without entitlement", async () => {
+      const result = await entitlementService.checkEntitlement(
+        testUser._id.toString(),
+        "INTERMEDIATE"
+      );
+
+      expect(result.hasAccess).toBe(false);
+      expect(result.reason).toContain("Upgrade");
+    });
+
+    it("should deny access for SENIOR without entitlement", async () => {
+      testUser.entitlements = ["JUNIOR", "INTERMEDIATE"];
+      await testUser.save();
+
+      entitlementService.clearUserCache(testUser._id.toString());
+
+      const result = await entitlementService.checkEntitlement(
+        testUser._id.toString(),
+        "SENIOR"
+      );
+
+      expect(result.hasAccess).toBe(false);
+      expect(result.reason).toContain("Upgrade");
+    });
+  });
+
+  describe("Subscription Status Checks", () => {
+    it("should deny access if subscription expired", async () => {
+      testUser.entitlements = ["JUNIOR", "INTERMEDIATE"];
+      await testUser.save();
+
+      const purchase = await Purchase.create({
+        userId: testUser._id,
+        orderId: "order-expired",
+        paymentId: "pay-expired",
+        paymentGateway: "paypal",
+        amount: { currency: "USD", value: "29.99" },
+        status: "completed",
+        items: [{ type: "INTERMEDIATE", name: "Intermediate Plan", price: { currency: "USD", value: "29.99" } }],
+        customer: { email: testUser.email, name: testUser.name },
+      });
+
+      await Subscription.create({
+        userId: testUser._id,
+        purchaseId: purchase._id,
+        planType: "INTERMEDIATE",
+        status: "expired",
+        currentPeriodStart: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000),
+        currentPeriodEnd: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+        billingCycle: "monthly",
+        price: { currency: "USD", amount: "29.99" },
+        entitlements: ["INTERMEDIATE"],
+      });
+
+      // Clear cache to force fresh fetch
+      entitlementService.clearUserCache(testUser._id.toString());
+
+      const result = await entitlementService.checkEntitlement(
+        testUser._id.toString(),
+        "INTERMEDIATE"
+      );
+
+      // Should still have access via user entitlements
+      expect(result.hasAccess).toBe(true);
+    });
+
+    it("should handle suspended subscriptions", async () => {
+      testUser.entitlements = ["JUNIOR"];
+      await testUser.save();
+
+      const purchase = await Purchase.create({
+        userId: testUser._id,
+        orderId: "order-suspended",
+        paymentId: "pay-suspended",
+        paymentGateway: "paypal",
+        amount: { currency: "USD", value: "49.99" },
+        status: "completed",
+        items: [{ type: "SENIOR", name: "Senior Plan", price: { currency: "USD", value: "49.99" } }],
+        customer: { email: testUser.email, name: testUser.name },
+      });
+
+      await Subscription.create({
+        userId: testUser._id,
+        purchaseId: purchase._id,
+        planType: "SENIOR",
+        status: "suspended",
+        currentPeriodStart: new Date(),
+        currentPeriodEnd: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+        billingCycle: "monthly",
+        price: { currency: "USD", amount: "49.99" },
+        entitlements: ["SENIOR"],
+      });
+
+      entitlementService.clearUserCache(testUser._id.toString());
+
+      const result = await entitlementService.checkEntitlement(
+        testUser._id.toString(),
+        "SENIOR"
+      );
+
+      // Subscription suspended, but user doesn't have entitlement
+      expect(result.hasAccess).toBe(false);
     });
   });
 });

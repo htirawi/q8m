@@ -10,7 +10,6 @@ export default defineConfig({
       "node_modules/**",
       "dist/**",
       "src/tests/middlewares/auth.middleware.test.ts", // Mongoose model conflict
-      "src/tests/services/entitlement.service.test.ts", // Mongoose model conflict
       "src/tests/paypal/createOrder.spec.ts", // Mongoose model conflict - skipped until PayPal integration complete
     ],
     coverage: {
