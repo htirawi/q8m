@@ -583,16 +583,17 @@ export class IntrusionDetectionService {
 
     // XSS patterns
     // ✅ SECURITY FIX (CodeQL #729): Fixed bad HTML filtering regexp
-    // Replaced .*? with safer patterns to avoid catastrophic backtracking
+    // Properly matches script tags with whitespace variations (e.g., </script >, </script  >)
     const xssPatterns = [
-      /<script[\s\S]{0,1000}?<\/script>/i, // Limited length to prevent backtracking
+      /<script[\s\S]{0,1000}?<\s*\/\s*script\s*>/i, // Matches </script>, </script >, etc.
+      /<script[^>]{0,1000}?>/i, // Opening script tag variations
       /javascript:/i,
       /onerror\s*=/i,
       /onload\s*=/i,
       /<iframe[\s>]/i, // More specific pattern
       /eval\s*\(/i,
-      /<object/i,
-      /<embed/i,
+      /<object[\s>]/i,
+      /<embed[\s>]/i,
       /vbscript:/i,
       /on\w+\s*=/i, // Generic event handler detection
     ];

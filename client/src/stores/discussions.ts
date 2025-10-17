@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
-import { httpClient, getErrorMessage } from "@/utils/httpClient";
+import axios from "axios";
+import { getErrorMessage } from "@/utils/httpClient";
 import { useAuthStore } from "./auth";
 import { useToast } from "@/composables/useToast";
 
