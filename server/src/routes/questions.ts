@@ -219,7 +219,7 @@ export default async function questionRoutes(fastify: FastifyInstance) {
           },
         });
       } catch (error) {
-        fastify.log.error("Reveal answer error:", error);
+        fastify.log.error("Reveal answer error: %s", error);
         reply.status(500).send({
           code: 500,
           error: "Internal Server Error",
