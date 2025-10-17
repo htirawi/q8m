@@ -98,6 +98,7 @@ import { ref, computed, onMounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { useAuthStore } from '@/stores/auth';
+import { usePaymentStore } from '@/stores/payment';
 import { usePlanStore } from '@/stores/plan';
 import { useSkeleton } from '@/composables/useSkeleton';
 import { analytics, EventCategory, EventAction } from '@/services/analytics';
@@ -114,6 +115,7 @@ import ConfettiCelebration from '@/components/ui/ConfettiCelebration.vue';
 const router = useRouter();
 const { t, locale } = useI18n();
 const authStore = useAuthStore();
+const paymentStore = usePaymentStore();
 const planStore = usePlanStore();
 
 // Skeleton loading
@@ -177,10 +179,10 @@ const levelOptions = computed<ILevelCard[]>(() => [
     description: t('levels.intermediate.description'),
     duration: t('levels.intermediate.duration'),
     difficulty: 'intermediate',
-    isLocked: !planStore.hasAccess('intermediate'),
+    isLocked: !paymentStore.hasContentAccess('INTERMEDIATE'),
     isSelected: selectedLevel.value === 'intermediate',
     requiredPlan: 'pro',
-    badge: !planStore.hasAccess('intermediate') ? { text: 'PRO', variant: 'warning' } : undefined,
+    badge: !paymentStore.hasContentAccess('INTERMEDIATE') ? { text: 'PRO', variant: 'warning' } : undefined,
     progress: getUserProgressForLevel('intermediate')
   },
   {
@@ -190,10 +192,10 @@ const levelOptions = computed<ILevelCard[]>(() => [
     description: t('levels.senior.description'),
     duration: t('levels.senior.duration'),
     difficulty: 'senior',
-    isLocked: !planStore.hasAccess('senior'),
+    isLocked: !paymentStore.hasContentAccess('SENIOR'),
     isSelected: selectedLevel.value === 'senior',
     requiredPlan: 'pro',
-    badge: !planStore.hasAccess('senior') ? { text: 'PRO', variant: 'warning' } : undefined,
+    badge: !paymentStore.hasContentAccess('SENIOR') ? { text: 'PRO', variant: 'warning' } : undefined,
     progress: getUserProgressForLevel('senior')
   },
   {
