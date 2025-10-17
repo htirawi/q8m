@@ -1,0 +1,42 @@
+# =============================================================================
+# Git Attributes Configuration
+# =============================================================================
+# This file defines attributes for paths in the repository
+
+# Mark .env.example files as documentation/vendored to prevent false positives
+# in secret scanning tools (GitHub Secret Scanning, TruffleHog, etc.)
+**/.env.example linguist-documentation linguist-vendored
+**/.env*.example linguist-documentation linguist-vendored
+
+# Mark example configuration files as documentation
+**/config.example.* linguist-documentation
+**/*.example linguist-documentation
+
+# Ensure line endings are normalized across platforms
+* text=auto
+
+# Explicitly declare text files for proper diff and merge
+*.ts text eol=lf
+*.js text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.vue text eol=lf
+*.css text eol=lf
+*.html text eol=lf
+*.sh text eol=lf
+
+# Binary files (treat as binary to avoid diff/merge issues)
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.pdf binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+

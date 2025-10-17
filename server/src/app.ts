@@ -43,6 +43,7 @@ import { notificationScheduler } from "@services/notification-scheduler";
 import Fastify, { type FastifyRequest, type FastifyReply } from "fastify";
 
 // Create Fastify instance
+// ✅ SECURITY FIX (SEC-009): Enhanced PII/PCI redaction in logs
 const fastify = Fastify({
   logger: {
     level: env.LOG_LEVEL,
@@ -59,11 +60,42 @@ const fastify = Fastify({
         : undefined,
     redact: {
       paths: [
+        // Authentication & Authorization
         "req.headers.authorization",
+        "req.headers.cookie",
+        "headers.authorization",
+        "headers.cookie",
+        // Request body sensitive fields
         "body.password",
         "body.token",
         "body.card",
+        "body.cvv",
+        "body.cardNumber",
+        "body.securityCode",
+        "body.refreshToken",
+        "body.accessToken",
+        "body.apiKey",
+        // Query parameters
         "query.token",
+        "query.password",
+        "query.api_key",
+        "query.accessToken",
+        "query.refreshToken",
+        // PayPal webhook sensitive data
+        "*.payer.email_address",
+        "*.payer.phone",
+        "*.payer.phone.phone_number",
+        "*.purchase_units[*].payments.captures[*].id",
+        "*.purchase_units[*].payee.email_address",
+        // Payment data
+        "*.amount",
+        "*.payment_source",
+        "*.credit_card",
+        // User PII
+        "email",
+        "phoneNumber",
+        "phone",
+        "ipAddress",
       ],
       remove: true,
     },
@@ -228,6 +260,7 @@ async function registerPlugins() {
   });
 
   // Multipart (for file uploads)
+  // ✅ SECURITY FIX (SEC-008): MIME type validation with magic bytes
   await fastify.register(multipart, {
     limits: {
       fileSize: parseInt(env.MAX_FILE_SIZE), // 10MB

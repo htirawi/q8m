@@ -7,13 +7,51 @@ import type { ValidationResult } from "../types/services/validation";
 export class InputValidationService {
   /**
    * Sanitize string input
+   * ✅ SECURITY FIX (CodeQL #720, #719): Complete multi-character sanitization
+   * and comprehensive URL scheme check to prevent XSS and injection attacks
    */
   sanitizeString(input: string): string {
-    return input
-      .trim()
-      .replace(/[<>]/g, "") // Remove potential HTML tags
-      .replace(/javascript:/gi, "") // Remove javascript: protocol
-      .replace(/on\w+=/gi, ""); // Remove event handlers
+    let sanitized = input.trim();
+
+    // Remove all HTML tags completely (not just < and >)
+    sanitized = sanitized.replace(/<[^>]*>/g, "");
+
+    // Remove dangerous URL schemes (comprehensive list)
+    // Use loop to handle encoded/obfuscated variants
+    const dangerousSchemes = [
+      /javascript:/gi,
+      /data:/gi,
+      /vbscript:/gi,
+      /file:/gi,
+      /about:/gi,
+      /blob:/gi,
+    ];
+
+    for (const scheme of dangerousSchemes) {
+      // Keep replacing until no more matches (handles nested encoding)
+      let prevLength = 0;
+      while (sanitized.length !== prevLength) {
+        prevLength = sanitized.length;
+        sanitized = sanitized.replace(scheme, "");
+        // Also remove URL-encoded variants
+        sanitized = sanitized.replace(/javascript%3a/gi, "");
+        sanitized = sanitized.replace(/&#(0*106|0*74);/gi, ""); // j in various encodings
+        sanitized = sanitized.replace(/\\u006a/gi, ""); // j in unicode escape
+      }
+    }
+
+    // Remove all event handlers (comprehensive)
+    sanitized = sanitized.replace(/\s*on\w+\s*=\s*["'][^"']*["']/gi, "");
+    sanitized = sanitized.replace(/\s*on\w+\s*=\s*[^\s>]*/gi, "");
+
+    // Remove other dangerous patterns
+    sanitized = sanitized.replace(/eval\s*\(/gi, "");
+    sanitized = sanitized.replace(/expression\s*\(/gi, "");
+    sanitized = sanitized.replace(/import\s+/gi, "");
+    sanitized = sanitized.replace(/&lt;script/gi, "");
+    sanitized = sanitized.replace(/&lt;iframe/gi, "");
+
+    return sanitized;
   }
 
   /**

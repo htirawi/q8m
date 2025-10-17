@@ -1129,11 +1129,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
           });
         }
 
-        // Update session
-        session.lastUsed = new Date();
-        await session.save();
-
-        // Generate new access token
+        // Generate new user object
         const user = await User.findById(session.userId);
         if (!user) {
           return reply.status(401).send({
@@ -1143,22 +1139,37 @@ export default async function authRoutes(fastify: FastifyInstance) {
           });
         }
 
-        const newAccessToken = jwtService.generateTokenPair(
-          user,
-          session._id.toString()
-        ).accessToken;
+        // ✅ SECURITY FIX (SEC-006): Refresh token rotation
+        // Generate new access AND refresh tokens (rotation)
+        const newTokenPair = jwtService.rotateRefreshToken(user, session._id.toString());
+
+        // Update session with new refresh token and last used time
+        session.refreshToken = newTokenPair.refreshToken;
+        session.accessToken = newTokenPair.accessToken;
+        session.lastUsed = new Date();
+        await session.save();
 
         // Set new access token cookie
-        secureCookieService.setSecureCookie(reply, "accessToken", newAccessToken, {
+        secureCookieService.setSecureCookie(reply, "accessToken", newTokenPair.accessToken, {
           maxAge: 15 * 60 * 1000, // 15 minutes
           httpOnly: true,
           secure: env.NODE_ENV === "production",
           sameSite: cookieToken ? "lax" : "strict", // Use 'lax' for OAuth
         });
 
+        // Set new refresh token cookie (rotated)
+        secureCookieService.setSecureCookie(reply, "refreshToken", newTokenPair.refreshToken, {
+          maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+          httpOnly: true,
+          secure: env.NODE_ENV === "production",
+          sameSite: cookieToken ? "lax" : "strict",
+        });
+
         reply.send({
           message: "Token refreshed successfully",
-          accessToken: newAccessToken,
+          accessToken: newTokenPair.accessToken,
+          refreshToken: newTokenPair.refreshToken,
+          expiresIn: newTokenPair.expiresIn,
         });
       } catch (error: unknown) {
         // Error handling

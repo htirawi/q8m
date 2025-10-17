@@ -67,7 +67,7 @@ const EnvSchema = z.object({
   RATE_LIMIT_TRUST_PROXY: z.string().optional(),
 
   // Rate-limit HMAC
-  HMAC_RATE_KEY_SECRET: z.string().default("change-me"),
+  HMAC_RATE_KEY_SECRET: z.string().min(32, "HMAC rate key secret must be at least 32 characters"),
 
   // API Configuration
   API_BASE_URL: z.string().url("Invalid API base URL"),
