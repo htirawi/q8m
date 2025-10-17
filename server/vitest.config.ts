@@ -50,7 +50,7 @@ export default defineConfig({
       LOGIN_FAIL_BASE_BLOCK_MS: "60000",
       LOGIN_FAIL_MAX_BLOCK_MS: "3600000",
       RATE_LIMIT_TRUST_PROXY: "false",
-      HMAC_RATE_KEY_SECRET: "test-hmac-rate-key-secret",
+      HMAC_RATE_KEY_SECRET: "test-hmac-rate-key-secret-that-is-long-enough-for-security",
       API_BASE_URL: "http://localhost:3001",
       CLIENT_URL: "http://localhost:5173",
       SERVER_URL: "http://localhost:3001",
