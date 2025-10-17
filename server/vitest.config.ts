@@ -10,7 +10,6 @@ export default defineConfig({
       "node_modules/**",
       "dist/**",
       "src/tests/middlewares/auth.middleware.test.ts", // Mongoose model conflict
-      "src/tests/services/entitlement.service.test.ts", // Mongoose model conflict
       "src/tests/paypal/createOrder.spec.ts", // Mongoose model conflict - skipped until PayPal integration complete
     ],
     coverage: {
@@ -19,12 +18,21 @@ export default defineConfig({
       exclude: [
         "node_modules/**",
         "src/tests/**",
+        "tests/**",
         "dist/**",
         "**/*.d.ts",
         "**/*.config.ts",
         "src/migrations/**",
         "src/types/**",
         "src/schemas/**",
+        // Exclude massive seed/data files that skew coverage metrics
+        "src/scripts/**",
+        "scripts/**",
+        "**/*-questions.ts",
+        "**/*-batch-*.ts",
+        "**/*-quiz-*.ts",
+        "**/seed-*.ts",
+        "**/framework-access.ts",
       ],
       thresholds: {
         lines: 80,
