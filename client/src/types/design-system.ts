@@ -247,6 +247,7 @@ export interface ILevelCard {
     text: string;
     variant: ComponentVariant;
   };
+  progress?: number;
 }
 
 /**
