@@ -53,6 +53,7 @@
     "db:seed:framework-access": "tsx -r tsconfig-paths/register src/scripts/seed-framework-access.ts",
     "db:seed:rich-questions": "tsx -r tsconfig-paths/register src/scripts/seed-rich-questions.ts",
     "db:seed:study-questions": "tsx -r tsconfig-paths/register src/scripts/seed-study-questions.ts",
+    "db:seed:learning-paths": "tsx -r tsconfig-paths/register scripts/seed-learning-paths.ts",
     "db:reset": "tsx -r tsconfig-paths/register scripts/reset.ts"
   },
   "dependencies": {

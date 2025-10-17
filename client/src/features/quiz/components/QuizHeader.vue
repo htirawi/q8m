@@ -25,6 +25,7 @@
         </div>
       </div>
       <div class="flex items-center gap-3 sm:gap-4">
+        <UserMenu />
         <!-- Countdown Timer -->
         <div
           ref="timerElement"
@@ -89,6 +90,7 @@
 import type { IQuizHeaderProps as Props } from "@/types/components/quiz";
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+import UserMenu from '@/components/layout/UserMenu.vue';
 
 
 

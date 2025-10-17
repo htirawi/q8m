@@ -13,6 +13,7 @@ const pinia = createPinia();
 // Styles
 import "@/styles/main.css";
 import "@/assets/styles/tokens.css";
+import "@/assets/styles/design-system.css";
 import "@/assets/styles/globals.css";
 
 // Create Vue app

@@ -480,6 +480,68 @@ const routes: RouteRecordRaw[] = [
     "challenges"
   ),
 
+  // Learning Paths
+  createLocalizedRoute(
+    "/paths",
+    () =>
+      import(
+        /* webpackChunkName: "paths" */
+        "@/features/paths/pages/PathsBrowsePage.vue"
+      ),
+    {
+      title: "Learning Paths - q8m",
+      description: "Structured learning journeys to master web development",
+      requiresAuth: false,
+      layout: "default",
+    },
+    "paths"
+  ),
+
+  createLocalizedRoute(
+    "/paths/:slug",
+    () =>
+      import(
+        /* webpackChunkName: "paths" */
+        "@/features/paths/pages/PathDetailsPage.vue"
+      ),
+    {
+      title: "Learning Path - q8m",
+      requiresAuth: false,
+      layout: "default",
+    },
+    "path-details"
+  ),
+
+  createLocalizedRoute(
+    "/paths/:slug/learn",
+    () =>
+      import(
+        /* webpackChunkName: "paths" */
+        "@/features/paths/pages/PathLearningPage.vue"
+      ),
+    {
+      title: "Learning - q8m",
+      requiresAuth: true,
+      layout: "default",
+    },
+    "path-learning"
+  ),
+
+  createLocalizedRoute(
+    "/paths/:slug/certificate",
+    () =>
+      import(
+        /* webpackChunkName: "paths" */
+        "@/features/paths/pages/CertificatePage.vue"
+      ),
+    {
+      title: "Certificate - q8m",
+      requiresAuth: true,
+      layout: "default",
+    },
+    "path-certificate"
+  ),
+
   createLocalizedRoute(
     "/account",
     () =>

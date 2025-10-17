@@ -5,11 +5,16 @@
 import type { PlanTier } from "@shared/types/plan";
 
 export interface InlineUpsellCardProps {
-  feature: string;
-  requiredPlan: PlanTier;
+  title: string;
+  subtitle: string;
+  targetPlan: PlanTier;
   benefits?: string[];
   ctaText?: string;
 }
+
+// Alias for backwards compatibility
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface IInlineUpsellCardProps extends InlineUpsellCardProps {}
 
 export interface ILockedBadgeProps {
   requiredPlan: PlanTier;

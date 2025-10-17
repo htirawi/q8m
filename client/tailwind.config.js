@@ -5,75 +5,123 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Primary brand colors
+        // Modern grayscale (11 steps) - Linear/Arc inspired
+        gray: {
+          50: "#FAFAFA",
+          100: "#F5F5F5",
+          200: "#E5E5E7",
+          300: "#D4D4D8",
+          400: "#A1A1AA",
+          500: "#71717A",
+          600: "#52525B",
+          700: "#3F3F46",
+          800: "#27272A",
+          900: "#18181B",
+          950: "#0A0A0B",
+        },
+        // Primary brand color - Electric purple (Arc-inspired)
         primary: {
-          50: "#eff6ff",
-          100: "#dbeafe",
-          200: "#bfdbfe",
-          300: "#93c5fd",
-          400: "#60a5fa",
-          500: "#3b82f6",
-          600: "#2563eb",
-          700: "#1d4ed8",
-          800: "#1e40af",
-          900: "#1e3a8a",
-          950: "#172554",
+          50: "#F5F3FF",
+          100: "#EDE9FE",
+          200: "#DDD6FE",
+          300: "#C4B5FD",
+          400: "#A78BFA",
+          500: "#8B5CF6",
+          600: "#7C3AED",
+          700: "#6D28D9",
+          800: "#5B21B6",
+          900: "#4C1D95",
+          950: "#2E1065",
+          DEFAULT: "#5E5CE6", // Arc's signature purple
         },
-        // Secondary accent colors
+        // Secondary - Sky blue
         secondary: {
-          50: "#f8fafc",
-          100: "#f1f5f9",
-          200: "#e2e8f0",
-          300: "#cbd5e1",
-          400: "#94a3b8",
-          500: "#64748b",
-          600: "#475569",
-          700: "#334155",
-          800: "#1e293b",
-          900: "#0f172a",
-          950: "#020617",
+          50: "#F0F9FF",
+          100: "#E0F2FE",
+          200: "#BAE6FD",
+          300: "#7DD3FC",
+          400: "#38BDF8",
+          500: "#0EA5E9",
+          600: "#0284C7",
+          700: "#0369A1",
+          800: "#075985",
+          900: "#0C4A6E",
+          950: "#082F49",
+          DEFAULT: "#32ADE6",
         },
-        // Success colors
+        // Success - Modern green
         success: {
-          50: "#f0fdf4",
-          100: "#dcfce7",
-          200: "#bbf7d0",
-          300: "#86efac",
-          400: "#4ade80",
-          500: "#22c55e",
-          600: "#16a34a",
-          700: "#15803d",
+          50: "#F0FDF4",
+          100: "#DCFCE7",
+          200: "#BBF7D0",
+          300: "#86EFAC",
+          400: "#4ADE80",
+          500: "#22C55E",
+          600: "#16A34A",
+          700: "#15803D",
           800: "#166534",
-          900: "#14532d",
-          950: "#052e16",
+          900: "#14532D",
+          950: "#052E16",
+          DEFAULT: "#34C759", // Apple's success green
         },
-        // Warning colors
+        // Warning - Vibrant orange
         warning: {
-          50: "#fffbeb",
-          100: "#fef3c7",
-          200: "#fde68a",
-          300: "#fcd34d",
-          400: "#fbbf24",
-          500: "#f59e0b",
-          600: "#d97706",
-          700: "#b45309",
-          800: "#92400e",
-          900: "#78350f",
-          950: "#451a03",
+          50: "#FFF7ED",
+          100: "#FFEDD5",
+          200: "#FED7AA",
+          300: "#FDBA74",
+          400: "#FB923C",
+          500: "#F97316",
+          600: "#EA580C",
+          700: "#C2410C",
+          800: "#9A3412",
+          900: "#7C2D12",
+          950: "#431407",
+          DEFAULT: "#FF9F0A", // Apple's warning orange
         },
-        // Error colors
+        // Error/Danger - Modern red
         error: {
-          50: "#fef2f2",
-          100: "#fee2e2",
-          200: "#fecaca",
-          300: "#fca5a5",
-          400: "#f87171",
-          500: "#ef4444",
-          600: "#dc2626",
-          700: "#b91c1c",
-          800: "#991b1b",
-          900: "#7f1d1d",
-          950: "#450a0a",
+          50: "#FEF2F2",
+          100: "#FEE2E2",
+          200: "#FECACA",
+          300: "#FCA5A5",
+          400: "#F87171",
+          500: "#EF4444",
+          600: "#DC2626",
+          700: "#B91C1C",
+          800: "#991B1B",
+          900: "#7F1D1D",
+          950: "#450A0A",
+          DEFAULT: "#FF453A", // Apple's danger red
+        },
+        // Info - Bright blue
+        info: {
+          50: "#EFF6FF",
+          100: "#DBEAFE",
+          200: "#BFDBFE",
+          300: "#93C5FD",
+          400: "#60A5FA",
+          500: "#3B82F6",
+          600: "#2563EB",
+          700: "#1D4ED8",
+          800: "#1E40AF",
+          900: "#1E3A8A",
+          950: "#172554",
+          DEFAULT: "#32ADE6",
+        },
+        // Background colors for cards and surfaces
+        surface: {
+          DEFAULT: "#FFFFFF",
+          secondary: "#FAFAFA",
+          tertiary: "#F5F5F5",
+          elevated: "#FFFFFF",
+          overlay: "rgba(0, 0, 0, 0.5)",
+        },
+        // Dark mode specific (for future implementation)
+        dark: {
+          bg: "#0A0A0B",
+          surface: "#18181B",
+          border: "#27272A",
         },
       },
       fontFamily: {
@@ -145,18 +193,58 @@ export default {
         "4xl": "2rem",
       },
       boxShadow: {
+        // Subtle shadows (Linear-style)
+        xs: "0 1px 2px rgba(0, 0, 0, 0.04)",
+        sm: "0 1px 3px rgba(0, 0, 0, 0.06)",
+        md: "0 4px 6px rgba(0, 0, 0, 0.07)",
+        lg: "0 10px 15px rgba(0, 0, 0, 0.08)",
+        xl: "0 20px 25px rgba(0, 0, 0, 0.09)",
+        "2xl": "0 25px 50px rgba(0, 0, 0, 0.12)",
+        // Soft shadows for cards
         soft: "0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04)",
         medium: "0 4px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
         strong: "0 10px 40px -10px rgba(0, 0, 0, 0.15), 0 20px 25px -5px rgba(0, 0, 0, 0.1)",
+        // Glow effects for focus states
+        "glow-primary": "0 0 0 3px rgba(94, 92, 230, 0.15)",
+        "glow-success": "0 0 0 3px rgba(52, 199, 89, 0.15)",
+        "glow-danger": "0 0 0 3px rgba(255, 69, 58, 0.15)",
+        "glow-info": "0 0 0 3px rgba(50, 173, 230, 0.15)",
+        // Inner shadows
+        inner: "inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)",
+        "inner-lg": "inset 0 4px 6px 0 rgba(0, 0, 0, 0.1)",
       },
       animation: {
+        // Basic animations
         "fade-in": "fadeIn 0.5s ease-in-out",
         "fade-in-up": "fadeInUp 0.6s ease-out",
+        "fade-in-down": "fadeInDown 0.6s ease-out",
         "slide-up": "slideUp 0.3s ease-out",
         "slide-down": "slideDown 0.3s ease-out",
+        "slide-left": "slideLeft 0.3s ease-out",
+        "slide-right": "slideRight 0.3s ease-out",
         "scale-in": "scaleIn 0.3s ease-out",
+        "scale-up": "scaleUp 0.3s ease-out",
+        // Loading animations
+        "spin-slow": "spin 3s linear infinite",
         "pulse-slow": "pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+        "skeleton": "skeleton 1.5s ease-in-out infinite",
+        // Decorative animations
         "blob": "blob 7s infinite",
+        "float": "float 6s ease-in-out infinite",
+        "shimmer": "shimmer 2s linear infinite",
+      },
+      transitionDuration: {
+        instant: "100ms",
+        fast: "200ms",
+        moderate: "300ms",
+        slow: "500ms",
+        glacial: "800ms",
+      },
+      transitionTimingFunction: {
+        "in-out": "cubic-bezier(0.4, 0, 0.2, 1)",
+        out: "cubic-bezier(0, 0, 0.2, 1)",
+        in: "cubic-bezier(0.4, 0, 1, 1)",
+        spring: "cubic-bezier(0.34, 1.56, 0.64, 1)",
       },
       keyframes: {
         fadeIn: {
@@ -167,6 +255,10 @@ export default {
           "0%": { opacity: "0", transform: "translateY(20px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
+        fadeInDown: {
+          "0%": { opacity: "0", transform: "translateY(-20px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
         slideUp: {
           "0%": { transform: "translateY(10px)", opacity: "0" },
           "100%": { transform: "translateY(0)", opacity: "1" },
@@ -175,9 +267,33 @@ export default {
           "0%": { transform: "translateY(-10px)", opacity: "0" },
           "100%": { transform: "translateY(0)", opacity: "1" },
         },
+        slideLeft: {
+          "0%": { transform: "translateX(10px)", opacity: "0" },
+          "100%": { transform: "translateX(0)", opacity: "1" },
+        },
+        slideRight: {
+          "0%": { transform: "translateX(-10px)", opacity: "0" },
+          "100%": { transform: "translateX(0)", opacity: "1" },
+        },
         scaleIn: {
           "0%": { transform: "scale(0.9)", opacity: "0" },
           "100%": { transform: "scale(1)", opacity: "1" },
+        },
+        scaleUp: {
+          "0%": { transform: "scale(0.95)" },
+          "100%": { transform: "scale(1)" },
+        },
+        skeleton: {
+          "0%": { backgroundPosition: "200% 0" },
+          "100%": { backgroundPosition: "-200% 0" },
+        },
+        shimmer: {
+          "0%": { transform: "translateX(-100%)" },
+          "100%": { transform: "translateX(100%)" },
+        },
+        float: {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-20px)" },
         },
         blob: {
           "0%": { transform: "translate(0px, 0px) scale(1)" },

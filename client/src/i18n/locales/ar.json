@@ -2,7 +2,9 @@
   "common": {
     "appName": "q8m",
     "currency": "د.أ",
-    "perMonth": "/شهر"
+    "perMonth": "/شهر",
+    "new": "جديد",
+    "retry": "إعادة المحاولة"
   },
   "navigation": {
     "home": "الرئيسية",
@@ -12,10 +14,14 @@
     "account": "الحساب",
     "profile": "الملف الشخصي",
     "settings": "الإعدادات",
+    "dashboard": "لوحة التحكم",
+    "learningPaths": "مسارات التعلم",
+    "upgrade": "ترقية إلى المميز",
     "userMenu": "قائمة المستخدم",
     "login": "تسجيل الدخول",
     "register": "إنشاء حساب",
     "logout": "تسجيل الخروج",
+    "loggingOut": "جارٍ تسجيل الخروج...",
     "about": "حول",
     "contact": "اتصل بنا",
     "help": "المساعدة",
@@ -281,6 +287,9 @@
         "companies": "شركات"
       }
     }
+  },
+  "errors": {
+    "logoutFailed": "فشل تسجيل الخروج. يرجى المحاولة مرة أخرى."
   },
   "auth": {
     "register": {
@@ -777,6 +786,12 @@
     "followOnLinkedIn": "تابعنا على لينكد إن",
     "followOnGitHub": "تابعنا على جيت هاب",
     "logout": "تسجيل الخروج",
+    "userMenu": "قائمة المستخدم - انقر لفتح خيارات الحساب",
+    "menuOpened": "تم فتح قائمة المستخدم. {count} خيارات متاحة. تم تسجيل الدخول باسم {name}، {email}، خطة {plan}.",
+    "menuClosed": "تم إغلاق قائمة المستخدم",
+    "loggingOut": "جارٍ تسجيل خروجك...",
+    "loggedOut": "تم تسجيل خروجك بنجاح",
+    "logoutFailed": "فشل تسجيل الخروج. يرجى المحاولة مرة أخرى.",
     "switchLanguage": "تغيير اللغة",
     "closeModal": "إغلاق النافذة المنبثقة",
     "dismissNotification": "إغلاق الإشعار"
@@ -881,7 +896,15 @@
     "welcome": "مرحباً بعودتك",
     "resume": {
       "title": "تابع من حيث توقفت",
+      "startQuiz": "ابدأ الاختبار",
       "noneAvailable": "لا يوجد نشاط حديث. ابدأ اختباراً جديداً!"
+    },
+    "recentActivity": "النشاط الحديث",
+    "noActivity": {
+      "title": "لا يوجد نشاط بعد",
+      "description": "ابدأ رحلة التعلم الخاصة بك من خلال أخذ اختبار أو استكشاف مواد الدراسة.",
+      "startLearning": "ابدأ التعلم",
+      "viewProgress": "عرض التقدم"
     },
     "yourPlan": "خطتك",
     "manage": "إدارة",
@@ -1314,6 +1337,9 @@
   },
   "keyboard": {
     "shortcuts": "اختصارات لوحة المفاتيح",
+    "navigate": "التنقل",
+    "quickSelect": "اختيار سريع",
+    "close": "إغلاق",
     "quiz": {
       "space": "إرسال الإجابة / السؤال التالي",
       "enter": "إرسال الإجابة",
