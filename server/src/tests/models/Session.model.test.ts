@@ -174,10 +174,10 @@ describe("Session Model", () => {
       });
 
       const originalLastUsed = session.lastUsed;
-      
+
       // Wait a bit
       await new Promise((resolve) => setTimeout(resolve, 10));
-      
+
       session.lastUsed = new Date();
       await session.save();
 
@@ -339,4 +339,3 @@ describe("Session Model", () => {
     });
   });
 });
-

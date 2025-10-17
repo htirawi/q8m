@@ -707,4 +707,3 @@ describe("QuizResult Model", () => {
     });
   });
 });
-

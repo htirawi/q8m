@@ -413,7 +413,13 @@ describe("Subscription Model", () => {
         paymentGateway: "paypal",
         amount: { currency: "USD", value: "29.99" },
         status: "completed",
-        items: [{ type: "INTERMEDIATE", name: "Intermediate Monthly", price: { currency: "USD", value: "29.99" } }],
+        items: [
+          {
+            type: "INTERMEDIATE",
+            name: "Intermediate Monthly",
+            price: { currency: "USD", value: "29.99" },
+          },
+        ],
         customer: { email: testUser.email, name: testUser.name },
       });
 
@@ -424,7 +430,9 @@ describe("Subscription Model", () => {
         paymentGateway: "paypal",
         amount: { currency: "USD", value: "49.99" },
         status: "completed",
-        items: [{ type: "SENIOR", name: "Senior Monthly", price: { currency: "USD", value: "49.99" } }],
+        items: [
+          { type: "SENIOR", name: "Senior Monthly", price: { currency: "USD", value: "49.99" } },
+        ],
         customer: { email: testUser.email, name: testUser.name },
       });
 
@@ -540,4 +548,3 @@ describe("Subscription Model", () => {
     });
   });
 });
-

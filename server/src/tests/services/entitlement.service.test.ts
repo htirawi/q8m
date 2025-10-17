@@ -29,19 +29,13 @@ describe("EntitlementService", () => {
 
   describe("checkEntitlement", () => {
     it("should allow access with correct entitlement", async () => {
-      const result = await entitlementService.checkEntitlement(
-        testUser._id.toString(),
-        "JUNIOR"
-      );
+      const result = await entitlementService.checkEntitlement(testUser._id.toString(), "JUNIOR");
 
       expect(result.hasAccess).toBe(true);
     });
 
     it("should deny access without required entitlement", async () => {
-      const result = await entitlementService.checkEntitlement(
-        testUser._id.toString(),
-        "SENIOR"
-      );
+      const result = await entitlementService.checkEntitlement(testUser._id.toString(), "SENIOR");
 
       expect(result.hasAccess).toBe(false);
       expect(result.reason).toContain("Upgrade");
@@ -51,20 +45,14 @@ describe("EntitlementService", () => {
       testUser.isActive = false;
       await testUser.save();
 
-      const result = await entitlementService.checkEntitlement(
-        testUser._id.toString(),
-        "JUNIOR"
-      );
+      const result = await entitlementService.checkEntitlement(testUser._id.toString(), "JUNIOR");
 
       expect(result.hasAccess).toBe(false);
       expect(result.reason).toContain("not active");
     });
 
     it("should handle invalid userId gracefully", async () => {
-      const result = await entitlementService.checkEntitlement(
-        "invalid-user-id",
-        "JUNIOR"
-      );
+      const result = await entitlementService.checkEntitlement("invalid-user-id", "JUNIOR");
 
       expect(result.hasAccess).toBe(false);
       expect(result.reason).toContain("Error");
@@ -86,10 +74,7 @@ describe("EntitlementService", () => {
       testUser.entitlements = ["JUNIOR", "INTERMEDIATE", "SENIOR"];
       await testUser.save();
 
-      const result = await entitlementService.checkEntitlement(
-        testUser._id.toString(),
-        "SENIOR"
-      );
+      const result = await entitlementService.checkEntitlement(testUser._id.toString(), "SENIOR");
 
       expect(result.hasAccess).toBe(true);
     });
@@ -98,10 +83,7 @@ describe("EntitlementService", () => {
       testUser.entitlements = ["JUNIOR", "INTERMEDIATE", "SENIOR", "BUNDLE"];
       await testUser.save();
 
-      const result = await entitlementService.checkEntitlement(
-        testUser._id.toString(),
-        "BUNDLE"
-      );
+      const result = await entitlementService.checkEntitlement(testUser._id.toString(), "BUNDLE");
 
       expect(result.hasAccess).toBe(true);
     });
@@ -109,9 +91,7 @@ describe("EntitlementService", () => {
 
   describe("getUserEntitlements", () => {
     it("should return basic entitlements for free user", async () => {
-      const entitlements = await entitlementService.getUserEntitlements(
-        testUser._id.toString()
-      );
+      const entitlements = await entitlementService.getUserEntitlements(testUser._id.toString());
 
       expect(entitlements.entitlements).toContain("JUNIOR");
       expect(entitlements.isActive).toBe(true);
@@ -128,7 +108,13 @@ describe("EntitlementService", () => {
         paymentGateway: "paypal",
         amount: { currency: "USD", value: "29.99" },
         status: "completed",
-        items: [{ type: "INTERMEDIATE", name: "Intermediate Plan", price: { currency: "USD", value: "29.99" } }],
+        items: [
+          {
+            type: "INTERMEDIATE",
+            name: "Intermediate Plan",
+            price: { currency: "USD", value: "29.99" },
+          },
+        ],
         customer: { email: testUser.email, name: testUser.name },
       });
 
@@ -144,9 +130,7 @@ describe("EntitlementService", () => {
         entitlements: ["JUNIOR", "INTERMEDIATE"],
       });
 
-      const entitlements = await entitlementService.getUserEntitlements(
-        testUser._id.toString()
-      );
+      const entitlements = await entitlementService.getUserEntitlements(testUser._id.toString());
 
       expect(entitlements.entitlements).toContain("INTERMEDIATE");
       expect(entitlements.activeSubscription).toBeDefined();
@@ -154,14 +138,10 @@ describe("EntitlementService", () => {
 
     it("should cache entitlements", async () => {
       // First call - should hit database
-      const entitlements1 = await entitlementService.getUserEntitlements(
-        testUser._id.toString()
-      );
+      const entitlements1 = await entitlementService.getUserEntitlements(testUser._id.toString());
 
       // Second call - should use cache
-      const entitlements2 = await entitlementService.getUserEntitlements(
-        testUser._id.toString()
-      );
+      const entitlements2 = await entitlementService.getUserEntitlements(testUser._id.toString());
 
       expect(entitlements1).toEqual(entitlements2);
     });
@@ -176,9 +156,7 @@ describe("EntitlementService", () => {
       entitlementService.clearUserCache(testUser._id.toString());
 
       // Should fetch fresh data
-      const entitlements = await entitlementService.getUserEntitlements(
-        testUser._id.toString()
-      );
+      const entitlements = await entitlementService.getUserEntitlements(testUser._id.toString());
 
       expect(entitlements).toBeDefined();
     });
@@ -201,10 +179,7 @@ describe("EntitlementService", () => {
 
       entitlementService.clearUserCache(testUser._id.toString());
 
-      const result = await entitlementService.checkEntitlement(
-        testUser._id.toString(),
-        "SENIOR"
-      );
+      const result = await entitlementService.checkEntitlement(testUser._id.toString(), "SENIOR");
 
       expect(result.hasAccess).toBe(false);
       expect(result.reason).toContain("Upgrade");
@@ -223,7 +198,13 @@ describe("EntitlementService", () => {
         paymentGateway: "paypal",
         amount: { currency: "USD", value: "29.99" },
         status: "completed",
-        items: [{ type: "INTERMEDIATE", name: "Intermediate Plan", price: { currency: "USD", value: "29.99" } }],
+        items: [
+          {
+            type: "INTERMEDIATE",
+            name: "Intermediate Plan",
+            price: { currency: "USD", value: "29.99" },
+          },
+        ],
         customer: { email: testUser.email, name: testUser.name },
       });
 
@@ -262,7 +243,9 @@ describe("EntitlementService", () => {
         paymentGateway: "paypal",
         amount: { currency: "USD", value: "49.99" },
         status: "completed",
-        items: [{ type: "SENIOR", name: "Senior Plan", price: { currency: "USD", value: "49.99" } }],
+        items: [
+          { type: "SENIOR", name: "Senior Plan", price: { currency: "USD", value: "49.99" } },
+        ],
         customer: { email: testUser.email, name: testUser.name },
       });
 
@@ -280,10 +263,7 @@ describe("EntitlementService", () => {
 
       entitlementService.clearUserCache(testUser._id.toString());
 
-      const result = await entitlementService.checkEntitlement(
-        testUser._id.toString(),
-        "SENIOR"
-      );
+      const result = await entitlementService.checkEntitlement(testUser._id.toString(), "SENIOR");
 
       // Subscription suspended, but user doesn't have entitlement
       expect(result.hasAccess).toBe(false);

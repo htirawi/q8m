@@ -66,7 +66,7 @@ describe("PricingService", () => {
 
     it("should include free tier without conversion", async () => {
       const pricing = await pricingService.getPricingForCurrency("USD");
-      
+
       const freeTier = pricing.find((p) => p.planId === "JUNIOR");
       expect(freeTier).toBeDefined();
       expect(freeTier?.usdPrice).toBe(0);
@@ -220,4 +220,3 @@ describe("PricingService", () => {
     });
   });
 });
-
