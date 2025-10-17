@@ -11,6 +11,50 @@
   "errors": {
     "logoutFailed": "Failed to log out. Please try again."
   },
+  "greetings": {
+    "morning": "Good morning",
+    "afternoon": "Good afternoon",
+    "evening": "Good evening",
+    "night": "Good night"
+  },
+  "motivation": {
+    "message1": "Keep up the great work!",
+    "message2": "You're making excellent progress!",
+    "message3": "Every question brings you closer to your goals!",
+    "message4": "Your dedication is inspiring!",
+    "message5": "You're on fire today!"
+  },
+  "levels": {
+    "subtitleDefault": "Choose your difficulty level to get started",
+    "chooseYourPath": "Choose Your Learning Path",
+    "selectDifficultyDescription": "Select the difficulty level that matches your experience and start your journey",
+    "junior": {
+      "title": "Junior",
+      "subtitle": "Perfect for beginners",
+      "description": "Master the fundamentals with carefully curated questions for those starting their frontend journey",
+      "duration": "15-20 mins per session"
+    },
+    "intermediate": {
+      "title": "Intermediate",
+      "subtitle": "Level up your skills",
+      "description": "Challenge yourself with complex scenarios and deepen your understanding of advanced concepts",
+      "duration": "20-30 mins per session"
+    },
+    "senior": {
+      "title": "Senior",
+      "subtitle": "Master level challenges",
+      "description": "Tackle expert-level questions covering architecture, performance, and best practices",
+      "duration": "30-45 mins per session"
+    },
+    "custom": {
+      "title": "Custom",
+      "subtitle": "Create your own path",
+      "description": "Mix and match topics to create a personalized learning experience tailored to your needs",
+      "duration": "Flexible"
+    },
+    "lockedCard": "{title} level requires {plan} plan",
+    "selectCard": "Select {title} difficulty level"
+  },
   "navigation": {
     "home": "Home",
     "pricing": "Pricing",
