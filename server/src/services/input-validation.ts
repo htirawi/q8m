@@ -7,17 +7,22 @@ import type { ValidationResult } from "../types/services/validation";
 export class InputValidationService {
   /**
    * Sanitize string input
-   * ✅ SECURITY FIX (CodeQL #720, #719): Complete multi-character sanitization
-   * and comprehensive URL scheme check to prevent XSS and injection attacks
+   * ✅ SECURITY FIX (CodeQL #720, #719, #17): Complete multi-character sanitization
+   * Uses iterative replacement to prevent bypass via nested patterns
    */
   sanitizeString(input: string): string {
     let sanitized = input.trim();
 
-    // Remove all HTML tags completely (not just < and >)
-    sanitized = sanitized.replace(/<[^>]*>/g, "");
+    // Remove all HTML tags completely using iterative replacement
+    // Prevents bypass like: <<script>script> becoming <script>
+    let prevLength = 0;
+    while (sanitized.length !== prevLength) {
+      prevLength = sanitized.length;
+      sanitized = sanitized.replace(/<[^>]*>/g, "");
+    }
 
     // Remove dangerous URL schemes (comprehensive list)
-    // Use loop to handle encoded/obfuscated variants
+    // Use iterative replacement for each scheme to handle nested/obfuscated variants
     const dangerousSchemes = [
       /javascript:/gi,
       /data:/gi,
@@ -25,31 +30,50 @@ export class InputValidationService {
       /file:/gi,
       /about:/gi,
       /blob:/gi,
+      /javascript%3a/gi, // URL-encoded
+      /&#(0*106|0*74);/gi, // HTML entity encoded 'j'
+      /\\u006a/gi, // Unicode escape 'j'
     ];
 
     for (const scheme of dangerousSchemes) {
-      // Keep replacing until no more matches (handles nested encoding)
-      let prevLength = 0;
+      prevLength = 0;
       while (sanitized.length !== prevLength) {
         prevLength = sanitized.length;
         sanitized = sanitized.replace(scheme, "");
-        // Also remove URL-encoded variants
-        sanitized = sanitized.replace(/javascript%3a/gi, "");
-        sanitized = sanitized.replace(/&#(0*106|0*74);/gi, ""); // j in various encodings
-        sanitized = sanitized.replace(/\\u006a/gi, ""); // j in unicode escape
       }
     }
 
-    // Remove all event handlers (comprehensive)
-    sanitized = sanitized.replace(/\s*on\w+\s*=\s*["'][^"']*["']/gi, "");
-    sanitized = sanitized.replace(/\s*on\w+\s*=\s*[^\s>]*/gi, "");
+    // Remove all event handlers using iterative replacement
+    // Prevents bypass like: ononclickclick= becoming onclick=
+    const eventHandlerPatterns = [
+      /\s*on\w+\s*=\s*["'][^"']*["']/gi,
+      /\s*on\w+\s*=\s*[^\s>]*/gi,
+    ];
 
-    // Remove other dangerous patterns
-    sanitized = sanitized.replace(/eval\s*\(/gi, "");
-    sanitized = sanitized.replace(/expression\s*\(/gi, "");
-    sanitized = sanitized.replace(/import\s+/gi, "");
-    sanitized = sanitized.replace(/&lt;script/gi, "");
-    sanitized = sanitized.replace(/&lt;iframe/gi, "");
+    for (const pattern of eventHandlerPatterns) {
+      prevLength = 0;
+      while (sanitized.length !== prevLength) {
+        prevLength = sanitized.length;
+        sanitized = sanitized.replace(pattern, "");
+      }
+    }
+
+    // Remove other dangerous patterns using iterative replacement
+    const dangerousPatterns = [
+      /eval\s*\(/gi,
+      /expression\s*\(/gi,
+      /import\s+/gi,
+      /&lt;script/gi,
+      /&lt;iframe/gi,
+    ];
+
+    for (const pattern of dangerousPatterns) {
+      prevLength = 0;
+      while (sanitized.length !== prevLength) {
+        prevLength = sanitized.length;
+        sanitized = sanitized.replace(pattern, "");
+      }
+    }
 
     return sanitized;
   }
