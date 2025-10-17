@@ -69,6 +69,98 @@ const parsedBlocks = computed(() => {
   return blocks;
 });
 
+/**
+ * Apply lightweight syntax highlighting to code
+ * Supports: TypeScript, JavaScript, HTML, CSS
+ */
+function highlightCode(code: string, language: string): string {
+  const lang = language.toLowerCase();
+
+  if (lang === 'ts' || lang === 'typescript' || lang === 'js' || lang === 'javascript') {
+    return highlightTypeScript(code);
+  } else if (lang === 'html') {
+    return highlightHTML(code);
+  } else if (lang === 'css') {
+    return highlightCSS(code);
+  }
+
+  // Return as-is for unsupported languages
+  return escapeHtml(code);
+}
+
+function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+function highlightTypeScript(code: string): string {
+  // Keywords
+  const keywords = /\b(const|let|var|function|return|if|else|for|while|do|switch|case|break|continue|class|interface|type|enum|import|export|from|as|async|await|try|catch|finally|throw|new|this|super|extends|implements|public|private|protected|static|readonly|namespace|module|declare|any|unknown|never|void|null|undefined|true|false)\b/g;
+
+  // Strings (single and double quoted)
+  const strings = /("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|`(?:[^`\\]|\\.)*`)/g;
+
+  // Comments
+  const comments = /(\/\/.*$|\/\*[\s\S]*?\*\/)/gm;
+
+  // Numbers
+  const numbers = /\b(\d+\.?\d*)\b/g;
+
+  // Functions
+  const functions = /\b([a-zA-Z_$][\w$]*)\s*(?=\()/g;
+
+  let highlighted = escapeHtml(code);
+
+  // Apply highlighting (order matters)
+  highlighted = highlighted.replace(comments, '<span class="text-gray-500 dark:text-gray-400">$1</span>');
+  highlighted = highlighted.replace(strings, '<span class="text-green-400 dark:text-green-300">$1</span>');
+  highlighted = highlighted.replace(keywords, '<span class="text-purple-400 dark:text-purple-300 font-semibold">$1</span>');
+  highlighted = highlighted.replace(numbers, '<span class="text-orange-400 dark:text-orange-300">$1</span>');
+  highlighted = highlighted.replace(functions, '<span class="text-blue-400 dark:text-blue-300">$1</span>');
+
+  return highlighted;
+}
+
+function highlightHTML(code: string): string {
+  let highlighted = escapeHtml(code);
+
+  // Tags
+  highlighted = highlighted.replace(/(&lt;\/?)([\w-]+)/g, '$1<span class="text-blue-400 dark:text-blue-300">$2</span>');
+
+  // Attributes
+  highlighted = highlighted.replace(/\s([\w-]+)=/g, ' <span class="text-yellow-400 dark:text-yellow-300">$1</span>=');
+
+  // Attribute values
+  highlighted = highlighted.replace(/=(&quot;|&#039;)(.*?)(&quot;|&#039;)/g, '=$1<span class="text-green-400 dark:text-green-300">$2</span>$3');
+
+  // Comments
+  highlighted = highlighted.replace(/(&lt;!--[\s\S]*?--&gt;)/g, '<span class="text-gray-500 dark:text-gray-400">$1</span>');
+
+  return highlighted;
+}
+
+function highlightCSS(code: string): string {
+  let highlighted = escapeHtml(code);
+
+  // Selectors
+  highlighted = highlighted.replace(/^([.#]?[\w-]+)(?=\s*\{)/gm, '<span class="text-yellow-400 dark:text-yellow-300">$1</span>');
+
+  // Properties
+  highlighted = highlighted.replace(/\b([\w-]+):/g, '<span class="text-blue-400 dark:text-blue-300">$1</span>:');
+
+  // Values
+  highlighted = highlighted.replace(/:\s*([^;}\n]+)/g, ': <span class="text-green-400 dark:text-green-300">$1</span>');
+
+  // Comments
+  highlighted = highlighted.replace(/(\/\*[\s\S]*?\*\/)/g, '<span class="text-gray-500 dark:text-gray-400">$1</span>');
+
+  return highlighted;
+}
+
 function parseCodeBlock(lines: string[], startIndex: number) {
   const firstLine = lines[startIndex] || '';
   const language = firstLine.replace('```', '').trim() || 'code';
@@ -82,6 +174,7 @@ function parseCodeBlock(lines: string[], startIndex: number) {
 
   const blockIndex = startIndex;
   const code = codeLines.join('\n');
+  const highlightedCode = highlightCode(code, language);
 
   return {
     block: {
@@ -98,13 +191,14 @@ function parseCodeBlock(lines: string[], startIndex: number) {
             onClick: () => copyCode(blockIndex, code),
           }, copiedBlocks.value.has(blockIndex) ? '✓ Copied!' : 'Copy'),
         ]),
-        // Code content
+        // Code content with syntax highlighting
         h('pre', {
           class: 'max-w-full overflow-x-auto rounded-b-lg bg-gray-900 p-4 text-sm dark:bg-black'
         }, [
           h('code', {
-            class: 'whitespace-pre-wrap break-words font-mono text-gray-100'
-          }, code),
+            class: 'whitespace-pre-wrap break-words font-mono text-gray-100',
+            innerHTML: highlightedCode,
+          }),
         ]),
       ]),
       props: {},

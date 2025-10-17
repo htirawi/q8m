@@ -1342,21 +1342,21 @@ export default async function authRoutes(fastify: FastifyInstance) {
     }
   });
 
-  // Development-only login endpoint (bypasses password check)
-  // Only works in development mode for testing purposes
-  if (env.NODE_ENV === "development") {
+  // Development-only login endpoint (SECURED - requires DEV_LOGIN_SECRET)
+  // Only works in development mode AND requires DEV_LOGIN_SECRET environment variable
+  if (env.NODE_ENV === "development" && env.DEV_LOGIN_SECRET) {
     fastify.post(
       "/dev-login",
       {
         rateLimit: {
-          max: 20,
+          max: 5, // Reduced from 20 to 5 for security
           timeWindow: "15m",
           hook: "onRequest",
           keyGenerator: ipKey,
         },
         config: {
           rateLimit: {
-            max: 20,
+            max: 5,
             timeWindow: "15m",
             hook: "onRequest",
             keyGenerator: ipKey,
@@ -1366,23 +1366,49 @@ export default async function authRoutes(fastify: FastifyInstance) {
           body: zodToJsonSchema(
             z.object({
               email: z.string().email("Invalid email format"),
+              devSecret: z.string().min(32, "Dev secret must be at least 32 characters"),
             })
           ),
         },
       },
       async (request, reply) => {
         try {
-          const { email } = request.body as { email: string };
+          const { email, devSecret } = request.body as { email: string; devSecret: string };
+
+          // Verify dev secret
+          if (devSecret !== env.DEV_LOGIN_SECRET) {
+            request.log.warn({
+              message: "Invalid dev login attempt",
+              email,
+              ip: request.ip,
+            });
+            return reply.status(401).send({
+              code: 401,
+              error: "Unauthorized",
+              message: "Invalid dev secret",
+            });
+          }
+
+          // Only allow whitelisted emails (if configured)
+          const devWhitelist = env.DEV_LOGIN_WHITELIST?.split(',').map(e => e.trim()) || [];
+          if (devWhitelist.length > 0 && !devWhitelist.includes(email)) {
+            return reply.status(403).send({
+              code: 403,
+              error: "Forbidden",
+              message: "Email not in dev whitelist",
+            });
+          }
 
           // Find or create dev user
           let user = await User.findOne({ email });
 
           if (!user) {
-            // Create new dev user
+            // Create new dev user with secure random password
+            const randomPassword = crypto.randomBytes(32).toString('hex');
             user = new User({
               email,
               name: "Dev User",
-              password: "dev-password-123", // Default password for dev users
+              password: randomPassword, // Secure random password (not used for dev login)
               entitlements: ["JUNIOR"], // Default entitlement
               permissions: [],
               acceptTerms: true,
@@ -1391,7 +1417,11 @@ export default async function authRoutes(fastify: FastifyInstance) {
               isEmailVerified: true, // Skip email verification for dev
             });
             await user.save();
-            console.warn(`[DEV] Created new dev user: ${email}`);
+            request.log.info({
+              message: "Created new dev user",
+              userId: user._id.toString(),
+              email: user.email,
+            });
           }
 
           // Reset login attempts on successful login
@@ -1429,7 +1459,10 @@ export default async function authRoutes(fastify: FastifyInstance) {
             sameSite: "strict",
           });
 
-          console.warn(`[DEV] Dev login successful for: ${email}`);
+          request.log.info({
+            message: "Dev login successful",
+            userId: user._id.toString(),
+          });
 
           reply.send({
             message: "Dev login successful",

@@ -33,6 +33,10 @@
     "privacy": "Privacy",
     "terms": "Terms"
   },
+  "mode": {
+    "study": "Study Mode",
+    "quiz": "Quiz Mode"
+  },
   "levelSelection": {
     "title": "Choose Your Learning Path",
     "subtitle": "Select your experience level and preferred learning mode",
@@ -1198,6 +1202,8 @@
     "resumeTimer": "Resume timer",
     "resetTimer": "Reset timer",
     "selectAnswer": "Select your answer",
+    "correctAnswer": "Correct Answer",
+    "explanation": "Explanation",
     "answer": "Answer",
     "levelCard": {
       "currentPlan": "Current Plan",

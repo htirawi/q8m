@@ -3,22 +3,28 @@
     <!-- Header -->
     <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
       <div class="flex items-center gap-3 sm:gap-4">
-        <button
-          type="button"
+        <button type="button"
           class="group inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white/80 px-4 py-2.5 text-sm font-medium text-gray-700 backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:border-purple-300 hover:bg-white hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-purple-500 focus:ring-offset-2 dark:border-gray-700 dark:bg-gray-800/80 dark:text-gray-300 dark:hover:border-purple-600 dark:hover:bg-gray-800 dark:focus:ring-purple-400"
-          aria-label="Exit quiz"
-          @click="$emit('exit')"
-        >
-          <svg class="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          aria-label="Exit quiz" @click="$emit('exit')">
+          <svg class="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-1" fill="none"
+            stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
           </svg>
           {{ t('quiz.exit') }}
         </button>
         <div class="flex items-center gap-2">
+          <!-- Quiz Mode Badge -->
+          <span
+            class="inline-flex items-center gap-2 rounded-full border-2 border-purple-200 bg-purple-50 px-4 py-1.5 text-sm font-semibold text-purple-700 shadow-sm backdrop-blur-sm dark:border-purple-800 dark:bg-purple-900/30 dark:text-purple-300">
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+            </svg>
+            {{ t('mode.quiz') }}
+          </span>
           <span
             class="inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold shadow-md backdrop-blur-sm transition-all duration-300 hover:scale-105"
-            :class="levelBadgeClass"
-          >
+            :class="levelBadgeClass">
             <span class="text-base">{{ levelIcon }}</span>
             <span>{{ t(`level.${level}.label`) }}</span>
           </span>
@@ -27,19 +33,20 @@
       <div class="flex items-center gap-3 sm:gap-4">
         <UserMenu />
         <!-- Countdown Timer -->
-        <div
-          ref="timerElement"
+        <div ref="timerElement"
           class="flex items-center gap-2 rounded-xl border px-4 py-2.5 shadow-md backdrop-blur-sm transition-all duration-300 md:static md:transform-none"
-          :class="[timerBgColor, timerBorderClass, isSticky ? 'fixed top-4 right-4 z-50 shadow-2xl' : '']"
-        >
-          <svg class="h-5 w-5 flex-shrink-0" :class="timerColor" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          :class="[timerBgColor, timerBorderClass, isSticky ? 'fixed top-4 right-4 z-50 shadow-2xl' : '']">
+          <svg class="h-5 w-5 flex-shrink-0" :class="timerColor" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+            aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           <span class="text-xl font-bold tabular-nums" :class="timerColor">
             {{ timeFormatted }}
           </span>
         </div>
-        <div class="flex items-center gap-2 rounded-xl border border-gray-200 bg-white/80 px-3 py-2 text-sm font-semibold text-gray-700 backdrop-blur-sm dark:border-gray-700 dark:bg-gray-800/80 dark:text-gray-300">
+        <div
+          class="flex items-center gap-2 rounded-xl border border-gray-200 bg-white/80 px-3 py-2 text-sm font-semibold text-gray-700 backdrop-blur-sm dark:border-gray-700 dark:bg-gray-800/80 dark:text-gray-300">
           <span class="text-purple-600 dark:text-purple-400">{{ currentIndex + 1 }}</span>
           <span class="text-gray-400">/</span>
           <span>{{ totalQuestions }}</span>
@@ -48,15 +55,16 @@
     </div>
 
     <!-- Time Warning Banner -->
-    <div
-      v-if="remainingTime <= 300 && remainingTime > 0"
+    <div v-if="remainingTime <= 300 && remainingTime > 0"
       class="mt-4 animate-fade-in-up rounded-xl border border-yellow-200 bg-yellow-50/80 p-4 backdrop-blur-sm dark:border-yellow-800 dark:bg-yellow-900/20 sm:mt-5"
-      role="alert"
-    >
+      role="alert">
       <div class="flex items-start gap-3">
         <div class="flex-shrink-0 rounded-full bg-yellow-100 p-2 dark:bg-yellow-900/30">
-          <svg class="h-5 w-5 text-yellow-600 dark:text-yellow-400" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+          <svg class="h-5 w-5 text-yellow-600 dark:text-yellow-400" fill="currentColor" viewBox="0 0 20 20"
+            aria-hidden="true">
+            <path fill-rule="evenodd"
+              d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+              clip-rule="evenodd" />
           </svg>
         </div>
         <div class="flex-1">
@@ -79,8 +87,7 @@
       <div class="h-2.5 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
         <div
           class="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-600 shadow-sm transition-all duration-500"
-          :style="{ width: `${progress}%` }"
-        ></div>
+          :style="{ width: `${progress}%` }"></div>
       </div>
     </div>
   </div>

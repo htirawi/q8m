@@ -4,9 +4,9 @@
  */
 
 import type { FastifyInstance } from 'fastify';
+import mongoose from 'mongoose';
 import { z } from 'zod';
 import { zodToJsonSchema } from 'zod-to-json-schema';
-import mongoose from 'mongoose';
 
 import { LearningPath } from '../models/LearningPath';
 import { PathEnrollment } from '../models/PathEnrollment';
@@ -371,7 +371,7 @@ export default async function learningPathRoutes(fastify: FastifyInstance) {
         // Check premium access
         if (path.isPremium) {
           const user = await User.findById(userId);
-          if (!user || !user.subscription?.isActive) {
+          if (!user?.subscription?.isActive) {
             return reply.status(403).send({
               code: 403,
               error: 'Forbidden',

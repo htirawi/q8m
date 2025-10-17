@@ -69,6 +69,7 @@ export interface IStickyStartBarEmits {
 export interface IStudyHeaderProps {
   currentIndex: number;
   totalQuestions: number;
+  loadedCount: number;
   difficulty: DifficultyLevel;
 }
 
@@ -91,8 +92,6 @@ export interface IStudyNavigationProps {
   totalQuestions: number;
   answeredQuestions: Set<string>;
   markedQuestions: Set<string>;
-  sessionTime: number;
-  isPaused: boolean;
   loadedCount: number;
   totalAvailable: number;
   hasMore?: boolean;

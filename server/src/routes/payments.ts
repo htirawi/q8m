@@ -2,7 +2,7 @@
 import { features } from "@config/appConfig.js";
 import { env } from "@config/env.js";
 import { authenticate, optionalAuth } from "@middlewares/auth.middleware.js";
-import { Purchase } from "@models/Purchase.js";
+import { Purchase, type IPurchase } from "@models/Purchase.js";
 import { Subscription } from "@models/Subscription.js";
 import { safeLogFields } from "@server/security/logging.js";
 import { apsService, type APSWebhookData } from "@services/aps.js";
@@ -401,9 +401,37 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
 
         const purchases = await Purchase.getUserPurchases(userId, limit, skip);
 
+        // Sanitize purchase data to remove sensitive information
+        const sanitizedPurchases = purchases.map((purchase: IPurchase) => {
+          const purchaseObj = purchase.toObject ? purchase.toObject() : purchase;
+          return {
+            id: purchaseObj.id || purchaseObj._id,
+            orderId: purchaseObj.orderId,
+            status: purchaseObj.status,
+            planType: purchaseObj.planType,
+            billingCycle: purchaseObj.billingCycle,
+            amount: {
+              currency: purchaseObj.amount.currency,
+              value: purchaseObj.amount.value,
+            },
+            items: purchaseObj.items,
+            paymentGateway: purchaseObj.paymentGateway,
+            createdAt: purchaseObj.createdAt,
+            updatedAt: purchaseObj.updatedAt,
+            // Exclude sensitive data:
+            // - customer email/name
+            // - billingAddress
+            // - paymentDetails (card info)
+            // - gatewayResponse
+            // - metadata (IP address, user agent)
+            // - refundDetails
+            // - populated userId data
+          };
+        });
+
         reply.send({
           success: true,
-          purchases,
+          purchases: sanitizedPurchases,
           pagination: {
             limit,
             skip,
@@ -598,34 +626,40 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
     }
   });
 
-  // Get payment gateway status
-  fastify.get("/gateways/status", async (request, reply) => {
-    try {
-      const apsStatus = apsService.getConfigurationStatus();
-      const hyperpayStatus = hyperpayService.getConfigurationStatus();
+  // Get payment gateway status (secured - requires authentication)
+  fastify.get(
+    "/gateways/status",
+    {
+      preHandler: [authenticate], // Added authentication requirement
+    },
+    async (request, reply) => {
+      try {
+        const apsStatus = apsService.getConfigurationStatus();
+        const hyperpayStatus = hyperpayService.getConfigurationStatus();
 
-      reply.send({
-        success: true,
-        gateways: {
-          paypal: { configured: features.paypal, note: "Uses Orders v2 API" },
-          aps: apsStatus,
-          hyperpay: hyperpayStatus,
-        },
-      });
-    } catch (error: unknown) {
-      request.log.error(
-        safeLogFields({
-          event: "get_gateway_status_error",
-          error: error instanceof Error ? error.message : "Unknown error",
-          stack: error instanceof Error ? error.stack : undefined,
-        })
-      );
-      reply.status(500).send({
-        success: false,
-        error: "Failed to get gateway status",
-      });
+        reply.send({
+          success: true,
+          gateways: {
+            paypal: { configured: features.paypal, note: "Uses Orders v2 API" },
+            aps: apsStatus,
+            hyperpay: hyperpayStatus,
+          },
+        });
+      } catch (error: unknown) {
+        request.log.error(
+          safeLogFields({
+            event: "get_gateway_status_error",
+            error: error instanceof Error ? error.message : "Unknown error",
+            stack: error instanceof Error ? error.stack : undefined,
+          })
+        );
+        reply.status(500).send({
+          success: false,
+          error: "Failed to get gateway status",
+        });
+      }
     }
-  });
+  );
 
   // Get currency exchange rates
   fastify.get("/currencies/rates", async (request, reply) => {
@@ -656,7 +690,7 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/refund/:purchaseId",
     {
-      preHandler: [authenticate],
+      preHandler: [authenticate, fastify.requireRole("admin")], // Fixed: require admin role
       schema: {
         params: zodToJsonSchema(
           z.object({
@@ -684,16 +718,7 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
           });
         }
 
-        // Check if user owns this purchase or is admin
-        if (
-          purchase.userId.toString() !== request.authUser!.id &&
-          request.authUser!.role !== "admin"
-        ) {
-          return reply.status(403).send({
-            success: false,
-            error: "Access denied",
-          });
-        }
+        // Only admins can process refunds (enforced by requireRole middleware)
 
         const refundAmount = amount || parseFloat(purchase.amount.value);
         let result;

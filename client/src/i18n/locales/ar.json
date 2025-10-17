@@ -28,6 +28,10 @@
     "privacy": "الخصوصية",
     "terms": "الشروط"
   },
+  "mode": {
+    "study": "وضع الدراسة",
+    "quiz": "وضع الاختبار"
+  },
   "levelSelection": {
     "title": "اختر مسار التعلم الخاص بك",
     "subtitle": "حدد مستوى خبرتك ووضع التعلم المفضل لديك",
@@ -1030,6 +1034,8 @@
     "resumeTimer": "استئناف المؤقت",
     "resetTimer": "إعادة تعيين المؤقت",
     "selectAnswer": "اختر إجابتك",
+    "correctAnswer": "الإجابة الصحيحة",
+    "explanation": "الشرح",
     "answer": "الإجابة",
     "levelCard": {
       "currentPlan": "الخطة الحالية",

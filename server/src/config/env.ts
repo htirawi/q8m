@@ -86,6 +86,10 @@ const EnvSchema = z.object({
 
   // Package version
   npm_package_version: z.string().optional(),
+
+  // Development security (only for development environment)
+  DEV_LOGIN_SECRET: z.string().min(32, "Dev login secret must be at least 32 characters").optional(),
+  DEV_LOGIN_WHITELIST: z.string().optional(),
 });
 
 export type Env = z.infer<typeof EnvSchema>;

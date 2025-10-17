@@ -1,5 +1,6 @@
 import { Subscription } from "@models/Subscription.js";
 import { User } from "@models/User.js";
+import { maskEmail, safeLogFields } from "@server/security/logging.js";
 import type { ObjectId } from "mongoose";
 
 import type { EntitlementCheck, UserEntitlements } from "../types/services/entitlement";
@@ -166,7 +167,15 @@ export class EntitlementService {
       // Clear cache for this user
       this.cache.delete(userId);
 
-      console.warn(`Updated entitlements for user ${user.email}: ${newEntitlements.join(", ")}`);
+      // Log with masked email for security
+      const safeLog = safeLogFields({
+        event: "entitlements_updated",
+        userId: user._id.toString(),
+        userEmail: maskEmail(user.email),
+        entitlements: newEntitlements,
+        planType,
+      });
+      console.warn(JSON.stringify(safeLog));
     } catch (error) {
       console.error("Error updating user entitlements:", error);
       throw error;
@@ -193,7 +202,15 @@ export class EntitlementService {
       // Clear cache for this user
       this.cache.delete(userId);
 
-      console.warn(`Revoked entitlements for user ${user.email}. Reason: ${reason}`);
+      // Log with masked email for security
+      const safeLog = safeLogFields({
+        event: "entitlements_revoked",
+        userId: user._id.toString(),
+        userEmail: maskEmail(user.email),
+        reason,
+        entitlements: user.entitlements,
+      });
+      console.warn(JSON.stringify(safeLog));
     } catch (error) {
       console.error("Error revoking user entitlements:", error);
       throw error;

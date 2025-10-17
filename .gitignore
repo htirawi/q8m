@@ -21,8 +21,10 @@ playwright-report/
 # Local development tools and migrations
 scripts/reset-project.sh
 server/src/migrations/migrate.ts
+server/src/migrations/003_seed_migrated_questions.ts
 server/src/migrations/004_fix_framework_data.ts
 server/src/migrations/005_populate_framework_access.ts
+server/src/migrations/006_fix_study_mode_questions.ts
 docs/development/troubleshooting-reset.md
 
 # Production builds

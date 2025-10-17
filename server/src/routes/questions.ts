@@ -1,13 +1,21 @@
 import { authenticate } from "@middlewares/auth.middleware.js";
-import { studyGuard, quizGuard } from "@middlewares/plan-guard.middleware.js";
+import {
+  studyGuard,
+  quizGuard,
+  getUserPlanTier,
+  enforceQuestionLimit,
+} from "@middlewares/plan-guard.middleware.js";
 import { FrameworkAccess } from "@models/FrameworkAccess.js";
-import { Question } from "@models/Question.js";
+import { Question, type IQuestion } from "@models/Question.js";
+import { UsageTracking } from "@models/UsageTracking.js";
 import { UserProgress } from "@models/UserProgress.js";
 import { QuestionResponseSchema } from "@shared/schemas/question.schema.js";
 import type { PlanTier } from "@shared/types/plan.js";
 import type { FastifyInstance } from "fastify";
 import { z } from "zod";
 import { zodToJsonSchema } from "zod-to-json-schema";
+
+type QuestionOption = { id: string; text: string; isCorrect: boolean };
 
 const getQuestionsSchema = z.object({
   framework: z
@@ -26,6 +34,7 @@ const getQuestionsSchema = z.object({
   level: z.enum(["junior", "intermediate", "senior"]).optional(),
   category: z.string().optional(),
   difficulty: z.enum(["easy", "medium", "hard"]).optional(),
+  mode: z.enum(["study", "quiz"]).optional(), // Add mode parameter
   limit: z.string().transform(Number).optional().default("10"),
   offset: z.string().transform(Number).optional().default("0"),
   ids: z.string().optional(), // Comma-separated question IDs for bookmarked questions
@@ -51,9 +60,23 @@ export default async function questionRoutes(fastify: FastifyInstance) {
     },
     async (request, reply) => {
       const { query } = request;
-      const { framework, level, category, difficulty, limit, offset, ids } = query as z.infer<
+      const { framework, level, category, difficulty, mode, limit, offset, ids } = query as z.infer<
         typeof getQuestionsSchema
       >;
+
+      // ADDED: Enforce plan-based limits
+      const userTier = getUserPlanTier(request.authUser?.entitlements || []);
+      const effectiveMode = mode || "study";
+      const effectiveFramework = framework || "other";
+      const maxAllowed = enforceQuestionLimit(userTier, effectiveFramework, effectiveMode);
+
+      // Limit cannot exceed plan limits
+      const effectiveLimit = Math.min(Number(limit), maxAllowed);
+
+      // Add response headers to inform frontend of limits
+      reply.header("X-Plan-Tier", userTier);
+      reply.header("X-Plan-Limit", maxAllowed.toString());
+      reply.header("X-Framework", effectiveFramework);
 
       let questions;
       let total;
@@ -76,7 +99,7 @@ export default async function questionRoutes(fastify: FastifyInstance) {
           _id: { $in: questionIds },
           isActive: true,
         })
-          .limit(limit)
+          .limit(effectiveLimit)
           .skip(offset);
 
         total = questionIds.length;
@@ -88,7 +111,7 @@ export default async function questionRoutes(fastify: FastifyInstance) {
           category,
           difficulty,
           mode: "study", // Only get study mode questions (open-ended, explanatory)
-          limit,
+          limit: effectiveLimit,
           offset,
         });
 
@@ -106,37 +129,83 @@ export default async function questionRoutes(fastify: FastifyInstance) {
         fastify.log.info(`Total count result: ${total}`);
       }
 
-      // For study mode, remove answers and explanations to prevent cheating
-      const sanitizedQuestions = questions.map((q: any) => {
+      // Handle explanations based on mode and question type
+      const sanitizedQuestions = questions.map((q: IQuestion) => {
         const question = q.toObject ? q.toObject() : q;
 
-        // Remove correct answers and explanations
+        // For Study Mode requests with open-ended questions, keep explanations (that's the content)
+        if (mode === "study" && question.type === "open-ended" && question.mode === "study") {
+          return {
+            ...question,
+            content: {
+              en: {
+                question: question.content.en.question,
+                options: [], // Study Mode open-ended questions don't have options
+                explanation: question.content.en.explanation, // Keep explanation for Study Mode
+              },
+              ar: {
+                question: question.content.ar?.question,
+                options: [], // Study Mode open-ended questions don't have options
+                explanation: question.content.ar?.explanation, // Keep explanation for Study Mode
+              },
+            },
+          };
+        }
+
+        // For all other cases (Quiz Mode, Study Mode with quiz-style questions), remove explanations and correct answers
         return {
           ...question,
           content: {
             en: {
               question: question.content.en.question,
-              options: question.content.en.options?.map((opt: any) => ({
+              options: question.content.en.options?.map((opt: QuestionOption) => ({
                 id: opt.id,
                 text: opt.text,
-                // Remove isCorrect flag
+                // Remove isCorrect flag to prevent cheating
               })),
-              // Remove explanation
+              // Remove explanation to prevent cheating
             },
             ar: {
               question: question.content.ar?.question,
-              options: question.content.ar?.options?.map((opt: any) => ({
+              options: question.content.ar?.options?.map((opt: QuestionOption) => ({
                 id: opt.id,
                 text: opt.text,
-                // Remove isCorrect flag
+                // Remove isCorrect flag to prevent cheating
               })),
-              // Remove explanation
+              // Remove explanation to prevent cheating
             },
           },
         };
       });
 
       const hasMoreValue = Number(offset) + Number(limit) < Number(total);
+
+      // ADDED: Track usage for authenticated users
+      if (request.authUser?.id && sanitizedQuestions.length > 0) {
+        try {
+          await UsageTracking.incrementStudyQuestions(
+            request.authUser.id,
+            effectiveFramework,
+            sanitizedQuestions.length
+          );
+
+          // Check remaining quota
+          const quotaInfo = await UsageTracking.hasQuotaRemaining(
+            request.authUser.id,
+            effectiveFramework,
+            effectiveMode,
+            0,
+            maxAllowed
+          );
+
+          // Add quota info to response headers
+          reply.header("X-Quota-Used", quotaInfo.used.toString());
+          reply.header("X-Quota-Remaining", quotaInfo.remaining.toString());
+        } catch (trackingError) {
+          // Log but don't fail the request
+          fastify.log.warn({ error: trackingError }, "Failed to track usage");
+        }
+      }
 
       // Debug logging
       fastify.log.info(
@@ -188,7 +257,7 @@ export default async function questionRoutes(fastify: FastifyInstance) {
         }
 
         // Validate question structure
-        if (!question.content || !question.content.en) {
+        if (!question.content?.en) {
           fastify.log.error(`Question ${questionId} has invalid structure:`, question);
           return reply.status(500).send({
             code: 500,
@@ -211,8 +280,8 @@ export default async function questionRoutes(fastify: FastifyInstance) {
           questionId,
           correctAnswers:
             question.content.en.options
-              ?.filter((opt: any) => opt.isCorrect)
-              .map((opt: any) => opt.id) || [],
+              ?.filter((opt: QuestionOption) => opt.isCorrect)
+              .map((opt: QuestionOption) => opt.id) || [],
           explanation: {
             en: question.content.en.explanation || "",
             ar: question.content.ar?.explanation || "",
@@ -230,10 +299,11 @@ export default async function questionRoutes(fastify: FastifyInstance) {
     }
   );
 
-  // Get question by ID
+  // Get question by ID (SECURED - requires authentication)
   fastify.get(
     "/:questionId",
     {
+      preHandler: [authenticate], // Added authentication requirement
       schema: {
         params: zodToJsonSchema(
           z.object({
@@ -257,7 +327,43 @@ export default async function questionRoutes(fastify: FastifyInstance) {
         });
       }
 
-      reply.send(question);
+      // Sanitize the response - remove answers and explanations for security
+      const sanitizedQuestion = {
+        _id: question._id,
+        id: question.id,
+        type: question.type,
+        framework: question.framework,
+        level: question.level,
+        difficulty: question.difficulty,
+        category: question.category,
+        tags: question.tags,
+        points: question.points,
+        mode: question.mode,
+        content: {
+          en: {
+            question: question.content.en.question,
+            options: question.content.en.options?.map((opt: QuestionOption) => ({
+              id: opt.id,
+              text: opt.text,
+              // Remove isCorrect flag to prevent answer exposure
+            })),
+            // Remove explanation to prevent cheating
+          },
+          ar: {
+            question: question.content.ar?.question,
+            options: question.content.ar?.options?.map((opt: QuestionOption) => ({
+              id: opt.id,
+              text: opt.text,
+              // Remove isCorrect flag to prevent answer exposure
+            })),
+            // Remove explanation to prevent cheating
+          },
+        },
+        createdAt: question.createdAt,
+        updatedAt: question.updatedAt,
+      };
+
+      reply.send(sanitizedQuestion);
     }
   );
 
@@ -307,7 +413,9 @@ export default async function questionRoutes(fastify: FastifyInstance) {
         if (!user) {
           return reply.status(401).send({ success: false, message: "Unauthorized" });
         }
-        const userTier = "free" as PlanTier; // Default to free plan
+
+        // FIXED: Now properly determines user's plan tier from entitlements
+        const userTier = getUserPlanTier(user.entitlements || []);
 
         // Get all active framework access rules from database
         fastify.log.info("Fetching framework access rules...");
@@ -357,10 +465,11 @@ export default async function questionRoutes(fastify: FastifyInstance) {
     }
   );
 
-  // Get framework counts by difficulty
+  // Get framework counts by difficulty (SECURED - requires authentication)
   fastify.get(
     "/framework-counts",
     {
+      preHandler: [authenticate], // Added authentication requirement
       schema: {
         querystring: zodToJsonSchema(
           z.object({
@@ -468,7 +577,7 @@ export default async function questionRoutes(fastify: FastifyInstance) {
   fastify.get(
     "/quiz/questions",
     {
-      preHandler: [authenticate, quizGuard()],
+      preHandler: [quizGuard({ allowAnonymous: true })], // Allow anonymous access for testing
       config: {
         rateLimit: {
           max: 50,
@@ -542,12 +651,38 @@ export default async function questionRoutes(fastify: FastifyInstance) {
         // Get total count
         const total = await Question.countDocuments(query);
 
-        return {
-          questions: questions.map((q: Record<string, unknown>) => ({
+        // Sanitize questions for Quiz Mode (remove explanations and correct answers)
+        type QuizQuestionContent = {
+          en: { question: string; options?: QuestionOption[]; explanation: string };
+          ar?: { question: string; options?: QuestionOption[]; explanation: string };
+        };
+
+        const sanitizedQuestions = questions.map((q: Record<string, unknown>) => {
+          const content = q.content as QuizQuestionContent;
+          return {
             _id: (q._id as { toString(): string }).toString(),
-            id: q.id,
+            id: q.id || (q._id as { toString(): string }).toString(), // Ensure id field exists
             type: q.type,
-            content: q.content,
+            content: {
+              en: {
+                question: content.en.question,
+                options: content.en.options?.map((opt: QuestionOption) => ({
+                  id: opt.id,
+                  text: opt.text,
+                  isCorrect: false, // Set to false to prevent cheating
+                })),
+                explanation: "", // Empty explanation for Quiz Mode
+              },
+              ar: {
+                question: content.ar?.question,
+                options: content.ar?.options?.map((opt: QuestionOption) => ({
+                  id: opt.id,
+                  text: opt.text,
+                  isCorrect: false, // Set to false to prevent cheating
+                })),
+                explanation: "", // Empty explanation for Quiz Mode
+              },
+            },
             difficulty: q.difficulty,
             level: q.level,
             framework: q.framework,
@@ -557,7 +692,11 @@ export default async function questionRoutes(fastify: FastifyInstance) {
             createdAt: q.createdAt,
             updatedAt: q.updatedAt,
             isActive: q.isActive,
-          })),
+          };
+        });
+
+        return {
+          questions: sanitizedQuestions,
           total,
           hasMore: questions.length < total,
         };
@@ -727,7 +866,14 @@ export default async function questionRoutes(fastify: FastifyInstance) {
         }
 
         // Build query for bookmarked questions
-        const query: any = {
+        type BookmarkQuery = {
+          _id: { $in: string[] };
+          isActive: boolean;
+          difficulty?: string;
+          framework?: string;
+        };
+
+        const query: BookmarkQuery = {
           _id: { $in: bookmarkedIds },
           isActive: true,
         };

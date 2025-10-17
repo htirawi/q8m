@@ -6,6 +6,7 @@
 
 import type { PlanTier } from '@shared/types/plan';
 import type { PlanId } from '@/types/pricing';
+import { PLAN_LIMITS } from '@shared/config/plan-limits';
 
 export interface IPlanConfig {
   id: PlanId; // Machine ID: 'junior', 'intermediate', 'senior', 'bundle'
@@ -54,12 +55,12 @@ export const PLANS: IPlanConfig[] = [
     tier: 'free',
     labelKey: 'plans.junior.name',
     descriptionKey: 'plans.junior.description',
-    priceMonthly: 0,
-    priceYearly: 0,
+    priceMonthly: PLAN_LIMITS.junior.price.monthly,
+    priceYearly: PLAN_LIMITS.junior.price.yearly,
     currency: 'USD',
     features: {
-      studyItems: 50,
-      quizQuestions: 50,
+      studyItems: 30, // Max from React framework limits (most generous)
+      quizQuestions: 10, // Max from React framework limits
       aiSupport: false,
       priority: 'low',
       benefits: [
@@ -95,16 +96,16 @@ export const PLANS: IPlanConfig[] = [
     tier: 'intermediate',
     labelKey: 'plans.intermediate.name',
     descriptionKey: 'plans.intermediate.description',
-    priceMonthly: 15,
-    priceYearly: 150,
+    priceMonthly: PLAN_LIMITS.intermediate.price.monthly,
+    priceYearly: PLAN_LIMITS.intermediate.price.yearly,
     currency: 'USD',
     badge: {
       textKey: 'plans.badges.mostPopular',
       color: 'blue',
     },
     features: {
-      studyItems: 200,
-      quizQuestions: 250,
+      studyItems: PLAN_LIMITS.intermediate.global!.studyItems,
+      quizQuestions: PLAN_LIMITS.intermediate.global!.quizQuestions,
       aiSupport: false,
       priority: 'medium',
       benefits: [
@@ -146,12 +147,12 @@ export const PLANS: IPlanConfig[] = [
     tier: 'advanced',
     labelKey: 'plans.senior.name',
     descriptionKey: 'plans.senior.description',
-    priceMonthly: 22,
-    priceYearly: 220,
+    priceMonthly: PLAN_LIMITS.senior.price.monthly,
+    priceYearly: PLAN_LIMITS.senior.price.yearly,
     currency: 'USD',
     features: {
-      studyItems: 300,
-      quizQuestions: 350,
+      studyItems: PLAN_LIMITS.senior.global!.studyItems,
+      quizQuestions: PLAN_LIMITS.senior.global!.quizQuestions,
       aiSupport: true,
       priority: 'high',
       benefits: [
@@ -193,16 +194,16 @@ export const PLANS: IPlanConfig[] = [
     tier: 'pro',
     labelKey: 'plans.bundle.name',
     descriptionKey: 'plans.bundle.description',
-    priceMonthly: 30,
-    priceYearly: 300,
+    priceMonthly: PLAN_LIMITS.allAccess.price.monthly,
+    priceYearly: PLAN_LIMITS.allAccess.price.yearly,
     currency: 'USD',
     badge: {
       textKey: 'plans.badges.bestValue',
       color: 'gold',
     },
     features: {
-      studyItems: 300,
-      quizQuestions: 350,
+      studyItems: 9999, // Unlimited (represented as high number)
+      quizQuestions: 9999, // Unlimited
       aiSupport: true,
       priority: 'high',
       benefits: [
