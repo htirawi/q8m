@@ -138,8 +138,8 @@ const props = withDefaults(defineProps<Props>(), {
   requiredPlan: '',
 });
 
-defineemits<{
-  select: [;framework: string]
+defineEmits<{
+  select: [framework: string]
 }>();
 
 // Get professional icon path for the framework

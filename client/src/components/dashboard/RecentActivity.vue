@@ -105,7 +105,7 @@ const props = withDefaults(defineProps<Props>(), {
   displayLimit: 5
 });
 
-const emit = defineemits<{
+const emit = defineEmits<{
   'action-click': [activity: Activity];
 }>();
 

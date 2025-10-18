@@ -167,7 +167,7 @@ const props = withDefaults(defineProps<Props>(), {
   recentBadges: () => []
 });
 
-const emit = defineemits<{
+const emit = defineEmits<{
   
 }>();
 

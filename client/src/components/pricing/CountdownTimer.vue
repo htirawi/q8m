@@ -108,7 +108,7 @@ const props = withDefaults(defineProps<Props>(), {
   resetDuration: 86400, // 24 hours in seconds
 });
 
-const emit = defineemits<{
+const emit = defineEmits<{
   'tick': [timeLeft: TimeLeft];
 }>();
 

@@ -79,7 +79,7 @@ const props = withDefaults(defineProps<Props>(), {
   isSticky: false,
 });
 
-defineemits<{
+defineEmits<{
   exit: [];
 }>();
 

@@ -112,7 +112,7 @@ import type { DifficultyLevel } from '@/types/plan/access';
 
 const props = defineProps<Props>();
 
-defineemits<{
+defineEmits<{
   select: [];
 }>();
 

@@ -67,7 +67,7 @@ const props = withDefaults(defineProps<Props>(), {
   openModal: true,
 });
 
-const emit = defineemits<{
+const emit = defineEmits<{
   (e: 'click'): void;
   (e: 'share-success'): void;
   (e: 'share-error', error: string): void

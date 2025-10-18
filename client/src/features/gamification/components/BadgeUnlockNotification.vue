@@ -102,9 +102,9 @@ const props = withDefaults(defineProps<{
   stackSpacing: 16,
 });
 
-const emit = defineemits<{
-  share: [;badge: IBadge];
-  dismiss: [;badgeId: string]
+const emit = defineEmits<{
+  share: [badge: IBadge];
+  dismiss: [badgeId: string]
 }>();
 
 const badges = ref<(IBadge & { progress: number; timestamp: number })[]>([]);

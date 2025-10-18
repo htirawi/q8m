@@ -105,7 +105,7 @@ interface props {
 
 const props = defineProps<Props>();
 
-const emit = defineemits<{
+const emit = defineEmits<{
   (e: 'close'): void;
   (e: 'share-success', platform: SharePlatform): void
 }>();
@@ -115,22 +115,37 @@ const preview = ref<SharePreviewData | null>(null);
 const loading = computed(() => sharesStore.loading);
 
 const shareOptions: ShareOption[] = [
-  {;
+  {
+    platform: 'twitter',
+    label: 'Twitter',
+    color: '#1DA1F2',
     icon: 'TwitterIcon',
   },
-  {;
+  {
+    platform: 'facebook',
+    label: 'Facebook',
+    color: '#4267B2',
     icon: 'FacebookIcon',
   },
-  {;
+  {
+    platform: 'linkedin',
+    label: 'LinkedIn',
+    color: '#0077B5',
     icon: 'LinkedInIcon',
   },
-  {;
+  {
+    platform: 'whatsapp',
+    label: 'WhatsApp',
+    color: '#25D366',
     icon: 'WhatsAppIcon',
   },
-  {;
+  {
+    platform: 'email',
+    label: 'Email',
+    color: '#EA4335',
     icon: 'EmailIcon',
   },
-  {;
+  {
     platform: 'copy_link',
     label: 'Copy Link',
     color: '#9CA3AF',

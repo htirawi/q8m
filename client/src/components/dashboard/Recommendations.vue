@@ -181,7 +181,7 @@ const props = withDefaults(defineProps<Props>(), {
   showRefresh: true
 });
 
-const emit = defineemits<{
+const emit = defineEmits<{
   'item-click': [item: Recommendation];
   
   

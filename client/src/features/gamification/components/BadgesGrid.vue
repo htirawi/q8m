@@ -145,8 +145,8 @@ const props = withDefaults(defineProps<Props>(), {
   hasMore: false,
 });
 
-const emit = defineemits<{
-  badgeClick: [;badge: IBadge];
+const emit = defineEmits<{
+  badgeClick: [badge: IBadge];
   loadMore: [];
 }>();
 

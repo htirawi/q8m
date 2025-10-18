@@ -12,7 +12,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
 
-const emit = defineemits<{
+const emit = defineEmits<{
   complete: [];
 }>();
 

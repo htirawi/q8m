@@ -279,7 +279,7 @@ const props = withDefaults(defineProps<Props>(), {
   variant: 'card',
 });
 
-defineemits<{
+defineEmits<{
   click: [];
 }>();
 

@@ -4,7 +4,7 @@ import type { BillingHistorySectionProps } from "@/types/ui/component-props";
 
 defineProps<BillingHistorySectionProps>();
 
-const emit = defineemits<{
+const emit = defineEmits<{
   refresh: [];
 }>();
 

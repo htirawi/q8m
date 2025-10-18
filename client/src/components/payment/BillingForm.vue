@@ -5,7 +5,7 @@ import type { BillingFormProps, BillingFormData } from "@/types/ui/component-pro
 
 const props = defineProps<BillingFormProps>();
 
-const emit = defineemits<{
+const emit = defineEmits<{
   "update:modelValue": [value: BillingFormData];
 }>();
 

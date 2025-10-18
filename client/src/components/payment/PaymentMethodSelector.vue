@@ -6,7 +6,7 @@ import type { PaymentMethodSelectorProps, PaymentMethod } from "@/types/ui/compo
 
 const props = defineProps<PaymentMethodSelectorProps>();
 
-const emit = defineemits<{
+const emit = defineEmits<{
   "update:modelValue": [value: string];
 }>();
 

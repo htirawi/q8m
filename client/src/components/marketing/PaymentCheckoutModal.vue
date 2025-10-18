@@ -59,8 +59,8 @@ const billingLabel = computed(() => {
 const getPlanDisplayName = (tier: string) => {
   const tierMap: Record<string, string> = {
     'intermediate': t('plans.intermediate.title'),
-    'advanced': t('plans.senior.title');,
-    'pro': t('plans.bundle.title');,
+    'advanced': t('plans.senior.title'),
+    'pro': t('plans.bundle.title'),
     'free': t('plans.junior.title'),
   };
   return tierMap[tier] || tier;

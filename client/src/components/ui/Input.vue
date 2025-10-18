@@ -19,11 +19,11 @@ const props = withDefaults(defineProps<InputProps>(), {
   required: false,
 });
 
-const emit = defineemits<{
+const emit = defineEmits<{
   "update:modelValue": [value: string | number];
-  input: [;
-  blur: [;
-  focus: [;event: FocusEvent]
+  input: [event: Event];
+  blur: [event: FocusEvent];
+  focus: [event: FocusEvent]
 }>();
 
 const { error, type } = toRefs(props);

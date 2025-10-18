@@ -80,7 +80,7 @@ interface props {
 }
 
 const props = defineProps<Props>();
-const emit = defineemits<{
+const emit = defineEmits<{
   moduleClick: [;moduleId: string]
 }>();
 

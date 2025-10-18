@@ -134,8 +134,8 @@ const props = withDefaults(defineProps<Props>(), {
   clickable: false,
 });
 
-const emit = defineemits<{
-  click: [;badge: IBadge]
+const emit = defineEmits<{
+  click: [badge: IBadge]
 }>();
 
 function handleClick() {

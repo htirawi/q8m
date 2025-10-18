@@ -9,7 +9,7 @@ import type { EmailStepProps } from "@/types/ui/component-props";
 
 const props = defineProps<EmailStepProps>();
 
-const emit = defineemits<{
+const emit = defineEmits<{
   "update:email": [value: string];
   continue: [];
 }>();

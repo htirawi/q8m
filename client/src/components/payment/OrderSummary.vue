@@ -5,7 +5,7 @@ import type { OrderSummaryProps } from "@/types/ui/component-props";
 
 const props = defineProps<OrderSummaryProps>();
 
-defineemits<{
+defineEmits<{
   
 }>();
 

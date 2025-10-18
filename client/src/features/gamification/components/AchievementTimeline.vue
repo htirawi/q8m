@@ -178,7 +178,7 @@ const props = withDefaults(defineProps<Props>(), {
   itemsPerPage: 10,
 });
 
-const emit = defineemits<{
+const emit = defineEmits<{
   'achievement-click': [achievement: IAchievement];
   
 }>();

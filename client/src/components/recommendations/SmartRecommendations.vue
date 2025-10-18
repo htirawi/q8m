@@ -455,24 +455,32 @@ const generaterecommendations = () => {
   // Generate learning path
   learningPath.value = {
     steps: [
-      {; 0 : false,
+      {
+        title: t('recommendations.path.step1'),
+        description: t('recommendations.path.step1Desc'),
+        completed: juniorStats ? juniorStats.avgScore >= 70 : false,
+        current: !juniorStats || juniorStats.avgScore < 70,
         action: 'junior_quiz',
       },
-      {;
+      {
+        title: t('recommendations.path.step2'),
+        description: t('recommendations.path.step2Desc'),
+        completed: intermediateStats ? intermediateStats.avgScore >= 70 : false,
+        current: juniorStats && intermediateStats ? juniorStats.avgScore >= 70 && intermediateStats.avgScore < 70 : false,
         action: 'intermediate_quiz',
       },
-      {;
+      {
         title: t('recommendations.path.step3'),
         description: t('recommendations.path.step3Desc'),
-        completed: seniorStats ? seniorStats.avgScore >=;
-        current: intermediateStats && seniorStats ? intermediateStats.avgScore >= 70 && seniorStats.avgScore <; 70 : false,
+        completed: seniorStats ? seniorStats.avgScore >= 70 : false,
+        current: intermediateStats && seniorStats ? intermediateStats.avgScore >= 70 && seniorStats.avgScore < 70 : false,
         action: 'senior_quiz',
       },
     ],
   };
 
   // Quick tips based on performance
-  const tips: IQuickTip[] = [];Quicktipsbasedonperformanceconsttips
+  const tips: IQuickTip[] = [];
 
   const recentScores = history.value.slice(0, 3).map(h => h.score);
   const avgRecentScore = recentScores.reduce((sum, s) => sum + s, 0) / recentScores.length;

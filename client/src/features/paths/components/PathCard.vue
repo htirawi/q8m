@@ -90,7 +90,7 @@ interface props {
 }
 
 const props = defineProps<Props>();
-defineemits<{
+defineEmits<{
   click: [];
 }>();
 

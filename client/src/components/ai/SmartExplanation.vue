@@ -431,15 +431,10 @@ const readingTime = ref(5);
 
 // Mock explanation data (replace with actual AI service call)
 const mockExplanation: Partial<ISmartExplanation> = {
-  definition: `**${props.concept}
-
-** is a fundamental concept in modern web development that enables developers to build more efficient and maintainable applications.
+  definition: `**${props.concept}** is a fundamental concept in modern web development that enables developers to build more efficient and maintainable applications.
 
 It works by creating a layer of abstraction that separates concerns and provides a clear interface for interaction between different parts of your application.`,
-
-  importance: `Understanding ${props.concept}
-
- is crucial because:
+  importance: `Understanding ${props.concept} is crucial because:
 
 - It significantly improves code organization and reusability
 - It reduces complexity in large-scale applications
@@ -447,20 +442,20 @@ It works by creating a layer of abstraction that separates concerns and provides
 - It's a pattern used by most modern frameworks and libraries
 - It's frequently asked about in technical interviews`,
   examples: [
-    {;
+    {
       output: '{ name: "Example", value: 42 }'
     },
-    {;
+    {
       language: 'typescript',
       code: `// Advanced ${props.concept} with TypeScript
-interface ExampleInterface {;
-  name: string;;
-  value: number;;
+interface ExampleInterface {
+  name: string;
+  value: number;
   process(): void;
 }
 
 class AdvancedExample implements ExampleInterface {
-  constructor(public name: string, public value: number) {};
+  constructor(public name: string, public value: number) {}
   process(): void {
     console.log(\`Processing \${this.name} with value \${this.value}\`);
   }
@@ -473,13 +468,18 @@ class AdvancedExample implements ExampleInterface {
     'Mixing concerns that should be separated'
   ],
   practiceProblems: [
-    {;
-    createdAt: new Date()
-  };
+    {
+      id: 'p1',
+      question: `Implement a basic ${props.concept} example`,
+      difficulty: 'easy',
+      hints: ['Start with the fundamentals', 'Focus on clarity over complexity'],
+      solution: `class Example {
+  constructor(public name: string) {}
+  createdAt = new Date()
 }`,
       explanation: 'This solution demonstrates the core pattern with minimal complexity.'
     },
-    {;
+    {
       id: 'p2',
       question: `Refactor this code to properly implement ${props.concept}`,
       difficulty: 'medium',
@@ -489,11 +489,15 @@ class AdvancedExample implements ExampleInterface {
   ],
   relatedConcepts: ['Design Patterns', 'SOLID Principles', 'Functional Programming', 'Object-Oriented Programming'],
   resources: [
-    {;
+    {
+      type: 'video',
+      title: `Mastering ${props.concept}`,
+      url: 'https://example.com/video',
+      description: 'Comprehensive video tutorial with real-world examples',
       duration: '45 min',
       recommended: true
     },
-    {;
+    {
       type: 'article',
       title: `Deep Dive into ${props.concept}`,
       url: 'https://example.com/article',

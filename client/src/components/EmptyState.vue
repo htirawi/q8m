@@ -79,7 +79,7 @@ const props = withDefaults(defineProps<{
   variant: 'default',
 });
 
-defineemits<{
+defineEmits<{
   
   
 }>();

@@ -10,7 +10,7 @@ const props = withDefaults(defineProps<ToastInternalProps>(), {
   persistent: false,
 });
 
-const emit = defineemits<{
+const emit = defineEmits<{
   dismiss: [];
   "update:isVisible": [value: boolean];
 }>();

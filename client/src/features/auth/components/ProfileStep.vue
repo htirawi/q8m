@@ -10,7 +10,7 @@ import type { ProfileStepProps } from "@/types/ui/component-props";
 
 const props = defineProps<ProfileStepProps>();
 
-defineemits<{
+defineEmits<{
   "update:password": [value: string];
   "update:acceptTerms": [value: boolean];
   back: [];

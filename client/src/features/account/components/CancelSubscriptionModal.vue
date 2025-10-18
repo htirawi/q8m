@@ -5,9 +5,9 @@ import type { CancelSubscriptionModalProps } from "@/types/ui/component-props";
 
 const props = defineProps<CancelSubscriptionModalProps>();
 
-const emit = defineemits<{
+const emit = defineEmits<{
   close: [];
-  confirm: [;reason: string]
+  confirm: [reason: string]
 }>();
 
 useI18n();

@@ -44,7 +44,7 @@ import UserMenu from '@/components/layout/UserMenu.vue';
 
 const props = defineProps<Props>();
 
-defineemits<{
+defineEmits<{
   back: [];
 }>();
 

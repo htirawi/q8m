@@ -114,7 +114,7 @@ const props = withDefaults(defineProps<Props>(), {
   autoDismissDelay: 0,
 });
 
-const emit = defineemits<{
+const emit = defineEmits<{
   enabled: [];
   dismissed: [];
 }>();

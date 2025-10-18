@@ -225,7 +225,7 @@ const props = withDefaults(defineProps<Props>(), {
   loading: false,
 });
 
-const emit = defineemits<{
+const emit = defineEmits<{
   close: [];
   submit: [;data: CreateChallengeData]
 }>();

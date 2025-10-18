@@ -142,7 +142,7 @@ const props = withDefaults(defineProps<Props>(), {
   showCreateButton: true,
 });
 
-const emit = defineemits<{
+const emit = defineEmits<{
   accept: [;
   reject: [;
   start: [;

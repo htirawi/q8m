@@ -150,7 +150,7 @@ import { useI18n } from 'vue-i18n';
 
 const props = defineProps<Props>();
 
-const emit = defineemits<{
+const emit = defineEmits<{
   'update:answeredFilter': [value: string];
   'mode-change': [mode: 'sequential' | 'random' | 'bookmarked'];
   clear: [];

@@ -11,7 +11,7 @@ const props = withDefaults(defineProps<IModernPricingCardProps>(), {
   popular: false,
 });
 
-const emit = defineemits<{
+const emit = defineEmits<{
   "select-paypal": [planId: string, billingCycle: BillingCycle]
 }>();
 

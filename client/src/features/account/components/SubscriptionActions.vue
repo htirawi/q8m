@@ -4,7 +4,7 @@ import type { SubscriptionActionsProps } from "@/types/ui/component-props";
 
 defineProps<SubscriptionActionsProps>();
 
-const emit = defineemits<{
+const emit = defineEmits<{
   upgrade: [];
   cancel: [];
   startQuizzes: [];

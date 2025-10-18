@@ -5,7 +5,7 @@ import type { OAuthButtonsProps } from "@/types/ui/component-props";
 
 defineProps<OAuthButtonsProps>();
 
-const emit = defineemits<{
+const emit = defineEmits<{
   "oauth-login": [provider: "google"];
 }>();
 

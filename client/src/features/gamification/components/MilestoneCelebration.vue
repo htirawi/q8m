@@ -149,9 +149,9 @@ const props = withDefaults(defineProps<Props>(), {
   celebrationStyle: 'fireworks',
 });
 
-const emit = defineemits<{
+const emit = defineEmits<{
   close: [];
-  share: [;platform: string]
+  share: [platform: string]
 }>();
 
 const { celebrate, fireworks, burst, rain } = useConfetti();

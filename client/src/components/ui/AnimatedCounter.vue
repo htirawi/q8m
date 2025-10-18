@@ -7,9 +7,10 @@
 
 <script setup lang="ts">
 import { ref, watch, onMounted } from 'vue';
-import type { IAnimatedCounterProps }animationFrame
+import type { IAnimatedCounterProps } from '@/types/components/shared';
 
-let startTime: number | null = null;startTime
+let startTime: number | null = null;
+let animationFrame: number | null = null;
 let startValue = 0;
 
 const animate = () => {

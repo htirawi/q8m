@@ -300,7 +300,7 @@ import type { IQuizResultsProps as Props } from "@/types/components/quiz";
 
 const props = defineProps<Props>();
 
-defineemits<{
+defineEmits<{
   retry: [];
   exit: [];
 }>();

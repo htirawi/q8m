@@ -13,7 +13,7 @@ const currentLanguage = computed(() => locale.value);
 
 const togglelanguage = async () => {
   const currentLocale = (route.params.locale as SupportedLocale) || DEFAULT_LOCALE;
-  const newLocale: SupportedLocale = currentLocale === "en"; ? "ar" : "en";
+  const newLocale: SupportedLocale = currentLocale === "en" ? "ar" : "en";
 
   // Build the new path with the new locale
   const pathWithoutLocale = route.path.replace(/^\/[a-z]{2}(\/|$)/, "/");

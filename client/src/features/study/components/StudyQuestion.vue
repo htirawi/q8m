@@ -191,7 +191,7 @@ const answerSection = ref<HTMLDivElement | null>(null);
 
 const props = defineProps<Props>();
 
-const emit = defineemits<{
+const emit = defineEmits<{
   'update:selectedAnswer': [value: string | null];
   'update:textAnswer': [value: string];
   'update:multipleAnswers': [value: string[]];

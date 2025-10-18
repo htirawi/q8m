@@ -106,7 +106,7 @@ const props = withDefaults(defineProps<Props>(), {
   progress: undefined
 });
 
-const emit = defineemits<{
+const emit = defineEmits<{
   'update:modelValue': [value: boolean];
   'click': [event: MouseEvent];
   'select': [difficulty: string];
@@ -130,7 +130,7 @@ const ariaLabel = computed(() => {
 const getBadgeExplanation = (badgeText: string): string => {
   const explanations: Record<string, string> = {
     'PRO': t('levels.badgePro'),
-    'NEW': t('levels.badgeNew');,
+    'NEW': t('levels.badgeNew'),
     'RECOMMENDED': t('levels.badgeRecommended')
   };
   return explanations[badgeText] || '';

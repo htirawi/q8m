@@ -230,7 +230,7 @@ const props = withDefaults(defineProps<Props>(), {
   loading: false,
 });
 
-defineemits<{
+defineEmits<{
   accept: [;
   reject: [;
   start: [;
