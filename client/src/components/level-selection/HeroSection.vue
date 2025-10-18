@@ -122,7 +122,7 @@
           </div>
           <div class="stat-card__value">
             <span
-              >{{ currentDifficulty ? $t(`levels.${currentDifficulty}.title`) : $t('levels.junior.title')$t }}
+              >{{ currentDifficulty ? $t(`levels.${currentDifficulty}.title`) : $t('levels.junior.title') }}
             </span>
           </div>
           <div class="stat-card__badges">
