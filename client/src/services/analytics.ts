@@ -425,7 +425,7 @@ class AnalyticsService {
     if (typeof crypto !== "undefined" && crypto.getRandomValues) {
       const array = new Uint32Array(2);
       crypto.getRandomValues(array);
-      return `sess_${Date.now()}_${array[0].toString(36)}${array[1].toString(36)}`;
+      return `sess_${Date.now()}_${(array[0] ?? 0).toString(36)}${(array[1] ?? 0).toString(36)}`;
     }
     // Last resort fallback (should rarely be needed in modern browsers)
     return `sess_${Date.now()}_${Date.now().toString(36)}`;
