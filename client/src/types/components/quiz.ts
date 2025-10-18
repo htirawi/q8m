@@ -2,6 +2,33 @@
  * Quiz Component Props & Types
  */
 
+export interface IQuizAnswer {
+  questionId: string;
+  answer: string | string[];
+  selectedAnswer?: string;
+  correct?: boolean;
+  isCorrect?: boolean;
+  timeSpent?: number;
+}
+
+export interface ISubmitQuizPayload {
+  quizType: "practice" | "exam";
+  level: "junior" | "intermediate" | "senior";
+  answers: IQuizAnswer[];
+  startTime: string;
+  endTime: string;
+}
+
+export interface ISubmitQuizResponse {
+  xpEarned: number;
+  badgesEarned: string[];
+  leveledUp?: boolean;
+  newLevel?: number;
+  previousLevel?: number;
+  weakCategories: string[];
+  strongCategories?: string[];
+}
+
 export interface IQuizHeaderProps {
   level: string;
   currentIndex: number;
