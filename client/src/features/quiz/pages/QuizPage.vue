@@ -191,7 +191,8 @@ const streakStore = useStreakStore();
 const level = computed(() => route.params.level as "junior" | "intermediate" | "senior");
 
 // Gamification state
-const quizResultData = ref<{
+const quizResultData = ref<ISubmitQuizResponse | Record<string, unknown> | null>(null);
+const _gamificationData = ref<{
   xpEarned: number;
   badgesEarned: string[];
   leveledUp?: boolean;
@@ -212,12 +213,22 @@ const badgeNotificationRef = ref<InstanceType<typeof BadgeUnlockNotification> | 
 
 const questions = ref<Question[]>([]);
 const currentIndex = ref(0);
-const selectedAnswer = ref<string | null>(null);
+const selectedAnswer = ref<string | string[] | null>(null);
 const textAnswer = ref("");
 const multipleAnswers = ref<string[]>([]);
 const hasAnswered = ref(false);
 const userAnswers = ref<
-  Record<number, { answer: string | string[]; isCorrect: boolean; timeSpent: number }>
+  Record<
+    number,
+    {
+      answer: string | string[];
+      isCorrect: boolean;
+      correctAnswer?: string | string[];
+      timeSpent: number;
+      explanation?: string;
+      points?: number;
+    }
+  >
 >({});
 
 const isLoading = ref(true);
