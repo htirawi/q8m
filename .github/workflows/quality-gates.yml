@@ -37,9 +37,18 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ env.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          key: ${{ runner.os }}-pnpm-v9-store-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
-            ${{ runner.os }}-pnpm-store-
+            ${{ runner.os }}-pnpm-v9-store-
+
+      - name: Verify lockfile exists
+        run: |
+          if [ ! -f pnpm-lock.yaml ]; then
+            echo "Error: pnpm-lock.yaml not found!"
+            exit 1
+          fi
+          echo "✓ pnpm-lock.yaml found"
+          head -5 pnpm-lock.yaml
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -88,6 +97,28 @@ jobs:
         uses: pnpm/action-setup@v3
         with:
           version: 9
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-v9-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-v9-store-
+
+      - name: Verify lockfile exists
+        run: |
+          if [ ! -f pnpm-lock.yaml ]; then
+            echo "Error: pnpm-lock.yaml not found!"
+            exit 1
+          fi
+          echo "✓ pnpm-lock.yaml found"
+          head -5 pnpm-lock.yaml
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
