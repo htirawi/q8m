@@ -245,7 +245,7 @@ import { useRouter, useRoute } from "vue-router";
 import type { Question } from "@shared/types/quiz";
 import { useAuthStore } from "@/stores/auth";
 import { usePreferencesStore } from "@/stores/preferences";
-import { useQuizResults, type IQuizAnswer } from "@/composables/useQuizResults";
+import { useQuizResults } from "@/composables/useQuizResults";
 import { useStreakStore } from "@/stores/streak";
 import QuizResults from "../components/QuizResults.vue";
 import QuizHeader from "../components/QuizHeader.vue";
@@ -258,7 +258,7 @@ const router = useRouter();
 const route = useRoute();
 const authStore = useAuthStore();
 const preferencesStore = usePreferencesStore();
-const { submitQuiz, isLoading: isSubmittingisLoading } = useQuizResults();
+const { submitQuiz, isLoading: isSubmitting } = useQuizResults();
 const streakStore = useStreakStore();
 
 const level = computed(() => route.params.level as "junior" | "intermediate" | "senior");
@@ -275,7 +275,7 @@ const quizResultData = ref<{
 } | null>(null);
 
 const showLevelUpModal = ref(false);
-const levelupdata = ref<{
+const levelUpData = ref<{
   newLevel: number;
   previousLevel: number;
   xpEarned: number;
@@ -327,7 +327,7 @@ const score = computed(() => {
   return { correct, total, percentage, timeSpent };
 });
 
-const submitanswer = async () => {
+const submitAnswer = async () => {
   if (!currentQuestion.value) return;
   const timeSpent = Math.floor((Date.now() - questionStartTime.value) / 1000);
   let answer: string | string[];
