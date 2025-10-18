@@ -321,7 +321,17 @@ const userInitials = computed(() => {
 });
 
 // Menu Items Configuration
-const menuItems = computed(() => [
+interface MenuItem {
+  path: string;
+  label: string;
+  icon: ReturnType<typeof h>;
+  badge?: {
+    type: "new" | "count" | "dot";
+    value?: number | string;
+  };
+}
+
+const menuItems = computed<MenuItem[]>(() => [
   {
     path: "/dashboard",
     label: "navigation.dashboard",
