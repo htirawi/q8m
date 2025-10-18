@@ -15,9 +15,7 @@ async function main() {
   console.log("🔧 Analyzing undefined errors...\n");
 
   // Get all typecheck errors
-  const { stdout } = await execAsync(
-    "cd client && pnpm typecheck 2>&1 || true"
-  );
+  const { stdout } = await execAsync("cd client && pnpm typecheck 2>&1 || true");
 
   // Parse errors for "possibly undefined" patterns
   const errors = stdout.split("\n");
@@ -81,4 +79,3 @@ async function main() {
 }
 
 main().catch(console.error);
-

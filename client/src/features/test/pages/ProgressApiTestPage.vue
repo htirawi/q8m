@@ -39,18 +39,10 @@ function formatDate(date: Date | string): string {
     <div v-else-if="progress" class="dashboard-content">
       <!-- Tabs -->
       <div class="tabs">
-        <button
-          @click="activeTab = 'overview'"
-          :class="{ active: activeTab === 'overview' }"
-          class="tab-btn"
-        >
+        <button @click="activeTab = 'overview'" :class="{ active: activeTab === 'overview' }" class="tab-btn">
           Overview
         </button>
-        <button
-          @click="activeTab = 'stats'"
-          :class="{ active: activeTab === 'stats' }"
-          class="tab-btn"
-        >
+        <button @click="activeTab = 'stats'" :class="{ active: activeTab === 'stats' }" class="tab-btn">
           Detailed Stats
         </button>
       </div>
@@ -208,11 +200,9 @@ function formatDate(date: Date | string): string {
               <tr>
                 <td>Total Study Time</td>
                 <td>
-                  <strong
-                    >{{ Math.round(stats.totalStudyTimeMinutes) }}
+                  <strong>{{ Math.round(stats.totalStudyTimeMinutes) }}
 
-                    minutes</strong
-                  >
+                    minutes</strong>
                 </td>
               </tr>
               <tr>
@@ -224,11 +214,9 @@ function formatDate(date: Date | string): string {
               <tr>
                 <td>Average Session Duration</td>
                 <td>
-                  <strong
-                    >{{ Math.round(stats.averageSessionDurationMinutes) }}
+                  <strong>{{ Math.round(stats.averageSessionDurationMinutes) }}
 
-                    minutes</strong
-                  >
+                    minutes</strong>
                 </td>
               </tr>
               <tr>

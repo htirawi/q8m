@@ -7,9 +7,10 @@
       <div class="flex items-center gap-3">
         <!-- Opponent Avatar -->
         <div
+          v-if="opponent"
           :class="[
             'flex h-12 w-12 items-center justify-center rounded-full font-semibold text-white',
-            getAvatarColor(opponent.name),
+            getAvatarColor(opponent.name || ''),
           ]"
         >
           <img
@@ -18,7 +19,7 @@
             :alt="opponent.name"
             class="h-full w-full rounded-full object-cover"
           />
-          <span v-else>{{ getInitials(opponent.name) }} </span>
+          <span v-else>{{ getInitials(opponent.name || 'U') }} </span>
         </div>
 
         <!-- Opponent Info -->
@@ -26,14 +27,14 @@
           <div class="flex items-center gap-2">
             <h3 class="font-semibold text-gray-900 dark:text-white">
               {{ isChallenger(challenge) ? "Challenge to" : "Challenge from" }}
-              {{ opponent.name }}
+              {{ opponent?.name || 'Unknown' }}
             </h3>
             <span :class="getLevelColor(opponentLevel)">
               {{ getLevelBadge(opponentLevel) }}
             </span>
           </div>
           <p class="text-sm text-gray-500 dark:text-gray-400">
-            {{ formatDate(challenge.createdAt) }}
+            {{ formatDate(challenge.createdAt as Date) }}
           </p>
         </div>
       </div>
@@ -58,10 +59,10 @@
         <span
           :class="[
             'rounded px-2 py-1 text-xs font-medium',
-            getDifficultyColor(challenge.difficulty),
+            getDifficultyColor(String(challenge.difficulty)),
           ]"
         >
-          {{ getDifficultyBadge(challenge.difficulty) }}
+          {{ getDifficultyBadge(String(challenge.difficulty)) }}
           <span class="capitalize">{{ challenge.difficulty }} </span>
         </span>
       </div>
@@ -70,7 +71,7 @@
       <div class="flex items-center gap-2" v-if="challenge.framework">
         <span class="text-sm text-gray-500 dark:text-gray-400">Framework:</span>
         <span class="text-sm font-medium text-gray-900 dark:text-white">
-          {{ getFrameworkBadge(challenge.framework) }}
+          {{ getFrameworkBadge(String(challenge.framework)) }}
           <span class="capitalize">{{ challenge.framework }} </span>
         </span>
       </div>
@@ -79,7 +80,7 @@
       <div class="flex items-center gap-2">
         <span class="text-sm text-gray-500 dark:text-gray-400">Questions:</span>
         <span class="text-sm font-medium text-gray-900 dark:text-white">
-          {{ challenge.questionCount }}
+          {{ challenge.questionCount ?? 0 }}
         </span>
       </div>
 
@@ -87,7 +88,7 @@
       <div class="flex items-center gap-2">
         <span class="text-sm text-gray-500 dark:text-gray-400">Time:</span>
         <span class="text-sm font-medium text-gray-900 dark:text-white">
-          {{ formatTime(challenge.timeLimit) }}
+          {{ formatTime(challenge.timeLimit ?? 0) }}
         </span>
       </div>
     </div>
@@ -95,7 +96,7 @@
     <!-- Message -->
     <div v-if="challenge.message" class="mb-4">
       <div class="rounded-lg border-l-4 border-indigo-500 bg-gray-50 p-3 dark:bg-gray-900">
-        <p class="text-sm italic text-gray-700 dark:text-gray-300">"{{ challenge.message }}"</p>
+        <p class="text-sm italic text-gray-700 dark:text-gray-300">"{{ challenge.message || '' }}"</p>
       </div>
     </div>
 
@@ -162,7 +163,7 @@
       <!-- Accept Button (for received pending challenges) -->
       <button
         v-if="challenge.status === 'pending' && !isChallenger(challenge)"
-        @click="$emit('accept', challenge._id)"
+        @click="$emit('accept', String(challenge._id || challenge.id || ''))"
         :disabled="loading"
         class="flex-1 rounded-lg bg-green-600 px-4 py-2 font-medium text-white transition-colors hover:bg-green-700 disabled:bg-gray-400"
       >
@@ -172,7 +173,7 @@
       <!-- Reject Button (for received pending challenges) -->
       <button
         v-if="challenge.status === 'pending' && !isChallenger(challenge)"
-        @click="$emit('reject', challenge._id)"
+        @click="$emit('reject', String(challenge._id || challenge.id || ''))"
         :disabled="loading"
         class="flex-1 rounded-lg bg-red-600 px-4 py-2 font-medium text-white transition-colors hover:bg-red-700 disabled:bg-gray-400"
       >
@@ -182,7 +183,7 @@
       <!-- Start Button (for in-progress challenges) -->
       <button
         v-if="challenge.status === 'in-progress' && !hasUserSubmitted(challenge)"
-        @click="$emit('start', challenge._id)"
+        @click="$emit('start', String(challenge._id || challenge.id || ''))"
         :disabled="loading"
         class="flex-1 rounded-lg bg-indigo-600 px-4 py-2 font-medium text-white transition-colors hover:bg-indigo-700 disabled:bg-gray-400"
       >
@@ -199,7 +200,7 @@
 
       <!-- View Details Button -->
       <button
-        @click="$emit('view-details', challenge._id)"
+        @click="$emit('view-details', String(challenge._id || challenge.id || ''))"
         class="rounded-lg bg-gray-200 px-4 py-2 font-medium text-gray-900 transition-colors hover:bg-gray-300 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
       >
         View Details
@@ -247,8 +248,8 @@ const {
   getLevelBadge,
 } = useChallenges();
 
-const opponent = computed(() => getOpponent(props.challenge));
-const opponentLevel = computed(() => opponent.value.gamification?.level || 1);
+const opponent = computed(() => getOpponent(props.challenge as Challenge));
+const opponentLevel = computed(() => opponent.value?.gamification?.level || 1);
 
 const getInitials = (name: string): string => {
   return name

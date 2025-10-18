@@ -135,7 +135,9 @@ export class AIService {
       }
     } catch (error: unknown) {
       this.error.value = error instanceof Error ? error.message : String(error);
-      analytics.trackError(error instanceof Error ? error : String(error), { context: "ai_send_message" });
+      analytics.trackError(error instanceof Error ? error : String(error), {
+        context: "ai_send_message",
+      });
       throw error;
     } finally {
       this.isLoading.value = false;
