@@ -411,7 +411,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
-import { aiService } from "@/services/ai/aiService";
 import type { ISmartExplanation, ICodeExample } from "@/types/ai";
 import { analytics } from "@/services/analytics";
 import { marked } from "marked";

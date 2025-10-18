@@ -692,7 +692,7 @@ const speakMessage = (content: string) => {
   }
 };
 
-const toggleReaction = (message: IChatMessage, type: string) => {
+const toggleReaction = (_message: IChatMessage, type: string) => {
   // Implementation for reactions
   analytics.track("ai_message_reaction", { type });
 };

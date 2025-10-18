@@ -305,8 +305,6 @@ import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 import { useAnalytics } from "@/composables/useAnalytics";
 import { getPlanByTier, DIFFICULTY_TO_PLAN_ID, getPlanById } from "@/config/plans";
-import type { DifficultyLevel } from "@/types/plan/access";
-import type { PlanTier } from "@shared/types/plan";
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();

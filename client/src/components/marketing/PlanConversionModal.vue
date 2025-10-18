@@ -366,8 +366,6 @@ import { useI18n } from "vue-i18n";
 import { useCheckout } from "@/composables/useCheckout";
 import { useAnalytics } from "@/composables/useAnalytics";
 import PlanComparisonCard from "./PlanComparisonCard.vue";
-import type { DifficultyLevel } from "@/types/plan/access";
-import type { PlanTier } from "@shared/types/plan";
 import type { BillingCycle } from "@/composables/useCheckout";
 
 const props = withDefaults(defineProps<Props>(), {

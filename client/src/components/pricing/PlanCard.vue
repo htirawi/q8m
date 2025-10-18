@@ -5,7 +5,6 @@ import type {
 } from "@/types/components/pricing";
 import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
-import type { IPlanConfig } from "@/config/plans";
 import type { BillingCycle, PlanId } from "@/types/pricing";
 
 const props = withDefaults(defineProps<IProps>(), {

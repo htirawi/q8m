@@ -59,7 +59,7 @@
 </template>
 
 <script setup lang="ts">
-import type { IEmptyStateProps as Props } from "@/types/components/ui";
+import type { IEmptyStateProps } from "@/types/components/ui";
 import { computed } from "vue";
 
 const props = withDefaults(
