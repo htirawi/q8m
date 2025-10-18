@@ -124,6 +124,13 @@ export interface IMilestone {
 export interface IMilestoneCelebrationProps {
   milestone: IMilestone;
   show?: boolean;
+  celebrationStyle?: string;
+  duration?: number;
+  badges?: unknown[];
+  xpReward?: number;
+  title?: string;
+  description?: string;
+  icon?: string;
 }
 
 export interface IStreakDisplayProps {
