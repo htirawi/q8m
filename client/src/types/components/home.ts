@@ -129,6 +129,9 @@ export interface ISocialProofBarProps {
   userCount?: number;
   companyLogos?: string[];
   showAnimation?: boolean;
+  showLogos?: boolean;
+  logoWidth?: number;
+  logoHeight?: number;
 }
 
 // ============================================================================

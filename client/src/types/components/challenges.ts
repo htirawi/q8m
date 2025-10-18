@@ -39,6 +39,8 @@ export interface IChallengeListProps {
 
 export interface ICreateChallengeModalProps {
   open: boolean;
+  isOpen?: boolean; // Alias for open
   friendId?: string;
+  friends?: Array<{ id: string; name: string; avatar?: string }>;
   loading?: boolean;
 }

@@ -60,6 +60,9 @@ export interface IBadgeData {
 export interface IBadgesGridProps {
   badges: IBadgeData[];
   filter?: string;
+  showProgress?: boolean;
+  loading?: boolean;
+  hasMore?: boolean;
 }
 
 export interface IBadgeUnlockNotificationBadge {
@@ -98,11 +101,13 @@ export interface IUserRank {
 export interface ILeaderboardProps {
   entries: ILeaderboardEntry[];
   userRank?: IUserRank;
+  currentUserId?: string;
   type?: "weekly" | "monthly" | "all_time";
   variant?: "compact" | "detailed" | "card";
   loading?: boolean;
   getLevelDescriptionClass?: (level: number) => string;
   scrollTargetSelector?: string;
+  lastUpdated?: Date | string;
 }
 
 export interface IReward {
@@ -114,8 +119,17 @@ export interface IReward {
 
 export interface ILevelUpCelebrationProps {
   newLevel: number;
+  level?: number; // Alias for newLevel
+  previousLevel?: number;
   rewards?: IReward[];
   show?: boolean;
+  shareable?: boolean;
+  autoHide?: boolean;
+  autoHideDelay?: number;
+  levelTitle?: string;
+  xpEarned?: number;
+  message?: string;
+  actionText?: string;
 }
 
 export interface IMilestoneReward {
@@ -190,4 +204,6 @@ export interface IXPDisplayProps {
   levelProgress?: number;
   showProgress?: boolean;
   xpToNextLevel?: number;
+  variant?: "compact" | "full" | "detailed";
+  xp?: number; // Alias for currentXP
 }

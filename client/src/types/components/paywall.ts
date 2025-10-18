@@ -10,6 +10,7 @@ export interface InlineUpsellCardProps {
   targetPlan: PlanTier;
   benefits?: string[];
   ctaText?: string;
+  contentId?: string;
 }
 
 // Alias for backwards compatibility
