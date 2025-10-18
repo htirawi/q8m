@@ -9,20 +9,30 @@ export interface IAchievement {
   icon: string;
   date: Date;
   type?: string;
+  xp?: number; // Alias for xpEarned
   xpEarned?: number;
+  rarity?: "common" | "rare" | "epic" | "legendary";
+  category?: string;
+  details?: string;
 }
 
 export interface IAchievementTimelineProps {
   achievements: IAchievement[];
   loading?: boolean;
+  showHeader?: boolean;
+  showFilters?: boolean;
+  itemsPerPage?: number;
 }
+
+export type BadgeTier = "common" | "rare" | "epic" | "legendary";
 
 export interface IBadge {
   id: string;
   name: string;
   description: string;
   icon: string;
-  rarity: "common" | "rare" | "epic" | "legendary";
+  rarity: BadgeTier;
+  tier?: BadgeTier; // Alias for rarity
   earned: boolean;
   earnedAt?: Date;
 }
@@ -31,6 +41,11 @@ export interface IBadgeCardProps {
   badge: IBadge;
   earned?: boolean; // Flattened from badge.earned for convenience
   size?: "sm" | "md" | "lg";
+  variant?: "default" | "compact" | "detailed";
+  clickable?: boolean;
+  showLock?: boolean;
+  showProgress?: boolean;
+  progress?: number;
 }
 
 export interface IBadgeData {
@@ -143,5 +158,8 @@ export interface IXPDisplayProps {
   currentXP: number;
   requiredXP: number;
   level: number;
+  levelTitle?: string;
+  levelProgress?: number;
   showProgress?: boolean;
+  xpToNextLevel?: number;
 }

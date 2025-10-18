@@ -13,8 +13,10 @@ export interface ICountdownTimerTimeLeft {
 
 export interface ICountdownTimerProps {
   endDate: Date;
+  targetDate?: Date; // Alias for endDate
   showLabels?: boolean;
   variant?: string;
+  celebrationStyle?: string;
   showIcon?: boolean;
   icon?: string;
   title?: string;
@@ -29,13 +31,19 @@ export interface ICountdownTimerProps {
 
 export interface IModernPricingCardProps {
   planId: PlanId;
+  tier?: PlanId; // Alias for planId
   title: string;
   description: string;
   price: number;
+  priceMonthly?: number;
+  priceYearly?: number;
   billingCycle: BillingCycle;
   features: string[];
   popular?: boolean;
   recommended?: boolean;
+  badge?: string;
+  targetPlan?: string;
+  shareable?: boolean;
 }
 
 export interface IPlanCardProps {

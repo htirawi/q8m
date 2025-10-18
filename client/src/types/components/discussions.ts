@@ -32,17 +32,38 @@ export interface IDiscussionFormEmits {
 export interface IDiscussionItemProps {
   discussion: Record<string, unknown>;
   questionId: string;
+  questionCreatorId?: string;
+  isReply?: boolean;
 }
 
 export interface IDiscussionListProps {
   questionId: string;
   discussions: Record<string, unknown>[];
+  questionCreatorId?: string;
+  showForm?: boolean;
+}
+
+export interface IDiscussionFormProps {
+  questionId: string;
+  parentId?: string;
+  initialContent?: string;
+  placeholder?: string;
+  showCancel?: boolean;
+  maxLength?: number;
+  minRows?: number;
+}
+
+export interface IDiscussionFormEmits {
+  (e: "submit", content: string): void;
+  (e: "cancel"): void;
 }
 
 export interface IReplyFormProps {
   discussionId: string;
+  placeholder?: string;
 }
 
 export interface IReplyFormEmits {
   (e: "submit", content: string): void;
+  (e: "cancel"): void;
 }
