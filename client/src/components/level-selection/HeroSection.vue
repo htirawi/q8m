@@ -59,7 +59,7 @@
           </div>
           <div class="stat-card__value">
             <AnimatedCounter
-              :value="stats.streak"
+              :value="stats?.streak || 0"
               :format="(value) => Math.round(value).toString()"
             />
             <span class="stat-card__unit">{{ $t("stats.days") }}</span>
@@ -88,7 +88,7 @@
           </div>
           <div class="stat-card__value">
             <AnimatedCounter
-              :value="stats.coins"
+              :value="stats?.coins || 0"
               :format="(value) => Math.round(value).toString()"
             />
           </div>
