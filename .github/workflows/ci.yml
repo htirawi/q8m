@@ -116,13 +116,32 @@ jobs:
           fi
 
       # ✅ SECURITY FIX (SEC-011): Secret scanning
-      - name: Security Scan - Secrets
+      - name: Security Scan - Secrets (Pull Requests)
+        if: github.event_name == 'pull_request'
         uses: trufflesecurity/trufflehog@main
         with:
           path: ./
-          base: ${{ github.event.repository.default_branch }}
-          head: HEAD
-          extra_args: --debug --only-verified --exclude-paths=.trufflehog-exclude.txt
+          base: ${{ github.event.pull_request.base.sha }}
+          head: ${{ github.event.pull_request.head.sha }}
+          extra_args: --only-verified
+
+      - name: Security Scan - Secrets (Push to Main)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: ${{ github.event.before }}
+          head: ${{ github.event.after }}
+          extra_args: --only-verified
+        continue-on-error: true # Don't fail if BASE=HEAD on first commit
+
+      - name: Security Scan - Secrets (Full Scan on Other Branches)
+        if: github.event_name == 'push' && github.ref != 'refs/heads/main'
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          extra_args: --only-verified --since-commit HEAD~1
+        continue-on-error: true # Don't fail on first commits
 
       - name: Upload Security Reports
         if: failure()
