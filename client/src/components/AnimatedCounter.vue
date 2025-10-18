@@ -7,6 +7,7 @@ import type { IAnimatedCounterProps as Props } from "@/types/components/ui";
 import { ref, watch, onMounted } from "vue";
 
 const props = withDefaults(defineProps<Props>(), {
+  value: 0,
   duration: 1000,
   delay: 0,
   format: (value: number) => Math.round(value).toString(),

@@ -7,7 +7,10 @@ import type { Ref } from "vue";
 export interface IAnimatedCounterProps {
   value: number;
   duration?: number;
+  delay?: number;
   decimals?: number;
+  format?: (value: number) => string;
+  easingFunction?: (t: number) => number;
 }
 
 export interface IEmptyStateProps {
