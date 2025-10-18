@@ -100,6 +100,9 @@ export interface ISmartExplanation {
   questionId: string;
   concept: string;
   explanation: string;
+  definition?: string; // Short definition of the concept
+  importance?: string; // Why this concept matters
+  pitfalls?: string[]; // Common mistakes
   difficulty: "beginner" | "intermediate" | "advanced";
   examples?: ICodeExample[];
   visualAids?: IVisualAid[];
