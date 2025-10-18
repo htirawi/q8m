@@ -16,9 +16,8 @@ const props = withDefaults(defineProps<Props>(), {
 const displayValue = ref(props.format ? props.format(0) : "0");
 const currentValue = ref(0);
 let animationFrame: number | null = null;
-animationFrame;
 
-function animatevalue(start: number, end: number) {
+function animateValue(start: number, end: number) {
   const startTime = performance.now();
   const range = end - start;
   const animate = (currentTime: number) => {
@@ -31,18 +30,15 @@ function animatevalue(start: number, end: number) {
 
     const progress = Math.min(elapsed / props.duration, 1);
     const easedProgress = props.easingFunction ? props.easingFunction(progress) : progress;
-    easedProgressprops.easingFunctionprops.easingFunction;
     const value = start + range * easedProgress;
     currentValue.value = value;
     displayValue.value = props.format ? props.format(value) : value.toString();
-    props.formatprops.format;
 
     if (progress < 1) {
       animationFrame = requestAnimationFrame(animate);
     } else {
       currentValue.value = end;
       displayValue.value = props.format ? props.format(end) : end.toString();
-      props.formatprops.format;
     }
   };
 
