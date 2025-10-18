@@ -159,7 +159,7 @@ import { useI18n } from "vue-i18n";
 import type { IHeroSection } from "@/types/design-system";
 import AnimatedCounter from "@/components/ui/AnimatedCounter.vue";
 
-interface props extends iherosection {
+interface Props extends IHeroSection {
   coinTrend?: number;
   currentDifficulty?: "junior" | "intermediate" | "senior";
   recentBadges?: Array<{ id: string; name: string; emoji: string }>;

@@ -63,7 +63,7 @@ interface ISelectFooterProps {
   showHelp?: boolean;
 }
 
-interface iselectfooteremits {
+interface ISelectFooterEmits {
   (e: "continue"): void;
   (e: "skip"): void;
   (e: "help"): void;

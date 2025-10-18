@@ -47,7 +47,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-interface iselecterrorprops {
+interface ISelectErrorProps {
   /** Error message to display */
   message?: string;
 
@@ -55,7 +55,7 @@ interface iselecterrorprops {
   dismissible?: boolean;
 }
 
-interface iselecterroremits {
+interface ISelectErrorEmits {
   (e: "retry"): void;
   (e: "dismiss"): void;
 }

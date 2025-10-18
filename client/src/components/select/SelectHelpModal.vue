@@ -208,11 +208,11 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from "vue";
 
-interface iselecthelpmodalprops {
+interface ISelectHelpModalProps {
   modelValue: boolean;
 }
 
-interface iselecthelpmodalemits {
+interface ISelectHelpModalEmits {
   (e: "update:modelValue", value: boolean): void;
 }
 

@@ -33,7 +33,7 @@
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 
-interface iselectheaderprops {
+interface ISelectHeaderProps {
   /** Whether to show breadcrumb navigation */
   showBreadcrumb?: boolean;
 
