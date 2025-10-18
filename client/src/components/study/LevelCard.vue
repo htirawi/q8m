@@ -229,7 +229,8 @@ onMounted(() => {
     difficulty: props.difficulty,
     isLocked: props.isLocked,
     requiredPlan: props.isLocked ? props.requiredPlan : undefined,
-  }););
+  });
+});
 
 </script>
 

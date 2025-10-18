@@ -97,7 +97,7 @@ interface iselectcardprops {
     isSelected: boolean;
 }
 
-interface iselectcardemits {
+interface ISelectCardEmits {
     (e: 'select', id: string): void
 }
 
