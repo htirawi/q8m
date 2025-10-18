@@ -473,6 +473,7 @@ const RegularTable = (props: { rows: string[][] }) => {
     ]),
   ]);
 };
+
 </script>
 
 <style scoped>
@@ -492,7 +493,7 @@ const RegularTable = (props: { rows: string[][] }) => {
   @apply bg-transparent p-0 text-gray-100;
 }
 
-@media (max-width: 640px) {
+@media (width <= 640px) {
   .markdown-content {
     @apply text-sm;
   }

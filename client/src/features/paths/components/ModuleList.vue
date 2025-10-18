@@ -12,19 +12,28 @@
           <div class="flex items-center gap-2">
             <span class="flex h-6 w-6 items-center justify-center rounded-full text-xs font-medium" :class="getIconClasses(module)">
               {{ index + 1 }}
+
             </span>
             <h4 class="font-medium text-gray-900 dark:text-white">
               {{ getModuleTitle(module) }}
+
             </h4>
           </div>
           <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
             {{ getModuleDescription(module) }}
+
           </p>
           <div class="mt-2 flex items-center gap-4 text-xs text-gray-500 dark:text-gray-400">
-            <span>⏱️ {{ module.estimatedMinutes }} min</span>
-            <span>📝 {{ getModuleQuestionsCount(module) }} questions</span>
+            <span>⏱️ {{ module.estimatedMinutes }}
+
+ min</span>
+            <span>📝 {{ getModuleQuestionsCount(module) }}
+
+ questions</span>
             <span v-if="module.prerequisites.length > 0">
-              🔒 {{ module.prerequisites.length }} prerequisites
+              🔒 {{ module.prerequisites.length }}
+
+ prerequisites
             </span>
           </div>
         </div>
@@ -63,7 +72,7 @@ import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import type { IModule, IModuleProgress } from '@shared/types/learning-paths';
 
-interface Props {
+interface props {
   modules: IModule[];
   moduleProgress: IModuleProgress[];
   isEnrolled: boolean;
@@ -71,45 +80,45 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-const emit = defineEmits<{
-  moduleClick: [moduleId: string];
+const emit = defineemits<{
+  moduleClick: [;moduleId: string]
 }>();
 
 const route = useRoute();
 const locale = computed(() => (route.params.locale as string) || 'en');
 
-const getModuleTitle = (module: IModule) => {
+const getmoduletitle = (module: IModule) => {
   return module.title[locale.value === 'ar' ? 'ar' : 'en'];
 };
 
-const getModuleDescription = (module: IModule) => {
+const getmoduledescription = (module: IModule) => {
   return module.description[locale.value === 'ar' ? 'ar' : 'en'];
 };
 
-const getModuleQuestionsCount = (module: IModule) => {
+const getmodulequestionscount = (module: IModule) => {
   return module.questionIds?.length || 0;
 };
 
-const isModuleCompleted = (moduleId: string) => {
+const ismodulecompleted = (moduleId: string) => {
   const progress = props.moduleProgress.find((mp) => mp.moduleId === moduleId);
   return progress?.isCompleted || false;
 };
 
-const isCurrentModule = (moduleId: string) => {
+const iscurrentmodule = (moduleId: string) => {
   return props.currentModuleId === moduleId;
 };
 
-const getModuleProgressData = (moduleId: string) => {
+const getmoduleprogressdata = (moduleId: string) => {
   return props.moduleProgress.find((mp) => mp.moduleId === moduleId);
 };
 
-const getModuleProgressPercentage = (moduleId: string) => {
+const getmoduleprogresspercentage = (moduleId: string) => {
   const progress = getModuleProgressData(moduleId);
   if (!progress || progress.totalQuestions === 0) return 0;
   return Math.round((progress.questionsCompleted / progress.totalQuestions) * 100);
 };
 
-const getModuleClasses = (module: IModule) => {
+const getmoduleclasses = (module: IModule) => {
   if (module.isLocked) {
     return 'border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800/50 cursor-not-allowed opacity-60';
   }
@@ -122,7 +131,7 @@ const getModuleClasses = (module: IModule) => {
   return 'border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800 cursor-pointer hover:border-gray-300';
 };
 
-const getIconClasses = (module: IModule) => {
+const geticonclasses = (module: IModule) => {
   if (isModuleCompleted(module.moduleId)) {
     return 'bg-green-600 text-white';
   }
@@ -135,7 +144,7 @@ const getIconClasses = (module: IModule) => {
   return 'bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300';
 };
 
-const handleModuleClick = (moduleId: string) => {
+const handlemoduleclick = (moduleId: string) => {
   const module = props.modules.find((m) => m.moduleId === moduleId);
   if (module && !module.isLocked && props.isEnrolled) {
     emit('moduleClick', moduleId);

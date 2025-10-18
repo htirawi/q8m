@@ -52,7 +52,7 @@ const handleLike = async () => {
   await likeDiscussion(props.discussion._id);
 };
 
-const handleReply = () => {
+const handlereply = () => {
   if (!isAuthenticated.value) {
     // Redirect to login or show message
     return;
@@ -60,11 +60,11 @@ const handleReply = () => {
   emit('reply');
 };
 
-const handleEdit = () => {
+const handleedit = () => {
   emit('edit');
 };
 
-const handleDelete = async () => {
+const handledelete = async () => {
   if (!showDeleteConfirm.value) {
     showDeleteConfirm.value = true;
     return;
@@ -74,34 +74,40 @@ const handleDelete = async () => {
   try {
     await removeDiscussion(props.discussion._id);
     showDeleteConfirm.value = false;
-  } finally {
+  }
+
+ finally {
     isProcessing.value = false;
   }
 };
 
-const cancelDelete = () => {
+const canceldelete = () => {
   showDeleteConfirm.value = false;
 };
 
-const handlePin = async () => {
+const handlepin = async () => {
   isProcessing.value = true;
   try {
     await pin(props.discussion._id);
-  } finally {
+  }
+
+ finally {
     isProcessing.value = false;
   }
 };
 
-const handleBestAnswer = async () => {
+const handlebestanswer = async () => {
   isProcessing.value = true;
   try {
     await setBestAnswer(props.discussion._id);
-  } finally {
+  }
+
+ finally {
     isProcessing.value = false;
   }
 };
 
-const handleReport = async () => {
+const handlereport = async () => {
   if (!reportReason.value.trim()) {
     return;
   }
@@ -111,15 +117,18 @@ const handleReport = async () => {
     await report(props.discussion._id, reportReason.value);
     showReportModal.value = false;
     reportReason.value = '';
-  } finally {
+  }
+
+ finally {
     isProcessing.value = false;
   }
 };
 
-const cancelReport = () => {
+const cancelreport = () => {
   showReportModal.value = false;
   reportReason.value = '';
 };
+
 </script>
 
 <template>
@@ -151,7 +160,9 @@ const cancelReport = () => {
             d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
           />
         </svg>
-        <span class="text-sm font-medium">{{ discussion.likesCount }}</span>
+        <span class="text-sm font-medium">{{ discussion.likesCount }}
+
+</span>
       </button>
 
       <!-- Reply Button -->
@@ -231,6 +242,7 @@ const cancelReport = () => {
         </svg>
         <span class="text-sm font-medium">
           {{ discussion.isPinned ? 'Unpin' : 'Pin' }}
+
         </span>
       </button>
 
@@ -257,6 +269,7 @@ const cancelReport = () => {
         </svg>
         <span class="text-sm font-medium">
           {{ discussion.isBestAnswer ? 'Remove Best Answer' : 'Mark as Best Answer' }}
+
         </span>
       </button>
 
@@ -344,6 +357,7 @@ const cancelReport = () => {
             ]"
           >
             {{ isProcessing ? 'Reporting...' : 'Submit Report' }}
+
           </button>
         </div>
       </div>

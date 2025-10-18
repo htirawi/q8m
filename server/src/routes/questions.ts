@@ -719,15 +719,76 @@ export default async function questionRoutes(fastify: FastifyInstance) {
             timeSpent: z.number().optional(),
           })
         ),
+        response: {
+          200: zodToJsonSchema(
+            z.object({
+              isCorrect: z.boolean(),
+              correctAnswer: z.union([z.string(), z.array(z.string())]),
+              explanation: z.string(),
+              points: z.number(),
+            })
+          ),
+        },
       },
     },
-    async (_request, reply) => {
-      // Process answer submission and calculate score
-      reply.send({
-        correct: true,
-        score: 1,
-        explanation: "Your answer is correct!",
-      });
+    async (request, reply) => {
+      try {
+        const { questionId, answer } = request.body as {
+          questionId: string;
+          answer: string | string[];
+          timeSpent?: number;
+        };
+
+        // Find the question in the database
+        const question = await Question.findById(questionId).lean();
+        if (!question) {
+          return reply.status(404).send({ message: "Question not found" });
+        }
+
+        // Get the question content (we need the correct answers)
+        const content = question.content.en || question.content.ar;
+        if (!content) {
+          return reply.status(400).send({ message: "Question content not found" });
+        }
+
+        let isCorrect = false;
+        let correctAnswer: string | string[] = "";
+        let points = question.points || 1;
+
+        // Validate answer based on question type
+        if (question.type === "multiple-choice" || question.type === "true-false") {
+          // Find the correct option
+          const correctOption = content.options?.find((opt: any) => opt.isCorrect);
+          correctAnswer = correctOption?.id || "";
+          isCorrect = answer === correctAnswer;
+        } else if (question.type === "fill-blank") {
+          // Find the correct text answer
+          const correctOption = content.options?.find((opt: any) => opt.isCorrect);
+          correctAnswer = correctOption?.text || "";
+          const correctAnswerStr = String(correctAnswer);
+          const correctAnswerLower = correctAnswerStr.toLowerCase().trim();
+          isCorrect = Array.isArray(answer)
+            ? answer.some((a) => String(a).toLowerCase().trim() === correctAnswerLower)
+            : String(answer).toLowerCase().trim() === correctAnswerLower;
+        } else if (question.type === "multiple-checkbox") {
+          // Get all correct option IDs
+          const correctOptions = content.options?.filter((opt: any) => opt.isCorrect) || [];
+          correctAnswer = correctOptions.map((opt: any) => opt.id).sort();
+          const userAnswerArray = Array.isArray(answer) ? answer.sort() : [answer].sort();
+          isCorrect = JSON.stringify(correctAnswer) === JSON.stringify(userAnswerArray);
+        }
+
+        // Return validation result
+        reply.send({
+          isCorrect,
+          correctAnswer,
+          explanation: content.explanation || "No explanation available",
+          points: isCorrect ? points : 0,
+        });
+      } catch (error) {
+        fastify.log.error(error);
+        reply.status(500).send({ message: "Failed to validate answer" });
+      }
     }
   );
 

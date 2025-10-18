@@ -69,7 +69,8 @@ const billingCycleText = computed(() => {
       <button type="submit" :disabled="isProcessing || !isFormValid" class="checkout-button"
         :class="{ 'checkout-button--loading': isProcessing }">
         <LoadingSpinner v-if="isProcessing" size="sm" color="white" class="mr-2" />
-        {{ isProcessing ? $t("checkout.processing") : $t("checkout.completeOrder") }}
+        {{ isProcessing ? $t("checkout.processing") : $t("checkout.completeOrder")$t }}
+
       </button>
 
       <p class="security-note">

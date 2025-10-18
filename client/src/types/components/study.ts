@@ -10,7 +10,7 @@ export interface IFrameworkCardProps {
   description: string;
   icon: string;
   questionCount: number;
-  color: "red" | "black" | "blue" | "purple" | "gray" | "gradient";
+  color: "red" | "black" | "blue" | "purple" | "gray" | "green" | "gradient";
   difficulty: DifficultyLevel;
   progressPercent?: number;
   isLocked?: boolean;
@@ -99,12 +99,21 @@ export interface IStudyNavigationProps {
 }
 
 export interface IStudyQuestionProps {
-  question: Record<string, unknown>;
+  question: {
+    id: string;
+    content: Record<string, string>;
+    type: string;
+    difficulty: string;
+    category: string;
+    tags: string[];
+    options?: Array<{ id: string; text: string; isCorrect: boolean }>;
+    explanation?: Record<string, string>;
+  };
   currentIndex: number;
   totalQuestions: number;
   showAnswer: boolean;
   locale: string;
-  selectedAnswer: unknown;
+  selectedAnswer: string | string[] | null;
   textAnswer?: string;
   multipleAnswers?: string[];
   isBookmarked?: boolean;

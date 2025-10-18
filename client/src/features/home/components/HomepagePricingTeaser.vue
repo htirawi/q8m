@@ -1,14 +1,11 @@
 <template>
-  <section
-    class="pricing-teaser"
-    data-testid="pricing-teaser"
-    aria-labelledby="pricing-title"
-  >
+  <section class="pricing-teaser" data-testid="pricing-teaser" aria-labelledby="pricing-title">
     <div class="pricing-teaser__container">
       <!-- Section header -->
       <div class="pricing-teaser__header">
         <h2 id="pricing-title" class="pricing-teaser__title">
           {{ t('home.pricing.title') }}
+
         </h2>
         <p class="pricing-teaser__subtitle">
           {{ t('home.pricing.subtitle') }}
@@ -17,24 +14,17 @@
 
       <!-- Billing cycle toggle -->
       <div class="pricing-teaser__toggle-wrapper">
-        <button
-          type="button"
-          class="pricing-teaser__toggle-button"
+        <button type="button" class="pricing-teaser__toggle-button"
           :class="{ 'pricing-teaser__toggle-button--active': billingCycle === 'monthly' }"
-          @click="handleToggle('monthly')"
-          data-testid="toggle-monthly"
-        >
+          @click="handleToggle('monthly')" data-testid="toggle-monthly">
           {{ t('home.pricing.monthly') }}
         </button>
 
-        <button
-          type="button"
-          class="pricing-teaser__toggle-button"
+        <button type="button" class="pricing-teaser__toggle-button"
           :class="{ 'pricing-teaser__toggle-button--active': billingCycle === 'annual' }"
-          @click="handleToggle('annual')"
-          data-testid="toggle-annual"
-        >
+          @click="handleToggle('annual')" data-testid="toggle-annual">
           {{ t('home.pricing.yearly') }}
+
         </button>
       </div>
 
@@ -44,100 +34,19 @@
       </p>
 
       <!-- Pricing cards -->
-      <div class="pricing-teaser__cards">
-        <div
-          v-for="plan in plans"
-          :key="plan.id"
-          class="pricing-card"
-          :class="{ 'pricing-card--popular': plan.badge?.textKey === 'plans.badges.mostPopular' }"
-          :data-testid="`pricing-card-${plan.id}`"
-        >
-          <!-- Popular badge -->
-          <div v-if="plan.badge" class="pricing-card__badge">
-            {{ t(plan.badge.textKey) }}
-          </div>
-
-          <!-- Plan name -->
-          <h3 class="pricing-card__name">
-            {{ t(plan.labelKey) }}
-          </h3>
-
-          <!-- Price -->
-          <div class="pricing-card__price-wrapper">
-            <span class="pricing-card__currency">$</span>
-            <span class="pricing-card__price">
-              {{ currentPrice(plan) }}
-            </span>
-            <span class="pricing-card__period">
-              {{ billingCycle === 'monthly' ? t('home.pricing.perMonth') : t('home.pricing.perYear') }}
-            </span>
-          </div>
-
-          <!-- Description -->
-          <p class="pricing-card__description">
-            {{ t(plan.descriptionKey) }}
-          </p>
-
-          <!-- Features list -->
-          <ul class="pricing-card__features" role="list">
-            <li
-              v-for="(feature, index) in plan.features.benefits"
-              :key="index"
-              class="pricing-card__feature"
-            >
-              <svg
-                class="pricing-card__feature-icon"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                aria-hidden="true"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-              <span>{{ t(feature) }}</span>
-            </li>
-          </ul>
-
-          <!-- CTA button -->
-          <button
-            type="button"
-            class="pricing-card__cta"
-            :class="{
-              'pricing-card__cta--primary': plan.badge?.textKey === 'plans.badges.mostPopular',
-              'pricing-card__cta--secondary': !plan.badge || plan.badge.textKey !== 'plans.badges.mostPopular'
-            }"
-            @click="handlePlanSelect(plan)"
-            :data-testid="`pricing-cta-${plan.id}`"
-          >
-            {{ t(plan.cta.labelKey) }}
-          </button>
-        </div>
+      <div class="pricing-teaser__cards" :class="{ 'pricing-teaser__cards--rtl': $i18n.locale === 'ar' }">
+        <PlanCard v-for="plan in plans" :key="plan.id" :plan="plan" :billing="billingCycle"
+          :featured="plan.badge?.textKey === 'plans.badges.mostPopular'" @select="handlePlanSelect" />
       </div>
 
       <!-- View all plans link -->
       <div class="pricing-teaser__footer">
-        <router-link
-          :to="{ name: 'pricing', params: { locale: currentLocale } }"
-          class="pricing-teaser__view-all"
-          @click="handleViewAllPlans"
-        >
+        <router-link :to="{ name: 'pricing', params: { locale: currentLocale } }" class="pricing-teaser__view-all"
+          @click="handleViewAllPlans">
           {{ t('home.pricing.viewAllPlans') }}
-          <svg
-            class="pricing-teaser__arrow"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M13 7l5 5m0 0l-5 5m5-5H6"
-            />
+
+          <svg class="pricing-teaser__arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
           </svg>
         </router-link>
       </div>
@@ -153,6 +62,7 @@ import { useHomepageAnalytics } from '@/composables/useHomepageAnalytics';
 import { getHomepagePlans } from '@/config/plans';
 import type { IPlanConfig } from '@/config/plans';
 import type { BillingCycle } from '@/types/pricing';
+import PlanCard from '@/components/pricing/PlanCard.vue';
 
 const { t, locale } = useI18n();
 const router = useRouter();
@@ -170,7 +80,7 @@ const plans = computed(() => canonicalPlans);
 
 // Computed
 const currentPrice = (plan: IPlanConfig): number => {
-  return billingCycle.value === 'monthly' ? plan.priceMonthly : plan.priceYearly;
+  return billingCycle.value === 'monthly' ? plan.priceMonthly : plan.priceYearly; billingCycle.valueplan.priceMonthly
 };
 
 // Methods
@@ -197,7 +107,9 @@ const handlePlanSelect = (plan: IPlanConfig): void => {
       name: 'register',
       params: { locale: currentLocale.value },
     });
-  } else {
+  }
+
+  else {
     router.push({
       name: 'pricing',
       params: { locale: currentLocale.value },
@@ -238,6 +150,7 @@ defineOptions({
 .pricing-teaser__title {
   @apply text-3xl font-bold text-gray-900 dark:text-white mb-4;
   @apply sm:text-4xl;
+
   letter-spacing: -0.02em;
 }
 
@@ -272,6 +185,10 @@ defineOptions({
   @apply sm:grid-cols-2;
   @apply lg:grid-cols-4;
   @apply lg:gap-5;
+}
+
+.pricing-teaser__cards--rtl {
+  direction: rtl;
 }
 
 /* Pricing card */
@@ -314,18 +231,22 @@ defineOptions({
   @apply lg:text-2xl;
 }
 
+.pricing-card__currency--rtl {
+  @apply mr-0 ml-2;
+}
+
 .pricing-card__price {
   @apply text-4xl font-bold text-gray-900 dark:text-white;
   @apply lg:text-5xl;
 }
 
 .pricing-card__period {
-  @apply ml-2 text-xs text-gray-600 dark:text-gray-400;
+  @apply ml-2 text-xs text-gray-700 dark:text-gray-300;
   @apply lg:text-sm;
 }
 
 .pricing-card__description {
-  @apply text-xs text-gray-600 dark:text-gray-400 mb-4;
+  @apply text-xs text-gray-700 dark:text-gray-300 mb-4;
   @apply min-h-[2.5rem];
   @apply lg:text-sm lg:mb-6 lg:min-h-[3rem];
 }
@@ -337,8 +258,13 @@ defineOptions({
 
 .pricing-card__feature {
   @apply flex items-start gap-2;
-  @apply text-xs;
+  @apply text-xs text-gray-700 dark:text-gray-300;
   @apply lg:gap-3 lg:text-sm;
+}
+
+.pricing-card__feature--rtl {
+  @apply flex-row-reverse gap-2;
+  @apply lg:gap-3;
 }
 
 .pricing-card__feature-icon {
@@ -401,6 +327,7 @@ defineOptions({
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
+
   .pricing-card,
   .pricing-teaser__arrow {
     @apply transition-none;

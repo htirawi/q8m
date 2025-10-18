@@ -10,22 +10,22 @@ import type {
   IStudyPlan,
   ICodeAnalysis,
   IAIFeedback,
-  IChatContext
-} from '@/types/ai';
-import { ref } from 'vue';
-import { analytics } from '@/services/analytics';
+  IChatContext,
+} from "@/types/ai";
+import { ref } from "vue";
+import { analytics } from "@/services/analytics";
 
 // Configuration
 const DEFAULT_CONFIG: IAIConfig = {
-  provider: 'openai',
-  model: 'gpt-4-turbo-preview',
+  provider: "openai",
+  model: "gpt-4-turbo-preview",
   temperature: 0.7,
   maxTokens: 2048,
   topP: 0.9,
   streamResponses: true,
   enableVoice: false,
   autoSave: true,
-  codeExecutionEnabled: false
+  codeExecutionEnabled: false,
 };
 
 // System prompts for different contexts
@@ -51,7 +51,7 @@ Provide constructive feedback with specific improvements.`,
 
   explanation: `You are a master teacher who excels at explaining complex concepts.
 Break down topics into digestible parts, use analogies and visual descriptions,
-provide multiple examples, and check understanding with questions.`
+provide multiple examples, and check understanding with questions.`,
 };
 
 export class AIService {
@@ -63,7 +63,7 @@ export class AIService {
   // Reactive state
   public isLoading = ref(false);
   public error = ref<string | null>(null);
-  public streamingMessage = ref<string>('');
+  public streamingMessage = ref<string>("");
 
   constructor(config?: Partial<IAIConfig>) {
     this.config = { ...DEFAULT_CONFIG, ...config };
@@ -79,19 +79,19 @@ export class AIService {
     }
 
     // Verify API key is present
-    if (!this.config.apiKey && this.config.provider !== 'local') {
-      throw new Error('API key is required for AI service');
+    if (!this.config.apiKey && this.config.provider !== "local") {
+      throw new Error("API key is required for AI service");
     }
 
     // Test connection
     try {
       await this.testConnection();
-      analytics.track('ai_service_initialized', {
+      analytics.track("ai_service_initialized", {
         provider: this.config.provider,
-        model: this.config.model
+        model: this.config.model,
       });
     } catch (error) {
-      console.error('AI service initialization failed:', error);
+      console.error("AI service initialization failed:", error);
       throw error;
     }
   }
@@ -106,22 +106,20 @@ export class AIService {
   ): Promise<IChatMessage> {
     this.isLoading.value = true;
     this.error.value = null;
-    this.streamingMessage.value = '';
+    this.streamingMessage.value = "";
 
     try {
       // Get or create session
-      const session = sessionId
-        ? this.sessions.get(sessionId)
-        : this.createSession(context);
+      const session = sessionId ? this.sessions.get(sessionId) : this.createSession(context);
 
-      if (!session) throw new Error('Session not found');
+      if (!session) throw new Error("Session not found");
 
       // Create user message
       const userMessage: IChatMessage = {
         id: this.generateId(),
-        role: 'user',
+        role: "user",
         content: message,
-        timestamp: new Date()
+        timestamp: new Date(),
       };
 
       session.messages.push(userMessage);
@@ -137,7 +135,7 @@ export class AIService {
       }
     } catch (error: unknown) {
       this.error.value = error instanceof Error ? error.message : String(error);
-      analytics.trackError(error, { context: 'ai_send_message' });
+      analytics.trackError(error, { context: "ai_send_message" });
       throw error;
     } finally {
       this.isLoading.value = false;
@@ -150,7 +148,7 @@ export class AIService {
   async generateExplanation(
     concept: string,
     questionId: string,
-    difficulty: 'beginner' | 'intermediate' | 'advanced'
+    difficulty: "beginner" | "intermediate" | "advanced"
   ): Promise<ISmartExplanation> {
     this.isLoading.value = true;
 
@@ -159,19 +157,19 @@ export class AIService {
 
       const response = await this.callAPI({
         messages: [
-          { role: 'system', content: SYSTEM_PROMPTS.explanation },
-          { role: 'user', content: prompt }
+          { role: "system", content: SYSTEM_PROMPTS.explanation },
+          { role: "user", content: prompt },
         ],
         temperature: 0.6,
-        maxTokens: 3000
+        maxTokens: 3000,
       });
 
       const explanation = this.parseExplanationResponse(response, concept, questionId, difficulty);
 
-      analytics.track('ai_explanation_generated', {
+      analytics.track("ai_explanation_generated", {
         concept,
         difficulty,
-        questionId
+        questionId,
       });
 
       return explanation;
@@ -200,20 +198,20 @@ export class AIService {
 
       const response = await this.callAPI({
         messages: [
-          { role: 'system', content: SYSTEM_PROMPTS.studyPlan },
-          { role: 'user', content: prompt }
+          { role: "system", content: SYSTEM_PROMPTS.studyPlan },
+          { role: "user", content: prompt },
         ],
         temperature: 0.7,
-        maxTokens: 4000
+        maxTokens: 4000,
       });
 
       const studyPlan = this.parseStudyPlanResponse(response, userId, goal, timeCommitment);
 
-      analytics.track('ai_study_plan_generated', {
+      analytics.track("ai_study_plan_generated", {
         userId,
         goal,
         weeks: timeCommitment.weeks,
-        hoursPerWeek: timeCommitment.hoursPerWeek
+        hoursPerWeek: timeCommitment.hoursPerWeek,
       });
 
       return studyPlan;
@@ -228,11 +226,7 @@ export class AIService {
   /**
    * Analyze code and provide feedback
    */
-  async analyzeCode(
-    code: string,
-    language: string,
-    context?: string
-  ): Promise<ICodeAnalysis> {
+  async analyzeCode(code: string, language: string, context?: string): Promise<ICodeAnalysis> {
     this.isLoading.value = true;
 
     try {
@@ -240,18 +234,18 @@ export class AIService {
 
       const response = await this.callAPI({
         messages: [
-          { role: 'system', content: SYSTEM_PROMPTS.codeReview },
-          { role: 'user', content: prompt }
+          { role: "system", content: SYSTEM_PROMPTS.codeReview },
+          { role: "user", content: prompt },
         ],
         temperature: 0.3,
-        maxTokens: 2500
+        maxTokens: 2500,
       });
 
       const analysis = this.parseCodeAnalysisResponse(response, code, language);
 
-      analytics.track('ai_code_analyzed', {
+      analytics.track("ai_code_analyzed", {
         language,
-        codeLength: code.length
+        codeLength: code.length,
       });
 
       return analysis;
@@ -292,20 +286,20 @@ Please provide detailed feedback on the user's answer including:
 
       const response = await this.callAPI({
         messages: [
-          { role: 'system', content: SYSTEM_PROMPTS.general },
-          { role: 'user', content: prompt }
+          { role: "system", content: SYSTEM_PROMPTS.general },
+          { role: "user", content: prompt },
         ],
         temperature: 0.5,
-        maxTokens: 1500
+        maxTokens: 1500,
       });
 
       return {
         id: this.generateId(),
-        userId: context?.userId || '',
-        type: 'answer_analysis',
+        userId: context?.userId || "",
+        type: "answer_analysis",
         context: { question, userAnswer, correctAnswer },
         feedback: response.content,
-        timestamp: new Date()
+        timestamp: new Date(),
       };
     } catch (error: unknown) {
       this.error.value = error instanceof Error ? error.message : String(error);
@@ -324,16 +318,16 @@ Please provide detailed feedback on the user's answer including:
     this.abortController = new AbortController();
 
     const response = await fetch(endpoint, {
-      method: 'POST',
+      method: "POST",
       headers,
       body: JSON.stringify({
         model: this.config.model,
         ...params,
         temperature: params.temperature || this.config.temperature,
         max_tokens: params.maxTokens || this.config.maxTokens,
-        top_p: params.topP || this.config.topP
+        top_p: params.topP || this.config.topP,
       }),
-      signal: this.abortController.signal
+      signal: this.abortController.signal,
     });
 
     if (!response.ok) {
@@ -343,24 +337,27 @@ Please provide detailed feedback on the user's answer including:
     const data = await response.json();
     return {
       content: data.choices[0].message.content,
-      usage: data.usage
+      usage: data.usage,
     };
   }
 
-  private async streamResponse(requestBody: Record<string, unknown>, session: IChatSession): Promise<IChatMessage> {
+  private async streamResponse(
+    requestBody: Record<string, unknown>,
+    session: IChatSession
+  ): Promise<IChatMessage> {
     const endpoint = this.getEndpoint();
     const headers = this.getHeaders();
 
     this.abortController = new AbortController();
 
     const response = await fetch(endpoint, {
-      method: 'POST',
+      method: "POST",
       headers,
       body: JSON.stringify({
         ...requestBody,
-        stream: true
+        stream: true,
       }),
-      signal: this.abortController.signal
+      signal: this.abortController.signal,
     });
 
     if (!response.ok) {
@@ -372,10 +369,10 @@ Please provide detailed feedback on the user's answer including:
 
     const assistantMessage: IChatMessage = {
       id: this.generateId(),
-      role: 'assistant',
-      content: '',
+      role: "assistant",
+      content: "",
       timestamp: new Date(),
-      streaming: true
+      streaming: true,
     };
 
     session.messages.push(assistantMessage);
@@ -387,16 +384,16 @@ Please provide detailed feedback on the user's answer including:
           if (done) break;
 
           const chunk = decoder.decode(value);
-          const lines = chunk.split('\n');
+          const lines = chunk.split("\n");
 
           for (const line of lines) {
-            if (line.startsWith('data: ')) {
+            if (line.startsWith("data: ")) {
               const data = line.slice(6);
-              if (data === '[DONE]') continue;
+              if (data === "[DONE]") continue;
 
               try {
                 const parsed = JSON.parse(data);
-                const content = parsed.choices[0]?.delta?.content || '';
+                const content = parsed.choices[0]?.delta?.content || "";
                 assistantMessage.content += content;
                 this.streamingMessage.value = assistantMessage.content;
               } catch (_e) {
@@ -416,18 +413,21 @@ Please provide detailed feedback on the user's answer including:
     return assistantMessage;
   }
 
-  private async getResponse(requestBody: Record<string, unknown>, session: IChatSession): Promise<IChatMessage> {
+  private async getResponse(
+    requestBody: Record<string, unknown>,
+    session: IChatSession
+  ): Promise<IChatMessage> {
     const response = await this.callAPI(requestBody);
 
     const assistantMessage: IChatMessage = {
       id: this.generateId(),
-      role: 'assistant',
+      role: "assistant",
       content: response.content,
       timestamp: new Date(),
       metadata: {
         model: this.config.model,
-        tokens: response.usage?.total_tokens
-      }
+        tokens: response.usage?.total_tokens,
+      },
     };
 
     session.messages.push(assistantMessage);
@@ -438,11 +438,11 @@ Please provide detailed feedback on the user's answer including:
 
   private buildRequestBody(session: IChatSession, context?: IChatContext): Record<string, unknown> {
     const messages = [
-      { role: 'system', content: this.getSystemPrompt(context) },
-      ...session.messages.map(m => ({
+      { role: "system", content: this.getSystemPrompt(context) },
+      ...session.messages.map((m) => ({
         role: m.role,
-        content: m.content
-      }))
+        content: m.content,
+      })),
     ];
 
     return {
@@ -452,7 +452,7 @@ Please provide detailed feedback on the user's answer including:
       max_tokens: this.config.maxTokens,
       top_p: this.config.topP,
       frequency_penalty: this.config.frequencyPenalty,
-      presence_penalty: this.config.presencePenalty
+      presence_penalty: this.config.presencePenalty,
     };
   }
 
@@ -510,7 +510,7 @@ Duration: ${timeCommitment.weeks} weeks
 Time Commitment: ${timeCommitment.hoursPerWeek} hours per week
 Total Study Hours: ${timeCommitment.weeks * timeCommitment.hoursPerWeek} hours
 
-${preferences ? `Learning Preferences: ${JSON.stringify(preferences)}` : ''}
+${preferences ? `Learning Preferences: ${JSON.stringify(preferences)}` : ""}
 
 Please create a comprehensive study plan that includes:
 1. Weekly curriculum breakdown with specific topics
@@ -535,7 +535,7 @@ Analyze the following ${language} code:
 ${code}
 \`\`\`
 
-${context ? `Context: ${context}` : ''}
+${context ? `Context: ${context}` : ""}
 
 Please provide:
 1. Code quality assessment (complexity, readability, maintainability)
@@ -554,7 +554,7 @@ Be specific with line numbers and provide actionable feedback.
     response: Record<string, unknown>,
     concept: string,
     questionId: string,
-    difficulty: 'beginner' | 'intermediate' | 'advanced'
+    difficulty: "beginner" | "intermediate" | "advanced"
   ): ISmartExplanation {
     // Parse the AI response into structured explanation
     // This is a simplified version - in production, use proper parsing
@@ -568,8 +568,8 @@ Be specific with line numbers and provide actionable feedback.
         generatedAt: new Date(),
         model: this.config.model!,
         confidence: 0.95,
-        readingTime: Math.ceil(response.content.split(' ').length / 200)
-      }
+        readingTime: Math.ceil(response.content.split(" ").length / 200),
+      },
     };
   }
 
@@ -593,18 +593,18 @@ Be specific with line numbers and provide actionable feedback.
         hoursPerWeek: timeCommitment.hoursPerWeek,
         totalHours: timeCommitment.weeks * timeCommitment.hoursPerWeek,
         startDate: now,
-        targetEndDate: new Date(now.getTime() + timeCommitment.weeks * 7 * 24 * 60 * 60 * 1000)
+        targetEndDate: new Date(now.getTime() + timeCommitment.weeks * 7 * 24 * 60 * 60 * 1000),
       },
       schedule: {
-        preferredDays: ['Monday', 'Wednesday', 'Friday'],
-        preferredTimes: { start: '19:00', end: '21:00' },
+        preferredDays: ["Monday", "Wednesday", "Friday"],
+        preferredTimes: { start: "19:00", end: "21:00" },
         reminderSettings: {
           enabled: true,
           email: true,
           push: true,
-          frequency: 'daily'
+          frequency: "daily",
         },
-        flexibility: 'moderate'
+        flexibility: "moderate",
       },
       curriculum: [], // Would be parsed from response
       progress: {
@@ -617,59 +617,63 @@ Be specific with line numbers and provide actionable feedback.
         averageScore: 0,
         strengths: [],
         weaknesses: [],
-        velocity: 0
+        velocity: 0,
       },
       adaptiveSettings: {
         enabled: true,
-        difficultyAdjustment: 'auto',
-        paceAdjustment: 'auto',
+        difficultyAdjustment: "auto",
+        paceAdjustment: "auto",
         focusOnWeakAreas: true,
         skipMasteredTopics: false,
         personalizedRecommendations: true,
-        learningStyle: 'mixed'
+        learningStyle: "mixed",
       },
       milestones: [],
       createdAt: now,
       updatedAt: now,
-      status: 'active'
+      status: "active",
     };
   }
 
-  private parseCodeAnalysisResponse(response: Record<string, unknown>, code: string, language: string): ICodeAnalysis {
+  private parseCodeAnalysisResponse(
+    response: Record<string, unknown>,
+    code: string,
+    language: string
+  ): ICodeAnalysis {
     // Parse the AI response into structured code analysis
     return {
       id: this.generateId(),
       code,
       language,
       analysis: {
-        complexity: 'medium',
+        complexity: "medium",
         issues: [],
         suggestions: [],
         patterns: [],
         performance: {
-          timeComplexity: 'O(n)',
-          spaceComplexity: 'O(1)'
+          timeComplexity: "O(n)",
+          spaceComplexity: "O(1)",
         },
         security: {
           vulnerabilities: [],
-          secure: true
+          secure: true,
         },
-        bestPractices: []
+        bestPractices: [],
       },
-      timestamp: new Date()
+      timestamp: new Date(),
     };
   }
 
   private createSession(context?: IChatContext): IChatSession {
     const session: IChatSession = {
       id: this.generateId(),
-      title: context?.topic || 'New Chat',
+      title: context?.topic || "New Chat",
       messages: [],
       createdAt: new Date(),
       updatedAt: new Date(),
       context,
-      status: 'active',
-      model: this.config.model
+      status: "active",
+      model: this.config.model,
     };
 
     this.sessions.set(session.id, session);
@@ -688,7 +692,7 @@ Be specific with line numbers and provide actionable feedback.
 
   private loadSessions(): void {
     try {
-      const stored = localStorage.getItem('ai_chat_sessions');
+      const stored = localStorage.getItem("ai_chat_sessions");
       if (stored) {
         const data = JSON.parse(stored);
         data.forEach((session: IChatSession) => {
@@ -696,48 +700,40 @@ Be specific with line numbers and provide actionable feedback.
         });
       }
     } catch (error) {
-      console.error('Failed to load chat sessions:', error);
+      console.error("Failed to load chat sessions:", error);
     }
   }
 
   private persistSessions(): void {
     try {
       const data = Array.from(this.sessions.values());
-      localStorage.setItem('ai_chat_sessions', JSON.stringify(data));
+      localStorage.setItem("ai_chat_sessions", JSON.stringify(data));
     } catch (error) {
-      console.error('Failed to persist chat sessions:', error);
+      console.error("Failed to persist chat sessions:", error);
     }
   }
 
   private getEndpoint(): string {
-    switch (this.config.provider) {
-      case 'openai':
-        return 'https://api.openai.com/v1/chat/completions';
-      case 'anthropic':
-        return 'https://api.anthropic.com/v1/messages';
-      case 'gemini':
-        return 'https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent';
-      default:
-        return '/api/ai/chat';
-    }
+    // Always use our internal AI API endpoint
+    return "/api/v1/ai/chat";
   }
 
   private getHeaders(): Record<string, string> {
     const headers: Record<string, string> = {
-      'Content-Type': 'application/json'
+      "Content-Type": "application/json",
     };
 
     if (this.config.apiKey) {
       switch (this.config.provider) {
-        case 'openai':
-          headers['Authorization'] = `Bearer ${this.config.apiKey}`;
+        case "openai":
+          headers["Authorization"] = `Bearer ${this.config.apiKey}`;
           break;
-        case 'anthropic':
-          headers['X-API-Key'] = this.config.apiKey;
-          headers['anthropic-version'] = '2023-06-01';
+        case "anthropic":
+          headers["X-API-Key"] = this.config.apiKey;
+          headers["anthropic-version"] = "2023-06-01";
           break;
-        case 'gemini':
-          headers['X-API-Key'] = this.config.apiKey;
+        case "gemini":
+          headers["X-API-Key"] = this.config.apiKey;
           break;
       }
     }
@@ -749,13 +745,11 @@ Be specific with line numbers and provide actionable feedback.
     // Simple test to verify API key works
     try {
       await this.callAPI({
-        messages: [
-          { role: 'user', content: 'Hello' }
-        ],
-        maxTokens: 10
+        messages: [{ role: "user", content: "Hello" }],
+        maxTokens: 10,
       });
     } catch (_error) {
-      throw new Error('Failed to connect to AI service. Please check your API key.');
+      throw new Error("Failed to connect to AI service. Please check your API key.");
     }
   }
 
@@ -798,7 +792,7 @@ Be specific with line numbers and provide actionable feedback.
       this.abortController.abort();
       this.abortController = null;
       this.isLoading.value = false;
-      this.streamingMessage.value = '';
+      this.streamingMessage.value = "";
     }
   }
 }

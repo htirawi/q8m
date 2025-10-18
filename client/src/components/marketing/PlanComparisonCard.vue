@@ -5,12 +5,15 @@
         <tr>
           <th class="px-4 py-3 text-left font-medium text-gray-900 dark:text-white">
             {{ t('convert.comparison.feature') }}
+
           </th>
           <th class="px-4 py-3 text-center font-medium text-gray-500 dark:text-gray-400">
             {{ t('plans.names.free') }}
+
           </th>
           <th class="px-4 py-3 text-center font-medium text-white dark:text-white bg-gradient-to-r from-primary-500 to-purple-500">
             {{ targetPlanName }}
+
           </th>
         </tr>
       </thead>
@@ -18,6 +21,7 @@
         <tr v-for="(feature, idx) in comparisonFeatures" :key="idx" class="hover:bg-gray-50 dark:hover:bg-gray-800/50">
           <td class="px-4 py-3 text-gray-700 dark:text-gray-300">
             {{ feature.label }}
+
           </td>
           <td class="px-4 py-3 bg-gray-50/50 dark:bg-gray-900/50">
             <div class="flex justify-center">

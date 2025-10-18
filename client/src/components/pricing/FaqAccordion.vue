@@ -6,11 +6,13 @@ import { faqs } from "@/components/pricing/pricing.config";
 
 const openFaqs = ref<number[]>([]);
 
-const toggleFaq = (index: number) => {
+const togglefaq = (index: number) => {
   const currentIndex = openFaqs.value.indexOf(index);
   if (currentIndex > -1) {
     openFaqs.value.splice(currentIndex, 1);
-  } else {
+  }
+
+ else {
     openFaqs.value.push(index);
   }
 };
@@ -26,6 +28,7 @@ defineOptions({
       <div class="faq-accordion-header">
         <h2 id="faq-title" class="faq-accordion-title">
           {{ $t("pricing.faq.title") }}
+
         </h2>
         <p class="faq-accordion-description">
           {{ $t("pricing.faq.subtitle") }}
@@ -59,6 +62,7 @@ defineOptions({
           >
             <p class="faq-accordion-answer-text">
               {{ $t(faq.answerKey) }}
+
             </p>
           </div>
         </div>

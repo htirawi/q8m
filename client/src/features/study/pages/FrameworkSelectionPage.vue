@@ -41,8 +41,12 @@
             role="status" aria-live="polite">
             Master
             <span class="font-bold text-purple-600 dark:text-purple-400">{{ totalQuestions > 0 ? totalQuestions + '+' :
-              '' }}</span>
-            {{ getDifficultyLabel(difficulty) }} questions across top JavaScript frameworks
+              ''0totalQuestions }}
+
+</span>
+            {{ getDifficultyLabel(difficulty) }}
+
+ questions across top JavaScript frameworks
           </p>
         </div>
 
@@ -51,8 +55,12 @@
           <div
             class="inline-flex items-center gap-2 rounded-full px-6 py-2.5 text-sm font-semibold shadow-lg backdrop-blur-sm transition-all duration-300 hover:scale-105"
             :class="getDifficultyBadgeClass(difficulty)">
-            <span class="text-lg">{{ getDifficultyIcon(difficulty) }}</span>
-            <span>{{ getDifficultyLabel(difficulty) }} Level</span>
+            <span class="text-lg">{{ getDifficultyIcon(difficulty) }}
+
+</span>
+            <span>{{ getDifficultyLabel(difficulty) }}
+
+ Level</span>
           </div>
         </div>
 
@@ -261,7 +269,7 @@ const getFallbackFrameworks = (): IFrameworkAccessRule[] => {
       description: 'Requires Pro plan',
       requiredPlanTier: 'Pro',
       isLocked: userPlan !== 'pro',
-      metadata: { icon: '💚', color: 'gray', order: 5 },
+      metadata: { icon: '💚', color: 'green', order: 5 },
     },
     {
       framework: 'random',
@@ -280,7 +288,7 @@ const totalQuestions = computed(() => {
   return Object.values(frameworkCounts.value).reduce((sum, count) => sum + count, 0);
 });
 
-const getDifficultyLabel = (diff: DifficultyLevel) => {
+const getdifficultylabel = (diff: DifficultyLevel) => {
   const labels = {
     easy: 'Junior',
     medium: 'Intermediate',
@@ -289,12 +297,12 @@ const getDifficultyLabel = (diff: DifficultyLevel) => {
   return labels[diff] || 'Junior';
 };
 
-const getDifficultyIcon = (diff: DifficultyLevel) => {
+const getdifficultyicon = (diff: DifficultyLevel) => {
   const icons = { easy: '🟢', medium: '🟡', hard: '🔴' };
   return icons[diff] || '🟢';
 };
 
-const getDifficultyBadgeClass = (diff: DifficultyLevel) => {
+const getdifficultybadgeclass = (diff: DifficultyLevel) => {
   const classes = {
     easy: 'bg-green-100 text-green-800 border border-green-200 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800',
     medium: 'bg-yellow-100 text-yellow-800 border border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-300 dark:border-yellow-800',
@@ -303,7 +311,7 @@ const getDifficultyBadgeClass = (diff: DifficultyLevel) => {
   return classes[diff] || classes.easy;
 };
 
-const selectFramework = (framework: string) => {
+const selectframework = (framework: string) => {
   track('framework_selected', {
     framework,
     difficulty: difficulty.value,
@@ -315,7 +323,7 @@ const selectFramework = (framework: string) => {
   router.push(`/${locale.value}/study/${difficulty.value}/${framework}`);
 };
 
-const goBack = () => {
+const goback = () => {
   track('back_to_mode_chooser', {
     from: 'framework_selection',
     difficulty: difficulty.value,

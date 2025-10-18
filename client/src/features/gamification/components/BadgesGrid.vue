@@ -7,7 +7,9 @@
           Badges
         </h2>
         <p class="text-sm text-gray-600 dark:text-gray-400">
-          {{ earnedCount }} of {{ totalCount }} earned
+          {{ earnedCount }} of {{ totalCount }}
+
+ earned
         </p>
       </div>
 
@@ -28,6 +30,7 @@
           :class="selectedCategory === category ? 'bg-purple-600 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'"
         >
           {{ category }}
+
         </button>
       </div>
     </div>
@@ -51,21 +54,28 @@
         ]"
       >
         {{ rarity }}
+
       </button>
     </div>
 
     <!-- Progress Stats -->
     <div v-if="showProgress" class="mb-6 grid grid-cols-2 md:grid-cols-4 gap-4">
       <div class="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-lg p-4 border-2 border-gray-200 dark:border-gray-700">
-        <div class="text-2xl font-bold text-gray-900 dark:text-white">{{ earnedCount }}</div>
+        <div class="text-2xl font-bold text-gray-900 dark:text-white">{{ earnedCount }}
+
+</div>
         <div class="text-xs text-gray-600 dark:text-gray-400">Total Earned</div>
       </div>
       <div class="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-900/30 rounded-lg p-4 border-2 border-blue-200 dark:border-blue-800">
-        <div class="text-2xl font-bold text-blue-600 dark:text-blue-400">{{ commonCount }}</div>
+        <div class="text-2xl font-bold text-blue-600 dark:text-blue-400">{{ commonCount }}
+
+</div>
         <div class="text-xs text-gray-600 dark:text-gray-400">Common</div>
       </div>
       <div class="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-900/30 rounded-lg p-4 border-2 border-purple-200 dark:border-purple-800">
-        <div class="text-2xl font-bold text-purple-600 dark:text-purple-400">{{ rareCount }}</div>
+        <div class="text-2xl font-bold text-purple-600 dark:text-purple-400">{{ rareCount }}
+
+</div>
         <div class="text-xs text-gray-600 dark:text-gray-400">Rare+</div>
       </div>
       <div class="bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-900/30 rounded-lg p-4 border-2 border-orange-200 dark:border-orange-800">
@@ -86,7 +96,8 @@
         No badges found
       </h3>
       <p class="text-gray-600 dark:text-gray-400">
-        {{ selectedCategory || selectedRarity ? 'Try changing your filters' : 'Start earning badges by completing activities!' }}
+        {{ selectedCategory || selectedRarity ? 'Try changing your filters' : 'Start earning badges by completing activities!'selectedRarity }}
+
       </p>
     </div>
 
@@ -134,8 +145,8 @@ const props = withDefaults(defineProps<Props>(), {
   hasMore: false,
 });
 
-const emit = defineEmits<{
-  badgeClick: [badge: IBadge];
+const emit = defineemits<{
+  badgeClick: [;badge: IBadge];
   loadMore: [];
 }>();
 
@@ -180,13 +191,14 @@ function getRaritySelectedClass(rarity: string): string {
   return classes[rarity as keyof typeof classes] || classes.common;
 }
 
-function handleBadgeClick(badge: IBadge) {
+function handlebadgeclick(badge: ibadge) {
   emit('badgeClick', badge);
 }
 
 function loadMore() {
   emit('loadMore');
 }
+
 </script>
 
 <style scoped>

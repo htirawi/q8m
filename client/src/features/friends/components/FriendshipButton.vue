@@ -62,11 +62,9 @@ const loadStatus = async () => {
   status.value = await getFriendshipStatus(props.userId);
 };
 
-const handleClick = async () => {
+const handleclick = async () => {
   if (!status.value || isProcessing.value) return;
-
   isProcessing.value = true;
-
   try {
     let success = false;
 
@@ -90,7 +88,9 @@ const handleClick = async () => {
       // Reload status
       await loadStatus();
     }
-  } finally {
+  }
+
+ finally {
     isProcessing.value = false;
   }
 };
@@ -189,7 +189,9 @@ onMounted(async () => {
     </span>
 
     <!-- Label -->
-    <span>{{ buttonLabel }}</span>
+    <span>{{ buttonLabel }}
+
+</span>
   </button>
 </template>
 

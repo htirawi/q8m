@@ -52,7 +52,7 @@ const toggleBilling = (cycle: BillingCycle) => {
   });
 };
 
-const handlePlanSelect = (planId: PlanId, billing: BillingCycle) => {
+const handleplanselect = (planId: PlanId, billing: BillingCycle) => {
   selectedPlan.value = planId;
 
   track('plan_card_clicked', {
@@ -68,7 +68,9 @@ const handlePlanSelect = (planId: PlanId, billing: BillingCycle) => {
     router.push({
       path: `/${currentLocale.value}/auth/register`,
     });
-  } else {
+  }
+
+ else {
     // Paid plans - open embedded checkout modal
     checkoutPlanId.value = planId;
     checkoutBilling.value = billing;
@@ -85,7 +87,7 @@ const handlePlanSelect = (planId: PlanId, billing: BillingCycle) => {
   }
 };
 
-const handleCheckoutClose = () => {
+const handlecheckoutclose = () => {
   showCheckoutModal.value = false;
 
   track('checkout_modal_closed', {
@@ -94,7 +96,7 @@ const handleCheckoutClose = () => {
   });
 };
 
-const handleCheckoutSuccess = (subscriptionId: string) => {
+const handlecheckoutsuccess = (subscriptionId: string) => {
   showCheckoutModal.value = false;
 
   track('checkout_completed_modal', {
@@ -142,8 +144,10 @@ defineOptions({
           :class="{ 'pricing-cards__toggle-btn--active': billingCycle === 'annual' }" @click="toggleBilling('annual')"
           data-testid="toggle-annual" :aria-pressed="billingCycle === 'annual'">
           {{ t('pricing.billing.yearly') }}
+
           <span v-if="savingsPercent > 0" class="pricing-cards__toggle-badge">
             {{ t('pricing.billing.savePercent', { percent: savingsPercent }) }}
+
           </span>
         </button>
       </div>
@@ -155,7 +159,7 @@ defineOptions({
     </div>
 
     <!-- Cards grid -->
-    <div class="pricing-cards__grid">
+    <div class="pricing-cards__grid" :class="{ 'pricing-cards__grid--rtl': $i18n.locale === 'ar' }">
       <PlanCard v-for="plan in pricingPlans" :key="plan.id" :plan="plan" :billing="billingCycle"
         :featured="plan.metadata.featured" :selected="selectedPlan === plan.id"
         :show-social-proof="plan.id === 'intermediate'" @select="handlePlanSelect" />
@@ -164,11 +168,72 @@ defineOptions({
     <!-- Social Proof Banner -->
     <div class="pricing-cards__social-proof">
       <div class="pricing-cards__social-proof-content">
+        <div class="pricing-cards__social-proof-stats">
+          <div class="pricing-cards__social-proof-stat">
+            <span class="pricing-cards__social-proof-number">2,500+</span>
+            <span class="pricing-cards__social-proof-label">{{ t('pricing.socialProof.recentPurchases', {
+              count: '2,500'
+            }) }}
+
+</span>
+          </div>
+          <div class="pricing-cards__social-proof-stat">
+            <span class="pricing-cards__social-proof-number">150+</span>
+            <span class="pricing-cards__social-proof-label">{{ t('pricing.socialProof.liveCounter', { count: '150' })
+            }}
+
+</span>
+          </div>
+          <div class="pricing-cards__social-proof-stat">
+            <span class="pricing-cards__social-proof-number">4.9★</span>
+            <span class="pricing-cards__social-proof-label">{{ t('pricing.socialProof.rating', {
+              rating: '4.9', count:
+                '500'
+            }) }}
+
+</span>
+          </div>
+        </div>
+        <div class="pricing-cards__social-proof-badges">
+          <div class="pricing-cards__social-proof-badge">
+            <svg class="pricing-cards__social-proof-icon" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd"
+                d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                clip-rule="evenodd" />
+            </svg>
+            <span>{{ t('pricing.trust.secure') }}
+
+</span>
+          </div>
+          <div class="pricing-cards__social-proof-badge">
+            <svg class="pricing-cards__social-proof-icon" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clip-rule="evenodd" />
+            </svg>
+            <span>{{ t('pricing.trust.moneyBack') }}
+
+</span>
+          </div>
+          <div class="pricing-cards__social-proof-badge">
+            <svg class="pricing-cards__social-proof-icon" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd"
+                d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                clip-rule="evenodd" />
+            </svg>
+            <span>{{ t('pricing.trust.cancel') }}
+
+</span>
+          </div>
+        </div>
+      </div>
+      <div class="pricing-cards__social-proof-content">
         <svg class="pricing-cards__social-proof-icon" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
           <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" />
         </svg>
         <span class="pricing-cards__social-proof-text">
-          {{ $t('pricing.socialProof.recentPurchases', { count: 247 }) }}
+          {{ t('pricing.socialProof.trust') }}
+
         </span>
       </div>
     </div>
@@ -182,7 +247,9 @@ defineOptions({
               d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
               clip-rule="evenodd" />
           </svg>
-          <span>{{ t('pricing.trust.secure') }}</span>
+          <span>{{ t('pricing.trust.secure') }}
+
+</span>
         </div>
         <div class="pricing-cards__trust-item">
           <svg class="pricing-cards__trust-icon" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
@@ -192,7 +259,9 @@ defineOptions({
               d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z"
               clip-rule="evenodd" />
           </svg>
-          <span>{{ t('pricing.trust.moneyBack') }}</span>
+          <span>{{ t('pricing.trust.moneyBack') }}
+
+</span>
         </div>
         <div class="pricing-cards__trust-item">
           <svg class="pricing-cards__trust-icon" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
@@ -200,7 +269,9 @@ defineOptions({
               d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 100-2 1 1 0 000 2zm7-1a1 1 0 11-2 0 1 1 0 012 0zm-.464 5.535a1 1 0 10-1.415-1.414 3 3 0 01-4.242 0 1 1 0 00-1.415 1.414 5 5 0 007.072 0z"
               clip-rule="evenodd" />
           </svg>
-          <span>{{ t('pricing.trust.cancel') }}</span>
+          <span>{{ t('pricing.trust.cancel') }}
+
+</span>
         </div>
       </div>
     </div>
@@ -214,6 +285,16 @@ defineOptions({
 <style scoped>
 .pricing-cards {
   @apply w-full;
+}
+
+.pricing-cards__grid {
+  @apply grid grid-cols-1 gap-6 mb-12;
+  @apply sm:grid-cols-2;
+  @apply lg:grid-cols-4;
+}
+
+.pricing-cards__grid--rtl {
+  direction: rtl;
 }
 
 /* Billing toggle section */
@@ -262,6 +343,7 @@ defineOptions({
 
 .pricing-cards__savings-message::before {
   content: '🎉';
+
   @apply text-xl;
 }
 
@@ -302,6 +384,30 @@ defineOptions({
 
 .pricing-cards__social-proof-text {
   @apply text-sm font-semibold text-green-700 dark:text-green-300;
+}
+
+.pricing-cards__social-proof-stats {
+  @apply flex items-center gap-8;
+}
+
+.pricing-cards__social-proof-stat {
+  @apply text-center;
+}
+
+.pricing-cards__social-proof-number {
+  @apply block text-lg font-bold text-gray-900 dark:text-white;
+}
+
+.pricing-cards__social-proof-label {
+  @apply block text-xs text-gray-600 dark:text-gray-400;
+}
+
+.pricing-cards__social-proof-badges {
+  @apply flex items-center gap-4;
+}
+
+.pricing-cards__social-proof-badge {
+  @apply flex items-center gap-2 text-xs text-gray-600 dark:text-gray-400;
 }
 
 /* Trust section */
@@ -358,7 +464,7 @@ defineOptions({
 }
 
 /* Responsive */
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .pricing-cards__grid {
     @apply gap-6;
   }
@@ -374,10 +480,10 @@ defineOptions({
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
-
   .pricing-cards__toggle-btn,
   .animate-fade-in {
     @apply transition-none;
+
     animation: none;
   }
 }

@@ -9,7 +9,7 @@ import type { EmailStepProps } from "@/types/ui/component-props";
 
 const props = defineProps<EmailStepProps>();
 
-const emit = defineEmits<{
+const emit = defineemits<{
   "update:email": [value: string];
   continue: [];
 }>();
@@ -23,24 +23,25 @@ const isValid = computed(() => {
   return props.email && /\S+@\S+\.\S+/.test(props.email);
 });
 
-const handleInput = (event: Event) => {
+const handleinput = (event: Event) => {
   const target = event.target as HTMLInputElement;
   emit("update:email", target.value);
   error.value = undefined;
 };
 
-const handleBlur = () => {
+const handleblur = () => {
   const emailError = validateEmail(props.email);
   if (emailError) {
     error.value = emailError;
   }
 };
 
-const handleContinue = () => {
+const handlecontinue = () => {
   if (isValid.value) {
     emit("continue");
   }
 };
+
 </script>
 
 <template>
@@ -52,16 +53,20 @@ const handleContinue = () => {
       <input id="email" :model-value="email" @input="handleInput" @blur="handleBlur" type="email" autocomplete="email"
         required class="form-input" :class="{ 'form-input-error': error }"
         :placeholder="$t('auth.fields.emailPlaceholder')" />
-      <p v-if="error" class="form-error">{{ error }}</p>
+      <p v-if="error" class="form-error">{{ error }}
+
+</p>
     </div>
 
     <button type="button" @click="handleContinue" :disabled="!isValid || isLoading" class="form-button">
       <span v-if="isLoading" class="button-content">
         <LoadingSpinner size="sm" color="white" />
         {{ $t("auth.register.processing") }}
+
       </span>
       <span v-else class="button-content">
         {{ $t("auth.register.continue") }}
+
       </span>
     </button>
   </div>

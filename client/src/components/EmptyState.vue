@@ -6,6 +6,7 @@
         <slot name="icon">
           <div class="empty-state-icon-default">
             {{ icon || defaultIcon }}
+
           </div>
         </slot>
       </div>
@@ -19,9 +20,11 @@
       <div class="empty-state-content">
         <h3 v-if="title" class="empty-state-title">
           {{ title }}
+
         </h3>
         <p v-if="description" class="empty-state-description">
           {{ description }}
+
         </p>
 
         <!-- Additional Content Slot -->
@@ -36,10 +39,12 @@
           <button v-if="primaryAction" class="empty-state-btn empty-state-btn--primary"
             @click="$emit('primary-action')">
             {{ primaryAction }}
+
           </button>
           <button v-if="secondaryAction" class="empty-state-btn empty-state-btn--secondary"
             @click="$emit('secondary-action')">
             {{ secondaryAction }}
+
           </button>
         </slot>
       </div>
@@ -47,6 +52,7 @@
       <!-- Help Text -->
       <p v-if="helpText" class="empty-state-help">
         {{ helpText }}
+
       </p>
     </div>
   </div>
@@ -73,9 +79,9 @@ const props = withDefaults(defineProps<{
   variant: 'default',
 });
 
-defineEmits<{
-  'primary-action': [];
-  'secondary-action': [];
+defineemits<{
+  
+  
 }>();
 
 const defaultIcon = computed(() => {
@@ -232,7 +238,6 @@ const defaultIcon = computed(() => {
 
 /* Animations */
 @keyframes bounce-subtle {
-
   0%,
   100% {
     transform: translateY(0);
@@ -253,7 +258,7 @@ const defaultIcon = computed(() => {
 }
 
 /* Responsive */
-@media (max-width: 640px) {
+@media (width <= 640px) {
   .empty-state {
     @apply py-8 min-h-[300px];
   }

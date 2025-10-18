@@ -19,9 +19,11 @@ defineOptions({
         <div class="guarantee-panel-text">
           <h2 id="guarantee-title" class="guarantee-panel-title">
             {{ $t(guaranteeData.titleKey) }}
+
           </h2>
           <p class="guarantee-panel-description">
             {{ $t(guaranteeData.descriptionKey) }}
+
           </p>
         </div>
       </div>
@@ -63,7 +65,7 @@ defineOptions({
 }
 
 /* Mobile adjustments */
-@media (max-width: 640px) {
+@media (width <= 640px) {
   .guarantee-panel-content {
     @apply flex-col;
   }

@@ -56,36 +56,42 @@ const handleAccept = async (userId: string) => {
     if (success) {
       emit('request-accepted', userId);
     }
-  } finally {
+  }
+
+ finally {
     processingRequest.value = null;
   }
 };
 
-const handleReject = async (userId: string) => {
+const handlereject = async (userId: string) => {
   processingRequest.value = userId;
   try {
     const success = await rejectRequest(userId);
     if (success) {
       emit('request-rejected', userId);
     }
-  } finally {
+  }
+
+ finally {
     processingRequest.value = null;
   }
 };
 
-const handleCancel = async (userId: string) => {
+const handlecancel = async (userId: string) => {
   processingRequest.value = userId;
   try {
     const success = await cancelRequest(userId);
     if (success) {
       emit('request-cancelled', userId);
     }
-  } finally {
+  }
+
+ finally {
     processingRequest.value = null;
   }
 };
 
-const switchTab = async (tab: 'received' | 'sent') => {
+const switchtab = async (tab: 'received' | 'sent') => {
   activeTab.value = tab;
   if (tab === 'received' && receivedRequests.value.length === 0) {
     await loadReceivedRequests();
@@ -124,6 +130,7 @@ onMounted(async () => {
             class="px-2 py-0.5 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-full text-xs font-bold"
           >
             {{ receivedRequestsCount }}
+
           </span>
         </span>
         <div
@@ -148,6 +155,7 @@ onMounted(async () => {
             class="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded-full text-xs font-bold"
           >
             {{ sentRequestsCount }}
+
           </span>
         </span>
         <div
@@ -302,6 +310,7 @@ onMounted(async () => {
                 ]"
               >
                 {{ getUserAvatar(request).value }}
+
               </div>
               <img
                 v-else
@@ -316,17 +325,21 @@ onMounted(async () => {
               <div class="flex items-center gap-2 mb-1">
                 <h3 class="font-semibold text-gray-900 dark:text-white truncate">
                   {{ request.name }}
+
                 </h3>
                 <span :class="['text-sm', getLevelColor(request.level)]">
                   {{ getLevelBadge(request.level) }}
+
                 </span>
               </div>
               <div class="text-sm text-gray-600 dark:text-gray-400">
                 Level {{ request.level }}
+
               </div>
               <div class="flex items-center gap-2 mt-1">
                 <span class="text-xs text-gray-500 dark:text-gray-500">
                   Sent {{ formatDate(request.sentAt!) }}
+
                 </span>
                 <span class="text-xs text-yellow-600 dark:text-yellow-400">• Pending</span>
               </div>

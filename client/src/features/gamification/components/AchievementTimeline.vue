@@ -79,7 +79,9 @@
           <!-- Icon Circle -->
           <div class="relative z-10 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full shadow-lg"
             :class="getIconClass(achievement.type)">
-            <span class="text-2xl">{{ achievement.icon }}</span>
+            <span class="text-2xl">{{ achievement.icon }}
+
+</span>
 
             <!-- Pulse Animation for Recent -->
             <div v-if="isRecent(achievement.date)" class="absolute inset-0 animate-ping rounded-full" :class="getPulseClass(achievement.type)"></div>
@@ -97,16 +99,20 @@
                 <div>
                   <h4 class="font-bold text-gray-900 dark:text-white">
                     {{ achievement.title }}
+
                   </h4>
                   <p class="text-sm text-gray-600 dark:text-gray-400">
                     {{ achievement.description }}
+
                   </p>
                 </div>
                 <span
                   v-if="achievement.xp"
                   class="ml-2 flex-shrink-0 rounded-full bg-purple-100 px-2 py-1 text-xs font-bold text-purple-700 dark:bg-purple-900/40 dark:text-purple-300"
                 >
-                  +{{ achievement.xp }} XP
+                  +{{ achievement.xp }}
+
+ XP
                 </span>
               </div>
 
@@ -117,20 +123,24 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                   {{ formatDate(achievement.date) }}
+
                 </span>
 
                 <span v-if="achievement.rarity" class="flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold" :class="getRarityClass(achievement.rarity)">
                   {{ achievement.rarity }}
+
                 </span>
 
                 <span v-if="achievement.category" class="capitalize">
                   {{ achievement.category }}
+
                 </span>
               </div>
 
               <!-- Additional Details (if expandable) -->
               <div v-if="achievement.details" class="mt-3 rounded-lg bg-gray-50 p-3 text-sm text-gray-700 dark:bg-gray-800/50 dark:text-gray-300">
                 {{ achievement.details }}
+
               </div>
             </div>
 
@@ -168,9 +178,9 @@ const props = withDefaults(defineProps<Props>(), {
   itemsPerPage: 10,
 });
 
-const emit = defineEmits<{
+const emit = defineemits<{
   'achievement-click': [achievement: IAchievement];
-  'load-more': [];
+  
 }>();
 
 const selectedFilter = ref<'all' | 'badges' | 'levels' | 'milestones'>('all');
@@ -268,6 +278,7 @@ function loadMore() {
   currentPage.value++;
   emit('load-more');
 }
+
 </script>
 
 <style scoped>
@@ -285,6 +296,7 @@ function loadMore() {
     opacity: 0;
     transform: translateX(-30px);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
@@ -296,6 +308,7 @@ function loadMore() {
     opacity: 1;
     transform: translateX(0);
   }
+
   to {
     opacity: 0;
     transform: translateX(30px);

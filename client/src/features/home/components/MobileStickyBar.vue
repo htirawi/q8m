@@ -12,6 +12,7 @@
         <div class="mobile-sticky-bar__message">
           <span class="mobile-sticky-bar__text">
             {{ t('home.mobileStickyBar.message') }}
+
           </span>
         </div>
 
@@ -26,6 +27,7 @@
             data-testid="mobile-sticky-cta"
           >
             {{ t('home.mobileStickyBar.cta') }}
+
           </button>
 
           <!-- Dismiss button -->
@@ -106,7 +108,9 @@ const checkDismissalStatus = (): void => {
 
   if (now - dismissedTimestamp < DISMISS_DURATION) {
     hasDismissed.value = true;
-  } else {
+  }
+
+ else {
     // Dismissal expired, remove from storage
     localStorage.removeItem(DISMISS_STORAGE_KEY);
   }
@@ -252,7 +256,7 @@ defineOptions({
 }
 
 /* Small screens */
-@media (max-width: 360px) {
+@media (width <= 360px) {
   .mobile-sticky-bar__text {
     @apply text-xs;
   }

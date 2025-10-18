@@ -11,7 +11,9 @@
         <div class="relative flex-shrink-0">
           <div class="relative flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-yellow-400 via-orange-500 to-pink-500 shadow-lg">
             <div class="absolute inset-0 animate-ping rounded-full bg-yellow-400 opacity-75"></div>
-            <span class="relative z-10 text-4xl">{{ badge.icon }}</span>
+            <span class="relative z-10 text-4xl">{{ badge.icon }}
+
+</span>
           </div>
           <!-- Sparkles -->
           <div class="pointer-events-none absolute inset-0">
@@ -30,13 +32,16 @@
               :class="getRarityClass(badge.rarity)"
             >
               {{ badge.rarity }}
+
             </span>
           </div>
           <h4 class="mb-1 font-bold text-gray-900 dark:text-white">
             {{ badge.name }}
+
           </h4>
           <p class="mb-2 text-sm text-gray-600 dark:text-gray-400">
             {{ badge.description }}
+
           </p>
           <div class="flex items-center gap-3 text-sm">
             <div class="flex items-center gap-1 font-semibold text-purple-600 dark:text-purple-400">
@@ -97,9 +102,9 @@ const props = withDefaults(defineProps<{
   stackSpacing: 16,
 });
 
-const emit = defineEmits<{
-  share: [badge: IBadge];
-  dismiss: [badgeId: string];
+const emit = defineemits<{
+  share: [;badge: IBadge];
+  dismiss: [;badgeId: string]
 }>();
 
 const badges = ref<(IBadge & { progress: number; timestamp: number })[]>([]);
@@ -112,12 +117,28 @@ function getNotificationStyle(badge: IBadge & { timestamp: number }) {
   const offset = index * (80 + props.stackSpacing); // 80px height + spacing
 
   const positionStyles: Record<string, string> = {
-    'top-right': `top: ${16 + offset}px; right: 16px;`,
-    'top-left': `top: ${16 + offset}px; left: 16px;`,
-    'bottom-right': `bottom: ${16 + offset}px; right: 16px;`,
-    'bottom-left': `bottom: ${16 + offset}px; left: 16px;`,
-    'top-center': `top: ${16 + offset}px; left: 50%; transform: translateX(-50%);`,
-    'bottom-center': `bottom: ${16 + offset}px; left: 50%; transform: translateX(-50%);`,
+    'top-right': `top: ${16 + offset}
+
+`,
+    'top-left': `top: ${16 + offset}
+
+`,
+    'bottom-right': `bottom: ${16 + offset}
+
+px; right: 16px;
+
+`,
+    'bottom-left': `bottom: ${16 + offset}
+
+`,
+    'top-center': `top: ${16 + offset}
+
+px; left: 50%;
+
+`,
+    'bottom-center': `bottom: ${16 + offset}
+
+px; left: 50%; transform: translateX(-50%);`,
   };
 
   return positionStyles[props.position] || positionStyles['top-right'];
@@ -133,13 +154,12 @@ function getRarityClass(rarity: string): string {
   return classes[rarity as keyof typeof classes] || classes.common;
 }
 
-function getSparkleStyle(index: number) {
+function getsparklestyle(index: number) {
   const angle = (index * 60) - 30; // Distribute around circle
   const distance = 25;
   const x = Math.cos((angle * Math.PI) / 180) * distance;
   const y = Math.sin((angle * Math.PI) / 180) * distance;
   const delay = index * 0.1;
-
   return {
     left: `calc(50% + ${x}px)`,
     top: `calc(50% + ${y}px)`,
@@ -147,7 +167,7 @@ function getSparkleStyle(index: number) {
   };
 }
 
-function shareBadge(badge: IBadge) {
+function sharebadge(badge: ibadge) {
   emit('share', badge);
 
   const shareText = `I just unlocked the "${badge.name}" badge! ${badge.description}`;
@@ -161,13 +181,15 @@ function shareBadge(badge: IBadge) {
       // Fallback to clipboard
       navigator.clipboard.writeText(`${shareText}\n\n${window.location.origin}`);
     });
-  } else {
+  }
+
+ else {
     // Fallback to clipboard
     navigator.clipboard.writeText(`${shareText}\n\n${window.location.origin}`);
   }
 }
 
-function dismissBadge(badgeId: string) {
+function dismissbadge(badgeid: string) {
   const timer = timers.value.get(badgeId);
   if (timer) {
     clearTimeout(timer);
@@ -182,7 +204,7 @@ function dismissBadge(badgeId: string) {
   emit('dismiss', badgeId);
 }
 
-function showBadge(badge: IBadge) {
+function showbadge(badge: ibadge) {
   // Add progress tracking
   const badgeWithProgress = {
     ...badge,
@@ -208,7 +230,7 @@ function showBadge(badge: IBadge) {
   timers.value.set(badge.id, timer);
 }
 
-function showBadges(newBadges: IBadge[]) {
+function showbadges(newbadges: ibadge[]) {
   newBadges.forEach((badge, index) => {
     setTimeout(() => {
       showBadge(badge);
@@ -251,6 +273,7 @@ onUnmounted(() => {
     opacity: 0;
     transform: translateX(100%);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
@@ -262,6 +285,7 @@ onUnmounted(() => {
     opacity: 1;
     transform: translateX(0) scale(1);
   }
+
   to {
     opacity: 0;
     transform: translateX(100%) scale(0.8);
@@ -284,6 +308,7 @@ onUnmounted(() => {
     opacity: 0;
     transform: scale(0);
   }
+
   50% {
     opacity: 1;
     transform: scale(1);
@@ -292,14 +317,14 @@ onUnmounted(() => {
 
 /* Notification box shadow by rarity */
 .badge-notification-enter-active[data-rarity="legendary"] {
-  box-shadow: 0 10px 40px rgba(251, 146, 60, 0.5);
+  box-shadow: 0 10px 40px rgb(251, 146, 60, 0.5);
 }
 
 .badge-notification-enter-active[data-rarity="epic"] {
-  box-shadow: 0 10px 40px rgba(168, 85, 247, 0.5);
+  box-shadow: 0 10px 40px rgb(168, 85, 247, 0.5);
 }
 
 .badge-notification-enter-active[data-rarity="rare"] {
-  box-shadow: 0 10px 40px rgba(59, 130, 246, 0.5);
+  box-shadow: 0 10px 40px rgb(59, 130, 246, 0.5);
 }
 </style>

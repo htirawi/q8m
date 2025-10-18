@@ -13,20 +13,42 @@ defineOptions({
       <div class="pricing-hero-content">
         <h1 id="pricing-hero-title" class="pricing-hero-title">
           {{ $t(heroData.titleKey) }}
+
         </h1>
         <p class="pricing-hero-subtitle">
           {{ $t(heroData.subtitleKey) }}
+
         </p>
 
         <!-- Value Props -->
         <div class="pricing-hero-value-props">
-          <div
-            v-for="(valuePropKey, index) in heroData.valuePropsKeys"
-            :key="index"
-            class="pricing-hero-value-prop"
-          >
+          <div v-for="(valuePropKey, index) in heroData.valuePropsKeys" :key="index" class="pricing-hero-value-prop">
             <CheckIcon class="pricing-hero-check-icon" aria-hidden="true" />
-            <span>{{ $t(valuePropKey) }}</span>
+            <span>{{ $t(valuePropKey) }}
+
+</span>
+          </div>
+        </div>
+
+        <!-- Social Proof Stats -->
+        <div class="pricing-hero-stats">
+          <div class="pricing-hero-stat">
+            <div class="pricing-hero-stat-number">10,000+</div>
+            <div class="pricing-hero-stat-label">{{ $t('pricing.socialProof.recentPurchases', { count: '10,000' }) }}
+
+            </div>
+          </div>
+          <div class="pricing-hero-stat">
+            <div class="pricing-hero-stat-number">4.9/5</div>
+            <div class="pricing-hero-stat-label">{{ $t('pricing.socialProof.rating', { rating: '4.9', count: '500' }) }}
+
+            </div>
+          </div>
+          <div class="pricing-hero-stat">
+            <div class="pricing-hero-stat-number">83%</div>
+            <div class="pricing-hero-stat-label">{{ $t('pricing.roi.stats.jobOfferRate.label') }}
+
+</div>
           </div>
         </div>
 
@@ -34,6 +56,7 @@ defineOptions({
         <div class="pricing-hero-trust">
           <p class="pricing-hero-trust-text">
             {{ $t("pricing.hero.trustedBy") }}
+
           </p>
           <div class="pricing-hero-trust-badges">
             <div v-for="badge in trustBadges" :key="badge.name" class="pricing-hero-trust-badge">
@@ -77,6 +100,23 @@ defineOptions({
 
 .pricing-hero-check-icon {
   @apply h-5 w-5 text-green-500;
+}
+
+.pricing-hero-stats {
+  @apply mt-8 grid grid-cols-1 gap-6 sm:grid-cols-3;
+}
+
+.pricing-hero-stat {
+  @apply text-center;
+}
+
+.pricing-hero-stat-number {
+  @apply text-3xl font-bold text-gray-900 sm:text-4xl;
+  @apply bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent;
+}
+
+.pricing-hero-stat-label {
+  @apply mt-1 text-sm text-gray-600;
 }
 
 .pricing-hero-trust {

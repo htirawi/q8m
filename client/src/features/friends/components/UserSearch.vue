@@ -81,7 +81,7 @@ const handleClear = () => {
   validationError.value = null;
 };
 
-const handleLoadMore = async () => {
+const handleloadmore = async () => {
   if (searchQuery.value) {
     await loadMoreSearch(searchQuery.value);
   }
@@ -169,6 +169,7 @@ if (props.showSuggestions) {
       <!-- Validation Error -->
       <div v-if="validationError" class="mt-2 text-sm text-red-600 dark:text-red-400">
         {{ validationError }}
+
       </div>
 
       <!-- Search Hint -->
@@ -232,6 +233,7 @@ if (props.showSuggestions) {
                 ]"
               >
                 {{ getUserAvatar(user).value }}
+
               </div>
               <img
                 v-else
@@ -246,23 +248,32 @@ if (props.showSuggestions) {
               <div class="flex items-center gap-2 mb-1">
                 <h3 class="font-semibold text-gray-900 dark:text-white truncate">
                   {{ user.name }}
+
                 </h3>
                 <span :class="['text-sm', getLevelColor(user.level)]">
                   {{ getLevelBadge(user.level) }}
+
                 </span>
               </div>
               <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                <span>Level {{ user.level }}</span>
+                <span>Level {{ user.level }}
+
+</span>
                 <span>•</span>
-                <span>{{ user.xp.toLocaleString() }} XP</span>
+                <span>{{ user.xp.toLocaleString() }}
+
+ XP</span>
               </div>
               <div
                 v-if="user.mutualFriends && user.mutualFriends > 0"
                 class="text-xs text-indigo-600 dark:text-indigo-400 mt-1"
               >
-                {{ user.mutualFriends }} mutual friend{{
-                  user.mutualFriends > 1 ? 's' : ''
+                {{ user.mutualFriends }}
+
+ mutual friend{{
+                  user.mutualFriends > 1 ? 's' : ''1
                 }}
+
               </div>
             </div>
 
@@ -315,6 +326,7 @@ if (props.showSuggestions) {
                 ]"
               >
                 {{ getUserAvatar(suggestion).value }}
+
               </div>
               <img
                 v-else
@@ -329,23 +341,32 @@ if (props.showSuggestions) {
               <div class="flex items-center gap-2 mb-1">
                 <h3 class="font-semibold text-gray-900 dark:text-white truncate">
                   {{ suggestion.name }}
+
                 </h3>
                 <span :class="['text-sm', getLevelColor(suggestion.level)]">
                   {{ getLevelBadge(suggestion.level) }}
+
                 </span>
               </div>
               <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                <span>Level {{ suggestion.level }}</span>
+                <span>Level {{ suggestion.level }}
+
+</span>
                 <span>•</span>
-                <span>{{ suggestion.xp.toLocaleString() }} XP</span>
+                <span>{{ suggestion.xp.toLocaleString() }}
+
+ XP</span>
               </div>
               <div
                 v-if="suggestion.mutualFriends && suggestion.mutualFriends > 0"
                 class="text-xs text-indigo-600 dark:text-indigo-400 mt-1"
               >
-                {{ suggestion.mutualFriends }} mutual friend{{
-                  suggestion.mutualFriends > 1 ? 's' : ''
+                {{ suggestion.mutualFriends }}
+
+ mutual friend{{
+                  suggestion.mutualFriends > 1 ? 's' : ''1
                 }}
+
               </div>
             </div>
 

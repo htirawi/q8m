@@ -13,9 +13,11 @@
           <div class="mb-4">
             <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
               {{ currentTitle }}
+
             </h1>
             <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
               Module {{ currentModuleNumber }} of {{ store.currentPath.modules.length }}
+
             </p>
           </div>
 
@@ -38,14 +40,20 @@
         <div v-if="currentModule" class="rounded-lg bg-white p-6 shadow-sm dark:bg-gray-800">
           <h2 class="mb-2 text-xl font-bold text-gray-900 dark:text-white">
             {{ currentModuleTitle }}
+
           </h2>
           <p class="mb-6 text-gray-600 dark:text-gray-300">
             {{ currentModuleDescription }}
+
           </p>
 
           <div class="mb-6 flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
-            <span>⏱️ {{ currentModule.estimatedMinutes }} minutes</span>
-            <span>📝 {{ currentModuleProgress?.totalQuestions || 0 }} questions</span>
+            <span>⏱️ {{ currentModule.estimatedMinutes }}
+
+ minutes</span>
+            <span>📝 {{ currentModuleProgress?.totalQuestions || 0 }}
+
+ questions</span>
           </div>
 
           <!-- Actions -->
@@ -56,6 +64,7 @@
               @click="startModule"
             >
               {{ currentModuleProgress?.isCompleted ? 'Review Module' : 'Start Module' }}
+
             </button>
             <button
               v-if="currentModuleProgress?.isCompleted"
@@ -189,7 +198,7 @@ const viewCertificate = () => {
 
 const goBack = () => {
   const locale = route.params.locale || 'en';
-  router.push(`/${locale}/paths/${route.params.slug}`);
+  router.push(`/${locale}/paths/${route.params.slug}`)<buttonv-if=type=class=NextModule</button></div></div>ModuleList<divclass=<h3class=AllModules</h3><ModuleList
 };
 
 onMounted(async () => {

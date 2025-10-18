@@ -112,6 +112,7 @@ button,
 [type="submit"] {
   -webkit-appearance: button;
   cursor: pointer;
+
   /* Note: background styles removed to allow Tailwind gradient classes to work */
 }
 

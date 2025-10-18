@@ -43,6 +43,7 @@ const learningSteps = computed(() => [
       <div class="learning-path-header">
         <h2 id="learning-path-title" class="learning-path-title">
           {{ $t("home.learningPath.title") }}
+
         </h2>
         <p class="learning-path-description">
           {{ $t("home.learningPath.description") }}
@@ -58,15 +59,23 @@ const learningSteps = computed(() => [
             :class="{ 'path-step--active': index === 0 }"
           >
             <div class="step-number">
-              <span class="number-text">{{ index + 1 }}</span>
+              <span class="number-text">{{ index + 1 }}
+
+</span>
             </div>
             <div class="step-content">
-              <h3 class="step-title">{{ $t(step.titleKey) }}</h3>
-              <p class="step-description">{{ $t(step.descriptionKey) }}</p>
+              <h3 class="step-title">{{ $t(step.titleKey) }}
+
+</h3>
+              <p class="step-description">{{ $t(step.descriptionKey) }}
+
+</p>
               <div class="step-features">
                 <div v-for="feature in step.features" :key="feature" class="step-feature">
                   <CheckIcon class="feature-icon" aria-hidden="true" />
-                  <span>{{ $t(feature) }}</span>
+                  <span>{{ $t(feature) }}
+
+</span>
                 </div>
               </div>
             </div>
@@ -79,21 +88,29 @@ const learningSteps = computed(() => [
               <div class="progress-fill"></div>
               <div class="progress-text">
                 <span class="progress-number">95%</span>
-                <span class="progress-label">{{ $t("home.learningPath.successRate") }}</span>
+                <span class="progress-label">{{ $t("home.learningPath.successRate") }}
+
+</span>
               </div>
             </div>
             <div class="progress-stats">
               <div class="stat-item">
                 <span class="stat-number">500+</span>
-                <span class="stat-label">{{ $t("home.learningPath.stats.questions") }}</span>
+                <span class="stat-label">{{ $t("home.learningPath.stats.questions") }}
+
+</span>
               </div>
               <div class="stat-item">
                 <span class="stat-number">10+</span>
-                <span class="stat-label">{{ $t("home.learningPath.stats.frameworks") }}</span>
+                <span class="stat-label">{{ $t("home.learningPath.stats.frameworks") }}
+
+</span>
               </div>
               <div class="stat-item">
                 <span class="stat-number">50+</span>
-                <span class="stat-label">{{ $t("home.learningPath.stats.companies") }}</span>
+                <span class="stat-label">{{ $t("home.learningPath.stats.companies") }}
+
+</span>
               </div>
             </div>
           </div>
@@ -118,6 +135,7 @@ const learningSteps = computed(() => [
 
 .learning-path-title {
   @apply mb-6 text-4xl font-bold text-slate-900 dark:text-white md:text-5xl;
+
   background: linear-gradient(135deg, #1e293b 0%, #3b82f6 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -145,14 +163,15 @@ const learningSteps = computed(() => [
 
 .path-step {
   @apply relative flex gap-6 rounded-2xl bg-white p-8 shadow-lg transition-all duration-300 hover:shadow-xl dark:bg-slate-800;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.9) 100%);
+
+  background: linear-gradient(135deg, rgb(255, 255, 255, 0.9) 0%, rgb(248, 250, 252, 0.9) 100%);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(226, 232, 240, 0.8);
+  border: 1px solid rgb(226, 232, 240, 0.8);
 }
 
 .dark .path-step {
-  background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(51, 65, 85, 0.9) 100%);
-  border: 1px solid rgba(71, 85, 105, 0.8);
+  background: linear-gradient(135deg, rgb(30, 41, 59, 0.9) 0%, rgb(51, 65, 85, 0.9) 100%);
+  border: 1px solid rgb(71, 85, 105, 0.8);
 }
 
 .path-step--active {
@@ -201,6 +220,7 @@ const learningSteps = computed(() => [
 
 .progress-fill {
   @apply absolute inset-0 rounded-full border-8 border-primary-200 dark:border-primary-800;
+
   background: conic-gradient(from 0deg, #3b82f6 0deg 342deg, #e2e8f0 342deg 360deg);
 }
 
@@ -265,6 +285,7 @@ const learningSteps = computed(() => [
     opacity: 0;
     transform: translateY(40px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -278,9 +299,11 @@ const learningSteps = computed(() => [
 .path-step:nth-child(1) {
   animation-delay: 0.1s;
 }
+
 .path-step:nth-child(2) {
   animation-delay: 0.2s;
 }
+
 .path-step:nth-child(3) {
   animation-delay: 0.3s;
 }

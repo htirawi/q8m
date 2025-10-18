@@ -36,9 +36,11 @@ defineOptions({
       <div class="feature-grid-header">
         <h2 id="feature-grid-title" class="feature-grid-title">
           {{ $t("pricing.features.title") }}
+
         </h2>
         <p class="feature-grid-description">
           {{ $t("pricing.features.description") }}
+
         </p>
       </div>
 
@@ -50,9 +52,11 @@ defineOptions({
           <div class="feature-card-content">
             <h3 class="feature-card-title">
               {{ $t(feature.titleKey) }}
+
             </h3>
             <p class="feature-card-description">
               {{ $t(feature.descriptionKey) }}
+
             </p>
           </div>
         </div>

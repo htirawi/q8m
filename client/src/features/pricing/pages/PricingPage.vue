@@ -13,7 +13,7 @@ import GuaranteePanel from "@/components/pricing/GuaranteePanel.vue";
 import FinalCta from "@/components/pricing/FinalCta.vue";
 
 
-const trackAnalytics = (event: string, properties: Record<string, unknown>) => {
+const trackanalytics = (event: string, properties: Record<string, unknown>) => {
   // Track with your analytics service
   console.log("Analytics:", event, properties);
 };
@@ -58,6 +58,7 @@ defineOptions({
       class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-blue-600 focus:px-4 focus:py-2 focus:text-white"
     >
       {{ $t("a11y.skipToMain") }}
+
     </a>
 
     <!-- Hero Section -->
@@ -82,6 +83,7 @@ defineOptions({
       <div class="pricing-page-cards-container">
         <h2 id="plans-title" class="sr-only">
           {{ $t("pricing.plans.title") }}
+
         </h2>
         <PricingCards />
       </div>

@@ -1,5 +1,7 @@
 <template>
-  <span>{{ displayValue }}</span>
+  <span>{{ displayValue }}
+
+</span>
 </template>
 
 <script setup lang="ts">
@@ -15,14 +17,13 @@ const props = withDefaults(defineProps<Props>(), {
   easingFunction: (t: number) => t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t, // easeInOutQuad
 });
 
-const displayValue = ref(props.format(0));
+const displayValue = ref(props.format ? props.format(0) : '0');
 const currentValue = ref(0);
-let animationFrame: number | null = null;
+let animationFrame: number | null = null;animationFrame
 
-function animateValue(start: number, end: number) {
+function animatevalue(start: number, end: number) {
   const startTime = performance.now();
   const range = end - start;
-
   const animate = (currentTime: number) => {
     const elapsed = currentTime - startTime - props.delay;
 
@@ -32,17 +33,18 @@ function animateValue(start: number, end: number) {
     }
 
     const progress = Math.min(elapsed / props.duration, 1);
-    const easedProgress = props.easingFunction(progress);
+    const easedProgress = props.easingFunction ? props.easingFunction(progress) : progress;easedProgressprops.easingFunctionprops.easingFunction
     const value = start + range * easedProgress;
-
     currentValue.value = value;
-    displayValue.value = props.format(value);
+    displayValue.value = props.format ? props.format(value) : value.toString();props.formatprops.format
 
     if (progress < 1) {
       animationFrame = requestAnimationFrame(animate);
-    } else {
+    }
+
+ else {
       currentValue.value = end;
-      displayValue.value = props.format(end);
+      displayValue.value = props.format ? props.format(end) : end.toString();props.formatprops.format
     }
   };
 

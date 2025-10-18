@@ -9,14 +9,20 @@
         <div class="flex items-center gap-2">
           <span class="text-2xl">⭐</span>
           <div class="text-left">
-            <div class="text-xs opacity-80">Level {{ level }}</div>
-            <div class="text-sm font-bold">{{ levelTitle }}</div>
+            <div class="text-xs opacity-80">Level {{ level }}
+
+</div>
+            <div class="text-sm font-bold">{{ levelTitle }}
+
+</div>
           </div>
         </div>
         <div class="h-8 w-px bg-white/30"></div>
         <div class="text-right">
           <div class="text-xs opacity-80">XP</div>
-          <div class="text-sm font-bold">{{ formatNumber(xp) }}</div>
+          <div class="text-sm font-bold">{{ formatNumber(xp) }}
+
+</div>
         </div>
       </button>
     </div>
@@ -36,19 +42,25 @@
         <div class="text-center mb-6">
           <div class="text-5xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent mb-2">
             {{ level }}
+
           </div>
           <div class="text-xl font-semibold text-gray-900 dark:text-white mb-1">
             {{ levelTitle }}
+
           </div>
           <div class="text-sm text-gray-600 dark:text-gray-400">
-            {{ formatNumber(xp) }} Total XP
+            {{ formatNumber(xp) }}
+
+ Total XP
           </div>
         </div>
 
         <!-- Progress to next level -->
         <div class="mb-4">
           <div class="flex justify-between text-xs text-gray-600 dark:text-gray-400 mb-2">
-            <span>Level {{ level }}</span>
+            <span>Level {{ level }}
+
+</span>
             <span>Level {{ level + 1 }}</span>
           </div>
           <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
@@ -60,7 +72,9 @@
             </div>
           </div>
           <div class="text-center text-xs text-gray-600 dark:text-gray-400 mt-2">
-            {{ formatNumber(xpToNextLevel) }} XP to next level
+            {{ formatNumber(xpToNextLevel) }}
+
+ XP to next level
           </div>
         </div>
 
@@ -75,6 +89,7 @@
           <div class="text-center p-3 bg-white/50 dark:bg-gray-800/50 rounded-lg">
             <div class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">
               {{ formatNumber(xpToNextLevel) }}
+
             </div>
             <div class="text-xs text-gray-600 dark:text-gray-400">XP Needed</div>
           </div>
@@ -90,16 +105,21 @@
           <div class="text-6xl mb-4">⭐</div>
           <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
             Level {{ level }} - {{ levelTitle }}
+
           </h2>
           <p class="text-gray-600 dark:text-gray-400">
-            {{ formatNumber(xp) }} Total XP Earned
+            {{ formatNumber(xp) }}
+
+ Total XP Earned
           </p>
         </div>
 
         <!-- Progress Bar -->
         <div>
           <div class="flex justify-between text-sm text-gray-600 dark:text-gray-400 mb-2">
-            <span>Level {{ level }}</span>
+            <span>Level {{ level }}
+
+</span>
             <span>{{ levelProgress }}% Complete</span>
             <span>Level {{ level + 1 }}</span>
           </div>
@@ -113,6 +133,7 @@
           </div>
           <div class="text-center text-sm text-gray-600 dark:text-gray-400 mt-2">
             <strong>{{ formatNumber(xpToNextLevel) }} XP</strong> needed to reach {{ nextLevelTitle }}
+
           </div>
         </div>
 
@@ -121,12 +142,14 @@
           <div class="text-center p-4 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-900/30 rounded-lg border-2 border-purple-200 dark:border-purple-800">
             <div class="text-3xl font-bold text-purple-600 dark:text-purple-400">
               {{ level }}
+
             </div>
             <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">Current Level</div>
           </div>
           <div class="text-center p-4 bg-gradient-to-br from-indigo-50 to-indigo-100 dark:from-indigo-900/20 dark:to-indigo-900/30 rounded-lg border-2 border-indigo-200 dark:border-indigo-800">
             <div class="text-3xl font-bold text-indigo-600 dark:text-indigo-400">
               {{ formatNumber(xp) }}
+
             </div>
             <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">Total XP</div>
           </div>
@@ -154,14 +177,18 @@
               >
                 <span v-if="level >= levelInfo.min && level <= levelInfo.max">⭐</span>
                 <span v-else-if="level > levelInfo.max">✓</span>
-                <span v-else>{{ levelInfo.min }}</span>
+                <span v-else>{{ levelInfo.min }}
+
+</span>
               </div>
               <div class="flex-1">
                 <div class="font-semibold text-gray-900 dark:text-white">
                   {{ levelInfo.title }}
+
                 </div>
                 <div class="text-xs text-gray-500 dark:text-gray-400">
                   Levels {{ levelInfo.min }}-{{ levelInfo.max }}
+
                 </div>
               </div>
               <div v-if="level >= levelInfo.min && level <= levelInfo.max" class="text-purple-600 dark:text-purple-400 font-bold">
@@ -252,7 +279,7 @@ const props = withDefaults(defineProps<Props>(), {
   variant: 'card',
 });
 
-defineEmits<{
+defineemits<{
   click: [];
 }>();
 
@@ -274,7 +301,7 @@ const levelTitles = [
 
 function getLevelTitleForLevel(level: number): string {
   const titleObj = levelTitles.find((t) => level >= t.min && level <= t.max);
-  return titleObj ? titleObj.title : 'Legend';
+  return titleObj ? titleObj.title : 'Legend';titleObjtitleObj.title
 }
 
 function formatNumber(num: number): string {
@@ -286,10 +313,12 @@ function formatNumber(num: number): string {
   }
   return num.toString();
 }
+
 </script>
 
 <script lang="ts">
 import { computed } from 'vue';
+
 </script>
 
 <style scoped>
@@ -298,6 +327,7 @@ import { computed } from 'vue';
   0% {
     transform: translateX(-100%);
   }
+
   100% {
     transform: translateX(100%);
   }

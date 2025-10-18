@@ -76,7 +76,7 @@ const handleCreateDiscussion = async (content: string) => {
   await createDiscussion(props.questionId, content);
 };
 
-const handleLoadMore = async () => {
+const handleloadmore = async () => {
   await loadMore(props.questionId);
 };
 
@@ -174,7 +174,9 @@ watch(
       v-if="error"
       class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6"
     >
-      <p class="text-red-700 dark:text-red-400">{{ error }}</p>
+      <p class="text-red-700 dark:text-red-400">{{ error }}
+
+</p>
     </div>
 
     <!-- Loading State -->

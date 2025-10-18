@@ -53,12 +53,14 @@
 /* Container */
 .level-selection-skeleton {
   @apply w-full max-w-7xl mx-auto px-4 py-8 space-y-8;
+
   animation: fadeIn 0.3s ease-out;
 }
 
 /* Base skeleton element */
 .skeleton {
   @apply relative overflow-hidden;
+
   background: linear-gradient(
     90deg,
     var(--color-gray-200) 0%,
@@ -84,6 +86,7 @@
   0% {
     background-position: 200% 0;
   }
+
   100% {
     background-position: -200% 0;
   }
@@ -94,6 +97,7 @@
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -135,6 +139,7 @@
   @apply p-6 rounded-xl border border-gray-200 dark:border-gray-700;
   @apply bg-white dark:bg-gray-800 space-y-4;
   @apply transition-all duration-300;
+
   min-height: 280px;
 }
 
@@ -230,7 +235,7 @@
 }
 
 /* Mobile responsiveness */
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .skeleton-header {
     @apply flex-col space-y-4;
   }

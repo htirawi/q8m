@@ -4,8 +4,7 @@ import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter, useRoute } from 'vue-router';
 import { useHomepageAnalytics } from '@/composables/useHomepageAnalytics';
-
-
+import { BoltIcon, FlagIcon, CheckCircleIcon, RocketLaunchIcon } from '@heroicons/vue/24/solid';
 
 const props = withDefaults(defineProps<Props>(), {
   headlineVariant: 'control',
@@ -58,6 +57,7 @@ const handleSecondaryCTA = (): void => {
     query: { source: 'hero' },
   });
 };
+
 </script>
 
 <template>
@@ -66,6 +66,7 @@ const handleSecondaryCTA = (): void => {
       <div class="hero-content">
         <!-- IBadge -->
         <div class="hero-badge">
+          <RocketLaunchIcon class="badge-icon" aria-hidden="true" />
           <span class="badge-text">{{ $t("home.hero.badge") }}</span>
         </div>
 
@@ -74,15 +75,26 @@ const handleSecondaryCTA = (): void => {
         </h1>
         <p :class="['hero-description', { 'font-arabic-sans': locale === 'ar' }]">
           {{ $t("home.hero.description") }}
+
         </p>
 
         <!-- Tech Stack Badges -->
         <div class="tech-stack">
-          <span class="tech-badge">{{ $t("home.hero.techStack.react") }}</span>
-          <span class="tech-badge">{{ $t("home.hero.techStack.vue") }}</span>
-          <span class="tech-badge">{{ $t("home.hero.techStack.angular") }}</span>
-          <span class="tech-badge">{{ $t("home.hero.techStack.nextjs") }}</span>
-          <span class="tech-badge">{{ $t("home.hero.techStack.typescript") }}</span>
+          <span class="tech-badge">{{ $t("home.hero.techStack.react") }}
+
+</span>
+          <span class="tech-badge">{{ $t("home.hero.techStack.vue") }}
+
+</span>
+          <span class="tech-badge">{{ $t("home.hero.techStack.angular") }}
+
+</span>
+          <span class="tech-badge">{{ $t("home.hero.techStack.nextjs") }}
+
+</span>
+          <span class="tech-badge">{{ $t("home.hero.techStack.typescript") }}
+
+</span>
         </div>
 
         <div class="hero-actions">
@@ -94,6 +106,7 @@ const handleSecondaryCTA = (): void => {
             :aria-label="t('home.hero.cta.primaryAriaLabel')"
           >
             {{ $t("home.hero.cta.primary") }}
+
             <svg
               class="hero-cta-icon"
               fill="none"
@@ -118,6 +131,7 @@ const handleSecondaryCTA = (): void => {
             :aria-label="t('home.hero.cta.secondaryAriaLabel')"
           >
             {{ $t("home.hero.cta.secondary") }}
+
           </button>
         </div>
 
@@ -127,34 +141,46 @@ const handleSecondaryCTA = (): void => {
             <svg class="hero-reassurance__icon" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
               <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
             </svg>
-            <span>{{ $t("home.hero.reassurance.noCard") }}</span>
+            <span>{{ $t("home.hero.reassurance.noCard") }}
+
+</span>
           </li>
           <li class="hero-reassurance__item">
             <svg class="hero-reassurance__icon" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
               <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
             </svg>
-            <span>{{ $t("home.hero.reassurance.fullAccess") }}</span>
+            <span>{{ $t("home.hero.reassurance.fullAccess") }}
+
+</span>
           </li>
           <li class="hero-reassurance__item">
             <svg class="hero-reassurance__icon" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
               <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
             </svg>
-            <span>{{ $t("home.hero.reassurance.cancelAnytime") }}</span>
+            <span>{{ $t("home.hero.reassurance.cancelAnytime") }}
+
+</span>
           </li>
         </ul>
 
         <div class="hero-stats">
           <div class="stat-item">
             <span class="stat-number">500+</span>
-            <span class="stat-label">{{ $t("home.hero.stats.questions") }}</span>
+            <span class="stat-label">{{ $t("home.hero.stats.questions") }}
+
+</span>
           </div>
           <div class="stat-item">
             <span class="stat-number">10+</span>
-            <span class="stat-label">{{ $t("home.hero.stats.frameworks") }}</span>
+            <span class="stat-label">{{ $t("home.hero.stats.frameworks") }}
+
+</span>
           </div>
           <div class="stat-item">
             <span class="stat-number">95%</span>
-            <span class="stat-label">{{ $t("home.hero.stats.success") }}</span>
+            <span class="stat-label">{{ $t("home.hero.stats.success") }}
+
+</span>
           </div>
         </div>
       </div>
@@ -168,14 +194,22 @@ const handleSecondaryCTA = (): void => {
                 <div class="dot yellow"></div>
                 <div class="dot green"></div>
               </div>
-              <div class="dashboard-title">{{ $t("home.hero.dashboard.title") }}</div>
+              <div class="dashboard-title">{{ $t("home.hero.dashboard.title") }}
+
+</div>
             </div>
             <div class="dashboard-content">
               <div class="quiz-card">
-                <div class="quiz-icon">⚡</div>
+                <div class="quiz-icon quiz-icon--blue">
+                  <BoltIcon class="quiz-icon__svg" aria-hidden="true" />
+                </div>
                 <div class="quiz-info">
-                  <h4>{{ $t("home.hero.dashboard.quiz1.title") }}</h4>
-                  <p>{{ $t("home.hero.dashboard.quiz1.details") }}</p>
+                  <h4>{{ $t("home.hero.dashboard.quiz1.title") }}
+
+</h4>
+                  <p>{{ $t("home.hero.dashboard.quiz1.details") }}
+
+</p>
                 </div>
                 <div class="quiz-progress">
                   <div class="progress-bar">
@@ -185,10 +219,16 @@ const handleSecondaryCTA = (): void => {
                 </div>
               </div>
               <div class="quiz-card">
-                <div class="quiz-icon">🎯</div>
+                <div class="quiz-icon quiz-icon--purple">
+                  <FlagIcon class="quiz-icon__svg" aria-hidden="true" />
+                </div>
                 <div class="quiz-info">
-                  <h4>{{ $t("home.hero.dashboard.quiz2.title") }}</h4>
-                  <p>{{ $t("home.hero.dashboard.quiz2.details") }}</p>
+                  <h4>{{ $t("home.hero.dashboard.quiz2.title") }}
+
+</h4>
+                  <p>{{ $t("home.hero.dashboard.quiz2.details") }}
+
+</p>
                 </div>
                 <div class="quiz-progress">
                   <div class="progress-bar">
@@ -198,10 +238,16 @@ const handleSecondaryCTA = (): void => {
                 </div>
               </div>
               <div class="quiz-card">
-                <div class="quiz-icon">🚀</div>
+                <div class="quiz-icon quiz-icon--green">
+                  <CheckCircleIcon class="quiz-icon__svg" aria-hidden="true" />
+                </div>
                 <div class="quiz-info">
-                  <h4>{{ $t("home.hero.dashboard.quiz3.title") }}</h4>
-                  <p>{{ $t("home.hero.dashboard.quiz3.details") }}</p>
+                  <h4>{{ $t("home.hero.dashboard.quiz3.title") }}
+
+</h4>
+                  <p>{{ $t("home.hero.dashboard.quiz3.details") }}
+
+</p>
                 </div>
                 <div class="quiz-progress">
                   <div class="progress-bar">
@@ -221,6 +267,7 @@ const handleSecondaryCTA = (): void => {
 <style scoped>
 .hero-section {
   @apply bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 py-20 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 md:py-32;
+
   position: relative;
   overflow: hidden;
 }
@@ -233,13 +280,14 @@ const handleSecondaryCTA = (): void => {
   right: 0;
   bottom: 0;
   background:
-    radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(99, 102, 241, 0.1) 0%, transparent 50%);
+    radial-gradient(circle at 20% 80%, rgb(59, 130, 246, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgb(99, 102, 241, 0.1) 0%, transparent 50%);
   pointer-events: none;
 }
 
 .hero-container {
   @apply container mx-auto grid grid-cols-1 items-center gap-16 px-4 lg:grid-cols-2 lg:gap-20;
+
   position: relative;
   z-index: 1;
 }
@@ -249,7 +297,11 @@ const handleSecondaryCTA = (): void => {
 }
 
 .hero-badge {
-  @apply inline-flex items-center;
+  @apply inline-flex items-center gap-2;
+}
+
+.badge-icon {
+  @apply h-4 w-4 text-primary-600 dark:text-primary-400;
 }
 
 .badge-text {
@@ -258,6 +310,7 @@ const handleSecondaryCTA = (): void => {
 
 .hero-title {
   @apply text-5xl font-bold leading-tight text-slate-900 dark:text-white md:text-6xl lg:text-7xl;
+
   background: linear-gradient(135deg, #1e293b 0%, #3b82f6 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -381,8 +434,9 @@ const handleSecondaryCTA = (): void => {
 
 .dashboard-preview {
   @apply bg-white dark:bg-slate-800;
+
   border-radius: 16px;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 25px 50px -12px rgb(0, 0, 0, 0.25);
 }
 
 .dashboard-header {
@@ -422,7 +476,35 @@ const handleSecondaryCTA = (): void => {
 }
 
 .quiz-icon {
-  @apply text-2xl;
+  @apply flex h-10 w-10 items-center justify-center rounded-lg;
+}
+
+.quiz-icon--blue {
+  @apply bg-blue-100 dark:bg-blue-900/30;
+}
+
+.quiz-icon--purple {
+  @apply bg-purple-100 dark:bg-purple-900/30;
+}
+
+.quiz-icon--green {
+  @apply bg-green-100 dark:bg-green-900/30;
+}
+
+.quiz-icon__svg {
+  @apply h-6 w-6;
+}
+
+.quiz-icon--blue .quiz-icon__svg {
+  @apply text-blue-600 dark:text-blue-400;
+}
+
+.quiz-icon--purple .quiz-icon__svg {
+  @apply text-purple-600 dark:text-purple-400;
+}
+
+.quiz-icon--green .quiz-icon__svg {
+  @apply text-green-600 dark:text-green-400;
 }
 
 .quiz-info {
@@ -447,6 +529,7 @@ const handleSecondaryCTA = (): void => {
 
 .progress-fill {
   @apply h-2 rounded-full bg-primary-500 transition-all duration-1000;
+
   width: 85%;
 }
 
@@ -509,6 +592,7 @@ const handleSecondaryCTA = (): void => {
     opacity: 0;
     transform: translateY(30px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -522,18 +606,23 @@ const handleSecondaryCTA = (): void => {
 .hero-content > *:nth-child(1) {
   animation-delay: 0.1s;
 }
+
 .hero-content > *:nth-child(2) {
   animation-delay: 0.2s;
 }
+
 .hero-content > *:nth-child(3) {
   animation-delay: 0.3s;
 }
+
 .hero-content > *:nth-child(4) {
   animation-delay: 0.4s;
 }
+
 .hero-content > *:nth-child(5) {
   animation-delay: 0.5s;
 }
+
 .hero-content > *:nth-child(6) {
   animation-delay: 0.6s;
 }

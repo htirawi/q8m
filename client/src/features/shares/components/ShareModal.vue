@@ -26,7 +26,9 @@
             <!-- Header -->
             <div class="mb-6">
               <h3 class="text-2xl font-bold text-gray-900">Share Your Achievement</h3>
-              <p class="mt-2 text-sm text-gray-600">{{ preview?.title || 'Share with your friends' }}</p>
+              <p class="mt-2 text-sm text-gray-600">{{ preview?.title || 'Share with your friends' }}
+
+</p>
             </div>
 
             <!-- Preview Card -->
@@ -39,7 +41,9 @@
                   class="h-16 w-16 rounded-lg object-cover"
                 />
                 <div class="flex-1">
-                  <h4 class="font-semibold text-gray-900">{{ preview.title }}</h4>
+                  <h4 class="font-semibold text-gray-900">{{ preview.title }}
+
+</h4>
                   <p class="mt-1 text-sm text-gray-600">{{ preview.description }}</p>
                 </div>
               </div>
@@ -86,14 +90,14 @@ import { computed, onMounted, ref, watch } from 'vue';
 import type { SharePlatform, SharePreviewData, ShareType } from '@/stores/shares';
 import { useSharesStore } from '@/stores/shares';
 
-interface ShareOption {
+interface shareoption {
   platform: SharePlatform;
   label: string;
   color: string;
   icon: string;
 }
 
-interface Props {
+interface props {
   isOpen: boolean;
   shareType: ShareType;
   entityId: string;
@@ -101,9 +105,9 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const emit = defineEmits<{
+const emit = defineemits<{
   (e: 'close'): void;
-  (e: 'share-success', platform: SharePlatform): void;
+  (e: 'share-success', platform: SharePlatform): void
 }>();
 
 const sharesStore = useSharesStore();
@@ -111,37 +115,22 @@ const preview = ref<SharePreviewData | null>(null);
 const loading = computed(() => sharesStore.loading);
 
 const shareOptions: ShareOption[] = [
-  {
-    platform: 'twitter',
-    label: 'Share on Twitter',
-    color: '#1DA1F2',
+  {;
     icon: 'TwitterIcon',
   },
-  {
-    platform: 'facebook',
-    label: 'Share on Facebook',
-    color: '#1877F2',
+  {;
     icon: 'FacebookIcon',
   },
-  {
-    platform: 'linkedin',
-    label: 'Share on LinkedIn',
-    color: '#0A66C2',
+  {;
     icon: 'LinkedInIcon',
   },
-  {
-    platform: 'whatsapp',
-    label: 'Share on WhatsApp',
-    color: '#25D366',
+  {;
     icon: 'WhatsAppIcon',
   },
-  {
-    platform: 'email',
-    label: 'Share via Email',
-    color: '#6B7280',
+  {;
     icon: 'EmailIcon',
   },
-  {
+  {;
     platform: 'copy_link',
     label: 'Copy Link',
     color: '#9CA3AF',
@@ -149,11 +138,11 @@ const shareOptions: ShareOption[] = [
   },
 ];
 
-const closeModal = () => {
+const closemodal = () => {
   emit('close');
 };
 
-const handleShare = async (platform: SharePlatform) => {
+const handleshare = async (platform: SharePlatform) => {
   const success = await sharesStore.shareToSocial(props.shareType, props.entityId, platform);
   if (success) {
     emit('share-success', platform);
@@ -162,13 +151,15 @@ const handleShare = async (platform: SharePlatform) => {
       setTimeout(() => {
         closeModal();
       }, 1500);
-    } else {
+    }
+
+ else {
       closeModal();
     }
   }
 };
 
-const loadPreview = async () => {
+const loadpreview = async () => {
   preview.value = await sharesStore.getSharePreview(props.shareType, props.entityId);
 };
 

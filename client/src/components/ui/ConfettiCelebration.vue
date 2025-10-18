@@ -12,7 +12,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
 
-const emit = defineEmits<{
+const emit = defineemits<{
   complete: [];
 }>();
 
@@ -21,7 +21,7 @@ const canvasWidth = ref(window.innerWidth);
 const canvasHeight = ref(window.innerHeight);
 const isActive = ref(true);
 
-interface Particle {
+interface particle {
   x: number;
   y: number;
   vx: number;
@@ -34,11 +34,11 @@ interface Particle {
   fade: number;
 }
 
-const particles: Particle[] = [];
+const particles: Particle[] = [];particles
 const colors = ['#5E5CE6', '#32ADE6', '#34C759', '#FF9F0A', '#FF453A', '#AF52DE', '#FFD60A'];
-let animationId: number | null = null;
+let animationId: number | null = null;animationId
 
-const createParticles = () => {
+const createparticles = () => {
   const particleCount = 150;
 
   for (let i = 0; i < particleCount; i++) {
@@ -57,7 +57,7 @@ const createParticles = () => {
   }
 };
 
-const drawParticle = (ctx: CanvasRenderingContext2D, particle: Particle) => {
+const drawparticle = (ctx: CanvasRenderingContext2D, particle: Particle) => {
   ctx.save();
   ctx.translate(particle.x, particle.y);
   ctx.rotate(particle.rotation * Math.PI / 180);
@@ -74,7 +74,9 @@ const drawParticle = (ctx: CanvasRenderingContext2D, particle: Particle) => {
 
     if (i === 0) {
       ctx.moveTo(x, y);
-    } else {
+    }
+
+ else {
       ctx.lineTo(x, y);
     }
 
@@ -112,14 +114,18 @@ const animate = () => {
     if (particle.opacity > 0 && particle.y < canvasHeight.value) {
       drawParticle(ctx, particle);
       activeParticles++;
-    } else {
+    }
+
+ else {
       particles.splice(i, 1);
     }
   }
 
   if (activeParticles > 0) {
     animationId = requestAnimationFrame(animate);
-  } else {
+  }
+
+ else {
     // All particles have disappeared
     isActive.value = false;
     setTimeout(() => {
@@ -128,7 +134,7 @@ const animate = () => {
   }
 };
 
-const handleResize = () => {
+const handleresize = () => {
   canvasWidth.value = window.innerWidth;
   canvasHeight.value = window.innerHeight;
 };

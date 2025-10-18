@@ -1,26 +1,15 @@
 <template>
-  <div
-    class="level-card"
-    :class="{
-      'level-card--selected': isSelected,
-      'level-card--locked': isLocked,
-      'level-card--hovering': isHovering,
-      'level-card--junior': difficulty === 'junior',
-      'level-card--intermediate': difficulty === 'intermediate',
-      'level-card--senior': difficulty === 'senior',
-      'level-card--custom': difficulty === 'custom'
-    }"
-    @mouseenter="handleMouseEnter"
-    @mouseleave="handleMouseLeave"
-    @click="handleClick"
-    @keydown.enter="handleClick"
-    @keydown.space.prevent="handleClick"
-    :tabindex="isLocked ? -1 : 0"
-    role="button"
-    :aria-pressed="isSelected"
-    :aria-disabled="isLocked"
-    :aria-label="ariaLabel"
-  >
+  <div class="level-card" :class="{
+    'level-card--selected': isSelected,
+    'level-card--locked': isLocked,
+    'level-card--hovering': isHovering,
+    'level-card--junior': difficulty === 'junior',
+    'level-card--intermediate': difficulty === 'intermediate',
+    'level-card--senior': difficulty === 'senior',
+    'level-card--custom': difficulty === 'custom'
+  }" @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave" @click="handleClick" @keydown.enter="handleClick"
+    @keydown.space.prevent="handleClick" :tabindex="isLocked ? -1 : 0" role="button" :aria-pressed="isSelected"
+    :aria-disabled="isLocked" :aria-label="ariaLabel">
     <!-- Animated background gradient -->
     <div class="level-card__gradient" :style="{ '--gradient-angle': gradientAngle + 'deg' }"></div>
 
@@ -38,6 +27,9 @@
     <!-- Badge -->
     <div v-if="badge" class="level-card__badge" :class="`level-card__badge--${badge.variant}`">
       {{ badge.text }}
+      <div class="level-card__badge-text">{{ getBadgeExplanation(badge.text) }}
+
+</div>
     </div>
 
     <!-- Content -->
@@ -50,9 +42,15 @@
 
       <!-- Text content -->
       <div class="level-card__text">
-        <h3 class="level-card__title">{{ title }}</h3>
-        <p class="level-card__subtitle">{{ subtitle }}</p>
-        <p class="level-card__description">{{ description }}</p>
+        <h3 class="level-card__title">{{ title }}
+
+</h3>
+        <p class="level-card__subtitle">{{ subtitle }}
+
+</p>
+        <p class="level-card__description">{{ description }}
+
+</p>
       </div>
 
       <!-- Footer -->
@@ -97,7 +95,7 @@ import { ref, computed, h, onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import type { ILevelCard } from '@/types/design-system';
 
-interface Props extends Partial<ILevelCard> {
+interface props extends partial<ilevelcard> {
   modelValue?: boolean; // For v-model support
 }
 
@@ -108,7 +106,7 @@ const props = withDefaults(defineProps<Props>(), {
   progress: undefined
 });
 
-const emit = defineEmits<{
+const emit = defineemits<{
   'update:modelValue': [value: boolean];
   'click': [event: MouseEvent];
   'select': [difficulty: string];
@@ -119,7 +117,7 @@ const { t } = useI18n();
 // State
 const isHovering = ref(false);
 const gradientAngle = ref(45);
-let animationFrame: number | null = null;
+let animationFrame: number | null = null;animationFrame
 
 // Computed
 const ariaLabel = computed(() => {
@@ -128,6 +126,15 @@ const ariaLabel = computed(() => {
   }
   return t('levels.selectCard', { title: props.title });
 });
+
+const getBadgeExplanation = (badgeText: string): string => {
+  const explanations: Record<string, string> = {
+    'PRO': t('levels.badgePro'),
+    'NEW': t('levels.badgeNew');,
+    'RECOMMENDED': t('levels.badgeRecommended')
+  };
+  return explanations[badgeText] || '';
+};
 
 const iconComponent = computed(() => {
   const icons = {
@@ -156,7 +163,7 @@ const handleMouseEnter = () => {
   animateGradient();
 };
 
-const handleMouseLeave = () => {
+const handlemouseleave = () => {
   isHovering.value = false;
   if (animationFrame) {
     cancelAnimationFrame(animationFrame);
@@ -165,14 +172,14 @@ const handleMouseLeave = () => {
   gradientAngle.value = 45;
 };
 
-const animateGradient = () => {
+const animategradient = () => {
   if (!isHovering.value) return;
 
   gradientAngle.value = (gradientAngle.value + 2) % 360;
   animationFrame = requestAnimationFrame(animateGradient);
 };
 
-const handleClick = (event: MouseEvent | KeyboardEvent) => {
+const handleclick = (event: MouseEvent | KeyboardEvent) => {
   if (props.isLocked) {
     // Trigger shake animation
     const target = event.currentTarget as HTMLElement;
@@ -207,53 +214,138 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-/* Base card */
+/* Base card with enhanced glassmorphism */
 .level-card {
   @apply relative overflow-hidden;
-  @apply w-full rounded-2xl;
-  @apply bg-white dark:bg-gray-800;
-  @apply border-2 border-gray-200 dark:border-gray-700;
-  @apply transition-all duration-fast ease-out;
+  @apply w-full rounded-3xl;
   @apply cursor-pointer select-none;
-  @apply focus:outline-none focus:ring-4 focus:ring-primary/20;
-  min-height: 320px;
+  @apply focus:outline-none focus:ring-4 focus:ring-white/30;
+  @apply transition-all duration-300 ease-out;
+
+  /* Enhanced glassmorphism */
+  background: linear-gradient(135deg,
+      rgb(255, 255, 255, 0.95) 0%,
+      rgb(255, 255, 255, 0.85) 100%);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+
+  /* Sophisticated border with gradient */
+  border: 2px solid;
+  border-image: linear-gradient(135deg,
+      rgb(255, 255, 255, 0.6) 0%,
+      rgb(255, 255, 255, 0.2) 50%,
+      rgb(255, 255, 255, 0.6) 100%) 1;
+  min-height: 380px;
   transform-style: preserve-3d;
   transform: translateZ(0);
+
+  /* Professional multi-layer shadows */
+  box-shadow:
+    /* Primary shadow */
+    0 20px 60px -15px rgb(0, 0, 0, 0.25),
+    /* Rim light effect */
+    0 0 0 1px rgb(255, 255, 255, 0.15),
+    /* Inner glow for depth */
+    inset 0 1px 0 0 rgb(255, 255, 255, 0.5),
+    inset 0 -1px 0 0 rgb(0, 0, 0, 0.05);
 }
 
-/* Hover state */
+/* Hover state with enhanced effects */
 .level-card:hover:not(.level-card--locked) {
-  @apply border-primary/30 shadow-lg;
-  transform: translateY(-4px) scale(1.02);
+  transform: translateY(-12px) scale(1.04);
+
+  /* Enhanced glassmorphism on hover */
+  background: linear-gradient(135deg,
+      rgb(255, 255, 255, 0.98) 0%,
+      rgb(255, 255, 255, 0.92) 100%);
+  backdrop-filter: blur(32px) saturate(200%);
+  -webkit-backdrop-filter: blur(32px) saturate(200%);
+
+  /* Dramatic hover shadows */
+  box-shadow:
+    0 40px 100px -20px rgb(0, 0, 0, 0.35),
+    0 0 0 2px rgb(255, 255, 255, 0.25),
+    inset 0 2px 0 0 rgb(255, 255, 255, 0.7),
+    inset 0 -2px 0 0 rgb(0, 0, 0, 0.08),
+    /* Colored glow based on difficulty */
+    0 0 60px -15px rgb(var(--card-color-rgb), 0.4);
 }
 
 .level-card:active:not(.level-card--locked) {
-  transform: translateY(-2px) scale(1.01);
+  transform: translateY(-6px) scale(1.02);
 }
 
-/* Selected state */
+/* Selected state with premium feel */
 .level-card--selected {
-  @apply border-primary shadow-xl;
-  @apply bg-gradient-to-br from-primary-50 to-secondary-50;
-  @apply dark:from-primary-900/20 dark:to-secondary-900/20;
-  transform: scale(1.02);
+  background: linear-gradient(135deg,
+      rgb(255, 255, 255, 1) 0%,
+      rgb(255, 255, 255, 0.95) 100%);
+  backdrop-filter: blur(40px) saturate(200%);
+  -webkit-backdrop-filter: blur(40px) saturate(200%);
+  transform: scale(1.08);
+
+  /* Premium selected shadow with color accent */
+  box-shadow:
+    0 40px 120px -15px rgb(0, 0, 0, 0.4),
+    0 0 0 3px rgb(var(--card-color-rgb), 0.3),
+    0 0 0 5px rgb(255, 255, 255, 0.4),
+    inset 0 2px 0 0 rgb(255, 255, 255, 0.8),
+    inset 0 0 40px 0 rgb(var(--card-color-rgb), 0.05),
+    /* Prominent glow */
+    0 0 80px -10px rgb(var(--card-color-rgb), 0.6);
+
+  /* Animated border gradient */
+  border-image: linear-gradient(135deg,
+      rgb(var(--card-color-rgb), 0.8) 0%,
+      rgb(255, 255, 255, 0.4) 50%,
+      rgb(var(--card-color-rgb), 0.8) 100%) 1;
 }
 
-/* Locked state */
+/* Locked state with frosted glass effect */
 .level-card--locked {
-  @apply opacity-75 cursor-not-allowed;
-  @apply bg-gray-50 dark:bg-gray-900;
+  @apply opacity-65 cursor-not-allowed;
+
+  background: linear-gradient(135deg,
+      rgb(255, 255, 255, 0.7) 0%,
+      rgb(255, 255, 255, 0.6) 100%);
+  backdrop-filter: blur(20px) saturate(120%);
+  -webkit-backdrop-filter: blur(20px) saturate(120%);
+  filter: grayscale(0.3);
+}
+
+/* Difficulty-specific color variables */
+.level-card--junior {
+  --card-color-rgb: 34, 197, 94;
+
+  /* green-600 */
+}
+
+.level-card--intermediate {
+  --card-color-rgb: 59, 130, 246;
+
+  /* blue-600 */
+}
+
+.level-card--senior {
+  --card-color-rgb: 168, 85, 247;
+
+  /* purple-600 */
+}
+
+.level-card--custom {
+  --card-color-rgb: 251, 146, 60;
+
+  /* orange-600 */
 }
 
 /* Animated gradient background */
 .level-card__gradient {
   @apply absolute inset-0 opacity-0 transition-opacity duration-moderate;
-  background: linear-gradient(
-    var(--gradient-angle),
-    transparent 0%,
-    rgba(var(--color-primary-rgb), 0.05) 50%,
-    transparent 100%
-  );
+
+  background: linear-gradient(var(--gradient-angle),
+      transparent 0%,
+      rgb(var(--color-primary-rgb), 0.05) 50%,
+      transparent 100%);
   pointer-events: none;
 }
 
@@ -261,39 +353,127 @@ onUnmounted(() => {
   @apply opacity-100;
 }
 
-/* Lock overlay */
+/* Lock overlay with professional frosted glass */
 .level-card__lock-overlay {
   @apply absolute inset-0 z-10;
   @apply flex flex-col items-center justify-center;
-  @apply bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm;
+  @apply rounded-3xl;
+
+  /* Enhanced frosted glass effect */
+  background: linear-gradient(135deg,
+      rgb(255, 255, 255, 0.95) 0%,
+      rgb(255, 255, 255, 0.9) 100%);
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+
+  /* Subtle border */
+  box-shadow: inset 0 0 0 1px rgb(0, 0, 0, 0.05);
 }
 
 .level-card__lock-icon {
-  @apply w-12 h-12 text-gray-400 dark:text-gray-600 mb-2;
+  @apply w-16 h-16 text-gray-500 mb-4;
+  @apply transition-transform duration-300;
+
+  filter: drop-shadow(0 4px 12px rgb(0, 0, 0, 0.1));
+}
+
+.level-card--shake .level-card__lock-icon {
+  animation: lock-shake 0.5s ease-in-out;
+}
+
+@keyframes lock-shake {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(-10deg);
+  }
+
+  75% {
+    transform: rotate(10deg);
+  }
 }
 
 .level-card__lock-text {
-  @apply text-sm font-medium text-gray-600 dark:text-gray-400;
+  @apply text-sm font-bold text-gray-700;
+  @apply px-6 py-2 rounded-full;
+  @apply bg-gray-100/80;
+
+  text-shadow: 0 1px 2px rgb(255, 255, 255, 0.8);
 }
 
-/* Badge */
+/* Badge with premium glassmorphic design */
 .level-card__badge {
-  @apply absolute top-4 right-4 z-20;
-  @apply px-3 py-1 rounded-full;
-  @apply text-xs font-bold uppercase tracking-wider;
-  @apply shadow-sm;
+  @apply absolute top-6 right-6 z-20;
+  @apply px-5 py-2 rounded-full;
+  @apply text-xs font-extrabold uppercase tracking-[0.15em];
+  @apply transition-all duration-300;
+
+  /* Glassmorphic badge */
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+
+  /* Sophisticated shadow */
+  box-shadow:
+    0 6px 16px rgb(0, 0, 0, 0.2),
+    inset 0 1px 0 0 rgb(255, 255, 255, 0.3);
 }
 
 .level-card__badge--primary {
-  @apply bg-primary text-white;
+  background: linear-gradient(135deg,
+      rgb(59, 130, 246, 0.95) 0%,
+      rgb(37, 99, 235, 0.95) 100%);
+
+  @apply text-white;
+
+  box-shadow:
+    0 6px 16px rgb(59, 130, 246, 0.4),
+    inset 0 1px 0 0 rgb(255, 255, 255, 0.3),
+    0 0 20px rgb(59, 130, 246, 0.3);
 }
 
 .level-card__badge--success {
-  @apply bg-success text-white;
+  background: linear-gradient(135deg,
+      rgb(34, 197, 94, 0.95) 0%,
+      rgb(22, 163, 74, 0.95) 100%);
+
+  @apply text-white;
+
+  box-shadow:
+    0 6px 16px rgb(34, 197, 94, 0.4),
+    inset 0 1px 0 0 rgb(255, 255, 255, 0.3),
+    0 0 20px rgb(34, 197, 94, 0.3);
 }
 
 .level-card__badge--warning {
-  @apply bg-warning text-white;
+  background: linear-gradient(135deg,
+      rgb(251, 146, 60, 0.95) 0%,
+      rgb(249, 115, 22, 0.95) 100%);
+
+  @apply text-white;
+
+  box-shadow:
+    0 6px 16px rgb(251, 146, 60, 0.4),
+    inset 0 1px 0 0 rgb(255, 255, 255, 0.3),
+    0 0 20px rgb(251, 146, 60, 0.3);
+}
+
+.level-card--hovering .level-card__badge {
+  transform: scale(1.05);
+}
+
+.level-card--selected .level-card__badge {
+  transform: scale(1.08);
+}
+
+.level-card__badge-text {
+  @apply block mt-1;
+  @apply text-[10px] font-normal lowercase;
+  @apply opacity-80;
+  @apply leading-tight;
+  @apply tracking-normal;
 }
 
 /* Content */
@@ -302,90 +482,135 @@ onUnmounted(() => {
   @apply flex flex-col items-center text-center;
 }
 
-/* Icon */
+/* Icon with enhanced effects */
 .level-card__icon-wrapper {
-  @apply relative mb-4;
+  @apply relative mb-8;
+
+  perspective: 1000px;
 }
 
 .level-card__icon-bg {
   @apply absolute inset-0;
-  @apply w-20 h-20 rounded-2xl;
-  @apply bg-gradient-to-br opacity-10;
+  @apply w-28 h-28 rounded-3xl;
+  @apply transition-all duration-500 ease-out;
+
   transform: rotate(45deg);
+
+  /* Sophisticated gradient background */
+  background: linear-gradient(135deg,
+      rgb(var(--card-color-rgb), 0.15) 0%,
+      rgb(var(--card-color-rgb), 0.05) 100%);
+
+  /* Multi-layer shadow for depth */
+  box-shadow:
+    0 12px 35px -10px rgb(var(--card-color-rgb), 0.25),
+    inset 0 1px 0 0 rgb(255, 255, 255, 0.2),
+    inset 0 -1px 0 0 rgb(0, 0, 0, 0.05);
 }
 
-.level-card--junior .level-card__icon-bg {
-  @apply from-green-400 to-emerald-600;
+.level-card--hovering .level-card__icon-bg {
+  transform: rotate(50deg) scale(1.05);
+  box-shadow:
+    0 16px 45px -10px rgb(var(--card-color-rgb), 0.35),
+    inset 0 2px 0 0 rgb(255, 255, 255, 0.3),
+    inset 0 -2px 0 0 rgb(0, 0, 0, 0.08);
 }
 
-.level-card--intermediate .level-card__icon-bg {
-  @apply from-blue-400 to-indigo-600;
-}
-
-.level-card--senior .level-card__icon-bg {
-  @apply from-purple-400 to-pink-600;
-}
-
-.level-card--custom .level-card__icon-bg {
-  @apply from-amber-400 to-orange-600;
+.level-card--selected .level-card__icon-bg {
+  transform: rotate(45deg) scale(1.1);
+  background: linear-gradient(135deg,
+      rgb(var(--card-color-rgb), 0.25) 0%,
+      rgb(var(--card-color-rgb), 0.1) 100%);
 }
 
 .level-card__icon {
-  @apply relative w-16 h-16;
-  @apply transition-transform duration-fast;
+  @apply relative w-24 h-24;
+  @apply transition-all duration-500 ease-out;
+
+  stroke-width: 1.5;
+
+  /* Premium icon shadow */
+  filter: drop-shadow(0 4px 16px rgb(var(--card-color-rgb), 0.25));
 }
 
 .level-card--junior .level-card__icon {
-  @apply text-green-600 dark:text-green-400;
+  @apply text-green-600;
 }
 
 .level-card--intermediate .level-card__icon {
-  @apply text-blue-600 dark:text-blue-400;
+  @apply text-blue-600;
 }
 
 .level-card--senior .level-card__icon {
-  @apply text-purple-600 dark:text-purple-400;
+  @apply text-purple-600;
 }
 
 .level-card--custom .level-card__icon {
-  @apply text-amber-600 dark:text-amber-400;
+  @apply text-orange-600;
 }
 
 .level-card--hovering .level-card__icon {
-  transform: rotate(10deg) scale(1.1);
+  transform: rotate(12deg) scale(1.2);
+  filter: drop-shadow(0 8px 20px rgb(var(--card-color-rgb), 0.4));
 }
 
-/* Text content */
+.level-card--selected .level-card__icon {
+  transform: scale(1.15);
+  filter: drop-shadow(0 6px 18px rgb(var(--card-color-rgb), 0.5));
+}
+
+/* Text content with enhanced typography */
 .level-card__text {
-  @apply mb-6;
+  @apply mb-8;
 }
 
 .level-card__title {
-  @apply text-2xl font-bold text-gray-900 dark:text-white mb-2;
-  @apply transition-colors duration-fast;
+  @apply text-3xl font-extrabold text-gray-900 mb-3;
+  @apply transition-all duration-300;
+
+  letter-spacing: -0.02em;
+
+  /* Premium text shadow */
+  text-shadow: 0 2px 8px rgb(0, 0, 0, 0.08);
+}
+
+.level-card--selected .level-card__title {
+  color: rgb(var(--card-color-rgb));
+  text-shadow: 0 2px 12px rgb(var(--card-color-rgb), 0.2);
 }
 
 .level-card__subtitle {
-  @apply text-sm font-medium text-gray-600 dark:text-gray-400 mb-2;
-  @apply uppercase tracking-wider;
+  @apply text-xs font-extrabold text-gray-500 mb-4;
+  @apply uppercase tracking-[0.15em];
+  @apply transition-colors duration-300;
+}
+
+.level-card--selected .level-card__subtitle {
+  color: rgb(var(--card-color-rgb), 0.8);
 }
 
 .level-card__description {
-  @apply text-base text-gray-700 dark:text-gray-300;
+  @apply text-base text-gray-700 leading-relaxed;
+  @apply font-medium;
+  @apply transition-colors duration-300;
+}
+
+.level-card--selected .level-card__description {
+  @apply text-gray-800;
 }
 
 /* Footer */
 .level-card__footer {
-  @apply mt-auto pt-4 border-t border-gray-200 dark:border-gray-700;
+  @apply mt-auto pt-6 border-t-2 border-gray-100;
   @apply flex items-center justify-between w-full;
 }
 
 .level-card__duration {
-  @apply flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-400;
+  @apply flex items-center gap-2 text-sm text-gray-600 font-semibold;
 }
 
 .level-card__duration-icon {
-  @apply w-4 h-4;
+  @apply w-5 h-5;
 }
 
 /* Progress bar */
@@ -406,39 +631,74 @@ onUnmounted(() => {
   @apply text-xs font-medium text-gray-600 dark:text-gray-400;
 }
 
-/* Selected indicator */
+/* Selected indicator with premium design */
 .level-card__selected-indicator {
-  @apply absolute top-4 left-4 z-20;
-  @apply w-8 h-8 rounded-full;
-  @apply bg-primary text-white;
+  @apply absolute top-5 left-5 z-20;
+  @apply w-12 h-12 rounded-full;
+  @apply text-white;
   @apply flex items-center justify-center;
-  @apply shadow-lg;
+  @apply transition-all duration-300;
+
+  /* Dynamic background based on card color */
+  background: linear-gradient(135deg,
+      rgb(var(--card-color-rgb), 1) 0%,
+      rgb(var(--card-color-rgb), 0.85) 100%);
+
+  /* Premium shadow with colored glow */
+  box-shadow:
+    0 8px 20px rgb(var(--card-color-rgb), 0.5),
+    inset 0 1px 0 0 rgb(255, 255, 255, 0.3),
+    0 0 30px rgb(var(--card-color-rgb), 0.4);
 }
 
 .level-card__selected-indicator svg {
-  @apply w-5 h-5;
+  @apply w-6 h-6;
+
   stroke-width: 3;
+  filter: drop-shadow(0 2px 4px rgb(0, 0, 0, 0.2));
 }
 
-/* Hover effects */
+/* Hover effects with enhanced glow */
 .level-card__hover-effects {
-  @apply absolute inset-0 pointer-events-none;
+  @apply absolute inset-0 pointer-events-none overflow-hidden rounded-3xl;
 }
 
 .level-card__hover-glow {
-  @apply absolute -inset-4 opacity-0;
-  @apply transition-opacity duration-moderate;
-  background: radial-gradient(circle at center, rgba(var(--color-primary-rgb), 0.1) 0%, transparent 70%);
+  @apply absolute -inset-6 opacity-0;
+  @apply transition-all duration-500 ease-out;
+
+  /* Radial glow that matches card color */
+  background: radial-gradient(circle at center,
+      rgb(var(--card-color-rgb), 0.15) 0%,
+      rgb(var(--card-color-rgb), 0.08) 40%,
+      transparent 70%);
+
+  /* Animated pulse */
+  animation: glow-pulse 3s ease-in-out infinite;
 }
 
 .level-card--hovering .level-card__hover-glow {
-  @apply opacity-100;
+  opacity: 1;
+}
+
+@keyframes glow-pulse {
+  0%,
+  100% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
 }
 
 /* Particles animation */
 .level-card__particle {
   @apply absolute w-1 h-1 bg-primary rounded-full;
   @apply opacity-0;
+
   animation: particle-float 2s ease-out infinite;
   animation-delay: calc(var(--particle-index) * 0.2s);
 }
@@ -452,10 +712,12 @@ onUnmounted(() => {
     transform: translate(0, 0) scale(0);
     opacity: 0;
   }
+
   10% {
     opacity: 1;
     transform: scale(1);
   }
+
   100% {
     transform: translate(calc(var(--particle-index) * 10px - 30px), -60px) scale(0.5);
     opacity: 0;
@@ -464,9 +726,25 @@ onUnmounted(() => {
 
 /* Shake animation for locked cards */
 @keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
-  20%, 40%, 60%, 80% { transform: translateX(4px); }
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: translateX(-4px);
+  }
+
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: translateX(4px);
+  }
 }
 
 .level-card--shake {
@@ -509,12 +787,78 @@ onUnmounted(() => {
   }
 }
 
-/* Dark mode adjustments */
+/* Dark mode with enhanced glassmorphism */
+.dark .level-card {
+  background: linear-gradient(135deg,
+      rgb(24, 24, 27, 0.95) 0%,
+      rgb(24, 24, 27, 0.85) 100%);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-image: linear-gradient(135deg,
+      rgb(255, 255, 255, 0.2) 0%,
+      rgb(255, 255, 255, 0.05) 50%,
+      rgb(255, 255, 255, 0.2) 100%) 1;
+  box-shadow:
+    0 20px 60px -15px rgb(0, 0, 0, 0.6),
+    0 0 0 1px rgb(255, 255, 255, 0.08),
+    inset 0 1px 0 0 rgb(255, 255, 255, 0.1);
+}
+
 .dark .level-card--selected {
-  @apply bg-gray-800;
+  background: linear-gradient(135deg,
+      rgb(39, 39, 42, 1) 0%,
+      rgb(39, 39, 42, 0.95) 100%);
+  box-shadow:
+    0 40px 120px -15px rgb(0, 0, 0, 0.8),
+    0 0 0 3px rgb(var(--card-color-rgb), 0.4),
+    0 0 0 5px rgb(255, 255, 255, 0.1),
+    inset 0 2px 0 0 rgb(255, 255, 255, 0.15),
+    inset 0 0 40px 0 rgb(var(--card-color-rgb), 0.1),
+    0 0 80px -10px rgb(var(--card-color-rgb), 0.7);
+}
+
+.dark .level-card:hover:not(.level-card--locked) {
+  background: linear-gradient(135deg,
+      rgb(39, 39, 42, 0.98) 0%,
+      rgb(39, 39, 42, 0.92) 100%);
+  box-shadow:
+    0 40px 100px -20px rgb(0, 0, 0, 0.7),
+    0 0 0 2px rgb(255, 255, 255, 0.15),
+    inset 0 2px 0 0 rgb(255, 255, 255, 0.15),
+    0 0 60px -15px rgb(var(--card-color-rgb), 0.5);
 }
 
 .dark .level-card__hover-glow {
-  background: radial-gradient(circle at center, rgba(var(--color-primary-rgb), 0.05) 0%, transparent 70%);
+  background: radial-gradient(circle at center,
+      rgb(var(--card-color-rgb), 0.12) 0%,
+      rgb(var(--card-color-rgb), 0.06) 40%,
+      transparent 70%);
+}
+
+.dark .level-card__title {
+  @apply text-gray-100;
+}
+
+.dark .level-card--selected .level-card__title {
+  color: rgb(var(--card-color-rgb));
+}
+
+.dark .level-card__subtitle,
+.dark .level-card__description {
+  @apply text-gray-300;
+}
+
+.dark .level-card--selected .level-card__description {
+  @apply text-gray-200;
+}
+
+.dark .level-card__lock-overlay {
+  background: linear-gradient(135deg,
+      rgb(24, 24, 27, 0.95) 0%,
+      rgb(24, 24, 27, 0.9) 100%);
+}
+
+.dark .level-card__lock-text {
+  @apply bg-gray-800/80 text-gray-300;
 }
 </style>

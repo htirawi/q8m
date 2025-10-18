@@ -3,9 +3,10 @@ import { useRouter } from "vue-router";
 
 const router = useRouter();
 
-function navigateTo(path: string) {
+function navigateto(path: string) {
   router.push(path);
 }
+
 </script>
 
 <template>
@@ -172,7 +173,7 @@ function navigateTo(path: string) {
 
 .test-card:hover {
   border-color: #3b82f6;
-  box-shadow: 0 10px 30px rgba(59, 130, 246, 0.1);
+  box-shadow: 0 10px 30px rgb(59, 130, 246, 0.1);
   transform: translateY(-4px);
 }
 
@@ -206,7 +207,7 @@ function navigateTo(path: string) {
   font-size: 0.875rem;
 }
 
-.feature-list li:before {
+.feature-list li::before {
   content: "✓ ";
   color: #10b981;
   font-weight: 700;
@@ -324,7 +325,7 @@ function navigateTo(path: string) {
 }
 
 .tech-tag {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgb(255, 255, 255, 0.2);
   backdrop-filter: blur(10px);
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;

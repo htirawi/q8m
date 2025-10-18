@@ -133,7 +133,9 @@
                 Weekly Limit Reached
               </div>
               <div class="text-sm text-red-700 dark:text-red-300">
-                You've used all {{ maxFreezesPerWeek }} freezes this week
+                You've used all {{ maxFreezesPerWeek }}
+
+ freezes this week
               </div>
             </div>
           </div>
@@ -143,8 +145,12 @@
             <div class="font-semibold mb-2">How Streak Saver Works:</div>
             <ul class="space-y-1 text-xs">
               <li>• You get 2 free freezes per week</li>
-              <li>• Additional freezes cost {{ freezeCostInCoins }} coins or {{ freezeCostInXP }} XP</li>
-              <li>• Maximum {{ maxFreezesPerWeek }} freezes per week</li>
+              <li>• Additional freezes cost {{ freezeCostInCoins }} coins or {{ freezeCostInXP }}
+
+ XP</li>
+              <li>• Maximum {{ maxFreezesPerWeek }}
+
+ freezes per week</li>
               <li>• Must be used within 24 hours of missing activity</li>
             </ul>
           </div>
@@ -152,11 +158,13 @@
           <!-- Error Message -->
           <div v-if="errorMessage" class="mt-4 p-3 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800 text-sm text-red-800 dark:text-red-200">
             {{ errorMessage }}
+
           </div>
 
           <!-- Success Message -->
           <div v-if="successMessage" class="mt-4 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800 text-sm text-green-800 dark:text-green-200">
             {{ successMessage }}
+
           </div>
         </div>
       </div>
@@ -192,7 +200,6 @@ async function useFreeFreeze() {
   isProcessing.value = true;
   errorMessage.value = null;
   successMessage.value = null;
-
   try {
     const result = await useStreakFreeze(false, false);
 
@@ -204,12 +211,16 @@ async function useFreeFreeze() {
         showModal.value = false;
         successMessage.value = null;
       }, 2000);
-    } else {
+    }
+
+ else {
       errorMessage.value = result.message || 'Failed to save streak';
     }
   } catch (error) {
     errorMessage.value = (error as Error).message || 'Something went wrong';
-  } finally {
+  }
+
+ finally {
     isProcessing.value = false;
   }
 }
@@ -218,24 +229,27 @@ async function buyFreezeWithCoins() {
   isProcessing.value = true;
   errorMessage.value = null;
   successMessage.value = null;
-
   try {
     const result = await useStreakFreeze(true, false);
 
     if (result.success) {
-      successMessage.value = `Streak saved for ${result.cost} coins! 🎉`;
+      successmessage.value = `streak saved for ${result.cost} coins! 🎉`;
       burst();
 
       setTimeout(() => {
         showModal.value = false;
         successMessage.value = null;
       }, 2000);
-    } else {
+    }
+
+ else {
       errorMessage.value = result.message || 'Failed to save streak';
     }
   } catch (error) {
     errorMessage.value = (error as Error).message || 'Something went wrong';
-  } finally {
+  }
+
+ finally {
     isProcessing.value = false;
   }
 }
@@ -244,27 +258,31 @@ async function buyFreezeWithXP() {
   isProcessing.value = true;
   errorMessage.value = null;
   successMessage.value = null;
-
   try {
     const result = await useStreakFreeze(false, true);
 
     if (result.success) {
-      successMessage.value = `Streak saved for ${result.cost} XP! 🎉`;
+      successmessage.value = `streak saved for ${result.cost} XP! 🎉`;
       burst();
 
       setTimeout(() => {
         showModal.value = false;
         successMessage.value = null;
       }, 2000);
-    } else {
+    }
+
+ else {
       errorMessage.value = result.message || 'Failed to save streak';
     }
   } catch (error) {
     errorMessage.value = (error as Error).message || 'Something went wrong';
-  } finally {
+  }
+
+ finally {
     isProcessing.value = false;
   }
 }
+
 </script>
 
 <style scoped>
@@ -273,6 +291,7 @@ async function buyFreezeWithXP() {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }

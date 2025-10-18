@@ -931,7 +931,8 @@ router.beforeEach(async (to, _from, next) => {
     // Validate mode-chooser difficulty parameter
     if (to.name === "mode-chooser" && to.params.difficulty) {
       const difficulty = to.params.difficulty as string;
-      const validDifficulties = ["easy", "medium", "hard"];
+      // Accept both old (easy/medium/hard) and new (junior/intermediate/senior/custom) difficulty values
+      const validDifficulties = ["easy", "medium", "hard", "junior", "intermediate", "senior", "custom"];
       if (!validDifficulties.includes(difficulty)) {
         // Invalid difficulty - redirect to level selection
         next({

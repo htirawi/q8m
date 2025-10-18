@@ -70,6 +70,7 @@ function handleResendVerification() {
     query: { resend: "true" },
   });
 }
+
 </script>
 
 <template>
@@ -102,9 +103,12 @@ function handleResendVerification() {
           <div class="spinner-container">
             <div class="spinner"></div>
           </div>
-          <h2 class="state-title">{{ $t("auth.verify.verifying") }}</h2>
+          <h2 class="state-title">{{ $t("auth.verify.verifying") }}
+
+</h2>
           <p class="state-description">
             {{ $t("auth.verify.pleaseWait") }}
+
           </p>
         </div>
 
@@ -121,12 +125,16 @@ function handleResendVerification() {
               <path d="M20 6L9 17l-5-5" />
             </svg>
           </div>
-          <h2 class="state-title success">{{ $t("auth.verify.success") }}</h2>
+          <h2 class="state-title success">{{ $t("auth.verify.success") }}
+
+</h2>
           <p class="state-description">
             {{ $t("auth.verify.successMessage") }}
+
           </p>
           <p class="redirect-message">
             {{ $t("auth.verify.redirecting") }}
+
           </p>
         </div>
 
@@ -145,17 +153,22 @@ function handleResendVerification() {
               <line x1="9" y1="9" x2="15" y2="15" />
             </svg>
           </div>
-          <h2 class="state-title error">{{ $t("auth.verify.error") }}</h2>
+          <h2 class="state-title error">{{ $t("auth.verify.error") }}
+
+</h2>
           <p class="state-description error-text">
             {{ errorMessage }}
+
           </p>
 
           <div class="action-buttons">
             <button class="btn btn-primary" @click="handleGoToLogin">
               {{ $t("auth.verify.goToLogin") }}
+
             </button>
             <button class="btn btn-secondary" @click="handleResendVerification">
               {{ $t("auth.verify.resendEmail") }}
+
             </button>
           </div>
         </div>
@@ -168,6 +181,7 @@ function handleResendVerification() {
 /* Main Layout */
 .verify-email-page {
   @apply relative min-h-screen overflow-hidden;
+
   background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
 }
 
@@ -178,17 +192,19 @@ function handleResendVerification() {
 
 .background-pattern {
   @apply absolute inset-0 opacity-30;
+
   background-image:
-    radial-gradient(circle at 20% 20%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.06) 0%, transparent 50%);
+    radial-gradient(circle at 20% 20%, rgb(99, 102, 241, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgb(139, 92, 246, 0.06) 0%, transparent 50%);
 }
 
 .background-gradient {
   @apply absolute inset-0;
+
   background: linear-gradient(
     135deg,
-    rgba(248, 249, 255, 0.95) 0%,
-    rgba(240, 244, 255, 0.95) 100%
+    rgb(248, 249, 255, 0.95) 0%,
+    rgb(240, 244, 255, 0.95) 100%
   );
 }
 
@@ -207,6 +223,7 @@ function handleResendVerification() {
   @apply h-11 w-11 rounded-xl;
   @apply flex items-center justify-center;
   @apply shadow-sm;
+
   background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
   color: white;
 }
@@ -217,6 +234,7 @@ function handleResendVerification() {
 
 .logo-text {
   @apply text-3xl font-bold;
+
   background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -228,6 +246,7 @@ function handleResendVerification() {
   @apply relative z-10 flex flex-col items-center justify-center;
   @apply px-4 pb-12 sm:px-6 lg:px-8;
   @apply max-w-7xl mx-auto;
+
   min-height: calc(100vh - 140px);
 }
 
@@ -235,11 +254,12 @@ function handleResendVerification() {
   @apply w-full max-w-md rounded-2xl bg-white;
   @apply border border-gray-100;
   @apply p-10;
+
   box-shadow:
-    0 0 0 1px rgba(0, 0, 0, 0.02),
-    0 4px 6px -1px rgba(0, 0, 0, 0.04),
-    0 10px 15px -3px rgba(0, 0, 0, 0.06),
-    0 20px 25px -5px rgba(0, 0, 0, 0.04);
+    0 0 0 1px rgb(0, 0, 0, 0.02),
+    0 4px 6px -1px rgb(0, 0, 0, 0.04),
+    0 10px 15px -3px rgb(0, 0, 0, 0.06),
+    0 20px 25px -5px rgb(0, 0, 0, 0.04);
 }
 
 /* State Content */
@@ -253,6 +273,7 @@ function handleResendVerification() {
 
 .spinner {
   @apply h-16 w-16 rounded-full;
+
   border: 4px solid #e5e7eb;
   border-top-color: #6366f1;
   animation: spin 1s linear infinite;
@@ -271,23 +292,25 @@ function handleResendVerification() {
 
 .icon-container.success {
   background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+  box-shadow: 0 4px 14px rgb(16, 185, 129, 0.3);
 }
 
 .icon-container.error {
   background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.3);
+  box-shadow: 0 4px 14px rgb(239, 68, 68, 0.3);
 }
 
 .icon-check,
 .icon-error {
   @apply h-10 w-10;
+
   color: white;
   stroke-width: 3;
 }
 
 .state-title {
   @apply mb-3 text-3xl font-bold;
+
   color: #1e293b;
 }
 
@@ -328,12 +351,12 @@ function handleResendVerification() {
 .btn-primary {
   background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
   color: white;
-  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+  box-shadow: 0 2px 8px rgb(99, 102, 241, 0.3);
 }
 
 .btn-primary:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+  box-shadow: 0 4px 12px rgb(99, 102, 241, 0.4);
 }
 
 .btn-primary:focus {
@@ -342,6 +365,7 @@ function handleResendVerification() {
 
 .btn-secondary {
   @apply bg-white border-2 border-gray-200;
+
   color: #475569;
 }
 
@@ -354,7 +378,7 @@ function handleResendVerification() {
 }
 
 /* Responsive Design */
-@media (max-width: 640px) {
+@media (width <= 640px) {
   .verify-card {
     @apply p-6;
   }
@@ -386,18 +410,19 @@ function handleResendVerification() {
   .background-gradient {
     background: linear-gradient(
       135deg,
-      rgba(30, 41, 59, 0.95) 0%,
-      rgba(51, 65, 85, 0.95) 100%
+      rgb(30, 41, 59, 0.95) 0%,
+      rgb(51, 65, 85, 0.95) 100%
     );
   }
 
   .verify-card {
     @apply bg-slate-800 border-slate-700;
+
     box-shadow:
-      0 0 0 1px rgba(255, 255, 255, 0.08),
-      0 4px 6px -1px rgba(0, 0, 0, 0.3),
-      0 10px 15px -3px rgba(0, 0, 0, 0.4),
-      0 20px 25px -5px rgba(0, 0, 0, 0.3);
+      0 0 0 1px rgb(255, 255, 255, 0.08),
+      0 4px 6px -1px rgb(0, 0, 0, 0.3),
+      0 10px 15px -3px rgb(0, 0, 0, 0.4),
+      0 20px 25px -5px rgb(0, 0, 0, 0.3);
   }
 
   .state-title {
@@ -410,6 +435,7 @@ function handleResendVerification() {
 
   .btn-secondary {
     @apply bg-slate-700 border-slate-600;
+
     color: #e2e8f0;
   }
 
@@ -429,6 +455,7 @@ function handleResendVerification() {
     opacity: 0;
     transform: translateY(30px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);

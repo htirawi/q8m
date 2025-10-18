@@ -10,6 +10,7 @@ import Button from "@/components/ui/Button.vue";
       <div class="footer-cta-content">
         <h2 id="cta-title" class="footer-cta-title">
           {{ $t("home.cta.title") }}
+
         </h2>
         <p class="footer-cta-description">
           {{ $t("home.cta.description") }}
@@ -20,22 +21,31 @@ import Button from "@/components/ui/Button.vue";
           </Button>
           <Button variant="secondary" size="lg" :to="{ name: 'register' }" class="cta-secondary">
             {{ $t("home.cta.learnMore") }}
+
           </Button>
         </div>
         <div class="footer-cta-trust">
-          <p class="trust-text">{{ $t("home.cta.trust") }}</p>
+          <p class="trust-text">{{ $t("home.cta.trust") }}
+
+</p>
           <div class="trust-badges">
             <div class="trust-badge">
               <ShieldCheckIcon class="trust-icon" aria-hidden="true" />
-              <span>{{ $t("home.cta.secure") }} </span>
+              <span>{{ $t("home.cta.secure") }}
+
+ </span>
             </div>
             <div class="trust-badge">
               <ClockIcon class="trust-icon" aria-hidden="true" />
-              <span>{{ $t("home.cta.instant") }} </span>
+              <span>{{ $t("home.cta.instant") }}
+
+ </span>
             </div>
             <div class="trust-badge">
               <UserGroupIcon class="trust-icon" aria-hidden="true" />
-              <span>{{ $t("home.cta.support") }}</span>
+              <span>{{ $t("home.cta.support") }}
+
+</span>
             </div>
           </div>
         </div>
@@ -47,6 +57,7 @@ import Button from "@/components/ui/Button.vue";
 <style scoped>
 .footer-cta-section {
   @apply bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 py-20 dark:from-primary-700 dark:via-primary-800 dark:to-primary-900 md:py-32;
+
   position: relative;
   overflow: hidden;
 }
@@ -59,13 +70,14 @@ import Button from "@/components/ui/Button.vue";
   right: 0;
   bottom: 0;
   background:
-    radial-gradient(circle at 30% 70%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 70% 30%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+    radial-gradient(circle at 30% 70%, rgb(255, 255, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 70% 30%, rgb(255, 255, 255, 0.05) 0%, transparent 50%);
   pointer-events: none;
 }
 
 .footer-cta-container {
   @apply container mx-auto px-4;
+
   position: relative;
   z-index: 1;
 }
@@ -76,7 +88,8 @@ import Button from "@/components/ui/Button.vue";
 
 .footer-cta-title {
   @apply mb-8 text-4xl font-bold text-white md:text-5xl lg:text-6xl;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  text-shadow: 0 2px 4px rgb(0, 0, 0, 0.1);
 }
 
 .footer-cta-description {
@@ -146,6 +159,7 @@ import Button from "@/components/ui/Button.vue";
     opacity: 0;
     transform: translateY(30px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -159,12 +173,15 @@ import Button from "@/components/ui/Button.vue";
 .footer-cta-content > *:nth-child(1) {
   animation-delay: 0.1s;
 }
+
 .footer-cta-content > *:nth-child(2) {
   animation-delay: 0.2s;
 }
+
 .footer-cta-content > *:nth-child(3) {
   animation-delay: 0.3s;
 }
+
 .footer-cta-content > *:nth-child(4) {
   animation-delay: 0.4s;
 }

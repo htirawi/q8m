@@ -14,9 +14,11 @@
             <div>
               <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
                 {{ currentTitle }}
+
               </h1>
               <p class="mt-2 text-gray-600 dark:text-gray-300">
                 {{ currentDescription }}
+
               </p>
             </div>
             <span
@@ -31,19 +33,27 @@
           <div class="flex flex-wrap gap-4 text-sm text-gray-600 dark:text-gray-400">
             <div class="flex items-center gap-1">
               <span>📚</span>
-              <span>{{ store.currentPath.totalQuestions }} Questions</span>
+              <span>{{ store.currentPath.totalQuestions }}
+
+ Questions</span>
             </div>
             <div class="flex items-center gap-1">
               <span>⏱️</span>
-              <span>{{ store.currentPath.estimatedHours }} Hours</span>
+              <span>{{ store.currentPath.estimatedHours }}
+
+ Hours</span>
             </div>
             <div class="flex items-center gap-1">
               <span>📊</span>
-              <span class="capitalize">{{ store.currentPath.difficulty }}</span>
+              <span class="capitalize">{{ store.currentPath.difficulty }}
+
+</span>
             </div>
             <div class="flex items-center gap-1">
               <span>👥</span>
-              <span>{{ store.currentPath.enrollmentCount }} Enrolled</span>
+              <span>{{ store.currentPath.enrollmentCount }}
+
+ Enrolled</span>
             </div>
           </div>
 
@@ -117,7 +127,7 @@ const currentDescription = computed(() => {
   return store.currentPath?.description[locale === 'ar' ? 'ar' : 'en'] || '';
 });
 
-const enrollInPath = async () => {
+const enrollinpath = async () => {
   if (!authStore.isAuthenticated) {
     const locale = route.params.locale || 'en';
     router.push(`/${locale}/login`);
@@ -133,7 +143,7 @@ const enrollInPath = async () => {
   }
 };
 
-const continueLearning = () => {
+const continuelearning = () => {
   const locale = route.params.locale || 'en';
   router.push(`/${locale}/paths/${route.params.slug}/learn`);
 };

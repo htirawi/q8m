@@ -24,6 +24,7 @@ const helperTextId = computed(() => {
   <div class="form-field" :class="{ 'form-field--error': hasError }">
     <label v-if="label" :for="id" class="form-field-label" :class="{ 'form-field-label--required': required }">
       {{ label }}
+
     </label>
 
     <div class="form-field-input">
@@ -32,6 +33,7 @@ const helperTextId = computed(() => {
 
     <HelperText v-if="error || helperText" :id="helperTextId" :error="error" class="form-field-helper">
       {{ error || helperText }}
+
     </HelperText>
   </div>
 </template>

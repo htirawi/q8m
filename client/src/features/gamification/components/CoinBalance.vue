@@ -7,6 +7,7 @@
         <span class="text-2xl">🪙</span>
         <div class="text-white font-bold">
           {{ formatNumber(coins.total) }}
+
         </div>
       </button>
     </div>
@@ -16,7 +17,9 @@
       <div
         class="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full shadow-md">
         <span class="text-xl">🪙</span>
-        <span class="text-white font-bold">{{ formatNumber(coins.total) }}</span>
+        <span class="text-white font-bold">{{ formatNumber(coins.total) }}
+
+</span>
       </div>
     </div>
 
@@ -36,6 +39,7 @@
         <div class="text-center mb-6">
           <div class="text-5xl font-bold bg-gradient-to-r from-yellow-600 to-orange-600 bg-clip-text text-transparent">
             {{ formatNumber(coins.total) }}
+
           </div>
           <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">
             Total Balance
@@ -47,12 +51,14 @@
           <div class="text-center p-3 bg-white/50 dark:bg-gray-800/50 rounded-lg">
             <div class="text-2xl font-bold text-green-600 dark:text-green-400">
               +{{ formatNumber(coins.earned) }}
+
             </div>
             <div class="text-xs text-gray-600 dark:text-gray-400">Earned</div>
           </div>
           <div class="text-center p-3 bg-white/50 dark:bg-gray-800/50 rounded-lg">
             <div class="text-2xl font-bold text-red-600 dark:text-red-400">
               -{{ formatNumber(coins.spent) }}
+
             </div>
             <div class="text-xs text-gray-600 dark:text-gray-400">Spent</div>
           </div>
@@ -80,7 +86,9 @@
         <div class="text-center">
           <div class="text-6xl mb-4">🪙</div>
           <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-            {{ formatNumber(coins.total) }} Coins
+            {{ formatNumber(coins.total) }}
+
+ Coins
           </h2>
           <p class="text-gray-600 dark:text-gray-400">
             Your virtual currency balance
@@ -93,6 +101,7 @@
             class="text-center p-4 bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-lg border-2 border-yellow-200 dark:border-yellow-800">
             <div class="text-3xl font-bold text-yellow-600 dark:text-yellow-400">
               {{ formatNumber(coins.total) }}
+
             </div>
             <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">Total</div>
           </div>
@@ -100,6 +109,7 @@
             class="text-center p-4 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-lg border-2 border-green-200 dark:border-green-800">
             <div class="text-3xl font-bold text-green-600 dark:text-green-400">
               +{{ formatNumber(coins.earned) }}
+
             </div>
             <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">Earned</div>
           </div>
@@ -107,6 +117,7 @@
             class="text-center p-4 bg-gradient-to-br from-red-50 to-rose-50 dark:from-red-900/20 dark:to-rose-900/20 rounded-lg border-2 border-red-200 dark:border-red-800">
             <div class="text-3xl font-bold text-red-600 dark:text-red-400">
               -{{ formatNumber(coins.spent) }}
+
             </div>
             <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">Spent</div>
           </div>
@@ -218,7 +229,7 @@ const props = withDefaults(defineProps<Props>(), {
   variant: 'card',
 });
 
-defineEmits<{
+defineemits<{
   click: [];
 }>();
 
@@ -233,6 +244,7 @@ function formatNumber(num: number): string {
   }
   return num.toString();
 }
+
 </script>
 
 <style scoped>

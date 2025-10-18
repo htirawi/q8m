@@ -11,22 +11,36 @@
       <!-- Left: Greeting and subtitle -->
       <div class="hero-section__text">
         <h1 class="hero-section__greeting">
-          <span class="hero-section__greeting-text">{{ greeting }}</span>
-          <span class="hero-section__greeting-emoji" v-if="showEmoji">{{ getTimeBasedEmoji() }}</span>
+          <span class="hero-section__greeting-text">{{ greeting }}
+
+</span>
+          <span class="hero-section__greeting-emoji" v-if="showEmoji">{{ getTimeBasedEmoji() }}
+
+</span>
         </h1>
-        <p class="hero-section__subtitle">{{ subtitle }}</p>
+        <p class="hero-section__subtitle">{{ subtitle }}
+
+</p>
 
         <!-- Quick stats (mobile) -->
         <div class="hero-section__quick-stats hero-section__quick-stats--mobile" v-if="showStats && stats">
-          <div class="quick-stat" v-if="stats.streak">
+          <div class="quick-stat">
             <span class="quick-stat__icon">🔥</span>
-            <span class="quick-stat__value">{{ stats.streak }}</span>
-            <span class="quick-stat__label">{{ $t('stats.dayStreak') }}</span>
+            <span class="quick-stat__value">{{ stats.streak }}
+
+</span>
+            <span class="quick-stat__label">{{ $t('stats.dayStreak') }}
+
+</span>
           </div>
-          <div class="quick-stat" v-if="stats.coins">
+          <div class="quick-stat">
             <span class="quick-stat__icon">💰</span>
-            <span class="quick-stat__value">{{ formatNumber(stats.coins) }}</span>
-            <span class="quick-stat__label">{{ $t('stats.coins') }}</span>
+            <span class="quick-stat__value">{{ formatNumber(stats.coins) }}
+
+</span>
+            <span class="quick-stat__label">{{ $t('stats.coins') }}
+
+</span>
           </div>
         </div>
 
@@ -34,6 +48,7 @@
         <Transition name="fade-up" mode="out-in">
           <p class="hero-section__motivation" :key="motivationalMessage">
             {{ motivationalMessage }}
+
           </p>
         </Transition>
       </div>
@@ -41,32 +56,33 @@
       <!-- Right: Stats cards (desktop) -->
       <div class="hero-section__stats" v-if="showStats && stats">
         <!-- Streak card -->
-        <div class="stat-card stat-card--streak" v-if="stats.streak !== undefined">
+        <div class="stat-card stat-card--streak">
           <div class="stat-card__header">
             <div class="stat-card__icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                <path
+                  d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
               </svg>
             </div>
             <span class="stat-card__label">{{ $t('stats.streak') }}</span>
           </div>
           <div class="stat-card__value">
-            <AnimatedCounter :value="stats.streak" />
+            <AnimatedCounter :value="stats.streak" :format="(value) => Math.round(value).toString()" />
             <span class="stat-card__unit">{{ $t('stats.days') }}</span>
           </div>
           <div class="stat-card__progress">
             <div class="stat-card__progress-bar">
-              <div
-                class="stat-card__progress-fill stat-card__progress-fill--streak"
-                :style="{ width: `${getStreakProgress()}%` }"
-              ></div>
+              <div class="stat-card__progress-fill stat-card__progress-fill--streak"
+                :style="{ width: `${getStreakProgress()}%` }"></div>
             </div>
-            <span class="stat-card__progress-text">{{ getStreakMessage() }}</span>
+            <span class="stat-card__progress-text">{{ getStreakMessage() }}
+
+</span>
           </div>
         </div>
 
         <!-- Coins card -->
-        <div class="stat-card stat-card--coins" v-if="stats.coins !== undefined">
+        <div class="stat-card stat-card--coins">
           <div class="stat-card__header">
             <div class="stat-card__icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -77,16 +93,11 @@
             <span class="stat-card__label">{{ $t('stats.coins') }}</span>
           </div>
           <div class="stat-card__value">
-            <AnimatedCounter :value="stats.coins" />
+            <AnimatedCounter :value="stats.coins" :format="(value) => Math.round(value).toString()" />
           </div>
-          <div class="stat-card__trend" v-if="coinTrend">
-            <svg
-              class="stat-card__trend-icon"
-              :class="{ 'stat-card__trend-icon--up': coinTrend > 0 }"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-            >
+          <div class="stat-card__trend" v-if="coinTrend > 0">
+            <svg class="stat-card__trend-icon" :class="{ 'stat-card__trend-icon--up': coinTrend > 0 }"
+              viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <polyline :points="coinTrend > 0 ? '22 17 13.5 8.5 8.5 13.5 2 7' : '22 7 13.5 15.5 8.5 10.5 2 17'" />
             </svg>
             <span class="stat-card__trend-value">{{ Math.abs(coinTrend) }}%</span>
@@ -94,26 +105,26 @@
         </div>
 
         <!-- Level/Progress card -->
-        <div class="stat-card stat-card--level" v-if="stats.level !== undefined">
+        <div class="stat-card stat-card--level">
           <div class="stat-card__header">
             <div class="stat-card__icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" />
               </svg>
             </div>
-            <span class="stat-card__label">{{ $t('stats.level') }}</span>
+            <span class="stat-card__label">{{ $t('stats.level') }}
+
+</span>
           </div>
           <div class="stat-card__value">
-            <span>{{ currentDifficulty ? $t(`levels.${currentDifficulty}.title`) : $t('levels.junior.title') }}</span>
+            <span>{{ currentDifficulty ? $t(`levels.${currentDifficulty}.title`) : $t('levels.junior.title')$t }}
+
+</span>
           </div>
           <div class="stat-card__badges">
-            <span
-              v-for="badge in recentBadges"
-              :key="badge.id"
-              class="stat-card__badge"
-              :title="badge.name"
-            >
+            <span v-for="badge in recentBadges" :key="badge.id" class="stat-card__badge" :title="badge.name">
               {{ badge.emoji }}
+
             </span>
           </div>
         </div>
@@ -121,12 +132,8 @@
     </div>
 
     <!-- Floating action button (mobile) -->
-    <button
-      v-if="showFloatingAction"
-      class="hero-section__fab"
-      @click="$emit('fab-click')"
-      :aria-label="$t('actions.startLearning')"
-    >
+    <button v-if="showFloatingAction" class="hero-section__fab" @click="$emit('fab-click')"
+      :aria-label="$t('actions.startLearning')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
         <path d="M5 12h14M12 5l7 7-7 7" />
       </svg>
@@ -140,10 +147,11 @@ import { useI18n } from 'vue-i18n';
 import type { IHeroSection } from '@/types/design-system';
 import AnimatedCounter from '@/components/ui/AnimatedCounter.vue';
 
-interface Props extends IHeroSection {
+interface props extends iherosection {
   coinTrend?: number;
   currentDifficulty?: 'junior' | 'intermediate' | 'senior';
   recentBadges?: Array<{ id: string; name: string; emoji: string }>;
+
   showEmoji?: boolean;
   showFloatingAction?: boolean;
 }
@@ -159,8 +167,8 @@ const props = withDefaults(defineProps<Props>(), {
   recentBadges: () => []
 });
 
-const emit = defineEmits<{
-  'fab-click': [];
+const emit = defineemits<{
+  
 }>();
 
 const { t, locale } = useI18n();
@@ -200,7 +208,7 @@ const formatNumber = (num: number): string => {
   return num.toString();
 };
 
-const getStreakProgress = () => {
+const getstreakprogress = () => {
   if (!props.stats?.streak) return 0;
   // Progress towards next milestone (7, 14, 30, 60, 100, 365 days)
   const milestones = [7, 14, 30, 60, 100, 365];
@@ -213,7 +221,7 @@ const getStreakProgress = () => {
   );
 };
 
-const getStreakMessage = () => {
+const getstreakmessage = () => {
   if (!props.stats?.streak) return '';
 
   const streak = props.stats.streak;
@@ -247,23 +255,27 @@ onMounted(() => {
 /* Animated background */
 .hero-section__background {
   @apply absolute inset-0 overflow-hidden;
+
   pointer-events: none;
 }
 
 .hero-section__orb {
   @apply absolute rounded-full blur-3xl opacity-20 dark:opacity-10;
+
   animation: float 20s ease-in-out infinite;
 }
 
 .hero-section__orb--1 {
   @apply w-96 h-96 -top-48 -left-48;
   @apply bg-gradient-to-br from-primary to-secondary;
+
   animation-duration: 25s;
 }
 
 .hero-section__orb--2 {
   @apply w-64 h-64 top-0 right-0;
   @apply bg-gradient-to-br from-secondary to-success;
+
   animation-duration: 20s;
   animation-delay: -5s;
 }
@@ -271,17 +283,21 @@ onMounted(() => {
 .hero-section__orb--3 {
   @apply w-80 h-80 -bottom-40 right-1/3;
   @apply bg-gradient-to-br from-warning to-primary;
+
   animation-duration: 30s;
   animation-delay: -10s;
 }
 
 @keyframes float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translate(0, 0) scale(1);
   }
+
   33% {
     transform: translate(30px, -30px) scale(1.1);
   }
+
   66% {
     transform: translate(-20px, 20px) scale(0.9);
   }
@@ -304,23 +320,35 @@ onMounted(() => {
   @apply bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300;
   @apply bg-clip-text text-transparent;
   @apply mb-2;
+
   animation: fade-in-up 0.6s ease-out;
 }
 
 .hero-section__greeting-emoji {
   @apply inline-block ml-3 text-4xl;
+
   animation: wave 2s ease-in-out infinite;
 }
 
 @keyframes wave {
-  0%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(-10deg); }
-  75% { transform: rotate(10deg); }
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(-10deg);
+  }
+
+  75% {
+    transform: rotate(10deg);
+  }
 }
 
 .hero-section__subtitle {
   @apply text-lg md:text-xl text-gray-600 dark:text-gray-400;
   @apply mb-6;
+
   animation: fade-in-up 0.6s ease-out 0.1s backwards;
 }
 
@@ -330,6 +358,7 @@ onMounted(() => {
   @apply dark:from-primary-900/20 dark:to-secondary-900/20;
   @apply px-4 py-2 rounded-lg inline-block;
   @apply border border-primary-200/50 dark:border-primary-700/50;
+
   animation: fade-in-up 0.6s ease-out 0.2s backwards;
 }
 
@@ -371,6 +400,7 @@ onMounted(() => {
   @apply shadow-sm hover:shadow-md;
   @apply transition-all duration-fast;
   @apply hover:-translate-y-1;
+
   animation: fade-in-up 0.6s ease-out backwards;
 }
 
@@ -477,7 +507,9 @@ onMounted(() => {
   @apply flex items-center justify-center;
   @apply hover:shadow-xl hover:scale-110;
   @apply transition-all duration-fast;
-  @apply md:hidden; /* Only show on mobile */
+  @apply md:hidden;
+
+  /* Only show on mobile */
 }
 
 .hero-section__fab svg {
@@ -490,6 +522,7 @@ onMounted(() => {
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);

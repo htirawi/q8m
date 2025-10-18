@@ -37,7 +37,7 @@ const memoryPercentage = computed(() => {
   return (memoryUsage.value.usedJSHeapSize / memoryUsage.value.jsHeapSizeLimit) * 100;
 });
 
-const getMetricClass = (metric: string) => {
+const getmetricclass = (metric: string) => {
   const value = metrics.value[metric as keyof typeof metrics.value];
   if (value === null) return "metric-unknown";
   const thresholds: Record<string, number> = {
@@ -79,16 +79,16 @@ const formatBytes = (bytes: number): string => {
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`;
 };
 
-const toggleMonitor = () => {
+const togglemonitor = () => {
   showMonitor.value = !showMonitor.value;
 };
 
-const refreshMetrics = () => {
+const refreshmetrics = () => {
   performance.analyzeResourceTimings();
 };
 
-const exportMetrics = () => {
-  const exportData = {
+const exportmetrics = () => {
+  const exportdata = {
     timestamp: new Date().toISOString(),
     metrics: metrics.value,
     resourceTimings: resourceTimings.value,
@@ -145,6 +145,7 @@ onUnmounted(() => {
             <div class="metric-label">LCP</div>
             <div class="metric-value">
               {{ formatMetric(metrics.lcp) }}
+
             </div>
             <div class="metric-threshold">2.5s</div>
           </div>
@@ -153,6 +154,7 @@ onUnmounted(() => {
             <div class="metric-label">FID</div>
             <div class="metric-value">
               {{ formatMetric(metrics.fid) }}
+
             </div>
             <div class="metric-threshold">100ms</div>
           </div>
@@ -161,6 +163,7 @@ onUnmounted(() => {
             <div class="metric-label">CLS</div>
             <div class="metric-value">
               {{ formatMetric(metrics.cls, 3) }}
+
             </div>
             <div class="metric-threshold">0.1</div>
           </div>
@@ -169,6 +172,7 @@ onUnmounted(() => {
             <div class="metric-label">FCP</div>
             <div class="metric-value">
               {{ formatMetric(metrics.fcp) }}
+
             </div>
             <div class="metric-threshold">1.8s</div>
           </div>
@@ -177,6 +181,7 @@ onUnmounted(() => {
             <div class="metric-label">TTFB</div>
             <div class="metric-value">
               {{ formatMetric(metrics.ttfb) }}
+
             </div>
             <div class="metric-threshold">600ms</div>
           </div>
@@ -189,19 +194,27 @@ onUnmounted(() => {
         <div class="resource-stats">
           <div class="stat-item">
             <span class="stat-label">Total Resources:</span>
-            <span class="stat-value">{{ resourceTimings.length }}</span>
+            <span class="stat-value">{{ resourceTimings.length }}
+
+</span>
           </div>
           <div class="stat-item">
             <span class="stat-label">Total Size:</span>
-            <span class="stat-value">{{ formatBytes(totalSize) }}</span>
+            <span class="stat-value">{{ formatBytes(totalSize) }}
+
+</span>
           </div>
           <div class="stat-item">
             <span class="stat-label">Slow Resources:</span>
-            <span class="stat-value">{{ slowResources.length }}</span>
+            <span class="stat-value">{{ slowResources.length }}
+
+</span>
           </div>
           <div class="stat-item">
             <span class="stat-label">Large Resources:</span>
-            <span class="stat-value">{{ largeResources.length }}</span>
+            <span class="stat-value">{{ largeResources.length }}
+
+</span>
           </div>
         </div>
       </div>
@@ -216,7 +229,9 @@ onUnmounted(() => {
             class="recommendation-item"
           >
             <ExclamationTriangleIcon class="h-4 w-4 text-warning-500" />
-            <span>{{ recommendation }}</span>
+            <span>{{ recommendation }}
+
+</span>
           </div>
         </div>
       </div>
@@ -227,11 +242,15 @@ onUnmounted(() => {
         <div class="memory-stats">
           <div class="stat-item">
             <span class="stat-label">Used:</span>
-            <span class="stat-value">{{ formatBytes(memoryUsage.usedJSHeapSize) }}</span>
+            <span class="stat-value">{{ formatBytes(memoryUsage.usedJSHeapSize) }}
+
+</span>
           </div>
           <div class="stat-item">
             <span class="stat-label">Total:</span>
-            <span class="stat-value">{{ formatBytes(memoryUsage.totalJSHeapSize) }}</span>
+            <span class="stat-value">{{ formatBytes(memoryUsage.totalJSHeapSize) }}
+
+</span>
           </div>
           <div class="stat-item">
             <span class="stat-label">Limit:</span>

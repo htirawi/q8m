@@ -17,6 +17,7 @@
             :class="selectedPeriod === period.value ? 'bg-purple-600 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'"
           >
             {{ period.label }}
+
           </button>
         </div>
 
@@ -30,6 +31,7 @@
             :class="selectedScope === scope.value ? 'bg-indigo-600 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'"
           >
             {{ scope.label }}
+
           </button>
         </div>
       </div>
@@ -60,6 +62,7 @@
           <div class="relative inline-block mb-3">
             <div class="w-16 h-16 rounded-full bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center text-2xl font-bold text-white shadow-lg">
               {{ entries[1]?.displayName.charAt(0).toUpperCase() }}
+
             </div>
             <div class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-gray-400 text-white text-xs font-bold px-2 py-0.5 rounded-full">
               2nd
@@ -67,12 +70,15 @@
           </div>
           <div class="font-semibold text-sm text-gray-900 dark:text-white truncate">
             {{ entries[1]?.displayName }}
+
           </div>
           <div class="text-xs text-gray-600 dark:text-gray-400">
             Level {{ entries[1]?.level }}
+
           </div>
           <div class="text-lg font-bold text-purple-600 dark:text-purple-400 mt-1">
             {{ formatNumber(entries[1]?.score) }}
+
           </div>
         </div>
 
@@ -81,6 +87,7 @@
           <div class="relative inline-block mb-3">
             <div class="w-20 h-20 rounded-full bg-gradient-to-br from-yellow-300 to-yellow-500 flex items-center justify-center text-3xl font-bold text-white shadow-xl ring-4 ring-yellow-200 dark:ring-yellow-700">
               {{ entries[0]?.displayName.charAt(0).toUpperCase() }}
+
             </div>
             <div class="absolute -top-8 left-1/2 transform -translate-x-1/2 text-4xl animate-bounce-subtle">
               👑
@@ -91,12 +98,15 @@
           </div>
           <div class="font-bold text-gray-900 dark:text-white truncate">
             {{ entries[0]?.displayName }}
+
           </div>
           <div class="text-xs text-gray-600 dark:text-gray-400">
             Level {{ entries[0]?.level }}
+
           </div>
           <div class="text-2xl font-bold text-yellow-600 dark:text-yellow-400 mt-1">
             {{ formatNumber(entries[0]?.score) }}
+
           </div>
         </div>
 
@@ -105,6 +115,7 @@
           <div class="relative inline-block mb-3">
             <div class="w-14 h-14 rounded-full bg-gradient-to-br from-amber-600 to-amber-700 flex items-center justify-center text-xl font-bold text-white shadow-lg">
               {{ entries[2]?.displayName.charAt(0).toUpperCase() }}
+
             </div>
             <div class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-amber-700 text-white text-xs font-bold px-2 py-0.5 rounded-full">
               3rd
@@ -112,12 +123,15 @@
           </div>
           <div class="font-semibold text-xs text-gray-900 dark:text-white truncate">
             {{ entries[2]?.displayName }}
+
           </div>
           <div class="text-xs text-gray-600 dark:text-gray-400">
             Level {{ entries[2]?.level }}
+
           </div>
           <div class="text-base font-bold text-amber-600 dark:text-amber-400 mt-1">
             {{ formatNumber(entries[2]?.score) }}
+
           </div>
         </div>
       </div>
@@ -137,12 +151,14 @@
           <div class="w-8 text-center">
             <div class="text-lg font-bold text-gray-600 dark:text-gray-400">
               #{{ entry.rank }}
+
             </div>
           </div>
 
           <!-- Avatar -->
           <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-indigo-500 flex items-center justify-center text-white font-bold shadow-md">
             {{ entry.displayName.charAt(0).toUpperCase() }}
+
           </div>
 
           <!-- User info -->
@@ -150,17 +166,24 @@
             <div class="flex items-center gap-2">
               <div class="font-semibold text-gray-900 dark:text-white truncate">
                 {{ entry.displayName }}
+
               </div>
               <div v-if="entry.userId === currentUserId" class="text-xs bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 px-2 py-0.5 rounded-full font-medium">
                 You
               </div>
             </div>
             <div class="flex items-center gap-3 text-xs text-gray-600 dark:text-gray-400">
-              <span>Level {{ entry.level }}</span>
+              <span>Level {{ entry.level }}
+
+</span>
               <span>•</span>
-              <span>{{ entry.streak }}-day streak</span>
+              <span>{{ entry.streak }}
+
+-day streak</span>
               <span v-if="entry.badges.length > 0">•</span>
-              <span v-if="entry.badges.length > 0">{{ entry.badges.length }} badges</span>
+              <span v-if="entry.badges.length > 0">{{ entry.badges.length }}
+
+ badges</span>
             </div>
           </div>
 
@@ -280,6 +303,7 @@ import { watch } from 'vue';
   0%, 100% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(-8px);
   }

@@ -36,4 +36,4 @@ const spinnerClasses = computed(() => {
 </template>
 
 <style scoped>
-</style>
+</style><template><divclass=

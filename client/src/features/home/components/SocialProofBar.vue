@@ -9,6 +9,7 @@
       <div class="social-proof-bar__message">
         <span class="social-proof-bar__text">
           {{ t('home.socialProof.trustedBy', { count: userCount }) }}
+
         </span>
       </div>
 
@@ -158,7 +159,7 @@ defineOptions({
 }
 
 /* Responsive adjustments */
-@media (max-width: 640px) {
+@media (width <= 640px) {
   .social-proof-bar__logos {
     @apply gap-6;
   }

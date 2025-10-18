@@ -3,25 +3,43 @@
  */
 
 export interface IQuizHeaderProps {
-  currentQuestionIndex: number;
+  level: string;
+  currentIndex: number;
   totalQuestions: number;
-  timeRemaining?: number;
-  score?: number;
+  remainingTime: number;
+  quizDuration: number;
+  isSticky?: boolean;
 }
 
 export interface IQuizQuestionProps {
   question: Record<string, unknown>;
-  currentIndex: number;
-  totalQuestions: number;
+  level: string;
+  locale: string;
   selectedAnswer?: string | string[];
+  textAnswer?: string;
+  multipleAnswers?: string[];
+  hasAnswered?: boolean;
+  isLastQuestion?: boolean;
+  userAnswerResult?: {
+    isCorrect: boolean;
+    correctAnswer: string | string[];
+    explanation: string;
+    points: number;
+  };
 }
 
 export interface IQuizResultsProps {
-  score: number;
+  level: string;
+  score: {
+    correct: number;
+    total: number;
+    percentage: number;
+    timeSpent: number;
+  };
   totalQuestions: number;
   correctAnswers: number;
   timeSpent: number;
   xpEarned?: number;
   badgesEarned?: Record<string, unknown>[];
+  quizResultData?: Record<string, unknown>;
 }
-

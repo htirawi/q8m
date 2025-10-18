@@ -5,9 +5,9 @@ import type { CancelSubscriptionModalProps } from "@/types/ui/component-props";
 
 const props = defineProps<CancelSubscriptionModalProps>();
 
-const emit = defineEmits<{
+const emit = defineemits<{
   close: [];
-  confirm: [reason: string];
+  confirm: [;reason: string]
 }>();
 
 useI18n();
@@ -21,7 +21,7 @@ const handleClose = () => {
   emit("close");
 };
 
-const handleConfirm = () => {
+const handleconfirm = () => {
   if (!selectedReason.value) return;
   emit("confirm", selectedReason.value);
 };
@@ -41,7 +41,9 @@ watch(
   <div v-if="show" class="modal-overlay" @click="handleClose">
     <div class="modal-content" @click.stop>
       <div class="modal-header">
-        <h3 class="modal-title">{{ $t("subscription.cancelConfirm") }}</h3>
+        <h3 class="modal-title">{{ $t("subscription.cancelConfirm") }}
+
+</h3>
         <button @click="handleClose" class="modal-close">
           <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -50,14 +52,21 @@ watch(
       </div>
 
       <div class="modal-body">
-        <p class="modal-message">{{ $t("subscription.cancelMessage") }}</p>
+        <p class="modal-message">{{ $t("subscription.cancelMessage") }}
+
+</p>
 
         <div class="cancel-reasons">
-          <label class="reason-label">{{ $t("subscription.cancelReason") }} </label>
+          <label class="reason-label">{{ $t("subscription.cancelReason") }}
+
+ </label>
           <select v-model="selectedReason" class="reason-select">
-            <option value="">{{ $t("subscription.selectReason") }}</option>
+            <option value="">{{ $t("subscription.selectReason") }}
+
+</option>
             <option v-for="(reason, key) in reasons" :key="key" :value="key">
               {{ reason }}
+
             </option>
           </select>
         </div>
@@ -66,13 +75,17 @@ watch(
       <div class="modal-footer">
         <button @click="handleClose" class="btn-secondary">
           {{ $t("common.cancel") }}
+
         </button>
         <button @click="handleConfirm" :disabled="!selectedReason || isLoading" class="btn-danger">
           <span v-if="isLoading" class="flex items-center">
             <div class="mr-2 h-4 w-4 animate-spin rounded-full border-b-2 border-white"></div>
             {{ $t("common.processing") }}
+
           </span>
-          <span v-else>{{ $t("subscription.confirmCancel") }} </span>
+          <span v-else>{{ $t("subscription.confirmCancel") }}
+
+ </span>
         </button>
       </div>
     </div>

@@ -11,9 +11,9 @@ const router = useRouter();
 
 const currentLanguage = computed(() => locale.value);
 
-const toggleLanguage = async () => {
+const togglelanguage = async () => {
   const currentLocale = (route.params.locale as SupportedLocale) || DEFAULT_LOCALE;
-  const newLocale: SupportedLocale = currentLocale === "en" ? "ar" : "en";
+  const newLocale: SupportedLocale = currentLocale === "en"; ? "ar" : "en";
 
   // Build the new path with the new locale
   const pathWithoutLocale = route.path.replace(/^\/[a-z]{2}(\/|$)/, "/");
@@ -28,6 +28,7 @@ const toggleLanguage = async () => {
     query,
   });
 };
+
 </script>
 
 <template>
@@ -38,7 +39,9 @@ const toggleLanguage = async () => {
       :aria-label="$t('a11y.switchLanguage')"
       @click="toggleLanguage"
     >
-      <span class="lang-switch-text">{{ currentLanguage.toUpperCase() }}</span>
+      <span class="lang-switch-text">{{ currentLanguage.toUpperCase() }}
+
+</span>
       <svg class="lang-switch-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path
           stroke-linecap="round"

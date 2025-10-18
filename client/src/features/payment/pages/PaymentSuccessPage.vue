@@ -19,11 +19,11 @@ const goToDashboard = () => {
   router.push("/dashboard");
 };
 
-const goToQuizzes = () => {
+const gotoquizzes = () => {
   router.push("/quizzes");
 };
 
-const parseOrderDetails = () => {
+const parseorderdetails = () => {
   // Parse order details from URL parameters or state
   const orderId = route.query.orderId as string;
   const planName = route.query.plan as string;
@@ -32,12 +32,14 @@ const parseOrderDetails = () => {
   const billingCycle = route.query.billing as string;
 
   if (orderId && planName && amount) {
-    orderDetails.value = {
+    orderdetails.value = {
       orderId,
       planName,
-      amount: `${amount} ${currency}`,
+      amount: `${amount} ${currency}
+
+`,
       billingCycle,
-      date: new Date().toISOString(),
+      date: new Date().toISOString(),billingCycle,date
     };
   }
 };
@@ -74,38 +76,64 @@ onMounted(async () => {
 
       <!-- Success Content -->
       <div class="success-content">
-        <h1 class="success-title">{{ $t("payment.success.title") }}</h1>
-        <p class="success-message">{{ $t("payment.success.message") }}</p>
+        <h1 class="success-title">{{ $t("payment.success.title") }}
+
+</h1>
+        <p class="success-message">{{ $t("payment.success.message") }}
+
+</p>
 
         <!-- Order Details -->
         <div v-if="orderDetails" class="order-details">
           <div class="order-card">
-            <h3 class="order-title">{{ $t("payment.success.orderDetails") }}</h3>
+            <h3 class="order-title">{{ $t("payment.success.orderDetails") }}
+
+</h3>
 
             <div class="order-info">
               <div class="order-row">
-                <span class="order-label">{{ $t("payment.success.orderId") }} </span>
-                <span class="order-value">{{ orderDetails.orderId }} </span>
+                <span class="order-label">{{ $t("payment.success.orderId") }}
+
+ </span>
+                <span class="order-value">{{ orderDetails.orderId }}
+
+ </span>
               </div>
 
               <div class="order-row">
-                <span class="order-label">{{ $t("payment.success.plan") }} </span>
-                <span class="order-value">{{ orderDetails.planName }} </span>
+                <span class="order-label">{{ $t("payment.success.plan") }}
+
+ </span>
+                <span class="order-value">{{ orderDetails.planName }}
+
+ </span>
               </div>
 
               <div class="order-row">
-                <span class="order-label">{{ $t("payment.success.amount") }} </span>
-                <span class="order-value">{{ orderDetails.amount }} </span>
+                <span class="order-label">{{ $t("payment.success.amount") }}
+
+ </span>
+                <span class="order-value">{{ orderDetails.amount }}
+
+ </span>
               </div>
 
               <div class="order-row">
-                <span class="order-label">{{ $t("payment.success.billing") }} </span>
-                <span class="order-value">{{ orderDetails.billingCycle }} </span>
+                <span class="order-label">{{ $t("payment.success.billing") }}
+
+ </span>
+                <span class="order-value">{{ orderDetails.billingCycle }}
+
+ </span>
               </div>
 
               <div class="order-row">
-                <span class="order-label">{{ $t("payment.success.date") }} </span>
-                <span class="order-value">{{ orderDetails.date }} </span>
+                <span class="order-label">{{ $t("payment.success.date") }}
+
+ </span>
+                <span class="order-value">{{ orderDetails.date }}
+
+ </span>
               </div>
             </div>
           </div>
@@ -113,7 +141,9 @@ onMounted(async () => {
 
         <!-- Next Steps -->
         <div class="next-steps">
-          <h3 class="steps-title">{{ $t("payment.success.nextSteps") }}</h3>
+          <h3 class="steps-title">{{ $t("payment.success.nextSteps") }}
+
+</h3>
           <div class="steps-list">
             <div class="step-item">
               <div class="step-icon">
@@ -127,8 +157,12 @@ onMounted(async () => {
                 </svg>
               </div>
               <div class="step-content">
-                <h4 class="step-title">{{ $t("payment.success.step1.title") }}</h4>
-                <p class="step-description">{{ $t("payment.success.step1.description") }}</p>
+                <h4 class="step-title">{{ $t("payment.success.step1.title") }}
+
+</h4>
+                <p class="step-description">{{ $t("payment.success.step1.description") }}
+
+</p>
               </div>
             </div>
 
@@ -144,8 +178,12 @@ onMounted(async () => {
                 </svg>
               </div>
               <div class="step-content">
-                <h4 class="step-title">{{ $t("payment.success.step2.title") }}</h4>
-                <p class="step-description">{{ $t("payment.success.step2.description") }}</p>
+                <h4 class="step-title">{{ $t("payment.success.step2.title") }}
+
+</h4>
+                <p class="step-description">{{ $t("payment.success.step2.description") }}
+
+</p>
               </div>
             </div>
 
@@ -161,8 +199,12 @@ onMounted(async () => {
                 </svg>
               </div>
               <div class="step-content">
-                <h4 class="step-title">{{ $t("payment.success.step3.title") }}</h4>
-                <p class="step-description">{{ $t("payment.success.step3.description") }}</p>
+                <h4 class="step-title">{{ $t("payment.success.step3.title") }}
+
+</h4>
+                <p class="step-description">{{ $t("payment.success.step3.description") }}
+
+</p>
               </div>
             </div>
           </div>
@@ -186,6 +228,7 @@ onMounted(async () => {
               />
             </svg>
             {{ $t("payment.success.goToDashboard") }}
+
           </button>
 
           <button @click="goToQuizzes" class="btn-secondary">
@@ -198,6 +241,7 @@ onMounted(async () => {
               />
             </svg>
             {{ $t("payment.success.startQuizzes") }}
+
           </button>
         </div>
 
@@ -208,6 +252,7 @@ onMounted(async () => {
 
             <a href="mailto:support@quizplatform.com" class="support-link">
               {{ $t("payment.success.support.email") }}
+
             </a>
           </p>
         </div>

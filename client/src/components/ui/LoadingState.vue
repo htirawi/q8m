@@ -75,7 +75,9 @@ const ariaLabel = computed(() => {
         <div class="progress-bar">
           <div class="progress-fill" :style="{ width: `${Math.min(100, Math.max(0, progress))}%` }" />
         </div>
-        <div class="progress-text">{{ progressText }}</div>
+        <div class="progress-text">{{ progressText }}
+
+</div>
       </div>
     </div>
   </div>

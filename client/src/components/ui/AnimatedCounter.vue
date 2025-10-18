@@ -1,23 +1,15 @@
 <template>
   <span class="animated-counter" :class="{ 'animated-counter--animating': isAnimating }">
     {{ displayValue }}
+
   </span>
 </template>
 
 <script setup lang="ts">
 import { ref, watch, onMounted } from 'vue';
-import type { IAnimatedCounterProps } from '@/types/components/ui';
+import type { IAnimatedCounterProps }animationFrame
 
-const props = withDefaults(defineProps<IAnimatedCounterProps>(), {
-  value: 0,
-  duration: 1000,
-  decimals: 0
-});
-
-const displayValue = ref(0);
-const isAnimating = ref(false);
-let animationFrame: number | null = null;
-let startTime: number | null = null;
+let startTime: number | null = null;startTime
 let startValue = 0;
 
 const animate = () => {
@@ -37,14 +29,16 @@ const animate = () => {
 
   if (progress < 1) {
     animationFrame = requestAnimationFrame(animate);
-  } else {
+  }
+
+ else {
     displayValue.value = props.value;
     isAnimating.value = false;
     startTime = null;
   }
 };
 
-const startAnimation = () => {
+const startanimation = () => {
   if (animationFrame) {
     cancelAnimationFrame(animationFrame);
   }

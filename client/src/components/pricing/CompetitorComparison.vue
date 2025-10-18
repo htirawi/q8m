@@ -12,9 +12,11 @@ defineOptions({
       <div class="competitor-comparison__header">
         <h2 id="competitor-title" class="competitor-comparison__title">
           {{ $t('pricing.competitors.title') }}
+
         </h2>
         <p class="competitor-comparison__subtitle">
           {{ $t('pricing.competitors.subtitle') }}
+
         </p>
       </div>
 
@@ -24,6 +26,7 @@ defineOptions({
             <tr>
               <th class="competitor-comparison__header-cell competitor-comparison__header-cell--feature">
                 {{ $t('pricing.competitors.features.frontendFocus') }}
+
               </th>
               <th class="competitor-comparison__header-cell competitor-comparison__header-cell--highlight">
                 <div class="competitor-comparison__brand">
@@ -31,93 +34,132 @@ defineOptions({
                   <span class="competitor-comparison__brand-badge">Recommended</span>
                 </div>
               </th>
-              <th class="competitor-comparison__header-cell">{{ $t('pricing.competitors.leetcode.name') }}</th>
-              <th class="competitor-comparison__header-cell">{{ $t('pricing.competitors.algoexpert.name') }}</th>
+              <th class="competitor-comparison__header-cell">{{ $t('pricing.competitors.leetcode.name') }}
+
+</th>
+              <th class="competitor-comparison__header-cell">{{ $t('pricing.competitors.algoexpert.name') }}
+
+</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td class="competitor-comparison__cell competitor-comparison__cell--label">
                 {{ $t('pricing.competitors.features.frontendFocus') }}
+
               </td>
               <td class="competitor-comparison__cell competitor-comparison__cell--highlight">
                 <CheckIcon class="competitor-comparison__check" aria-hidden="true" />
-                <span class="competitor-comparison__text">{{ $t('pricing.competitors.q8m.frontendFocus') }}</span>
+                <span class="competitor-comparison__text">{{ $t('pricing.competitors.q8m.frontendFocus') }}
+
+</span>
               </td>
               <td class="competitor-comparison__cell">
                 <XMarkIcon class="competitor-comparison__x" aria-hidden="true" />
-                <span class="competitor-comparison__text">{{ $t('pricing.competitors.leetcode.frontendFocus') }}</span>
+                <span class="competitor-comparison__text">{{ $t('pricing.competitors.leetcode.frontendFocus') }}
+
+</span>
               </td>
               <td class="competitor-comparison__cell">
                 <XMarkIcon class="competitor-comparison__x" aria-hidden="true" />
-                <span class="competitor-comparison__text">{{ $t('pricing.competitors.algoexpert.frontendFocus') }}</span>
+                <span class="competitor-comparison__text">{{ $t('pricing.competitors.algoexpert.frontendFocus') }}
+
+</span>
               </td>
             </tr>
 
             <tr>
               <td class="competitor-comparison__cell competitor-comparison__cell--label">
                 {{ $t('pricing.competitors.features.mockInterviews') }}
+
               </td>
               <td class="competitor-comparison__cell competitor-comparison__cell--highlight">
                 <CheckIcon class="competitor-comparison__check" aria-hidden="true" />
-                <span class="competitor-comparison__text">{{ $t('pricing.competitors.q8m.mockInterviews') }}</span>
+                <span class="competitor-comparison__text">{{ $t('pricing.competitors.q8m.mockInterviews') }}
+
+</span>
               </td>
               <td class="competitor-comparison__cell">
                 <XMarkIcon class="competitor-comparison__x" aria-hidden="true" />
-                <span class="competitor-comparison__text">{{ $t('pricing.competitors.leetcode.mockInterviews') }}</span>
+                <span class="competitor-comparison__text">{{ $t('pricing.competitors.leetcode.mockInterviews') }}
+
+</span>
               </td>
               <td class="competitor-comparison__cell">
                 <XMarkIcon class="competitor-comparison__x" aria-hidden="true" />
-                <span class="competitor-comparison__text">{{ $t('pricing.competitors.algoexpert.mockInterviews') }}</span>
+                <span class="competitor-comparison__text">{{ $t('pricing.competitors.algoexpert.mockInterviews') }}
+
+</span>
               </td>
             </tr>
 
             <tr>
               <td class="competitor-comparison__cell competitor-comparison__cell--label">
                 {{ $t('pricing.competitors.features.liveSupport') }}
+
               </td>
               <td class="competitor-comparison__cell competitor-comparison__cell--highlight">
                 <CheckIcon class="competitor-comparison__check" aria-hidden="true" />
-                <span class="competitor-comparison__text">{{ $t('pricing.competitors.q8m.liveSupport') }}</span>
+                <span class="competitor-comparison__text">{{ $t('pricing.competitors.q8m.liveSupport') }}
+
+</span>
               </td>
               <td class="competitor-comparison__cell">
-                <span class="competitor-comparison__text">{{ $t('pricing.competitors.leetcode.liveSupport') }}</span>
+                <span class="competitor-comparison__text">{{ $t('pricing.competitors.leetcode.liveSupport') }}
+
+</span>
               </td>
               <td class="competitor-comparison__cell">
-                <span class="competitor-comparison__text">{{ $t('pricing.competitors.algoexpert.liveSupport') }}</span>
+                <span class="competitor-comparison__text">{{ $t('pricing.competitors.algoexpert.liveSupport') }}
+
+</span>
               </td>
             </tr>
 
             <tr>
               <td class="competitor-comparison__cell competitor-comparison__cell--label">
                 {{ $t('pricing.competitors.features.price') }}
+
               </td>
               <td class="competitor-comparison__cell competitor-comparison__cell--highlight">
-                <span class="competitor-comparison__price">{{ $t('pricing.competitors.q8m.price') }}</span>
+                <span class="competitor-comparison__price">{{ $t('pricing.competitors.q8m.price') }}
+
+</span>
               </td>
               <td class="competitor-comparison__cell">
-                <span class="competitor-comparison__price">{{ $t('pricing.competitors.leetcode.price') }}</span>
+                <span class="competitor-comparison__price">{{ $t('pricing.competitors.leetcode.price') }}
+
+</span>
               </td>
               <td class="competitor-comparison__cell">
-                <span class="competitor-comparison__price">{{ $t('pricing.competitors.algoexpert.price') }}</span>
+                <span class="competitor-comparison__price">{{ $t('pricing.competitors.algoexpert.price') }}
+
+</span>
               </td>
             </tr>
 
             <tr>
               <td class="competitor-comparison__cell competitor-comparison__cell--label">
                 {{ $t('pricing.competitors.features.moneyBack') }}
+
               </td>
               <td class="competitor-comparison__cell competitor-comparison__cell--highlight">
                 <CheckIcon class="competitor-comparison__check" aria-hidden="true" />
-                <span class="competitor-comparison__text">{{ $t('pricing.competitors.q8m.moneyBack') }}</span>
+                <span class="competitor-comparison__text">{{ $t('pricing.competitors.q8m.moneyBack') }}
+
+</span>
               </td>
               <td class="competitor-comparison__cell">
                 <XMarkIcon class="competitor-comparison__x" aria-hidden="true" />
-                <span class="competitor-comparison__text">{{ $t('pricing.competitors.leetcode.moneyBack') }}</span>
+                <span class="competitor-comparison__text">{{ $t('pricing.competitors.leetcode.moneyBack') }}
+
+</span>
               </td>
               <td class="competitor-comparison__cell">
                 <XMarkIcon class="competitor-comparison__x" aria-hidden="true" />
-                <span class="competitor-comparison__text">{{ $t('pricing.competitors.algoexpert.moneyBack') }}</span>
+                <span class="competitor-comparison__text">{{ $t('pricing.competitors.algoexpert.moneyBack') }}
+
+</span>
               </td>
             </tr>
           </tbody>
@@ -145,6 +187,7 @@ defineOptions({
   @apply text-3xl font-bold text-gray-900 dark:text-white;
   @apply sm:text-4xl lg:text-5xl;
   @apply mb-4;
+
   letter-spacing: -0.02em;
 }
 
@@ -246,7 +289,7 @@ defineOptions({
 }
 
 /* Responsive */
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .competitor-comparison__table {
     @apply text-xs;
   }

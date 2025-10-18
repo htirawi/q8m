@@ -41,6 +41,7 @@
                   <div class="w-32 h-32 rounded-full bg-gradient-to-br from-yellow-300 to-orange-500 flex items-center justify-center shadow-2xl ring-8 ring-yellow-400/30 animate-pulse-glow">
                     <div class="text-6xl font-black text-white drop-shadow-lg">
                       {{ newLevel }}
+
                     </div>
                   </div>
                   <!-- Star burst -->
@@ -58,16 +59,21 @@
               <!-- Level title -->
               <div class="text-2xl font-bold text-yellow-300 mb-6 animate-fade-in-up animation-delay-200">
                 {{ levelTitle }}
+
               </div>
 
               <!-- Stats -->
               <div class="grid grid-cols-2 gap-4 mb-8 max-w-md mx-auto">
                 <div class="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20 animate-fade-in-up animation-delay-300">
-                  <div class="text-3xl font-bold text-white">{{ previousLevel }} → {{ newLevel }}</div>
+                  <div class="text-3xl font-bold text-white">{{ previousLevel }} → {{ newLevel }}
+
+</div>
                   <div class="text-sm text-white/80">Level Progress</div>
                 </div>
                 <div class="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20 animate-fade-in-up animation-delay-400">
-                  <div class="text-3xl font-bold text-yellow-300">+{{ xpEarned }}</div>
+                  <div class="text-3xl font-bold text-yellow-300">+{{ xpEarned }}
+
+</div>
                   <div class="text-sm text-white/80">XP Earned</div>
                 </div>
               </div>
@@ -81,8 +87,12 @@
                     :key="index"
                     class="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-lg border border-white/30 flex items-center gap-2"
                   >
-                    <span class="text-2xl">{{ reward.icon }}</span>
-                    <span class="text-white font-medium">{{ reward.label }}</span>
+                    <span class="text-2xl">{{ reward.icon }}
+
+</span>
+                    <span class="text-white font-medium">{{ reward.label }}
+
+</span>
                   </div>
                 </div>
               </div>
@@ -221,16 +231,17 @@ function share(platform: string) {
   }
 }
 
-function getSparkleStyle(index: number) {
+function getsparklestyle(index: number) {
   const randomX = Math.random() * 100;
   const randomY = Math.random() * 100;
   const randomDelay = Math.random() * 2;
   const randomDuration = 1 + Math.random() * 2;
-
   return {
     left: `${randomX}%`,
     top: `${randomY}%`,
-    animationDelay: `${randomDelay}s`,
+    animationDelay: `${randomDelay}
+
+s`,
     animationDuration: `${randomDuration}s`,
   };
 }
@@ -284,6 +295,7 @@ defineExpose({
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -332,10 +344,11 @@ defineExpose({
 /* Pulse glow animation */
 @keyframes pulse-glow {
   0%, 100% {
-    box-shadow: 0 0 40px rgba(251, 191, 36, 0.5), 0 0 80px rgba(251, 191, 36, 0.3);
+    box-shadow: 0 0 40px rgb(251, 191, 36, 0.5), 0 0 80px rgb(251, 191, 36, 0.3);
   }
+
   50% {
-    box-shadow: 0 0 60px rgba(251, 191, 36, 0.8), 0 0 120px rgba(251, 191, 36, 0.5);
+    box-shadow: 0 0 60px rgb(251, 191, 36, 0.8), 0 0 120px rgb(251, 191, 36, 0.5);
   }
 }
 
@@ -378,10 +391,12 @@ defineExpose({
     opacity: 0;
     transform: translateY(0) scale(0);
   }
+
   50% {
     opacity: 1;
     transform: translateY(-50px) scale(1);
   }
+
   100% {
     opacity: 0;
     transform: translateY(-100px) scale(0);

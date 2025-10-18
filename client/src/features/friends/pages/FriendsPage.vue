@@ -22,6 +22,7 @@
           type="button"
         >
           {{ tab.label }}
+
           <span
             v-if="tab.count > 0"
             :class="[
@@ -30,6 +31,7 @@
             ]"
           >
             {{ tab.count }}
+
           </span>
         </button>
       </nav>

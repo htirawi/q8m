@@ -35,6 +35,7 @@
 .header-skeleton {
   @apply w-full bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800;
   @apply sticky top-0 z-40;
+
   height: 64px;
 }
 
@@ -46,6 +47,7 @@
 /* Base skeleton */
 .skeleton {
   @apply relative overflow-hidden;
+
   background: linear-gradient(
     90deg,
     var(--color-gray-200) 0%,
@@ -70,6 +72,7 @@
   0% {
     background-position: 200% 0;
   }
+
   100% {
     background-position: -200% 0;
   }
@@ -91,21 +94,25 @@
 
 .skeleton-nav-item {
   @apply h-5 w-16 rounded;
+
   opacity: 0.8;
 }
 
 .skeleton-nav-item:nth-child(2) {
   @apply w-20;
+
   animation-delay: 100ms;
 }
 
 .skeleton-nav-item:nth-child(3) {
   @apply w-14;
+
   animation-delay: 200ms;
 }
 
 .skeleton-nav-item:nth-child(4) {
   @apply w-24;
+
   animation-delay: 300ms;
 }
 
@@ -116,11 +123,13 @@
 
 .skeleton-icon-button {
   @apply h-9 w-9 rounded-lg;
+
   animation-delay: 400ms;
 }
 
 .skeleton-plan-badge {
   @apply hidden md:block h-6 w-16 rounded-full;
+
   animation-delay: 500ms;
   opacity: 0.7;
 }
@@ -128,11 +137,12 @@
 .skeleton-avatar {
   @apply h-9 w-9 rounded-full;
   @apply ring-2 ring-gray-100 dark:ring-gray-800;
+
   animation-delay: 600ms;
 }
 
 /* Mobile adjustments */
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .header-skeleton__nav {
     @apply hidden;
   }
