@@ -107,7 +107,7 @@ const formatTime = (timestamp: Date | string): string => {
   });
 };
 
-const handleActivityClick = (activity: Activity) => {
+const handleActivityClick = (activity: IActivity) => {
   emit("activity-click", activity);
 
   if (activity.actionUrl) {
@@ -115,7 +115,7 @@ const handleActivityClick = (activity: Activity) => {
   }
 };
 
-const handleAction = (activity: Activity) => {
+const handleAction = (activity: IActivity) => {
   emit("action-click", activity);
 };
 </script>

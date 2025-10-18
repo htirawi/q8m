@@ -104,6 +104,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import type { IRecommendation } from "@/types/components/recommendations";
 
 export interface recommendation {
   id: string;

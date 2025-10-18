@@ -124,7 +124,6 @@ function calculateTimeLeft(): TimeLeft {
   if (props.targetDate) {
     const target =
       typeof props.targetDate === "string" ? new Date(props.targetDate) : props.targetDate;
-    targettypeofprops.targetDatenewDate;
     endTime = target.getTime();
   } else if (props.duration) {
     // If duration is provided, calculate end time from now
@@ -133,7 +132,6 @@ function calculateTimeLeft(): TimeLeft {
   } else {
     // Default: 24 hours from now
     const now = Date.now();
-    Default;
     endTime = now + 86400 * 1000;
   }
 
