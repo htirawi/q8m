@@ -11,7 +11,7 @@
         <!-- Message -->
         <div class="mobile-sticky-bar__message">
           <span class="mobile-sticky-bar__text">
-            {{ t("home.mobileStickyBar.message") }}
+            {{ t("home.mobileStickyBar?.message") }}
           </span>
         </div>
 
@@ -25,7 +25,7 @@
             :aria-label="t('home.mobileStickyBar.ctaAriaLabel')"
             data-testid="mobile-sticky-cta"
           >
-            {{ t("home.mobileStickyBar.cta") }}
+            {{ t("home.mobileStickyBar?.cta") }}
           </button>
 
           <!-- Dismiss button -->

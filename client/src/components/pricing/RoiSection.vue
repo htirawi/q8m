@@ -11,10 +11,10 @@ defineOptions({
     <div class="roi-section__container">
       <div class="roi-section__header">
         <h2 id="roi-title" class="roi-section__title">
-          {{ $t("pricing.roi.title") }}
+          {{ $t("pricing.roi?.title") }}
         </h2>
         <p class="roi-section__subtitle">
-          {{ $t("pricing.roi.subtitle") }}
+          {{ $t("pricing.roi?.subtitle") }}
         </p>
       </div>
 
@@ -24,8 +24,12 @@ defineOptions({
             <CurrencyDollarIcon class="roi-stat__svg" aria-hidden="true" />
           </div>
           <div class="roi-stat__content">
-            <span class="roi-stat__value">{{ $t("pricing.roi.stats.salaryIncrease.value") }} </span>
-            <span class="roi-stat__label">{{ $t("pricing.roi.stats.salaryIncrease.label") }} </span>
+            <span class="roi-stat__value"
+              >{{ $t("pricing.roi.stats.salaryIncrease?.value") }}
+            </span>
+            <span class="roi-stat__label"
+              >{{ $t("pricing.roi.stats.salaryIncrease?.label") }}
+            </span>
           </div>
         </div>
 
@@ -34,8 +38,8 @@ defineOptions({
             <ChartBarIcon class="roi-stat__svg" aria-hidden="true" />
           </div>
           <div class="roi-stat__content">
-            <span class="roi-stat__value">{{ $t("pricing.roi.stats.jobOfferRate.value") }} </span>
-            <span class="roi-stat__label">{{ $t("pricing.roi.stats.jobOfferRate.label") }} </span>
+            <span class="roi-stat__value">{{ $t("pricing.roi.stats.jobOfferRate?.value") }} </span>
+            <span class="roi-stat__label">{{ $t("pricing.roi.stats.jobOfferRate?.label") }} </span>
           </div>
         </div>
 
@@ -44,8 +48,8 @@ defineOptions({
             <ClockIcon class="roi-stat__svg" aria-hidden="true" />
           </div>
           <div class="roi-stat__content">
-            <span class="roi-stat__value">{{ $t("pricing.roi.stats.timeToOffer.value") }} </span>
-            <span class="roi-stat__label">{{ $t("pricing.roi.stats.timeToOffer.label") }} </span>
+            <span class="roi-stat__value">{{ $t("pricing.roi.stats.timeToOffer?.value") }} </span>
+            <span class="roi-stat__label">{{ $t("pricing.roi.stats.timeToOffer?.label") }} </span>
           </div>
         </div>
 
@@ -54,8 +58,8 @@ defineOptions({
             <StarIcon class="roi-stat__svg" aria-hidden="true" />
           </div>
           <div class="roi-stat__content">
-            <span class="roi-stat__value">{{ $t("pricing.roi.stats.satisfaction.value") }} </span>
-            <span class="roi-stat__label">{{ $t("pricing.roi.stats.satisfaction.label") }} </span>
+            <span class="roi-stat__value">{{ $t("pricing.roi.stats.satisfaction?.value") }} </span>
+            <span class="roi-stat__label">{{ $t("pricing.roi.stats.satisfaction?.label") }} </span>
           </div>
         </div>
       </div>

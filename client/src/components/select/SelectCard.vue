@@ -28,7 +28,7 @@
       class="select-card__badge"
       :class="`badge--${option.badge.variant}`"
     >
-      {{ $t(option.badge.textKey) }}
+      {{ $t(option.badge?.textKey) }}
     </div>
 
     <!-- Content -->

@@ -44,7 +44,7 @@
             </svg>
           </div>
           <h3 class="mb-2 text-xl font-bold text-red-900 dark:text-red-200">
-            {{ t("study.error.title") }}
+            {{ t("study.error?.title") }}
           </h3>
           <p class="mb-6 max-w-md text-red-700 dark:text-red-300">{{ error }}</p>
           <button
@@ -61,7 +61,7 @@
                   d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
                 />
               </svg>
-              {{ t("study.error.retry") }}
+              {{ t("study.error?.retry") }}
             </span>
           </button>
         </div>

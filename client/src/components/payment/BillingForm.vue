@@ -50,7 +50,7 @@ watch(
           :class="{ 'form-input--error': errors.name }"
           :placeholder="$t('checkout.namePlaceholder')"
         />
-        <p v-if="errors.name" class="form-error">{{ errors.name }}</p>
+        <p v-if="errors.name" class="form-error">{{ errors.name ?? "" }}</p>
       </div>
 
       <!-- Email -->

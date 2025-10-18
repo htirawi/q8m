@@ -324,14 +324,14 @@
                 </div>
                 <div class="flex-1">
                   <p class="text-sm font-medium text-gray-900 dark:text-white">
-                    {{ activity.title }}
+                    {{ activity.title ?? "" }}
                   </p>
                   <p class="text-xs text-gray-500 dark:text-gray-400">
                     {{ formatTimeAgo(activity.timestamp) }}
                   </p>
                 </div>
                 <span class="text-xs font-semibold text-purple-600 dark:text-purple-400"
-                  >+{{ activity.xp }}
+                  >+{{ activity.xp ?? 0 }}
 
                   XP</span
                 >

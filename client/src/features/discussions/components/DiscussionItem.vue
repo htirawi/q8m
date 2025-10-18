@@ -34,7 +34,7 @@ const replyCount = computed(() => getReplyCount(props.discussion));
 const userLevel = computed(() => props.discussion.userId.gamification?.level || 0);
 const levelColor = computed(() => getLevelColor(userLevel.value));
 const levelBadge = computed(() => getLevelBadge(userLevel.value));
-const timeAgo = computed(() => formatDate(props.discussion.createdAt));
+const timeAgo = computed(() => formatDate(props.discussion.createdAt as Date | string));
 
 const canEditDiscussion = computed(() =>
   canEdit(props.discussion, authStore.user?.userId, authStore.user?.role)
@@ -102,7 +102,7 @@ const toggleReplies = () => {
         <div
           class="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 font-bold text-white"
         >
-          {{ discussion.userId.name.charAt(0).toUpperCase() }}
+          {{ discussion.userId.name?.charAt(0).toUpperCase() }}
         </div>
       </div>
 
@@ -111,7 +111,7 @@ const toggleReplies = () => {
         <!-- User Info -->
         <div class="mb-2 flex items-center gap-2">
           <span class="font-semibold text-gray-900 dark:text-white">
-            {{ discussion.userId.name }}
+            {{ discussion.userId?.name ?? "" }}
           </span>
           <span :class="['text-sm', levelColor]"> {{ levelBadge }} level {{ userLevel }} </span>
           <span class="text-sm text-gray-500 dark:text-gray-400">•</span>

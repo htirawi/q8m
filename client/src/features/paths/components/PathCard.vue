@@ -58,7 +58,7 @@
         v-if="path.frameworks.length > 3"
         class="rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-600 dark:bg-gray-700 dark:text-gray-400"
       >
-        +{{ path.frameworks.length - 3 }}
+        +{{ path.frameworks?.length - 3 }}
       </span>
     </div>
 
@@ -75,7 +75,7 @@
         v-if="path.rating"
         class="flex items-center gap-1 text-xs text-yellow-600 dark:text-yellow-400"
       >
-        ⭐ {{ path.rating.toFixed(1) }}
+        ⭐ {{ path.rating?.toFixed(1) }}
       </span>
     </div>
   </div>

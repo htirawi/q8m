@@ -66,23 +66,23 @@ const handleSecondaryCTA = (): void => {
         <!-- IBadge -->
         <div class="hero-badge">
           <RocketLaunchIcon class="badge-icon" aria-hidden="true" />
-          <span class="badge-text">{{ $t("home.hero.badge") }}</span>
+          <span class="badge-text">{{ $t("home.hero?.badge") }}</span>
         </div>
 
         <h1 id="hero-title" :class="['hero-title', { 'font-arabic': locale === 'ar' }]">
           {{ headlineText }}
         </h1>
         <p :class="['hero-description', { 'font-arabic-sans': locale === 'ar' }]">
-          {{ $t("home.hero.description") }}
+          {{ $t("home.hero?.description") }}
         </p>
 
         <!-- Tech Stack Badges -->
         <div class="tech-stack">
-          <span class="tech-badge">{{ $t("home.hero.techStack.react") }} </span>
-          <span class="tech-badge">{{ $t("home.hero.techStack.vue") }} </span>
-          <span class="tech-badge">{{ $t("home.hero.techStack.angular") }} </span>
-          <span class="tech-badge">{{ $t("home.hero.techStack.nextjs") }} </span>
-          <span class="tech-badge">{{ $t("home.hero.techStack.typescript") }} </span>
+          <span class="tech-badge">{{ $t("home.hero.techStack?.react") }} </span>
+          <span class="tech-badge">{{ $t("home.hero.techStack?.vue") }} </span>
+          <span class="tech-badge">{{ $t("home.hero.techStack?.angular") }} </span>
+          <span class="tech-badge">{{ $t("home.hero.techStack?.nextjs") }} </span>
+          <span class="tech-badge">{{ $t("home.hero.techStack?.typescript") }} </span>
         </div>
 
         <div class="hero-actions">
@@ -93,7 +93,7 @@ const handleSecondaryCTA = (): void => {
             @click="handlePrimaryCTA"
             :aria-label="t('home.hero.cta.primaryAriaLabel')"
           >
-            {{ $t("home.hero.cta.primary") }}
+            {{ $t("home.hero.cta?.primary") }}
 
             <svg
               class="hero-cta-icon"
@@ -118,7 +118,7 @@ const handleSecondaryCTA = (): void => {
             @click="handleSecondaryCTA"
             :aria-label="t('home.hero.cta.secondaryAriaLabel')"
           >
-            {{ $t("home.hero.cta.secondary") }}
+            {{ $t("home.hero.cta?.secondary") }}
           </button>
         </div>
 
@@ -137,7 +137,7 @@ const handleSecondaryCTA = (): void => {
                 clip-rule="evenodd"
               />
             </svg>
-            <span>{{ $t("home.hero.reassurance.noCard") }} </span>
+            <span>{{ $t("home.hero.reassurance?.noCard") }} </span>
           </li>
           <li class="hero-reassurance__item">
             <svg
@@ -152,7 +152,7 @@ const handleSecondaryCTA = (): void => {
                 clip-rule="evenodd"
               />
             </svg>
-            <span>{{ $t("home.hero.reassurance.fullAccess") }} </span>
+            <span>{{ $t("home.hero.reassurance?.fullAccess") }} </span>
           </li>
           <li class="hero-reassurance__item">
             <svg
@@ -167,22 +167,22 @@ const handleSecondaryCTA = (): void => {
                 clip-rule="evenodd"
               />
             </svg>
-            <span>{{ $t("home.hero.reassurance.cancelAnytime") }} </span>
+            <span>{{ $t("home.hero.reassurance?.cancelAnytime") }} </span>
           </li>
         </ul>
 
         <div class="hero-stats">
           <div class="stat-item">
             <span class="stat-number">500+</span>
-            <span class="stat-label">{{ $t("home.hero.stats.questions") }} </span>
+            <span class="stat-label">{{ $t("home.hero.stats?.questions") }} </span>
           </div>
           <div class="stat-item">
             <span class="stat-number">10+</span>
-            <span class="stat-label">{{ $t("home.hero.stats.frameworks") }} </span>
+            <span class="stat-label">{{ $t("home.hero.stats?.frameworks") }} </span>
           </div>
           <div class="stat-item">
             <span class="stat-number">95%</span>
-            <span class="stat-label">{{ $t("home.hero.stats.success") }} </span>
+            <span class="stat-label">{{ $t("home.hero.stats?.success") }} </span>
           </div>
         </div>
       </div>
@@ -196,7 +196,7 @@ const handleSecondaryCTA = (): void => {
                 <div class="dot yellow"></div>
                 <div class="dot green"></div>
               </div>
-              <div class="dashboard-title">{{ $t("home.hero.dashboard.title") }}</div>
+              <div class="dashboard-title">{{ $t("home.hero.dashboard?.title") }}</div>
             </div>
             <div class="dashboard-content">
               <div class="quiz-card">
@@ -204,8 +204,8 @@ const handleSecondaryCTA = (): void => {
                   <BoltIcon class="quiz-icon__svg" aria-hidden="true" />
                 </div>
                 <div class="quiz-info">
-                  <h4>{{ $t("home.hero.dashboard.quiz1.title") }}</h4>
-                  <p>{{ $t("home.hero.dashboard.quiz1.details") }}</p>
+                  <h4>{{ $t("home.hero.dashboard.quiz1?.title") }}</h4>
+                  <p>{{ $t("home.hero.dashboard.quiz1?.details") }}</p>
                 </div>
                 <div class="quiz-progress">
                   <div class="progress-bar">
@@ -219,8 +219,8 @@ const handleSecondaryCTA = (): void => {
                   <FlagIcon class="quiz-icon__svg" aria-hidden="true" />
                 </div>
                 <div class="quiz-info">
-                  <h4>{{ $t("home.hero.dashboard.quiz2.title") }}</h4>
-                  <p>{{ $t("home.hero.dashboard.quiz2.details") }}</p>
+                  <h4>{{ $t("home.hero.dashboard.quiz2?.title") }}</h4>
+                  <p>{{ $t("home.hero.dashboard.quiz2?.details") }}</p>
                 </div>
                 <div class="quiz-progress">
                   <div class="progress-bar">
@@ -234,8 +234,8 @@ const handleSecondaryCTA = (): void => {
                   <CheckCircleIcon class="quiz-icon__svg" aria-hidden="true" />
                 </div>
                 <div class="quiz-info">
-                  <h4>{{ $t("home.hero.dashboard.quiz3.title") }}</h4>
-                  <p>{{ $t("home.hero.dashboard.quiz3.details") }}</p>
+                  <h4>{{ $t("home.hero.dashboard.quiz3?.title") }}</h4>
+                  <p>{{ $t("home.hero.dashboard.quiz3?.details") }}</p>
                 </div>
                 <div class="quiz-progress">
                   <div class="progress-bar">

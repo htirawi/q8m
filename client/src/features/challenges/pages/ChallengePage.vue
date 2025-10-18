@@ -39,7 +39,7 @@
         >
           <div class="mb-1 text-sm text-gray-600 dark:text-gray-400">Best Score</div>
           <div class="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
-            {{ stats.bestScore.toFixed(1) }}%
+            {{ stats.bestScore?.toFixed(1) }}%
           </div>
         </div>
         <div
@@ -84,7 +84,7 @@
                       : 'bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-300',
                 ]"
               >
-                {{ tab.count }}
+                {{ tab.count ?? 0 }}
               </span>
             </span>
             <div

@@ -37,10 +37,10 @@
             </span>
           </div>
           <h4 class="mb-1 font-bold text-gray-900 dark:text-white">
-            {{ badge.name }}
+            {{ badge.name ?? "" }}
           </h4>
           <p class="mb-2 text-sm text-gray-600 dark:text-gray-400">
-            {{ badge.description }}
+            {{ badge.description ?? "" }}
           </p>
           <div class="flex items-center gap-3 text-sm">
             <div class="flex items-center gap-1 font-semibold text-purple-600 dark:text-purple-400">

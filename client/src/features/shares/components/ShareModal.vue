@@ -47,8 +47,8 @@
                   class="h-16 w-16 rounded-lg object-cover"
                 />
                 <div class="flex-1">
-                  <h4 class="font-semibold text-gray-900">{{ preview.title }}</h4>
-                  <p class="mt-1 text-sm text-gray-600">{{ preview.description }}</p>
+                  <h4 class="font-semibold text-gray-900">{{ preview.title ?? "" }}</h4>
+                  <p class="mt-1 text-sm text-gray-600">{{ preview.description ?? "" }}</p>
                 </div>
               </div>
             </div>

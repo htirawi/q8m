@@ -4,10 +4,10 @@
       <thead class="bg-gray-50 dark:bg-gray-900">
         <tr>
           <th class="px-4 py-3 text-left font-medium text-gray-900 dark:text-white">
-            {{ t("convert.comparison.feature") }}
+            {{ t("convert.comparison?.feature") }}
           </th>
           <th class="px-4 py-3 text-center font-medium text-gray-500 dark:text-gray-400">
-            {{ t("plans.names.free") }}
+            {{ t("plans.names?.free") }}
           </th>
           <th
             class="bg-gradient-to-r from-primary-500 to-purple-500 px-4 py-3 text-center font-medium text-white dark:text-white"

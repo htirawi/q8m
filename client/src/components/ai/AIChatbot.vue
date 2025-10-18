@@ -145,7 +145,7 @@
               >
                 <span class="ai-chatbot__quick-action-icon">{{ action.icon }} </span>
                 <span class="ai-chatbot__quick-action-label">{{ action.label }} </span>
-                <span class="ai-chatbot__quick-action-desc">{{ action.description }}</span>
+                <span class="ai-chatbot__quick-action-desc">{{ action.description ?? "" }}</span>
               </button>
             </div>
           </div>
@@ -333,7 +333,7 @@
 
             <!-- Character count -->
             <span v-if="showCharCount" class="ai-chatbot__char-count">
-              {{ inputText.length }} / {{ maxChars }}
+              {{ inputText.length ?? 0 }} / {{ maxChars }}
             </span>
           </div>
 

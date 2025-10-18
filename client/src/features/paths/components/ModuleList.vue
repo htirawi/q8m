@@ -35,7 +35,7 @@
               questions</span
             >
             <span v-if="module.prerequisites.length > 0">
-              🔒 {{ module.prerequisites.length }}
+              🔒 {{ module.prerequisites?.length ?? 0 }}
 
               prerequisites
             </span>

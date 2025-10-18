@@ -189,7 +189,7 @@ onUnmounted(() => {
         <div class="resource-stats">
           <div class="stat-item">
             <span class="stat-label">Total Resources:</span>
-            <span class="stat-value">{{ resourceTimings.length }} </span>
+            <span class="stat-value">{{ resourceTimings.length ?? 0 }} </span>
           </div>
           <div class="stat-item">
             <span class="stat-label">Total Size:</span>
@@ -197,11 +197,11 @@ onUnmounted(() => {
           </div>
           <div class="stat-item">
             <span class="stat-label">Slow Resources:</span>
-            <span class="stat-value">{{ slowResources.length }} </span>
+            <span class="stat-value">{{ slowResources.length ?? 0 }} </span>
           </div>
           <div class="stat-item">
             <span class="stat-label">Large Resources:</span>
-            <span class="stat-value">{{ largeResources.length }} </span>
+            <span class="stat-value">{{ largeResources.length ?? 0 }} </span>
           </div>
         </div>
       </div>

@@ -86,7 +86,7 @@ const selectCurrency = async (currency: "USD" | "JOD" | "SAR") => {
           >
             <span class="currency-flag">{{ currency.flag }} </span>
             <div class="currency-info">
-              <span class="currency-name">{{ currency.name }} </span>
+              <span class="currency-name">{{ currency.name ?? "" }} </span>
               <span class="currency-code">{{ currency.code }} </span>
             </div>
             <CheckIcon v-if="currency.code === currentCurrency" class="currency-check" />

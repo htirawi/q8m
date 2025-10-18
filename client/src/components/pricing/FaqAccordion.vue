@@ -25,10 +25,10 @@ defineOptions({
     <div class="faq-accordion-container">
       <div class="faq-accordion-header">
         <h2 id="faq-title" class="faq-accordion-title">
-          {{ $t("pricing.faq.title") }}
+          {{ $t("pricing.faq?.title") }}
         </h2>
         <p class="faq-accordion-description">
-          {{ $t("pricing.faq.subtitle") }}
+          {{ $t("pricing.faq?.subtitle") }}
         </p>
       </div>
 

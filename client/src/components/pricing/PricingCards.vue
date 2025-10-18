@@ -140,7 +140,7 @@ defineOptions({
           data-testid="toggle-monthly"
           :aria-pressed="billingCycle === 'monthly'"
         >
-          {{ t("pricing.billing.monthly") }}
+          {{ t("pricing.billing?.monthly") }}
         </button>
 
         <button
@@ -151,17 +151,17 @@ defineOptions({
           data-testid="toggle-annual"
           :aria-pressed="billingCycle === 'annual'"
         >
-          {{ t("pricing.billing.yearly") }}
+          {{ t("pricing.billing?.yearly") }}
 
           <span v-if="savingsPercent > 0" class="pricing-cards__toggle-badge">
-            {{ t("pricing.billing.savePercent", { percent: savingsPercent }) }}
+            {{ t("pricing.billing?.savePercent", { percent: savingsPercent }) }}
           </span>
         </button>
       </div>
 
       <!-- Savings message -->
       <p v-if="billingCycle === 'annual'" class="pricing-cards__savings-message">
-        {{ t("pricing.billing.savingsMessage") }}
+        {{ t("pricing.billing?.savingsMessage") }}
       </p>
     </div>
 
@@ -187,7 +187,7 @@ defineOptions({
             <span class="pricing-cards__social-proof-number">2,500+</span>
             <span class="pricing-cards__social-proof-label"
               >{{
-                t("pricing.socialProof.recentPurchases", {
+                t("pricing.socialProof?.recentPurchases", {
                   count: "2,500",
                 })
               }}
@@ -196,14 +196,14 @@ defineOptions({
           <div class="pricing-cards__social-proof-stat">
             <span class="pricing-cards__social-proof-number">150+</span>
             <span class="pricing-cards__social-proof-label"
-              >{{ t("pricing.socialProof.liveCounter", { count: "150" }) }}
+              >{{ t("pricing.socialProof?.liveCounter", { count: "150" }) }}
             </span>
           </div>
           <div class="pricing-cards__social-proof-stat">
             <span class="pricing-cards__social-proof-number">4.9★</span>
             <span class="pricing-cards__social-proof-label"
               >{{
-                t("pricing.socialProof.rating", {
+                t("pricing.socialProof?.rating", {
                   rating: "4.9",
                   count: "500",
                 })
@@ -220,7 +220,7 @@ defineOptions({
                 clip-rule="evenodd"
               />
             </svg>
-            <span>{{ t("pricing.trust.secure") }} </span>
+            <span>{{ t("pricing.trust?.secure") }} </span>
           </div>
           <div class="pricing-cards__social-proof-badge">
             <svg class="pricing-cards__social-proof-icon" fill="currentColor" viewBox="0 0 20 20">
@@ -230,7 +230,7 @@ defineOptions({
                 clip-rule="evenodd"
               />
             </svg>
-            <span>{{ t("pricing.trust.moneyBack") }} </span>
+            <span>{{ t("pricing.trust?.moneyBack") }} </span>
           </div>
           <div class="pricing-cards__social-proof-badge">
             <svg class="pricing-cards__social-proof-icon" fill="currentColor" viewBox="0 0 20 20">
@@ -240,7 +240,7 @@ defineOptions({
                 clip-rule="evenodd"
               />
             </svg>
-            <span>{{ t("pricing.trust.cancel") }} </span>
+            <span>{{ t("pricing.trust?.cancel") }} </span>
           </div>
         </div>
       </div>
@@ -254,7 +254,7 @@ defineOptions({
           <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" />
         </svg>
         <span class="pricing-cards__social-proof-text">
-          {{ t("pricing.socialProof.trust") }}
+          {{ t("pricing.socialProof?.trust") }}
         </span>
       </div>
     </div>
@@ -275,7 +275,7 @@ defineOptions({
               clip-rule="evenodd"
             />
           </svg>
-          <span>{{ t("pricing.trust.secure") }} </span>
+          <span>{{ t("pricing.trust?.secure") }} </span>
         </div>
         <div class="pricing-cards__trust-item">
           <svg
@@ -293,7 +293,7 @@ defineOptions({
               clip-rule="evenodd"
             />
           </svg>
-          <span>{{ t("pricing.trust.moneyBack") }} </span>
+          <span>{{ t("pricing.trust?.moneyBack") }} </span>
         </div>
         <div class="pricing-cards__trust-item">
           <svg
@@ -308,7 +308,7 @@ defineOptions({
               clip-rule="evenodd"
             />
           </svg>
-          <span>{{ t("pricing.trust.cancel") }} </span>
+          <span>{{ t("pricing.trust?.cancel") }} </span>
         </div>
       </div>
     </div>

@@ -193,14 +193,16 @@ onMounted(async () => {
                 @click="handleSuggestionClick(suggestion._id)"
                 class="mb-1 w-full truncate font-semibold text-gray-900 transition-colors hover:text-indigo-600 dark:text-white dark:hover:text-indigo-400"
               >
-                {{ suggestion.name }}
+                {{ suggestion.name ?? "" }}
               </button>
 
               <div class="mb-2 flex items-center justify-center gap-2 text-sm">
                 <span :class="getLevelColor(suggestion.level)">
                   {{ getLevelBadge(suggestion.level) }}
                 </span>
-                <span class="text-gray-600 dark:text-gray-400"> Level {{ suggestion.level }} </span>
+                <span class="text-gray-600 dark:text-gray-400">
+                  Level {{ suggestion.level ?? 0 }}
+                </span>
               </div>
 
               <!-- Mutual Friends -->

@@ -30,7 +30,7 @@
               activeTab === tab.id ? 'bg-blue-100 text-blue-600' : 'bg-gray-100 text-gray-600',
             ]"
           >
-            {{ tab.count }}
+            {{ tab.count ?? 0 }}
           </span>
         </button>
       </nav>

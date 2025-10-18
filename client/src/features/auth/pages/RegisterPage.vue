@@ -79,10 +79,10 @@ function handleRegistrationSuccess(_email: string) {
       <!-- Welcome Section -->
       <div class="welcome-section">
         <h2 class="welcome-title">
-          {{ $t("auth.unified.title") }}
+          {{ $t("auth.unified?.title") }}
         </h2>
         <p class="welcome-subtitle">
-          {{ $t("auth.unified.subtitle") }}
+          {{ $t("auth.unified?.subtitle") }}
         </p>
       </div>
 

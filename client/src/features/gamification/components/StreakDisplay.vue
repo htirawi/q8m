@@ -86,7 +86,7 @@
           </div>
           <div class="rounded-lg bg-gray-50 p-3 text-center dark:bg-gray-900">
             <div class="text-2xl font-bold text-gray-900 dark:text-white">
-              {{ achievedMilestones.length }}
+              {{ achievedMilestones.length ?? 0 }}
             </div>
             <div class="text-xs text-gray-600 dark:text-gray-400">Milestones Hit</div>
           </div>
@@ -154,7 +154,7 @@
           </div>
           <div class="rounded-lg bg-gray-50 p-4 text-center dark:bg-gray-800">
             <div class="text-3xl font-bold text-purple-500">
-              {{ achievedMilestones.length }}
+              {{ achievedMilestones.length ?? 0 }}
             </div>
             <div class="mt-1 text-sm text-gray-600 dark:text-gray-400">Milestones</div>
           </div>

@@ -95,9 +95,9 @@ function getScoreColor(score: number): string {
             <div v-for="quiz in quizHistory" :key="quiz.id" class="quiz-card">
               <div class="quiz-header">
                 <div class="quiz-type-badge">{{ quiz.quizType }}</div>
-                <div class="quiz-level-badge">{{ quiz.level }}</div>
+                <div class="quiz-level-badge">{{ quiz.level ?? 0 }}</div>
                 <div class="quiz-score" :style="{ color: getScoreColor(quiz.score) }">
-                  {{ quiz.score }}%
+                  {{ quiz.score ?? 0 }}%
                 </div>
               </div>
 
@@ -125,14 +125,14 @@ function getScoreColor(score: number): string {
                 <div v-if="quiz.badgesEarned.length > 0" class="detail-row">
                   <span class="detail-label">Badges:</span>
                   <span class="detail-value"
-                    >{{ quiz.badgesEarned.length }}
+                    >{{ quiz.badgesEarned?.length ?? 0 }}
 
                     earned 🏆</span
                   >
                 </div>
                 <div v-if="quiz.weakCategories.length > 0" class="detail-row">
                   <span class="detail-label">Weak Categories:</span>
-                  <span class="detail-value weak">{{ quiz.weakCategories.join(", ") }} </span>
+                  <span class="detail-value weak">{{ quiz.weakCategories?.join(", ") }} </span>
                 </div>
               </div>
 

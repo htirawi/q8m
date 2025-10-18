@@ -2,14 +2,22 @@
   <div class="recent-activity">
     <div class="recent-activity__header">
       <h3 class="recent-activity__title">{{ $t("dashboard.recentActivity") }}</h3>
-      <button v-if="activities.length > displayLimit" class="recent-activity__toggle" @click="showAll = !showAll">
+      <button
+        v-if="activities.length > displayLimit"
+        class="recent-activity__toggle"
+        @click="showAll = !showAll"
+      >
         {{ showAll ? $t('common.showLess') : $t('common.showAll')$t }}
       </button>
     </div>
 
     <TransitionGroup name="activity-list" tag="div" class="recent-activity__list">
-      <div v-for="activity in displayedActivities" :key="activity.id" class="activity-item"
-        @click="handleActivityClick(activity)">
+      <div
+        v-for="activity in displayedActivities"
+        :key="activity.id"
+        class="activity-item"
+        @click="handleActivityClick(activity)"
+      >
         <div class="activity-item__icon" :class="`activity-item__icon--${activity.type}`">
           <span v-if="activity.icon">{{ activity.icon }} </span>
           <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -19,9 +27,9 @@
         </div>
 
         <div class="activity-item__content">
-          <h4 class="activity-item__title">{{ activity.title }}</h4>
+          <h4 class="activity-item__title">{{ activity.title ?? "" }}</h4>
           <p v-if="activity.description" class="activity-item__description">
-            {{ activity.description }}
+            {{ activity.description ?? "" }}
           </p>
           <time class="activity-item__time" :datetime="activity.timestamp">
             {{ formatTime(activity.timestamp) }}
@@ -30,12 +38,19 @@
 
         <div v-if="activity.progress !== undefined" class="activity-item__progress">
           <div class="activity-item__progress-bar">
-            <div class="activity-item__progress-fill" :style="{ width: `${activity.progress}%` }"></div>
+            <div
+              class="activity-item__progress-fill"
+              :style="{ width: `${activity.progress}%` }"
+            ></div>
           </div>
           <span class="activity-item__progress-text">{{ activity.progress }}%</span>
         </div>
 
-        <button v-if="activity.actionable" class="activity-item__action" @click.stop="handleAction(activity)">
+        <button
+          v-if="activity.actionable"
+          class="activity-item__action"
+          @click.stop="handleAction(activity)"
+        >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path d="M9 18l6-6-6-6" />
           </svg>

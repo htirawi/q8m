@@ -72,7 +72,7 @@
       class="mb-3 text-xl font-bold transition-colors duration-300"
       :class="getTitleClass(props.color)"
     >
-      {{ props.title }}
+      {{ props.title ?? "" }}
     </h3>
 
     <!-- Question Count -->

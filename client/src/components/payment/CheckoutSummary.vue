@@ -26,7 +26,7 @@ const billingCycleText = computed(() => {
 
       <div class="summary-items">
         <div class="summary-item">
-          <span class="item-label">{{ selectedPlan.name }} </span>
+          <span class="item-label">{{ selectedPlan.name ?? "" }} </span>
           <span class="item-value">{{ displayPrice }} </span>
         </div>
 

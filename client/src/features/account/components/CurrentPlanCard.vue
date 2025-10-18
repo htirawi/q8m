@@ -69,8 +69,8 @@ const getEntitlementBadgeClass = (entitlement: string) => {
         </div>
       </div>
       <div class="plan-price">
-        <span class="price-amount">{{ subscription.price.amount }} </span>
-        <span class="price-currency">{{ subscription.price.currency }} </span>
+        <span class="price-amount">{{ subscription.price?.amount }} </span>
+        <span class="price-currency">{{ subscription.price?.currency }} </span>
         <span class="price-period"
           >{{ $t(`subscription.billing.${subscription.billingCycle}`) }}
         </span>
@@ -79,7 +79,7 @@ const getEntitlementBadgeClass = (entitlement: string) => {
 
     <!-- Plan Features -->
     <div class="plan-features">
-      <h3 class="features-title">{{ $t("subscription.features.title") }}</h3>
+      <h3 class="features-title">{{ $t("subscription.features?.title") }}</h3>
       <ul class="features-list">
         <li v-for="feature in features" :key="feature" class="feature-item">
           <svg class="h-5 w-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -97,7 +97,7 @@ const getEntitlementBadgeClass = (entitlement: string) => {
 
     <!-- Current Entitlements -->
     <div class="entitlements-section">
-      <h3 class="entitlements-title">{{ $t("subscription.entitlements.title") }}</h3>
+      <h3 class="entitlements-title">{{ $t("subscription.entitlements?.title") }}</h3>
       <div class="entitlements-grid">
         <div
           v-for="entitlement in entitlements"
@@ -117,14 +117,14 @@ const getEntitlementBadgeClass = (entitlement: string) => {
         </div>
       </div>
       <p class="entitlements-description">
-        {{ $t("subscription.entitlements.description") }}
+        {{ $t("subscription.entitlements?.description") }}
       </p>
     </div>
 
     <!-- Subscription Status -->
     <div class="subscription-status">
       <div class="status-item">
-        <span class="status-label">{{ $t("subscription.status.label") }} </span>
+        <span class="status-label">{{ $t("subscription.status?.label") }} </span>
         <span class="status-value" :class="statusClass">
           {{ $t(`subscription.status.${subscription.status}`) }}
         </span>

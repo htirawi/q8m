@@ -24,7 +24,7 @@ const levelBadge = computed(() => getLevelBadge(props.friend.level));
 const levelTitle = computed(() => getLevelTitle(props.friend.level));
 const avatarColor = computed(() => getAvatarColor(props.friend.name));
 const friendSinceText = computed(() =>
-  props.friend.friendSince ? formatDate(props.friend.friendSince) : "Recently"
+  props.friend.friendSince ? formatDate(props.friend.friendSince as Date | string) : "Recently"
 );
 
 // Methods
@@ -57,7 +57,7 @@ const handleView = () => {
             compact ? 'h-10 w-10 text-sm' : 'h-12 w-12 text-base',
           ]"
         >
-          {{ avatar.value }}
+          {{ avatar.value ?? 0 }}
         </div>
         <img
           v-else
@@ -74,7 +74,7 @@ const handleView = () => {
             class="truncate font-semibold text-gray-900 dark:text-white"
             :class="compact ? 'text-sm' : 'text-base'"
           >
-            {{ friend.name }}
+            {{ friend.name ?? "" }}
           </h3>
           <span :class="['text-sm', levelColor]" :title="levelTitle">
             {{ levelBadge }}
@@ -85,10 +85,10 @@ const handleView = () => {
           class="flex items-center gap-2 text-gray-600 dark:text-gray-400"
           :class="compact ? 'text-xs' : 'text-sm'"
         >
-          <span>Level {{ friend.level }} </span>
+          <span>Level {{ friend.level ?? 0 }} </span>
           <span>•</span>
           <span
-            >{{ friend.xp.toLocaleString() }}
+            >{{ friend.xp?.toLocaleString() }}
 
             XP</span
           >

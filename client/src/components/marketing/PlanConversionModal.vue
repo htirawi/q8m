@@ -64,14 +64,14 @@
             <div class="mb-6">
               <div class="mb-3 flex items-center justify-between">
                 <h3 class="font-semibold text-gray-900 dark:text-white">
-                  {{ t("convert.planSelection.title") }}
+                  {{ t("convert.planSelection?.title") }}
                 </h3>
                 <button
                   type="button"
                   class="text-sm text-primary-600 hover:text-primary-700 dark:text-primary-400"
                   @click="toggleCoupon"
                 >
-                  {{ t("convert.coupon.toggle") }}
+                  {{ t("convert.coupon?.toggle") }}
                 </button>
               </div>
 
@@ -104,13 +104,13 @@
                           v-if="option.discountPercent"
                           class="rounded-full bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-700 dark:bg-green-900/30 dark:text-green-400"
                         >
-                          {{ t("convert.cycle.save", { percent: option.discountPercent }) }}
+                          {{ t("convert.cycle?.save", { percent: option.discountPercent }) }}
                         </span>
                         <span
                           v-if="option.isRecommended"
                           class="rounded-full bg-purple-100 px-2 py-0.5 text-xs font-semibold text-purple-700 dark:bg-purple-900/30 dark:text-purple-400"
                         >
-                          {{ t("convert.cycle.recommended") }}
+                          {{ t("convert.cycle?.recommended") }}
                         </span>
                       </div>
                     </div>
@@ -141,7 +141,7 @@
                       class="rounded-lg bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
                       @click="handleApplyCoupon"
                     >
-                      {{ t("convert.coupon.apply") }}
+                      {{ t("convert.coupon?.apply") }}
                     </button>
                   </div>
                 </div>
@@ -152,7 +152,7 @@
             <div class="mb-6 rounded-lg bg-gray-50 p-4 dark:bg-gray-900/50">
               <div class="flex items-center justify-between">
                 <span class="text-sm text-gray-600 dark:text-gray-400"
-                  >{{ t("convert.summary.total") }}
+                  >{{ t("convert.summary?.total") }}
                 </span>
                 <span class="text-xl font-bold text-gray-900 dark:text-white">
                   {{
@@ -161,7 +161,7 @@
                 </span>
               </div>
               <div class="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                {{ t("convert.summary.billedAs", { cycle: t(`convert.cycle.${selectedCycle}`) }) }}
+                {{ t("convert.summary?.billedAs", { cycle: t(`convert.cycle.${selectedCycle}`) }) }}
               </div>
             </div>
 
@@ -200,15 +200,15 @@
                       d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                     ></path>
                   </svg>
-                  {{ t("convert.cta.processing") }}
+                  {{ t("convert.cta?.processing") }}
                 </span>
               </button>
             </div>
 
             <!-- Reassurance -->
             <div class="mt-4 text-center text-sm text-gray-600 dark:text-gray-400">
-              {{ t("convert.reassurance.cancel") }} · {{ t("convert.reassurance.secure") }} ·
-              {{ t("convert.reassurance.guarantee") }}
+              {{ t("convert.reassurance?.cancel") }} · {{ t("convert.reassurance?.secure") }} ·
+              {{ t("convert.reassurance?.guarantee") }}
             </div>
 
             <!-- Social proof -->
@@ -226,14 +226,14 @@
                   />
                 </svg>
                 <span class="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300">{{
-                  t("convert.socialProof.rating", { rating: "4.9", count: developerCount })
+                  t("convert.socialProof?.rating", { rating: "4.9", count: developerCount })
                 }}</span>
               </div>
               <p class="text-center text-sm italic text-gray-700 dark:text-gray-300">
-                "{{ t("convert.testimonial.text") }}"
+                "{{ t("convert.testimonial?.text") }}"
               </p>
               <p class="mt-1 text-center text-xs font-medium text-gray-600 dark:text-gray-400">
-                {{ t("convert.testimonial.author") }}
+                {{ t("convert.testimonial?.author") }}
               </p>
             </div>
 
@@ -253,7 +253,7 @@
                     clip-rule="evenodd"
                   />
                 </svg>
-                {{ t("convert.trustBadges.secure") }}
+                {{ t("convert.trustBadges?.secure") }}
               </div>
               <div class="flex items-center gap-1.5">
                 <svg
@@ -270,7 +270,7 @@
                     clip-rule="evenodd"
                   />
                 </svg>
-                {{ t("convert.trustBadges.moneyBack") }}
+                {{ t("convert.trustBadges?.moneyBack") }}
               </div>
               <div class="flex items-center gap-1.5">
                 <svg
@@ -284,7 +284,7 @@
                     clip-rule="evenodd"
                   />
                 </svg>
-                {{ t("convert.trustBadges.cancelAnytime") }}
+                {{ t("convert.trustBadges?.cancelAnytime") }}
               </div>
             </div>
 
@@ -295,7 +295,7 @@
                 class="secondary-action-btn text-base font-semibold text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300"
                 @click="toggleComparison"
               >
-                {{ t("convert.comparison.toggle") }}
+                {{ t("convert.comparison?.toggle") }}
                 <span class="ml-1.5">{{ showComparison ? "▲" : "▼" }} </span>
               </button>
               <button
@@ -303,7 +303,7 @@
                 class="secondary-action-btn text-base font-semibold text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300"
                 @click="toggleFaq"
               >
-                {{ t("convert.faq.toggle") }}
+                {{ t("convert.faq?.toggle") }}
                 <span class="ml-1.5">{{ showFaq ? "▲" : "▼" }} </span>
               </button>
             </div>

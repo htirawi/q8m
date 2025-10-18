@@ -39,10 +39,18 @@ function formatDate(date: Date | string): string {
     <div v-else-if="progress" class="dashboard-content">
       <!-- Tabs -->
       <div class="tabs">
-        <button @click="activeTab = 'overview'" :class="{ active: activeTab === 'overview' }" class="tab-btn">
+        <button
+          @click="activeTab = 'overview'"
+          :class="{ active: activeTab === 'overview' }"
+          class="tab-btn"
+        >
           Overview
         </button>
-        <button @click="activeTab = 'stats'" :class="{ active: activeTab === 'stats' }" class="tab-btn">
+        <button
+          @click="activeTab = 'stats'"
+          :class="{ active: activeTab === 'stats' }"
+          class="tab-btn"
+        >
           Detailed Stats
         </button>
       </div>
@@ -55,11 +63,11 @@ function formatDate(date: Date | string): string {
           <div class="stats-grid">
             <div class="stat-card">
               <div class="stat-label">Current XP</div>
-              <div class="stat-value">{{ progress.xp }}</div>
+              <div class="stat-value">{{ progress.xp ?? 0 }}</div>
             </div>
             <div class="stat-card">
               <div class="stat-label">Level</div>
-              <div class="stat-value">{{ progress.level }}</div>
+              <div class="stat-value">{{ progress.level ?? 0 }}</div>
             </div>
             <div class="stat-card">
               <div class="stat-label">Total Badges</div>
@@ -74,37 +82,37 @@ function formatDate(date: Date | string): string {
           <div class="stats-grid">
             <div class="stat-card">
               <div class="stat-label">Mastered</div>
-              <div class="stat-value mastered">{{ progress.masteryStats.mastered }}</div>
+              <div class="stat-value mastered">{{ progress.masteryStats?.mastered }}</div>
             </div>
             <div class="stat-card">
               <div class="stat-label">Familiar</div>
-              <div class="stat-value familiar">{{ progress.masteryStats.familiar }}</div>
+              <div class="stat-value familiar">{{ progress.masteryStats?.familiar }}</div>
             </div>
             <div class="stat-card">
               <div class="stat-label">Learning</div>
-              <div class="stat-value learning">{{ progress.masteryStats.learning }}</div>
+              <div class="stat-value learning">{{ progress.masteryStats?.learning }}</div>
             </div>
             <div class="stat-card">
               <div class="stat-label">New</div>
-              <div class="stat-value new">{{ progress.masteryStats.new }}</div>
+              <div class="stat-value new">{{ progress.masteryStats?.new }}</div>
             </div>
           </div>
           <div class="stats-grid">
             <div class="stat-card">
               <div class="stat-label">Total Questions</div>
-              <div class="stat-value">{{ progress.masteryStats.totalQuestions }}</div>
+              <div class="stat-value">{{ progress.masteryStats?.totalQuestions }}</div>
             </div>
             <div class="stat-card">
               <div class="stat-label">Accuracy</div>
-              <div class="stat-value">{{ progress.masteryStats.accuracy }}%</div>
+              <div class="stat-value">{{ progress.masteryStats?.accuracy }}%</div>
             </div>
             <div class="stat-card">
               <div class="stat-label">Due for Review</div>
-              <div class="stat-value">{{ progress.masteryStats.dueForReview }}</div>
+              <div class="stat-value">{{ progress.masteryStats?.dueForReview }}</div>
             </div>
             <div class="stat-card">
               <div class="stat-label">Overdue Reviews</div>
-              <div class="stat-value">{{ progress.masteryStats.overdueReviews }}</div>
+              <div class="stat-value">{{ progress.masteryStats?.overdueReviews }}</div>
             </div>
           </div>
         </section>
@@ -200,9 +208,11 @@ function formatDate(date: Date | string): string {
               <tr>
                 <td>Total Study Time</td>
                 <td>
-                  <strong>{{ Math.round(stats.totalStudyTimeMinutes) }}
+                  <strong
+                    >{{ Math.round(stats.totalStudyTimeMinutes) }}
 
-                    minutes</strong>
+                    minutes</strong
+                  >
                 </td>
               </tr>
               <tr>
@@ -214,9 +224,11 @@ function formatDate(date: Date | string): string {
               <tr>
                 <td>Average Session Duration</td>
                 <td>
-                  <strong>{{ Math.round(stats.averageSessionDurationMinutes) }}
+                  <strong
+                    >{{ Math.round(stats.averageSessionDurationMinutes) }}
 
-                    minutes</strong>
+                    minutes</strong
+                  >
                 </td>
               </tr>
               <tr>

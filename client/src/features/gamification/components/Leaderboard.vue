@@ -160,7 +160,7 @@
           <div
             class="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-purple-400 to-indigo-500 font-bold text-white shadow-md"
           >
-            {{ entry.displayName.charAt(0).toUpperCase() }}
+            {{ entry.displayName?.charAt(0).toUpperCase() }}
           </div>
 
           <!-- User info -->
@@ -177,7 +177,7 @@
               </div>
             </div>
             <div class="flex items-center gap-3 text-xs text-gray-600 dark:text-gray-400">
-              <span>Level {{ entry.level }} </span>
+              <span>Level {{ entry.level ?? 0 }} </span>
               <span>•</span>
               <span
                 >{{ entry.streak }}
@@ -186,7 +186,7 @@
               >
               <span v-if="entry.badges.length > 0">•</span>
               <span v-if="entry.badges.length > 0"
-                >{{ entry.badges.length }}
+                >{{ entry.badges?.length ?? 0 }}
 
                 badges</span
               >

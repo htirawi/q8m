@@ -46,7 +46,7 @@
               >
                 <option value="">Select a friend...</option>
                 <option v-for="friend in friends" :key="friend._id" :value="friend._id">
-                  {{ friend.name }} (Level {{ friend.level }})
+                  {{ friend.name ?? "" }} (Level {{ friend.level ?? 0 }})
                 </option>
               </select>
             </div>
@@ -71,7 +71,7 @@
                 >
                   <div class="mb-1 text-2xl">{{ diff.emoji }}</div>
                   <div class="font-medium capitalize text-gray-900 dark:text-white">
-                    {{ diff.value }}
+                    {{ diff.value ?? 0 }}
                   </div>
                 </button>
               </div>

@@ -57,7 +57,7 @@
                     {{ goal.label }}
                   </h3>
                   <p class="text-gray-600 dark:text-gray-400">
-                    {{ goal.description }}
+                    {{ goal.description ?? "" }}
                   </p>
                 </div>
                 <div v-if="preferences.goal === goal.value" class="text-blue-500">
@@ -93,7 +93,7 @@
                     {{ level.label }}
                   </h3>
                   <p class="text-gray-600 dark:text-gray-400">
-                    {{ level.description }}
+                    {{ level.description ?? "" }}
                   </p>
                 </div>
                 <div v-if="preferences.experienceLevel === level.value" class="text-indigo-500">
@@ -133,7 +133,7 @@
                       {{ framework.label }}
                     </h4>
                     <p class="text-xs text-gray-600 dark:text-gray-400">
-                      {{ framework.description }}
+                      {{ framework.description ?? "" }}
                     </p>
                   </div>
                   <div v-if="isFrameworkSelected(framework.value)" class="text-purple-500">
@@ -175,7 +175,7 @@
                   ]"
                 >
                   <div class="text-xl font-bold">{{ goal.label }}</div>
-                  <div class="mt-1 text-xs">{{ goal.description }}</div>
+                  <div class="mt-1 text-xs">{{ goal.description ?? "" }}</div>
                 </button>
               </div>
             </div>

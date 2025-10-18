@@ -142,26 +142,26 @@ onUnmounted(() => {
                 <path d="M2 12l10 5 10-5" />
               </svg>
             </div>
-            <span class="badge-text">{{ $t("home.demo.badge") }} </span>
+            <span class="badge-text">{{ $t("home.demo?.badge") }} </span>
           </div>
           <h1 id="demo-title" class="hero-title">
-            {{ $t("home.demo.title") }}
+            {{ $t("home.demo?.title") }}
           </h1>
           <p class="hero-description">
-            {{ $t("home.demo.description") }}
+            {{ $t("home.demo?.description") }}
           </p>
           <div class="hero-stats">
             <div class="stat-item">
               <span class="stat-number">50+</span>
-              <span class="stat-label">{{ $t("home.demo.stats.components") }} </span>
+              <span class="stat-label">{{ $t("home.demo.stats?.components") }} </span>
             </div>
             <div class="stat-item">
               <span class="stat-number">100%</span>
-              <span class="stat-label">{{ $t("home.demo.stats.accessible") }} </span>
+              <span class="stat-label">{{ $t("home.demo.stats?.accessible") }} </span>
             </div>
             <div class="stat-item">
               <span class="stat-number">0.5s</span>
-              <span class="stat-label">{{ $t("home.demo.stats.loadTime") }} </span>
+              <span class="stat-label">{{ $t("home.demo.stats?.loadTime") }} </span>
             </div>
           </div>
         </div>
@@ -174,7 +174,7 @@ onUnmounted(() => {
                   <span class="dot yellow"></span>
                   <span class="dot green"></span>
                 </div>
-                <span class="card-title">{{ $t("home.demo.cards.button") }} </span>
+                <span class="card-title">{{ $t("home.demo.cards?.button") }} </span>
               </div>
               <div class="card-content">
                 <div class="mini-button primary">Primary</div>
@@ -188,7 +188,7 @@ onUnmounted(() => {
                   <span class="dot yellow"></span>
                   <span class="dot green"></span>
                 </div>
-                <span class="card-title">{{ $t("home.demo.cards.form") }} </span>
+                <span class="card-title">{{ $t("home.demo.cards?.form") }} </span>
               </div>
               <div class="card-content">
                 <div class="mini-input"></div>
@@ -202,7 +202,7 @@ onUnmounted(() => {
                   <span class="dot yellow"></span>
                   <span class="dot green"></span>
                 </div>
-                <span class="card-title">{{ $t("home.demo.cards.state") }} </span>
+                <span class="card-title">{{ $t("home.demo.cards?.state") }} </span>
               </div>
               <div class="card-content">
                 <div class="mini-spinner"></div>
@@ -218,9 +218,9 @@ onUnmounted(() => {
     <div class="showcase-section">
       <div class="showcase-container">
         <div class="showcase-header">
-          <h2 class="showcase-title">{{ $t("home.demo.showcase.title") }}</h2>
+          <h2 class="showcase-title">{{ $t("home.demo.showcase?.title") }}</h2>
           <p class="showcase-subtitle">
-            {{ $t("home.demo.showcase.subtitle") }}
+            {{ $t("home.demo.showcase?.subtitle") }}
           </p>
         </div>
 
@@ -518,13 +518,13 @@ onUnmounted(() => {
                           <div class="multi-select-trigger" @click="toggleDropdown">
                             <div class="selected-display">
                               <span v-if="framework.length === 0" class="placeholder">
-                                {{ $t("home.demo.selectFramework") }}
+                                {{ $t("home.demo?.selectFramework") }}
                               </span>
                               <span v-else-if="framework.length === 1" class="single-selection">
                                 {{ getFrameworkLabel(framework[0] || "") }}
                               </span>
                               <span v-else class="multiple-selection">
-                                {{ framework.length }} frameworks selected
+                                {{ framework.length ?? 0 }} frameworks selected
                               </span>
                             </div>
                             <div class="dropdown-icon" :class="{ open: isDropdownOpen }">
@@ -575,7 +575,9 @@ onUnmounted(() => {
 
                         <div v-if="framework.length > 0" class="selected-frameworks">
                           <div class="selected-count">
-                            {{ framework.length }} framework{{ framework.length > 1 ? "s" : "" }}
+                            {{ framework.length ?? 0 }} framework{{
+                              framework.length > 1 ? "s" : ""
+                            }}
                             selected
                           </div>
                           <div class="selected-tags">
@@ -624,7 +626,7 @@ onUnmounted(() => {
                       >
                         <path d="M9 12l2 2 4-4" />
                       </svg>
-                      {{ $t("home.demo.submit") }}
+                      {{ $t("home.demo?.submit") }}
                     </button>
                     <button :class="cancelButtonClass" @click="handleCancel">
                       <svg
@@ -636,7 +638,7 @@ onUnmounted(() => {
                       >
                         <path d="M6 18L18 6M6 6l12 12" />
                       </svg>
-                      {{ $t("home.demo.cancel") }}
+                      {{ $t("home.demo?.cancel") }}
                     </button>
                   </div>
                 </div>

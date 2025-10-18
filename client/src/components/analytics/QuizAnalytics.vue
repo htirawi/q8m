@@ -81,7 +81,7 @@
       <div class="space-y-2">
         <div v-for="attempt in recentAttempts" :key="attempt.id" class="flex items-center gap-4">
           <div class="flex-shrink-0 text-sm text-gray-500 dark:text-gray-400">
-            {{ formatDate(attempt.timestamp) }}
+            {{ formatDate(attempt.timestamp as Date | string) }}
           </div>
           <div class="flex-shrink-0">
             <span
@@ -98,12 +98,12 @@
                 class="flex h-full items-center justify-end px-2 text-xs font-semibold text-white transition-all duration-500"
                 :style="{ width: `${attempt.score}%` }"
               >
-                {{ attempt.score }}%
+                {{ attempt.score ?? 0 }}%
               </div>
             </div>
           </div>
           <div class="flex-shrink-0 text-sm text-gray-600 dark:text-gray-400">
-            {{ attempt.correct }}/{{ attempt.total }}
+            {{ attempt.correct }}/{{ attempt.total ?? 0 }}
           </div>
         </div>
       </div>

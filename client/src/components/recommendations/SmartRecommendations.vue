@@ -38,10 +38,10 @@
         </svg>
         <div>
           <h3 class="font-semibold text-blue-900 dark:text-blue-200">
-            {{ personalizedMessage.title }}
+            {{ personalizedMessage.title ?? "" }}
           </h3>
           <p class="mt-1 text-sm text-blue-700 dark:text-blue-300">
-            {{ personalizedMessage.message }}
+            {{ personalizedMessage.message ?? "" }}
           </p>
         </div>
       </div>
@@ -73,10 +73,10 @@
             </span>
           </div>
           <h4 class="mb-2 font-semibold text-gray-900 dark:text-white">
-            {{ quiz.title }}
+            {{ quiz.title ?? "" }}
           </h4>
           <p class="mb-3 text-sm text-gray-600 dark:text-gray-400">
-            {{ quiz.description }}
+            {{ quiz.description ?? "" }}
           </p>
           <button
             type="button"
@@ -105,7 +105,7 @@
             <div class="flex-1">
               <div class="flex items-center gap-2">
                 <h4 class="font-semibold text-gray-900 dark:text-white">
-                  {{ topic.title }}
+                  {{ topic.title ?? "" }}
                 </h4>
                 <span
                   class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold"
@@ -165,7 +165,7 @@
             <div class="flex-1 pb-6">
               <div class="flex items-center justify-between">
                 <h4 class="font-semibold text-gray-900 dark:text-white">
-                  {{ step.title }}
+                  {{ step.title ?? "" }}
                 </h4>
                 <span
                   v-if="step.current"
@@ -175,7 +175,7 @@
                 </span>
               </div>
               <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                {{ step.description }}
+                {{ step.description ?? "" }}
               </p>
               <button
                 v-if="step.current"
@@ -214,7 +214,7 @@
             </svg>
             <div>
               <h4 class="text-sm font-semibold text-yellow-900 dark:text-yellow-200">
-                {{ tip.title }}
+                {{ tip.title ?? "" }}
               </h4>
               <p class="mt-1 text-xs text-yellow-700 dark:text-yellow-300">
                 {{ tip.tip }}

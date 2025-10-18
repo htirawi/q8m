@@ -92,32 +92,32 @@ onMounted(() => {
 
       <!-- Error Content -->
       <div class="error-content">
-        <h1 class="error-title">{{ $t("payment.error.title") }}</h1>
+        <h1 class="error-title">{{ $t("payment.error?.title") }}</h1>
         <p class="error-message">{{ errorMessage }}</p>
 
         <!-- Error Details -->
         <div v-if="errorDetails" class="error-details">
           <div class="error-card">
-            <h3 class="error-details-title">{{ $t("payment.error.details") }}</h3>
+            <h3 class="error-details-title">{{ $t("payment.error?.details") }}</h3>
 
             <div class="error-info">
               <div class="error-row">
-                <span class="error-label">{{ $t("payment.error.errorCode") }} </span>
+                <span class="error-label">{{ $t("payment.error?.errorCode") }} </span>
                 <span class="error-value">{{ errorDetails.errorCode }} </span>
               </div>
 
               <div v-if="errorDetails.orderId" class="error-row">
-                <span class="error-label">{{ $t("payment.error.orderId") }} </span>
+                <span class="error-label">{{ $t("payment.error?.orderId") }} </span>
                 <span class="error-value">{{ errorDetails.orderId }} </span>
               </div>
 
               <div v-if="errorDetails.plan" class="error-row">
-                <span class="error-label">{{ $t("payment.error.plan") }} </span>
+                <span class="error-label">{{ $t("payment.error?.plan") }} </span>
                 <span class="error-value">{{ errorDetails.plan }} </span>
               </div>
 
               <div class="error-row">
-                <span class="error-label">{{ $t("payment.error.timestamp") }} </span>
+                <span class="error-label">{{ $t("payment.error?.timestamp") }} </span>
                 <span class="error-value">{{ formattedTimestamp }} </span>
               </div>
             </div>
@@ -126,7 +126,7 @@ onMounted(() => {
 
         <!-- Common Solutions -->
         <div class="solutions-section">
-          <h3 class="solutions-title">{{ $t("payment.error.solutions.title") }}</h3>
+          <h3 class="solutions-title">{{ $t("payment.error.solutions?.title") }}</h3>
           <div class="solutions-list">
             <div class="solution-item">
               <div class="solution-icon">
@@ -140,9 +140,9 @@ onMounted(() => {
                 </svg>
               </div>
               <div class="solution-content">
-                <h4 class="solution-title">{{ $t("payment.error.solutions.card.title") }}</h4>
+                <h4 class="solution-title">{{ $t("payment.error.solutions.card?.title") }}</h4>
                 <p class="solution-description">
-                  {{ $t("payment.error.solutions.card.description") }}
+                  {{ $t("payment.error.solutions.card?.description") }}
                 </p>
               </div>
             </div>
@@ -159,9 +159,9 @@ onMounted(() => {
                 </svg>
               </div>
               <div class="solution-content">
-                <h4 class="solution-title">{{ $t("payment.error.solutions.billing.title") }}</h4>
+                <h4 class="solution-title">{{ $t("payment.error.solutions.billing?.title") }}</h4>
                 <p class="solution-description">
-                  {{ $t("payment.error.solutions.billing.description") }}
+                  {{ $t("payment.error.solutions.billing?.description") }}
                 </p>
               </div>
             </div>
@@ -178,9 +178,9 @@ onMounted(() => {
                 </svg>
               </div>
               <div class="solution-content">
-                <h4 class="solution-title">{{ $t("payment.error.solutions.network.title") }}</h4>
+                <h4 class="solution-title">{{ $t("payment.error.solutions.network?.title") }}</h4>
                 <p class="solution-description">
-                  {{ $t("payment.error.solutions.network.description") }}
+                  {{ $t("payment.error.solutions.network?.description") }}
                 </p>
               </div>
             </div>
@@ -198,7 +198,7 @@ onMounted(() => {
                 d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
               />
             </svg>
-            {{ $t("payment.error.retryPayment") }}
+            {{ $t("payment.error?.retryPayment") }}
           </button>
 
           <button @click="goToPricing" class="btn-secondary">
@@ -210,7 +210,7 @@ onMounted(() => {
                 d="M10 19l-7-7m0 0l7-7m-7 7h18"
               />
             </svg>
-            {{ $t("payment.error.backToPricing") }}
+            {{ $t("payment.error?.backToPricing") }}
           </button>
         </div>
 
@@ -228,8 +228,8 @@ onMounted(() => {
               </svg>
             </div>
             <div class="support-content">
-              <h3 class="support-title">{{ $t("payment.error.support.title") }}</h3>
-              <p class="support-description">{{ $t("payment.error.support.description") }}</p>
+              <h3 class="support-title">{{ $t("payment.error.support?.title") }}</h3>
+              <p class="support-description">{{ $t("payment.error.support?.description") }}</p>
               <div class="support-actions">
                 <a href="mailto:support@quizplatform.com" class="support-link">
                   <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -240,7 +240,7 @@ onMounted(() => {
                       d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
                     />
                   </svg>
-                  {{ $t("payment.error.support.email") }}
+                  {{ $t("payment.error.support?.email") }}
                 </a>
                 <a href="/contact" class="support-link">
                   <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -251,7 +251,7 @@ onMounted(() => {
                       d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
                     />
                   </svg>
-                  {{ $t("payment.error.support.chat") }}
+                  {{ $t("payment.error.support?.chat") }}
                 </a>
               </div>
             </div>

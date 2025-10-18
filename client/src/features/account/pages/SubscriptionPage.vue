@@ -144,10 +144,10 @@ onMounted(async () => {
               />
             </svg>
           </div>
-          <h2 class="no-subscription-title">{{ $t("subscription.noSubscription.title") }}</h2>
-          <p class="no-subscription-message">{{ $t("subscription.noSubscription.message") }}</p>
+          <h2 class="no-subscription-title">{{ $t("subscription.noSubscription?.title") }}</h2>
+          <p class="no-subscription-message">{{ $t("subscription.noSubscription?.message") }}</p>
           <button @click="goToPricing" class="btn-primary">
-            {{ $t("subscription.noSubscription.choosePlan") }}
+            {{ $t("subscription.noSubscription?.choosePlan") }}
           </button>
         </div>
       </div>

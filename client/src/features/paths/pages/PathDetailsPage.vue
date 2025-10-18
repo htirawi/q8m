@@ -34,7 +34,7 @@
             <div class="flex items-center gap-1">
               <span>📚</span>
               <span
-                >{{ store.currentPath.totalQuestions }}
+                >{{ store.currentPath?.totalQuestions }}
 
                 Questions</span
               >
@@ -42,19 +42,19 @@
             <div class="flex items-center gap-1">
               <span>⏱️</span>
               <span
-                >{{ store.currentPath.estimatedHours }}
+                >{{ store.currentPath?.estimatedHours }}
 
                 Hours</span
               >
             </div>
             <div class="flex items-center gap-1">
               <span>📊</span>
-              <span class="capitalize">{{ store.currentPath.difficulty }} </span>
+              <span class="capitalize">{{ store.currentPath?.difficulty }} </span>
             </div>
             <div class="flex items-center gap-1">
               <span>👥</span>
               <span
-                >{{ store.currentPath.enrollmentCount }}
+                >{{ store.currentPath?.enrollmentCount }}
 
                 Enrolled</span
               >

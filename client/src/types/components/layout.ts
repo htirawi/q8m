@@ -21,4 +21,3 @@ export interface IUserMenuProps {
   planName?: string;
   isPaidUser?: boolean;
 }
-

@@ -20,7 +20,7 @@
                 class="h-5 w-5 animate-spin rounded-full border-2 border-blue-600 border-t-transparent"
                 aria-hidden="true"
               />
-              <span class="text-sm font-medium">{{ t("study.sticky.loading") }} </span>
+              <span class="text-sm font-medium">{{ t("study.sticky?.loading") }} </span>
             </div>
 
             <!-- Error state -->
@@ -41,7 +41,7 @@
                 />
               </svg>
               <span class="text-sm font-medium"
-                >{{ errorMessage || t("study.sticky.error") }}
+                >{{ errorMessage || t("study.sticky?.error") }}
               </span>
             </div>
 
@@ -76,7 +76,7 @@
               data-testid="sticky-retry-button"
               @click="handleRetry"
             >
-              {{ t("study.sticky.retry") }}
+              {{ t("study.sticky?.retry") }}
             </button>
 
             <!-- Start button -->
@@ -121,7 +121,7 @@
           class="mt-2 text-center text-xs text-gray-500 dark:text-gray-400"
           data-testid="keyboard-hint"
         >
-          {{ t("study.sticky.keyboardHint") }}
+          {{ t("study.sticky?.keyboardHint") }}
         </div>
       </div>
     </div>

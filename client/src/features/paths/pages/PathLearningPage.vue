@@ -17,7 +17,7 @@
               {{ currentTitle }}
             </h1>
             <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-              Module {{ currentModuleNumber }} of {{ store.currentPath.modules.length }}
+              Module {{ currentModuleNumber }} of {{ store.currentPath.modules?.length ?? 0 }}
             </p>
           </div>
 
@@ -25,7 +25,7 @@
           <div class="space-y-2">
             <div class="flex justify-between text-sm text-gray-600 dark:text-gray-400">
               <span>Overall Progress</span>
-              <span>{{ store.currentEnrollment.progress }}%</span>
+              <span>{{ store.currentEnrollment?.progress }}%</span>
             </div>
             <div class="h-2 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
               <div

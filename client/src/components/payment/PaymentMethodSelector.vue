@@ -67,8 +67,8 @@ const selectMethod = (methodId: string) => {
             <component :is="method.icon" class="h-8 w-8" />
           </div>
           <div class="payment-method-info">
-            <h4 class="payment-method-name">{{ method.name }}</h4>
-            <p class="payment-method-description">{{ method.description }}</p>
+            <h4 class="payment-method-name">{{ method.name ?? "" }}</h4>
+            <p class="payment-method-description">{{ method.description ?? "" }}</p>
           </div>
           <div class="payment-method-radio">
             <input

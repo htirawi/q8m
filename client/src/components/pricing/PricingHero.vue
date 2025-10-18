@@ -35,19 +35,19 @@ defineOptions({
           <div class="pricing-hero-stat">
             <div class="pricing-hero-stat-number">10,000+</div>
             <div class="pricing-hero-stat-label">
-              {{ $t("pricing.socialProof.recentPurchases", { count: "10,000" }) }}
+              {{ $t("pricing.socialProof?.recentPurchases", { count: "10,000" }) }}
             </div>
           </div>
           <div class="pricing-hero-stat">
             <div class="pricing-hero-stat-number">4.9/5</div>
             <div class="pricing-hero-stat-label">
-              {{ $t("pricing.socialProof.rating", { rating: "4.9", count: "500" }) }}
+              {{ $t("pricing.socialProof?.rating", { rating: "4.9", count: "500" }) }}
             </div>
           </div>
           <div class="pricing-hero-stat">
             <div class="pricing-hero-stat-number">83%</div>
             <div class="pricing-hero-stat-label">
-              {{ $t("pricing.roi.stats.jobOfferRate.label") }}
+              {{ $t("pricing.roi.stats.jobOfferRate?.label") }}
             </div>
           </div>
         </div>
@@ -55,7 +55,7 @@ defineOptions({
         <!-- Trust Badges -->
         <div class="pricing-hero-trust">
           <p class="pricing-hero-trust-text">
-            {{ $t("pricing.hero.trustedBy") }}
+            {{ $t("pricing.hero?.trustedBy") }}
           </p>
           <div class="pricing-hero-trust-badges">
             <div v-for="badge in trustBadges" :key="badge.name" class="pricing-hero-trust-badge">

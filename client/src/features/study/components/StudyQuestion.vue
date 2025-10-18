@@ -32,7 +32,7 @@
               class="h-1.5 w-1.5 rounded-full bg-current"
             ></span>
           </span>
-          {{ question.difficulty.charAt(0).toUpperCase() + question.difficulty.slice(1) }}
+          {{ question.difficulty.charAt(0).toUpperCase() + question.difficulty?.slice(1) }}
         </span>
 
         <!-- Question Type Badge -->

@@ -25,8 +25,8 @@ const pricePeriod = computed(() => {
 
     <div class="plan-details">
       <div class="plan-info">
-        <h4 class="plan-name">{{ selectedPlan.name }}</h4>
-        <p class="plan-description">{{ selectedPlan.description }}</p>
+        <h4 class="plan-name">{{ selectedPlan.name ?? "" }}</h4>
+        <p class="plan-description">{{ selectedPlan.description ?? "" }}</p>
       </div>
 
       <div class="plan-pricing">

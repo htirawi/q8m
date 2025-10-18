@@ -60,7 +60,7 @@
           v-if="!isLocked && isCurrentPlan"
           class="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800 dark:bg-green-900 dark:text-green-200"
         >
-          {{ t("study.levelCard.currentPlan") }}
+          {{ t("study.levelCard?.currentPlan") }}
         </span>
         <!-- Available IBadge -->
         <span
@@ -68,7 +68,7 @@
           class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium"
           :class="availableBadgeClass"
         >
-          {{ t("plans.access.available") }}
+          {{ t("plans.access?.available") }}
         </span>
         <!-- Locked IBadge -->
         <LockedBadge v-else :required-plan="requiredPlan" />
@@ -111,7 +111,7 @@
                 d="M13 10V3L4 14h7v7l9-11h-7z"
               />
             </svg>
-            {{ t("study.levelCard.clickToUnlock") }}
+            {{ t("study.levelCard?.clickToUnlock") }}
           </span>
         </div>
       </div>

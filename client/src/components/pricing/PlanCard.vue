@@ -87,10 +87,10 @@ defineOptions({
         <span class="plan-card-amount">{{ currentPrice }} </span>
       </div>
       <p class="plan-card-period">
-        {{ billing === "monthly" ? t("pricing.billing.perMonth") : t("pricing.billing.perYear") }}
+        {{ billing === "monthly" ? t("pricing.billing.perMonth") : t("pricing.billing?.perYear") }}
       </p>
       <p v-if="savingsPercent > 0" class="plan-card-savings">
-        {{ t("pricing.billing.savePercent", { percent: savingsPercent }) }}
+        {{ t("pricing.billing?.savePercent", { percent: savingsPercent }) }}
       </p>
 
       <!-- ROI Calculator for paid plans -->
@@ -113,7 +113,7 @@ defineOptions({
               d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
             />
           </svg>
-          <span>{{ t("pricing.roi.calculator") }}</span>
+          <span>{{ t("pricing.roi?.calculator") }}</span>
         </button>
       </div>
 
@@ -122,7 +122,7 @@ defineOptions({
         <div class="plan-card-social-proof-stats">
           <div class="plan-card-social-proof-stat">
             <span class="plan-card-social-proof-label">{{
-              t("pricing.socialProof.recentPurchases", { count: "2,500" })
+              t("pricing.socialProof?.recentPurchases", { count: "2,500" })
             }}</span>
           </div>
         </div>
@@ -232,7 +232,7 @@ defineOptions({
               d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
             />
           </svg>
-          <span>{{ t("pricing.urgency.limitedTime") }}</span>
+          <span>{{ t("pricing.urgency?.limitedTime") }}</span>
         </div>
       </div>
     </div>

@@ -4,7 +4,7 @@
       <!-- User count -->
       <div class="social-proof-bar__message">
         <span class="social-proof-bar__text">
-          {{ t("home.socialProof.trustedBy", { count: userCount }) }}
+          {{ t("home.socialProof?.trustedBy", { count: userCount }) }}
         </span>
       </div>
 

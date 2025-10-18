@@ -51,10 +51,10 @@
               </svg>
             </div>
             <h3 :id="headingId" class="mt-4 text-center text-2xl font-bold">
-              {{ t("study.upsell.title") }}
+              {{ t("study.upsell?.title") }}
             </h3>
             <p class="mt-2 text-center text-sm text-white/90">
-              {{ t("study.upsell.subtitle", { difficulty: difficultyLabel }) }}
+              {{ t("study.upsell?.subtitle", { difficulty: difficultyLabel }) }}
             </p>
           </div>
 
@@ -63,19 +63,19 @@
             <!-- Plan comparison -->
             <div class="mb-6">
               <h4 class="mb-4 font-semibold text-gray-900 dark:text-white">
-                {{ t("study.upsell.comparison.title") }}
+                {{ t("study.upsell.comparison?.title") }}
               </h4>
               <div class="overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700">
                 <table class="w-full text-sm">
                   <thead class="bg-gray-50 dark:bg-gray-900">
                     <tr>
                       <th class="px-4 py-3 text-left font-medium text-gray-900 dark:text-white">
-                        {{ t("study.upsell.comparison.feature") }}
+                        {{ t("study.upsell.comparison?.feature") }}
                       </th>
                       <th
                         class="px-4 py-3 text-center font-medium text-gray-500 dark:text-gray-400"
                       >
-                        {{ t("plans.names.free") }}
+                        {{ t("plans.names?.free") }}
                       </th>
                       <th
                         class="rounded-t bg-gradient-to-r from-primary-500 to-purple-500 px-4 py-3 text-center font-medium text-white dark:text-white"
@@ -148,7 +148,7 @@
             <!-- Benefits -->
             <div class="mb-6">
               <h4 class="mb-4 font-semibold text-gray-900 dark:text-white">
-                {{ t("study.upsell.benefits.title", { plan: targetPlanName }) }}
+                {{ t("study.upsell.benefits?.title", { plan: targetPlanName }) }}
               </h4>
               <ul class="space-y-3">
                 <li v-for="(benefit, idx) in benefits" :key="idx" class="flex items-start gap-3">
@@ -184,17 +184,17 @@
                 </svg>
               </div>
               <p class="mb-2 text-sm italic text-gray-700 dark:text-gray-300">
-                {{ t("study.upsell.testimonial.text") }}
+                {{ t("study.upsell.testimonial?.text") }}
               </p>
               <p class="text-xs font-medium text-gray-600 dark:text-gray-400">
-                {{ t("study.upsell.testimonial.author") }}
+                {{ t("study.upsell.testimonial?.author") }}
               </p>
             </div>
 
             <!-- Quick FAQ -->
             <div class="mb-6">
               <h4 class="mb-3 font-semibold text-gray-900 dark:text-white">
-                {{ t("study.upsell.faq.title") }}
+                {{ t("study.upsell.faq?.title") }}
               </h4>
               <div class="space-y-3">
                 <details
@@ -236,7 +236,7 @@
                 class="w-full rounded-lg bg-gradient-to-r from-primary-600 to-purple-600 px-6 py-3 font-semibold text-white transition-all hover:from-primary-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
                 @click="handleUpgrade"
               >
-                {{ t("study.upsell.cta.upgrade", { plan: targetPlanName }) }}
+                {{ t("study.upsell.cta?.upgrade", { plan: targetPlanName }) }}
               </button>
 
               <!-- Secondary CTA -->
@@ -245,7 +245,7 @@
                 class="w-full rounded-lg border border-gray-300 bg-white px-6 py-3 font-medium text-gray-700 transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 dark:focus:ring-offset-gray-800"
                 @click="handleViewAllPlans"
               >
-                {{ t("study.upsell.cta.viewAllPlans") }}
+                {{ t("study.upsell.cta?.viewAllPlans") }}
               </button>
 
               <!-- Tertiary CTA -->
@@ -254,7 +254,7 @@
                 class="w-full px-6 py-2 text-sm text-gray-600 hover:text-gray-900 focus:outline-none dark:text-gray-400 dark:hover:text-gray-200"
                 @click="handleDismiss('maybe_later_button')"
               >
-                {{ t("study.upsell.cta.maybeLater") }}
+                {{ t("study.upsell.cta?.maybeLater") }}
               </button>
             </div>
 
@@ -270,7 +270,7 @@
                     clip-rule="evenodd"
                   />
                 </svg>
-                {{ t("study.upsell.trust.secure") }}
+                {{ t("study.upsell.trust?.secure") }}
               </div>
               <div class="flex items-center gap-1">
                 <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
@@ -283,7 +283,7 @@
                     clip-rule="evenodd"
                   />
                 </svg>
-                {{ t("study.upsell.trust.moneyBack") }}
+                {{ t("study.upsell.trust?.moneyBack") }}
               </div>
             </div>
           </div>

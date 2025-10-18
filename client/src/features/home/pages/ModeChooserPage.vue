@@ -121,7 +121,7 @@
       >
         <div class="mb-8 text-center">
           <h2 class="mb-2 text-3xl font-bold text-gray-900 dark:text-white">
-            {{ t("modeChooser.comparison.title") }}
+            {{ t("modeChooser.comparison?.title") }}
           </h2>
           <p class="text-base text-gray-600 dark:text-gray-400">Compare features side by side</p>
         </div>
@@ -133,7 +133,7 @@
                 <th
                   class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400"
                 >
-                  {{ t("modeChooser.comparison.feature") }}
+                  {{ t("modeChooser.comparison?.feature") }}
                 </th>
                 <th class="px-6 py-4 text-center">
                   <div class="inline-flex flex-col items-center gap-2">
@@ -143,7 +143,7 @@
                       📚
                     </div>
                     <span class="text-sm font-semibold text-gray-900 dark:text-white"
-                      >{{ t("modeChooser.studyMode.title") }}
+                      >{{ t("modeChooser.studyMode?.title") }}
                     </span>
                   </div>
                 </th>
@@ -155,7 +155,7 @@
                       🎯
                     </div>
                     <span class="text-sm font-semibold text-gray-900 dark:text-white"
-                      >{{ t("modeChooser.quizMode.title") }}
+                      >{{ t("modeChooser.quizMode?.title") }}
                     </span>
                   </div>
                 </th>
@@ -168,7 +168,7 @@
                 class="transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/50"
               >
                 <td class="px-6 py-5 text-sm font-medium text-gray-900 dark:text-white">
-                  {{ t(`modeChooser.comparison.features.${comparison.key}`) }}
+                  {{ t(`modeChooser.comparison?.features.${comparison.key}`) }}
                 </td>
                 <td class="px-6 py-5 text-center">
                   <span

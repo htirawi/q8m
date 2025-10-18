@@ -3,8 +3,8 @@
     <div class="testimonial-carousel-container">
       <!-- Header -->
       <div class="testimonial-header">
-        <h2 class="testimonial-title">{{ $t("pricing.testimonials.title") }}</h2>
-        <p class="testimonial-subtitle">{{ $t("pricing.testimonials.subtitle") }}</p>
+        <h2 class="testimonial-title">{{ $t("pricing.testimonials?.title") }}</h2>
+        <p class="testimonial-subtitle">{{ $t("pricing.testimonials?.subtitle") }}</p>
       </div>
 
       <!-- Carousel -->
@@ -64,8 +64,8 @@
                   </div>
                 </div>
                 <div class="testimonial-author-info">
-                  <div class="testimonial-author-name">{{ testimonial.name }}</div>
-                  <div class="testimonial-author-title">{{ testimonial.title }}</div>
+                  <div class="testimonial-author-name">{{ testimonial.name ?? "" }}</div>
+                  <div class="testimonial-author-title">{{ testimonial.title ?? "" }}</div>
                   <div v-if="testimonial.company" class="testimonial-author-company">
                     {{ testimonial.company }}
                   </div>
@@ -130,15 +130,15 @@
       <div class="testimonial-stats">
         <div class="testimonial-stat">
           <div class="testimonial-stat-value">15,000+</div>
-          <div class="testimonial-stat-label">{{ $t("pricing.stats.developers") }}</div>
+          <div class="testimonial-stat-label">{{ $t("pricing.stats?.developers") }}</div>
         </div>
         <div class="testimonial-stat">
           <div class="testimonial-stat-value">4.9/5</div>
-          <div class="testimonial-stat-label">{{ $t("pricing.stats.rating") }}</div>
+          <div class="testimonial-stat-label">{{ $t("pricing.stats?.rating") }}</div>
         </div>
         <div class="testimonial-stat">
           <div class="testimonial-stat-value">98%</div>
-          <div class="testimonial-stat-label">{{ $t("pricing.stats.satisfaction") }}</div>
+          <div class="testimonial-stat-label">{{ $t("pricing.stats?.satisfaction") }}</div>
         </div>
       </div>
     </div>

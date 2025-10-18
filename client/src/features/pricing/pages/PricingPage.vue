@@ -80,7 +80,7 @@ defineOptions({
     <section id="main-content" class="pricing-page-cards" aria-labelledby="plans-title">
       <div class="pricing-page-cards-container">
         <h2 id="plans-title" class="sr-only">
-          {{ $t("pricing.plans.title") }}
+          {{ $t("pricing.plans?.title") }}
         </h2>
         <PricingCards />
       </div>

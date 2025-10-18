@@ -27,7 +27,7 @@
           <h2
             class="mb-3 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-4xl font-extrabold text-transparent dark:from-blue-400 dark:via-purple-400 dark:to-pink-400 sm:text-5xl"
           >
-            {{ t("quiz.results.title") }}
+            {{ t("quiz.results?.title") }}
           </h2>
 
           <!-- Subtitle with IBadge -->
@@ -37,7 +37,7 @@
               :class="levelBadgeClass"
             >
               <span class="text-base">{{ levelIcon }} </span>
-              <span>{{ t(`level.${level}.label`) }} {{ t("quiz.results.levelQuiz") }} </span>
+              <span>{{ t(`level.${level}.label`) }} {{ t("quiz.results?.levelQuiz") }} </span>
             </span>
           </div>
 
@@ -74,12 +74,14 @@
           </div>
           <div class="mb-2 text-4xl font-extrabold text-blue-900 dark:text-blue-200">
             {{ score.correct
-            }}<span class="text-2xl text-blue-600 dark:text-blue-400">/{{ score.total }} </span>
+            }}<span class="text-2xl text-blue-600 dark:text-blue-400"
+              >/{{ score.total ?? 0 }}
+            </span>
           </div>
           <div
             class="text-xs font-semibold uppercase tracking-wide text-blue-700 dark:text-blue-300"
           >
-            {{ t("quiz.results.correctAnswers") }}
+            {{ t("quiz.results?.correctAnswers") }}
           </div>
         </div>
 
@@ -113,7 +115,7 @@
           <div
             class="text-xs font-semibold uppercase tracking-wide text-green-700 dark:text-green-300"
           >
-            {{ t("quiz.results.accuracy") }}
+            {{ t("quiz.results?.accuracy") }}
           </div>
         </div>
 
@@ -147,7 +149,7 @@
           <div
             class="text-xs font-semibold uppercase tracking-wide text-purple-700 dark:text-purple-300"
           >
-            {{ t("quiz.results.timeSpent") }}
+            {{ t("quiz.results?.timeSpent") }}
           </div>
         </div>
       </div>
@@ -158,7 +160,7 @@
         class="border-t border-gray-200 px-6 py-6 dark:border-gray-700 sm:px-8"
       >
         <h3 class="mb-4 text-center text-lg font-bold text-gray-900 dark:text-white">
-          🎉 {{ t("quiz.results.rewards") || "Rewards Earned" }}
+          🎉 {{ t("quiz.results?.rewards") || "Rewards Earned" }}
         </h3>
 
         <div class="space-y-3">
@@ -173,10 +175,10 @@
                 </div>
                 <div>
                   <div class="text-sm font-medium text-purple-900 dark:text-purple-100">
-                    {{ t("quiz.results.xpEarned") || "Experience Points" }}
+                    {{ t("quiz.results?.xpEarned") || "Experience Points" }}
                   </div>
                   <div class="text-xs text-purple-700 dark:text-purple-300">
-                    {{ t("quiz.results.keepLearning") || "Keep learning to level up!" }}
+                    {{ t("quiz.results?.keepLearning") || "Keep learning to level up!" }}
                   </div>
                 </div>
               </div>
@@ -221,7 +223,7 @@
             <div class="mb-2 flex items-center gap-2">
               <span class="text-2xl">🏆</span>
               <div class="text-sm font-semibold text-yellow-900 dark:text-yellow-100">
-                {{ t("quiz.results.newBadges") || "New Badges Unlocked!" }}
+                {{ t("quiz.results?.newBadges") || "New Badges Unlocked!" }}
               </div>
             </div>
             <div class="flex flex-wrap gap-2">
@@ -241,7 +243,7 @@
           >
             <span class="text-2xl">🔥</span>
             <div class="text-sm font-medium text-orange-900 dark:text-orange-100">
-              {{ t("quiz.results.streakMaintained") || "Daily streak maintained!" }}
+              {{ t("quiz.results?.streakMaintained") || "Daily streak maintained!" }}
             </div>
           </div>
 
@@ -253,7 +255,7 @@
             <div class="mb-2 flex items-center gap-2">
               <span class="text-xl">💪</span>
               <div class="text-sm font-semibold text-green-900 dark:text-green-100">
-                {{ t("quiz.results.strongCategories") || "Strong Categories" }}
+                {{ t("quiz.results?.strongCategories") || "Strong Categories" }}
               </div>
             </div>
             <div class="flex flex-wrap gap-2">
@@ -275,7 +277,7 @@
             <div class="mb-2 flex items-center gap-2">
               <span class="text-xl">📚</span>
               <div class="text-sm font-semibold text-blue-900 dark:text-blue-100">
-                {{ t("quiz.results.needsPractice") || "Areas for Improvement" }}
+                {{ t("quiz.results?.needsPractice") || "Areas for Improvement" }}
               </div>
             </div>
             <div class="flex flex-wrap gap-2">
@@ -315,7 +317,7 @@
                 d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
               />
             </svg>
-            {{ t("quiz.results.tryAgain") }}
+            {{ t("quiz.results?.tryAgain") }}
           </button>
           <button
             type="button"
@@ -336,7 +338,7 @@
                 d="M10 19l-7-7m0 0l7-7m-7 7h18"
               />
             </svg>
-            {{ t("quiz.results.backToSelection") }}
+            {{ t("quiz.results?.backToSelection") }}
           </button>
         </div>
       </div>

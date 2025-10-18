@@ -95,7 +95,7 @@
                 class="w-full rounded-lg bg-primary-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
                 @click="handleSeePlans"
               >
-                {{ t("paywall.cta.seePlans") }}
+                {{ t("paywall.cta?.seePlans") }}
               </button>
 
               <!-- Secondary CTA -->
@@ -104,7 +104,7 @@
                 class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 dark:focus:ring-offset-gray-800"
                 @click="handleContinueFree"
               >
-                {{ t("paywall.cta.continueFree") }}
+                {{ t("paywall.cta?.continueFree") }}
               </button>
             </div>
           </div>

@@ -107,7 +107,7 @@
                 class="code-example"
               >
                 <div class="code-example__header">
-                  <h5 class="code-example__title">{{ example.title }}</h5>
+                  <h5 class="code-example__title">{{ example.title ?? "" }}</h5>
                   <button
                     class="code-example__copy"
                     @click="copyCode(example.code)"
@@ -162,7 +162,7 @@
                   class="visual-aid__image"
                 />
                 <div v-if="visual.svg" class="visual-aid__svg" v-html="visual.svg"></div>
-                <p class="visual-aid__description">{{ visual.description }}</p>
+                <p class="visual-aid__description">{{ visual.description ?? "" }}</p>
               </div>
             </div>
           </div>
@@ -327,8 +327,8 @@
                     </svg>
                   </div>
                   <div class="resource-item__content">
-                    <h5 class="resource-item__title">{{ resource.title }}</h5>
-                    <p class="resource-item__description">{{ resource.description }}</p>
+                    <h5 class="resource-item__title">{{ resource.title ?? "" }}</h5>
+                    <p class="resource-item__description">{{ resource.description ?? "" }}</p>
                     <div class="resource-item__meta">
                       <span v-if="resource.duration">{{ resource.duration }} </span>
                       <span v-if="resource.free" class="resource-item__badge"

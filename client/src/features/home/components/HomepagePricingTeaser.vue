@@ -4,10 +4,10 @@
       <!-- Section header -->
       <div class="pricing-teaser__header">
         <h2 id="pricing-title" class="pricing-teaser__title">
-          {{ t("home.pricing.title") }}
+          {{ t("home.pricing?.title") }}
         </h2>
         <p class="pricing-teaser__subtitle">
-          {{ t("home.pricing.subtitle") }}
+          {{ t("home.pricing?.subtitle") }}
         </p>
       </div>
 
@@ -20,7 +20,7 @@
           @click="handleToggle('monthly')"
           data-testid="toggle-monthly"
         >
-          {{ t("home.pricing.monthly") }}
+          {{ t("home.pricing?.monthly") }}
         </button>
 
         <button
@@ -30,13 +30,13 @@
           @click="handleToggle('annual')"
           data-testid="toggle-annual"
         >
-          {{ t("home.pricing.yearly") }}
+          {{ t("home.pricing?.yearly") }}
         </button>
       </div>
 
       <!-- Savings message for annual -->
       <p v-if="billingCycle === 'annual'" class="pricing-teaser__savings-message">
-        {{ t("home.pricing.savingsMessage") }}
+        {{ t("home.pricing?.savingsMessage") }}
       </p>
 
       <!-- Pricing cards -->
@@ -61,7 +61,7 @@
           class="pricing-teaser__view-all"
           @click="handleViewAllPlans"
         >
-          {{ t("home.pricing.viewAllPlans") }}
+          {{ t("home.pricing?.viewAllPlans") }}
 
           <svg
             class="pricing-teaser__arrow"

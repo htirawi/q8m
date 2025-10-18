@@ -23,7 +23,7 @@
               :format="(value) => Math.round(value).toString()"
             />
           </div>
-          <div class="countdown-label">{{ $t("pricing.countdown.days") }}</div>
+          <div class="countdown-label">{{ $t("pricing.countdown?.days") }}</div>
         </div>
 
         <!-- Hours -->
@@ -31,7 +31,7 @@
           <div class="countdown-value">
             {{ formatTime(timeLeft.hours) }}
           </div>
-          <div class="countdown-label">{{ $t("pricing.countdown.hours") }}</div>
+          <div class="countdown-label">{{ $t("pricing.countdown?.hours") }}</div>
         </div>
 
         <!-- Separator -->
@@ -42,7 +42,7 @@
           <div class="countdown-value">
             {{ formatTime(timeLeft.minutes) }}
           </div>
-          <div class="countdown-label">{{ $t("pricing.countdown.minutes") }}</div>
+          <div class="countdown-label">{{ $t("pricing.countdown?.minutes") }}</div>
         </div>
 
         <!-- Separator -->
@@ -53,7 +53,7 @@
           <div class="countdown-value">
             {{ formatTime(timeLeft.seconds) }}
           </div>
-          <div class="countdown-label">{{ $t("pricing.countdown.seconds") }}</div>
+          <div class="countdown-label">{{ $t("pricing.countdown?.seconds") }}</div>
         </div>
       </div>
 
@@ -75,7 +75,7 @@
 
       <!-- Expired Message -->
       <div v-if="isExpired" class="countdown-expired">
-        {{ expiredMessage || $t("pricing.countdown.expired") }}
+        {{ expiredMessage || $t("pricing.countdown?.expired") }}
       </div>
     </div>
   </div>

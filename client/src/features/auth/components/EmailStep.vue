@@ -47,7 +47,7 @@ const _handlecontinue = () => {
   <div class="form-step">
     <div class="form-group">
       <label for="email" class="form-label">
-        {{ $t("auth.fields.email") }}
+        {{ $t("auth.fields?.email") }}
       </label>
       <input
         id="email"
@@ -72,10 +72,10 @@ const _handlecontinue = () => {
     >
       <span v-if="isLoading" class="button-content">
         <LoadingSpinner size="sm" color="white" />
-        {{ $t("auth.register.processing") }}
+        {{ $t("auth.register?.processing") }}
       </span>
       <span v-else class="button-content">
-        {{ $t("auth.register.continue") }}
+        {{ $t("auth.register?.continue") }}
       </span>
     </button>
   </div>

@@ -35,7 +35,7 @@ const handleCTAClick = (): void => {
     :data-tier-id="tier.id"
   >
     <div v-if="tier.popular" class="tier-card__badge">
-      {{ t("home.pricing.popular") }}
+      {{ t("home.pricing?.popular") }}
     </div>
 
     <div class="tier-card__header">

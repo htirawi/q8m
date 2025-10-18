@@ -217,15 +217,17 @@ onMounted(async () => {
             <div class="min-w-0 flex-1">
               <div class="mb-1 flex items-center gap-2">
                 <h3 class="truncate font-semibold text-gray-900 dark:text-white">
-                  {{ request.name }}
+                  {{ request.name ?? "" }}
                 </h3>
                 <span :class="['text-sm', getLevelColor(request.level)]">
                   {{ getLevelBadge(request.level) }}
                 </span>
               </div>
-              <div class="text-sm text-gray-600 dark:text-gray-400">Level {{ request.level }}</div>
+              <div class="text-sm text-gray-600 dark:text-gray-400">
+                Level {{ request.level ?? 0 }}
+              </div>
               <div v-if="request.requestedAt" class="mt-1 text-xs text-gray-500 dark:text-gray-500">
-                {{ formatDate(request.requestedAt) }}
+                {{ formatDate(request.requestedAt as Date | string) }}
               </div>
             </div>
 
@@ -293,16 +295,18 @@ onMounted(async () => {
             <div class="min-w-0 flex-1">
               <div class="mb-1 flex items-center gap-2">
                 <h3 class="truncate font-semibold text-gray-900 dark:text-white">
-                  {{ request.name }}
+                  {{ request.name ?? "" }}
                 </h3>
                 <span :class="['text-sm', getLevelColor(request.level)]">
                   {{ getLevelBadge(request.level) }}
                 </span>
               </div>
-              <div class="text-sm text-gray-600 dark:text-gray-400">Level {{ request.level }}</div>
+              <div class="text-sm text-gray-600 dark:text-gray-400">
+                Level {{ request.level ?? 0 }}
+              </div>
               <div class="mt-1 flex items-center gap-2">
                 <span class="text-xs text-gray-500 dark:text-gray-500">
-                  Sent {{ formatDate(request.sentAt!) }}
+                  Sent {{ formatDate(request.sentAt! as Date | string) }}
                 </span>
                 <span class="text-xs text-yellow-600 dark:text-yellow-400">• Pending</span>
               </div>

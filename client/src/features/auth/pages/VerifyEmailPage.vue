@@ -102,9 +102,9 @@ function handleResendVerification() {
           <div class="spinner-container">
             <div class="spinner"></div>
           </div>
-          <h2 class="state-title">{{ $t("auth.verify.verifying") }}</h2>
+          <h2 class="state-title">{{ $t("auth.verify?.verifying") }}</h2>
           <p class="state-description">
-            {{ $t("auth.verify.pleaseWait") }}
+            {{ $t("auth.verify?.pleaseWait") }}
           </p>
         </div>
 
@@ -121,12 +121,12 @@ function handleResendVerification() {
               <path d="M20 6L9 17l-5-5" />
             </svg>
           </div>
-          <h2 class="state-title success">{{ $t("auth.verify.success") }}</h2>
+          <h2 class="state-title success">{{ $t("auth.verify?.success") }}</h2>
           <p class="state-description">
-            {{ $t("auth.verify.successMessage") }}
+            {{ $t("auth.verify?.successMessage") }}
           </p>
           <p class="redirect-message">
-            {{ $t("auth.verify.redirecting") }}
+            {{ $t("auth.verify?.redirecting") }}
           </p>
         </div>
 
@@ -145,17 +145,17 @@ function handleResendVerification() {
               <line x1="9" y1="9" x2="15" y2="15" />
             </svg>
           </div>
-          <h2 class="state-title error">{{ $t("auth.verify.error") }}</h2>
+          <h2 class="state-title error">{{ $t("auth.verify?.error") }}</h2>
           <p class="state-description error-text">
             {{ errorMessage }}
           </p>
 
           <div class="action-buttons">
             <button class="btn btn-primary" @click="handleGoToLogin">
-              {{ $t("auth.verify.goToLogin") }}
+              {{ $t("auth.verify?.goToLogin") }}
             </button>
             <button class="btn btn-secondary" @click="handleResendVerification">
-              {{ $t("auth.verify.resendEmail") }}
+              {{ $t("auth.verify?.resendEmail") }}
             </button>
           </div>
         </div>

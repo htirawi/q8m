@@ -187,7 +187,7 @@
               </div>
               <div class="flex-1">
                 <div class="font-semibold text-gray-900 dark:text-white">
-                  {{ levelInfo.title }}
+                  {{ levelInfo.title ?? "" }}
                 </div>
                 <div class="text-xs text-gray-500 dark:text-gray-400">
                   Levels {{ levelInfo.min }}-{{ levelInfo.max }}

@@ -104,9 +104,9 @@
               </div>
 
               <div class="text-center">
-                <h3 class="mb-2 text-2xl font-bold">{{ t("level.junior.label") }}</h3>
+                <h3 class="mb-2 text-2xl font-bold">{{ t("level.junior?.label") }}</h3>
                 <p :class="getLevelDescriptionClass('junior')" class="mb-6 min-h-[48px]">
-                  {{ t("level.junior.description") }}
+                  {{ t("level.junior?.description") }}
                 </p>
               </div>
 
@@ -177,7 +177,7 @@
                       clip-rule="evenodd"
                     />
                   </svg>
-                  {{ t("plans.access.available") }}
+                  {{ t("plans.access?.available") }}
                 </span>
                 <div v-else class="flex flex-col items-center gap-2">
                   <LockedBadge required-plan="free" />
@@ -227,9 +227,9 @@
               </div>
 
               <div class="text-center">
-                <h3 class="mb-2 text-2xl font-bold">{{ t("level.intermediate.label") }}</h3>
+                <h3 class="mb-2 text-2xl font-bold">{{ t("level.intermediate?.label") }}</h3>
                 <p :class="getLevelDescriptionClass('intermediate')" class="mb-6 min-h-[48px]">
-                  {{ t("level.intermediate.description") }}
+                  {{ t("level.intermediate?.description") }}
                 </p>
               </div>
 
@@ -300,7 +300,7 @@
                       clip-rule="evenodd"
                     />
                   </svg>
-                  {{ t("plans.access.available") }}
+                  {{ t("plans.access?.available") }}
                 </span>
                 <div v-else class="flex flex-col items-center gap-2">
                   <LockedBadge required-plan="intermediate" />
@@ -350,9 +350,9 @@
               </div>
 
               <div class="text-center">
-                <h3 class="mb-2 text-2xl font-bold">{{ t("level.senior.label") }}</h3>
+                <h3 class="mb-2 text-2xl font-bold">{{ t("level.senior?.label") }}</h3>
                 <p :class="getLevelDescriptionClass('senior')" class="mb-6 min-h-[48px]">
-                  {{ t("level.senior.description") }}
+                  {{ t("level.senior?.description") }}
                 </p>
               </div>
 
@@ -423,7 +423,7 @@
                       clip-rule="evenodd"
                     />
                   </svg>
-                  {{ t("plans.access.available") }}
+                  {{ t("plans.access?.available") }}
                 </span>
                 <div v-else class="flex flex-col items-center gap-2">
                   <LockedBadge required-plan="advanced" />

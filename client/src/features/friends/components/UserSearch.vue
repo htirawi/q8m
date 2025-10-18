@@ -190,7 +190,7 @@ if (props.showSuggestions) {
         <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
           Search Results
           <span v-if="pagination.total > 0" class="ml-2 text-sm font-normal text-gray-500">
-            ({{ pagination.total }} found)
+            ({{ pagination.total ?? 0 }} found)
           </span>
         </h3>
       </div>
@@ -233,17 +233,17 @@ if (props.showSuggestions) {
             <div class="min-w-0 flex-1">
               <div class="mb-1 flex items-center gap-2">
                 <h3 class="truncate font-semibold text-gray-900 dark:text-white">
-                  {{ user.name }}
+                  {{ user.name ?? "" }}
                 </h3>
                 <span :class="['text-sm', getLevelColor(user.level)]">
                   {{ getLevelBadge(user.level) }}
                 </span>
               </div>
               <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                <span>Level {{ user.level }} </span>
+                <span>Level {{ user.level ?? 0 }} </span>
                 <span>•</span>
                 <span
-                  >{{ user.xp.toLocaleString() }}
+                  >{{ user.xp?.toLocaleString() }}
 
                   XP</span
                 >
@@ -318,17 +318,17 @@ if (props.showSuggestions) {
             <div class="min-w-0 flex-1">
               <div class="mb-1 flex items-center gap-2">
                 <h3 class="truncate font-semibold text-gray-900 dark:text-white">
-                  {{ suggestion.name }}
+                  {{ suggestion.name ?? "" }}
                 </h3>
                 <span :class="['text-sm', getLevelColor(suggestion.level)]">
                   {{ getLevelBadge(suggestion.level) }}
                 </span>
               </div>
               <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                <span>Level {{ suggestion.level }} </span>
+                <span>Level {{ suggestion.level ?? 0 }} </span>
                 <span>•</span>
                 <span
-                  >{{ suggestion.xp.toLocaleString() }}
+                  >{{ suggestion.xp?.toLocaleString() }}
 
                   XP</span
                 >
