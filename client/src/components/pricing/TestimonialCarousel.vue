@@ -225,7 +225,6 @@ function prev() {
   isTransitioning.value = true;
   currentIndex.value =
     currentIndex.value === 0 ? props.testimonials.length - 1 : currentIndex.value - 1;
-  currentIndex.value0props.testimonials.length1;
   setTimeout(() => {
     isTransitioning.value = false;
   }, 300);

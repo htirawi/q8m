@@ -25,6 +25,7 @@ export interface ILearningStep {
   title: string;
   description: string;
   completed: boolean;
+  current?: boolean;
   locked?: boolean;
   action?: string;
 }
@@ -38,6 +39,7 @@ export interface IQuickTip {
   id: string;
   title: string;
   description: string;
+  tip?: string; // Alias for description or additional tip text
   icon?: string;
   category?: string;
 }
