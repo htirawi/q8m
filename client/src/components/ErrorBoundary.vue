@@ -65,7 +65,7 @@ import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
 import { parseError, getUserFriendlyMessage, logError } from "@/utils/errorHandler";
 
-interface props {
+interface Props {
   error?: Error | unknown;
   title?: string;
   message?: string;
@@ -79,7 +79,7 @@ interface props {
   reloadText?: string;
 }
 
-interface emits {
+interface Emits {
   (e: "retry"): void;
   (e: "reset"): void;
 }
@@ -127,12 +127,12 @@ const handleRetry = async () => {
   }
 };
 
-const handlegoback = () => {
+const handleGoBack = () => {
   router.back();
   emit("reset");
 };
 
-const handlereload = () => {
+const handleReload = () => {
   window.location.reload();
 };
 
