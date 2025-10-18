@@ -66,10 +66,14 @@ export interface ITierCardProps {
 export interface ITestimonial {
   id: string;
   quoteKey: string; // i18n key
+  text?: string; // Direct text or i18n key
   nameKey: string; // i18n key
   roleKey: string; // i18n key
   companyKey?: string; // i18n key
   avatarUrl?: string;
+  avatar?: string; // Alias for avatarUrl
+  title?: string;
+  badge?: string;
   rating?: number; // 1-5
 }
 

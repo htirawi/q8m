@@ -26,6 +26,7 @@ export interface ILearningStep {
   description: string;
   completed: boolean;
   locked?: boolean;
+  action?: string;
 }
 
 export interface ILearningPath {

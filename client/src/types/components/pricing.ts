@@ -9,6 +9,7 @@ export interface ICountdownTimerTimeLeft {
   hours: number;
   minutes: number;
   seconds: number;
+  total?: number; // Total time remaining in ms
 }
 
 export interface ICountdownTimerProps {

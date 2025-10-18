@@ -35,6 +35,8 @@ export interface IBadge {
   tier?: BadgeTier; // Alias for rarity
   earned: boolean;
   earnedAt?: Date;
+  xpReward?: number;
+  category?: string;
 }
 
 export interface IBadgeCardProps {
@@ -51,6 +53,8 @@ export interface IBadgeCardProps {
 export interface IBadgeData {
   badge: IBadge;
   progress?: number;
+  earned?: boolean;
+  earnedAt?: Date;
 }
 
 export interface IBadgesGridProps {
@@ -82,11 +86,13 @@ export interface ILeaderboardEntry {
   level?: number;
   change?: number;
   badges?: unknown[];
+  streak?: number;
 }
 
 export interface IUserRank {
   rank: number;
   score: number;
+  percentile?: number;
 }
 
 export interface ILeaderboardProps {
@@ -103,6 +109,7 @@ export interface IReward {
   type: "badge" | "xp" | "coins";
   value: string | number;
   icon?: string;
+  label?: string;
 }
 
 export interface ILevelUpCelebrationProps {
@@ -115,6 +122,7 @@ export interface IMilestoneReward {
   type: string;
   value: number;
   icon?: string;
+  label?: string;
 }
 
 export interface IMilestoneStat {
@@ -127,6 +135,11 @@ export interface IMilestone {
   value: number;
   rewards: IMilestoneReward[];
   stats?: IMilestoneStat[];
+  icon?: string;
+  title?: string;
+  description?: string;
+  shareable?: boolean;
+  actionText?: string;
 }
 
 export interface IMilestoneCelebrationProps {

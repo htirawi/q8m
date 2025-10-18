@@ -31,6 +31,7 @@ export interface IComparisonFeature {
   label?: string; // Alias for name
   included?: boolean; // Deprecated, use plan-specific properties
   tooltip?: string;
+  target?: string;
   // Plan-specific availability
   free?: boolean | string;
   junior?: boolean | string;
