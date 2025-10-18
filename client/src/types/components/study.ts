@@ -57,6 +57,8 @@ export interface IStartStudyingCtaProps {
   level?: DifficultyLevel;
   selectedDifficulty?: DifficultyLevel;
   showAnimation?: boolean;
+  disabled?: boolean;
+  scrollTargetSelector?: string;
 }
 
 export interface IStartStudyingCtaEmits {
@@ -68,6 +70,9 @@ export interface IStickyStartBarProps {
   level?: DifficultyLevel;
   visible?: boolean;
   state?: string;
+  hasLastSession?: boolean;
+  selectedDifficulty?: string;
+  errorMessage?: string;
 }
 
 export interface IStickyStartBarEmits {

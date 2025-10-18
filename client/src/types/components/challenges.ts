@@ -32,9 +32,13 @@ export interface IChallengeListProps {
   challenges: Record<string, unknown>[];
   loading?: boolean;
   emptyMessage?: string;
+  emptyStateTitle?: string;
+  showCreateButton?: boolean;
+  pagination?: { currentPage: number; totalPages: number; pageSize: number };
 }
 
 export interface ICreateChallengeModalProps {
   open: boolean;
   friendId?: string;
+  loading?: boolean;
 }

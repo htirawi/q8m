@@ -24,6 +24,7 @@ export interface IPlanComparisonCardProps {
   features: string[];
   popular?: boolean;
   recommended?: boolean;
+  targetPlan?: string;
 }
 
 export interface IComparisonFeature {

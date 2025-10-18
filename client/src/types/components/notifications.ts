@@ -32,4 +32,6 @@ export interface INotificationPromptProps {
   description?: string;
   showBenefits?: boolean;
   variant?: "default" | "minimal" | "feature";
+  dismissible?: boolean;
+  autoDismissDelay?: number;
 }

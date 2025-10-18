@@ -28,6 +28,9 @@ export interface ICountdownTimerProps {
   showSeconds?: boolean;
   ctaText?: string;
   expiredMessage?: string;
+  duration?: number;
+  autoReset?: boolean;
+  resetDuration?: number;
 }
 
 export interface IModernPricingCardProps {
@@ -45,6 +48,7 @@ export interface IModernPricingCardProps {
   badge?: string;
   targetPlan?: string;
   shareable?: boolean;
+  planName?: string;
 }
 
 export interface IPlanCardProps {
@@ -95,4 +99,5 @@ export interface ITestimonialCarouselProps {
   testimonials: ITestimonial[];
   autoPlay?: boolean;
   interval?: number;
+  autoplayInterval?: number;
 }
