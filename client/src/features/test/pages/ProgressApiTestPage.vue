@@ -139,7 +139,9 @@ function formatDate(date: Date | string): string {
             </div>
             <div class="stat-card">
               <div class="stat-label">Last Activity</div>
-              <div class="stat-value">{{ formatDate(progress.streaks?.lastActivityDate ?? new Date()) }}</div>
+              <div class="stat-value">
+                {{ formatDate(progress.streaks?.lastActivityDate ?? new Date()) }}
+              </div>
             </div>
           </div>
         </section>
