@@ -257,7 +257,7 @@ const clearFilters = () => {
   answeredFilter.value = "all";
 };
 
-const _getdisplaytotal = () => {
+const getDisplayTotal = () => {
   // For bookmarked mode, show bookmark count
   if (practiceMode.value === "bookmarked") {
     return bookmarkCount.value;

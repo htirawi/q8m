@@ -98,7 +98,7 @@ const buttonClasses = computed(() => {
   return `${base} ${variants[props.variant]} ${sizes[props.size]} ${disabled}`;
 });
 
-const _handleshare = async () => {
+const handleShare = async () => {
   if (props.disabled || loading.value) return;
 
   emit("click");

@@ -428,7 +428,7 @@ const formatPrice = (price: number, currency: string): string => {
   }).format(price);
 };
 
-const _handlecyclechange = (cycle: BillingCycle) => {
+const handleCycleChange = (cycle: BillingCycle) => {
   selectPlan(props.requiredPlan, cycle);
 };
 
@@ -436,20 +436,19 @@ const toggleCoupon = () => {
   showCoupon.value = !showCoupon.value;
 };
 
-const _handleapplycoupon = async () => {
+const handleApplyCoupon = async () => {
   if (!couponInput.value) return;
 
   const success = await applyCoupon(couponInput.value);
   if (success) {
     // TODO: Show success message
     couponInput.value = "";
-    TODO;
   } else {
-    // TODO: Show error messageTODO
+    // TODO: Show error message
   }
 };
 
-const _handlesubscribe = async () => {
+const handleSubscribe = async () => {
   track("subscribe_click", {
     difficulty: props.difficulty,
     plan: props.requiredPlan,

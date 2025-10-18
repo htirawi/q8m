@@ -49,7 +49,7 @@ const handleViewAll = () => {
   emit("view-all");
 };
 
-const _handlesuggestionclick = (userId: string) => {
+const handleSuggestionClick = (userId: string) => {
   emit("suggestion-clicked", userId);
 };
 

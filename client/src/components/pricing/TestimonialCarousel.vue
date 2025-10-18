@@ -232,7 +232,7 @@ function prev() {
   resetAutoplay();
 }
 
-function goto(index: number) {
+function goTo(index: number) {
   if (isTransitioning.value || index === currentIndex.value) return;
   isTransitioning.value = true;
   currentIndex.value = index;

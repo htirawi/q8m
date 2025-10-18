@@ -616,7 +616,7 @@ const getLevelCardClass = (level: ExperienceLevel) => {
 
  border-gray-200 bg-white/80 backdrop-blur-sm hover:border-purple-400; hover:shadow-2xl; hover:scale-[1.02]; hover:-translate-y-1; dark:border-gray-700; dark:bg-gray-800/80; dark:hover:border-purple-500`;
 
-  const _getLevelDescriptionClass = (level: ExperienceLevel) => {
+  const getLevelDescriptionClass = (level: ExperienceLevel) => {
     const isSelected = selectedLevel.value === level;
     const canAccess = canUserAccessLevel(level);
 
@@ -649,7 +649,7 @@ const getLevelCardClass = (level: ExperienceLevel) => {
  group-hover:scale-110; group-hover:shadow-lg`;
   };
 
-  const _goToLearningPaths = () => {
+  const goToLearningPaths = () => {
     router.push(`/${locale.value}/paths`);
   };
 };

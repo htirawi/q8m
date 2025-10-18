@@ -409,7 +409,7 @@ const handleUpgrade = () => {
   emit("dismiss", "close_button");
 };
 
-const _handleviewallplans = () => {
+const handleViewAllPlans = () => {
   track("upsell_cta_clicked", {
     action: "view_plans",
     difficulty: props.difficulty,

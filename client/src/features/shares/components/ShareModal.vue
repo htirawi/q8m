@@ -186,11 +186,11 @@ const shareOptions: ShareOption[] = [
   },
 ];
 
-const _closemodal = () => {
+const closeModal = () => {
   emit("close");
 };
 
-const _handleshare = async (platform: SharePlatform) => {
+const handleShare = async (platform: SharePlatform) => {
   const success = await sharesStore.shareToSocial(props.shareType, props.entityId, platform);
   if (success) {
     emit("share-success", platform);

@@ -34,7 +34,7 @@ const savingsPercent = computed(() => {
   return Math.round((savings / monthlyCost) * 100);
 });
 
-const _handleselect = () => {
+const handleSelect = () => {
   emit("select", props.plan?.id, props.billing);
 };
 

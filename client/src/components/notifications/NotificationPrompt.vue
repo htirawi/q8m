@@ -165,7 +165,7 @@ const variantClass = computed(() => {
   return `${base} ${base}--${props.variant}`;
 });
 
-const _handleenable = async () => {
+const handleEnable = async () => {
   const granted = await requestPermission();
   if (granted) {
     emit("enabled");
