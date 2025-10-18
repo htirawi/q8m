@@ -228,7 +228,7 @@ const filteredFaqs = computed(() => {
   return filtered;
 });
 
-const getFaqCategory = (faqId: string, index: number): string => {
+const getFaqCategory = (faqId: string, _index: number): string => {
   // Map FAQ IDs to categories
   const categoryMap: Record<string, string> = {
     "faq-3": "features",

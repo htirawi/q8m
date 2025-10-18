@@ -238,7 +238,7 @@ function share(platform: string) {
   }
 }
 
-function getSparkleStyle(index: number) {
+function getSparkleStyle(_index: number) {
   const randomX = Math.random() * 100;
   const randomY = Math.random() * 100;
   const randomDelay = Math.random() * 2;

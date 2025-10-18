@@ -95,7 +95,6 @@
 <script setup lang="ts">
 import type { IBadgeUnlockNotificationBadge as IBadge } from "@/types/components/gamification";
 import { ref, computed, onUnmounted } from "vue";
-import type { BadgeTier } from "@shared/types/gamification";
 
 const props = withDefaults(
   defineProps<{
@@ -205,7 +204,7 @@ function shareBadge(badge: ibadge) {
   }
 }
 
-function dismissBadge(badgeid: string) {
+function dismissBadge(badgeId: string) {
   const timer = timers.value.get(badgeId);
   if (timer) {
     clearTimeout(timer);
@@ -246,7 +245,7 @@ function showBadge(badge: ibadge) {
   timers.value.set(badge.id, timer);
 }
 
-function showBadges(newbadges: ibadge[]) {
+function showBadges(newBadges: IBadge[]) {
   newBadges.forEach((badge, index) => {
     setTimeout(() => {
       showBadge(badge);

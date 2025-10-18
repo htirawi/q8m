@@ -244,10 +244,8 @@
 </template>
 
 <script setup lang="ts">
-import type { IStudyQuestionProps as Props } from "@/types/components/study";
 import { computed, ref, watch, nextTick, onMounted, onUnmounted } from "vue";
 import { useI18n } from "vue-i18n";
-import type { Question } from "@shared/types/quiz";
 import MarkdownRenderer from "@/components/common/MarkdownRenderer.vue";
 
 const answerSection = ref<HTMLDivElement | null>(null);

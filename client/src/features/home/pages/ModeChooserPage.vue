@@ -240,7 +240,6 @@ import { useAuthStore } from "@/stores/auth";
 import { usePreferencesStore } from "@/stores/preferences";
 import ModeCard from "@/components/study/ModeCard.vue";
 import UserMenu from "@/components/layout/UserMenu.vue";
-import type { DifficultyLevel } from "@/types/plan/access";
 
 const { t } = useI18n();
 const router = useRouter();
