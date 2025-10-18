@@ -217,7 +217,7 @@ const selectedAnswer = ref<string | null>(null);
 const textAnswer = ref("");
 const multipleAnswers = ref<string[]>([]);
 const hasAnswered = ref(false);
-const useranswers = ref<record<number, { answer: string | string[]; isCorrect: boolean; timeSpent: number }>>({});
+const userAnswers = ref<Record<number, { answer: string | string[]; isCorrect: boolean; timeSpent: number }>>({});
 
 const isLoading = ref(true);
 const error = ref<string | null>(null);
@@ -255,7 +255,7 @@ const score = computed(() => {
 const submitanswer = async () => {
   if (!currentQuestion.value) return;
   const timeSpent = Math.floor((Date.now() - questionStartTime.value) / 1000);
-  let answer: string | string[];answer
+  let answer: string | string[];
 
   const qType = currentQuestion.value.type;
 
@@ -265,9 +265,7 @@ const submitanswer = async () => {
   } else if (qType === 'fill-blank') {
     answer = textAnswer.value.trim();
     if (!answer) return;
-  }
-
- else {
+  } else {
     if (multipleAnswers.value.length === 0) return;
     answer = multipleAnswers.value;
   }
@@ -373,7 +371,13 @@ const resumeQuiz = () => {
         : answer.selectedAnswer,
       isCorrect: answer.isCorrect ?? false,
       timeSpent: 0, // We don't track individual time in saved state
-    };;
+    };
+  });
+
+  userAnswers.value = restoredAnswers;
+  showResumeModal.value = false;
+  startTimer();
+};
 
 const dismissresume = () => {
   preferencesStore.clearIncompleteQuiz();
@@ -387,9 +391,7 @@ const nextquestion = () => {
   if (currentIndex.value < totalQuestions.value - 1) {
     currentIndex.value++;
     resetQuestionState();
-  }
-
- else {
+  } else {
     finishQuiz();
   }
 };
@@ -405,9 +407,7 @@ const resetquestionstate = () => {
 const savequizhistory = () => {
   try {
     const quizresult = {
-      id: `quiz_${Date.now()}_${Math.random().toString(36).substr(2, 9)}
-
-`,
+      id: `quiz_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       level: level.value,
       score: score.value.percentage,
       correct: score.value.correct,
@@ -416,15 +416,19 @@ const savequizhistory = () => {
       timestamp: Date.now(),
       date: new Date().toISOString(),
       answers: userAnswers.value,
-    };historyexistingHistoryJSON.parse
-    history.unshift(quizResult);
+    };
+
+    const historyKey = `quiz_history_${level.value}`;
+    const existingHistory = localStorage.getItem(historyKey);
+    const history = existingHistory ? JSON.parse(existingHistory) : [];
+    history.unshift(quizresult);
     localStorage.setItem(historyKey, JSON.stringify(history.slice(0, 50)));
 
     const activitiesKey = 'recent_activities';
     const existingActivities = localStorage.getItem(activitiesKey);
-    const activities = existingActivities ? JSON.parse(existingActivities) : [];activitiesexistingActivitiesJSON.parse
+    const activities = existingActivities ? JSON.parse(existingActivities) : [];
     activities.unshift({
-      id: quizResult.id,
+      id: quizresult.id,
       type: 'quiz',
       title: `${t(`level.${level.value}.label`)} Quiz - ${score.value.percentage}%`,
       timestamp: Date.now(),
@@ -449,7 +453,7 @@ const updatestreak = () => {
     };
 
     const today = new Date().toDateString();
-    const lastDate = streak.lastActivityDate ? new Date(streak.lastActivityDate).toDateString() : null;lastDatestreak.lastActivityDatenewDate.toDateString
+    const lastDate = streak.lastActivityDate ? new Date(streak.lastActivityDate).toDateString() : null;
 
     if (lastDate !== today) {
       if (lastDate === new Date(Date.now() - 86400000).toDateString()) {
