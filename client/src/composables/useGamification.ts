@@ -8,11 +8,12 @@ import { httpClient, getErrorMessage } from "@/utils/httpClient";
 import { API_ENDPOINTS } from "@/config/api";
 import type { IBadge, ILeaderboard, IStreakData } from "@shared/types/gamification";
 import type { PlanTier } from "@shared/types/plan";
-import type { IBadgeWithProgress, IXPInfo, IGamificationSummary, ILeaderboardRank } from '@shared/types/composables';
-
-
-
-
+import type {
+  IBadgeWithProgress,
+  IXPInfo,
+  IGamificationSummary,
+  ILeaderboardRank,
+} from "@shared/types/composables";
 
 export function useGamification() {
   const isLoading = ref(false);
@@ -29,10 +30,12 @@ export function useGamification() {
   /**
    * Get all badges with user progress
    */
-  async function getBadges(options: {
-    category?: "study" | "quiz" | "streak" | "social" | "milestone";
-    rarity?: "common" | "rare" | "epic" | "legendary";
-  } = {}): Promise<IBadgeWithProgress[] | null> {
+  async function getBadges(
+    options: {
+      category?: "study" | "quiz" | "streak" | "social" | "milestone";
+      rarity?: "common" | "rare" | "epic" | "legendary";
+    } = {}
+  ): Promise<IBadgeWithProgress[] | null> {
     isLoading.value = true;
     error.value = null;
 
@@ -191,9 +194,7 @@ export function useGamification() {
     error.value = null;
 
     try {
-      const data = await httpClient.get<IGamificationSummary>(
-        API_ENDPOINTS.gamification.summary()
-      );
+      const data = await httpClient.get<IGamificationSummary>(API_ENDPOINTS.gamification.summary());
       summary.value = data;
       return data;
     } catch (err) {

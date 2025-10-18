@@ -69,12 +69,17 @@ export default async function devEmailRoutes(fastify: FastifyInstance) {
             </div>
           </div>
           <div class="email-list">
-            ${emails.length === 0 ? `
+            ${
+              emails.length === 0
+                ? `
               <div class="empty-state">
                 <p>No emails logged yet</p>
                 <p style="margin-top: 0.5rem; font-size: 0.875rem;">Register a user to see emails appear here</p>
               </div>
-            ` : emails.map(email => `
+            `
+                : emails
+                    .map(
+                      (email) => `
               <div class="email-item" onclick="window.location.href='/api/dev/emails/${email.id}'">
                 <div class="email-subject">${email.subject}</div>
                 <div class="email-meta">
@@ -82,14 +87,21 @@ export default async function devEmailRoutes(fastify: FastifyInstance) {
                   <span class="email-date">${new Date(email.sentAt).toLocaleString()}</span>
                 </div>
               </div>
-            `).join('')}
+            `
+                    )
+                    .join("")
+            }
           </div>
-          ${emails.length > 0 ? `
+          ${
+            emails.length > 0
+              ? `
             <div style="margin-top: 1rem;">
               <a href="/api/dev/emails/clear" class="clear-btn" style="display: inline-block; text-decoration: none;">Clear All Emails</a>
               <button type="button" class="refresh-btn" onclick="window.location.reload()">Refresh</button>
             </div>
-          ` : ''}
+          `
+              : ""
+          }
         </div>
       </body>
       </html>
@@ -169,7 +181,7 @@ export default async function devEmailRoutes(fastify: FastifyInstance) {
                 <button id="tab-text" class="tab-btn" onclick="showTab('text')">Plain Text</button>
               </div>
               <div id="content-html" class="tab-content active">
-                <iframe srcdoc="${email.html.replace(/"/g, '&quot;')}" style="width: 100%; height: 600px; border: 1px solid #e5e5e5; border-radius: 6px;"></iframe>
+                <iframe srcdoc="${email.html.replace(/"/g, "&quot;")}" style="width: 100%; height: 600px; border: 1px solid #e5e5e5; border-radius: 6px;"></iframe>
               </div>
               <div id="content-text" class="tab-content">
                 <pre style="white-space: pre-wrap; background: #f9fafb; padding: 1rem; border-radius: 6px; font-family: monospace; font-size: 0.875rem;">${email.text}</pre>

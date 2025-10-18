@@ -6,7 +6,6 @@ const router = useRouter();
 function navigateto(path: string) {
   router.push(path);
 }
-
 </script>
 
 <template>

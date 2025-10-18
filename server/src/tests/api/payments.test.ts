@@ -2,7 +2,6 @@ import { buildApp } from "@server/app.js";
 import type { FastifyInstance } from "fastify";
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 
-
 describe.skip("Payments API", () => {
   let app: FastifyInstance;
   let accessToken: string;
@@ -251,7 +250,7 @@ describe.skip("Payments API", () => {
       });
 
       expect(response.statusCode).toBe(200);
-//       const body = JSON.parse(response.body);
+      //       const body = JSON.parse(response.body);
       // expect(body.success).toBe(true);
     });
 
@@ -271,7 +270,7 @@ describe.skip("Payments API", () => {
       });
 
       expect(response.statusCode).toBe(200);
-//       const body = JSON.parse(response.body);
+      //       const body = JSON.parse(response.body);
       // expect(body.success).toBe(true);
     });
 
@@ -291,7 +290,7 @@ describe.skip("Payments API", () => {
       });
 
       expect(response.statusCode).toBe(200);
-//       const body = JSON.parse(response.body);
+      //       const body = JSON.parse(response.body);
       // expect(body.success).toBe(true);
     });
 
@@ -356,7 +355,7 @@ describe.skip("Payments API", () => {
       });
 
       expect(response.statusCode).toBe(200);
-//       const body = JSON.parse(response.body);
+      //       const body = JSON.parse(response.body);
       // expect(body.success).toBe(true);
     });
 
@@ -380,7 +379,7 @@ describe.skip("Payments API", () => {
       });
 
       expect(response.statusCode).toBe(200);
-//       const body = JSON.parse(response.body);
+      //       const body = JSON.parse(response.body);
       // expect(body.success).toBe(true);
     });
 

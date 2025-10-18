@@ -4,12 +4,11 @@
  * Provides 301 redirects for SEO and analytics tracking for legacy URLs
  */
 
-import { computed } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import type { PlanId, BillingCycle } from '@/types/pricing';
-import { useAnalytics } from '@/composables/useAnalytics';
-import type { IResolvedPlan } from '@shared/types/composables';
-
+import { computed } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import type { PlanId, BillingCycle } from "@/types/pricing";
+import { useAnalytics } from "@/composables/useAnalytics";
+import type { IResolvedPlan } from "@shared/types/composables";
 
 /**
  * Legacy plan mapping
@@ -17,35 +16,35 @@ import type { IResolvedPlan } from '@shared/types/composables';
  */
 const LEGACY_PLAN_MAP: Record<string, PlanId> = {
   // Old marketing names
-  'pro': 'intermediate',
-  'expert': 'senior',
-  'premium': 'bundle',
+  pro: "intermediate",
+  expert: "senior",
+  premium: "bundle",
 
   // Study/Quiz difficulty levels
-  'easy': 'junior',
-  'medium': 'intermediate',
-  'hard': 'senior',
+  easy: "junior",
+  medium: "intermediate",
+  hard: "senior",
 
   // Pass-through canonical IDs
-  'junior': 'junior',
-  'intermediate': 'intermediate',
-  'senior': 'senior',
-  'bundle': 'bundle',
+  junior: "junior",
+  intermediate: "intermediate",
+  senior: "senior",
+  bundle: "bundle",
 
   // Free tier aliases
-  'free': 'junior',
-  'basic': 'junior',
+  free: "junior",
+  basic: "junior",
 };
 
 /**
  * Legacy billing cycle mapping
  */
 const LEGACY_BILLING_MAP: Record<string, BillingCycle> = {
-  'month': 'monthly',
-  'monthly': 'monthly',
-  'year': 'annual',
-  'yearly': 'annual',
-  'annual': 'annual',
+  month: "monthly",
+  monthly: "monthly",
+  year: "annual",
+  yearly: "annual",
+  annual: "annual",
 };
 
 export function usePricingRoute() {
@@ -71,8 +70,8 @@ export function usePricingRoute() {
     }
 
     const billing: BillingCycle = billingParam
-      ? LEGACY_BILLING_MAP[billingParam.toLowerCase().trim()] || 'monthly'
-      : 'monthly';
+      ? LEGACY_BILLING_MAP[billingParam.toLowerCase().trim()] || "monthly"
+      : "monthly";
 
     const isLegacy = normalizedPlan !== planId;
 
@@ -93,14 +92,14 @@ export function usePricingRoute() {
     if (!resolved || !resolved.isLegacy) return;
 
     // Track legacy redirect
-    track('legacy_plan_redirected', {
+    track("legacy_plan_redirected", {
       from: resolved.originalParam,
       to: resolved.planId,
       billing: resolved.billing,
     });
 
     // Build canonical URL
-    const locale = route.params.locale || 'en';
+    const locale = route.params.locale || "en";
 
     router.replace({
       path: `/${locale}/pricing`,
@@ -124,8 +123,8 @@ export function usePricingRoute() {
   /**
    * Build pricing URL with plan and billing
    */
-  const buildPricingUrl = (planId: PlanId, billing: BillingCycle = 'monthly'): string => {
-    const locale = route.params.locale || 'en';
+  const buildPricingUrl = (planId: PlanId, billing: BillingCycle = "monthly"): string => {
+    const locale = route.params.locale || "en";
     return `/${locale}/pricing?plan=${planId}&billing=${billing}`;
   };
 

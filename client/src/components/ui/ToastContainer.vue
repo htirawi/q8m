@@ -36,9 +36,18 @@ defineExpose({
 <template>
   <div class="toast-container" aria-live="polite" aria-label="Notifications">
     <TransitionGroup name="toast-list" tag="div" class="toast-list">
-      <Toast v-for="toast in toasts" :key="toast.id" :id="toast.id" :type="toast.type" :message="toast.message"
-        :icon="toast.icon" :dismissible="toast.dismissible" :duration="toast.duration" :persistent="toast.persistent"
-        @dismiss="removeToast(toast.id)" />
+      <Toast
+        v-for="toast in toasts"
+        :key="toast.id"
+        :id="toast.id"
+        :type="toast.type"
+        :message="toast.message"
+        :icon="toast.icon"
+        :dismissible="toast.dismissible"
+        :duration="toast.duration"
+        :persistent="toast.persistent"
+        @dismiss="removeToast(toast.id)"
+      />
     </TransitionGroup>
   </div>
 </template>

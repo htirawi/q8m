@@ -1,4 +1,4 @@
-import mongoose, { Schema, type Document, type ObjectId } from 'mongoose';
+import mongoose, { Schema, type Document, type ObjectId } from "mongoose";
 
 export interface INotificationPreferences extends Document {
   userId: ObjectId;
@@ -10,7 +10,7 @@ export interface INotificationPreferences extends Document {
     achievements: boolean;
     subscription: boolean;
   };
-  frequency: 'realtime' | 'daily' | 'weekly';
+  frequency: "realtime" | "daily" | "weekly";
   quietHours: {
     enabled: boolean;
     start: string; // Format: "HH:MM"
@@ -25,7 +25,7 @@ const notificationPreferencesSchema = new Schema<INotificationPreferences>(
   {
     userId: {
       type: Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "User",
       required: true,
       unique: true,
       index: true,
@@ -58,8 +58,8 @@ const notificationPreferencesSchema = new Schema<INotificationPreferences>(
     },
     frequency: {
       type: String,
-      enum: ['realtime', 'daily', 'weekly'],
-      default: 'realtime',
+      enum: ["realtime", "daily", "weekly"],
+      default: "realtime",
     },
     quietHours: {
       enabled: {
@@ -68,17 +68,17 @@ const notificationPreferencesSchema = new Schema<INotificationPreferences>(
       },
       start: {
         type: String,
-        default: '22:00',
-        match: [/^([01]\d|2[0-3]):([0-5]\d)$/, 'Start time must be in HH:MM format'],
+        default: "22:00",
+        match: [/^([01]\d|2[0-3]):([0-5]\d)$/, "Start time must be in HH:MM format"],
       },
       end: {
         type: String,
-        default: '08:00',
-        match: [/^([01]\d|2[0-3]):([0-5]\d)$/, 'End time must be in HH:MM format'],
+        default: "08:00",
+        match: [/^([01]\d|2[0-3]):([0-5]\d)$/, "End time must be in HH:MM format"],
       },
       timezone: {
         type: String,
-        default: 'UTC',
+        default: "UTC",
       },
     },
   },
@@ -96,10 +96,10 @@ const notificationPreferencesSchema = new Schema<INotificationPreferences>(
 );
 
 // Indexes for performance
-notificationPreferencesSchema.index({ userId: 1 }, { unique: true, name: 'uniq_user_id' });
-notificationPreferencesSchema.index({ enabled: 1 }, { name: 'idx_enabled' });
+notificationPreferencesSchema.index({ userId: 1 }, { unique: true, name: "uniq_user_id" });
+notificationPreferencesSchema.index({ enabled: 1 }, { name: "idx_enabled" });
 
 export const NotificationPreferences = mongoose.model<INotificationPreferences>(
-  'NotificationPreferences',
+  "NotificationPreferences",
   notificationPreferencesSchema
 );

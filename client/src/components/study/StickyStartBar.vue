@@ -1,9 +1,5 @@
 <template>
-  <Transition
-    name="slide-up"
-    @before-enter="handleBeforeEnter"
-    @after-enter="handleAfterEnter"
-  >
+  <Transition name="slide-up" @before-enter="handleBeforeEnter" @after-enter="handleAfterEnter">
     <div
       v-if="isVisible"
       class="fixed bottom-0 left-0 right-0 z-50 border-t border-gray-200 bg-white/95 shadow-2xl backdrop-blur-sm dark:border-gray-700 dark:bg-gray-900/95"
@@ -20,10 +16,11 @@
               v-if="state === 'loading'"
               class="flex items-center gap-3 text-gray-700 dark:text-gray-300"
             >
-              <div class="h-5 w-5 animate-spin rounded-full border-2 border-blue-600 border-t-transparent" aria-hidden="true" />
-              <span class="text-sm font-medium">{{ t('study.sticky.loading') }}
-
-</span>
+              <div
+                class="h-5 w-5 animate-spin rounded-full border-2 border-blue-600 border-t-transparent"
+                aria-hidden="true"
+              />
+              <span class="text-sm font-medium">{{ t("study.sticky.loading") }} </span>
             </div>
 
             <!-- Error state -->
@@ -31,34 +28,39 @@
               v-else-if="state === 'error'"
               class="flex items-center gap-3 text-red-700 dark:text-red-400"
             >
-              <svg class="h-5 w-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+              <svg
+                class="h-5 w-5 flex-shrink-0"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                aria-hidden="true"
+              >
                 <path
                   fill-rule="evenodd"
                   d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
                   clip-rule="evenodd"
                 />
               </svg>
-              <span class="text-sm font-medium">{{ errorMessage || t('study.sticky.error') }}
-
-</span>
+              <span class="text-sm font-medium"
+                >{{ errorMessage || t("study.sticky.error") }}
+              </span>
             </div>
 
             <!-- Idle state - show trust signals -->
-            <div
-              v-else
-              class="flex items-center gap-3"
-            >
+            <div v-else class="flex items-center gap-3">
               <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                <svg class="h-4 w-4 text-green-500" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                <svg
+                  class="h-4 w-4 text-green-500"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  aria-hidden="true"
+                >
                   <path
                     fill-rule="evenodd"
                     d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
                     clip-rule="evenodd"
                   />
                 </svg>
-                <span class="font-medium">{{ trustMessage }}
-
-</span>
+                <span class="font-medium">{{ trustMessage }} </span>
               </div>
             </div>
           </div>
@@ -74,8 +76,7 @@
               data-testid="sticky-retry-button"
               @click="handleRetry"
             >
-              {{ t('study.sticky.retry') }}
-
+              {{ t("study.sticky.retry") }}
             </button>
 
             <!-- Start button -->
@@ -89,9 +90,7 @@
               @click="handleStart"
             >
               <span class="relative z-10 flex items-center gap-2">
-                <span>{{ startButtonText }}
-
-</span>
+                <span>{{ startButtonText }} </span>
                 <svg
                   v-if="state !== 'loading'"
                   class="h-4 w-4 transition-transform group-hover:translate-x-1"
@@ -122,8 +121,7 @@
           class="mt-2 text-center text-xs text-gray-500 dark:text-gray-400"
           data-testid="keyboard-hint"
         >
-          {{ t('study.sticky.keyboardHint') }}
-
+          {{ t("study.sticky.keyboardHint") }}
         </div>
       </div>
     </div>
@@ -131,16 +129,15 @@
 </template>
 
 <script setup lang="ts">
-import type { IStickyStartBarProps as Props, IStickyStartBarEmits as Emits } from "@/types/components/study";
+import type {
+  IStickyStartBarProps as Props,
+  IStickyStartBarEmits as Emits,
+} from "@/types/components/study";
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useAnalytics } from "@/composables/useAnalytics";
 import type { StudyLoadingState } from "@/composables/useStudy";
 import type { DifficultyLevel } from "@/types/plan/access";
-
-
-
-
 
 const props = withDefaults(defineProps<Props>(), {
   errorMessage: null,
@@ -242,7 +239,9 @@ onUnmounted(() => {
 /* Slide-up transition for sticky bar */
 .slide-up-enter-active,
 .slide-up-leave-active {
-  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+  transition:
+    transform 0.3s ease-out,
+    opacity 0.3s ease-out;
 }
 
 .slide-up-enter-from {

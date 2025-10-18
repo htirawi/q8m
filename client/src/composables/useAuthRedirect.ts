@@ -46,13 +46,9 @@ export function useAuthRedirect() {
    * Gets the validated redirect URL from query params
    * Returns default path if invalid or missing
    */
-  const getValidatedRedirectUrl = (
-    paramName = "signInSuccessUrl",
-    defaultPath = "/"
-  ): string => {
+  const getValidatedRedirectUrl = (paramName = "signInSuccessUrl", defaultPath = "/"): string => {
     const redirectParam = route.query[paramName];
-    const redirectUrl =
-      typeof redirectParam === "string" ? redirectParam : redirectParam?.[0];
+    const redirectUrl = typeof redirectParam === "string" ? redirectParam : redirectParam?.[0];
 
     if (!redirectUrl || !isValidRedirectUrl(redirectUrl)) {
       return defaultPath;

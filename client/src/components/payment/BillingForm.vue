@@ -35,79 +35,110 @@ watch(
 
 <template>
   <div class="form-section">
-    <h3 class="section-title">{{ $t("checkout.billingInformation") }}
-
-</h3>
+    <h3 class="section-title">{{ $t("checkout.billingInformation") }}</h3>
 
     <div class="form-grid">
       <!-- Name -->
       <div class="form-group">
         <label for="name" class="form-label"> {{ $t("checkout.fullName") }} * </label>
-        <input id="name" v-model="formData.name" type="text" required class="form-input"
-          :class="{ 'form-input--error': errors.name }" :placeholder="$t('checkout.namePlaceholder')" />
-        <p v-if="errors.name" class="form-error">{{ errors.name }}
-
-</p>
+        <input
+          id="name"
+          v-model="formData.name"
+          type="text"
+          required
+          class="form-input"
+          :class="{ 'form-input--error': errors.name }"
+          :placeholder="$t('checkout.namePlaceholder')"
+        />
+        <p v-if="errors.name" class="form-error">{{ errors.name }}</p>
       </div>
 
       <!-- Email -->
       <div class="form-group">
         <label for="email" class="form-label"> {{ $t("checkout.email") }} * </label>
-        <input id="email" v-model="formData.email" type="email" required class="form-input"
-          :class="{ 'form-input--error': errors.email }" :placeholder="$t('checkout.emailPlaceholder')" />
-        <p v-if="errors.email" class="form-error">{{ errors.email }}
-
-</p>
+        <input
+          id="email"
+          v-model="formData.email"
+          type="email"
+          required
+          class="form-input"
+          :class="{ 'form-input--error': errors.email }"
+          :placeholder="$t('checkout.emailPlaceholder')"
+        />
+        <p v-if="errors.email" class="form-error">{{ errors.email }}</p>
       </div>
 
       <!-- Street Address -->
       <div class="form-group">
         <label for="street" class="form-label"> {{ $t("checkout.streetAddress") }} * </label>
-        <input id="street" v-model="formData.street" type="text" required class="form-input"
-          :class="{ 'form-input--error': errors.street }" :placeholder="$t('checkout.streetPlaceholder')" />
-        <p v-if="errors.street" class="form-error">{{ errors.street }}
-
-</p>
+        <input
+          id="street"
+          v-model="formData.street"
+          type="text"
+          required
+          class="form-input"
+          :class="{ 'form-input--error': errors.street }"
+          :placeholder="$t('checkout.streetPlaceholder')"
+        />
+        <p v-if="errors.street" class="form-error">{{ errors.street }}</p>
       </div>
 
       <!-- City -->
       <div class="form-group">
         <label for="city" class="form-label"> {{ $t("checkout.city") }} * </label>
-        <input id="city" v-model="formData.city" type="text" required class="form-input"
-          :class="{ 'form-input--error': errors.city }" :placeholder="$t('checkout.cityPlaceholder')" />
-        <p v-if="errors.city" class="form-error">{{ errors.city }}
-
-</p>
+        <input
+          id="city"
+          v-model="formData.city"
+          type="text"
+          required
+          class="form-input"
+          :class="{ 'form-input--error': errors.city }"
+          :placeholder="$t('checkout.cityPlaceholder')"
+        />
+        <p v-if="errors.city" class="form-error">{{ errors.city }}</p>
       </div>
 
       <!-- State/Province -->
       <div class="form-group">
         <label for="state" class="form-label"> {{ $t("checkout.state") }} * </label>
-        <input id="state" v-model="formData.state" type="text" required class="form-input"
-          :class="{ 'form-input--error': errors.state }" :placeholder="$t('checkout.statePlaceholder')" />
-        <p v-if="errors.state" class="form-error">{{ errors.state }}
-
-</p>
+        <input
+          id="state"
+          v-model="formData.state"
+          type="text"
+          required
+          class="form-input"
+          :class="{ 'form-input--error': errors.state }"
+          :placeholder="$t('checkout.statePlaceholder')"
+        />
+        <p v-if="errors.state" class="form-error">{{ errors.state }}</p>
       </div>
 
       <!-- Postal Code -->
       <div class="form-group">
         <label for="postalCode" class="form-label"> {{ $t("checkout.postalCode") }} * </label>
-        <input id="postalCode" v-model="formData.postalCode" type="text" required class="form-input"
-          :class="{ 'form-input--error': errors.postalCode }" :placeholder="$t('checkout.postalCodePlaceholder')" />
-        <p v-if="errors.postalCode" class="form-error">{{ errors.postalCode }}
-
-</p>
+        <input
+          id="postalCode"
+          v-model="formData.postalCode"
+          type="text"
+          required
+          class="form-input"
+          :class="{ 'form-input--error': errors.postalCode }"
+          :placeholder="$t('checkout.postalCodePlaceholder')"
+        />
+        <p v-if="errors.postalCode" class="form-error">{{ errors.postalCode }}</p>
       </div>
 
       <!-- Country -->
       <div class="form-group">
         <label for="country" class="form-label"> {{ $t("checkout.country") }} * </label>
-        <select id="country" v-model="formData.country" required class="form-input"
-          :class="{ 'form-input--error': errors.country }">
-          <option value="">{{ $t("checkout.selectCountry") }}
-
-</option>
+        <select
+          id="country"
+          v-model="formData.country"
+          required
+          class="form-input"
+          :class="{ 'form-input--error': errors.country }"
+        >
+          <option value="">{{ $t("checkout.selectCountry") }}</option>
           <option value="US">United States</option>
           <option value="CA">Canada</option>
           <option value="GB">United Kingdom</option>
@@ -130,9 +161,7 @@ watch(
           <option value="EG">Egypt</option>
           <option value="ZA">South Africa</option>
         </select>
-        <p v-if="errors.country" class="form-error">{{ errors.country }}
-
-</p>
+        <p v-if="errors.country" class="form-error">{{ errors.country }}</p>
       </div>
     </div>
   </div>

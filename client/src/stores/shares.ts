@@ -1,12 +1,24 @@
-import { computed, ref } from 'vue';
-import { defineStore } from 'pinia';
+import { computed, ref } from "vue";
+import { defineStore } from "pinia";
 
-import { useToast } from '@/composables/useToast';
-import { getErrorMessage as extractErrorMessage, httpClient } from '@/utils/httpClient';
+import { useToast } from "@/composables/useToast";
+import { getErrorMessage as extractErrorMessage, httpClient } from "@/utils/httpClient";
 
 // Types
-export type ShareType = 'quiz_result' | 'achievement' | 'streak' | 'challenge_victory' | 'profile' | 'badge';
-export type SharePlatform = 'twitter' | 'facebook' | 'linkedin' | 'whatsapp' | 'email' | 'copy_link';
+export type ShareType =
+  | "quiz_result"
+  | "achievement"
+  | "streak"
+  | "challenge_victory"
+  | "profile"
+  | "badge";
+export type SharePlatform =
+  | "twitter"
+  | "facebook"
+  | "linkedin"
+  | "whatsapp"
+  | "email"
+  | "copy_link";
 
 export interface SharePreviewData {
   title: string;
@@ -34,7 +46,7 @@ function getErrorMessage(error: unknown, defaultMessage: string): string {
   return extractErrorMessage(error) || defaultMessage;
 }
 
-export const useSharesStore = defineStore('shares', () => {
+export const useSharesStore = defineStore("shares", () => {
   const toast = useToast();
 
   // State
@@ -49,12 +61,15 @@ export const useSharesStore = defineStore('shares', () => {
   const error = ref<string | null>(null);
 
   // API Base URL
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
   /**
    * Get share preview data
    */
-  const getSharePreview = async (shareType: ShareType, entityId: string): Promise<SharePreviewData | null> => {
+  const getSharePreview = async (
+    shareType: ShareType,
+    entityId: string
+  ): Promise<SharePreviewData | null> => {
     try {
       loading.value = true;
       error.value = null;
@@ -71,8 +86,8 @@ export const useSharesStore = defineStore('shares', () => {
 
       return null;
     } catch (err: unknown) {
-      error.value = getErrorMessage(err, 'Failed to load share preview');
-      console.error('Error fetching share preview:', err);
+      error.value = getErrorMessage(err, "Failed to load share preview");
+      console.error("Error fetching share preview:", err);
       return null;
     } finally {
       loading.value = false;
@@ -87,11 +102,9 @@ export const useSharesStore = defineStore('shares', () => {
       loading.value = true;
       error.value = null;
 
-      const result = await httpClient.post<{ success: boolean }>(
-        `${API_URL}/api/v1/shares`,
-        data,
-        { requireAuth: true }
-      );
+      const result = await httpClient.post<{ success: boolean }>(`${API_URL}/api/v1/shares`, data, {
+        requireAuth: true,
+      });
 
       if (result.success) {
         return true;
@@ -99,8 +112,8 @@ export const useSharesStore = defineStore('shares', () => {
 
       return false;
     } catch (err: unknown) {
-      error.value = getErrorMessage(err, 'Failed to share');
-      console.error('Error creating share:', err);
+      error.value = getErrorMessage(err, "Failed to share");
+      console.error("Error creating share:", err);
       return false;
     } finally {
       loading.value = false;
@@ -110,13 +123,13 @@ export const useSharesStore = defineStore('shares', () => {
   /**
    * Get user's share statistics
    */
-  const getShareStats = async (period: 'day' | 'week' | 'month' | 'all' = 'all'): Promise<void> => {
+  const getShareStats = async (period: "day" | "week" | "month" | "all" = "all"): Promise<void> => {
     try {
       loading.value = true;
       error.value = null;
 
       const params = new URLSearchParams();
-      params.append('period', period);
+      params.append("period", period);
 
       const result = await httpClient.get<{ success: boolean; data: ShareStats }>(
         `${API_URL}/api/v1/shares/stats?${params.toString()}`,
@@ -127,8 +140,8 @@ export const useSharesStore = defineStore('shares', () => {
         stats.value = result.data;
       }
     } catch (err: unknown) {
-      error.value = getErrorMessage(err, 'Failed to load share statistics');
-      console.error('Error fetching share stats:', err);
+      error.value = getErrorMessage(err, "Failed to load share statistics");
+      console.error("Error fetching share stats:", err);
     } finally {
       loading.value = false;
     }
@@ -145,7 +158,7 @@ export const useSharesStore = defineStore('shares', () => {
         { requireAuth: false }
       );
     } catch (err: unknown) {
-      console.error('Error tracking share click:', err);
+      console.error("Error tracking share click:", err);
     }
   };
 
@@ -164,7 +177,7 @@ export const useSharesStore = defineStore('shares', () => {
       // Get share preview first
       const preview = await getSharePreview(shareType, entityId);
       if (!preview) {
-        toast.error('Error', 'Failed to generate share content');
+        toast.error("Error", "Failed to generate share content");
         return false;
       }
 
@@ -182,46 +195,46 @@ export const useSharesStore = defineStore('shares', () => {
       const encodedTitle = encodeURIComponent(preview.title);
       const encodedDescription = encodeURIComponent(preview.description);
 
-      let shareLink = '';
+      let shareLink = "";
 
       switch (platform) {
-        case 'twitter':
+        case "twitter":
           shareLink = `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`;
           break;
-        case 'facebook':
+        case "facebook":
           shareLink = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
           break;
-        case 'linkedin':
+        case "linkedin":
           shareLink = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`;
           break;
-        case 'whatsapp':
+        case "whatsapp":
           shareLink = `https://wa.me/?text=${encodedTitle}%20${encodedUrl}`;
           break;
-        case 'email':
+        case "email":
           shareLink = `mailto:?subject=${encodedTitle}&body=${encodedDescription}%0A%0A${encodedUrl}`;
           break;
-        case 'copy_link':
+        case "copy_link":
           try {
             await navigator.clipboard.writeText(shareUrl);
-            toast.success('Success', 'Link copied to clipboard!');
+            toast.success("Success", "Link copied to clipboard!");
             return true;
           } catch (_clipboardErr) {
-            toast.error('Error', 'Failed to copy link');
+            toast.error("Error", "Failed to copy link");
             return false;
           }
       }
 
       if (shareLink) {
-        window.open(shareLink, '_blank', 'width=600,height=400');
-        toast.success('Success', 'Opening share dialog...');
+        window.open(shareLink, "_blank", "width=600,height=400");
+        toast.success("Success", "Opening share dialog...");
         return true;
       }
 
       return false;
     } catch (err: unknown) {
-      error.value = getErrorMessage(err, 'Failed to share');
-      toast.error('Error', error.value);
-      console.error('Error sharing to social:', err);
+      error.value = getErrorMessage(err, "Failed to share");
+      toast.error("Error", error.value);
+      console.error("Error sharing to social:", err);
       return false;
     } finally {
       loading.value = false;
@@ -247,12 +260,18 @@ export const useSharesStore = defineStore('shares', () => {
   const mostSharedType = computed(() => {
     const types = Object.entries(stats.value.sharesByType);
     if (types.length === 0) return null;
-    return types.reduce((max, [type, count]) => (count > max[1] ? [type, count] : max), types[0])[0];
+    return types.reduce(
+      (max, [type, count]) => (count > max[1] ? [type, count] : max),
+      types[0]
+    )[0];
   });
   const mostUsedPlatform = computed(() => {
     const platforms = Object.entries(stats.value.sharesByPlatform);
     if (platforms.length === 0) return null;
-    return platforms.reduce((max, [platform, count]) => (count > max[1] ? [platform, count] : max), platforms[0])[0];
+    return platforms.reduce(
+      (max, [platform, count]) => (count > max[1] ? [platform, count] : max),
+      platforms[0]
+    )[0];
   });
 
   return {

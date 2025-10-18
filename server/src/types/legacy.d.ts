@@ -1,10 +1,10 @@
 // Legacy type declarations to reduce TypeScript errors
 // These are temporary fixes for legacy code that will be refactored
 
-import type { 
-  UserPreferences, 
-  UserStats, 
-  RefundData, 
+import type {
+  UserPreferences,
+  UserStats,
+  RefundData,
   SubscriptionData,
   UserMethodResult,
   TokenMethodResult,
@@ -12,8 +12,8 @@ import type {
   PaymentMethodResult,
   SubscriptionMethodResult,
   FxRateMethodResult,
-  LoggerMethods
-} from '@server/types/common.js';
+  LoggerMethods,
+} from "@server/types/common.js";
 
 declare global {
   namespace NodeJS {

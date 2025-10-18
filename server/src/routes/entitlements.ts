@@ -4,7 +4,6 @@ import type { FastifyInstance } from "fastify";
 import { z } from "zod";
 import { zodToJsonSchema } from "zod-to-json-schema";
 
-
 // Validation schemas
 const checkEntitlementSchema = z.object({
   requiredEntitlement: z.enum(["JUNIOR", "INTERMEDIATE", "SENIOR", "BUNDLE"]),

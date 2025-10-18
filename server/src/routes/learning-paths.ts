@@ -3,14 +3,14 @@
  * Endpoints for learning path browsing, enrollment, progress tracking, and certificates
  */
 
-import type { FastifyInstance } from 'fastify';
-import mongoose from 'mongoose';
-import { z } from 'zod';
-import { zodToJsonSchema } from 'zod-to-json-schema';
+import type { FastifyInstance } from "fastify";
+import mongoose from "mongoose";
+import { z } from "zod";
+import { zodToJsonSchema } from "zod-to-json-schema";
 
-import { LearningPath } from '../models/LearningPath';
-import { PathEnrollment } from '../models/PathEnrollment';
-import { User } from '../models/User';
+import { LearningPath } from "../models/LearningPath";
+import { PathEnrollment } from "../models/PathEnrollment";
+import { User } from "../models/User";
 
 export default async function learningPathRoutes(fastify: FastifyInstance) {
   /**
@@ -18,24 +18,24 @@ export default async function learningPathRoutes(fastify: FastifyInstance) {
    * List all published learning paths with optional filters
    */
   fastify.get(
-    '/',
+    "/",
     {
       schema: {
-        description: 'List all published learning paths',
-        tags: ['learning-paths'],
+        description: "List all published learning paths",
+        tags: ["learning-paths"],
         querystring: zodToJsonSchema(
           z.object({
             category: z
               .enum([
-                'frontend',
-                'backend',
-                'fullstack',
-                'interview',
-                'framework-specific',
-                'role-based',
+                "frontend",
+                "backend",
+                "fullstack",
+                "interview",
+                "framework-specific",
+                "role-based",
               ])
               .optional(),
-            difficulty: z.enum(['beginner', 'intermediate', 'advanced', 'mixed']).optional(),
+            difficulty: z.enum(["beginner", "intermediate", "advanced", "mixed"]).optional(),
             framework: z.string().optional(),
             isPremium: z.coerce.boolean().optional(),
           })
@@ -91,19 +91,19 @@ export default async function learningPathRoutes(fastify: FastifyInstance) {
         if (isPremium !== undefined) filter.isPremium = isPremium;
 
         const paths = await LearningPath.find(filter)
-          .select('-modules.questionIds -createdBy')
+          .select("-modules.questionIds -createdBy")
           .sort({ enrollmentCount: -1, rating: -1 });
 
         reply.send({
-          paths: paths.map((p: typeof paths[0]) => p.toJSON()),
+          paths: paths.map((p: (typeof paths)[0]) => p.toJSON()),
           total: paths.length,
         });
       } catch (error) {
         fastify.log.error(error);
         reply.status(500).send({
           code: 500,
-          error: 'Internal Server Error',
-          message: 'Failed to fetch learning paths',
+          error: "Internal Server Error",
+          message: "Failed to fetch learning paths",
         });
       }
     }
@@ -114,11 +114,11 @@ export default async function learningPathRoutes(fastify: FastifyInstance) {
    * Get detailed information about a specific learning path
    */
   fastify.get(
-    '/:slug',
+    "/:slug",
     {
       schema: {
-        description: 'Get detailed learning path information',
-        tags: ['learning-paths'],
+        description: "Get detailed learning path information",
+        tags: ["learning-paths"],
         params: zodToJsonSchema(
           z.object({
             slug: z.string(),
@@ -177,14 +177,14 @@ export default async function learningPathRoutes(fastify: FastifyInstance) {
         const userId = request.authUser?.id;
 
         const path = await LearningPath.findOne({ slug, isPublished: true }).select(
-          '-modules.questionIds'
+          "-modules.questionIds"
         );
 
         if (!path) {
           return reply.status(404).send({
             code: 404,
-            error: 'Not Found',
-            message: 'Learning path not found',
+            error: "Not Found",
+            message: "Learning path not found",
           });
         }
 
@@ -208,8 +208,8 @@ export default async function learningPathRoutes(fastify: FastifyInstance) {
         fastify.log.error(error);
         reply.status(500).send({
           code: 500,
-          error: 'Internal Server Error',
-          message: 'Failed to fetch learning path',
+          error: "Internal Server Error",
+          message: "Failed to fetch learning path",
         });
       }
     }
@@ -220,15 +220,15 @@ export default async function learningPathRoutes(fastify: FastifyInstance) {
    * Get all learning paths the current user is enrolled in
    */
   fastify.get(
-    '/my/enrollments',
+    "/my/enrollments",
     {
       onRequest: [fastify.authenticate()],
       schema: {
-        description: 'Get user enrollments',
-        tags: ['learning-paths'],
+        description: "Get user enrollments",
+        tags: ["learning-paths"],
         querystring: zodToJsonSchema(
           z.object({
-            status: z.enum(['in-progress', 'completed', 'abandoned']).optional(),
+            status: z.enum(["in-progress", "completed", "abandoned"]).optional(),
           })
         ),
         response: {
@@ -273,11 +273,11 @@ export default async function learningPathRoutes(fastify: FastifyInstance) {
         if (status) filter.status = status;
 
         const enrollments = await PathEnrollment.find(filter)
-          .populate('pathId', 'title slug difficulty thumbnail estimatedHours')
+          .populate("pathId", "title slug difficulty thumbnail estimatedHours")
           .sort({ lastActivityAt: -1 });
 
         reply.send({
-          enrollments: enrollments.map((e: typeof enrollments[0]) => {
+          enrollments: enrollments.map((e: (typeof enrollments)[0]) => {
             const enrollment = e.toJSON();
             return {
               ...enrollment,
@@ -291,8 +291,8 @@ export default async function learningPathRoutes(fastify: FastifyInstance) {
         fastify.log.error(error);
         reply.status(500).send({
           code: 500,
-          error: 'Internal Server Error',
-          message: 'Failed to fetch enrollments',
+          error: "Internal Server Error",
+          message: "Failed to fetch enrollments",
         });
       }
     }
@@ -303,12 +303,12 @@ export default async function learningPathRoutes(fastify: FastifyInstance) {
    * Enroll user in a learning path
    */
   fastify.post(
-    '/:pathId/enroll',
+    "/:pathId/enroll",
     {
       onRequest: [fastify.authenticate()],
       schema: {
-        description: 'Enroll in a learning path',
-        tags: ['learning-paths'],
+        description: "Enroll in a learning path",
+        tags: ["learning-paths"],
         params: zodToJsonSchema(
           z.object({
             pathId: z.string(),
@@ -342,16 +342,16 @@ export default async function learningPathRoutes(fastify: FastifyInstance) {
         if (!path) {
           return reply.status(404).send({
             code: 404,
-            error: 'Not Found',
-            message: 'Learning path not found',
+            error: "Not Found",
+            message: "Learning path not found",
           });
         }
 
         if (!path.isPublished) {
           return reply.status(403).send({
             code: 403,
-            error: 'Forbidden',
-            message: 'This learning path is not available',
+            error: "Forbidden",
+            message: "This learning path is not available",
           });
         }
 
@@ -374,14 +374,14 @@ export default async function learningPathRoutes(fastify: FastifyInstance) {
           if (!user?.subscription?.isActive) {
             return reply.status(403).send({
               code: 403,
-              error: 'Forbidden',
-              message: 'Premium subscription required',
+              error: "Forbidden",
+              message: "Premium subscription required",
             });
           }
         }
 
         // Initialize module progress
-        const moduleProgress = path.modules.map((module: typeof path.modules[0]) => ({
+        const moduleProgress = path.modules.map((module: (typeof path.modules)[0]) => ({
           moduleId: module.moduleId,
           isCompleted: false,
           questionsCompleted: 0,
@@ -389,13 +389,13 @@ export default async function learningPathRoutes(fastify: FastifyInstance) {
         }));
 
         // Find first unlocked module
-        const firstModule = path.modules.find((m: typeof path.modules[0]) => !m.isLocked);
+        const firstModule = path.modules.find((m: (typeof path.modules)[0]) => !m.isLocked);
 
         // Create enrollment
         const enrollment = await PathEnrollment.create({
           userId: new mongoose.Types.ObjectId(userId),
           pathId: new mongoose.Types.ObjectId(pathId),
-          status: 'in-progress',
+          status: "in-progress",
           progress: 0,
           moduleProgress,
           currentModuleId: firstModule?.moduleId,
@@ -417,8 +417,8 @@ export default async function learningPathRoutes(fastify: FastifyInstance) {
         fastify.log.error(error);
         reply.status(500).send({
           code: 500,
-          error: 'Internal Server Error',
-          message: 'Failed to enroll in learning path',
+          error: "Internal Server Error",
+          message: "Failed to enroll in learning path",
         });
       }
     }
@@ -429,12 +429,12 @@ export default async function learningPathRoutes(fastify: FastifyInstance) {
    * Get enrollment progress for a specific path
    */
   fastify.get(
-    '/:pathId/enrollment',
+    "/:pathId/enrollment",
     {
       onRequest: [fastify.authenticate()],
       schema: {
-        description: 'Get enrollment progress',
-        tags: ['learning-paths'],
+        description: "Get enrollment progress",
+        tags: ["learning-paths"],
         params: zodToJsonSchema(
           z.object({
             pathId: z.string(),
@@ -470,8 +470,8 @@ export default async function learningPathRoutes(fastify: FastifyInstance) {
         if (!enrollment) {
           return reply.status(404).send({
             code: 404,
-            error: 'Not Found',
-            message: 'Enrollment not found',
+            error: "Not Found",
+            message: "Enrollment not found",
           });
         }
 
@@ -482,8 +482,8 @@ export default async function learningPathRoutes(fastify: FastifyInstance) {
         fastify.log.error(error);
         reply.status(500).send({
           code: 500,
-          error: 'Internal Server Error',
-          message: 'Failed to fetch enrollment',
+          error: "Internal Server Error",
+          message: "Failed to fetch enrollment",
         });
       }
     }
@@ -494,12 +494,12 @@ export default async function learningPathRoutes(fastify: FastifyInstance) {
    * Mark a module as completed and update progress
    */
   fastify.post(
-    '/:pathId/modules/:moduleId/complete',
+    "/:pathId/modules/:moduleId/complete",
     {
       onRequest: [fastify.authenticate()],
       schema: {
-        description: 'Complete a module',
-        tags: ['learning-paths'],
+        description: "Complete a module",
+        tags: ["learning-paths"],
         params: zodToJsonSchema(
           z.object({
             pathId: z.string(),
@@ -544,8 +544,8 @@ export default async function learningPathRoutes(fastify: FastifyInstance) {
         if (!enrollment) {
           return reply.status(404).send({
             code: 404,
-            error: 'Not Found',
-            message: 'Enrollment not found',
+            error: "Not Found",
+            message: "Enrollment not found",
           });
         }
 
@@ -553,21 +553,21 @@ export default async function learningPathRoutes(fastify: FastifyInstance) {
         if (!path) {
           return reply.status(404).send({
             code: 404,
-            error: 'Not Found',
-            message: 'Learning path not found',
+            error: "Not Found",
+            message: "Learning path not found",
           });
         }
 
         // Find module progress
         const moduleProgressIndex = enrollment.moduleProgress.findIndex(
-          (mp: typeof enrollment.moduleProgress[0]) => mp.moduleId === moduleId
+          (mp: (typeof enrollment.moduleProgress)[0]) => mp.moduleId === moduleId
         );
 
         if (moduleProgressIndex === -1) {
           return reply.status(404).send({
             code: 404,
-            error: 'Not Found',
-            message: 'Module not found',
+            error: "Not Found",
+            message: "Module not found",
           });
         }
 
@@ -587,7 +587,9 @@ export default async function learningPathRoutes(fastify: FastifyInstance) {
         enrollment.lastActivityAt = new Date();
 
         // Calculate overall progress
-        const completedModules = enrollment.moduleProgress.filter((mp: typeof enrollment.moduleProgress[0]) => mp.isCompleted).length;
+        const completedModules = enrollment.moduleProgress.filter(
+          (mp: (typeof enrollment.moduleProgress)[0]) => mp.isCompleted
+        ).length;
         const totalModules = path.modules.length;
         enrollment.progress = Math.round((completedModules / totalModules) * 100);
 
@@ -596,7 +598,7 @@ export default async function learningPathRoutes(fastify: FastifyInstance) {
         let certificateIssued = false;
 
         if (pathCompleted && !enrollment.certificateIssued) {
-          enrollment.status = 'completed';
+          enrollment.status = "completed";
           enrollment.completedAt = new Date();
           enrollment.certificateIssued = true;
           enrollment.certificateId = `cert_${pathId}_${userId}_${Date.now()}`;
@@ -610,11 +612,15 @@ export default async function learningPathRoutes(fastify: FastifyInstance) {
         // Find next module
         let nextModuleId: string | undefined;
         if (!pathCompleted) {
-          const currentModuleIndex = path.modules.findIndex((m: typeof path.modules[0]) => m.moduleId === moduleId);
+          const currentModuleIndex = path.modules.findIndex(
+            (m: (typeof path.modules)[0]) => m.moduleId === moduleId
+          );
           const nextModule = path.modules
             .slice(currentModuleIndex + 1)
-            .find((m: typeof path.modules[0]) => {
-              const progress = enrollment.moduleProgress.find((mp: typeof enrollment.moduleProgress[0]) => mp.moduleId === m.moduleId);
+            .find((m: (typeof path.modules)[0]) => {
+              const progress = enrollment.moduleProgress.find(
+                (mp: (typeof enrollment.moduleProgress)[0]) => mp.moduleId === m.moduleId
+              );
               return !progress?.isCompleted && !m.isLocked;
             });
 
@@ -637,8 +643,8 @@ export default async function learningPathRoutes(fastify: FastifyInstance) {
         fastify.log.error(error);
         reply.status(500).send({
           code: 500,
-          error: 'Internal Server Error',
-          message: 'Failed to complete module',
+          error: "Internal Server Error",
+          message: "Failed to complete module",
         });
       }
     }
@@ -649,12 +655,12 @@ export default async function learningPathRoutes(fastify: FastifyInstance) {
    * Get certificate for completed path
    */
   fastify.get(
-    '/:pathId/certificate',
+    "/:pathId/certificate",
     {
       onRequest: [fastify.authenticate()],
       schema: {
-        description: 'Get certificate for completed path',
-        tags: ['learning-paths'],
+        description: "Get certificate for completed path",
+        tags: ["learning-paths"],
         params: zodToJsonSchema(
           z.object({
             pathId: z.string(),
@@ -692,16 +698,16 @@ export default async function learningPathRoutes(fastify: FastifyInstance) {
         if (!enrollment) {
           return reply.status(404).send({
             code: 404,
-            error: 'Not Found',
-            message: 'Enrollment not found',
+            error: "Not Found",
+            message: "Enrollment not found",
           });
         }
 
         if (!enrollment.certificateIssued || !enrollment.certificateId) {
           return reply.status(403).send({
             code: 403,
-            error: 'Forbidden',
-            message: 'Certificate not available. Complete the path first.',
+            error: "Forbidden",
+            message: "Certificate not available. Complete the path first.",
           });
         }
 
@@ -711,18 +717,21 @@ export default async function learningPathRoutes(fastify: FastifyInstance) {
         if (!path || !user) {
           return reply.status(404).send({
             code: 404,
-            error: 'Not Found',
-            message: 'Path or user not found',
+            error: "Not Found",
+            message: "Path or user not found",
           });
         }
 
         // Calculate average score
         const scores = enrollment.moduleProgress
-          .filter((mp: typeof enrollment.moduleProgress[0]) => mp.score !== undefined)
-          .map((mp: typeof enrollment.moduleProgress[0]) => mp.score!);
-        const finalScore = scores.length > 0
-          ? Math.round(scores.reduce((sum: number, score: number) => sum + score, 0) / scores.length)
-          : 0;
+          .filter((mp: (typeof enrollment.moduleProgress)[0]) => mp.score !== undefined)
+          .map((mp: (typeof enrollment.moduleProgress)[0]) => mp.score!);
+        const finalScore =
+          scores.length > 0
+            ? Math.round(
+                scores.reduce((sum: number, score: number) => sum + score, 0) / scores.length
+              )
+            : 0;
 
         reply.send({
           certificate: {
@@ -741,8 +750,8 @@ export default async function learningPathRoutes(fastify: FastifyInstance) {
         fastify.log.error(error);
         reply.status(500).send({
           code: 500,
-          error: 'Internal Server Error',
-          message: 'Failed to fetch certificate',
+          error: "Internal Server Error",
+          message: "Failed to fetch certificate",
         });
       }
     }
@@ -753,12 +762,12 @@ export default async function learningPathRoutes(fastify: FastifyInstance) {
    * Get user's learning path statistics
    */
   fastify.get(
-    '/my/stats',
+    "/my/stats",
     {
       onRequest: [fastify.authenticate()],
       schema: {
-        description: 'Get user learning path statistics',
-        tags: ['learning-paths'],
+        description: "Get user learning path statistics",
+        tags: ["learning-paths"],
         response: {
           200: zodToJsonSchema(
             z.object({
@@ -784,10 +793,19 @@ export default async function learningPathRoutes(fastify: FastifyInstance) {
           userId: new mongoose.Types.ObjectId(userId),
         });
 
-        const completed = enrollments.filter((e: typeof enrollments[0]) => e.status === 'completed').length;
-        const inProgress = enrollments.filter((e: typeof enrollments[0]) => e.status === 'in-progress').length;
-        const certificates = enrollments.filter((e: typeof enrollments[0]) => e.certificateIssued).length;
-        const totalTime = enrollments.reduce((sum: number, e: typeof enrollments[0]) => sum + e.totalTimeSpent, 0);
+        const completed = enrollments.filter(
+          (e: (typeof enrollments)[0]) => e.status === "completed"
+        ).length;
+        const inProgress = enrollments.filter(
+          (e: (typeof enrollments)[0]) => e.status === "in-progress"
+        ).length;
+        const certificates = enrollments.filter(
+          (e: (typeof enrollments)[0]) => e.certificateIssued
+        ).length;
+        const totalTime = enrollments.reduce(
+          (sum: number, e: (typeof enrollments)[0]) => sum + e.totalTimeSpent,
+          0
+        );
 
         reply.send({
           stats: {
@@ -803,8 +821,8 @@ export default async function learningPathRoutes(fastify: FastifyInstance) {
         fastify.log.error(error);
         reply.status(500).send({
           code: 500,
-          error: 'Internal Server Error',
-          message: 'Failed to fetch statistics',
+          error: "Internal Server Error",
+          message: "Failed to fetch statistics",
         });
       }
     }

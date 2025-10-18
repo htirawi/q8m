@@ -1,31 +1,32 @@
 <template>
   <div class="markdown-content space-y-4">
-    <component v-for="(block, index) in parsedBlocks" :key="index" :is="block.component" v-bind="block.props" />
+    <component
+      v-for="(block, index) in parsedBlocks"
+      :key="index"
+      :is="block.component"
+      v-bind="block.props"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import type { IMarkdownRendererProps as Props, IParsedBlock } from "@/types/components/common";
-import { computed, ref, h } from 'vue';
-
-
+import { computed, ref, h } from "vue";
 
 const props = defineProps<Props>();
 
 const copiedBlocks = ref<Set<number>>(new Set());
 
-
-
 const parsedBlocks = computed(() => {
   const blocks: IParsedBlock[] = [];
-  const lines = props.content.split('\n');
+  const lines = props.content.split("\n");
   let i = 0;
 
   while (i < lines.length) {
     const line = lines[i];
 
     // Code blocks
-    if (line?.trim().startsWith('```')) {
+    if (line?.trim().startsWith("```")) {
       const result = parseCodeBlock(lines, i);
       blocks.push(result.block);
       i = result.nextIndex;
@@ -33,8 +34,8 @@ const parsedBlocks = computed(() => {
     }
 
     // Tables (HTML or markdown)
-    if (line?.trim().startsWith('<table') || line?.trim().startsWith('|')) {
-      const result = line.trim().startsWith('<table')
+    if (line?.trim().startsWith("<table") || line?.trim().startsWith("|")) {
+      const result = line.trim().startsWith("<table")
         ? parseHtmlTable(lines, i)
         : parseMarkdownTable(lines, i);
       if (result) {
@@ -45,7 +46,7 @@ const parsedBlocks = computed(() => {
     }
 
     // Headers
-    if (line?.trim().startsWith('#')) {
+    if (line?.trim().startsWith("#")) {
       blocks.push(parseHeader(line));
       i++;
       continue;
@@ -76,11 +77,11 @@ const parsedBlocks = computed(() => {
 function highlightCode(code: string, language: string): string {
   const lang = language.toLowerCase();
 
-  if (lang === 'ts' || lang === 'typescript' || lang === 'js' || lang === 'javascript') {
+  if (lang === "ts" || lang === "typescript" || lang === "js" || lang === "javascript") {
     return highlightTypeScript(code);
-  } else if (lang === 'html') {
+  } else if (lang === "html") {
     return highlightHTML(code);
-  } else if (lang === 'css') {
+  } else if (lang === "css") {
     return highlightCSS(code);
   }
 
@@ -90,16 +91,17 @@ function highlightCode(code: string, language: string): string {
 
 function escapeHtml(text: string): string {
   return text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 }
 
 function highlightTypeScript(code: string): string {
   // Keywords
-  const keywords = /\b(const|let|var|function|return|if|else|for|while|do|switch|case|break|continue|class|interface|type|enum|import|export|from|as|async|await|try|catch|finally|throw|new|this|super|extends|implements|public|private|protected|static|readonly|namespace|module|declare|any|unknown|never|void|null|undefined|true|false)\b/g;
+  const keywords =
+    /\b(const|let|var|function|return|if|else|for|while|do|switch|case|break|continue|class|interface|type|enum|import|export|from|as|async|await|try|catch|finally|throw|new|this|super|extends|implements|public|private|protected|static|readonly|namespace|module|declare|any|unknown|never|void|null|undefined|true|false)\b/g;
 
   // Strings (single and double quoted)
   const strings = /("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|`(?:[^`\\]|\\.)*`)/g;
@@ -116,11 +118,26 @@ function highlightTypeScript(code: string): string {
   let highlighted = escapeHtml(code);
 
   // Apply highlighting (order matters)
-  highlighted = highlighted.replace(comments, '<span class="text-gray-500 dark:text-gray-400">$1</span>');
-  highlighted = highlighted.replace(strings, '<span class="text-green-400 dark:text-green-300">$1</span>');
-  highlighted = highlighted.replace(keywords, '<span class="text-purple-400 dark:text-purple-300 font-semibold">$1</span>');
-  highlighted = highlighted.replace(numbers, '<span class="text-orange-400 dark:text-orange-300">$1</span>');
-  highlighted = highlighted.replace(functions, '<span class="text-blue-400 dark:text-blue-300">$1</span>');
+  highlighted = highlighted.replace(
+    comments,
+    '<span class="text-gray-500 dark:text-gray-400">$1</span>'
+  );
+  highlighted = highlighted.replace(
+    strings,
+    '<span class="text-green-400 dark:text-green-300">$1</span>'
+  );
+  highlighted = highlighted.replace(
+    keywords,
+    '<span class="text-purple-400 dark:text-purple-300 font-semibold">$1</span>'
+  );
+  highlighted = highlighted.replace(
+    numbers,
+    '<span class="text-orange-400 dark:text-orange-300">$1</span>'
+  );
+  highlighted = highlighted.replace(
+    functions,
+    '<span class="text-blue-400 dark:text-blue-300">$1</span>'
+  );
 
   return highlighted;
 }
@@ -129,16 +146,28 @@ function highlightHTML(code: string): string {
   let highlighted = escapeHtml(code);
 
   // Tags
-  highlighted = highlighted.replace(/(&lt;\/?)([\w-]+)/g, '$1<span class="text-blue-400 dark:text-blue-300">$2</span>');
+  highlighted = highlighted.replace(
+    /(&lt;\/?)([\w-]+)/g,
+    '$1<span class="text-blue-400 dark:text-blue-300">$2</span>'
+  );
 
   // Attributes
-  highlighted = highlighted.replace(/\s([\w-]+)=/g, ' <span class="text-yellow-400 dark:text-yellow-300">$1</span>=');
+  highlighted = highlighted.replace(
+    /\s([\w-]+)=/g,
+    ' <span class="text-yellow-400 dark:text-yellow-300">$1</span>='
+  );
 
   // Attribute values
-  highlighted = highlighted.replace(/=(&quot;|&#039;)(.*?)(&quot;|&#039;)/g, '=$1<span class="text-green-400 dark:text-green-300">$2</span>$3');
+  highlighted = highlighted.replace(
+    /=(&quot;|&#039;)(.*?)(&quot;|&#039;)/g,
+    '=$1<span class="text-green-400 dark:text-green-300">$2</span>$3'
+  );
 
   // Comments
-  highlighted = highlighted.replace(/(&lt;!--[\s\S]*?--&gt;)/g, '<span class="text-gray-500 dark:text-gray-400">$1</span>');
+  highlighted = highlighted.replace(
+    /(&lt;!--[\s\S]*?--&gt;)/g,
+    '<span class="text-gray-500 dark:text-gray-400">$1</span>'
+  );
 
   return highlighted;
 }
@@ -147,59 +176,89 @@ function highlightCSS(code: string): string {
   let highlighted = escapeHtml(code);
 
   // Selectors
-  highlighted = highlighted.replace(/^([.#]?[\w-]+)(?=\s*\{)/gm, '<span class="text-yellow-400 dark:text-yellow-300">$1</span>');
+  highlighted = highlighted.replace(
+    /^([.#]?[\w-]+)(?=\s*\{)/gm,
+    '<span class="text-yellow-400 dark:text-yellow-300">$1</span>'
+  );
 
   // Properties
-  highlighted = highlighted.replace(/\b([\w-]+):/g, '<span class="text-blue-400 dark:text-blue-300">$1</span>:');
+  highlighted = highlighted.replace(
+    /\b([\w-]+):/g,
+    '<span class="text-blue-400 dark:text-blue-300">$1</span>:'
+  );
 
   // Values
-  highlighted = highlighted.replace(/:\s*([^;}\n]+)/g, ': <span class="text-green-400 dark:text-green-300">$1</span>');
+  highlighted = highlighted.replace(
+    /:\s*([^;}\n]+)/g,
+    ': <span class="text-green-400 dark:text-green-300">$1</span>'
+  );
 
   // Comments
-  highlighted = highlighted.replace(/(\/\*[\s\S]*?\*\/)/g, '<span class="text-gray-500 dark:text-gray-400">$1</span>');
+  highlighted = highlighted.replace(
+    /(\/\*[\s\S]*?\*\/)/g,
+    '<span class="text-gray-500 dark:text-gray-400">$1</span>'
+  );
 
   return highlighted;
 }
 
 function parseCodeBlock(lines: string[], startIndex: number) {
-  const firstLine = lines[startIndex] || '';
-  const language = firstLine.replace('```', '').trim() || 'code';
+  const firstLine = lines[startIndex] || "";
+  const language = firstLine.replace("```", "").trim() || "code";
   const codeLines: string[] = [];
   let i = startIndex + 1;
 
-  while (i < lines.length && !lines[i]?.trim().startsWith('```')) {
-    codeLines.push(lines[i] || '');
+  while (i < lines.length && !lines[i]?.trim().startsWith("```")) {
+    codeLines.push(lines[i] || "");
     i++;
   }
 
   const blockIndex = startIndex;
-  const code = codeLines.join('\n');
+  const code = codeLines.join("\n");
   const highlightedCode = highlightCode(code, language);
 
   return {
     block: {
-      component: h('div', { class: 'group relative my-4' }, [
+      component: h("div", { class: "group relative my-4" }, [
         // Header with language and copy button
-        h('div', {
-          class: 'flex items-center justify-between rounded-t-lg bg-gray-800 px-4 py-2 dark:bg-gray-900'
-        }, [
-          h('span', {
-            class: 'text-xs font-medium uppercase tracking-wider text-gray-300'
-          }, language),
-          h('button', {
-            class: 'rounded px-3 py-1 text-xs font-medium text-gray-300 transition-all hover:bg-gray-700 hover:text-white',
-            onClick: () => copyCode(blockIndex, code),
-          }, copiedBlocks.value.has(blockIndex) ? '✓ Copied!' : 'Copy'),
-        ]),
+        h(
+          "div",
+          {
+            class:
+              "flex items-center justify-between rounded-t-lg bg-gray-800 px-4 py-2 dark:bg-gray-900",
+          },
+          [
+            h(
+              "span",
+              {
+                class: "text-xs font-medium uppercase tracking-wider text-gray-300",
+              },
+              language
+            ),
+            h(
+              "button",
+              {
+                class:
+                  "rounded px-3 py-1 text-xs font-medium text-gray-300 transition-all hover:bg-gray-700 hover:text-white",
+                onClick: () => copyCode(blockIndex, code),
+              },
+              copiedBlocks.value.has(blockIndex) ? "✓ Copied!" : "Copy"
+            ),
+          ]
+        ),
         // Code content with syntax highlighting
-        h('pre', {
-          class: 'max-w-full overflow-x-auto rounded-b-lg bg-gray-900 p-4 text-sm dark:bg-black'
-        }, [
-          h('code', {
-            class: 'whitespace-pre-wrap break-words font-mono text-gray-100',
-            innerHTML: highlightedCode,
-          }),
-        ]),
+        h(
+          "pre",
+          {
+            class: "max-w-full overflow-x-auto rounded-b-lg bg-gray-900 p-4 text-sm dark:bg-black",
+          },
+          [
+            h("code", {
+              class: "whitespace-pre-wrap break-words font-mono text-gray-100",
+              innerHTML: highlightedCode,
+            }),
+          ]
+        ),
       ]),
       props: {},
     },
@@ -211,15 +270,15 @@ function parseHtmlTable(lines: string[], startIndex: number) {
   const tableLines: string[] = [];
   let i = startIndex;
 
-  while (i < lines.length && !lines[i]?.includes('</table>')) {
-    tableLines.push(lines[i] || '');
+  while (i < lines.length && !lines[i]?.includes("</table>")) {
+    tableLines.push(lines[i] || "");
     i++;
   }
   if (i < lines.length) {
-    tableLines.push(lines[i] || '');
+    tableLines.push(lines[i] || "");
   }
 
-  const tableHtml = tableLines.join('\n');
+  const tableHtml = tableLines.join("\n");
   const rows = extractTableRows(tableHtml);
 
   if (rows.length === 0) {
@@ -241,20 +300,20 @@ function parseMarkdownTable(lines: string[], startIndex: number) {
   const tableLines: string[] = [];
   let i = startIndex;
 
-  while (i < lines.length && lines[i]?.trim().startsWith('|')) {
-    tableLines.push(lines[i] || '');
+  while (i < lines.length && lines[i]?.trim().startsWith("|")) {
+    tableLines.push(lines[i] || "");
     i++;
   }
 
   if (tableLines.length < 2) return null;
 
   const rows = tableLines
-    .filter(line => !line.includes('---')) // Skip separator line
-    .map(line =>
+    .filter((line) => !line.includes("---")) // Skip separator line
+    .map((line) =>
       line
-        .split('|')
-        .filter(cell => cell.trim())
-        .map(cell => cell.trim())
+        .split("|")
+        .filter((cell) => cell.trim())
+        .map((cell) => cell.trim())
     );
 
   const isComparison = rows[0]?.length === 3;
@@ -270,15 +329,15 @@ function parseMarkdownTable(lines: string[], startIndex: number) {
 
 function parseHeader(line: string) {
   const level = line.match(/^#+/)?.[0].length || 1;
-  const text = line.replace(/^#+\s*/, '');
+  const text = line.replace(/^#+\s*/, "");
 
   const classes = {
-    1: 'text-3xl font-extrabold text-gray-900 dark:text-white mb-4',
-    2: 'text-2xl font-bold text-gray-900 dark:text-white mb-3',
-    3: 'text-xl font-semibold text-gray-900 dark:text-white mb-2',
-    4: 'text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2',
-    5: 'text-base font-medium text-gray-800 dark:text-gray-100 mb-1',
-    6: 'text-sm font-medium text-gray-700 dark:text-gray-200 mb-1',
+    1: "text-3xl font-extrabold text-gray-900 dark:text-white mb-4",
+    2: "text-2xl font-bold text-gray-900 dark:text-white mb-3",
+    3: "text-xl font-semibold text-gray-900 dark:text-white mb-2",
+    4: "text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2",
+    5: "text-base font-medium text-gray-800 dark:text-gray-100 mb-1",
+    6: "text-sm font-medium text-gray-700 dark:text-gray-200 mb-1",
   };
 
   return {
@@ -295,15 +354,17 @@ function parseList(lines: string[], startIndex: number) {
   let i = startIndex;
 
   while (i < lines.length && lines[i]?.trim().match(/^[-*]\s/)) {
-    const item = lines[i]?.replace(/^[-*]\s+/, '') || '';
+    const item = lines[i]?.replace(/^[-*]\s+/, "") || "";
     items.push(item);
     i++;
   }
 
   return {
     block: {
-      component: h('ul', { class: 'list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300 ml-4' },
-        items.map(item => h('li', { innerHTML: parseInlineFormatting(item) }))
+      component: h(
+        "ul",
+        { class: "list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300 ml-4" },
+        items.map((item) => h("li", { innerHTML: parseInlineFormatting(item) }))
       ),
       props: {},
     },
@@ -313,9 +374,10 @@ function parseList(lines: string[], startIndex: number) {
 
 function parseParagraph(line: string) {
   return {
-    component: 'p',
+    component: "p",
     props: {
-      class: 'mb-3 max-w-full overflow-hidden break-words leading-relaxed text-gray-700 dark:text-gray-300',
+      class:
+        "mb-3 max-w-full overflow-hidden break-words leading-relaxed text-gray-700 dark:text-gray-300",
       innerHTML: parseInlineFormatting(line),
     },
   };
@@ -323,18 +385,30 @@ function parseParagraph(line: string) {
 
 function parseInlineFormatting(text: string): string {
   // Bold: **text** or __text__
-  text = text.replace(/\*\*(.+?)\*\*/g, '<strong class="font-bold text-gray-900 dark:text-white">$1</strong>');
-  text = text.replace(/__(.+?)__/g, '<strong class="font-bold text-gray-900 dark:text-white">$1</strong>');
+  text = text.replace(
+    /\*\*(.+?)\*\*/g,
+    '<strong class="font-bold text-gray-900 dark:text-white">$1</strong>'
+  );
+  text = text.replace(
+    /__(.+?)__/g,
+    '<strong class="font-bold text-gray-900 dark:text-white">$1</strong>'
+  );
 
   // Italic: *text* or _text_
   text = text.replace(/\*(.+?)\*/g, '<em class="italic">$1</em>');
   text = text.replace(/_(.+?)_/g, '<em class="italic">$1</em>');
 
   // Inline code: `code`
-  text = text.replace(/`(.+?)`/g, '<code class="rounded bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 text-sm font-mono text-pink-600 dark:text-pink-400">$1</code>');
+  text = text.replace(
+    /`(.+?)`/g,
+    '<code class="rounded bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 text-sm font-mono text-pink-600 dark:text-pink-400">$1</code>'
+  );
 
   // Links: [text](url)
-  text = text.replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" class="text-blue-600 dark:text-blue-400 hover:underline" target="_blank" rel="noopener noreferrer">$1</a>');
+  text = text.replace(
+    /\[(.+?)\]\((.+?)\)/g,
+    '<a href="$2" class="text-blue-600 dark:text-blue-400 hover:underline" target="_blank" rel="noopener noreferrer">$1</a>'
+  );
 
   return text;
 }
@@ -346,17 +420,17 @@ function extractTableRows(html: string): string[][] {
 
   let rowMatch;
   while ((rowMatch = rowRegex.exec(html)) !== null) {
-    const rowHtml = rowMatch[1] || '';
+    const rowHtml = rowMatch[1] || "";
     const cells: string[] = [];
     let cellMatch;
 
     while ((cellMatch = cellRegex.exec(rowHtml)) !== null) {
       // Robust HTML tag sanitization - iteratively remove until no tags remain
-      let cellContent = cellMatch[1] || '';
+      let cellContent = cellMatch[1] || "";
       let previousContent;
       do {
         previousContent = cellContent;
-        cellContent = cellContent.replace(/<[^>]+>/g, '');
+        cellContent = cellContent.replace(/<[^>]+>/g, "");
       } while (cellContent !== previousContent && /<[^>]+>/.test(cellContent));
 
       cells.push(cellContent.trim());
@@ -388,92 +462,140 @@ function copyCode(blockIndex: number, code: string) {
 const ComparisonTable = (props: { rows: string[][] }) => {
   const hoveredRow = ref<number | null>(null);
 
-  return h('div', { class: 'my-6 overflow-hidden rounded-xl border border-gray-200 shadow-sm dark:border-gray-700' }, [
-    h('div', { class: 'overflow-x-auto' }, [
-      h('table', { class: 'w-full' }, [
-        // Header
-        h('thead', [
-          h('tr', { class: 'bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 dark:from-gray-800 dark:via-gray-800 dark:to-gray-800' },
-            props.rows[0]?.map((header) =>
-              h('th', {
-                class: 'border-b border-gray-200 dark:border-gray-700 px-6 py-4 text-left text-sm font-bold text-gray-900 dark:text-white'
-              }, header)
+  return h(
+    "div",
+    {
+      class:
+        "my-6 overflow-hidden rounded-xl border border-gray-200 shadow-sm dark:border-gray-700",
+    },
+    [
+      h("div", { class: "overflow-x-auto" }, [
+        h("table", { class: "w-full" }, [
+          // Header
+          h("thead", [
+            h(
+              "tr",
+              {
+                class:
+                  "bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 dark:from-gray-800 dark:via-gray-800 dark:to-gray-800",
+              },
+              props.rows[0]?.map((header) =>
+                h(
+                  "th",
+                  {
+                    class:
+                      "border-b border-gray-200 dark:border-gray-700 px-6 py-4 text-left text-sm font-bold text-gray-900 dark:text-white",
+                  },
+                  header
+                )
+              )
+            ),
+          ]),
+          // Body
+          h(
+            "tbody",
+            props.rows.slice(1).map((row, rowIndex) =>
+              h(
+                "tr",
+                {
+                  class: [
+                    "border-b border-gray-100 dark:border-gray-800 transition-all",
+                    hoveredRow.value === rowIndex
+                      ? "bg-gradient-to-r from-blue-50/50 to-purple-50/50 dark:from-gray-800/50 dark:to-gray-700/50"
+                      : "bg-white dark:bg-gray-900",
+                  ],
+                  onMouseenter: () => (hoveredRow.value = rowIndex),
+                  onMouseleave: () => (hoveredRow.value = null),
+                },
+                row.map((cell, cellIndex) =>
+                  h("td", {
+                    class: [
+                      "px-6 py-4 text-sm",
+                      cellIndex === 0
+                        ? "font-semibold text-gray-900 dark:text-white"
+                        : "text-gray-700 dark:text-gray-300",
+                    ],
+                    innerHTML: parseInlineFormatting(cell),
+                  })
+                )
+              )
             )
           ),
         ]),
-        // Body
-        h('tbody',
-          props.rows.slice(1).map((row, rowIndex) =>
-            h('tr', {
-              class: [
-                'border-b border-gray-100 dark:border-gray-800 transition-all',
-                hoveredRow.value === rowIndex ? 'bg-gradient-to-r from-blue-50/50 to-purple-50/50 dark:from-gray-800/50 dark:to-gray-700/50' : 'bg-white dark:bg-gray-900'
-              ],
-              onMouseenter: () => hoveredRow.value = rowIndex,
-              onMouseleave: () => hoveredRow.value = null,
-            },
-              row.map((cell, cellIndex) =>
-                h('td', {
-                  class: [
-                    'px-6 py-4 text-sm',
-                    cellIndex === 0 ? 'font-semibold text-gray-900 dark:text-white' : 'text-gray-700 dark:text-gray-300'
-                  ],
-                  innerHTML: parseInlineFormatting(cell),
-                })
-              )
-            )
-          )
-        ),
       ]),
-    ]),
-  ]);
+    ]
+  );
 };
 
 const RegularTable = (props: { rows: string[][] }) => {
   const hoveredRow = ref<number | null>(null);
   const hasHeader = props.rows.length > 0;
 
-  return h('div', { class: 'my-6 overflow-hidden rounded-xl border border-gray-200 shadow-sm dark:border-gray-700' }, [
-    h('div', { class: 'overflow-x-auto' }, [
-      h('table', { class: 'w-full' }, [
-        // Header (first row)
-        hasHeader && h('thead', [
-          h('tr', { class: 'bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700' },
-            props.rows[0]?.map(header =>
-              h('th', {
-                class: 'border-b border-gray-200 dark:border-gray-700 px-6 py-3 text-left text-sm font-bold text-gray-900 dark:text-white'
-              }, header)
+  return h(
+    "div",
+    {
+      class:
+        "my-6 overflow-hidden rounded-xl border border-gray-200 shadow-sm dark:border-gray-700",
+    },
+    [
+      h("div", { class: "overflow-x-auto" }, [
+        h("table", { class: "w-full" }, [
+          // Header (first row)
+          hasHeader &&
+            h("thead", [
+              h(
+                "tr",
+                {
+                  class:
+                    "bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700",
+                },
+                props.rows[0]?.map((header) =>
+                  h(
+                    "th",
+                    {
+                      class:
+                        "border-b border-gray-200 dark:border-gray-700 px-6 py-3 text-left text-sm font-bold text-gray-900 dark:text-white",
+                    },
+                    header
+                  )
+                )
+              ),
+            ]),
+          // Body
+          h(
+            "tbody",
+            props.rows.slice(hasHeader ? 1 : 0).map((row, rowIndex) =>
+              h(
+                "tr",
+                {
+                  class: [
+                    "border-b border-gray-100 dark:border-gray-800 transition-all",
+                    hoveredRow.value === rowIndex
+                      ? "bg-gray-50/80 dark:bg-gray-800/50"
+                      : "bg-white dark:bg-gray-900",
+                  ],
+                  onMouseenter: () => (hoveredRow.value = rowIndex),
+                  onMouseleave: () => (hoveredRow.value = null),
+                },
+                row.map((cell, cellIndex) =>
+                  h("td", {
+                    class: [
+                      "px-6 py-3 text-sm",
+                      cellIndex === 0
+                        ? "font-medium text-gray-900 dark:text-white"
+                        : "text-gray-700 dark:text-gray-300",
+                    ],
+                    innerHTML: parseInlineFormatting(cell),
+                  })
+                )
+              )
             )
           ),
         ]),
-        // Body
-        h('tbody',
-          props.rows.slice(hasHeader ? 1 : 0).map((row, rowIndex) =>
-            h('tr', {
-              class: [
-                'border-b border-gray-100 dark:border-gray-800 transition-all',
-                hoveredRow.value === rowIndex ? 'bg-gray-50/80 dark:bg-gray-800/50' : 'bg-white dark:bg-gray-900'
-              ],
-              onMouseenter: () => hoveredRow.value = rowIndex,
-              onMouseleave: () => hoveredRow.value = null,
-            },
-              row.map((cell, cellIndex) =>
-                h('td', {
-                  class: [
-                    'px-6 py-3 text-sm',
-                    cellIndex === 0 ? 'font-medium text-gray-900 dark:text-white' : 'text-gray-700 dark:text-gray-300'
-                  ],
-                  innerHTML: parseInlineFormatting(cell),
-                })
-              )
-            )
-          )
-        ),
       ]),
-    ]),
-  ]);
+    ]
+  );
 };
-
 </script>
 
 <style scoped>
@@ -482,11 +604,11 @@ const RegularTable = (props: { rows: string[][] }) => {
 }
 
 .markdown-content :deep(a) {
-  @apply text-blue-600 dark:text-blue-400 hover:underline;
+  @apply text-blue-600 hover:underline dark:text-blue-400;
 }
 
 .markdown-content :deep(code) {
-  @apply rounded bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 text-sm font-mono text-pink-600 dark:text-pink-400;
+  @apply rounded bg-gray-100 px-1.5 py-0.5 font-mono text-sm text-pink-600 dark:bg-gray-800 dark:text-pink-400;
 }
 
 .markdown-content :deep(pre code) {

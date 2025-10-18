@@ -46,16 +46,11 @@ describe("SecureCookieService", () => {
     });
 
     it("should merge custom options with defaults", () => {
-      secureCookieService.setSecureCookie(
-        mockReply as FastifyReply,
-        "testCookie",
-        "testValue",
-        {
-          maxAge: 7 * 24 * 60 * 60 * 1000,
-          domain: "example.com",
-          sameSite: "lax",
-        }
-      );
+      secureCookieService.setSecureCookie(mockReply as FastifyReply, "testCookie", "testValue", {
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        domain: "example.com",
+        sameSite: "lax",
+      });
 
       expect(setCookieMock).toHaveBeenCalledWith("testCookie", "testValue", {
         httpOnly: true,
@@ -68,14 +63,9 @@ describe("SecureCookieService", () => {
     });
 
     it("should allow httpOnly to be overridden", () => {
-      secureCookieService.setSecureCookie(
-        mockReply as FastifyReply,
-        "testCookie",
-        "testValue",
-        {
-          httpOnly: false,
-        }
-      );
+      secureCookieService.setSecureCookie(mockReply as FastifyReply, "testCookie", "testValue", {
+        httpOnly: false,
+      });
 
       expect(setCookieMock).toHaveBeenCalledWith(
         "testCookie",
@@ -91,14 +81,9 @@ describe("SecureCookieService", () => {
 
       for (const sameSite of sameSiteValues) {
         setCookieMock.mockClear();
-        secureCookieService.setSecureCookie(
-          mockReply as FastifyReply,
-          "testCookie",
-          "testValue",
-          {
-            sameSite,
-          }
-        );
+        secureCookieService.setSecureCookie(mockReply as FastifyReply, "testCookie", "testValue", {
+          sameSite,
+        });
 
         expect(setCookieMock).toHaveBeenCalledWith(
           "testCookie",
@@ -128,11 +113,7 @@ describe("SecureCookieService", () => {
     it("should set access token with correct name", () => {
       secureCookieService.setAccessTokenCookie(mockReply as FastifyReply, "token-value");
 
-      expect(setCookieMock).toHaveBeenCalledWith(
-        "accessToken",
-        "token-value",
-        expect.any(Object)
-      );
+      expect(setCookieMock).toHaveBeenCalledWith("accessToken", "token-value", expect.any(Object));
     });
   });
 
@@ -183,14 +164,14 @@ describe("SecureCookieService", () => {
     it("should clear both cookies with correct options", () => {
       secureCookieService.clearAuthCookies(mockReply as FastifyReply);
 
-      const {calls} = clearCookieMock.mock;
+      const { calls } = clearCookieMock.mock;
       expect(calls).toHaveLength(2);
 
-      const cookieNames = calls.map(call => call[0]);
+      const cookieNames = calls.map((call) => call[0]);
       expect(cookieNames).toContain("accessToken");
       expect(cookieNames).toContain("refreshToken");
 
-      calls.forEach(call => {
+      calls.forEach((call) => {
         expect(call[1]).toHaveProperty("httpOnly", true);
         expect(call[1]).toHaveProperty("sameSite", "strict");
         expect(call[1]).toHaveProperty("path", "/");
@@ -339,11 +320,7 @@ describe("SecureCookieService", () => {
 
       expect(setCookieMock).toHaveBeenCalledTimes(2);
       expect(setCookieMock).toHaveBeenCalledWith("accessToken", accessToken, expect.any(Object));
-      expect(setCookieMock).toHaveBeenCalledWith(
-        "refreshToken",
-        refreshToken,
-        expect.any(Object)
-      );
+      expect(setCookieMock).toHaveBeenCalledWith("refreshToken", refreshToken, expect.any(Object));
 
       // Clear auth cookies
       secureCookieService.clearAuthCookies(mockReply as FastifyReply);

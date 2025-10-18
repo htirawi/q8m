@@ -1,6 +1,6 @@
 /**
  * File Upload Validation Service
- * 
+ *
  * SECURITY: SEC-008 - MIME type validation using magic bytes, not just extensions
  * Prevents file upload attacks by verifying actual file content
  */
@@ -19,7 +19,7 @@ const ALLOWED_MIME_TYPES = [
   "application/pdf",
 ] as const;
 
-type AllowedMimeType = typeof ALLOWED_MIME_TYPES[number];
+type AllowedMimeType = (typeof ALLOWED_MIME_TYPES)[number];
 
 /**
  * File validation result
@@ -33,13 +33,11 @@ interface FileValidationResult {
 
 /**
  * Validate file upload using magic byte detection
- * 
+ *
  * @param file - Multipart file from Fastify
  * @returns Validation result with detected MIME type
  */
-export async function validateFileUpload(
-  file: MultipartFile
-): Promise<FileValidationResult> {
+export async function validateFileUpload(file: MultipartFile): Promise<FileValidationResult> {
   try {
     // Read file buffer
     const buffer = await file.toBuffer();
@@ -81,15 +79,12 @@ export async function validateFileUpload(
 
 /**
  * Validate file size
- * 
+ *
  * @param fileSize - Size in bytes
  * @param maxSize - Maximum allowed size in bytes
  * @returns Validation result
  */
-export function validateFileSize(
-  fileSize: number,
-  maxSize: number
-): FileValidationResult {
+export function validateFileSize(fileSize: number, maxSize: number): FileValidationResult {
   if (fileSize > maxSize) {
     return {
       isValid: false,
@@ -108,4 +103,3 @@ export function validateFileSize(
 export function getAllowedMimeTypes(): readonly string[] {
   return ALLOWED_MIME_TYPES;
 }
-

@@ -2,9 +2,25 @@ import type { Document, ObjectId } from "mongoose";
 import { Schema, model } from "mongoose";
 
 export interface IQuestion extends Document {
-  framework: "angular" | "react" | "vue" | "nextjs" | "redux" | "random" | "typescript" | "testing" | "svelte";
+  framework:
+    | "angular"
+    | "react"
+    | "vue"
+    | "nextjs"
+    | "redux"
+    | "random"
+    | "typescript"
+    | "testing"
+    | "svelte";
   level: "junior" | "intermediate" | "senior";
-  type: "multiple-choice" | "true-false" | "fill-blank" | "multiple-checkbox" | "open-ended" | "debugging" | "interview";
+  type:
+    | "multiple-choice"
+    | "true-false"
+    | "fill-blank"
+    | "multiple-checkbox"
+    | "open-ended"
+    | "debugging"
+    | "interview";
   mode: "study" | "quiz" | "both"; // study = explanatory only, quiz = testing, both = can be used in either
   category: string;
   difficulty: "easy" | "medium" | "hard";
@@ -31,7 +47,17 @@ const questionSchema = new Schema(
   {
     framework: {
       type: String,
-      enum: ["angular", "react", "vue", "nextjs", "redux", "random", "typescript", "testing", "svelte"],
+      enum: [
+        "angular",
+        "react",
+        "vue",
+        "nextjs",
+        "redux",
+        "random",
+        "typescript",
+        "testing",
+        "svelte",
+      ],
       required: true,
       index: true,
     },
@@ -43,7 +69,15 @@ const questionSchema = new Schema(
     },
     type: {
       type: String,
-      enum: ["multiple-choice", "true-false", "fill-blank", "multiple-checkbox", "open-ended", "debugging", "interview"],
+      enum: [
+        "multiple-choice",
+        "true-false",
+        "fill-blank",
+        "multiple-checkbox",
+        "open-ended",
+        "debugging",
+        "interview",
+      ],
       required: true,
     },
     mode: {

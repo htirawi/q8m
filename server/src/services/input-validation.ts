@@ -45,10 +45,7 @@ export class InputValidationService {
 
     // Remove all event handlers using iterative replacement
     // Prevents bypass like: ononclickclick= becoming onclick=
-    const eventHandlerPatterns = [
-      /\s*on\w+\s*=\s*["'][^"']*["']/gi,
-      /\s*on\w+\s*=\s*[^\s>]*/gi,
-    ];
+    const eventHandlerPatterns = [/\s*on\w+\s*=\s*["'][^"']*["']/gi, /\s*on\w+\s*=\s*[^\s>]*/gi];
 
     for (const pattern of eventHandlerPatterns) {
       prevLength = 0;

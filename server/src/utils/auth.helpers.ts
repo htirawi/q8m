@@ -3,7 +3,6 @@
  * Common utilities and error responses for authentication
  */
 
-
 import type { ISession } from "@models/Session";
 import type { IUser } from "@models/User";
 import type { FastifyReply, FastifyRequest } from "fastify";
@@ -73,11 +72,7 @@ export function sendAuthError(
 /**
  * Attach authenticated user to request
  */
-export function attachAuthUser(
-  request: FastifyRequest,
-  user: IUser,
-  session: ISession
-): void {
+export function attachAuthUser(request: FastifyRequest, user: IUser, session: ISession): void {
   request.authUser = {
     id: (user._id as { toString(): string }).toString(),
     email: user.email,

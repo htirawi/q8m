@@ -1,7 +1,10 @@
-import { ref, onMounted } from 'vue';
-import { initializeApp } from 'firebase/app';
-import { getMessaging, getToken, onMessage, type Messaging } from 'firebase/messaging';
-import type { NotificationPermissionState, ForegroundNotification } from '@shared/types/composables';
+import { ref, onMounted } from "vue";
+import { initializeApp } from "firebase/app";
+import { getMessaging, getToken, onMessage, type Messaging } from "firebase/messaging";
+import type {
+  NotificationPermissionState,
+  ForegroundNotification,
+} from "@shared/types/composables";
 
 // Firebase configuration from environment variables
 const firebaseConfig = {
@@ -25,13 +28,11 @@ function initializeFirebase() {
       firebaseApp = initializeApp(firebaseConfig);
       messaging = getMessaging(firebaseApp);
     } catch (error) {
-      console.error('Failed to initialize Firebase:', error);
+      console.error("Failed to initialize Firebase:", error);
     }
   }
   return messaging;
 }
-
-
 
 export function useNotifications() {
   const isSupported = ref(false);
@@ -43,7 +44,7 @@ export function useNotifications() {
 
   // Check if notifications are supported
   const checkSupport = () => {
-    isSupported.value = 'Notification' in window && 'serviceWorker' in navigator;
+    isSupported.value = "Notification" in window && "serviceWorker" in navigator;
     return isSupported.value;
   };
 
@@ -58,12 +59,12 @@ export function useNotifications() {
       };
     }
 
-    const {permission} = Notification;
+    const { permission } = Notification;
 
     return {
-      granted: permission === 'granted',
-      denied: permission === 'denied',
-      default: permission === 'default',
+      granted: permission === "granted",
+      denied: permission === "denied",
+      default: permission === "default",
       supported: true,
     };
   };
@@ -71,7 +72,7 @@ export function useNotifications() {
   // Request notification permission
   const requestPermission = async (): Promise<boolean> => {
     if (!checkSupport()) {
-      error.value = 'Notifications are not supported in your browser';
+      error.value = "Notifications are not supported in your browser";
       return false;
     }
 
@@ -80,8 +81,8 @@ export function useNotifications() {
       error.value = null;
 
       const permission = await Notification.requestPermission();
-      permissionGranted.value = permission === 'granted';
-      permissionDenied.value = permission === 'denied';
+      permissionGranted.value = permission === "granted";
+      permissionDenied.value = permission === "denied";
 
       if (permissionGranted.value) {
         // If permission granted, get FCM token
@@ -90,8 +91,8 @@ export function useNotifications() {
 
       return permissionGranted.value;
     } catch (err) {
-      console.error('Error requesting notification permission:', err);
-      error.value = 'Failed to request notification permission';
+      console.error("Error requesting notification permission:", err);
+      error.value = "Failed to request notification permission";
       return false;
     } finally {
       isLoading.value = false;
@@ -109,13 +110,13 @@ export function useNotifications() {
       error.value = null;
 
       // Register service worker
-      const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
-      console.error('Service Worker registered:', registration);
+      const registration = await navigator.serviceWorker.register("/firebase-messaging-sw.js");
+      console.error("Service Worker registered:", registration);
 
       // Initialize Firebase Messaging
       const messagingInstance = initializeFirebase();
       if (!messagingInstance) {
-        throw new Error('Failed to initialize Firebase Messaging');
+        throw new Error("Failed to initialize Firebase Messaging");
       }
 
       // Get FCM token
@@ -126,18 +127,18 @@ export function useNotifications() {
 
       if (token) {
         fcmToken.value = token;
-        console.error('FCM Token obtained:', token);
+        console.error("FCM Token obtained:", token);
 
         // Send token to backend
         await registerTokenWithBackend(token);
 
         return token;
       }
-      console.warn('No FCM token available');
+      console.warn("No FCM token available");
       return null;
     } catch (err) {
-      console.error('Error getting FCM token:', err);
-      error.value = 'Failed to get messaging token';
+      console.error("Error getting FCM token:", err);
+      error.value = "Failed to get messaging token";
       return null;
     } finally {
       isLoading.value = false;
@@ -147,26 +148,26 @@ export function useNotifications() {
   // Register FCM token with backend
   const registerTokenWithBackend = async (token: string): Promise<void> => {
     try {
-      const response = await fetch('/api/v1/notifications/register-token', {
-        method: 'POST',
+      const response = await fetch("/api/v1/notifications/register-token", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        credentials: 'include',
+        credentials: "include",
         body: JSON.stringify({
           token,
-          platform: 'web',
+          platform: "web",
           userAgent: navigator.userAgent,
         }),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to register token with backend');
+        throw new Error("Failed to register token with backend");
       }
 
-      console.error('FCM token registered with backend');
+      console.error("FCM token registered with backend");
     } catch (err) {
-      console.error('Error registering token with backend:', err);
+      console.error("Error registering token with backend:", err);
       // Don't throw - token is still valid locally
     }
   };
@@ -176,21 +177,21 @@ export function useNotifications() {
     if (!fcmToken.value) return;
 
     try {
-      await fetch('/api/v1/notifications/unregister-token', {
-        method: 'POST',
+      await fetch("/api/v1/notifications/unregister-token", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        credentials: 'include',
+        credentials: "include",
         body: JSON.stringify({
           token: fcmToken.value,
         }),
       });
 
       fcmToken.value = null;
-      console.error('FCM token unregistered');
+      console.error("FCM token unregistered");
     } catch (err) {
-      console.error('Error unregistering token:', err);
+      console.error("Error unregistering token:", err);
     }
   };
 
@@ -200,11 +201,11 @@ export function useNotifications() {
     if (!messagingInstance) return;
 
     onMessage(messagingInstance, (payload) => {
-      console.error('Foreground message received:', payload);
+      console.error("Foreground message received:", payload);
 
       const notification: ForegroundNotification = {
-        title: payload.notification?.title || 'New Notification',
-        body: payload.notification?.body || '',
+        title: payload.notification?.title || "New Notification",
+        body: payload.notification?.body || "",
         icon: payload.notification?.icon,
         data: payload.data,
       };
@@ -215,10 +216,10 @@ export function useNotifications() {
       if (permissionGranted.value) {
         new Notification(notification.title, {
           body: notification.body,
-          icon: notification.icon || '/logo.png',
-          badge: '/badge-icon.png',
+          icon: notification.icon || "/logo.png",
+          badge: "/badge-icon.png",
           data: notification.data,
-          tag: notification.data?.tag || 'default',
+          tag: notification.data?.tag || "default",
         });
       }
     });
@@ -227,14 +228,14 @@ export function useNotifications() {
   // Show a local test notification
   const showTestNotification = () => {
     if (!permissionGranted.value) {
-      console.warn('Notification permission not granted');
+      console.warn("Notification permission not granted");
       return;
     }
 
-    new Notification('Test Notification', {
-      body: 'This is a test notification from Q8M',
-      icon: '/logo.png',
-      badge: '/badge-icon.png',
+    new Notification("Test Notification", {
+      body: "This is a test notification from Q8M",
+      icon: "/logo.png",
+      badge: "/badge-icon.png",
       vibrate: [200, 100, 200],
     });
   };

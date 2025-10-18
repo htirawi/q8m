@@ -140,7 +140,10 @@ export class PayPalWebhookService {
       links?: Array<{ href: string; rel: string }>;
     };
 
-    const captureId = resource.links?.find((link) => link.rel === "up")?.href.split("/").pop();
+    const captureId = resource.links
+      ?.find((link) => link.rel === "up")
+      ?.href.split("/")
+      .pop();
     if (!captureId) {
       request.log.warn({
         event: "paypal_webhook_refund_no_capture_link",
@@ -194,10 +197,7 @@ export class PayPalWebhookService {
    * Mark event as processed
    */
   private async markEventProcessed(eventId: string): Promise<void> {
-    await WebhookEvent.updateOne(
-      { eventId },
-      { processedAt: new Date(), status: "processed" }
-    );
+    await WebhookEvent.updateOne({ eventId }, { processedAt: new Date(), status: "processed" });
   }
 
   /**

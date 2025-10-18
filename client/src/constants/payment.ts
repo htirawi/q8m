@@ -39,9 +39,7 @@ export const PAYMENT_METHODS: IPaymentMethodConfig[] = [
 ];
 
 export const getAvailablePaymentMethods = (currency: string): IPaymentMethodConfig[] => {
-  return PAYMENT_METHODS.filter((method) =>
-    method.availableForCurrencies.includes(currency)
-  );
+  return PAYMENT_METHODS.filter((method) => method.availableForCurrencies.includes(currency));
 };
 
 export const getDefaultPaymentMethod = (currency: string): IPaymentMethodConfig | undefined => {

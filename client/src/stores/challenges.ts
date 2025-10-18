@@ -1,19 +1,31 @@
-import { defineStore } from 'pinia';
-import { ref, computed } from 'vue';
-import { httpClient, getErrorMessage as extractErrorMessage } from '@/utils/httpClient';
-import { useAuthStore } from './auth';
-import { useToast } from '@/composables/useToast';
-import type { Challenge, ChallengeStats, CreateChallengeData, SubmitChallengeData, Pagination } from '@shared/types/challenges';
+import { defineStore } from "pinia";
+import { ref, computed } from "vue";
+import { httpClient, getErrorMessage as extractErrorMessage } from "@/utils/httpClient";
+import { useAuthStore } from "./auth";
+import { useToast } from "@/composables/useToast";
+import type {
+  Challenge,
+  ChallengeStats,
+  CreateChallengeData,
+  SubmitChallengeData,
+  Pagination,
+} from "@shared/types/challenges";
 
 // Re-export types for use in other modules
-export type { Challenge, ChallengeStats, CreateChallengeData, SubmitChallengeData, Pagination } from '@shared/types/challenges';
+export type {
+  Challenge,
+  ChallengeStats,
+  CreateChallengeData,
+  SubmitChallengeData,
+  Pagination,
+} from "@shared/types/challenges";
 
 // Helper to extract error message
 function getErrorMessage(error: unknown, defaultMessage: string): string {
   return extractErrorMessage(error) || defaultMessage;
 }
 
-export const useChallengesStore = defineStore('challenges', () => {
+export const useChallengesStore = defineStore("challenges", () => {
   const authStore = useAuthStore();
   const toast = useToast();
 
@@ -42,41 +54,32 @@ export const useChallengesStore = defineStore('challenges', () => {
   });
 
   // Computed
-  const pendingChallenges = computed(() =>
-    challenges.value.filter((c) => c.status === 'pending')
-  );
+  const pendingChallenges = computed(() => challenges.value.filter((c) => c.status === "pending"));
 
   const activeChallenges = computed(() =>
-    challenges.value.filter((c) => c.status === 'in-progress')
+    challenges.value.filter((c) => c.status === "in-progress")
   );
 
   const completedChallenges = computed(() =>
-    challenges.value.filter((c) => c.status === 'completed')
+    challenges.value.filter((c) => c.status === "completed")
   );
 
   const receivedChallenges = computed(() => {
     const userId = authStore.user?._id;
-    return pendingChallenges.value.filter(
-      (c) => {
-        if (!c.challengedUserId) return false;
-        const challengedId = typeof c.challengedUserId === 'string'
-          ? c.challengedUserId
-          : c.challengedUserId._id;
-        return challengedId === userId;
-      }
-    );
+    return pendingChallenges.value.filter((c) => {
+      if (!c.challengedUserId) return false;
+      const challengedId =
+        typeof c.challengedUserId === "string" ? c.challengedUserId : c.challengedUserId._id;
+      return challengedId === userId;
+    });
   });
 
   const sentChallenges = computed(() => {
     const userId = authStore.user?._id;
-    return pendingChallenges.value.filter(
-      (c) => {
-        const challengerId = typeof c.challengerId === 'string'
-          ? c.challengerId
-          : c.challengerId._id;
-        return challengerId === userId;
-      }
-    );
+    return pendingChallenges.value.filter((c) => {
+      const challengerId = typeof c.challengerId === "string" ? c.challengerId : c.challengerId._id;
+      return challengerId === userId;
+    });
   });
 
   const winRate = computed(() => {
@@ -85,7 +88,7 @@ export const useChallengesStore = defineStore('challenges', () => {
   });
 
   // API Base URL
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
   /**
    * Get all challenges
@@ -100,15 +103,16 @@ export const useChallengesStore = defineStore('challenges', () => {
       error.value = null;
 
       const params = new URLSearchParams();
-      if (status) params.append('status', status);
-      params.append('page', page.toString());
-      params.append('limit', limit.toString());
+      if (status) params.append("status", status);
+      params.append("page", page.toString());
+      params.append("limit", limit.toString());
 
       const url = `${API_URL}/api/v1/challenges?${params.toString()}`;
-      const data = await httpClient.get<{ success: boolean; challenges: Challenge[]; pagination: Pagination }>(
-        url,
-        { requireAuth: true }
-      );
+      const data = await httpClient.get<{
+        success: boolean;
+        challenges: Challenge[];
+        pagination: Pagination;
+      }>(url, { requireAuth: true });
 
       if (data.success) {
         if (page === 1) {
@@ -119,9 +123,9 @@ export const useChallengesStore = defineStore('challenges', () => {
         pagination.value = data.pagination;
       }
     } catch (err: unknown) {
-      error.value = getErrorMessage(err, 'Failed to load challenges');
-      toast.error('Error', error.value);
-      console.error('Error fetching challenges:', err);
+      error.value = getErrorMessage(err, "Failed to load challenges");
+      toast.error("Error", error.value);
+      console.error("Error fetching challenges:", err);
     } finally {
       loading.value = false;
     }
@@ -147,9 +151,9 @@ export const useChallengesStore = defineStore('challenges', () => {
 
       return null;
     } catch (err: unknown) {
-      error.value = getErrorMessage(err, 'Failed to load challenge details');
-      toast.error('Error', error.value);
-      console.error('Error fetching challenge details:', err);
+      error.value = getErrorMessage(err, "Failed to load challenge details");
+      toast.error("Error", error.value);
+      console.error("Error fetching challenge details:", err);
       return null;
     } finally {
       loading.value = false;
@@ -171,7 +175,7 @@ export const useChallengesStore = defineStore('challenges', () => {
       );
 
       if (result.success) {
-        toast.success('Challenge sent successfully!');
+        toast.success("Challenge sent successfully!");
         // Add to challenges list
         challenges.value.unshift(result.challenge);
         return true;
@@ -179,9 +183,9 @@ export const useChallengesStore = defineStore('challenges', () => {
 
       return false;
     } catch (err: unknown) {
-      error.value = getErrorMessage(err, 'Failed to create challenge');
-      toast.error('Error', error.value);
-      console.error('Error creating challenge:', err);
+      error.value = getErrorMessage(err, "Failed to create challenge");
+      toast.error("Error", error.value);
+      console.error("Error creating challenge:", err);
       return false;
     } finally {
       loading.value = false;
@@ -203,7 +207,7 @@ export const useChallengesStore = defineStore('challenges', () => {
       );
 
       if (result.success) {
-        toast.success('Challenge accepted!');
+        toast.success("Challenge accepted!");
 
         // Update challenge in list
         const index = challenges.value.findIndex((c) => c._id === challengeId);
@@ -216,9 +220,9 @@ export const useChallengesStore = defineStore('challenges', () => {
 
       return false;
     } catch (err: unknown) {
-      error.value = getErrorMessage(err, 'Failed to accept challenge');
-      toast.error('Error', error.value);
-      console.error('Error accepting challenge:', err);
+      error.value = getErrorMessage(err, "Failed to accept challenge");
+      toast.error("Error", error.value);
+      console.error("Error accepting challenge:", err);
       return false;
     } finally {
       loading.value = false;
@@ -240,7 +244,7 @@ export const useChallengesStore = defineStore('challenges', () => {
       );
 
       if (result.success) {
-        toast.success('Challenge rejected');
+        toast.success("Challenge rejected");
 
         // Remove from challenges list
         challenges.value = challenges.value.filter((c) => c._id !== challengeId);
@@ -250,9 +254,9 @@ export const useChallengesStore = defineStore('challenges', () => {
 
       return false;
     } catch (err: unknown) {
-      error.value = getErrorMessage(err, 'Failed to reject challenge');
-      toast.error('Error', error.value);
-      console.error('Error rejecting challenge:', err);
+      error.value = getErrorMessage(err, "Failed to reject challenge");
+      toast.error("Error", error.value);
+      console.error("Error rejecting challenge:", err);
       return false;
     } finally {
       loading.value = false;
@@ -277,23 +281,23 @@ export const useChallengesStore = defineStore('challenges', () => {
       );
 
       if (result.success) {
-        const {challenge} = result;
+        const { challenge } = result;
 
         // Check if challenge is completed
-        if (challenge.status === 'completed') {
+        if (challenge.status === "completed") {
           const userId = authStore.user?._id;
           const isWinner = challenge.winnerId === userId;
-          const {isTie} = challenge;
+          const { isTie } = challenge;
 
           if (isTie) {
             toast.success("It's a tie! Great job!");
           } else if (isWinner) {
-            toast.success('Congratulations! You won the challenge!');
+            toast.success("Congratulations! You won the challenge!");
           } else {
-            toast.info('Challenge completed. Better luck next time!');
+            toast.info("Challenge completed. Better luck next time!");
           }
         } else {
-          toast.success('Results submitted! Waiting for opponent...');
+          toast.success("Results submitted! Waiting for opponent...");
         }
 
         // Update challenge in list
@@ -307,9 +311,9 @@ export const useChallengesStore = defineStore('challenges', () => {
 
       return false;
     } catch (err: unknown) {
-      error.value = getErrorMessage(err, 'Failed to submit results');
-      toast.error('Error', error.value);
-      console.error('Error submitting results:', err);
+      error.value = getErrorMessage(err, "Failed to submit results");
+      toast.error("Error", error.value);
+      console.error("Error submitting results:", err);
       return false;
     } finally {
       loading.value = false;
@@ -333,8 +337,8 @@ export const useChallengesStore = defineStore('challenges', () => {
         stats.value = result.stats;
       }
     } catch (err: unknown) {
-      error.value = getErrorMessage(err, 'Failed to load stats');
-      console.error('Error fetching stats:', err);
+      error.value = getErrorMessage(err, "Failed to load stats");
+      console.error("Error fetching stats:", err);
     } finally {
       loading.value = false;
     }

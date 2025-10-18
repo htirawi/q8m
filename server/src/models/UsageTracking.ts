@@ -235,8 +235,7 @@ UsageTrackingSchema.statics.hasQuotaRemaining = async function (
 ): Promise<{ hasQuota: boolean; used: number; remaining: number }> {
   const stats = await this.getUserUsageStats(userId, framework, "daily");
 
-  const used =
-    mode === "study" ? stats.studyQuestionsUsed : stats.quizQuestionsUsed;
+  const used = mode === "study" ? stats.studyQuestionsUsed : stats.quizQuestionsUsed;
   const remaining = Math.max(0, maxAllowed - used);
   const hasQuota = used + requestedCount <= maxAllowed;
 
@@ -276,12 +275,8 @@ UsageTrackingSchema.methods.getUsagePercentage = function (
 ): number {
   if (limit <= 0) return 0;
 
-  const used =
-    mode === "study" ? this.studyQuestionsViewed : this.quizQuestionsTaken;
+  const used = mode === "study" ? this.studyQuestionsViewed : this.quizQuestionsTaken;
   return Math.min(100, Math.round((used / limit) * 100));
 };
 
-export const UsageTracking = mongoose.model<IUsageTracking>(
-  "UsageTracking",
-  UsageTrackingSchema
-);
+export const UsageTracking = mongoose.model<IUsageTracking>("UsageTracking", UsageTrackingSchema);

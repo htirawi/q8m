@@ -8,11 +8,29 @@ import { zodToJsonSchema } from "zod-to-json-schema";
 // Validation schemas
 const onboardingSchema = z.object({
   preferences: z.object({
-    goal: z.enum(["get-job", "learn-framework", "interview-prep", "skill-improvement", "certification"]),
+    goal: z.enum([
+      "get-job",
+      "learn-framework",
+      "interview-prep",
+      "skill-improvement",
+      "certification",
+    ]),
     experienceLevel: z.enum(["junior", "mid", "senior"]),
-    frameworks: z.array(
-      z.enum(["react", "vue", "angular", "nextjs", "redux", "typescript", "javascript", "node", "express"])
-    ).min(1, "At least one framework is required"),
+    frameworks: z
+      .array(
+        z.enum([
+          "react",
+          "vue",
+          "angular",
+          "nextjs",
+          "redux",
+          "typescript",
+          "javascript",
+          "node",
+          "express",
+        ])
+      )
+      .min(1, "At least one framework is required"),
     dailyGoal: z.number().min(5).max(480).optional(), // 5 minutes to 8 hours
     availableDaysPerWeek: z.number().min(1).max(7).optional(),
     preferredStudyTime: z.enum(["morning", "afternoon", "evening", "night"]).optional(),

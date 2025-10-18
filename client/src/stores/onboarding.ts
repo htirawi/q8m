@@ -1,18 +1,18 @@
-import { defineStore } from 'pinia';
-import { ref, computed } from 'vue';
+import { defineStore } from "pinia";
+import { ref, computed } from "vue";
 import type {
   OnboardingPreferences,
   OnboardingState,
   OnboardingGoal,
   ExperienceLevel,
   Framework,
-} from '@shared/types/onboarding';
-import { httpClient } from '@/utils/httpClient';
-import { useAuthStore } from './auth';
+} from "@shared/types/onboarding";
+import { httpClient } from "@/utils/httpClient";
+import { useAuthStore } from "./auth";
 
 const TOTAL_STEPS = 4;
 
-export const useOnboardingStore = defineStore('onboarding', () => {
+export const useOnboardingStore = defineStore("onboarding", () => {
   const authStore = useAuthStore();
 
   // State
@@ -102,7 +102,7 @@ export const useOnboardingStore = defineStore('onboarding', () => {
   function setStudyPreferences(prefs: {
     dailyGoal?: number;
     availableDaysPerWeek?: number;
-    preferredStudyTime?: 'morning' | 'afternoon' | 'evening' | 'night';
+    preferredStudyTime?: "morning" | "afternoon" | "evening" | "night";
   }) {
     preferences.value = {
       ...preferences.value,
@@ -128,7 +128,7 @@ export const useOnboardingStore = defineStore('onboarding', () => {
       };
 
       await httpClient.post(
-        '/api/v1/users/onboarding',
+        "/api/v1/users/onboarding",
         { preferences: completePreferences },
         { requireAuth: true, useBearer: true }
       );
@@ -148,7 +148,7 @@ export const useOnboardingStore = defineStore('onboarding', () => {
 
       return true;
     } catch (error) {
-      console.error('Failed to complete onboarding:', error);
+      console.error("Failed to complete onboarding:", error);
       return false;
     } finally {
       isLoading.value = false;

@@ -137,7 +137,6 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/create",
     {
-
       ...(paymentRateLimits.create() as unknown as Record<string, never>),
       preHandler: [authenticate],
       schema: {
@@ -306,7 +305,6 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/callback/:gateway",
     {
-
       ...(paymentRateLimits.callback() as unknown as Record<string, never>),
       schema: {
         params: zodToJsonSchema(
@@ -577,7 +575,6 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/webhooks/aps",
     {
-
       ...(webhookRateLimits.aps() as unknown as Record<string, never>),
     },
     async (request, reply) => {
@@ -620,7 +617,6 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/webhooks/hyperpay",
     {
-
       ...(webhookRateLimits.hyperpay() as unknown as Record<string, never>),
     },
     async (request, reply) => {
@@ -723,7 +719,6 @@ export default async function paymentRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/refund/:purchaseId",
     {
-
       ...(paymentRateLimits.refund() as unknown as Record<string, never>),
       preHandler: [authenticate, fastify.requireRole("admin")], // Fixed: require admin role
       schema: {

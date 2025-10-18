@@ -102,10 +102,7 @@ describe.skip("PayPal Create Order", () => {
       status: "pending",
     } as any);
 
-    await paypalController.createOrder(
-      mockRequest as FastifyRequest,
-      mockReply as FastifyReply
-    );
+    await paypalController.createOrder(mockRequest as FastifyRequest, mockReply as FastifyReply);
 
     expect(mockReply.send).toHaveBeenCalledWith({
       success: true,
@@ -146,10 +143,7 @@ describe.skip("PayPal Create Order", () => {
       billingCycle: "monthly",
     };
 
-    await paypalController.createOrder(
-      mockRequest as FastifyRequest,
-      mockReply as FastifyReply
-    );
+    await paypalController.createOrder(mockRequest as FastifyRequest, mockReply as FastifyReply);
 
     // Verify pricing service was called
     expect(pricingService.getPlanPricing).toHaveBeenCalledWith("SENIOR", "USD");
@@ -172,10 +166,7 @@ describe.skip("PayPal Create Order", () => {
       billingCycle: "monthly",
     };
 
-    await paypalController.createOrder(
-      mockRequest as FastifyRequest,
-      mockReply as FastifyReply
-    );
+    await paypalController.createOrder(mockRequest as FastifyRequest, mockReply as FastifyReply);
 
     expect(mockReply.status).toHaveBeenCalledWith(400);
     expect(mockReply.send).toHaveBeenCalledWith({
@@ -198,14 +189,9 @@ describe.skip("PayPal Create Order", () => {
       category: "subscription",
     });
 
-    vi.mocked(paypalClient.paypalClient.execute).mockRejectedValue(
-      new Error("PayPal API Error")
-    );
+    vi.mocked(paypalClient.paypalClient.execute).mockRejectedValue(new Error("PayPal API Error"));
 
-    await paypalController.createOrder(
-      mockRequest as FastifyRequest,
-      mockReply as FastifyReply
-    );
+    await paypalController.createOrder(mockRequest as FastifyRequest, mockReply as FastifyReply);
 
     expect(mockReply.status).toHaveBeenCalledWith(500);
     expect(mockReply.send).toHaveBeenCalledWith({
@@ -247,10 +233,7 @@ describe.skip("PayPal Create Order", () => {
       billingCycle: "monthly",
     };
 
-    await paypalController.createOrder(
-      mockRequest as FastifyRequest,
-      mockReply as FastifyReply
-    );
+    await paypalController.createOrder(mockRequest as FastifyRequest, mockReply as FastifyReply);
 
     // Verify idempotency header was set
     const callArgs = mockExecute.mock.calls[0][0];

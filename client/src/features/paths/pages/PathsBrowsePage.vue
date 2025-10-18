@@ -4,9 +4,7 @@
       <!-- Header -->
       <div class="mb-8 flex items-start justify-between">
         <div>
-          <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
-            Learning Paths
-          </h1>
+          <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Learning Paths</h1>
           <p class="mt-2 text-lg text-gray-600 dark:text-gray-300">
             Structured learning journeys to master web development
           </p>
@@ -42,7 +40,9 @@
 
       <!-- Loading State -->
       <div v-if="store.loading" class="flex justify-center py-12">
-        <div class="h-8 w-8 animate-spin rounded-full border-4 border-primary-500 border-t-transparent"></div>
+        <div
+          class="h-8 w-8 animate-spin rounded-full border-4 border-primary-500 border-t-transparent"
+        ></div>
       </div>
 
       <!-- Paths Grid -->
@@ -56,7 +56,7 @@
       </div>
 
       <!-- Empty State -->
-      <div v-else class="text-center py-12">
+      <div v-else class="py-12 text-center">
         <p class="text-gray-600 dark:text-gray-400">No learning paths found</p>
       </div>
     </div>
@@ -64,18 +64,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
-import { useLearningPathsStore } from '@/stores/learning-paths';
-import PathCard from '../components/PathCard.vue';
-import UserMenu from '@/components/layout/UserMenu.vue';
-import type { PathCategory, PathDifficulty } from '@shared/types/learning-paths';
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import { useLearningPathsStore } from "@/stores/learning-paths";
+import PathCard from "../components/PathCard.vue";
+import UserMenu from "@/components/layout/UserMenu.vue";
+import type { PathCategory, PathDifficulty } from "@shared/types/learning-paths";
 
 const router = useRouter();
 const store = useLearningPathsStore();
 
-const selectedCategory = ref<PathCategory | ''>('');
-const selectedDifficulty = ref<PathDifficulty | ''>('');
+const selectedCategory = ref<PathCategory | "">("");
+const selectedDifficulty = ref<PathDifficulty | "">("");
 
 const applyfilters = async () => {
   const filters: {
@@ -90,7 +90,7 @@ const applyfilters = async () => {
 };
 
 const gotopath = (slug: string) => {
-  const locale = router.currentRoute.value.params.locale || 'en';
+  const locale = router.currentRoute.value.params.locale || "en";
   router.push(`/${locale}/paths/${slug}`);
 };
 

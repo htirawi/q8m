@@ -6,37 +6,37 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-console */
 
-import { ref, type Ref } from 'vue';
-import type { Router } from 'vue-router';
+import { ref, type Ref } from "vue";
+import type { Router } from "vue-router";
 
 // Event categories
 export enum EventCategory {
-  Navigation = 'navigation',
-  Authentication = 'authentication',
-  UserMenu = 'user_menu',
-  LevelSelection = 'level_selection',
-  Gamification = 'gamification',
-  Monetization = 'monetization',
-  Performance = 'performance',
-  Accessibility = 'accessibility',
-  Error = 'error',
-  Engagement = 'engagement'
+  Navigation = "navigation",
+  Authentication = "authentication",
+  UserMenu = "user_menu",
+  LevelSelection = "level_selection",
+  Gamification = "gamification",
+  Monetization = "monetization",
+  Performance = "performance",
+  Accessibility = "accessibility",
+  Error = "error",
+  Engagement = "engagement",
 }
 
 // Event actions
 export enum EventAction {
-  Click = 'click',
-  View = 'view',
-  Submit = 'submit',
-  Change = 'change',
-  Complete = 'complete',
-  Skip = 'skip',
-  Open = 'open',
-  Close = 'close',
-  Hover = 'hover',
-  Scroll = 'scroll',
-  Load = 'load',
-  Error = 'error'
+  Click = "click",
+  View = "view",
+  Submit = "submit",
+  Change = "change",
+  Complete = "complete",
+  Skip = "skip",
+  Open = "open",
+  Close = "close",
+  Hover = "hover",
+  Scroll = "scroll",
+  Load = "load",
+  Error = "error",
 }
 
 // Common event properties interface
@@ -45,7 +45,7 @@ export interface CommonEventProperties {
   session_id?: string;
   user_id?: string;
   locale?: string;
-  viewport?: 'mobile' | 'tablet' | 'desktop';
+  viewport?: "mobile" | "tablet" | "desktop";
   browser?: string;
   os?: string;
   referrer?: string;
@@ -60,11 +60,11 @@ export interface CommonEventProperties {
 export interface UserProperties {
   user_id: string;
   email_domain?: string;
-  plan_tier?: 'free' | 'pro' | 'team';
+  plan_tier?: "free" | "pro" | "team";
   account_age_days?: number;
   total_sessions?: number;
-  preferred_locale?: 'en' | 'ar';
-  preferred_difficulty?: 'junior' | 'intermediate' | 'senior';
+  preferred_locale?: "en" | "ar";
+  preferred_difficulty?: "junior" | "intermediate" | "senior";
   courses_completed?: number;
   achievement_level?: number;
 }
@@ -122,12 +122,14 @@ class AnalyticsService {
   /**
    * Initialize analytics with configuration
    */
-  async initialize(config: {
-    providers?: Record<string, any>;
-    debug?: boolean;
-    batchSize?: number;
-    batchInterval?: number;
-  } = {}) {
+  async initialize(
+    config: {
+      providers?: Record<string, any>;
+      debug?: boolean;
+      batchSize?: number;
+      batchInterval?: number;
+    } = {}
+  ) {
     this.debug = config.debug || import.meta.env.DEV;
     this.batchSize = config.batchSize || this.batchSize;
     this.batchInterval = config.batchInterval || this.batchInterval;
@@ -144,7 +146,7 @@ class AnalyticsService {
 
     // Always add console provider in debug mode
     if (this.debug) {
-      this.providers.set('console', new ConsoleProvider());
+      this.providers.set("console", new ConsoleProvider());
     }
 
     this.isInitialized = true;
@@ -156,9 +158,9 @@ class AnalyticsService {
     this.startBatchTimer();
 
     if (this.debug) {
-      console.log('🎯 Analytics initialized', {
+      console.log("🎯 Analytics initialized", {
         providers: Array.from(this.providers.keys()),
-        sessionId: this.sessionId
+        sessionId: this.sessionId,
       });
     }
   }
@@ -186,8 +188,8 @@ class AnalyticsService {
         ...this.commonProperties,
         ...properties,
         timestamp: Date.now(),
-        session_id: this.sessionId
-      }
+        session_id: this.sessionId,
+      },
     };
 
     if (this.userId.value) {
@@ -217,16 +219,16 @@ class AnalyticsService {
       ...properties,
       page_path: window.location.pathname,
       page_title: document.title,
-      referrer: document.referrer
+      referrer: document.referrer,
     };
 
-    this.providers.forEach(provider => {
+    this.providers.forEach((provider) => {
       provider.page(pageProperties);
     });
 
-    this.track('page_view', pageProperties, {
+    this.track("page_view", pageProperties, {
       category: EventCategory.Navigation,
-      action: EventAction.View
+      action: EventAction.View,
     });
   }
 
@@ -237,12 +239,12 @@ class AnalyticsService {
     this.userId.value = userId;
     this.userProperties = { ...this.userProperties, ...properties };
 
-    this.providers.forEach(provider => {
+    this.providers.forEach((provider) => {
       provider.identify(userId, this.userProperties);
     });
 
     if (this.debug) {
-      console.log('👤 User identified', { userId, properties });
+      console.log("👤 User identified", { userId, properties });
     }
   }
 
@@ -252,7 +254,7 @@ class AnalyticsService {
   setUserProperties(properties: Partial<UserProperties>) {
     this.userProperties = { ...this.userProperties, ...properties };
 
-    this.providers.forEach(provider => {
+    this.providers.forEach((provider) => {
       provider.setUserProperties(properties);
     });
   }
@@ -261,13 +263,17 @@ class AnalyticsService {
    * Track performance metrics
    */
   trackPerformance(metrics: PerformanceMetrics) {
-    this.track('performance_metric', {
-      ...metrics,
-      page_path: window.location.pathname
-    }, {
-      category: EventCategory.Performance,
-      action: EventAction.Load
-    });
+    this.track(
+      "performance_metric",
+      {
+        ...metrics,
+        page_path: window.location.pathname,
+      },
+      {
+        category: EventCategory.Performance,
+        action: EventAction.Load,
+      }
+    );
   }
 
   /**
@@ -277,25 +283,29 @@ class AnalyticsService {
     const errorMessage = error instanceof Error ? error.message : error;
     const errorStack = error instanceof Error ? error.stack : undefined;
 
-    this.track('error_occurred', {
-      error_message: errorMessage,
-      error_stack: errorStack,
-      ...context
-    }, {
-      category: EventCategory.Error,
-      action: EventAction.Error
-    });
+    this.track(
+      "error_occurred",
+      {
+        error_message: errorMessage,
+        error_stack: errorStack,
+        ...context,
+      },
+      {
+        category: EventCategory.Error,
+        action: EventAction.Error,
+      }
+    );
   }
 
   /**
    * Track timing
    */
   trackTiming(category: string, variable: string, value: number, label?: string) {
-    this.track('timing', {
+    this.track("timing", {
       timing_category: category,
       timing_variable: variable,
       timing_value: value,
-      timing_label: label
+      timing_label: label,
     });
   }
 
@@ -307,12 +317,12 @@ class AnalyticsService {
     this.userProperties = {};
     this.sessionId = this.generateSessionId();
 
-    this.providers.forEach(provider => {
+    this.providers.forEach((provider) => {
       provider.reset();
     });
 
     if (this.debug) {
-      console.log('🔄 Analytics reset');
+      console.log("🔄 Analytics reset");
     }
   }
 
@@ -326,33 +336,34 @@ class AnalyticsService {
         page_path: to.path,
         page_name: to.name?.toString(),
         from_path: from.path,
-        from_name: from.name?.toString()
+        from_name: from.name?.toString(),
       });
 
       // Track navigation
-      this.track('navigation', {
-        to: to.path,
-        from: from.path,
-        method: to.params.fromClick ? 'click' : 'programmatic'
-      }, {
-        category: EventCategory.Navigation,
-        action: EventAction.Change
-      });
+      this.track(
+        "navigation",
+        {
+          to: to.path,
+          from: from.path,
+          method: to.params.fromClick ? "click" : "programmatic",
+        },
+        {
+          category: EventCategory.Navigation,
+          action: EventAction.Change,
+        }
+      );
     });
   }
 
   // Private methods
 
-  private async createProvider(
-    name: string,
-    config: any
-  ): Promise<AnalyticsProvider | null> {
+  private async createProvider(name: string, config: any): Promise<AnalyticsProvider | null> {
     switch (name) {
-      case 'google':
+      case "google":
         return new GoogleAnalyticsProvider(config);
-      case 'custom':
+      case "custom":
         return new CustomAPIProvider(config);
-      case 'console':
+      case "console":
         return new ConsoleProvider();
       default:
         console.warn(`Unknown analytics provider: ${name}`);
@@ -361,7 +372,7 @@ class AnalyticsService {
   }
 
   private processEvent(event: AnalyticsEvent) {
-    this.providers.forEach(provider => {
+    this.providers.forEach((provider) => {
       try {
         provider.track(event);
       } catch (error) {
@@ -385,7 +396,7 @@ class AnalyticsService {
     const batch = this.eventQueue.splice(0, this.batchSize);
 
     // Send batch to custom API if available
-    const customProvider = this.providers.get('custom') as CustomAPIProvider;
+    const customProvider = this.providers.get("custom") as CustomAPIProvider;
     if (customProvider) {
       customProvider.sendBatch(batch);
     }
@@ -407,11 +418,11 @@ class AnalyticsService {
 
   private generateSessionId(): string {
     // Use crypto.randomUUID() for secure random session ID
-    if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+    if (typeof crypto !== "undefined" && crypto.randomUUID) {
       return `sess_${Date.now()}_${crypto.randomUUID()}`;
     }
     // Fallback for older browsers - use Web Crypto API
-    if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
+    if (typeof crypto !== "undefined" && crypto.getRandomValues) {
       const array = new Uint32Array(2);
       crypto.getRandomValues(array);
       return `sess_${Date.now()}_${array[0].toString(36)}${array[1].toString(36)}`;
@@ -422,46 +433,46 @@ class AnalyticsService {
 
   private initializeCommonProperties() {
     this.commonProperties = {
-      locale: document.documentElement.lang || 'en',
+      locale: document.documentElement.lang || "en",
       viewport: this.getViewport(),
       browser: this.getBrowser(),
       os: this.getOS(),
       referrer: document.referrer,
       page_path: window.location.pathname,
-      page_title: document.title
+      page_title: document.title,
     };
 
     // Parse UTM parameters
     const urlParams = new URLSearchParams(window.location.search);
-    this.commonProperties.utm_source = urlParams.get('utm_source') || undefined;
-    this.commonProperties.utm_medium = urlParams.get('utm_medium') || undefined;
-    this.commonProperties.utm_campaign = urlParams.get('utm_campaign') || undefined;
+    this.commonProperties.utm_source = urlParams.get("utm_source") || undefined;
+    this.commonProperties.utm_medium = urlParams.get("utm_medium") || undefined;
+    this.commonProperties.utm_campaign = urlParams.get("utm_campaign") || undefined;
   }
 
-  private getViewport(): 'mobile' | 'tablet' | 'desktop' {
+  private getViewport(): "mobile" | "tablet" | "desktop" {
     const width = window.innerWidth;
-    if (width < 768) return 'mobile';
-    if (width < 1024) return 'tablet';
-    return 'desktop';
+    if (width < 768) return "mobile";
+    if (width < 1024) return "tablet";
+    return "desktop";
   }
 
   private getBrowser(): string {
     const ua = navigator.userAgent;
-    if (ua.includes('Chrome')) return 'Chrome';
-    if (ua.includes('Safari')) return 'Safari';
-    if (ua.includes('Firefox')) return 'Firefox';
-    if (ua.includes('Edge')) return 'Edge';
-    return 'Other';
+    if (ua.includes("Chrome")) return "Chrome";
+    if (ua.includes("Safari")) return "Safari";
+    if (ua.includes("Firefox")) return "Firefox";
+    if (ua.includes("Edge")) return "Edge";
+    return "Other";
   }
 
   private getOS(): string {
     const ua = navigator.userAgent;
-    if (ua.includes('Windows')) return 'Windows';
-    if (ua.includes('Mac')) return 'macOS';
-    if (ua.includes('Linux')) return 'Linux';
-    if (ua.includes('Android')) return 'Android';
-    if (ua.includes('iOS')) return 'iOS';
-    return 'Other';
+    if (ua.includes("Windows")) return "Windows";
+    if (ua.includes("Mac")) return "macOS";
+    if (ua.includes("Linux")) return "Linux";
+    if (ua.includes("Android")) return "Android";
+    if (ua.includes("iOS")) return "iOS";
+    return "Other";
   }
 }
 
@@ -475,61 +486,61 @@ class GoogleAnalyticsProvider implements AnalyticsProvider {
   async initialize() {
     // Load gtag script if not already loaded
     if (!window.gtag) {
-      const script = document.createElement('script');
+      const script = document.createElement("script");
       script.async = true;
       script.src = `https://www.googletagmanager.com/gtag/js?id=${this.config.measurementId}`;
       document.head.appendChild(script);
 
-      await new Promise<void>(resolve => {
+      await new Promise<void>((resolve) => {
         script.onload = () => resolve();
       });
     }
 
     // Initialize gtag
     window.dataLayer = window.dataLayer || [];
-    this.gtag = function() {
+    this.gtag = function () {
       window.dataLayer.push(arguments);
     };
-    this.gtag('js', new Date());
-    this.gtag('config', this.config.measurementId);
+    this.gtag("js", new Date());
+    this.gtag("config", this.config.measurementId);
   }
 
   track(event: AnalyticsEvent) {
     if (!this.gtag) return;
 
-    this.gtag('event', event.name, {
+    this.gtag("event", event.name, {
       event_category: event.category,
       event_label: event.label,
       value: event.value,
-      ...event.properties
+      ...event.properties,
     });
   }
 
   identify(userId: string, properties?: Partial<UserProperties>) {
     if (!this.gtag) return;
 
-    this.gtag('set', { user_id: userId });
+    this.gtag("set", { user_id: userId });
     if (properties) {
-      this.gtag('set', 'user_properties', properties);
+      this.gtag("set", "user_properties", properties);
     }
   }
 
   page(properties?: Record<string, any>) {
     if (!this.gtag) return;
 
-    this.gtag('event', 'page_view', properties);
+    this.gtag("event", "page_view", properties);
   }
 
   setUserProperties(properties: Partial<UserProperties>) {
     if (!this.gtag) return;
 
-    this.gtag('set', 'user_properties', properties);
+    this.gtag("set", "user_properties", properties);
   }
 
   reset() {
     // GA doesn't have a built-in reset, but we can clear the user_id
     if (this.gtag) {
-      this.gtag('set', { user_id: null });
+      this.gtag("set", { user_id: null });
     }
   }
 }
@@ -551,26 +562,26 @@ class CustomAPIProvider implements AnalyticsProvider {
 
   identify(userId: string, properties?: Partial<UserProperties>) {
     this.track({
-      name: 'identify',
+      name: "identify",
       properties: {
         user_id: userId,
-        ...properties
-      }
+        ...properties,
+      },
     });
   }
 
   page(properties?: Record<string, any>) {
     this.track({
-      name: 'page_view',
+      name: "page_view",
       category: EventCategory.Navigation,
-      properties
+      properties,
     });
   }
 
   setUserProperties(properties: Partial<UserProperties>) {
     this.track({
-      name: 'user_properties_updated',
-      properties
+      name: "user_properties_updated",
+      properties,
     });
   }
 
@@ -587,19 +598,19 @@ class CustomAPIProvider implements AnalyticsProvider {
 
     try {
       const response = await fetch(this.config.endpoint, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          ...(this.config.apiKey && { 'X-API-Key': this.config.apiKey })
+          "Content-Type": "application/json",
+          ...(this.config.apiKey && { "X-API-Key": this.config.apiKey }),
         },
-        body: JSON.stringify({ events })
+        body: JSON.stringify({ events }),
       });
 
       if (!response.ok) {
         throw new Error(`Analytics API error: ${response.status}`);
       }
     } catch (error) {
-      console.error('Failed to send analytics batch:', error);
+      console.error("Failed to send analytics batch:", error);
       // Could implement retry logic here
     }
   }
@@ -624,65 +635,53 @@ class CustomAPIProvider implements AnalyticsProvider {
 
 class ConsoleProvider implements AnalyticsProvider {
   private groupColors = {
-    [EventCategory.Navigation]: '#3B82F6',
-    [EventCategory.Authentication]: '#10B981',
-    [EventCategory.UserMenu]: '#8B5CF6',
-    [EventCategory.LevelSelection]: '#F59E0B',
-    [EventCategory.Gamification]: '#EC4899',
-    [EventCategory.Monetization]: '#14B8A6',
-    [EventCategory.Performance]: '#6366F1',
-    [EventCategory.Accessibility]: '#84CC16',
-    [EventCategory.Error]: '#EF4444',
-    [EventCategory.Engagement]: '#06B6D4'
+    [EventCategory.Navigation]: "#3B82F6",
+    [EventCategory.Authentication]: "#10B981",
+    [EventCategory.UserMenu]: "#8B5CF6",
+    [EventCategory.LevelSelection]: "#F59E0B",
+    [EventCategory.Gamification]: "#EC4899",
+    [EventCategory.Monetization]: "#14B8A6",
+    [EventCategory.Performance]: "#6366F1",
+    [EventCategory.Accessibility]: "#84CC16",
+    [EventCategory.Error]: "#EF4444",
+    [EventCategory.Engagement]: "#06B6D4",
   };
 
   async initialize() {
-    console.log('📊 Console Analytics Provider initialized');
+    console.log("📊 Console Analytics Provider initialized");
   }
 
   track(event: AnalyticsEvent) {
-    const color = event.category ? this.groupColors[event.category] : '#6B7280';
+    const color = event.category ? this.groupColors[event.category] : "#6B7280";
 
-    console.groupCollapsed(
-      `%c📊 ${event.name}`,
-      `color: ${color}; font-weight: bold;`
-    );
+    console.groupCollapsed(`%c📊 ${event.name}`, `color: ${color}; font-weight: bold;`);
 
-    if (event.category) console.log('Category:', event.category);
-    if (event.action) console.log('Action:', event.action);
-    if (event.label) console.log('Label:', event.label);
-    if (event.value !== undefined) console.log('Value:', event.value);
+    if (event.category) console.log("Category:", event.category);
+    if (event.action) console.log("Action:", event.action);
+    if (event.label) console.log("Label:", event.label);
+    if (event.value !== undefined) console.log("Value:", event.value);
     if (event.properties) console.table(event.properties);
 
     console.groupEnd();
   }
 
   identify(userId: string, properties?: Partial<UserProperties>) {
-    console.log(
-      '%c👤 User Identified',
-      'color: #10B981; font-weight: bold;',
-      { userId, properties }
-    );
+    console.log("%c👤 User Identified", "color: #10B981; font-weight: bold;", {
+      userId,
+      properties,
+    });
   }
 
   page(properties?: Record<string, any>) {
-    console.log(
-      '%c📄 Page View',
-      'color: #3B82F6; font-weight: bold;',
-      properties
-    );
+    console.log("%c📄 Page View", "color: #3B82F6; font-weight: bold;", properties);
   }
 
   setUserProperties(properties: Partial<UserProperties>) {
-    console.log(
-      '%c👤 User Properties Updated',
-      'color: #8B5CF6; font-weight: bold;',
-      properties
-    );
+    console.log("%c👤 User Properties Updated", "color: #8B5CF6; font-weight: bold;", properties);
   }
 
   reset() {
-    console.log('%c🔄 Analytics Reset', 'color: #EF4444; font-weight: bold;');
+    console.log("%c🔄 Analytics Reset", "color: #EF4444; font-weight: bold;");
   }
 }
 

@@ -23,7 +23,7 @@ const emit = defineEmits<{
   "update:modelValue": [value: string | number];
   input: [event: Event];
   blur: [event: FocusEvent];
-  focus: [event: FocusEvent]
+  focus: [event: FocusEvent];
 }>();
 
 const { error, type } = toRefs(props);
@@ -59,7 +59,8 @@ const inputClasses = computed(() => {
 
 const handleinput = (event: Event) => {
   const target = event.target as HTMLInputElement;
-  const value = type.value === "number" ? Number(target.value) : target.value;valuetype.valueNumber
+  const value = type.value === "number" ? Number(target.value) : target.value;
+  valuetype.valueNumber;
   emit("update:modelValue", value);
   emit("input", event);
 };
@@ -71,15 +72,27 @@ const handleblur = (event: FocusEvent) => {
 const handlefocus = (event: FocusEvent) => {
   emit("focus", event);
 };
-
 </script>
 
 <template>
   <div class="input-wrapper">
-    <input :id="id" :type="type" :value="modelValue" :placeholder="placeholder" :disabled="disabled"
-      :readonly="readonly" :required="required" :aria-label="ariaLabel" :aria-describedby="ariaDescribedby"
-      :aria-invalid="hasError" :aria-required="required" :class="inputClasses" @input="handleInput" @blur="handleBlur"
-      @focus="handleFocus" />
+    <input
+      :id="id"
+      :type="type"
+      :value="modelValue"
+      :placeholder="placeholder"
+      :disabled="disabled"
+      :readonly="readonly"
+      :required="required"
+      :aria-label="ariaLabel"
+      :aria-describedby="ariaDescribedby"
+      :aria-invalid="hasError"
+      :aria-required="required"
+      :class="inputClasses"
+      @input="handleInput"
+      @blur="handleBlur"
+      @focus="handleFocus"
+    />
   </div>
 </template>
 

@@ -52,7 +52,10 @@ export class SessionValidationService {
   /**
    * Validate session and fetch user using sessionId from JWT payload
    */
-  async validateSessionAndUser(sessionId: string, userId: string): Promise<SessionValidationResult> {
+  async validateSessionAndUser(
+    sessionId: string,
+    userId: string
+  ): Promise<SessionValidationResult> {
     // Check if session exists and is valid
     const session = await this.findActiveSessionById(sessionId);
     if (!session) {

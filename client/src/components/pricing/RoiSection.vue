@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ChartBarIcon, CurrencyDollarIcon, ClockIcon, StarIcon } from '@heroicons/vue/24/outline';
+import { ChartBarIcon, CurrencyDollarIcon, ClockIcon, StarIcon } from "@heroicons/vue/24/outline";
 
 defineOptions({
-  name: 'RoiSection',
+  name: "RoiSection",
 });
 </script>
 
@@ -11,12 +11,10 @@ defineOptions({
     <div class="roi-section__container">
       <div class="roi-section__header">
         <h2 id="roi-title" class="roi-section__title">
-          {{ $t('pricing.roi.title') }}
-
+          {{ $t("pricing.roi.title") }}
         </h2>
         <p class="roi-section__subtitle">
-          {{ $t('pricing.roi.subtitle') }}
-
+          {{ $t("pricing.roi.subtitle") }}
         </p>
       </div>
 
@@ -26,12 +24,8 @@ defineOptions({
             <CurrencyDollarIcon class="roi-stat__svg" aria-hidden="true" />
           </div>
           <div class="roi-stat__content">
-            <span class="roi-stat__value">{{ $t('pricing.roi.stats.salaryIncrease.value') }}
-
-</span>
-            <span class="roi-stat__label">{{ $t('pricing.roi.stats.salaryIncrease.label') }}
-
-</span>
+            <span class="roi-stat__value">{{ $t("pricing.roi.stats.salaryIncrease.value") }} </span>
+            <span class="roi-stat__label">{{ $t("pricing.roi.stats.salaryIncrease.label") }} </span>
           </div>
         </div>
 
@@ -40,12 +34,8 @@ defineOptions({
             <ChartBarIcon class="roi-stat__svg" aria-hidden="true" />
           </div>
           <div class="roi-stat__content">
-            <span class="roi-stat__value">{{ $t('pricing.roi.stats.jobOfferRate.value') }}
-
-</span>
-            <span class="roi-stat__label">{{ $t('pricing.roi.stats.jobOfferRate.label') }}
-
-</span>
+            <span class="roi-stat__value">{{ $t("pricing.roi.stats.jobOfferRate.value") }} </span>
+            <span class="roi-stat__label">{{ $t("pricing.roi.stats.jobOfferRate.label") }} </span>
           </div>
         </div>
 
@@ -54,12 +44,8 @@ defineOptions({
             <ClockIcon class="roi-stat__svg" aria-hidden="true" />
           </div>
           <div class="roi-stat__content">
-            <span class="roi-stat__value">{{ $t('pricing.roi.stats.timeToOffer.value') }}
-
-</span>
-            <span class="roi-stat__label">{{ $t('pricing.roi.stats.timeToOffer.label') }}
-
-</span>
+            <span class="roi-stat__value">{{ $t("pricing.roi.stats.timeToOffer.value") }} </span>
+            <span class="roi-stat__label">{{ $t("pricing.roi.stats.timeToOffer.label") }} </span>
           </div>
         </div>
 
@@ -68,12 +54,8 @@ defineOptions({
             <StarIcon class="roi-stat__svg" aria-hidden="true" />
           </div>
           <div class="roi-stat__content">
-            <span class="roi-stat__value">{{ $t('pricing.roi.stats.satisfaction.value') }}
-
-</span>
-            <span class="roi-stat__label">{{ $t('pricing.roi.stats.satisfaction.label') }}
-
-</span>
+            <span class="roi-stat__value">{{ $t("pricing.roi.stats.satisfaction.value") }} </span>
+            <span class="roi-stat__label">{{ $t("pricing.roi.stats.satisfaction.label") }} </span>
           </div>
         </div>
       </div>
@@ -93,7 +75,7 @@ defineOptions({
 }
 
 .roi-section__header {
-  @apply text-center mb-12;
+  @apply mb-12 text-center;
 }
 
 .roi-section__title {
@@ -106,7 +88,7 @@ defineOptions({
 
 .roi-section__subtitle {
   @apply text-lg text-gray-600 dark:text-gray-300;
-  @apply max-w-2xl mx-auto;
+  @apply mx-auto max-w-2xl;
 }
 
 .roi-section__stats {
@@ -125,7 +107,7 @@ defineOptions({
 }
 
 .roi-stat__icon {
-  @apply w-16 h-16 rounded-2xl;
+  @apply h-16 w-16 rounded-2xl;
   @apply flex items-center justify-center;
   @apply mb-4;
   @apply shadow-lg;
@@ -148,7 +130,7 @@ defineOptions({
 }
 
 .roi-stat__svg {
-  @apply w-8 h-8 text-white;
+  @apply h-8 w-8 text-white;
   @apply drop-shadow-md;
 }
 
@@ -169,7 +151,7 @@ defineOptions({
 }
 
 /* RTL Support */
-[dir='rtl'] .roi-stat {
+[dir="rtl"] .roi-stat {
   @apply text-center;
 }
 

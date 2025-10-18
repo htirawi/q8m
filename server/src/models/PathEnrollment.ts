@@ -110,4 +110,7 @@ const pathEnrollmentSchema = new Schema<IPathEnrollment>(
 pathEnrollmentSchema.index({ userId: 1, pathId: 1 }, { unique: true });
 pathEnrollmentSchema.index({ userId: 1, status: 1 });
 
-export const PathEnrollment = mongoose.model<IPathEnrollment>("PathEnrollment", pathEnrollmentSchema);
+export const PathEnrollment = mongoose.model<IPathEnrollment>(
+  "PathEnrollment",
+  pathEnrollmentSchema
+);

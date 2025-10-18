@@ -10,4 +10,3 @@ export interface ICardListSkeletonProps {
 export interface IQuestionCardSkeletonProps {
   showActions?: boolean;
 }
-

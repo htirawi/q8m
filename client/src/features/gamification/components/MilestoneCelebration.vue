@@ -3,17 +3,22 @@
     <Transition name="celebration">
       <div
         v-if="isVisible"
-        class="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 z-50"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-md"
         @click="close"
       >
         <div
-          class="bg-gradient-to-br from-purple-500 via-pink-500 to-red-500 rounded-3xl shadow-2xl max-w-lg w-full p-8 relative overflow-hidden"
+          class="relative w-full max-w-lg overflow-hidden rounded-3xl bg-gradient-to-br from-purple-500 via-pink-500 to-red-500 p-8 shadow-2xl"
           @click.stop
         >
           <!-- Animated background patterns -->
           <div class="absolute inset-0 overflow-hidden opacity-20">
-            <div class="absolute top-0 left-0 w-64 h-64 bg-white rounded-full blur-3xl animate-pulse" />
-            <div class="absolute bottom-0 right-0 w-96 h-96 bg-yellow-300 rounded-full blur-3xl animate-pulse" style="animation-delay: 0.5s" />
+            <div
+              class="absolute left-0 top-0 h-64 w-64 animate-pulse rounded-full bg-white blur-3xl"
+            />
+            <div
+              class="absolute bottom-0 right-0 h-96 w-96 animate-pulse rounded-full bg-yellow-300 blur-3xl"
+              style="animation-delay: 0.5s"
+            />
           </div>
 
           <!-- Content -->
@@ -21,93 +26,87 @@
             <!-- Close button -->
             <button
               @click="close"
-              class="absolute top-0 right-0 text-white/80 hover:text-white transition-colors"
+              class="absolute right-0 top-0 text-white/80 transition-colors hover:text-white"
             >
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </button>
 
             <!-- Icon/Emoji -->
-            <div class="text-center mb-6 animate-bounce">
-              <div class="text-8xl">{{ milestone.icon }}
-
-</div>
+            <div class="mb-6 animate-bounce text-center">
+              <div class="text-8xl">{{ milestone.icon }}</div>
             </div>
 
             <!-- Title -->
-            <h2 class="text-4xl font-black text-white text-center mb-4 drop-shadow-lg">
+            <h2 class="mb-4 text-center text-4xl font-black text-white drop-shadow-lg">
               {{ milestone.title }}
-
             </h2>
 
             <!-- Description -->
-            <p class="text-xl text-white/90 text-center mb-6 font-medium">
+            <p class="mb-6 text-center text-xl font-medium text-white/90">
               {{ milestone.description }}
-
             </p>
 
             <!-- Stats -->
-            <div v-if="milestone.stats" class="grid grid-cols-2 gap-4 mb-6">
+            <div v-if="milestone.stats" class="mb-6 grid grid-cols-2 gap-4">
               <div
                 v-for="(stat, index) in milestone.stats"
                 :key="index"
-                class="bg-white/20 backdrop-blur-sm rounded-xl p-4 text-center"
+                class="rounded-xl bg-white/20 p-4 text-center backdrop-blur-sm"
               >
-                <div class="text-3xl font-bold text-white">{{ stat.value }}
-
-</div>
-                <div class="text-sm text-white/80">{{ stat.label }}
-
-</div>
+                <div class="text-3xl font-bold text-white">{{ stat.value }}</div>
+                <div class="text-sm text-white/80">{{ stat.label }}</div>
               </div>
             </div>
 
             <!-- Rewards -->
             <div v-if="milestone.rewards && milestone.rewards.length > 0" class="mb-6">
-              <div class="text-center text-white/80 text-sm mb-3 font-semibold">Rewards Earned</div>
+              <div class="mb-3 text-center text-sm font-semibold text-white/80">Rewards Earned</div>
               <div class="space-y-2">
                 <div
                   v-for="(reward, index) in milestone.rewards"
                   :key="index"
-                  class="bg-white/20 backdrop-blur-sm rounded-lg p-3 flex items-center justify-between"
+                  class="flex items-center justify-between rounded-lg bg-white/20 p-3 backdrop-blur-sm"
                 >
                   <div class="flex items-center gap-3">
-                    <span class="text-2xl">{{ reward.icon }}
-
-</span>
-                    <span class="text-white font-medium">{{ reward.label }}
-
-</span>
+                    <span class="text-2xl">{{ reward.icon }} </span>
+                    <span class="font-medium text-white">{{ reward.label }} </span>
                   </div>
-                  <span class="text-white font-bold">{{ reward.value }}
-
-</span>
+                  <span class="font-bold text-white">{{ reward.value }} </span>
                 </div>
               </div>
             </div>
 
             <!-- Share prompt (optional) -->
-            <div v-if="milestone.shareable" class="mb-6 p-4 bg-white/10 backdrop-blur-sm rounded-xl">
-              <div class="text-center text-white/90 text-sm mb-3">
+            <div
+              v-if="milestone.shareable"
+              class="mb-6 rounded-xl bg-white/10 p-4 backdrop-blur-sm"
+            >
+              <div class="mb-3 text-center text-sm text-white/90">
                 Share your achievement with friends!
               </div>
-              <div class="flex gap-2 justify-center">
+              <div class="flex justify-center gap-2">
                 <button
                   @click="share('twitter')"
-                  class="px-4 py-2 bg-blue-400 hover:bg-blue-500 text-white rounded-lg transition-colors font-medium"
+                  class="rounded-lg bg-blue-400 px-4 py-2 font-medium text-white transition-colors hover:bg-blue-500"
                 >
                   Twitter
                 </button>
                 <button
                   @click="share('facebook')"
-                  class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium"
+                  class="rounded-lg bg-blue-600 px-4 py-2 font-medium text-white transition-colors hover:bg-blue-700"
                 >
                   Facebook
                 </button>
                 <button
                   @click="share('copy')"
-                  class="px-4 py-2 bg-gray-700 hover:bg-gray-800 text-white rounded-lg transition-colors font-medium"
+                  class="rounded-lg bg-gray-700 px-4 py-2 font-medium text-white transition-colors hover:bg-gray-800"
                 >
                   Copy Link
                 </button>
@@ -117,10 +116,9 @@
             <!-- Action button -->
             <button
               @click="close"
-              class="w-full py-4 bg-white text-purple-600 font-bold rounded-xl hover:bg-gray-100 transition-all shadow-xl text-lg"
+              class="w-full rounded-xl bg-white py-4 text-lg font-bold text-purple-600 shadow-xl transition-all hover:bg-gray-100"
             >
-              {{ milestone.actionText || 'Awesome!' }}
-
+              {{ milestone.actionText || "Awesome!" }}
             </button>
           </div>
         </div>
@@ -130,34 +128,32 @@
 </template>
 
 <script setup lang="ts">
-import type { IMilestoneReward, IMilestoneStat, IMilestone, IMilestoneCelebrationProps as Props } from "@/types/components/gamification";
-import { ref, watch, onMounted } from 'vue';
-import { useConfetti } from '@/composables/useConfetti';
-
-
-
-
-
-
-
-
+import type {
+  IMilestoneReward,
+  IMilestoneStat,
+  IMilestone,
+  IMilestoneCelebrationProps as Props,
+} from "@/types/components/gamification";
+import { ref, watch, onMounted } from "vue";
+import { useConfetti } from "@/composables/useConfetti";
 
 const props = withDefaults(defineProps<Props>(), {
   show: false,
   autoHide: false,
   autoHideDelay: 5000,
-  celebrationStyle: 'fireworks',
+  celebrationStyle: "fireworks",
 });
 
 const emit = defineEmits<{
   close: [];
-  share: [platform: string]
+  share: [platform: string];
 }>();
 
 const { celebrate, fireworks, burst, rain } = useConfetti();
 
 const isVisible = ref(false);
-let autoHideTimeout: ReturnType<typeof setTimeout> | null = null;autoHideTimeout
+let autoHideTimeout: ReturnType<typeof setTimeout> | null = null;
+autoHideTimeout;
 
 watch(
   () => props.show,
@@ -180,13 +176,13 @@ function show() {
   isVisible.value = true;
 
   // Trigger confetti animation
-  if (props.celebrationStyle === 'celebrate') {
+  if (props.celebrationStyle === "celebrate") {
     celebrate();
-  } else if (props.celebrationStyle === 'fireworks') {
+  } else if (props.celebrationStyle === "fireworks") {
     fireworks();
-  } else if (props.celebrationStyle === 'burst') {
+  } else if (props.celebrationStyle === "burst") {
     burst();
-  } else if (props.celebrationStyle === 'rain') {
+  } else if (props.celebrationStyle === "rain") {
     rain();
   }
 
@@ -208,23 +204,25 @@ function hide() {
 
 function close() {
   hide();
-  emit('close');
+  emit("close");
 }
 
 function share(platform: string) {
-  emit('share', platform);
+  emit("share", platform);
 
-  if (platform === 'copy') {
+  if (platform === "copy") {
     // Copy share link to clipboard
     const shareText = `${props.milestone.title} - ${props.milestone.description}`;
     navigator.clipboard.writeText(`${shareText}\n\n${window.location.origin}`);
-  } else if (platform === 'twitter') {
-    const shareText = encodeURIComponent(`${props.milestone.title}! ${props.milestone.description}`);
+  } else if (platform === "twitter") {
+    const shareText = encodeURIComponent(
+      `${props.milestone.title}! ${props.milestone.description}`
+    );
     const url = encodeURIComponent(window.location.origin);
-    window.open(`https://twitter.com/intent/tweet?text=${shareText}&url=${url}`, '_blank');
-  } else if (platform === 'facebook') {
+    window.open(`https://twitter.com/intent/tweet?text=${shareText}&url=${url}`, "_blank");
+  } else if (platform === "facebook") {
     const url = encodeURIComponent(window.location.origin);
-    window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, "_blank");
   }
 }
 
@@ -238,7 +236,9 @@ defineExpose({
 <style scoped>
 /* Celebration animation */
 .celebration-enter-active {
-  animation: fadeIn 0.3s ease-out, scaleIn 0.3s ease-out;
+  animation:
+    fadeIn 0.3s ease-out,
+    scaleIn 0.3s ease-out;
 }
 
 .celebration-leave-active {
@@ -277,7 +277,8 @@ defineExpose({
 
 /* Pulse animation for background */
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0.2;
   }
 

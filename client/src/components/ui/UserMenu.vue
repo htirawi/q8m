@@ -29,7 +29,6 @@ async function handleLogout() {
   await authStore.logout();
   router.push("/");
 }
-
 </script>
 
 <template>
@@ -42,9 +41,7 @@ async function handleLogout() {
       :aria-label="$t('navigation.userMenu')"
     >
       <div class="user-avatar">
-        <span class="user-initial">{{ userInitial }}
-
-</span>
+        <span class="user-initial">{{ userInitial }} </span>
       </div>
 
       <span class="user-name">{{ userName }}</span>
@@ -67,24 +64,15 @@ async function handleLogout() {
       <div v-if="isOpen" class="dropdown-menu" role="menu">
         <div class="dropdown-header">
           <div class="user-info">
-            <p class="user-info-name">{{ userName }}
-
-</p>
-            <p class="user-info-email">{{ userEmail }}
-
-</p>
+            <p class="user-info-name">{{ userName }}</p>
+            <p class="user-info-email">{{ userEmail }}</p>
           </div>
         </div>
 
         <div class="dropdown-divider"></div>
 
         <div class="dropdown-items">
-          <RouterLink
-            to="/account"
-            class="dropdown-item"
-            role="menuitem"
-            @click="close"
-          >
+          <RouterLink to="/account" class="dropdown-item" role="menuitem" @click="close">
             <svg class="dropdown-item-icon" viewBox="0 0 20 20" fill="currentColor">
               <path
                 fill-rule="evenodd"
@@ -92,17 +80,10 @@ async function handleLogout() {
                 clip-rule="evenodd"
               />
             </svg>
-            <span>{{ $t("navigation.profile") }}
-
-</span>
+            <span>{{ $t("navigation.profile") }} </span>
           </RouterLink>
 
-          <RouterLink
-            to="/settings"
-            class="dropdown-item"
-            role="menuitem"
-            @click="close"
-          >
+          <RouterLink to="/settings" class="dropdown-item" role="menuitem" @click="close">
             <svg class="dropdown-item-icon" viewBox="0 0 20 20" fill="currentColor">
               <path
                 fill-rule="evenodd"
@@ -110,9 +91,7 @@ async function handleLogout() {
                 clip-rule="evenodd"
               />
             </svg>
-            <span>{{ $t("navigation.settings") }}
-
-</span>
+            <span>{{ $t("navigation.settings") }} </span>
           </RouterLink>
         </div>
 
@@ -135,9 +114,7 @@ async function handleLogout() {
                 d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
               />
             </svg>
-            <span>{{ $t("navigation.logout") }}
-
-</span>
+            <span>{{ $t("navigation.logout") }} </span>
           </button>
         </div>
       </div>

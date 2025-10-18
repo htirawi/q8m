@@ -1,4 +1,4 @@
-import confetti from 'canvas-confetti';
+import confetti from "canvas-confetti";
 
 export function useConfetti() {
   /**
@@ -99,7 +99,7 @@ export function useConfetti() {
    */
   function rain(duration = 2000) {
     const animationEnd = Date.now() + duration;
-    const colors = ['#6366f1', '#8b5cf6', '#ec4899', '#f43f5e'];
+    const colors = ["#6366f1", "#8b5cf6", "#ec4899", "#f43f5e"];
 
     const frame = () => {
       confetti({
@@ -132,7 +132,10 @@ export function useConfetti() {
    */
   function emoji(emojis: string[], options?: confetti.Options) {
     const scalar = 2;
-    const emoji = confetti.shapeFromText({ text: emojis[Math.floor(Math.random() * emojis.length)], scalar });
+    const emoji = confetti.shapeFromText({
+      text: emojis[Math.floor(Math.random() * emojis.length)],
+      scalar,
+    });
 
     confetti({
       shapes: [emoji],
@@ -150,7 +153,7 @@ export function useConfetti() {
    */
   function cannon() {
     const end = Date.now() + 3 * 1000;
-    const colors = ['#6366f1', '#8b5cf6'];
+    const colors = ["#6366f1", "#8b5cf6"];
 
     (function blast() {
       confetti({

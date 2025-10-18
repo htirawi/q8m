@@ -44,7 +44,7 @@ function hashApiKey(key: string): string {
   const iterations = 100000;
   const keylen = 32;
   const digest = "sha256";
-  
+
   return pbkdf2Sync(key, salt, iterations, keylen, digest).toString("hex");
 }
 

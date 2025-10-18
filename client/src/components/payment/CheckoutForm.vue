@@ -94,7 +94,6 @@ onMounted(async () => {
           >
             <LoadingSpinner v-if="isProcessing" size="sm" color="white" class="mr-2" />
             {{ isProcessing ? $t("checkout.processing") : $t("checkout.completeOrder")$t }}
-
           </button>
         </div>
       </form>

@@ -27,48 +27,41 @@ const getstatusclass = (status: string) => {
       return "text-gray-600 dark:text-gray-400";
   }
 };
-
 </script>
 
 <template>
   <div class="billing-history">
     <div class="history-header">
-      <h3 class="history-title">{{ $t("subscription.billingHistory") }}
-
-</h3>
+      <h3 class="history-title">{{ $t("subscription.billingHistory") }}</h3>
       <button @click="handleRefresh" class="refresh-button">
         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+          />
         </svg>
         {{ $t("common.refresh") }}
-
       </button>
     </div>
 
     <div v-if="purchases.length === 0" class="no-history">
-      <p class="no-history-text">{{ $t("subscription.noHistory") }}
-
-</p>
+      <p class="no-history-text">{{ $t("subscription.noHistory") }}</p>
     </div>
 
     <div v-else class="history-list">
       <div v-for="purchase in purchases" :key="purchase._id" class="history-item">
         <div class="history-info">
-          <h4 class="history-plan">{{ purchase.productId }}
-
-</h4>
-          <p class="history-date">{{ formatDate(purchase.createdAt.toString()) }}
-
-</p>
+          <h4 class="history-plan">{{ purchase.productId }}</h4>
+          <p class="history-date">{{ formatDate(purchase.createdAt.toString()) }}</p>
         </div>
         <div class="history-details">
-          <span class="history-amount">{{ purchase.amount.displayAmount }} {{ purchase.amount.displayCurrency }}
-
+          <span class="history-amount"
+            >{{ purchase.amount.displayAmount }} {{ purchase.amount.displayCurrency }}
           </span>
           <span class="history-status" :class="getStatusClass(purchase.status)">
             {{ $t(`subscription.purchaseStatus.${purchase.status}`) }}
-
           </span>
         </div>
       </div>

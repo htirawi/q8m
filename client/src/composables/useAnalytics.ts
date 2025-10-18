@@ -3,15 +3,15 @@
  * Type-safe analytics tracking with automatic metadata injection
  */
 
-import { useI18n } from 'vue-i18n';
-import { usePlanStore } from '@/stores/plan';
-import type { DeviceType } from '@shared/types/analytics';
+import { useI18n } from "vue-i18n";
+import { usePlanStore } from "@/stores/plan";
+import type { DeviceType } from "@shared/types/analytics";
 
 // Generate a unique session ID that persists for the session
-let sessionId = '';
-if (typeof window !== 'undefined') {
-  sessionId = sessionStorage.getItem('analytics_session_id') || generateSessionId();
-  sessionStorage.setItem('analytics_session_id', sessionId);
+let sessionId = "";
+if (typeof window !== "undefined") {
+  sessionId = sessionStorage.getItem("analytics_session_id") || generateSessionId();
+  sessionStorage.setItem("analytics_session_id", sessionId);
 }
 
 function generateSessionId(): string {
@@ -29,10 +29,10 @@ export function useAnalytics() {
    * Get device type based on viewport width
    */
   const getDevice = (): DeviceType => {
-    if (typeof window === 'undefined') return 'desktop';
-    if (window.innerWidth < 768) return 'mobile';
-    if (window.innerWidth < 1024) return 'tablet';
-    return 'desktop';
+    if (typeof window === "undefined") return "desktop";
+    if (window.innerWidth < 768) return "mobile";
+    if (window.innerWidth < 1024) return "tablet";
+    return "desktop";
   };
 
   /**
@@ -40,8 +40,8 @@ export function useAnalytics() {
    */
   const getBaseProperties = () => ({
     plan: planStore.planTier,
-    locale: locale.value as 'en' | 'ar',
-    rtl: locale.value === 'ar',
+    locale: locale.value as "en" | "ar",
+    rtl: locale.value === "ar",
     device: getDevice(),
     sessionId,
     timestamp: Date.now(),
@@ -59,14 +59,14 @@ export function useAnalytics() {
     };
 
     // Send to Google Analytics (production only)
-    if (import.meta.env.PROD && typeof window !== 'undefined' && 'gtag' in window) {
+    if (import.meta.env.PROD && typeof window !== "undefined" && "gtag" in window) {
       try {
-        const {gtag} = (window as Window & { gtag?: (...args: unknown[]) => void });
+        const { gtag } = window as Window & { gtag?: (...args: unknown[]) => void };
         if (gtag) {
-          gtag('event', event, payload);
+          gtag("event", event, payload);
         }
       } catch (error) {
-        console.error('[Analytics] Failed to send event to GA:', error);
+        console.error("[Analytics] Failed to send event to GA:", error);
       }
     }
 
@@ -85,7 +85,7 @@ export function useAnalytics() {
    * @param title - Page title
    */
   const trackPageView = (path: string, title?: string) => {
-    track('page_view', {
+    track("page_view", {
       page_path: path,
       page_title: title,
     });
@@ -96,17 +96,17 @@ export function useAnalytics() {
    */
   const trackConversion = (
     targetPlan: string,
-    billingCycle: 'monthly' | 'annual',
+    billingCycle: "monthly" | "annual",
     price: number,
     paymentMethod: string
   ) => {
-    track('checkout_completed', {
+    track("checkout_completed", {
       targetPlan,
       billingCycle,
       price,
       paymentMethod,
       value: price, // For GA conversion value
-      currency: 'USD',
+      currency: "USD",
     });
   };
 
@@ -114,7 +114,7 @@ export function useAnalytics() {
    * Track an error
    */
   const trackError = (errorMessage: string, errorContext?: Record<string, unknown>) => {
-    track('error', {
+    track("error", {
       error_message: errorMessage,
       ...errorContext,
     });

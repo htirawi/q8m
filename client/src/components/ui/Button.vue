@@ -77,10 +77,22 @@ const handleBlur = (event: FocusEvent) => {
 </script>
 
 <template>
-  <component :is="tag" :to="to" :href="href" :type="type" :disabled="disabled" :class="buttonClasses"
-    :aria-label="ariaLabel" :aria-describedby="ariaDescribedby" :aria-pressed="ariaPressed"
-    :aria-expanded="ariaExpanded" :aria-controls="ariaControls" @click="handleClick" @focus="handleFocus"
-    @blur="handleBlur">
+  <component
+    :is="tag"
+    :to="to"
+    :href="href"
+    :type="type"
+    :disabled="disabled"
+    :class="buttonClasses"
+    :aria-label="ariaLabel"
+    :aria-describedby="ariaDescribedby"
+    :aria-pressed="ariaPressed"
+    :aria-expanded="ariaExpanded"
+    :aria-controls="ariaControls"
+    @click="handleClick"
+    @focus="handleFocus"
+    @blur="handleBlur"
+  >
     <slot />
   </component>
 </template>

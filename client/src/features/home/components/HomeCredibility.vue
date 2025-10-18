@@ -1,59 +1,63 @@
 <script setup lang="ts">
-import type { IHomeCredibilityProps as Props } from '@/types/components/home';
-import { useI18n } from 'vue-i18n';
-import { HOMEPAGE_CREDIBILITY } from '@/data/home';
+import type { IHomeCredibilityProps as Props } from "@/types/components/home";
+import { useI18n } from "vue-i18n";
+import { HOMEPAGE_CREDIBILITY } from "@/data/home";
 
 const props = withDefaults(defineProps<Props>(), {
-    logos: () => HOMEPAGE_CREDIBILITY,
-    titleKey: 'home.credibility.title',
+  logos: () => HOMEPAGE_CREDIBILITY,
+  titleKey: "home.credibility.title",
 });
 
 const { t } = useI18n();
-
 </script>
 
 <template>
-    <section class="credibility-section" aria-labelledby="credibility-title">
-        <div class="credibility-container">
-            <h2 v-if="titleKey" id="credibility-title" class="credibility-title">
-                {{ t(titleKey) }}
+  <section class="credibility-section" aria-labelledby="credibility-title">
+    <div class="credibility-container">
+      <h2 v-if="titleKey" id="credibility-title" class="credibility-title">
+        {{ t(titleKey) }}
+      </h2>
 
-            </h2>
-
-            <div class="credibility-logos">
-                <div v-for="logo in logos" :key="logo.id" class="credibility-logo">
-                    <img v-if="logo.logoUrl" :src="logo.logoUrl" :alt="t(logo.altKey)" class="credibility-logo__image"
-                        loading="lazy" width="80" height="80" />
-                    <span v-else-if="logo.icon" class="credibility-logo__icon" :aria-label="t(logo.altKey)">
-                        {{ logo.icon }}
-
-                    </span>
-                </div>
-            </div>
+      <div class="credibility-logos">
+        <div v-for="logo in logos" :key="logo.id" class="credibility-logo">
+          <img
+            v-if="logo.logoUrl"
+            :src="logo.logoUrl"
+            :alt="t(logo.altKey)"
+            class="credibility-logo__image"
+            loading="lazy"
+            width="80"
+            height="80"
+          />
+          <span v-else-if="logo.icon" class="credibility-logo__icon" :aria-label="t(logo.altKey)">
+            {{ logo.icon }}
+          </span>
         </div>
-    </section>
+      </div>
+    </div>
+  </section>
 </template>
 
 <style scoped>
 .credibility-section {
-    @apply bg-slate-50 py-12 dark:bg-slate-900/50 md:py-16;
+  @apply bg-slate-50 py-12 dark:bg-slate-900/50 md:py-16;
 }
 
 .credibility-container {
-    @apply container mx-auto px-4;
+  @apply container mx-auto px-4;
 }
 
 .credibility-title {
-    @apply mb-8 text-center text-sm font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-400;
+  @apply mb-8 text-center text-sm font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-400;
 }
 
 .credibility-logos {
-    @apply flex flex-wrap items-center justify-center gap-8 md:gap-12;
+  @apply flex flex-wrap items-center justify-center gap-8 md:gap-12;
 }
 
 .credibility-logo {
-    @apply flex flex-col items-center gap-2 opacity-70 grayscale transition-all duration-200;
-    @apply hover:opacity-100 hover:grayscale-0;
+  @apply flex flex-col items-center gap-2 opacity-70 grayscale transition-all duration-200;
+  @apply hover:opacity-100 hover:grayscale-0;
 }
 
 .credibility-logo__image {
@@ -78,8 +82,8 @@ const { t } = useI18n();
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
-    .credibility-logo {
-        @apply transition-none;
-    }
+  .credibility-logo {
+    @apply transition-none;
+  }
 }
 </style>

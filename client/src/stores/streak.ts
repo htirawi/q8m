@@ -1,9 +1,9 @@
-import { defineStore } from 'pinia';
-import { ref, computed } from 'vue';
-import { httpClient } from '@/utils/httpClient';
-import type { IStreakData, ICoinBalance } from '@shared/types/gamification';
+import { defineStore } from "pinia";
+import { ref, computed } from "vue";
+import { httpClient } from "@/utils/httpClient";
+import type { IStreakData, ICoinBalance } from "@shared/types/gamification";
 
-export const useStreakStore = defineStore('streak', () => {
+export const useStreakStore = defineStore("streak", () => {
   // State
   const streak = ref<IStreakData>({
     currentStreak: 0,
@@ -55,7 +55,7 @@ export const useStreakStore = defineStore('streak', () => {
     error.value = null;
 
     try {
-      const response = await httpClient.get<IStreakData>('/api/v1/gamification/streak');
+      const response = await httpClient.get<IStreakData>("/api/v1/gamification/streak");
       streak.value = {
         currentStreak: response.currentStreak,
         longestStreak: response.longestStreak,
@@ -66,7 +66,7 @@ export const useStreakStore = defineStore('streak', () => {
       };
       return true;
     } catch (err: unknown) {
-      error.value = (err as Error).message || 'Failed to fetch streak data';
+      error.value = (err as Error).message || "Failed to fetch streak data";
       return false;
     } finally {
       isLoading.value = false;
@@ -75,19 +75,22 @@ export const useStreakStore = defineStore('streak', () => {
 
   async function fetchCoins() {
     try {
-      const response = await httpClient.get<ICoinBalance>('/api/v1/gamification/coins');
+      const response = await httpClient.get<ICoinBalance>("/api/v1/gamification/coins");
       coins.value = response;
       return true;
     } catch (err: unknown) {
-      error.value = (err as Error).message || 'Failed to fetch coin balance';
+      error.value = (err as Error).message || "Failed to fetch coin balance";
       return false;
     }
   }
 
-  async function useStreakFreeze(useCoins = true, useXP = false): Promise<{
+  async function useStreakFreeze(
+    useCoins = true,
+    useXP = false
+  ): Promise<{
     success: boolean;
     message?: string;
-    costType?: 'free' | 'coins' | 'xp';
+    costType?: "free" | "coins" | "xp";
     cost?: number;
   }> {
     isLoading.value = true;
@@ -100,9 +103,9 @@ export const useStreakStore = defineStore('streak', () => {
         streak: IStreakData;
         coins?: ICoinBalance;
         xp?: number;
-        costType: 'free' | 'coins' | 'xp';
+        costType: "free" | "coins" | "xp";
         cost?: number;
-      }>('/api/v1/gamification/streak/freeze', {
+      }>("/api/v1/gamification/streak/freeze", {
         useCoins,
         useXP,
       });
@@ -135,7 +138,7 @@ export const useStreakStore = defineStore('streak', () => {
         message: response.message,
       };
     } catch (err: unknown) {
-      const errorMessage = (err as Error).message || 'Failed to use streak freeze';
+      const errorMessage = (err as Error).message || "Failed to use streak freeze";
       error.value = errorMessage;
       return {
         success: false,
@@ -153,7 +156,11 @@ export const useStreakStore = defineStore('streak', () => {
     if (streak.value.lastActivityDate) {
       const lastActivity = new Date(streak.value.lastActivityDate);
       const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-      const lastActivityDate = new Date(lastActivity.getFullYear(), lastActivity.getMonth(), lastActivity.getDate());
+      const lastActivityDate = new Date(
+        lastActivity.getFullYear(),
+        lastActivity.getMonth(),
+        lastActivity.getDate()
+      );
 
       if (today.getTime() === lastActivityDate.getTime()) {
         // Already updated today

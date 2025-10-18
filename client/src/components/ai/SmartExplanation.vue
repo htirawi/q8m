@@ -6,30 +6,34 @@
         <div class="smart-explanation__icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path
-              d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+              d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+            />
           </svg>
         </div>
         <div class="smart-explanation__header-info">
           <h3 class="smart-explanation__title">{{ concept }}</h3>
           <div class="smart-explanation__meta">
-            <span class="smart-explanation__difficulty" :class="`smart-explanation__difficulty--${difficulty}`">
+            <span
+              class="smart-explanation__difficulty"
+              :class="`smart-explanation__difficulty--${difficulty}`"
+            >
               {{ $t(`difficulty.${difficulty}`) }}
-
             </span>
             <span class="smart-explanation__reading-time">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <circle cx="12" cy="12" r="10" />
                 <path d="M12 6v6l4 2" />
               </svg>
-              {{ readingTime }} {{ $t('common.minRead') }}
-
+              {{ readingTime }} {{ $t("common.minRead") }}
             </span>
           </div>
         </div>
       </div>
 
-      <button class="smart-explanation__expand-btn"
-        :aria-label="isExpanded ? $t('common.collapse') : $t('common.expand')">
+      <button
+        class="smart-explanation__expand-btn"
+        :aria-label="isExpanded ? $t('common.collapse') : $t('common.expand')"
+      >
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
           <path v-if="!isExpanded" d="M19 9l-7 7-7-7" />
           <path v-else d="M5 15l7-7 7 7" />
@@ -39,11 +43,9 @@
 
     <!-- Quick Preview (collapsed state) -->
     <div v-if="!isExpanded" class="smart-explanation__preview">
-      <p>{{ previewText }}
-
-      </p>
+      <p>{{ previewText }}</p>
       <button class="smart-explanation__learn-more" @click="toggleExpand">
-        {{ $t('ai.learnMore') }}
+        {{ $t("ai.learnMore") }}
 
         →
       </button>
@@ -55,9 +57,7 @@
         <!-- Loading State -->
         <div v-if="isLoading" class="smart-explanation__loading">
           <div class="smart-explanation__loading-spinner"></div>
-          <p>{{ $t('ai.generatingExplanation') }}
-
-          </p>
+          <p>{{ $t("ai.generatingExplanation") }}</p>
         </div>
 
         <!-- Content Sections -->
@@ -68,10 +68,12 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              {{ $t('ai.whatIs') }}
-
+              {{ $t("ai.whatIs") }}
             </h4>
-            <div class="explanation-section__content" v-html="renderMarkdown(explanation.definition)"></div>
+            <div
+              class="explanation-section__content"
+              v-html="renderMarkdown(explanation.definition)"
+            ></div>
           </div>
 
           <!-- Why It Matters -->
@@ -79,12 +81,15 @@
             <h4 class="explanation-section__title">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path
-                  d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                  d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
+                />
               </svg>
-              {{ $t('ai.whyItMatters') }}
-
+              {{ $t("ai.whyItMatters") }}
             </h4>
-            <div class="explanation-section__content" v-html="renderMarkdown(explanation.importance)"></div>
+            <div
+              class="explanation-section__content"
+              v-html="renderMarkdown(explanation.importance)"
+            ></div>
           </div>
 
           <!-- Code Examples -->
@@ -93,34 +98,42 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
               </svg>
-              {{ $t('ai.examples') }}
-
+              {{ $t("ai.examples") }}
             </h4>
             <div class="explanation-section__content">
-              <div v-for="(example, index) in explanation.examples" :key="index" class="code-example">
+              <div
+                v-for="(example, index) in explanation.examples"
+                :key="index"
+                class="code-example"
+              >
                 <div class="code-example__header">
                   <h5 class="code-example__title">{{ example.title }}</h5>
-                  <button class="code-example__copy" @click="copyCode(example.code)" :aria-label="$t('common.copy')">
+                  <button
+                    class="code-example__copy"
+                    @click="copyCode(example.code)"
+                    :aria-label="$t('common.copy')"
+                  >
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                       <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
                       <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
                     </svg>
                   </button>
                 </div>
-                <pre class="code-example__code"><code :class="`language-${example.language}`">{{ example.code }}
+                <pre
+                  class="code-example__code"
+                ><code :class="`language-${example.language}`">{{ example.code }}
 
 </code></pre>
                 <div v-if="example.explanation" class="code-example__explanation">
                   {{ example.explanation }}
-
                 </div>
                 <div v-if="example.output" class="code-example__output">
-                  <span class="code-example__output-label">{{ $t('ai.output') }}
+                  <span class="code-example__output-label"
+                    >{{ $t("ai.output") }}
 
-                    :</span>
-                  <code>{{ example.output }}
-
-</code>
+                    :</span
+                  >
+                  <code>{{ example.output }} </code>
                 </div>
               </div>
             </div>
@@ -131,18 +144,25 @@
             <h4 class="explanation-section__title">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path
-                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                />
               </svg>
-              {{ $t('ai.visualAids') }}
-
+              {{ $t("ai.visualAids") }}
             </h4>
             <div class="explanation-section__content">
-              <div v-for="(visual, index) in explanation.visualAids" :key="index" class="visual-aid">
-                <img v-if="visual.url" :src="visual.url" :alt="visual.description" class="visual-aid__image" />
+              <div
+                v-for="(visual, index) in explanation.visualAids"
+                :key="index"
+                class="visual-aid"
+              >
+                <img
+                  v-if="visual.url"
+                  :src="visual.url"
+                  :alt="visual.description"
+                  class="visual-aid__image"
+                />
                 <div v-if="visual.svg" class="visual-aid__svg" v-html="visual.svg"></div>
-                <p class="visual-aid__description">{{ visual.description }}
-
-                </p>
+                <p class="visual-aid__description">{{ visual.description }}</p>
               </div>
             </div>
           </div>
@@ -152,20 +172,22 @@
             <h4 class="explanation-section__title">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path
-                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                />
               </svg>
-              {{ $t('ai.commonPitfalls') }}
-
+              {{ $t("ai.commonPitfalls") }}
             </h4>
             <div class="explanation-section__content">
               <ul class="pitfalls-list">
-                <li v-for="(pitfall, index) in explanation.pitfalls" :key="index" class="pitfalls-list__item">
+                <li
+                  v-for="(pitfall, index) in explanation.pitfalls"
+                  :key="index"
+                  class="pitfalls-list__item"
+                >
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                     <path d="M6 18L18 6M6 6l12 12" />
                   </svg>
-                  <span>{{ pitfall }}
-
-                  </span>
+                  <span>{{ pitfall }} </span>
                 </li>
               </ul>
             </div>
@@ -176,49 +198,54 @@
             <h4 class="explanation-section__title">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path
-                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
+                />
               </svg>
-              {{ $t('ai.practiceProblems') }}
+              {{ $t("ai.practiceProblems") }}
             </h4>
             <div class="explanation-section__content">
-              <div v-for="problem in explanation.practiceProblems" :key="problem.id" class="practice-problem">
+              <div
+                v-for="problem in explanation.practiceProblems"
+                :key="problem.id"
+                class="practice-problem"
+              >
                 <div class="practice-problem__header">
-                  <span class="practice-problem__difficulty"
-                    :class="`practice-problem__difficulty--${problem.difficulty}`">
+                  <span
+                    class="practice-problem__difficulty"
+                    :class="`practice-problem__difficulty--${problem.difficulty}`"
+                  >
                     {{ problem.difficulty }}
-
                   </span>
-                  <h5 class="practice-problem__question">{{ problem.question }}
-
-                  </h5>
+                  <h5 class="practice-problem__question">{{ problem.question }}</h5>
                 </div>
 
                 <div v-if="showSolution[problem.id]" class="practice-problem__solution">
-                  <h6>{{ $t('ai.solution') }}
+                  <h6>
+                    {{ $t("ai.solution") }}
 
-                    :</h6>
+                    :
+                  </h6>
                   <pre><code>{{ problem.solution }}
 
 </code></pre>
-                  <p v-if="problem.explanation">{{ problem.explanation }}
-
-                  </p>
+                  <p v-if="problem.explanation">{{ problem.explanation }}</p>
                 </div>
 
                 <div class="practice-problem__actions">
                   <button class="practice-problem__btn" @click="toggleSolution(problem.id)">
                     {{ showSolution[problem.id] ? $t('ai.hideSolution') : $t('ai.showSolution')$t }}
-
                   </button>
-                  <button v-if="problem.hints?.length" class="practice-problem__btn" @click="showHint(problem.id)">
-                    {{ $t('ai.getHint') }}
-
+                  <button
+                    v-if="problem.hints?.length"
+                    class="practice-problem__btn"
+                    @click="showHint(problem.id)"
+                  >
+                    {{ $t("ai.getHint") }}
                   </button>
                 </div>
 
                 <div v-if="hints[problem.id]" class="practice-problem__hint">
                   💡 {{ hints[problem.id] }}
-
                 </div>
               </div>
             </div>
@@ -229,15 +256,19 @@
             <h4 class="explanation-section__title">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path
-                  d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                  d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
+                />
               </svg>
-              {{ $t('ai.relatedConcepts') }}
-
+              {{ $t("ai.relatedConcepts") }}
             </h4>
             <div class="explanation-section__content">
               <div class="related-concepts">
-                <button v-for="related in explanation.relatedConcepts" :key="related" class="related-concept"
-                  @click="explainConcept(related)">
+                <button
+                  v-for="related in explanation.relatedConcepts"
+                  :key="related"
+                  class="related-concept"
+                  @click="explainConcept(related)"
+                >
                   {{ related }}
 
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -253,45 +284,61 @@
             <h4 class="explanation-section__title">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path
-                  d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                  d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                />
               </svg>
-              {{ $t('ai.additionalResources') }}
-
+              {{ $t("ai.additionalResources") }}
             </h4>
             <div class="explanation-section__content">
               <div class="resources-list">
-                <a v-for="resource in explanation.resources" :key="resource.url" :href="resource.url" target="_blank"
-                  rel="noopener noreferrer" class="resource-item">
+                <a
+                  v-for="resource in explanation.resources"
+                  :key="resource.url"
+                  :href="resource.url"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="resource-item"
+                >
                   <div class="resource-item__icon">
-                    <svg v-if="resource.type === 'video'" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <svg
+                      v-if="resource.type === 'video'"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                    >
                       <path
-                        d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
+                      />
                     </svg>
-                    <svg v-else-if="resource.type === 'article'" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <svg
+                      v-else-if="resource.type === 'article'"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                    >
                       <path
-                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                      />
                     </svg>
                     <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                      <path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      <path
+                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                      />
                     </svg>
                   </div>
                   <div class="resource-item__content">
-                    <h5 class="resource-item__title">{{ resource.title }}
-
-                    </h5>
-                    <p class="resource-item__description">{{ resource.description }}
-
-                    </p>
+                    <h5 class="resource-item__title">{{ resource.title }}</h5>
+                    <p class="resource-item__description">{{ resource.description }}</p>
                     <div class="resource-item__meta">
-                      <span v-if="resource.duration">{{ resource.duration }}
-
+                      <span v-if="resource.duration">{{ resource.duration }} </span>
+                      <span v-if="resource.free" class="resource-item__badge"
+                        >{{ $t("common.free") }}
                       </span>
-                      <span v-if="resource.free" class="resource-item__badge">{{ $t('common.free') }}
-
-                      </span>
-                      <span v-if="resource.recommended" class="resource-item__badge resource-item__badge--recommended">
-                        {{ $t('common.recommended') }}
-
+                      <span
+                        v-if="resource.recommended"
+                        class="resource-item__badge resource-item__badge--recommended"
+                      >
+                        {{ $t("common.recommended") }}
                       </span>
                     </div>
                   </div>
@@ -304,19 +351,27 @@
         <!-- Actions Footer -->
         <div class="smart-explanation__footer">
           <div class="smart-explanation__feedback">
-            <span>{{ $t('ai.wasHelpful') }}</span>
-            <button class="feedback-btn feedback-btn--yes" :class="{ active: feedback === 'helpful' }"
-              @click="submitFeedback('helpful')">
+            <span>{{ $t("ai.wasHelpful") }}</span>
+            <button
+              class="feedback-btn feedback-btn--yes"
+              :class="{ active: feedback === 'helpful' }"
+              @click="submitFeedback('helpful')"
+            >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path
-                  d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
+                  d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"
+                />
               </svg>
             </button>
-            <button class="feedback-btn feedback-btn--no" :class="{ active: feedback === 'unhelpful' }"
-              @click="submitFeedback('unhelpful')">
+            <button
+              class="feedback-btn feedback-btn--no"
+              :class="{ active: feedback === 'unhelpful' }"
+              @click="submitFeedback('unhelpful')"
+            >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path
-                  d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018a2 2 0 01.485.06l3.76.94m-7 10v5a2 2 0 002 2h.096c.5 0 .904-.405.904-.904 0-.715.211-1.413.608-2.008L17 13V4m-7 10h2m5-10h2a2 2 0 012 2v6a2 2 0 01-2 2h-2.5" />
+                  d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018a2 2 0 01.485.06l3.76.94m-7 10v5a2 2 0 002 2h.096c.5 0 .904-.405.904-.904 0-.715.211-1.413.608-2.008L17 13V4m-7 10h2m5-10h2a2 2 0 012 2v6a2 2 0 01-2 2h-2.5"
+                />
               </svg>
             </button>
           </div>
@@ -325,26 +380,26 @@
             <button class="action-btn" @click="regenerate">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path
-                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                />
               </svg>
-              {{ $t('ai.regenerate') }}
-
+              {{ $t("ai.regenerate") }}
             </button>
             <button class="action-btn" @click="share">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path
-                  d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m9.032 8.326a9.001 9.001 0 11-13.432 0m13.432 0A9.001 9.001 0 015.284 4.016m13.432 15.968A9.002 9.002 0 0112 21a9.002 9.002 0 01-6.716-2.016" />
+                  d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m9.032 8.326a9.001 9.001 0 11-13.432 0m13.432 0A9.001 9.001 0 015.284 4.016m13.432 15.968A9.002 9.002 0 0112 21a9.002 9.002 0 01-6.716-2.016"
+                />
               </svg>
-              {{ $t('ai.share') }}
-
+              {{ $t("ai.share") }}
             </button>
             <button class="action-btn action-btn--primary" @click="openInChat">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path
-                  d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                  d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                />
               </svg>
-              {{ $t('ai.discussInChat') }}
-
+              {{ $t("ai.discussInChat") }}
             </button>
           </div>
         </div>
@@ -354,32 +409,32 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { aiService } from '@/services/ai/aiService';
-import type { ISmartExplanation, ICodeExample } from '@/types/ai';
-import { analytics } from '@/services/analytics';
-import { marked } from 'marked';
-import hljs from 'highlight.js';
+import { ref, computed, onMounted } from "vue";
+import { useI18n } from "vue-i18n";
+import { aiService } from "@/services/ai/aiService";
+import type { ISmartExplanation, ICodeExample } from "@/types/ai";
+import { analytics } from "@/services/analytics";
+import { marked } from "marked";
+import hljs from "highlight.js";
 
 // Props
 interface Props {
   concept: string;
   questionId: string;
-  difficulty: 'beginner' | 'intermediate' | 'advanced';
+  difficulty: "beginner" | "intermediate" | "advanced";
   autoExpand?: boolean;
   context?: any;
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  autoExpand: false
+  autoExpand: false,
 });
 
 // Emits
 const emit = defineEmits<{
-  'concept-clicked': [concept: string];
-  'feedback': [type: string];
-  'open-chat': [context: any];
+  "concept-clicked": [concept: string];
+  feedback: [type: string];
+  "open-chat": [context: any];
 }>();
 
 // i18n
@@ -408,12 +463,12 @@ It works by creating a layer of abstraction that separates concerns and provides
 - It's frequently asked about in technical interviews`,
   examples: [
     {
-      language: 'javascript',
+      language: "javascript",
       code: '{ name: "Example", value: 42 }',
-      output: '{ name: "Example", value: 42 }'
+      output: '{ name: "Example", value: 42 }',
     },
     {
-      language: 'typescript',
+      language: "typescript",
       code: `// Advanced ${props.concept} with TypeScript
 interface ExampleInterface {
   name: string;
@@ -427,60 +482,65 @@ class AdvancedExample implements ExampleInterface {
     console.log(\`Processing \${this.name} with value \${this.value}\`);
   }
 }`,
-      output: 'TypeScript implementation with interfaces'
-    }
+      output: "TypeScript implementation with interfaces",
+    },
   ],
   pitfalls: [
-    'Not properly understanding the scope and context',
-    'Overcomplicating simple implementations',
-    'Ignoring performance implications',
-    'Not following established best practices',
-    'Mixing concerns that should be separated'
+    "Not properly understanding the scope and context",
+    "Overcomplicating simple implementations",
+    "Ignoring performance implications",
+    "Not following established best practices",
+    "Mixing concerns that should be separated",
   ],
   practiceProblems: [
     {
-      id: 'p1',
+      id: "p1",
       question: `Implement a basic ${props.concept} example`,
-      difficulty: 'easy',
-      hints: ['Start with the fundamentals', 'Focus on clarity over complexity'],
+      difficulty: "easy",
+      hints: ["Start with the fundamentals", "Focus on clarity over complexity"],
       solution: `class Example {
   constructor(public name: string) {}
   createdAt = new Date()
 }`,
-      explanation: 'This solution demonstrates the core pattern with minimal complexity.'
+      explanation: "This solution demonstrates the core pattern with minimal complexity.",
     },
     {
-      id: 'p2',
+      id: "p2",
       question: `Refactor this code to properly implement ${props.concept}`,
-      difficulty: 'medium',
-      hints: ['Identify repeated logic', 'Extract common functionality'],
-      solution: 'Solution would go here...'
-    }
+      difficulty: "medium",
+      hints: ["Identify repeated logic", "Extract common functionality"],
+      solution: "Solution would go here...",
+    },
   ],
-  relatedConcepts: ['Design Patterns', 'SOLID Principles', 'Functional Programming', 'Object-Oriented Programming'],
+  relatedConcepts: [
+    "Design Patterns",
+    "SOLID Principles",
+    "Functional Programming",
+    "Object-Oriented Programming",
+  ],
   resources: [
     {
-      type: 'video',
+      type: "video",
       title: `Mastering ${props.concept}`,
-      url: 'https://example.com/video',
-      description: 'Comprehensive video tutorial with real-world examples',
-      duration: '45 min',
-      recommended: true
+      url: "https://example.com/video",
+      description: "Comprehensive video tutorial with real-world examples",
+      duration: "45 min",
+      recommended: true,
     },
     {
-      type: 'article',
+      type: "article",
       title: `Deep Dive into ${props.concept}`,
-      url: 'https://example.com/article',
-      description: 'Detailed written guide with examples',
-      free: true
-    }
-  ]
+      url: "https://example.com/article",
+      description: "Detailed written guide with examples",
+      free: true,
+    },
+  ],
 };
 
 // Computed
 const previewText = computed(() => {
-  const text = explanation.value.definition || mockExplanation.definition || '';
-  return text.replace(/[*_#]/g, '').substring(0, 150) + '...';
+  const text = explanation.value.definition || mockExplanation.definition || "";
+  return text.replace(/[*_#]/g, "").substring(0, 150) + "...";
 });
 
 // Methods
@@ -491,9 +551,9 @@ const toggleExpand = async () => {
     await loadExplanation();
   }
 
-  analytics.track('smart_explanation_toggled', {
+  analytics.track("smart_explanation_toggled", {
     concept: props.concept,
-    expanded: isExpanded.value
+    expanded: isExpanded.value,
   });
 };
 
@@ -509,81 +569,82 @@ const loadexplanation = async () => {
     // explanation.value = result;
 
     // For now, use mock data
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     explanation.value = mockExplanation;
-    readingTime.value = Math.ceil((mockExplanation.definition?.split(' ').length || 0) / 200);
+    readingTime.value = Math.ceil((mockExplanation.definition?.split(" ").length || 0) / 200);
 
-    analytics.track('smart_explanation_loaded', {
+    analytics.track("smart_explanation_loaded", {
       concept: props.concept,
       questionId: props.questionId,
-      difficulty: props.difficulty
+      difficulty: props.difficulty,
     });
   } catch (error) {
-    console.error('Failed to load explanation:', error);
-  }
-
-  finally {
+    console.error("Failed to load explanation:", error);
+  } finally {
     isLoading.value = false;
   }
 };
 
 const copycode = (code: string) => {
   navigator.clipboard.writeText(code);
-  analytics.track('explanation_code_copied', { concept: props.concept });
+  analytics.track("explanation_code_copied", { concept: props.concept });
 };
 
 const togglesolution = (problemId: string) => {
   showSolution.value[problemId] = !showSolution.value[problemId];
-  analytics.track('practice_solution_viewed', {
+  analytics.track("practice_solution_viewed", {
     concept: props.concept,
-    problemId
+    problemId,
   });
 };
 
 const showhint = (problemId: string) => {
-  const problem = explanation.value.practiceProblems?.find(p => p.id === problemId);
+  const problem = explanation.value.practiceProblems?.find((p) => p.id === problemId);
   if (problem?.hints) {
-    const currentHintIndex = hints.value[problemId] ? problem.hints.indexOf(hints.value[problemId]) : -1; currentHintIndexhints.valueproblemIdproblem.hints.indexOf
+    const currentHintIndex = hints.value[problemId]
+      ? problem.hints.indexOf(hints.value[problemId])
+      : -1;
+    currentHintIndexhints.valueproblemIdproblem.hints.indexOf;
     const nextHintIndex = Math.min(currentHintIndex + 1, problem.hints.length - 1);
     hints.value[problemId] = problem.hints[nextHintIndex];
   }
 };
 
 const explainconcept = (concept: string) => {
-  emit('concept-clicked', concept);
+  emit("concept-clicked", concept);
 };
 
 const submitfeedback = (type: string) => {
   feedback.value = type;
-  emit('feedback', type);
+  emit("feedback", type);
 
-  analytics.track('explanation_feedback', {
+  analytics.track("explanation_feedback", {
     concept: props.concept,
-    feedback: type
+    feedback: type,
   });
 };
 
 const regenerate = async () => {
-  analytics.track('explanation_regenerate', { concept: props.concept });
+  analytics.track("explanation_regenerate", { concept: props.concept });
   await loadExplanation();
 };
 
 const share = () => {
   // Implementation for sharing
-  analytics.track('explanation_shared', { concept: props.concept });
+  analytics.track("explanation_shared", { concept: props.concept });
 };
 
 const openinchat = () => {
-  emit('open-chat', {
+  emit("open-chat", {
     concept: props.concept,
-    explanation: explanation.value
+    explanation: explanation.value,
   });
 
-  analytics.track('explanation_opened_in_chat', { concept: props.concept });
+  analytics.track("explanation_opened_in_chat", { concept: props.concept });
 };
 
 const renderMarkdown = (content: string): string => {
-  if (!content) return '';
+  if (!content) return "";
 
   marked.setOptions({
     highlight: (code, lang) => {
@@ -593,7 +654,7 @@ const renderMarkdown = (content: string): string => {
       return hljs.highlightAuto(code).value;
     },
     breaks: true,
-    gfm: true
+    gfm: true,
   });
 
   return marked(content);
@@ -623,7 +684,7 @@ onMounted(() => {
 /* Header */
 .smart-explanation__header {
   @apply flex items-center justify-between;
-  @apply p-4 cursor-pointer;
+  @apply cursor-pointer p-4;
   @apply hover:bg-gray-50 dark:hover:bg-gray-700/30;
   @apply transition-colors duration-fast;
 }
@@ -633,14 +694,14 @@ onMounted(() => {
 }
 
 .smart-explanation__icon {
-  @apply w-10 h-10 rounded-lg;
+  @apply h-10 w-10 rounded-lg;
   @apply bg-gradient-to-br from-primary-100 to-secondary-100;
   @apply dark:from-primary-900/50 dark:to-secondary-900/50;
   @apply flex items-center justify-center;
 }
 
 .smart-explanation__icon svg {
-  @apply w-6 h-6 text-primary-600 dark:text-primary-400;
+  @apply h-6 w-6 text-primary-600 dark:text-primary-400;
 }
 
 .smart-explanation__header-info {
@@ -656,7 +717,7 @@ onMounted(() => {
 }
 
 .smart-explanation__difficulty {
-  @apply px-2 py-0.5 rounded-full font-medium;
+  @apply rounded-full px-2 py-0.5 font-medium;
 }
 
 .smart-explanation__difficulty--beginner {
@@ -676,11 +737,11 @@ onMounted(() => {
 }
 
 .smart-explanation__reading-time svg {
-  @apply w-3 h-3;
+  @apply h-3 w-3;
 }
 
 .smart-explanation__expand-btn {
-  @apply w-8 h-8 rounded-lg;
+  @apply h-8 w-8 rounded-lg;
   @apply text-gray-500 hover:text-gray-700 dark:hover:text-gray-300;
   @apply hover:bg-gray-100 dark:hover:bg-gray-700;
   @apply transition-all duration-fast;
@@ -688,7 +749,7 @@ onMounted(() => {
 }
 
 .smart-explanation__expand-btn svg {
-  @apply w-5 h-5;
+  @apply h-5 w-5;
   @apply transition-transform duration-fast;
 }
 
@@ -720,8 +781,8 @@ onMounted(() => {
 }
 
 .smart-explanation__loading-spinner {
-  @apply w-8 h-8 border-2 border-primary border-t-transparent;
-  @apply rounded-full animate-spin mb-3;
+  @apply h-8 w-8 border-2 border-primary border-t-transparent;
+  @apply mb-3 animate-spin rounded-full;
 }
 
 /* Sections */
@@ -734,12 +795,12 @@ onMounted(() => {
 }
 
 .explanation-section__title {
-  @apply flex items-center gap-2 mb-4;
+  @apply mb-4 flex items-center gap-2;
   @apply text-base font-semibold text-gray-900 dark:text-white;
 }
 
 .explanation-section__title svg {
-  @apply w-5 h-5 text-primary;
+  @apply h-5 w-5 text-primary;
 }
 
 .explanation-section__content {
@@ -753,7 +814,7 @@ onMounted(() => {
 }
 
 .code-example__header {
-  @apply flex items-center justify-between mb-2;
+  @apply mb-2 flex items-center justify-between;
 }
 
 .code-example__title {
@@ -761,7 +822,7 @@ onMounted(() => {
 }
 
 .code-example__copy {
-  @apply w-6 h-6 rounded;
+  @apply h-6 w-6 rounded;
   @apply text-gray-500 hover:text-gray-700 dark:hover:text-gray-300;
   @apply hover:bg-gray-100 dark:hover:bg-gray-700;
   @apply transition-all duration-fast;
@@ -769,12 +830,12 @@ onMounted(() => {
 }
 
 .code-example__copy svg {
-  @apply w-4 h-4;
+  @apply h-4 w-4;
 }
 
 .code-example__code {
   @apply bg-gray-900 text-gray-100;
-  @apply p-4 rounded-lg overflow-x-auto;
+  @apply overflow-x-auto rounded-lg p-4;
   @apply text-xs leading-relaxed;
 }
 
@@ -783,7 +844,7 @@ onMounted(() => {
 }
 
 .code-example__output {
-  @apply mt-2 p-2 rounded;
+  @apply mt-2 rounded p-2;
   @apply bg-gray-100 dark:bg-gray-900;
   @apply text-xs;
 }
@@ -798,11 +859,11 @@ onMounted(() => {
 }
 
 .visual-aid__image {
-  @apply w-full rounded-lg mb-2;
+  @apply mb-2 w-full rounded-lg;
 }
 
 .visual-aid__description {
-  @apply text-xs text-gray-600 dark:text-gray-400 italic;
+  @apply text-xs italic text-gray-600 dark:text-gray-400;
 }
 
 /* Pitfalls */
@@ -815,13 +876,13 @@ onMounted(() => {
 }
 
 .pitfalls-list__item svg {
-  @apply w-4 h-4 text-red-500 flex-shrink-0 mt-0.5;
+  @apply mt-0.5 h-4 w-4 flex-shrink-0 text-red-500;
 }
 
 /* Practice problems */
 .practice-problem {
   @apply mb-4 last:mb-0;
-  @apply p-4 rounded-lg;
+  @apply rounded-lg p-4;
   @apply bg-gray-50 dark:bg-gray-900;
   @apply border border-gray-200 dark:border-gray-700;
 }
@@ -831,7 +892,7 @@ onMounted(() => {
 }
 
 .practice-problem__difficulty {
-  @apply inline-block px-2 py-0.5 rounded text-xs font-medium mb-2;
+  @apply mb-2 inline-block rounded px-2 py-0.5 text-xs font-medium;
 }
 
 .practice-problem__difficulty--easy {
@@ -851,18 +912,18 @@ onMounted(() => {
 }
 
 .practice-problem__solution {
-  @apply mt-3 p-3 rounded;
+  @apply mt-3 rounded p-3;
   @apply bg-white dark:bg-gray-800;
   @apply border border-gray-200 dark:border-gray-700;
 }
 
 .practice-problem__solution h6 {
-  @apply text-xs font-medium text-gray-700 dark:text-gray-300 mb-2;
+  @apply mb-2 text-xs font-medium text-gray-700 dark:text-gray-300;
 }
 
 .practice-problem__solution pre {
   @apply bg-gray-900 text-gray-100;
-  @apply p-3 rounded text-xs overflow-x-auto mb-2;
+  @apply mb-2 overflow-x-auto rounded p-3 text-xs;
 }
 
 .practice-problem__solution p {
@@ -870,11 +931,11 @@ onMounted(() => {
 }
 
 .practice-problem__actions {
-  @apply flex gap-2 mt-3;
+  @apply mt-3 flex gap-2;
 }
 
 .practice-problem__btn {
-  @apply px-3 py-1 rounded text-xs font-medium;
+  @apply rounded px-3 py-1 text-xs font-medium;
   @apply bg-white dark:bg-gray-800;
   @apply border border-gray-300 dark:border-gray-600;
   @apply hover:bg-gray-50 dark:hover:bg-gray-700;
@@ -882,7 +943,7 @@ onMounted(() => {
 }
 
 .practice-problem__hint {
-  @apply mt-3 p-3 rounded;
+  @apply mt-3 rounded p-3;
   @apply bg-blue-50 dark:bg-blue-900/20;
   @apply text-xs text-blue-700 dark:text-blue-400;
   @apply border border-blue-200 dark:border-blue-800;
@@ -895,7 +956,7 @@ onMounted(() => {
 
 .related-concept {
   @apply flex items-center gap-1;
-  @apply px-3 py-1.5 rounded-full;
+  @apply rounded-full px-3 py-1.5;
   @apply bg-gray-100 dark:bg-gray-700;
   @apply text-sm text-gray-700 dark:text-gray-300;
   @apply hover:bg-primary-100 hover:text-primary-700;
@@ -904,7 +965,7 @@ onMounted(() => {
 }
 
 .related-concept svg {
-  @apply w-3 h-3;
+  @apply h-3 w-3;
 }
 
 /* Resources */
@@ -913,7 +974,7 @@ onMounted(() => {
 }
 
 .resource-item {
-  @apply flex gap-3 p-3 rounded-lg;
+  @apply flex gap-3 rounded-lg p-3;
   @apply bg-gray-50 dark:bg-gray-900;
   @apply border border-gray-200 dark:border-gray-700;
   @apply hover:border-primary-300 dark:hover:border-primary-700;
@@ -922,13 +983,13 @@ onMounted(() => {
 }
 
 .resource-item__icon {
-  @apply w-10 h-10 rounded-lg flex-shrink-0;
+  @apply h-10 w-10 flex-shrink-0 rounded-lg;
   @apply bg-gray-200 dark:bg-gray-700;
   @apply flex items-center justify-center;
 }
 
 .resource-item__icon svg {
-  @apply w-5 h-5 text-gray-600 dark:text-gray-400;
+  @apply h-5 w-5 text-gray-600 dark:text-gray-400;
 }
 
 .resource-item__content {
@@ -951,7 +1012,7 @@ onMounted(() => {
 }
 
 .resource-item__badge {
-  @apply px-2 py-0.5 rounded-full;
+  @apply rounded-full px-2 py-0.5;
   @apply bg-green-100 text-green-700;
   @apply dark:bg-green-900/30 dark:text-green-400;
   @apply font-medium;
@@ -976,7 +1037,7 @@ onMounted(() => {
 }
 
 .feedback-btn {
-  @apply w-8 h-8 rounded-lg;
+  @apply h-8 w-8 rounded-lg;
   @apply text-gray-500 hover:text-gray-700 dark:hover:text-gray-300;
   @apply hover:bg-gray-200 dark:hover:bg-gray-700;
   @apply transition-all duration-fast;
@@ -984,19 +1045,19 @@ onMounted(() => {
 }
 
 .feedback-btn svg {
-  @apply w-5 h-5;
+  @apply h-5 w-5;
 }
 
 .feedback-btn--yes:hover,
 .feedback-btn--yes.active {
-  @apply text-green-600 bg-green-100;
-  @apply dark:text-green-400 dark:bg-green-900/30;
+  @apply bg-green-100 text-green-600;
+  @apply dark:bg-green-900/30 dark:text-green-400;
 }
 
 .feedback-btn--no:hover,
 .feedback-btn--no.active {
-  @apply text-red-600 bg-red-100;
-  @apply dark:text-red-400 dark:bg-red-900/30;
+  @apply bg-red-100 text-red-600;
+  @apply dark:bg-red-900/30 dark:text-red-400;
 }
 
 .smart-explanation__actions {
@@ -1005,7 +1066,7 @@ onMounted(() => {
 
 .action-btn {
   @apply flex items-center gap-2;
-  @apply px-3 py-1.5 rounded-lg;
+  @apply rounded-lg px-3 py-1.5;
   @apply text-sm font-medium;
   @apply border border-gray-300 dark:border-gray-600;
   @apply text-gray-700 dark:text-gray-300;
@@ -1014,11 +1075,11 @@ onMounted(() => {
 }
 
 .action-btn svg {
-  @apply w-4 h-4;
+  @apply h-4 w-4;
 }
 
 .action-btn--primary {
-  @apply bg-primary text-white border-primary;
+  @apply border-primary bg-primary text-white;
   @apply hover:bg-primary-700;
 }
 

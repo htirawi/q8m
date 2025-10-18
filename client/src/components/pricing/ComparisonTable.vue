@@ -30,11 +30,9 @@ defineOptions({
       <div class="comparison-table-header">
         <h2 id="comparison-title" class="comparison-table-title">
           {{ $t("pricing.comparison.title") }}
-
         </h2>
         <p class="comparison-table-description">
           {{ $t("pricing.comparison.description") }}
-
         </p>
       </div>
 
@@ -59,11 +57,9 @@ defineOptions({
                   <div class="comparison-table-plan-header-content">
                     <span class="comparison-table-plan-name">
                       {{ $t(plan.titleKey) }}
-
                     </span>
                     <span v-if="plan.badgeKey" class="comparison-table-plan-badge">
                       {{ $t(plan.badgeKey) }}
-
                     </span>
                   </div>
                 </th>
@@ -73,7 +69,6 @@ defineOptions({
               <tr v-for="row in comparisonRows" :key="row.featureKey" class="comparison-table-row">
                 <td class="comparison-table-feature-cell">
                   {{ $t(row.featureKey) }}
-
                 </td>
                 <td v-for="plan in plans" :key="plan.id" class="comparison-table-plan-cell">
                   <div class="comparison-table-cell-content">
@@ -91,7 +86,6 @@ defineOptions({
                     </span>
                     <span v-else class="comparison-table-text">
                       {{ getCellValue(row, plan.id) }}
-
                     </span>
                   </div>
                 </td>
@@ -109,13 +103,11 @@ defineOptions({
           >
             <h3 class="comparison-table-mobile-feature">
               {{ $t(row.featureKey) }}
-
             </h3>
             <div class="comparison-table-mobile-plans">
               <div v-for="plan in plans" :key="plan.id" class="comparison-table-mobile-plan">
                 <span class="comparison-table-mobile-plan-name">
                   {{ $t(plan.titleKey) }}
-
                 </span>
                 <div class="comparison-table-mobile-plan-value">
                   <CheckIcon
@@ -132,7 +124,6 @@ defineOptions({
                   </span>
                   <span v-else class="comparison-table-mobile-text">
                     {{ getCellValue(row, plan.id) }}
-
                   </span>
                 </div>
               </div>

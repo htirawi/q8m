@@ -43,4 +43,7 @@ const userConnectionSchema = new Schema<IUserConnection>(
 // Compound index to prevent duplicate connections
 userConnectionSchema.index({ userId: 1, friendId: 1 }, { unique: true });
 
-export const UserConnection = mongoose.model<IUserConnection>("UserConnection", userConnectionSchema);
+export const UserConnection = mongoose.model<IUserConnection>(
+  "UserConnection",
+  userConnectionSchema
+);

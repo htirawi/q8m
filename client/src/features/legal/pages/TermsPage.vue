@@ -33,20 +33,13 @@ const sections = [
           <div class="breadcrumb">
             <router-link :to="{ name: 'home' }" class="breadcrumb-link">
               {{ $t("legal.breadcrumb.home") }}
-
             </router-link>
             <span class="breadcrumb-separator">/</span>
-            <span class="breadcrumb-current">{{ $t("legal.breadcrumb.terms") }}
-
-</span>
+            <span class="breadcrumb-current">{{ $t("legal.breadcrumb.terms") }} </span>
           </div>
 
-          <h1 class="terms-title">{{ $t("legal.terms.title") }}
-
-</h1>
-          <p class="terms-subtitle">{{ $t("legal.terms.subtitle") }}
-
-</p>
+          <h1 class="terms-title">{{ $t("legal.terms.title") }}</h1>
+          <p class="terms-subtitle">{{ $t("legal.terms.subtitle") }}</p>
 
           <div class="last-updated">
             <svg
@@ -60,7 +53,6 @@ const sections = [
               <polyline points="12,6 12,12 16,14" />
             </svg>
             {{ $t("legal.terms.lastUpdated") }}: {{ lastUpdated }}
-
           </div>
         </div>
       </div>
@@ -82,7 +74,6 @@ const sections = [
                   class="toc-link"
                 >
                   {{ $t(section.titleKey) }}
-
                 </a>
               </nav>
             </div>
@@ -93,272 +84,171 @@ const sections = [
             <div class="terms-card">
               <!-- Introduction -->
               <section id="introduction" class="terms-section">
-                <h2 class="section-title">{{ $t("legal.terms.introduction.title") }}
-
-</h2>
+                <h2 class="section-title">{{ $t("legal.terms.introduction.title") }}</h2>
                 <div class="section-content">
-                  <p>{{ $t("legal.terms.introduction.content") }}
-
-</p>
+                  <p>{{ $t("legal.terms.introduction.content") }}</p>
                 </div>
               </section>
 
               <!-- Acceptance of Terms -->
               <section id="acceptance" class="terms-section">
-                <h2 class="section-title">{{ $t("legal.terms.acceptance.title") }}
-
-</h2>
+                <h2 class="section-title">{{ $t("legal.terms.acceptance.title") }}</h2>
                 <div class="section-content">
-                  <p>{{ $t("legal.terms.acceptance.content") }}
-
-</p>
+                  <p>{{ $t("legal.terms.acceptance.content") }}</p>
                 </div>
               </section>
 
               <!-- Service Description -->
               <section id="service-description" class="terms-section">
-                <h2 class="section-title">{{ $t("legal.terms.serviceDescription.title") }}
-
-</h2>
+                <h2 class="section-title">{{ $t("legal.terms.serviceDescription.title") }}</h2>
                 <div class="section-content">
-                  <p>{{ $t("legal.terms.serviceDescription.content") }}
-
-</p>
+                  <p>{{ $t("legal.terms.serviceDescription.content") }}</p>
                   <ul class="terms-list">
-                    <li>{{ $t("legal.terms.serviceDescription.features.interview") }}
-
-</li>
-                    <li>{{ $t("legal.terms.serviceDescription.features.practice") }}
-
-</li>
-                    <li>{{ $t("legal.terms.serviceDescription.features.analytics") }}
-
-</li>
-                    <li>{{ $t("legal.terms.serviceDescription.features.support") }}
-
-</li>
+                    <li>{{ $t("legal.terms.serviceDescription.features.interview") }}</li>
+                    <li>{{ $t("legal.terms.serviceDescription.features.practice") }}</li>
+                    <li>{{ $t("legal.terms.serviceDescription.features.analytics") }}</li>
+                    <li>{{ $t("legal.terms.serviceDescription.features.support") }}</li>
                   </ul>
                 </div>
               </section>
 
               <!-- User Accounts -->
               <section id="user-accounts" class="terms-section">
-                <h2 class="section-title">{{ $t("legal.terms.userAccounts.title") }}
-
-</h2>
+                <h2 class="section-title">{{ $t("legal.terms.userAccounts.title") }}</h2>
                 <div class="section-content">
                   <h3 class="subsection-title">
                     {{ $t("legal.terms.userAccounts.registration.title") }}
-
                   </h3>
-                  <p>{{ $t("legal.terms.userAccounts.registration.content") }}
-
-</p>
+                  <p>{{ $t("legal.terms.userAccounts.registration.content") }}</p>
 
                   <h3 class="subsection-title">
                     {{ $t("legal.terms.userAccounts.responsibilities.title") }}
-
                   </h3>
                   <ul class="terms-list">
-                    <li>{{ $t("legal.terms.userAccounts.responsibilities.accurate") }}
-
-</li>
-                    <li>{{ $t("legal.terms.userAccounts.responsibilities.security") }}
-
-</li>
-                    <li>{{ $t("legal.terms.userAccounts.responsibilities.activity") }}
-
-</li>
+                    <li>{{ $t("legal.terms.userAccounts.responsibilities.accurate") }}</li>
+                    <li>{{ $t("legal.terms.userAccounts.responsibilities.security") }}</li>
+                    <li>{{ $t("legal.terms.userAccounts.responsibilities.activity") }}</li>
                   </ul>
                 </div>
               </section>
 
               <!-- Payment Terms -->
               <section id="payment-terms" class="terms-section">
-                <h2 class="section-title">{{ $t("legal.terms.paymentTerms.title") }}
-
-</h2>
+                <h2 class="section-title">{{ $t("legal.terms.paymentTerms.title") }}</h2>
                 <div class="section-content">
                   <h3 class="subsection-title">
                     {{ $t("legal.terms.paymentTerms.subscription.title") }}
-
                   </h3>
-                  <p>{{ $t("legal.terms.paymentTerms.subscription.content") }}
-
-</p>
+                  <p>{{ $t("legal.terms.paymentTerms.subscription.content") }}</p>
 
                   <h3 class="subsection-title">
                     {{ $t("legal.terms.paymentTerms.billing.title") }}
-
                   </h3>
-                  <p>{{ $t("legal.terms.paymentTerms.billing.content") }}
-
-</p>
+                  <p>{{ $t("legal.terms.paymentTerms.billing.content") }}</p>
 
                   <h3 class="subsection-title">
                     {{ $t("legal.terms.paymentTerms.refunds.title") }}
-
                   </h3>
-                  <p>{{ $t("legal.terms.paymentTerms.refunds.content") }}
-
-</p>
+                  <p>{{ $t("legal.terms.paymentTerms.refunds.content") }}</p>
                 </div>
               </section>
 
               <!-- Prohibited Uses -->
               <section id="prohibited-uses" class="terms-section">
-                <h2 class="section-title">{{ $t("legal.terms.prohibitedUses.title") }}
-
-</h2>
+                <h2 class="section-title">{{ $t("legal.terms.prohibitedUses.title") }}</h2>
                 <div class="section-content">
-                  <p>{{ $t("legal.terms.prohibitedUses.content") }}
-
-</p>
+                  <p>{{ $t("legal.terms.prohibitedUses.content") }}</p>
                   <ul class="terms-list">
-                    <li>{{ $t("legal.terms.prohibitedUses.illegal") }}
-
-</li>
-                    <li>{{ $t("legal.terms.prohibitedUses.harassment") }}
-
-</li>
-                    <li>{{ $t("legal.terms.prohibitedUses.security") }}
-
-</li>
-                    <li>{{ $t("legal.terms.prohibitedUses.unauthorized") }}
-
-</li>
-                    <li>{{ $t("legal.terms.prohibitedUses.automation") }}
-
-</li>
+                    <li>{{ $t("legal.terms.prohibitedUses.illegal") }}</li>
+                    <li>{{ $t("legal.terms.prohibitedUses.harassment") }}</li>
+                    <li>{{ $t("legal.terms.prohibitedUses.security") }}</li>
+                    <li>{{ $t("legal.terms.prohibitedUses.unauthorized") }}</li>
+                    <li>{{ $t("legal.terms.prohibitedUses.automation") }}</li>
                   </ul>
                 </div>
               </section>
 
               <!-- Intellectual Property -->
               <section id="intellectual-property" class="terms-section">
-                <h2 class="section-title">{{ $t("legal.terms.intellectualProperty.title") }}
-
-</h2>
+                <h2 class="section-title">{{ $t("legal.terms.intellectualProperty.title") }}</h2>
                 <div class="section-content">
                   <h3 class="subsection-title">
                     {{ $t("legal.terms.intellectualProperty.ourContent.title") }}
-
                   </h3>
-                  <p>{{ $t("legal.terms.intellectualProperty.ourContent.content") }}
-
-</p>
+                  <p>{{ $t("legal.terms.intellectualProperty.ourContent.content") }}</p>
 
                   <h3 class="subsection-title">
                     {{ $t("legal.terms.intellectualProperty.userContent.title") }}
-
                   </h3>
-                  <p>{{ $t("legal.terms.intellectualProperty.userContent.content") }}
-
-</p>
+                  <p>{{ $t("legal.terms.intellectualProperty.userContent.content") }}</p>
                 </div>
               </section>
 
               <!-- Termination -->
               <section id="termination" class="terms-section">
-                <h2 class="section-title">{{ $t("legal.terms.termination.title") }}
-
-</h2>
+                <h2 class="section-title">{{ $t("legal.terms.termination.title") }}</h2>
                 <div class="section-content">
-                  <p>{{ $t("legal.terms.termination.content") }}
-
-</p>
+                  <p>{{ $t("legal.terms.termination.content") }}</p>
                   <ul class="terms-list">
-                    <li>{{ $t("legal.terms.termination.violation") }}
-
-</li>
-                    <li>{{ $t("legal.terms.termination.fraud") }}
-
-</li>
-                    <li>{{ $t("legal.terms.termination.discontinuation") }}
-
-</li>
+                    <li>{{ $t("legal.terms.termination.violation") }}</li>
+                    <li>{{ $t("legal.terms.termination.fraud") }}</li>
+                    <li>{{ $t("legal.terms.termination.discontinuation") }}</li>
                   </ul>
                 </div>
               </section>
 
               <!-- Disclaimers -->
               <section id="disclaimers" class="terms-section">
-                <h2 class="section-title">{{ $t("legal.terms.disclaimers.title") }}
-
-</h2>
+                <h2 class="section-title">{{ $t("legal.terms.disclaimers.title") }}</h2>
                 <div class="section-content">
-                  <p>{{ $t("legal.terms.disclaimers.content") }}
-
-</p>
+                  <p>{{ $t("legal.terms.disclaimers.content") }}</p>
                 </div>
               </section>
 
               <!-- Limitation of Liability -->
               <section id="limitation-liability" class="terms-section">
-                <h2 class="section-title">{{ $t("legal.terms.limitationLiability.title") }}
-
-</h2>
+                <h2 class="section-title">{{ $t("legal.terms.limitationLiability.title") }}</h2>
                 <div class="section-content">
-                  <p>{{ $t("legal.terms.limitationLiability.content") }}
-
-</p>
+                  <p>{{ $t("legal.terms.limitationLiability.content") }}</p>
                 </div>
               </section>
 
               <!-- Governing Law -->
               <section id="governing-law" class="terms-section">
-                <h2 class="section-title">{{ $t("legal.terms.governingLaw.title") }}
-
-</h2>
+                <h2 class="section-title">{{ $t("legal.terms.governingLaw.title") }}</h2>
                 <div class="section-content">
-                  <p>{{ $t("legal.terms.governingLaw.content") }}
-
-</p>
+                  <p>{{ $t("legal.terms.governingLaw.content") }}</p>
                 </div>
               </section>
 
               <!-- Changes to Terms -->
               <section id="changes-terms" class="terms-section">
-                <h2 class="section-title">{{ $t("legal.terms.changesTerms.title") }}
-
-</h2>
+                <h2 class="section-title">{{ $t("legal.terms.changesTerms.title") }}</h2>
                 <div class="section-content">
-                  <p>{{ $t("legal.terms.changesTerms.content") }}
-
-</p>
+                  <p>{{ $t("legal.terms.changesTerms.content") }}</p>
                 </div>
               </section>
 
               <!-- Contact Information -->
               <section id="contact" class="terms-section">
-                <h2 class="section-title">{{ $t("legal.terms.contact.title") }}
-
-</h2>
+                <h2 class="section-title">{{ $t("legal.terms.contact.title") }}</h2>
                 <div class="section-content">
-                  <p>{{ $t("legal.terms.contact.content") }}
-
-</p>
+                  <p>{{ $t("legal.terms.contact.content") }}</p>
                   <div class="contact-info">
                     <p>
-                      <strong>{{ $t("legal.terms.contact.email") }}
-
-</strong
-                      >: support@q8m.dev
+                      <strong>{{ $t("legal.terms.contact.email") }} </strong>: support@q8m.dev
                     </p>
                     <p>
-                      <strong>{{ $t("legal.terms.contact.address") }}
-
-</strong>
+                      <strong>{{ $t("legal.terms.contact.address") }} </strong>
                     </p>
                     <address class="address">
                       {{ $t("legal.terms.contact.addressLine1") }}
 
-<br />
+                      <br />
                       {{ $t("legal.terms.contact.addressLine2") }}
 
-<br />
+                      <br />
                       {{ $t("legal.terms.contact.country") }}
-
                     </address>
                   </div>
                 </div>

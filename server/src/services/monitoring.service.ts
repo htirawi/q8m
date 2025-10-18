@@ -137,9 +137,7 @@ export class MonitoringService {
    */
   private checkAlertThresholds(): void {
     const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
-    const recentViolations = this.violations.filter(
-      (v) => v.timestamp > oneHourAgo
-    );
+    const recentViolations = this.violations.filter((v) => v.timestamp > oneHourAgo);
 
     // Check total violations threshold
     if (recentViolations.length >= this.alertThresholds.violationsPerHour) {
@@ -224,9 +222,7 @@ export class MonitoringService {
     recentCount: number;
   } {
     const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
-    const recentViolations = this.violations.filter(
-      (v) => v.timestamp > oneHourAgo
-    );
+    const recentViolations = this.violations.filter((v) => v.timestamp > oneHourAgo);
 
     const byType: Record<string, number> = {};
     const bySeverity: Record<string, number> = {};
@@ -249,9 +245,7 @@ export class MonitoringService {
    */
   getUserViolations(userId: string, hours: number = 24): PlanViolation[] {
     const since = new Date(Date.now() - hours * 60 * 60 * 1000);
-    return this.violations.filter(
-      (v) => v.userId === userId && v.timestamp > since
-    );
+    return this.violations.filter((v) => v.userId === userId && v.timestamp > since);
   }
 
   /**

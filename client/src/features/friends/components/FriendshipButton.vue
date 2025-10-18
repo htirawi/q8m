@@ -1,13 +1,11 @@
 <script setup lang="ts">
 import type { IFriendshipButtonProps as Props } from "@/types/components/friends";
-import { ref, computed, onMounted } from 'vue';
-import { useFriends } from '@/composables/useFriends';
-import type { FriendStatus } from '@/stores/friends';
-
-
+import { ref, computed, onMounted } from "vue";
+import { useFriends } from "@/composables/useFriends";
+import type { FriendStatus } from "@/stores/friends";
 
 const props = withDefaults(defineProps<Props>(), {
-  size: 'md',
+  size: "md",
   showIcon: true,
 });
 
@@ -28,23 +26,23 @@ const isProcessing = ref(false);
 
 // Computed
 const buttonLabel = computed(() => {
-  if (!status.value) return 'Loading...';
+  if (!status.value) return "Loading...";
   return getActionLabel(status.value);
 });
 
 const buttonColor = computed(() => {
-  if (!status.value) return 'bg-gray-400';
+  if (!status.value) return "bg-gray-400";
   return getActionColor(status.value);
 });
 
 const sizeClasses = computed(() => {
   switch (props.size) {
-    case 'sm':
-      return 'px-3 py-1.5 text-sm';
-    case 'lg':
-      return 'px-6 py-3 text-base';
+    case "sm":
+      return "px-3 py-1.5 text-sm";
+    case "lg":
+      return "px-6 py-3 text-base";
     default:
-      return 'px-4 py-2 text-sm';
+      return "px-4 py-2 text-sm";
   }
 });
 
@@ -53,7 +51,7 @@ const isDisabled = computed(() => {
     isProcessing.value ||
     loading.value ||
     !status.value ||
-    (status.value.status === 'blocked' && !status.value.canUnblock)
+    (status.value.status === "blocked" && !status.value.canUnblock)
   );
 });
 
@@ -68,10 +66,10 @@ const handleclick = async () => {
   try {
     let success = false;
 
-    if (status.value.status === 'none') {
+    if (status.value.status === "none") {
       // Send friend request
       success = await sendRequest(props.userId);
-    } else if (status.value.status === 'pending') {
+    } else if (status.value.status === "pending") {
       if (status.value.canAccept) {
         // Accept request
         success = await acceptRequest(props.userId);
@@ -79,7 +77,7 @@ const handleclick = async () => {
         // Cancel sent request
         success = await cancelRequest(props.userId);
       }
-    } else if (status.value.status === 'friends') {
+    } else if (status.value.status === "friends") {
       // Unfriend
       success = await unfriend(props.userId);
     }
@@ -88,9 +86,7 @@ const handleclick = async () => {
       // Reload status
       await loadStatus();
     }
-  }
-
- finally {
+  } finally {
     isProcessing.value = false;
   }
 };
@@ -108,7 +104,7 @@ onMounted(async () => {
     :class="[
       'friendship-button rounded-lg font-medium text-white transition-all',
       'flex items-center justify-center gap-2',
-      'disabled:opacity-50 disabled:cursor-not-allowed',
+      'disabled:cursor-not-allowed disabled:opacity-50',
       'hover:shadow-md active:scale-95',
       buttonColor,
       sizeClasses,
@@ -117,7 +113,7 @@ onMounted(async () => {
     <!-- Loading Spinner -->
     <svg
       v-if="isProcessing || loading"
-      class="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+      class="-ml-1 mr-2 h-4 w-4 animate-spin text-white"
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"
@@ -142,7 +138,7 @@ onMounted(async () => {
       <!-- Add Friend Icon -->
       <svg
         v-if="status?.status === 'none'"
-        class="w-4 h-4"
+        class="h-4 w-4"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -158,23 +154,18 @@ onMounted(async () => {
       <!-- Accept Icon -->
       <svg
         v-else-if="status?.canAccept"
-        class="w-4 h-4"
+        class="h-4 w-4"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
       >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M5 13l4 4L19 7"
-        />
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
       </svg>
 
       <!-- Cancel/Remove Icon -->
       <svg
         v-else-if="status?.canCancel || status?.canUnfriend"
-        class="w-4 h-4"
+        class="h-4 w-4"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -189,9 +180,7 @@ onMounted(async () => {
     </span>
 
     <!-- Label -->
-    <span>{{ buttonLabel }}
-
-</span>
+    <span>{{ buttonLabel }} </span>
   </button>
 </template>
 
@@ -201,6 +190,6 @@ onMounted(async () => {
 }
 
 .friendship-button:not(:disabled):hover {
-  @apply transform -translate-y-0.5;
+  @apply -translate-y-0.5 transform;
 }
 </style>

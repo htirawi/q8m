@@ -19,11 +19,9 @@ defineOptions({
         <div class="guarantee-panel-text">
           <h2 id="guarantee-title" class="guarantee-panel-title">
             {{ $t(guaranteeData.titleKey) }}
-
           </h2>
           <p class="guarantee-panel-description">
             {{ $t(guaranteeData.descriptionKey) }}
-
           </p>
         </div>
       </div>

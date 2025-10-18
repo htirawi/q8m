@@ -3,9 +3,9 @@
  * Defines achievement badges with criteria and rewards
  */
 
-import type { BadgeTier, BadgeCriteriaType } from '@shared/types/gamification';
-import type { Document, ObjectId } from 'mongoose';
-import { Schema, model } from 'mongoose';
+import type { BadgeTier, BadgeCriteriaType } from "@shared/types/gamification";
+import type { Document, ObjectId } from "mongoose";
+import { Schema, model } from "mongoose";
 
 /**
  * Badge criteria sub-document
@@ -27,8 +27,8 @@ export interface IBadgeDoc extends Document {
   criteria: IBadgeCriteriaDoc;
   xpReward: number;
   isSecret: boolean;
-  category: 'study' | 'quiz' | 'streak' | 'social' | 'milestone';
-  rarity: 'common' | 'rare' | 'epic' | 'legendary';
+  category: "study" | "quiz" | "streak" | "social" | "milestone";
+  rarity: "common" | "rare" | "epic" | "legendary";
   createdAt: Date;
   updatedAt: Date;
 }
@@ -39,15 +39,15 @@ const badgeCriteriaSchema = new Schema<IBadgeCriteriaDoc>(
     type: {
       type: String,
       enum: [
-        'streak',
-        'mastery',
-        'quiz_score',
-        'quiz_count',
-        'study_time',
-        'xp',
-        'speed',
-        'perfect_quiz',
-        'custom',
+        "streak",
+        "mastery",
+        "quiz_score",
+        "quiz_count",
+        "study_time",
+        "xp",
+        "speed",
+        "perfect_quiz",
+        "custom",
       ],
       required: true,
     },
@@ -65,22 +65,22 @@ const badgeSchema = new Schema<IBadgeDoc>(
     icon: { type: String, required: true },
     tier: {
       type: String,
-      enum: ['bronze', 'silver', 'gold', 'platinum'],
+      enum: ["bronze", "silver", "gold", "platinum"],
     },
     criteria: { type: badgeCriteriaSchema, required: true },
     xpReward: { type: Number, required: true, min: 0 },
     isSecret: { type: Boolean, required: true, default: false },
     category: {
       type: String,
-      enum: ['study', 'quiz', 'streak', 'social', 'milestone'],
+      enum: ["study", "quiz", "streak", "social", "milestone"],
       required: true,
       index: true,
     },
     rarity: {
       type: String,
-      enum: ['common', 'rare', 'epic', 'legendary'],
+      enum: ["common", "rare", "epic", "legendary"],
       required: true,
-      default: 'common',
+      default: "common",
       index: true,
     },
   },
@@ -99,7 +99,7 @@ const badgeSchema = new Schema<IBadgeDoc>(
 
 // Indexes
 badgeSchema.index({ category: 1, rarity: 1 });
-badgeSchema.index({ 'criteria.type': 1 });
+badgeSchema.index({ "criteria.type": 1 });
 
 // Static method: Get all badges (with option to hide secret badges)
 badgeSchema.statics.getAllBadges = function (options: { includeSecret?: boolean } = {}) {
@@ -133,16 +133,16 @@ badgeSchema.statics.checkCriteria = async function (
   const { criteria } = badge;
 
   switch (criteria.type) {
-    case 'xp':
+    case "xp":
       return userProgress.xp >= criteria.threshold;
 
-    case 'streak':
+    case "streak":
       return userProgress.streaks.currentStreak >= criteria.threshold;
 
-    case 'study_time':
+    case "study_time":
       return userProgress.totalStudyTimeMinutes >= criteria.threshold;
 
-    case 'quiz_count': {
+    case "quiz_count": {
       const minScore = criteria.metadata?.minScore as number | undefined;
       if (minScore) {
         // Count only quizzes above minScore (would need to query QuizResult)
@@ -151,19 +151,19 @@ badgeSchema.statics.checkCriteria = async function (
       return userProgress.quizzesTaken >= criteria.threshold;
     }
 
-    case 'perfect_quiz':
+    case "perfect_quiz":
       return userProgress.perfectQuizzes >= criteria.threshold;
 
-    case 'mastery': {
+    case "mastery": {
       const masteredCount = Array.from(userProgress.questions.values()).filter(
-        (q) => q.masteryLevel === 'mastered'
+        (q) => q.masteryLevel === "mastered"
       ).length;
       return masteredCount >= criteria.threshold;
     }
 
-    case 'speed':
-    case 'quiz_score':
-    case 'custom':
+    case "speed":
+    case "quiz_score":
+    case "custom":
       // These require more complex logic - implement in service layer
       return false;
 
@@ -172,4 +172,4 @@ badgeSchema.statics.checkCriteria = async function (
   }
 };
 
-export const Badge = model<IBadgeDoc>('Badge', badgeSchema);
+export const Badge = model<IBadgeDoc>("Badge", badgeSchema);

@@ -1,9 +1,11 @@
 <template>
-  <div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-12">
+  <div class="min-h-screen bg-gray-50 py-12 dark:bg-gray-900">
     <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
       <!-- Loading State -->
       <div v-if="loading" class="flex justify-center py-12">
-        <div class="h-8 w-8 animate-spin rounded-full border-4 border-primary-500 border-t-transparent"></div>
+        <div
+          class="h-8 w-8 animate-spin rounded-full border-4 border-primary-500 border-t-transparent"
+        ></div>
       </div>
 
       <!-- Certificate -->
@@ -14,7 +16,9 @@
           class="relative overflow-hidden rounded-lg bg-white p-12 shadow-lg dark:bg-gray-800"
         >
           <!-- Border Decoration -->
-          <div class="absolute inset-0 border-8 border-double border-yellow-600/20 dark:border-yellow-400/20"></div>
+          <div
+            class="absolute inset-0 border-8 border-double border-yellow-600/20 dark:border-yellow-400/20"
+          ></div>
 
           <!-- Content -->
           <div class="relative space-y-8 text-center">
@@ -23,16 +27,13 @@
               <h1 class="text-4xl font-bold text-gray-900 dark:text-white">
                 Certificate of Completion
               </h1>
-              <p class="mt-2 text-gray-600 dark:text-gray-400">
-                This is to certify that
-              </p>
+              <p class="mt-2 text-gray-600 dark:text-gray-400">This is to certify that</p>
             </div>
 
             <!-- Recipient Name -->
             <div class="py-4">
               <p class="text-3xl font-bold text-primary-600 dark:text-primary-400">
                 {{ certificate.userName }}
-
               </p>
             </div>
 
@@ -43,7 +44,6 @@
               </p>
               <p class="text-2xl font-semibold text-gray-900 dark:text-white">
                 {{ pathTitle }}
-
               </p>
             </div>
 
@@ -52,7 +52,6 @@
               <div class="text-center">
                 <p class="text-2xl font-bold text-gray-900 dark:text-white">
                   {{ certificate.moduleCount }}
-
                 </p>
                 <p class="text-sm text-gray-600 dark:text-gray-400">Modules</p>
               </div>
@@ -60,7 +59,7 @@
                 <p class="text-2xl font-bold text-gray-900 dark:text-white">
                   {{ Math.round(certificate.totalTimeSpent / 60) }}
 
-h
+                  h
                 </p>
                 <p class="text-sm text-gray-600 dark:text-gray-400">Time Invested</p>
               </div>
@@ -79,7 +78,6 @@ h
               </p>
               <p class="mt-1 text-xs text-gray-500 dark:text-gray-500">
                 Certificate ID: {{ certificate.certificateId }}
-
               </p>
             </div>
           </div>
@@ -105,7 +103,7 @@ h
       </div>
 
       <!-- Error State -->
-      <div v-else class="text-center py-12">
+      <div v-else class="py-12 text-center">
         <p class="text-gray-600 dark:text-gray-400">Certificate not found</p>
       </div>
     </div>
@@ -113,10 +111,10 @@ h
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
-import { useLearningPathsStore } from '@/stores/learning-paths';
-import type { ICertificate } from '@shared/types/learning-paths';
+import { ref, computed, onMounted } from "vue";
+import { useRouter, useRoute } from "vue-router";
+import { useLearningPathsStore } from "@/stores/learning-paths";
+import type { ICertificate } from "@shared/types/learning-paths";
 
 const router = useRouter();
 const route = useRoute();
@@ -125,19 +123,19 @@ const store = useLearningPathsStore();
 const loading = ref(true);
 const certificate = ref<ICertificate | null>(null);
 
-const locale = computed(() => (route.params.locale as string) || 'en');
+const locale = computed(() => (route.params.locale as string) || "en");
 
 const pathTitle = computed(() => {
-  if (!certificate.value) return '';
-  return certificate.value.pathTitle[locale.value === 'ar' ? 'ar' : 'en'];
+  if (!certificate.value) return "";
+  return certificate.value.pathTitle[locale.value === "ar" ? "ar" : "en"];
 });
 
 const formatdate = (dateString: string) => {
   const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
   });
 };
 

@@ -6,7 +6,6 @@
 import { env } from "@config/env.js";
 import * as paypal from "@paypal/checkout-server-sdk";
 
-
 /**
  * Get PayPal environment based on configuration
  * @returns PayPal Environment (Sandbox or Live)

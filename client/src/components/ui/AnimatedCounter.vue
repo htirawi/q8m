@@ -1,13 +1,12 @@
 <template>
   <span class="animated-counter" :class="{ 'animated-counter--animating': isAnimating }">
     {{ displayValue }}
-
   </span>
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue';
-import type { IAnimatedCounterProps } from '@/types/components/shared';
+import { ref, watch, onMounted } from "vue";
+import type { IAnimatedCounterProps } from "@/types/components/shared";
 
 let startTime: number | null = null;
 let animationFrame: number | null = null;
@@ -26,13 +25,12 @@ const animate = () => {
   const easeOutQuart = 1 - Math.pow(1 - progress, 4);
 
   const currentValue = startValue + (props.value - startValue) * easeOutQuart;
-  displayValue.value = Math.round(currentValue * Math.pow(10, props.decimals)) / Math.pow(10, props.decimals);
+  displayValue.value =
+    Math.round(currentValue * Math.pow(10, props.decimals)) / Math.pow(10, props.decimals);
 
   if (progress < 1) {
     animationFrame = requestAnimationFrame(animate);
-  }
-
- else {
+  } else {
     displayValue.value = props.value;
     isAnimating.value = false;
     startTime = null;
@@ -47,11 +45,14 @@ const startanimation = () => {
   animate();
 };
 
-watch(() => props.value, (newValue) => {
-  if (newValue !== displayValue.value) {
-    startAnimation();
+watch(
+  () => props.value,
+  (newValue) => {
+    if (newValue !== displayValue.value) {
+      startAnimation();
+    }
   }
-});
+);
 
 onMounted(() => {
   if (props.value !== 0) {

@@ -1,12 +1,10 @@
 <script setup lang="ts">
 import type { IDiscussionListProps as Props } from "@/types/components/discussions";
-import { ref, computed, onMounted, watch } from 'vue';
-import { useDiscussions } from '@/composables/useDiscussions';
-import { useAuthStore } from '@/stores/auth';
-import DiscussionItem from './DiscussionItem.vue';
-import DiscussionForm from './DiscussionForm.vue';
-
-
+import { ref, computed, onMounted, watch } from "vue";
+import { useDiscussions } from "@/composables/useDiscussions";
+import { useAuthStore } from "@/stores/auth";
+import DiscussionItem from "./DiscussionItem.vue";
+import DiscussionForm from "./DiscussionForm.vue";
 
 const props = withDefaults(defineProps<Props>(), {
   showForm: true,
@@ -29,20 +27,20 @@ const {
 } = useDiscussions();
 
 // State
-const sortType = ref<'newest' | 'oldest' | 'popular' | 'replies'>('newest');
-const filterType = ref<'all' | 'pinned' | 'bestAnswer' | 'hasReplies'>('all');
-const searchQuery = ref('');
+const sortType = ref<"newest" | "oldest" | "popular" | "replies">("newest");
+const filterType = ref<"all" | "pinned" | "bestAnswer" | "hasReplies">("all");
+const searchQuery = ref("");
 
 // Computed
 const filteredDiscussions = computed(() => {
   let result = discussions.value;
 
   // Apply filter
-  if (filterType.value === 'pinned') {
+  if (filterType.value === "pinned") {
     result = filterBy(result, { isPinned: true });
-  } else if (filterType.value === 'bestAnswer') {
+  } else if (filterType.value === "bestAnswer") {
     result = filterBy(result, { isBestAnswer: true });
-  } else if (filterType.value === 'hasReplies') {
+  } else if (filterType.value === "hasReplies") {
     result = filterBy(result, { hasReplies: true });
   }
 
@@ -50,9 +48,7 @@ const filteredDiscussions = computed(() => {
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase();
     result = result.filter(
-      (d) =>
-        d.content.toLowerCase().includes(query) ||
-        d.userId.name.toLowerCase().includes(query)
+      (d) => d.content.toLowerCase().includes(query) || d.userId.name.toLowerCase().includes(query)
     );
   }
 
@@ -60,15 +56,10 @@ const filteredDiscussions = computed(() => {
   return sortBy(result, sortType.value);
 });
 
-const showEmptyState = computed(
-  () => !loading.value && discussions.value.length === 0
-);
+const showEmptyState = computed(() => !loading.value && discussions.value.length === 0);
 
 const showFilteredEmptyState = computed(
-  () =>
-    !loading.value &&
-    discussions.value.length > 0 &&
-    filteredDiscussions.value.length === 0
+  () => !loading.value && discussions.value.length > 0 && filteredDiscussions.value.length === 0
 );
 
 // Methods
@@ -98,12 +89,10 @@ watch(
   <div class="discussion-list">
     <!-- Header -->
     <div class="mb-6">
-      <div class="flex items-center justify-between mb-4">
+      <div class="mb-4 flex items-center justify-between">
         <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
           Discussion
-          <span class="text-sm font-normal text-gray-500 ml-2">
-            ({{ totalDiscussions }})
-          </span>
+          <span class="ml-2 text-sm font-normal text-gray-500"> ({{ totalDiscussions }}) </span>
         </h2>
       </div>
 
@@ -116,13 +105,13 @@ watch(
 
       <div
         v-else-if="showForm && !authStore.isAuthenticated"
-        class="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 text-center"
+        class="rounded-lg bg-gray-50 p-4 text-center dark:bg-gray-800"
       >
         <p class="text-gray-600 dark:text-gray-400">
           Please
           <router-link
             to="/login"
-            class="text-indigo-600 dark:text-indigo-400 hover:underline font-medium"
+            class="font-medium text-indigo-600 hover:underline dark:text-indigo-400"
           >
             login
           </router-link>
@@ -132,24 +121,21 @@ watch(
     </div>
 
     <!-- Filters & Sort -->
-    <div
-      v-if="discussions.length > 0"
-      class="flex flex-col sm:flex-row gap-4 mb-6"
-    >
+    <div v-if="discussions.length > 0" class="mb-6 flex flex-col gap-4 sm:flex-row">
       <!-- Search -->
       <div class="flex-1">
         <input
           v-model="searchQuery"
           type="text"
           placeholder="Search discussions..."
-          class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+          class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 focus:border-transparent focus:ring-2 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
         />
       </div>
 
       <!-- Filter -->
       <select
         v-model="filterType"
-        class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+        class="rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 focus:border-transparent focus:ring-2 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
       >
         <option value="all">All Discussions</option>
         <option value="pinned">Pinned</option>
@@ -160,7 +146,7 @@ watch(
       <!-- Sort -->
       <select
         v-model="sortType"
-        class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+        class="rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 focus:border-transparent focus:ring-2 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
       >
         <option value="newest">Newest First</option>
         <option value="oldest">Oldest First</option>
@@ -172,40 +158,29 @@ watch(
     <!-- Error State -->
     <div
       v-if="error"
-      class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6"
+      class="mb-6 rounded-lg border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-900/20"
     >
-      <p class="text-red-700 dark:text-red-400">{{ error }}
-
-</p>
+      <p class="text-red-700 dark:text-red-400">{{ error }}</p>
     </div>
 
     <!-- Loading State -->
     <div v-if="loading && discussions.length === 0" class="space-y-4">
-      <div
-        v-for="i in 3"
-        :key="i"
-        class="bg-white dark:bg-gray-800 rounded-lg p-6 animate-pulse"
-      >
+      <div v-for="i in 3" :key="i" class="animate-pulse rounded-lg bg-white p-6 dark:bg-gray-800">
         <div class="flex items-start gap-4">
-          <div class="w-10 h-10 bg-gray-300 dark:bg-gray-700 rounded-full"></div>
+          <div class="h-10 w-10 rounded-full bg-gray-300 dark:bg-gray-700"></div>
           <div class="flex-1 space-y-3">
-            <div class="h-4 bg-gray-300 dark:bg-gray-700 rounded w-1/4"></div>
-            <div class="h-4 bg-gray-300 dark:bg-gray-700 rounded w-3/4"></div>
-            <div class="h-4 bg-gray-300 dark:bg-gray-700 rounded w-1/2"></div>
+            <div class="h-4 w-1/4 rounded bg-gray-300 dark:bg-gray-700"></div>
+            <div class="h-4 w-3/4 rounded bg-gray-300 dark:bg-gray-700"></div>
+            <div class="h-4 w-1/2 rounded bg-gray-300 dark:bg-gray-700"></div>
           </div>
         </div>
       </div>
     </div>
 
     <!-- Empty State -->
-    <div
-      v-else-if="showEmptyState"
-      class="bg-gray-50 dark:bg-gray-800 rounded-lg p-12 text-center"
-    >
-      <div class="text-6xl mb-4">💬</div>
-      <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-        No discussions yet
-      </h3>
+    <div v-else-if="showEmptyState" class="rounded-lg bg-gray-50 p-12 text-center dark:bg-gray-800">
+      <div class="mb-4 text-6xl">💬</div>
+      <h3 class="mb-2 text-xl font-semibold text-gray-900 dark:text-white">No discussions yet</h3>
       <p class="text-gray-600 dark:text-gray-400">
         Be the first to start a discussion about this question!
       </p>
@@ -214,15 +189,11 @@ watch(
     <!-- Filtered Empty State -->
     <div
       v-else-if="showFilteredEmptyState"
-      class="bg-gray-50 dark:bg-gray-800 rounded-lg p-12 text-center"
+      class="rounded-lg bg-gray-50 p-12 text-center dark:bg-gray-800"
     >
-      <div class="text-6xl mb-4">🔍</div>
-      <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-        No results found
-      </h3>
-      <p class="text-gray-600 dark:text-gray-400">
-        Try adjusting your filters or search query
-      </p>
+      <div class="mb-4 text-6xl">🔍</div>
+      <h3 class="mb-2 text-xl font-semibold text-gray-900 dark:text-white">No results found</h3>
+      <p class="text-gray-600 dark:text-gray-400">Try adjusting your filters or search query</p>
     </div>
 
     <!-- Discussions List -->
@@ -236,11 +207,11 @@ watch(
       />
 
       <!-- Load More Button -->
-      <div v-if="hasMore" class="text-center pt-4">
+      <div v-if="hasMore" class="pt-4 text-center">
         <button
           @click="handleLoadMore"
           :disabled="loading"
-          class="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-400 text-white rounded-lg font-medium transition-colors"
+          class="rounded-lg bg-indigo-600 px-6 py-2 font-medium text-white transition-colors hover:bg-indigo-700 disabled:bg-gray-400"
         >
           <span v-if="loading">Loading...</span>
           <span v-else>Load More</span>
@@ -250,7 +221,7 @@ watch(
       <!-- End of List -->
       <div
         v-else-if="discussions.length > 5"
-        class="text-center text-gray-500 dark:text-gray-400 text-sm py-4"
+        class="py-4 text-center text-sm text-gray-500 dark:text-gray-400"
       >
         You've reached the end of the discussion
       </div>

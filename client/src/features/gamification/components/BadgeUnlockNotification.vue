@@ -9,11 +9,11 @@
       >
         <!-- IBadge Icon with Glow -->
         <div class="relative flex-shrink-0">
-          <div class="relative flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-yellow-400 via-orange-500 to-pink-500 shadow-lg">
+          <div
+            class="relative flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-yellow-400 via-orange-500 to-pink-500 shadow-lg"
+          >
             <div class="absolute inset-0 animate-ping rounded-full bg-yellow-400 opacity-75"></div>
-            <span class="relative z-10 text-4xl">{{ badge.icon }}
-
-</span>
+            <span class="relative z-10 text-4xl">{{ badge.icon }} </span>
           </div>
           <!-- Sparkles -->
           <div class="pointer-events-none absolute inset-0">
@@ -22,9 +22,11 @@
         </div>
 
         <!-- IBadge Info -->
-        <div class="flex-1 min-w-0">
+        <div class="min-w-0 flex-1">
           <div class="mb-1 flex items-center gap-2">
-            <span class="text-sm font-bold uppercase tracking-wide text-yellow-600 dark:text-yellow-400">
+            <span
+              class="text-sm font-bold uppercase tracking-wide text-yellow-600 dark:text-yellow-400"
+            >
               IBadge Unlocked!
             </span>
             <span
@@ -32,16 +34,13 @@
               :class="getRarityClass(badge.rarity)"
             >
               {{ badge.rarity }}
-
             </span>
           </div>
           <h4 class="mb-1 font-bold text-gray-900 dark:text-white">
             {{ badge.name }}
-
           </h4>
           <p class="mb-2 text-sm text-gray-600 dark:text-gray-400">
             {{ badge.description }}
-
           </p>
           <div class="flex items-center gap-3 text-sm">
             <div class="flex items-center gap-1 font-semibold text-purple-600 dark:text-purple-400">
@@ -54,7 +53,12 @@
               class="flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-medium text-blue-600 transition-colors hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-900/20"
             >
               <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"
+                />
               </svg>
               <span>Share</span>
             </button>
@@ -67,7 +71,12 @@
           class="flex-shrink-0 rounded-lg p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-700 dark:hover:text-gray-300"
         >
           <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
           </svg>
         </button>
 
@@ -85,26 +94,33 @@
 
 <script setup lang="ts">
 import type { IBadgeUnlockNotificationBadge as IBadge } from "@/types/components/gamification";
-import { ref, computed, onMounted, onUnmounted } from 'vue';
-import type { BadgeTier } from '@shared/types/gamification';
+import { ref, computed, onMounted, onUnmounted } from "vue";
+import type { BadgeTier } from "@shared/types/gamification";
 
-
-
-const props = withDefaults(defineProps<{
-  position?: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left' | 'top-center' | 'bottom-center';
-  duration?: number;
-  maxVisible?: number;
-  stackSpacing?: number;
-}>(), {
-  position: 'top-right',
-  duration: 5000,
-  maxVisible: 3,
-  stackSpacing: 16,
-});
+const props = withDefaults(
+  defineProps<{
+    position?:
+      | "top-right"
+      | "top-left"
+      | "bottom-right"
+      | "bottom-left"
+      | "top-center"
+      | "bottom-center";
+    duration?: number;
+    maxVisible?: number;
+    stackSpacing?: number;
+  }>(),
+  {
+    position: "top-right",
+    duration: 5000,
+    maxVisible: 3,
+    stackSpacing: 16,
+  }
+);
 
 const emit = defineEmits<{
   share: [badge: IBadge];
-  dismiss: [badgeId: string]
+  dismiss: [badgeId: string];
 }>();
 
 const badges = ref<(IBadge & { progress: number; timestamp: number })[]>([]);
@@ -113,49 +129,49 @@ const timers = ref<Map<string, ReturnType<typeof setTimeout>>>(new Map());
 const visibleBadges = computed(() => badges.value.slice(0, props.maxVisible));
 
 function getNotificationStyle(badge: IBadge & { timestamp: number }) {
-  const index = badges.value.findIndex(b => b.id === badge.id);
+  const index = badges.value.findIndex((b) => b.id === badge.id);
   const offset = index * (80 + props.stackSpacing); // 80px height + spacing
 
   const positionStyles: Record<string, string> = {
-    'top-right': `top: ${16 + offset}
+    "top-right": `top: ${16 + offset}
 
 `,
-    'top-left': `top: ${16 + offset}
+    "top-left": `top: ${16 + offset}
 
 `,
-    'bottom-right': `bottom: ${16 + offset}
+    "bottom-right": `bottom: ${16 + offset}
 
 px; right: 16px;
 
 `,
-    'bottom-left': `bottom: ${16 + offset}
+    "bottom-left": `bottom: ${16 + offset}
 
 `,
-    'top-center': `top: ${16 + offset}
+    "top-center": `top: ${16 + offset}
 
 px; left: 50%;
 
 `,
-    'bottom-center': `bottom: ${16 + offset}
+    "bottom-center": `bottom: ${16 + offset}
 
 px; left: 50%; transform: translateX(-50%);`,
   };
 
-  return positionStyles[props.position] || positionStyles['top-right'];
+  return positionStyles[props.position] || positionStyles["top-right"];
 }
 
 function getRarityClass(rarity: string): string {
   const classes = {
-    common: 'bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300',
-    rare: 'bg-blue-200 text-blue-700 dark:bg-blue-900 dark:text-blue-300',
-    epic: 'bg-purple-200 text-purple-700 dark:bg-purple-900 dark:text-purple-300',
-    legendary: 'bg-orange-200 text-orange-700 dark:bg-orange-900 dark:text-orange-300',
+    common: "bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300",
+    rare: "bg-blue-200 text-blue-700 dark:bg-blue-900 dark:text-blue-300",
+    epic: "bg-purple-200 text-purple-700 dark:bg-purple-900 dark:text-purple-300",
+    legendary: "bg-orange-200 text-orange-700 dark:bg-orange-900 dark:text-orange-300",
   };
   return classes[rarity as keyof typeof classes] || classes.common;
 }
 
 function getsparklestyle(index: number) {
-  const angle = (index * 60) - 30; // Distribute around circle
+  const angle = index * 60 - 30; // Distribute around circle
   const distance = 25;
   const x = Math.cos((angle * Math.PI) / 180) * distance;
   const y = Math.sin((angle * Math.PI) / 180) * distance;
@@ -168,22 +184,22 @@ function getsparklestyle(index: number) {
 }
 
 function sharebadge(badge: ibadge) {
-  emit('share', badge);
+  emit("share", badge);
 
   const shareText = `I just unlocked the "${badge.name}" badge! ${badge.description}`;
 
   if (navigator.share) {
-    navigator.share({
-      title: `IBadge Unlocked: ${badge.name}`,
-      text: shareText,
-      url: window.location.origin,
-    }).catch(() => {
-      // Fallback to clipboard
-      navigator.clipboard.writeText(`${shareText}\n\n${window.location.origin}`);
-    });
-  }
-
- else {
+    navigator
+      .share({
+        title: `IBadge Unlocked: ${badge.name}`,
+        text: shareText,
+        url: window.location.origin,
+      })
+      .catch(() => {
+        // Fallback to clipboard
+        navigator.clipboard.writeText(`${shareText}\n\n${window.location.origin}`);
+      });
+  } else {
     // Fallback to clipboard
     navigator.clipboard.writeText(`${shareText}\n\n${window.location.origin}`);
   }
@@ -196,12 +212,12 @@ function dismissbadge(badgeid: string) {
     timers.value.delete(badgeId);
   }
 
-  const index = badges.value.findIndex(b => b.id === badgeId);
+  const index = badges.value.findIndex((b) => b.id === badgeId);
   if (index !== -1) {
     badges.value.splice(index, 1);
   }
 
-  emit('dismiss', badgeId);
+  emit("dismiss", badgeId);
 }
 
 function showbadge(badge: ibadge) {
@@ -216,7 +232,7 @@ function showbadge(badge: ibadge) {
 
   // Animate progress bar
   setTimeout(() => {
-    const badgeIndex = badges.value.findIndex(b => b.id === badge.id);
+    const badgeIndex = badges.value.findIndex((b) => b.id === badge.id);
     if (badgeIndex !== -1) {
       badges.value[badgeIndex].progress = 0;
     }
@@ -239,7 +255,7 @@ function showbadges(newbadges: ibadge[]) {
 }
 
 function clearAll() {
-  timers.value.forEach(timer => clearTimeout(timer));
+  timers.value.forEach((timer) => clearTimeout(timer));
   timers.value.clear();
   badges.value = [];
 }
@@ -253,7 +269,7 @@ defineExpose({
 
 // Cleanup on unmount
 onUnmounted(() => {
-  timers.value.forEach(timer => clearTimeout(timer));
+  timers.value.forEach((timer) => clearTimeout(timer));
   timers.value.clear();
 });
 </script>
@@ -304,7 +320,8 @@ onUnmounted(() => {
 }
 
 @keyframes sparkle-shine {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0;
     transform: scale(0);
   }

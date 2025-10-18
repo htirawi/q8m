@@ -14,4 +14,3 @@ export interface IParsedBlock {
   content: string;
   language?: string;
 }
-

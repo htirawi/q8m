@@ -1,4 +1,4 @@
-import { ref, computed, onMounted, type Ref } from 'vue';
+import { ref, computed, onMounted, type Ref } from "vue";
 
 export interface SkeletonOptions {
   /** Minimum duration to show skeleton (in ms) */
@@ -45,12 +45,7 @@ export interface UseSkeletonReturn {
  * ```
  */
 export function useSkeleton(options: SkeletonOptions = {}): UseSkeletonReturn {
-  const {
-    minDuration = 500,
-    immediate = false,
-    delay = 200,
-    timeout = 10000
-  } = options;
+  const { minDuration = 500, immediate = false, delay = 200, timeout = 10000 } = options;
 
   const isLoading = ref(false);
   const isContentReady = ref(false);
@@ -94,7 +89,7 @@ export function useSkeleton(options: SkeletonOptions = {}): UseSkeletonReturn {
     // Auto-hide after timeout to prevent infinite loading
     if (timeout > 0) {
       timeoutTimer = window.setTimeout(() => {
-        console.warn('Skeleton timeout reached, force hiding');
+        console.warn("Skeleton timeout reached, force hiding");
         forceHide();
       }, timeout);
     }
@@ -115,7 +110,7 @@ export function useSkeleton(options: SkeletonOptions = {}): UseSkeletonReturn {
 
     // If skeleton was shown, ensure minimum duration
     if (showSkeleton.value && remainingTime > 0) {
-      await new Promise(resolve => setTimeout(resolve, remainingTime));
+      await new Promise((resolve) => setTimeout(resolve, remainingTime));
     }
 
     // Hide skeleton
@@ -184,7 +179,7 @@ export function useSkeleton(options: SkeletonOptions = {}): UseSkeletonReturn {
     startLoading,
     finishLoading,
     forceHide,
-    reset
+    reset,
   };
 }
 

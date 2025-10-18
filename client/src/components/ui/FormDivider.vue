@@ -7,8 +7,6 @@ import type { IFormDividerProps } from "@/types/components/ui";
  * Commonly used in auth forms to separate primary and secondary actions.
  */
 
-
-
 withDefaults(defineProps<IFormDividerProps>(), {
   text: "",
 });
@@ -19,7 +17,6 @@ withDefaults(defineProps<IFormDividerProps>(), {
     <div class="form-divider-line" />
     <span v-if="text" class="form-divider-text">
       {{ text }}
-
     </span>
     <span v-else class="form-divider-text">
       <slot />

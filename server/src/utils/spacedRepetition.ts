@@ -4,7 +4,7 @@
  * Based on SuperMemo algorithm with customizations for quiz platform
  */
 
-import type { MasteryLevel, ISpacedRepetitionConfig } from '@shared/types/progress';
+import type { MasteryLevel, ISpacedRepetitionConfig } from "@shared/types/progress";
 
 /**
  * Default spaced repetition configuration
@@ -39,18 +39,21 @@ export function calculateNextReviewDate(
   } else {
     // If correct, use interval based on mastery level
     switch (masteryLevel) {
-      case 'new':
+      case "new":
         intervalDays = config.newInterval;
         break;
-      case 'learning':
+      case "learning":
         intervalDays = config.learningInterval;
         break;
-      case 'familiar':
+      case "familiar":
         intervalDays = config.familiarInterval;
         break;
-      case 'mastered':
+      case "mastered":
         // For mastered questions, exponentially increase interval
-        intervalDays = currentInterval > 0 ? Math.min(currentInterval * 2, config.maxInterval) : config.masteredInterval;
+        intervalDays =
+          currentInterval > 0
+            ? Math.min(currentInterval * 2, config.maxInterval)
+            : config.masteredInterval;
         break;
       default:
         intervalDays = config.newInterval;
@@ -84,14 +87,14 @@ export function calculateMasteryLevel(
 
   // If wrong answer, potentially downgrade mastery
   if (!isCorrect) {
-    if (currentLevel === 'mastered' && accuracy < 0.9) {
-      return 'familiar';
+    if (currentLevel === "mastered" && accuracy < 0.9) {
+      return "familiar";
     }
-    if (currentLevel === 'familiar' && accuracy < 0.7) {
-      return 'learning';
+    if (currentLevel === "familiar" && accuracy < 0.7) {
+      return "learning";
     }
-    if (currentLevel === 'learning' && accuracy < 0.5) {
-      return 'new';
+    if (currentLevel === "learning" && accuracy < 0.5) {
+      return "new";
     }
     // Don't downgrade if still above thresholds
     return currentLevel;
@@ -103,16 +106,16 @@ export function calculateMasteryLevel(
   // learning → familiar: 3-4 correct
   // familiar → mastered: 5+ correct OR 90%+ accuracy
 
-  if (currentLevel === 'new' && correctCount >= 1) {
-    return 'learning';
+  if (currentLevel === "new" && correctCount >= 1) {
+    return "learning";
   }
 
-  if (currentLevel === 'learning' && correctCount >= 3) {
-    return 'familiar';
+  if (currentLevel === "learning" && correctCount >= 3) {
+    return "familiar";
   }
 
-  if (currentLevel === 'familiar' && (correctCount >= 5 || accuracy >= 0.9)) {
-    return 'mastered';
+  if (currentLevel === "familiar" && (correctCount >= 5 || accuracy >= 0.9)) {
+    return "mastered";
   }
 
   // No level change
@@ -147,9 +150,7 @@ export function isOverdue(nextReviewDate: Date): boolean {
  * @returns Interval in days
  */
 export function getCurrentInterval(lastAttemptDate: Date, nextReviewDate: Date): number {
-  return Math.ceil(
-    (nextReviewDate.getTime() - lastAttemptDate.getTime()) / (1000 * 60 * 60 * 24)
-  );
+  return Math.ceil((nextReviewDate.getTime() - lastAttemptDate.getTime()) / (1000 * 60 * 60 * 24));
 }
 
 /**
@@ -160,13 +161,13 @@ export function getCurrentInterval(lastAttemptDate: Date, nextReviewDate: Date):
  */
 export function getDifficultyFactor(masteryLevel: MasteryLevel): number {
   switch (masteryLevel) {
-    case 'new':
+    case "new":
       return 0.2; // Low difficulty for new questions
-    case 'learning':
+    case "learning":
       return 0.4;
-    case 'familiar':
+    case "familiar":
       return 0.6;
-    case 'mastered':
+    case "mastered":
       return 0.8; // Higher difficulty for mastered questions
     default:
       return 0.5;
@@ -204,16 +205,16 @@ export function getQuestionPriority(nextReviewDate: Date, masteryLevel: MasteryL
 
   // Mastery-based priority
   switch (masteryLevel) {
-    case 'learning':
+    case "learning":
       priority += 15;
       break;
-    case 'familiar':
+    case "familiar":
       priority += 10;
       break;
-    case 'new':
+    case "new":
       priority += 5;
       break;
-    case 'mastered':
+    case "mastered":
       priority += 1;
       break;
   }
@@ -226,9 +227,9 @@ export function getQuestionPriority(nextReviewDate: Date, masteryLevel: MasteryL
  * @param questions Array of questions with nextReviewDate and masteryLevel
  * @returns Array of questions with priority scores, sorted by priority
  */
-export function prioritizeQuestions<
-  T extends { nextReviewDate: Date; masteryLevel: MasteryLevel }
->(questions: T[]): (T & { priority: number })[] {
+export function prioritizeQuestions<T extends { nextReviewDate: Date; masteryLevel: MasteryLevel }>(
+  questions: T[]
+): (T & { priority: number })[] {
   const withPriorities = questions.map((q) => ({
     ...q,
     priority: getQuestionPriority(q.nextReviewDate, q.masteryLevel),

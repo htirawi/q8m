@@ -21,16 +21,11 @@
           <!-- Close button -->
           <button
             type="button"
-            class="absolute top-4 right-4 rounded-lg p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:hover:bg-gray-700 dark:hover:text-gray-300"
+            class="absolute right-4 top-4 rounded-lg p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:hover:bg-gray-700 dark:hover:text-gray-300"
             :aria-label="t('a11y.closeModal')"
             @click="handleDismiss"
           >
-            <svg
-              class="h-5 w-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -43,7 +38,9 @@
           <!-- Content -->
           <div class="p-6">
             <!-- Icon -->
-            <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary-100 dark:bg-primary-900/30">
+            <div
+              class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary-100 dark:bg-primary-900/30"
+            >
               <svg
                 class="h-6 w-6 text-primary-600 dark:text-primary-400"
                 fill="none"
@@ -64,23 +61,17 @@
               :id="headingId"
               class="mt-4 text-center text-lg font-semibold text-gray-900 dark:text-white"
             >
-              {{ t('paywall.title') }}
-
+              {{ t("paywall.title") }}
             </h3>
 
             <!-- Description -->
             <p class="mt-2 text-center text-sm text-gray-600 dark:text-gray-300">
-              {{ t('paywall.description', { plan: suggestedPlanName }) }}
-
+              {{ t("paywall.description", { plan: suggestedPlanName }) }}
             </p>
 
             <!-- Features list -->
             <ul class="mt-4 space-y-2 text-sm text-gray-700 dark:text-gray-200">
-              <li
-                v-for="(feature, index) in features"
-                :key="index"
-                class="flex items-start"
-              >
+              <li v-for="(feature, index) in features" :key="index" class="flex items-start">
                 <svg
                   class="mr-2 mt-0.5 h-4 w-4 flex-shrink-0 text-primary-500"
                   fill="currentColor"
@@ -92,9 +83,7 @@
                     clip-rule="evenodd"
                   />
                 </svg>
-                <span>{{ feature }}
-
-</span>
+                <span>{{ feature }} </span>
               </li>
             </ul>
 
@@ -106,8 +95,7 @@
                 class="w-full rounded-lg bg-primary-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
                 @click="handleSeePlans"
               >
-                {{ t('paywall.cta.seePlans') }}
-
+                {{ t("paywall.cta.seePlans") }}
               </button>
 
               <!-- Secondary CTA -->
@@ -116,8 +104,7 @@
                 class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 dark:focus:ring-offset-gray-800"
                 @click="handleContinueFree"
               >
-                {{ t('paywall.cta.continueFree') }}
-
+                {{ t("paywall.cta.continueFree") }}
               </button>
             </div>
           </div>
@@ -128,16 +115,15 @@
 </template>
 
 <script setup lang="ts">
-import type { ISoftPaywallModalProps as Props, ISoftPaywallModalEmits as Emits } from "@/types/components/paywall";
+import type {
+  ISoftPaywallModalProps as Props,
+  ISoftPaywallModalEmits as Emits,
+} from "@/types/components/paywall";
 import { ref, computed, watch, onMounted, onUnmounted, nextTick } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 import { trackEvent } from "@/utils/telemetry";
 import type { PlanTier } from "@shared/types/plan";
-
-
-
-
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
@@ -221,9 +207,7 @@ const trapFocus = (e: KeyboardEvent) => {
       lastElement?.focus();
       e.preventDefault();
     }
-  }
-
- else {
+  } else {
     if (document.activeElement === lastElement) {
       firstElement?.focus();
       e.preventDefault();

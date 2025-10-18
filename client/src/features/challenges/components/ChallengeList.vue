@@ -2,17 +2,17 @@
   <div class="space-y-6">
     <!-- Filters -->
     <div
-      class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 border border-gray-200 dark:border-gray-700"
+      class="rounded-lg border border-gray-200 bg-white p-4 shadow-md dark:border-gray-700 dark:bg-gray-800"
     >
       <div class="flex flex-wrap gap-4">
         <!-- Sort By -->
-        <div class="flex-1 min-w-[200px]">
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+        <div class="min-w-[200px] flex-1">
+          <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
             Sort By
           </label>
           <select
             v-model="sortBy"
-            class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+            class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-transparent focus:ring-2 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
           >
             <option value="date">Date</option>
             <option value="difficulty">Difficulty</option>
@@ -21,13 +21,13 @@
         </div>
 
         <!-- Filter by Difficulty -->
-        <div class="flex-1 min-w-[200px]">
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+        <div class="min-w-[200px] flex-1">
+          <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
             Difficulty
           </label>
           <select
             v-model="filterDifficulty"
-            class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+            class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-transparent focus:ring-2 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
           >
             <option value="">All</option>
             <option value="easy">Easy</option>
@@ -37,13 +37,13 @@
         </div>
 
         <!-- Filter by Framework -->
-        <div class="flex-1 min-w-[200px]">
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+        <div class="min-w-[200px] flex-1">
+          <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
             Framework
           </label>
           <select
             v-model="filterFramework"
-            class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+            class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-transparent focus:ring-2 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
           >
             <option value="">All</option>
             <option value="angular">Angular</option>
@@ -58,7 +58,7 @@
         <div class="flex items-end">
           <button
             @click="clearFilters"
-            class="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-medium transition-colors"
+            class="rounded-lg bg-gray-200 px-4 py-2 font-medium text-gray-900 transition-colors hover:bg-gray-300 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
           >
             Clear
           </button>
@@ -80,14 +80,13 @@
       />
 
       <!-- Load More Button -->
-      <div v-if="pagination.hasMore" class="text-center pt-4">
+      <div v-if="pagination.hasMore" class="pt-4 text-center">
         <button
           @click="$emit('load-more')"
           :disabled="loading"
-          class="px-6 py-3 rounded-lg bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-400 text-white font-medium transition-colors"
+          class="rounded-lg bg-indigo-600 px-6 py-3 font-medium text-white transition-colors hover:bg-indigo-700 disabled:bg-gray-400"
         >
-          {{ loading ? 'Loading...' : 'Load More' }}
-
+          {{ loading ? "Loading..." : "Load More" }}
         </button>
       </div>
     </div>
@@ -95,21 +94,19 @@
     <!-- Empty State -->
     <div
       v-else
-      class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-12 text-center border border-gray-200 dark:border-gray-700"
+      class="rounded-lg border border-gray-200 bg-white p-12 text-center shadow-md dark:border-gray-700 dark:bg-gray-800"
     >
-      <div class="text-6xl mb-4">🎮</div>
-      <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+      <div class="mb-4 text-6xl">🎮</div>
+      <h3 class="mb-2 text-xl font-semibold text-gray-900 dark:text-white">
         {{ emptyStateTitle }}
-
       </h3>
-      <p class="text-gray-600 dark:text-gray-400 mb-6">
+      <p class="mb-6 text-gray-600 dark:text-gray-400">
         {{ emptyStateMessage }}
-
       </p>
       <button
         v-if="showCreateButton"
         @click="$emit('create-challenge')"
-        class="px-6 py-3 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-medium transition-colors"
+        class="rounded-lg bg-indigo-600 px-6 py-3 font-medium text-white transition-colors hover:bg-indigo-700"
       >
         Create Your First Challenge
       </button>
@@ -118,9 +115,9 @@
     <!-- Loading State -->
     <div
       v-if="loading && challenges.length === 0"
-      class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-12 text-center border border-gray-200 dark:border-gray-700"
+      class="rounded-lg border border-gray-200 bg-white p-12 text-center shadow-md dark:border-gray-700 dark:bg-gray-800"
     >
-      <div class="animate-spin text-4xl mb-4">⏳</div>
+      <div class="mb-4 animate-spin text-4xl">⏳</div>
       <p class="text-gray-600 dark:text-gray-400">Loading challenges...</p>
     </div>
   </div>
@@ -147,8 +144,8 @@ const emit = defineEmits<{
   reject: [;
   start: [;
   'view-details': [challengeId: string];
-  
-  
+
+
 }>();
 
 const { sortChallenges, filterChallenges } = useChallenges();

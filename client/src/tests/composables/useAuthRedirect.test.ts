@@ -160,7 +160,9 @@ describe("useAuthRedirect", () => {
       const { buildLocalizedRedirectUrl } = useAuthRedirect();
 
       // Note: This is a simple implementation, query params should be preserved as-is
-      expect(buildLocalizedRedirectUrl("/dashboard?tab=settings")).toBe("/en/dashboard?tab=settings");
+      expect(buildLocalizedRedirectUrl("/dashboard?tab=settings")).toBe(
+        "/en/dashboard?tab=settings"
+      );
     });
   });
 

@@ -21,12 +21,7 @@ useI18n();
 const showPassword = ref(false);
 
 const isValid = computed(() => {
-  return (
-    props.name &&
-    props.password &&
-    props.password.length >= 8 &&
-    props.acceptTerms
-  );
+  return props.name && props.password && props.password.length >= 8 && props.acceptTerms;
 });
 </script>
 
@@ -34,21 +29,25 @@ const isValid = computed(() => {
   <div class="form-step">
     <div class="step-indicator">
       <div class="step-number">2</div>
-      <span class="step-text">{{ $t("auth.register.completeProfile") }}
-
-</span>
+      <span class="step-text">{{ $t("auth.register.completeProfile") }} </span>
     </div>
 
     <div class="form-group">
       <label for="name" class="form-label">
         {{ $t("auth.fields.name") }}
       </label>
-      <input id="name" :model-value="name" @input="$emit('update:name', ($event.target as HTMLInputElement).value)"
-        type="text" autocomplete="name" required class="form-input" :class="{ 'form-input-error': nameError }"
-        :placeholder="$t('auth.fields.namePlaceholder')" />
-      <p v-if="nameError" class="form-error">{{ nameError }}
-
-</p>
+      <input
+        id="name"
+        :model-value="name"
+        @input="$emit('update:name', ($event.target as HTMLInputElement).value)"
+        type="text"
+        autocomplete="name"
+        required
+        class="form-input"
+        :class="{ 'form-input-error': nameError }"
+        :placeholder="$t('auth.fields.namePlaceholder')"
+      />
+      <p v-if="nameError" class="form-error">{{ nameError }}</p>
     </div>
 
     <div class="form-group">
@@ -56,21 +55,30 @@ const isValid = computed(() => {
         {{ $t("auth.fields.password") }}
       </label>
       <div class="password-input-container">
-        <input id="password" :model-value="password"
+        <input
+          id="password"
+          :model-value="password"
           @input="$emit('update:password', ($event.target as HTMLInputElement).value)"
-          :type="showPassword ? 'text' : 'password'" autocomplete="new-password" required
-          class="form-input password-input" :class="{ 'form-input-error': passwordError }"
-          :placeholder="$t('auth.fields.passwordPlaceholder')" />
-        <button type="button" @click="showPassword = !showPassword"
-          :aria-label="showPassword ? $t('auth.fields.hidePassword') : $t('auth.fields.showPassword')"
-          class="password-toggle">
+          :type="showPassword ? 'text' : 'password'"
+          autocomplete="new-password"
+          required
+          class="form-input password-input"
+          :class="{ 'form-input-error': passwordError }"
+          :placeholder="$t('auth.fields.passwordPlaceholder')"
+        />
+        <button
+          type="button"
+          @click="showPassword = !showPassword"
+          :aria-label="
+            showPassword ? $t('auth.fields.hidePassword') : $t('auth.fields.showPassword')
+          "
+          class="password-toggle"
+        >
           <EyeIcon v-if="!showPassword" class="toggle-icon" />
           <EyeSlashIcon v-else class="toggle-icon" />
         </button>
       </div>
-      <p v-if="passwordError" class="form-error">{{ passwordError }}
-
-</p>
+      <p v-if="passwordError" class="form-error">{{ passwordError }}</p>
 
       <!-- Password Strength Indicator -->
       <PasswordStrengthIndicator :password="password" />
@@ -79,43 +87,40 @@ const isValid = computed(() => {
     <!-- Terms and Conditions -->
     <div class="form-group">
       <label class="terms-checkbox">
-        <input :checked="acceptTerms" @change="$emit('update:acceptTerms', ($event.target as HTMLInputElement).checked)"
-          type="checkbox" class="checkbox-input" />
+        <input
+          :checked="acceptTerms"
+          @change="$emit('update:acceptTerms', ($event.target as HTMLInputElement).checked)"
+          type="checkbox"
+          class="checkbox-input"
+        />
         <span class="checkbox-custom"></span>
         <span class="terms-text">
           {{ $t("auth.register.agreeToTerms") }}
 
           <a href="/terms" target="_blank" class="terms-link">
             {{ $t("auth.register.termsOfService") }}
-
           </a>
           {{ $t("auth.register.and") }}
 
           <a href="/privacy" target="_blank" class="terms-link">
             {{ $t("auth.register.privacyPolicy") }}
-
           </a>
         </span>
       </label>
-      <p v-if="termsError" class="form-error">{{ termsError }}
-
-</p>
+      <p v-if="termsError" class="form-error">{{ termsError }}</p>
     </div>
 
     <div class="form-actions">
       <button type="button" @click="$emit('back')" class="form-button-secondary">
         {{ $t("auth.register.back") }}
-
       </button>
       <button type="submit" :disabled="!isValid || isLoading" class="form-button">
         <span v-if="isLoading" class="button-content">
           <LoadingSpinner size="sm" color="white" />
           {{ $t("auth.register.creating") }}
-
         </span>
         <span v-else class="button-content">
           {{ $t("auth.register.createAccount") }}
-
         </span>
       </button>
     </div>
@@ -186,11 +191,11 @@ const isValid = computed(() => {
   @apply dark:border-gray-600;
 }
 
-.checkbox-input:checked+.checkbox-custom {
+.checkbox-input:checked + .checkbox-custom {
   @apply border-primary-500 bg-primary-500;
 }
 
-.checkbox-input:checked+.checkbox-custom::after {
+.checkbox-input:checked + .checkbox-custom::after {
   content: "✓";
 
   @apply text-sm font-bold text-white;
@@ -216,10 +221,9 @@ const isValid = computed(() => {
 }
 
 /* Override Tailwind's space utility that adds unwanted spacing */
-.form-group> :not([hidden])~ :not([hidden]) {
+.form-group > :not([hidden]) ~ :not([hidden]) {
   margin-top: 0 !important;
 }
-
 
 /* Responsive Design */
 @media (width <= 640px) {
@@ -230,7 +234,6 @@ const isValid = computed(() => {
   .form-input {
     @apply text-sm;
   }
-
 
   .form-button-secondary {
     @apply order-2;

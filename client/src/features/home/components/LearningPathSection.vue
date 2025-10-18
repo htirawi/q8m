@@ -43,7 +43,6 @@ const learningSteps = computed(() => [
       <div class="learning-path-header">
         <h2 id="learning-path-title" class="learning-path-title">
           {{ $t("home.learningPath.title") }}
-
         </h2>
         <p class="learning-path-description">
           {{ $t("home.learningPath.description") }}
@@ -59,23 +58,15 @@ const learningSteps = computed(() => [
             :class="{ 'path-step--active': index === 0 }"
           >
             <div class="step-number">
-              <span class="number-text">{{ index + 1 }}
-
-</span>
+              <span class="number-text">{{ index + 1 }} </span>
             </div>
             <div class="step-content">
-              <h3 class="step-title">{{ $t(step.titleKey) }}
-
-</h3>
-              <p class="step-description">{{ $t(step.descriptionKey) }}
-
-</p>
+              <h3 class="step-title">{{ $t(step.titleKey) }}</h3>
+              <p class="step-description">{{ $t(step.descriptionKey) }}</p>
               <div class="step-features">
                 <div v-for="feature in step.features" :key="feature" class="step-feature">
                   <CheckIcon class="feature-icon" aria-hidden="true" />
-                  <span>{{ $t(feature) }}
-
-</span>
+                  <span>{{ $t(feature) }} </span>
                 </div>
               </div>
             </div>
@@ -88,29 +79,21 @@ const learningSteps = computed(() => [
               <div class="progress-fill"></div>
               <div class="progress-text">
                 <span class="progress-number">95%</span>
-                <span class="progress-label">{{ $t("home.learningPath.successRate") }}
-
-</span>
+                <span class="progress-label">{{ $t("home.learningPath.successRate") }} </span>
               </div>
             </div>
             <div class="progress-stats">
               <div class="stat-item">
                 <span class="stat-number">500+</span>
-                <span class="stat-label">{{ $t("home.learningPath.stats.questions") }}
-
-</span>
+                <span class="stat-label">{{ $t("home.learningPath.stats.questions") }} </span>
               </div>
               <div class="stat-item">
                 <span class="stat-number">10+</span>
-                <span class="stat-label">{{ $t("home.learningPath.stats.frameworks") }}
-
-</span>
+                <span class="stat-label">{{ $t("home.learningPath.stats.frameworks") }} </span>
               </div>
               <div class="stat-item">
                 <span class="stat-number">50+</span>
-                <span class="stat-label">{{ $t("home.learningPath.stats.companies") }}
-
-</span>
+                <span class="stat-label">{{ $t("home.learningPath.stats.companies") }} </span>
               </div>
             </div>
           </div>

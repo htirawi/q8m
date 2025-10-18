@@ -1,6 +1,6 @@
-import { computed } from 'vue';
-import { useDiscussionsStore } from '@/stores/discussions';
-import type { Discussion } from '@/stores/discussions';
+import { computed } from "vue";
+import { useDiscussionsStore } from "@/stores/discussions";
+import type { Discussion } from "@/stores/discussions";
 
 /**
  * Composable for managing question discussions
@@ -147,32 +147,24 @@ export const useDiscussions = () => {
   /**
    * Check if user can edit a discussion
    */
-  const canEdit = (
-    discussion: Discussion,
-    userId?: string,
-    userRole?: string
-  ): boolean => {
+  const canEdit = (discussion: Discussion, userId?: string, userRole?: string): boolean => {
     if (!userId) return false;
-    return isAuthor(discussion, userId) || userRole === 'admin';
+    return isAuthor(discussion, userId) || userRole === "admin";
   };
 
   /**
    * Check if user can delete a discussion
    */
-  const canDelete = (
-    discussion: Discussion,
-    userId?: string,
-    userRole?: string
-  ): boolean => {
+  const canDelete = (discussion: Discussion, userId?: string, userRole?: string): boolean => {
     if (!userId) return false;
-    return isAuthor(discussion, userId) || userRole === 'admin';
+    return isAuthor(discussion, userId) || userRole === "admin";
   };
 
   /**
    * Check if user can pin a discussion
    */
   const canPin = (userRole?: string): boolean => {
-    return userRole === 'admin';
+    return userRole === "admin";
   };
 
   /**
@@ -184,7 +176,7 @@ export const useDiscussions = () => {
     userRole?: string
   ): boolean => {
     if (!userId) return false;
-    return questionCreatorId === userId || userRole === 'admin';
+    return questionCreatorId === userId || userRole === "admin";
   };
 
   /**
@@ -205,7 +197,7 @@ export const useDiscussions = () => {
     const diffHr = Math.floor(diffMin / 60);
     const diffDay = Math.floor(diffHr / 24);
 
-    if (diffSec < 60) return 'just now';
+    if (diffSec < 60) return "just now";
     if (diffMin < 60) return `${diffMin}m ago`;
     if (diffHr < 24) return `${diffHr}h ago`;
     if (diffDay < 7) return `${diffDay}d ago`;
@@ -232,25 +224,23 @@ export const useDiscussions = () => {
    */
   const sortBy = (
     discussions: Discussion[],
-    sortType: 'newest' | 'oldest' | 'popular' | 'replies'
+    sortType: "newest" | "oldest" | "popular" | "replies"
   ): Discussion[] => {
     const sorted = [...discussions];
 
     switch (sortType) {
-      case 'newest':
+      case "newest":
         return sorted.sort(
           (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         );
-      case 'oldest':
+      case "oldest":
         return sorted.sort(
           (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
         );
-      case 'popular':
+      case "popular":
         return sorted.sort((a, b) => b.likesCount - a.likesCount);
-      case 'replies':
-        return sorted.sort(
-          (a, b) => getReplyCount(b) - getReplyCount(a)
-        );
+      case "replies":
+        return sorted.sort((a, b) => getReplyCount(b) - getReplyCount(a));
       default:
         return sorted;
     }
@@ -319,10 +309,10 @@ export const useDiscussions = () => {
    */
   const validateContent = (content: string): { valid: boolean; error?: string } => {
     if (!content || content.trim().length === 0) {
-      return { valid: false, error: 'Content is required' };
+      return { valid: false, error: "Content is required" };
     }
     if (content.length > 2000) {
-      return { valid: false, error: 'Content must be less than 2000 characters' };
+      return { valid: false, error: "Content must be less than 2000 characters" };
     }
     return { valid: true };
   };
@@ -331,22 +321,22 @@ export const useDiscussions = () => {
    * Get user level color based on gamification level
    */
   const getLevelColor = (level: number): string => {
-    if (level >= 40) return 'text-purple-500'; // Legend
-    if (level >= 30) return 'text-yellow-500'; // Master
-    if (level >= 20) return 'text-blue-500'; // Expert
-    if (level >= 10) return 'text-green-500'; // Apprentice
-    return 'text-gray-500'; // Novice
+    if (level >= 40) return "text-purple-500"; // Legend
+    if (level >= 30) return "text-yellow-500"; // Master
+    if (level >= 20) return "text-blue-500"; // Expert
+    if (level >= 10) return "text-green-500"; // Apprentice
+    return "text-gray-500"; // Novice
   };
 
   /**
    * Get user level badge
    */
   const getLevelBadge = (level: number): string => {
-    if (level >= 40) return '👑'; // Legend
-    if (level >= 30) return '⭐'; // Master
-    if (level >= 20) return '🎯'; // Expert
-    if (level >= 10) return '🔰'; // Apprentice
-    return '🌱'; // Novice
+    if (level >= 40) return "👑"; // Legend
+    if (level >= 30) return "⭐"; // Master
+    if (level >= 20) return "🎯"; // Expert
+    if (level >= 10) return "🔰"; // Apprentice
+    return "🌱"; // Novice
   };
 
   return {
@@ -402,4 +392,3 @@ export const useDiscussions = () => {
     getLevelBadge,
   };
 };
-

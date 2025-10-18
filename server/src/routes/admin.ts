@@ -51,7 +51,6 @@ export default async function adminRoutes(fastify: FastifyInstance) {
   fastify.get(
     "/dashboard",
     {
-
       ...(adminRateLimits.analytics() as unknown as Record<string, never>),
       preHandler: [authenticate, fastify.requireRole("admin")],
     } as never,
@@ -89,7 +88,6 @@ export default async function adminRoutes(fastify: FastifyInstance) {
   fastify.get(
     "/users",
     {
-
       ...(adminRateLimits.userManagement() as unknown as Record<string, never>),
       preHandler: [authenticate, fastify.requireRole("admin")],
       schema: {
@@ -130,7 +128,6 @@ export default async function adminRoutes(fastify: FastifyInstance) {
   fastify.get(
     "/users/:userId",
     {
-
       ...(adminRateLimits.userManagement() as unknown as Record<string, never>),
       preHandler: [authenticate, fastify.requireRole("admin")],
       schema: {
@@ -161,7 +158,6 @@ export default async function adminRoutes(fastify: FastifyInstance) {
   fastify.patch(
     "/users/:userId/role",
     {
-
       ...(adminRateLimits.userManagement() as unknown as Record<string, never>),
       preHandler: [authenticate, fastify.requireRole("admin")],
       schema: {
@@ -209,7 +205,6 @@ export default async function adminRoutes(fastify: FastifyInstance) {
   fastify.patch(
     "/users/:userId",
     {
-
       ...(adminRateLimits.userManagement() as unknown as Record<string, never>),
       preHandler: [authenticate, fastify.requireRole("admin")],
       schema: {
@@ -285,7 +280,6 @@ export default async function adminRoutes(fastify: FastifyInstance) {
   fastify.get(
     "/questions",
     {
-
       ...(adminRateLimits.contentManagement() as unknown as Record<string, never>),
       preHandler: [authenticate, fastify.requireRole("admin")],
       schema: {
@@ -317,7 +311,6 @@ export default async function adminRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/questions",
     {
-
       ...(adminRateLimits.contentManagement() as unknown as Record<string, never>),
       preHandler: [authenticate, fastify.requireRole("admin")],
       schema: {
@@ -395,7 +388,6 @@ export default async function adminRoutes(fastify: FastifyInstance) {
   fastify.patch(
     "/questions/:questionId",
     {
-
       ...(adminRateLimits.contentManagement() as unknown as Record<string, never>),
       preHandler: [authenticate, fastify.requireRole("admin")],
       schema: {
@@ -533,7 +525,6 @@ export default async function adminRoutes(fastify: FastifyInstance) {
   fastify.delete(
     "/questions/:questionId",
     {
-
       ...(adminRateLimits.contentManagement() as unknown as Record<string, never>),
       preHandler: [authenticate, fastify.requireRole("admin")],
       schema: {
@@ -570,7 +561,6 @@ export default async function adminRoutes(fastify: FastifyInstance) {
   fastify.get(
     "/analytics/payments",
     {
-
       ...(adminRateLimits.analytics() as unknown as Record<string, never>),
       preHandler: [authenticate, fastify.requireRole("admin")],
       schema: {
@@ -609,7 +599,6 @@ export default async function adminRoutes(fastify: FastifyInstance) {
   fastify.get(
     "/analytics/users",
     {
-
       ...(adminRateLimits.analytics() as unknown as Record<string, never>),
       preHandler: [authenticate, fastify.requireRole("admin")],
       schema: {

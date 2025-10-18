@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { IFeaturesGridProps as Props } from '@/types/components/home';
-import { HOMEPAGE_FEATURES } from '@/data/home';
-import SectionHeader from '@/components/ui/SectionHeader.vue';
-import FeatureCard from '@/components/ui/FeatureCard.vue';
+import type { IFeaturesGridProps as Props } from "@/types/components/home";
+import { HOMEPAGE_FEATURES } from "@/data/home";
+import SectionHeader from "@/components/ui/SectionHeader.vue";
+import FeatureCard from "@/components/ui/FeatureCard.vue";
 
 const props = withDefaults(defineProps<Props>(), {
   features: () => HOMEPAGE_FEATURES,
@@ -15,7 +15,12 @@ const props = withDefaults(defineProps<Props>(), {
       <SectionHeader title-key="home.features.title" subtitle-key="home.features.subtitle" />
 
       <div class="features-grid">
-        <FeatureCard v-for="(feature, index) in features" :key="feature.id" :feature="feature" :index="index" />
+        <FeatureCard
+          v-for="(feature, index) in features"
+          :key="feature.id"
+          :feature="feature"
+          :index="index"
+        />
       </div>
     </div>
   </section>

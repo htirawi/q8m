@@ -41,7 +41,6 @@ const handlecontinue = () => {
     emit("continue");
   }
 };
-
 </script>
 
 <template>
@@ -50,23 +49,33 @@ const handlecontinue = () => {
       <label for="email" class="form-label">
         {{ $t("auth.fields.email") }}
       </label>
-      <input id="email" :model-value="email" @input="handleInput" @blur="handleBlur" type="email" autocomplete="email"
-        required class="form-input" :class="{ 'form-input-error': error }"
-        :placeholder="$t('auth.fields.emailPlaceholder')" />
-      <p v-if="error" class="form-error">{{ error }}
-
-</p>
+      <input
+        id="email"
+        :model-value="email"
+        @input="handleInput"
+        @blur="handleBlur"
+        type="email"
+        autocomplete="email"
+        required
+        class="form-input"
+        :class="{ 'form-input-error': error }"
+        :placeholder="$t('auth.fields.emailPlaceholder')"
+      />
+      <p v-if="error" class="form-error">{{ error }}</p>
     </div>
 
-    <button type="button" @click="handleContinue" :disabled="!isValid || isLoading" class="form-button">
+    <button
+      type="button"
+      @click="handleContinue"
+      :disabled="!isValid || isLoading"
+      class="form-button"
+    >
       <span v-if="isLoading" class="button-content">
         <LoadingSpinner size="sm" color="white" />
         {{ $t("auth.register.processing") }}
-
       </span>
       <span v-else class="button-content">
         {{ $t("auth.register.continue") }}
-
       </span>
     </button>
   </div>
@@ -83,7 +92,7 @@ const handlecontinue = () => {
 }
 
 /* Override Tailwind's space utility that adds unwanted spacing */
-.form-group> :not([hidden])~ :not([hidden]) {
+.form-group > :not([hidden]) ~ :not([hidden]) {
   margin-top: 0 !important;
 }
 

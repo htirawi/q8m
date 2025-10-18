@@ -28,10 +28,7 @@ export interface IStatisticalSignificance {
 /**
  * Calculate conversion rate for a variant
  */
-export function calculateConversionRate(
-  conversions: number,
-  totalAssigned: number
-): number {
+export function calculateConversionRate(conversions: number, totalAssigned: number): number {
   if (totalAssigned === 0) return 0;
   return (conversions / totalAssigned) * 100;
 }
@@ -94,10 +91,7 @@ function normalCDF(z: number): number {
   const t = 1 / (1 + 0.2316419 * Math.abs(z));
   const d = 0.3989423 * Math.exp((-z * z) / 2);
   const prob =
-    d *
-    t *
-    (0.3193815 +
-      t * (-0.3565638 + t * (1.781478 + t * (-1.821256 + t * 1.330274))));
+    d * t * (0.3193815 + t * (-0.3565638 + t * (1.781478 + t * (-1.821256 + t * 1.330274))));
 
   return z > 0 ? 1 - prob : prob;
 }
@@ -191,8 +185,9 @@ export function analyzeExportedData(
 } {
   // Count assignments
   const assignments = events.filter((e) => e.eventName === "study_ab_test_assigned");
-  const autostartAssignments = assignments.filter((e) => e.properties.variant === "autostart")
-    .length;
+  const autostartAssignments = assignments.filter(
+    (e) => e.properties.variant === "autostart"
+  ).length;
   const manualAssignments = assignments.filter((e) => e.properties.variant === "manual").length;
 
   // Count conversions

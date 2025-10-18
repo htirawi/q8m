@@ -1,23 +1,22 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+  <div
+    class="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900"
+  >
     <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       <!-- Header -->
       <div class="mb-12 text-center">
         <h1 class="mb-4 text-4xl font-bold text-gray-900 dark:text-white md:text-5xl">
-          {{ t('study.selection.title') }}
-
+          {{ t("study.selection.title") }}
         </h1>
         <p class="text-lg text-gray-600 dark:text-gray-400 md:text-xl">
-          {{ t('study.selection.subtitle') }}
-
+          {{ t("study.selection.subtitle") }}
         </p>
       </div>
 
       <!-- Difficulty Selection -->
       <div ref="difficultySelectionRef" class="mb-12">
         <h2 class="mb-8 text-center text-2xl font-bold text-gray-900 dark:text-white">
-          {{ t('study.selection.chooseDifficulty') }}
-
+          {{ t("study.selection.chooseDifficulty") }}
         </h2>
         <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
           <!-- Easy -->
@@ -71,39 +70,39 @@
 
       <!-- Features -->
       <div class="mt-16 grid grid-cols-1 gap-6 md:grid-cols-3">
-        <div class="rounded-xl border border-gray-200 bg-white/50 p-6 backdrop-blur dark:border-gray-700 dark:bg-gray-800/50">
+        <div
+          class="rounded-xl border border-gray-200 bg-white/50 p-6 backdrop-blur dark:border-gray-700 dark:bg-gray-800/50"
+        >
           <div class="mb-3 text-3xl">📚</div>
           <h3 class="mb-2 font-semibold text-gray-900 dark:text-white">
-            {{ t('study.features.selfPaced.title') }}
-
+            {{ t("study.features.selfPaced.title") }}
           </h3>
           <p class="text-sm text-gray-600 dark:text-gray-400">
-            {{ t('study.features.selfPaced.description') }}
-
+            {{ t("study.features.selfPaced.description") }}
           </p>
         </div>
 
-        <div class="rounded-xl border border-gray-200 bg-white/50 p-6 backdrop-blur dark:border-gray-700 dark:bg-gray-800/50">
+        <div
+          class="rounded-xl border border-gray-200 bg-white/50 p-6 backdrop-blur dark:border-gray-700 dark:bg-gray-800/50"
+        >
           <div class="mb-3 text-3xl">💡</div>
           <h3 class="mb-2 font-semibold text-gray-900 dark:text-white">
-            {{ t('study.features.detailedExplanations.title') }}
-
+            {{ t("study.features.detailedExplanations.title") }}
           </h3>
           <p class="text-sm text-gray-600 dark:text-gray-400">
-            {{ t('study.features.detailedExplanations.description') }}
-
+            {{ t("study.features.detailedExplanations.description") }}
           </p>
         </div>
 
-        <div class="rounded-xl border border-gray-200 bg-white/50 p-6 backdrop-blur dark:border-gray-700 dark:bg-gray-800/50">
+        <div
+          class="rounded-xl border border-gray-200 bg-white/50 p-6 backdrop-blur dark:border-gray-700 dark:bg-gray-800/50"
+        >
           <div class="mb-3 text-3xl">🔖</div>
           <h3 class="mb-2 font-semibold text-gray-900 dark:text-white">
-            {{ t('study.features.bookmarks.title') }}
-
+            {{ t("study.features.bookmarks.title") }}
           </h3>
           <p class="text-sm text-gray-600 dark:text-gray-400">
-            {{ t('study.features.bookmarks.description') }}
-
+            {{ t("study.features.bookmarks.description") }}
           </p>
         </div>
       </div>
@@ -154,7 +153,12 @@ const router = useRouter();
 const planStore = usePlanStore();
 const authStore = useAuthStore();
 const { handlePlanEntryClick } = usePlanEntry();
-const { isModalVisible: isUpsellModalVisible, modalContext: upsellModalContext, openUpsellModal, closeUpsellModal } = useUpsell();
+const {
+  isModalVisible: isUpsellModalVisible,
+  modalContext: upsellModalContext,
+  openUpsellModal,
+  closeUpsellModal,
+} = useUpsell();
 const { track } = useAnalytics();
 
 // Study composable with auto-start logic
@@ -183,15 +187,15 @@ const isUserCurrentPlan = (difficulty: DifficultyLevel): boolean => {
   const currentTier = planStore.planTier;
 
   // Bundle/Pro plan includes both Intermediate (medium) and Senior (hard)
-  if (currentTier === 'pro') {
-    return difficulty === 'medium' || difficulty === 'hard';
+  if (currentTier === "pro") {
+    return difficulty === "medium" || difficulty === "hard";
   }
 
   // For other plans, map to specific difficulty
-  const tierToDifficultyMap: Record<Exclude<PlanTier, 'pro'>, DifficultyLevel> = {
-    free: 'easy',
-    intermediate: 'medium',
-    advanced: 'hard',
+  const tierToDifficultyMap: Record<Exclude<PlanTier, "pro">, DifficultyLevel> = {
+    free: "easy",
+    intermediate: "medium",
+    advanced: "hard",
   };
 
   return tierToDifficultyMap[currentTier] === difficulty;
@@ -199,31 +203,31 @@ const isUserCurrentPlan = (difficulty: DifficultyLevel): boolean => {
 
 // Features for each difficulty level (shown on locked cards)
 const easyFeatures = computed(() => [
-  t('study.levelCard.features.easy.feature1'),
-  t('study.levelCard.features.easy.feature2'),
-  t('study.levelCard.features.easy.feature3'),
+  t("study.levelCard.features.easy.feature1"),
+  t("study.levelCard.features.easy.feature2"),
+  t("study.levelCard.features.easy.feature3"),
 ]);
 
 const mediumFeatures = computed(() => [
-  t('study.levelCard.features.medium.feature1'),
-  t('study.levelCard.features.medium.feature2'),
-  t('study.levelCard.features.medium.feature3'),
-  t('study.levelCard.features.medium.feature4'),
+  t("study.levelCard.features.medium.feature1"),
+  t("study.levelCard.features.medium.feature2"),
+  t("study.levelCard.features.medium.feature3"),
+  t("study.levelCard.features.medium.feature4"),
 ]);
 
 const hardFeatures = computed(() => [
-  t('study.levelCard.features.hard.feature1'),
-  t('study.levelCard.features.hard.feature2'),
-  t('study.levelCard.features.hard.feature3'),
-  t('study.levelCard.features.hard.feature4'),
-  t('study.levelCard.features.hard.feature5'),
+  t("study.levelCard.features.hard.feature1"),
+  t("study.levelCard.features.hard.feature2"),
+  t("study.levelCard.features.hard.feature3"),
+  t("study.levelCard.features.hard.feature4"),
+  t("study.levelCard.features.hard.feature5"),
 ]);
 
 /**
  * Handle auto-start for Easy difficulty (one-click flow)
  */
 const handleAutoStart = async (difficulty: DifficultyLevel) => {
-  if (difficulty !== 'easy') {
+  if (difficulty !== "easy") {
     // Only Easy supports auto-start
     return;
   }
@@ -236,7 +240,7 @@ const handleAutoStart = async (difficulty: DifficultyLevel) => {
     }
   } catch (error) {
     // Error handled by useStudy composable
-    console.error('Auto-start failed:', error);
+    console.error("Auto-start failed:", error);
   }
 };
 
@@ -254,7 +258,7 @@ const handleDifficultySelect = (difficulty: DifficultyLevel) => {
  */
 const handleUnlockClick = (difficulty: DifficultyLevel, requiredPlan: PlanTier) => {
   // Open upsell modal
-  openUpsellModal(difficulty, requiredPlan, 'level_card');
+  openUpsellModal(difficulty, requiredPlan, "level_card");
 };
 
 /**
@@ -301,18 +305,21 @@ const handleStickyRetry = async () => {
 const handleKeyboardShortcut = (event: KeyboardEvent) => {
   // Check if 'S' or 's' key is pressed (without modifiers except shift)
   if (
-    (event.key === 'S' || event.key === 's') &&
+    (event.key === "S" || event.key === "s") &&
     !event.ctrlKey &&
     !event.metaKey &&
     !event.altKey
   ) {
     // Don't trigger if user is typing in an input/textarea
-    const target = event.target as HTMLElement;Determineifadifficultylevelrepresentstheuserpromediumhardproeasymediumhardstudy.levelCard.features.easy.feature1study.levelCard.features.easy.feature2study.levelCard.features.easy.feature3study.levelCard.features.medium.feature1study.levelCard.features.medium.feature2study.levelCard.features.medium.feature3study.levelCard.features.medium.feature4study.levelCard.features.hard.feature1study.levelCard.features.hard.feature2study.levelCard.features.hard.feature3study.levelCard.features.hard.feature4study.levelCard.features.hard.feature5easyAuto-startfailed
-    if (
-      target.tagName === 'INPUT' ||
-      target.tagName === 'TEXTAREA' ||
-      target.isContentEditable
-    ) {
+    const target = event.target as HTMLElement;
+    Determineifadifficultylevelrepresentstheuserpromediumhardproeasymediumhardstudy.levelCard
+      .features.easy.feature1study.levelCard.features.easy.feature2study.levelCard.features.easy
+      .feature3study.levelCard.features.medium.feature1study.levelCard.features.medium.feature2study
+      .levelCard.features.medium.feature3study.levelCard.features.medium.feature4study.levelCard
+      .features.hard.feature1study.levelCard.features.hard.feature2study.levelCard.features.hard
+      .feature3study.levelCard.features.hard.feature4study.levelCard.features.hard
+      .feature5easyAuto - startfailed;
+    if (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable) {
       return;
     }
 
@@ -320,34 +327,31 @@ const handleKeyboardShortcut = (event: KeyboardEvent) => {
     event.preventDefault();
 
     // Track event
-    track('keyboard_shortcut_used', {
-      key: 'S',
-      action: 'start_resume_study',
+    track("keyboard_shortcut_used", {
+      key: "S",
+      action: "start_resume_study",
     });
 
     // Trigger start/resume
-    if (isAutoStartEnabled.value && canUserAccessDifficulty('easy')) {
-      handleAutoStart('easy');
+    if (isAutoStartEnabled.value && canUserAccessDifficulty("easy")) {
+      handleAutoStart("easy");
     } else if (selectedDifficulty.value) {
       startStudy(selectedDifficulty.value);
-    }
-
- else {
+    } else {
       // Default to Easy
-      handleAutoStart('easy');
-    };
+      handleAutoStart("easy");
+    }
   }
-}
+};
 
 // Lifecycle hooks
 onMounted(() => {
   // Register keyboard shortcut
-  window.addEventListener('keydown', handleKeyboardShortcut);
+  window.addEventListener("keydown", handleKeyboardShortcut);
 });
 
 onUnmounted(() => {
   // Cleanup keyboard shortcut
-  window.removeEventListener('keydown', handleKeyboardShortcut);
+  window.removeEventListener("keydown", handleKeyboardShortcut);
 });
 </script>
-

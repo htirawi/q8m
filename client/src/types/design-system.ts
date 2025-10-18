@@ -55,11 +55,11 @@ export interface ITypographyScale {
   base: string;
   lg: string;
   xl: string;
-  '2xl': string;
-  '3xl': string;
-  '4xl': string;
-  '5xl': string;
-  '6xl': string;
+  "2xl": string;
+  "3xl": string;
+  "4xl": string;
+  "5xl": string;
+  "6xl": string;
 }
 
 /**
@@ -101,8 +101,8 @@ export interface IBorderRadiusScale {
   md: string;
   lg: string;
   xl: string;
-  '2xl': string;
-  '3xl': string;
+  "2xl": string;
+  "3xl": string;
   full: string;
 }
 
@@ -115,13 +115,13 @@ export interface IShadows {
   md: string;
   lg: string;
   xl: string;
-  '2xl': string;
+  "2xl": string;
   inner: string;
-  'inner-lg': string;
-  'glow-primary': string;
-  'glow-success': string;
-  'glow-danger': string;
-  'glow-info': string;
+  "inner-lg": string;
+  "glow-primary": string;
+  "glow-success": string;
+  "glow-danger": string;
+  "glow-info": string;
 }
 
 /**
@@ -139,7 +139,7 @@ export interface IAnimationDurations {
  * Animation easing functions
  */
 export interface IAnimationEasing {
-  'in-out': string;
+  "in-out": string;
   out: string;
   in: string;
   spring: string;
@@ -154,7 +154,7 @@ export interface IBreakpoints {
   md: string;
   lg: string;
   xl: string;
-  '2xl': string;
+  "2xl": string;
 }
 
 /**
@@ -171,7 +171,7 @@ export interface IZIndexScale {
   dropdown: number;
   sticky: number;
   fixed: number;
-  'modal-backdrop': number;
+  "modal-backdrop": number;
   modal: number;
   popover: number;
   tooltip: number;
@@ -206,27 +206,34 @@ export interface IDesignSystem {
 /**
  * Theme mode
  */
-export type ThemeMode = 'light' | 'dark' | 'auto';
+export type ThemeMode = "light" | "dark" | "auto";
 
 /**
  * Viewport size categories
  */
-export type ViewportSize = 'mobile' | 'tablet' | 'desktop';
+export type ViewportSize = "mobile" | "tablet" | "desktop";
 
 /**
  * Component size variants
  */
-export type ComponentSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+export type ComponentSize = "xs" | "sm" | "md" | "lg" | "xl";
 
 /**
  * Component color variants
  */
-export type ComponentVariant = 'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'info' | 'neutral';
+export type ComponentVariant =
+  | "primary"
+  | "secondary"
+  | "success"
+  | "warning"
+  | "error"
+  | "info"
+  | "neutral";
 
 /**
  * Button variants
  */
-export type ButtonVariant = 'solid' | 'outline' | 'ghost' | 'soft' | 'link';
+export type ButtonVariant = "solid" | "outline" | "ghost" | "soft" | "link";
 
 /**
  * Level selection card state
@@ -237,10 +244,10 @@ export interface ILevelCard {
   subtitle: string;
   description: string;
   duration: string;
-  difficulty: 'junior' | 'intermediate' | 'senior' | 'custom';
+  difficulty: "junior" | "intermediate" | "senior" | "custom";
   isLocked: boolean;
   isSelected: boolean;
-  requiredPlan?: 'free' | 'pro' | 'team';
+  requiredPlan?: "free" | "pro" | "team";
   icon?: string;
   color?: string;
   badge?: {

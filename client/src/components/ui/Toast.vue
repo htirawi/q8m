@@ -17,7 +17,8 @@ const emit = defineEmits<{
 
 // State
 const isVisible = ref(true);
-let timeoutId: number | null = null;timeoutId
+let timeoutId: number | null = null;
+timeoutId;
 
 // Computed properties
 const toastClasses = computed(() => {
@@ -74,8 +75,15 @@ onUnmounted(() => {
 
 <template>
   <Transition name="toast" @enter="handleEnter" @leave="handleLeave">
-    <div v-if="isVisible" :id="id" class="toast" :class="toastClasses" role="alert" :aria-live="ariaLive"
-      :aria-atomic="true">
+    <div
+      v-if="isVisible"
+      :id="id"
+      class="toast"
+      :class="toastClasses"
+      role="alert"
+      :aria-live="ariaLive"
+      :aria-atomic="true"
+    >
       <div class="toast-content">
         <div v-if="icon" class="toast-icon" aria-hidden="true">
           <component :is="icon" class="h-5 w-5" />
@@ -83,13 +91,22 @@ onUnmounted(() => {
         <div class="toast-message">
           <slot>
             {{ message }}
-
           </slot>
         </div>
-        <button v-if="dismissible" type="button" class="toast-close" :aria-label="$t('a11y.dismissNotification')"
-          @click="handleDismiss">
+        <button
+          v-if="dismissible"
+          type="button"
+          class="toast-close"
+          :aria-label="$t('a11y.dismissNotification')"
+          @click="handleDismiss"
+        >
           <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
           </svg>
         </button>
       </div>
@@ -137,7 +154,7 @@ onUnmounted(() => {
 
 /* Focus styles */
 .toast-close:focus {
-  @apply ring-primary-500 outline-none ring-2 ring-offset-2 dark:ring-offset-gray-800;
+  @apply outline-none ring-2 ring-primary-500 ring-offset-2 dark:ring-offset-gray-800;
 }
 
 /* Transitions */

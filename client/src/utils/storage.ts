@@ -3,13 +3,13 @@
  * Type-safe wrapper for localStorage with encryption support
  */
 
-import { STORAGE_KEYS } from '@/config/constants';
+import { STORAGE_KEYS } from "@/config/constants";
 
 // ============================================
 // Types
 // ============================================
 
-type StorageKey = typeof STORAGE_KEYS[keyof typeof STORAGE_KEYS];
+type StorageKey = (typeof STORAGE_KEYS)[keyof typeof STORAGE_KEYS];
 
 interface IStorageOptions {
   encrypt?: boolean;
@@ -28,7 +28,7 @@ interface IStorageItem<T> {
 class StorageService {
   private prefix: string;
 
-  constructor(prefix: string = 'q8m_') {
+  constructor(prefix: string = "q8m_") {
     this.prefix = prefix;
   }
 
@@ -114,13 +114,13 @@ class StorageService {
   clear(): void {
     try {
       const keys = Object.keys(localStorage);
-      keys.forEach(key => {
+      keys.forEach((key) => {
         if (key.startsWith(this.prefix)) {
           localStorage.removeItem(key);
         }
       });
     } catch (error) {
-      console.error('[Storage] Failed to clear:', error);
+      console.error("[Storage] Failed to clear:", error);
     }
   }
 
@@ -130,10 +130,10 @@ class StorageService {
   keys(): string[] {
     try {
       return Object.keys(localStorage)
-        .filter(key => key.startsWith(this.prefix))
-        .map(key => key.replace(this.prefix, ''));
+        .filter((key) => key.startsWith(this.prefix))
+        .map((key) => key.replace(this.prefix, ""));
     } catch (error) {
-      console.error('[Storage] Failed to get keys:', error);
+      console.error("[Storage] Failed to get keys:", error);
       return [];
     }
   }
@@ -157,7 +157,7 @@ export { StorageService };
  * Currency storage helpers
  */
 export const currencyStorage = {
-  get: () => storage.get<string>(STORAGE_KEYS.PREFERRED_CURRENCY, 'USD'),
+  get: () => storage.get<string>(STORAGE_KEYS.PREFERRED_CURRENCY, "USD"),
   set: (currency: string) => storage.set(STORAGE_KEYS.PREFERRED_CURRENCY, currency),
   remove: () => storage.remove(STORAGE_KEYS.PREFERRED_CURRENCY),
 };
@@ -166,7 +166,7 @@ export const currencyStorage = {
  * Theme storage helpers
  */
 export const themeStorage = {
-  get: () => storage.get<string>(STORAGE_KEYS.THEME, 'light'),
+  get: () => storage.get<string>(STORAGE_KEYS.THEME, "light"),
   set: (theme: string) => storage.set(STORAGE_KEYS.THEME, theme),
   remove: () => storage.remove(STORAGE_KEYS.THEME),
 };
@@ -175,7 +175,7 @@ export const themeStorage = {
  * Locale storage helpers
  */
 export const localeStorage = {
-  get: () => storage.get<string>(STORAGE_KEYS.LOCALE, 'en'),
+  get: () => storage.get<string>(STORAGE_KEYS.LOCALE, "en"),
   set: (locale: string) => storage.set(STORAGE_KEYS.LOCALE, locale),
   remove: () => storage.remove(STORAGE_KEYS.LOCALE),
 };

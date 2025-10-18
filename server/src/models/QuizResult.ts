@@ -3,10 +3,10 @@
  * Stores quiz attempts with detailed analytics and performance tracking
  */
 
-import type { ExperienceLevel } from '@shared/types/plan';
-import type { QuizType } from '@shared/types/quiz-result';
-import type { Document, ObjectId } from 'mongoose';
-import { Schema, model } from 'mongoose';
+import type { ExperienceLevel } from "@shared/types/plan";
+import type { QuizType } from "@shared/types/quiz-result";
+import type { Document, ObjectId } from "mongoose";
+import { Schema, model } from "mongoose";
 
 /**
  * Individual question answer sub-document
@@ -17,7 +17,7 @@ export interface IQuizAnswerDoc {
   correctAnswer: string | string[];
   isCorrect: boolean;
   timeSpentSeconds: number;
-  difficultyLevel: 'easy' | 'medium' | 'hard';
+  difficultyLevel: "easy" | "medium" | "hard";
   category: string;
   tags: string[];
   points: number;
@@ -41,7 +41,7 @@ export interface ICategoryPerformanceDoc {
  * Difficulty performance sub-document
  */
 export interface IDifficultyPerformanceDoc {
-  difficulty: 'easy' | 'medium' | 'hard';
+  difficulty: "easy" | "medium" | "hard";
   totalQuestions: number;
   correctAnswers: number;
   accuracy: number;
@@ -94,7 +94,7 @@ const quizAnswerSchema = new Schema<IQuizAnswerDoc>(
     timeSpentSeconds: { type: Number, required: true, min: 0 },
     difficultyLevel: {
       type: String,
-      enum: ['easy', 'medium', 'hard'],
+      enum: ["easy", "medium", "hard"],
       required: true,
     },
     category: { type: String, required: true, index: true },
@@ -124,7 +124,7 @@ const difficultyPerformanceSchema = new Schema<IDifficultyPerformanceDoc>(
   {
     difficulty: {
       type: String,
-      enum: ['easy', 'medium', 'hard'],
+      enum: ["easy", "medium", "hard"],
       required: true,
     },
     totalQuestions: { type: Number, required: true, min: 0 },
@@ -140,25 +140,25 @@ const quizResultSchema = new Schema<IQuizResultDoc>(
   {
     userId: {
       type: Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "User",
       required: true,
       index: true,
     },
     quizType: {
       type: String,
-      enum: ['practice', 'exam', 'retry_wrong', 'review'],
+      enum: ["practice", "exam", "retry_wrong", "review"],
       required: true,
-      default: 'practice',
+      default: "practice",
     },
     level: {
       type: String,
-      enum: ['junior', 'intermediate', 'senior'],
+      enum: ["junior", "intermediate", "senior"],
       required: true,
       index: true,
     },
     framework: {
       type: String,
-      enum: ['vue', 'react', 'angular', 'nextjs'],
+      enum: ["vue", "react", "angular", "nextjs"],
       index: true,
     },
     score: { type: Number, required: true, min: 0, max: 100 },
@@ -182,7 +182,7 @@ const quizResultSchema = new Schema<IQuizResultDoc>(
     streakMaintained: { type: Boolean, required: true, default: false },
     isPerfect: { type: Boolean, required: true, default: false },
     isFast: { type: Boolean, required: true, default: false },
-    originalQuizId: { type: Schema.Types.ObjectId, ref: 'QuizResult' },
+    originalQuizId: { type: Schema.Types.ObjectId, ref: "QuizResult" },
     previousAttempts: { type: Number, min: 0 },
     improvementPercentage: { type: Number },
   },
@@ -209,7 +209,7 @@ quizResultSchema.index({ userId: 1, level: 1, createdAt: -1 }); // User's quizze
 quizResultSchema.index({ userId: 1, score: -1 }); // User's best scores
 quizResultSchema.index({ level: 1, score: -1 }); // Leaderboard by level
 quizResultSchema.index({ isPerfect: 1, userId: 1 }); // Perfect scores
-quizResultSchema.index({ 'answers.category': 1 }); // Category analysis
+quizResultSchema.index({ "answers.category": 1 }); // Category analysis
 
 // Static method: Get user's quiz history
 quizResultSchema.statics.getUserHistory = function (
@@ -359,4 +359,4 @@ quizResultSchema.statics.getWrongQuestions = function (quizId: string | ObjectId
   });
 };
 
-export const QuizResult = model<IQuizResultDoc>('QuizResult', quizResultSchema);
+export const QuizResult = model<IQuizResultDoc>("QuizResult", quizResultSchema);

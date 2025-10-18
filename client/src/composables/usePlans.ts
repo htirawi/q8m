@@ -4,8 +4,8 @@
  * Handles number-copy display modes (totals vs deltas)
  */
 
-import { computed } from 'vue';
-import { useI18n } from 'vue-i18n';
+import { computed } from "vue";
+import { useI18n } from "vue-i18n";
 import {
   PLANS,
   getPlanById,
@@ -13,11 +13,10 @@ import {
   getHomepagePlans,
   getPricingPlans,
   type IPlanConfig,
-} from '@/config/plans';
-import type { PlanId, BillingCycle } from '@/types/pricing';
-import type { PlanTier } from '@shared/types/plan';
-import type { NumberCopyMode, IPlanPrice } from '@shared/types/composables';
-
+} from "@/config/plans";
+import type { PlanId, BillingCycle } from "@/types/pricing";
+import type { PlanTier } from "@shared/types/plan";
+import type { NumberCopyMode, IPlanPrice } from "@shared/types/composables";
 
 export function usePlans() {
   const { t } = useI18n();
@@ -72,14 +71,11 @@ export function usePlans() {
   /**
    * Get formatted price for display
    */
-  const getFormattedPrice = (
-    plan: IPlanConfig,
-    billing: BillingCycle = 'monthly'
-  ): string => {
-    const price = billing === 'monthly' ? plan.priceMonthly : plan.priceYearly;
+  const getFormattedPrice = (plan: IPlanConfig, billing: BillingCycle = "monthly"): string => {
+    const price = billing === "monthly" ? plan.priceMonthly : plan.priceYearly;
 
     if (price === 0) {
-      return t('pricing.free');
+      return t("pricing.free");
     }
 
     return `$${price}`;
@@ -89,57 +85,49 @@ export function usePlans() {
    * Get period label for billing cycle
    */
   const getPeriodLabel = (billing: BillingCycle): string => {
-    return billing === 'monthly'
-      ? t('pricing.billing.perMonth')
-      : t('pricing.billing.perYear');
+    return billing === "monthly" ? t("pricing.billing.perMonth") : t("pricing.billing.perYear");
   };
 
   /**
    * Format study items count with optional delta
    */
-  const getStudyItemsLabel = (
-    plan: IPlanConfig,
-    mode: NumberCopyMode = 'totals'
-  ): string => {
+  const getStudyItemsLabel = (plan: IPlanConfig, mode: NumberCopyMode = "totals"): string => {
     const total = plan.features.studyItems;
-    const baselinePlan = getPlanById('junior');
+    const baselinePlan = getPlanById("junior");
 
-    if (mode === 'totals' || !baselinePlan || plan.id === 'junior') {
-      return t('plans.features.studyItemsCount', { count: total });
+    if (mode === "totals" || !baselinePlan || plan.id === "junior") {
+      return t("plans.features.studyItemsCount", { count: total });
     }
 
     const delta = total - baselinePlan.features.studyItems;
 
-    if (mode === 'deltas') {
-      return t('plans.features.studyItemsDelta', { delta, total });
+    if (mode === "deltas") {
+      return t("plans.features.studyItemsDelta", { delta, total });
     }
 
     // mode === 'totals-with-deltas'
-    return t('plans.features.studyItemsTotalsWithDeltas', { total, delta });
+    return t("plans.features.studyItemsTotalsWithDeltas", { total, delta });
   };
 
   /**
    * Format quiz questions count with optional delta
    */
-  const getQuizQuestionsLabel = (
-    plan: IPlanConfig,
-    mode: NumberCopyMode = 'totals'
-  ): string => {
+  const getQuizQuestionsLabel = (plan: IPlanConfig, mode: NumberCopyMode = "totals"): string => {
     const total = plan.features.quizQuestions;
-    const baselinePlan = getPlanById('junior');
+    const baselinePlan = getPlanById("junior");
 
-    if (mode === 'totals' || !baselinePlan || plan.id === 'junior') {
-      return t('plans.features.quizQuestionsCount', { count: total });
+    if (mode === "totals" || !baselinePlan || plan.id === "junior") {
+      return t("plans.features.quizQuestionsCount", { count: total });
     }
 
     const delta = total - baselinePlan.features.quizQuestions;
 
-    if (mode === 'deltas') {
-      return t('plans.features.quizQuestionsDelta', { delta, total });
+    if (mode === "deltas") {
+      return t("plans.features.quizQuestionsDelta", { delta, total });
     }
 
     // mode === 'totals-with-deltas'
-    return t('plans.features.quizQuestionsTotalsWithDeltas', { total, delta });
+    return t("plans.features.quizQuestionsTotalsWithDeltas", { total, delta });
   };
 
   /**
@@ -153,7 +141,7 @@ export function usePlans() {
 
     if (monthsSaved < 1) return null;
 
-    return t('pricing.billing.saveMonths', { months: monthsSaved });
+    return t("pricing.billing.saveMonths", { months: monthsSaved });
   };
 
   /**

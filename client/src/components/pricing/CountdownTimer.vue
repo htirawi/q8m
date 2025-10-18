@@ -4,14 +4,11 @@
       <!-- Icon/Emoji -->
       <div v-if="showIcon" class="countdown-icon">
         {{ icon }}
-
       </div>
 
       <!-- Header -->
       <div class="countdown-header">
-        <h3 v-if="title" class="countdown-title">{{ title }}
-
-</h3>
+        <h3 v-if="title" class="countdown-title">{{ title }}</h3>
         <p v-if="message" class="countdown-message">{{ message }}</p>
       </div>
 
@@ -20,22 +17,21 @@
         <!-- Days -->
         <div v-if="showDays && timeLeft.days > 0" class="countdown-unit">
           <div class="countdown-value">
-            <AnimatedCounter :value="timeLeft.days" :duration="500" :format="(value) => Math.round(value).toString()" />
+            <AnimatedCounter
+              :value="timeLeft.days"
+              :duration="500"
+              :format="(value) => Math.round(value).toString()"
+            />
           </div>
-          <div class="countdown-label">{{ $t('pricing.countdown.days') }}
-
-</div>
+          <div class="countdown-label">{{ $t("pricing.countdown.days") }}</div>
         </div>
 
         <!-- Hours -->
         <div v-if="showHours" class="countdown-unit">
           <div class="countdown-value">
             {{ formatTime(timeLeft.hours) }}
-
           </div>
-          <div class="countdown-label">{{ $t('pricing.countdown.hours') }}
-
-</div>
+          <div class="countdown-label">{{ $t("pricing.countdown.hours") }}</div>
         </div>
 
         <!-- Separator -->
@@ -45,11 +41,8 @@
         <div v-if="showMinutes" class="countdown-unit">
           <div class="countdown-value">
             {{ formatTime(timeLeft.minutes) }}
-
           </div>
-          <div class="countdown-label">{{ $t('pricing.countdown.minutes') }}
-
-</div>
+          <div class="countdown-label">{{ $t("pricing.countdown.minutes") }}</div>
         </div>
 
         <!-- Separator -->
@@ -59,11 +52,8 @@
         <div v-if="showSeconds" class="countdown-unit">
           <div class="countdown-value">
             {{ formatTime(timeLeft.seconds) }}
-
           </div>
-          <div class="countdown-label">{{ $t('pricing.countdown.seconds') }}
-
-</div>
+          <div class="countdown-label">{{ $t("pricing.countdown.seconds") }}</div>
         </div>
       </div>
 
@@ -72,29 +62,32 @@
         <button v-if="ctaText" class="countdown-cta" @click="$emit('cta-click')">
           {{ ctaText }}
 
-          <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+          <svg class="ml-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 7l5 5m0 0l-5 5m5-5H6"
+            />
           </svg>
         </button>
       </slot>
 
       <!-- Expired Message -->
       <div v-if="isExpired" class="countdown-expired">
-        {{ expiredMessage || $t('pricing.countdown.expired') }}
-
+        {{ expiredMessage || $t("pricing.countdown.expired") }}
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import type { ICountdownTimerTimeLeft as TimeLeft, ICountdownTimerProps as Props } from "@/types/components/pricing";
-import { ref, onMounted, onUnmounted } from 'vue';
-import AnimatedCounter from '@/components/AnimatedCounter.vue';
-
-
-
-
+import type {
+  ICountdownTimerTimeLeft as TimeLeft,
+  ICountdownTimerProps as Props,
+} from "@/types/components/pricing";
+import { ref, onMounted, onUnmounted } from "vue";
+import AnimatedCounter from "@/components/AnimatedCounter.vue";
 
 const props = withDefaults(defineProps<Props>(), {
   showDays: true,
@@ -102,14 +95,14 @@ const props = withDefaults(defineProps<Props>(), {
   showMinutes: true,
   showSeconds: true,
   showIcon: true,
-  icon: '⏰',
-  variant: 'default',
+  icon: "⏰",
+  variant: "default",
   autoReset: false,
   resetDuration: 86400, // 24 hours in seconds
 });
 
 const emit = defineEmits<{
-  'tick': [timeLeft: TimeLeft];
+  tick: [timeLeft: TimeLeft];
 }>();
 
 const timeLeft = ref<TimeLeft>({
@@ -121,26 +114,27 @@ const timeLeft = ref<TimeLeft>({
 });
 
 const isExpired = ref(false);
-let intervalId: ReturnType<typeof setInterval> | null = null;intervalId
+let intervalId: ReturnType<typeof setInterval> | null = null;
+intervalId;
 
 function calculateTimeLeft(): TimeLeft {
-  let endTime: number;endTime
+  let endTime: number;
+  endTime;
 
   if (props.targetDate) {
-    const target = typeof props.targetDate === 'string'
-      ? new Date(props.targetDate)
-      : props.targetDate;targettypeofprops.targetDatenewDate
+    const target =
+      typeof props.targetDate === "string" ? new Date(props.targetDate) : props.targetDate;
+    targettypeofprops.targetDatenewDate;
     endTime = target.getTime();
   } else if (props.duration) {
     // If duration is provided, calculate end time from now
     const now = Date.now();
-    endTime = now + (props.duration * 1000);
-  }
-
- else {
+    endTime = now + props.duration * 1000;
+  } else {
     // Default: 24 hours from now
-    const now = Date.now();Default
-    endTime = now + (86400 * 1000);
+    const now = Date.now();
+    Default;
+    endTime = now + 86400 * 1000;
   }
 
   const now = Date.now();
@@ -175,12 +169,12 @@ function updateTimer() {
   const newTimeLeft = calculateTimeLeft();
   timeLeft.value = newTimeLeft;
 
-  emit('tick', newTimeLeft);
+  emit("tick", newTimeLeft);
 
   if (newTimeLeft.total <= 0) {
     isExpired.value = true;
     stopTimer();
-    emit('expired');
+    emit("expired");
 
     if (props.autoReset) {
       setTimeout(() => {
@@ -213,7 +207,7 @@ function resetTimer() {
 }
 
 function formatTime(value: number): string {
-  return value.toString().padStart(2, '0');
+  return value.toString().padStart(2, "0");
 }
 
 onMounted(() => {
@@ -243,7 +237,7 @@ defineExpose({
 
 /* Icon */
 .countdown-icon {
-  @apply text-5xl animate-bounce;
+  @apply animate-bounce text-5xl;
 }
 
 /* Header */
@@ -252,7 +246,7 @@ defineExpose({
 }
 
 .countdown-title {
-  @apply text-2xl font-bold text-gray-900 dark:text-white mb-2;
+  @apply mb-2 text-2xl font-bold text-gray-900 dark:text-white;
 }
 
 .countdown-message {
@@ -261,7 +255,7 @@ defineExpose({
 
 /* Display */
 .countdown-display {
-  @apply flex items-center gap-4 justify-center;
+  @apply flex items-center justify-center gap-4;
 }
 
 .countdown-unit {
@@ -269,30 +263,30 @@ defineExpose({
 }
 
 .countdown-value {
-  @apply text-4xl sm:text-5xl font-bold;
+  @apply text-4xl font-bold sm:text-5xl;
   @apply bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600;
   @apply bg-clip-text text-transparent;
-  @apply min-w-[60px] sm:min-w-[80px] text-center;
-  @apply p-3 rounded-xl;
+  @apply min-w-[60px] text-center sm:min-w-[80px];
+  @apply rounded-xl p-3;
   @apply bg-white dark:bg-gray-800;
-  @apply shadow-lg border-2 border-gray-100 dark:border-gray-700;
+  @apply border-2 border-gray-100 shadow-lg dark:border-gray-700;
 }
 
 .countdown-label {
-  @apply text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400 mt-2 uppercase tracking-wide;
+  @apply mt-2 text-xs font-medium uppercase tracking-wide text-gray-600 dark:text-gray-400 sm:text-sm;
 }
 
 .countdown-separator {
-  @apply text-3xl sm:text-4xl font-bold text-gray-400 dark:text-gray-600;
+  @apply text-3xl font-bold text-gray-400 dark:text-gray-600 sm:text-4xl;
   @apply animate-pulse;
 }
 
 /* CTA */
 .countdown-cta {
-  @apply mt-4 px-8 py-4 rounded-xl font-bold text-base;
+  @apply mt-4 rounded-xl px-8 py-4 text-base font-bold;
   @apply bg-gradient-to-r from-orange-500 via-red-500 to-pink-500;
   @apply text-white shadow-xl;
-  @apply hover:shadow-2xl hover:scale-105;
+  @apply hover:scale-105 hover:shadow-2xl;
   @apply transition-all duration-200;
   @apply flex items-center gap-2;
   @apply animate-pulse;
@@ -300,10 +294,10 @@ defineExpose({
 
 /* Expired */
 .countdown-expired {
-  @apply mt-4 px-6 py-3 rounded-lg;
+  @apply mt-4 rounded-lg px-6 py-3;
   @apply bg-red-100 dark:bg-red-900/30;
   @apply text-red-700 dark:text-red-300;
-  @apply font-semibold text-center;
+  @apply text-center font-semibold;
 }
 
 /* Variants */
@@ -314,11 +308,11 @@ defineExpose({
 }
 
 .countdown-timer--compact .countdown-header {
-  @apply text-left flex-1;
+  @apply flex-1 text-left;
 }
 
 .countdown-timer--compact .countdown-title {
-  @apply text-lg mb-0;
+  @apply mb-0 text-lg;
 }
 
 .countdown-timer--compact .countdown-display {
@@ -326,7 +320,7 @@ defineExpose({
 }
 
 .countdown-timer--compact .countdown-value {
-  @apply text-2xl min-w-[40px] p-2;
+  @apply min-w-[40px] p-2 text-2xl;
 }
 
 .countdown-timer--compact .countdown-label {
@@ -340,20 +334,20 @@ defineExpose({
 /* Banner */
 .countdown-timer--banner {
   @apply bg-gradient-to-r from-orange-500 via-red-500 to-pink-500;
-  @apply py-4 px-6;
+  @apply px-6 py-4;
 }
 
 .countdown-timer--banner .countdown-container {
-  @apply flex-row justify-between items-center;
-  @apply max-w-7xl mx-auto;
+  @apply flex-row items-center justify-between;
+  @apply mx-auto max-w-7xl;
 }
 
 .countdown-timer--banner .countdown-header {
-  @apply text-left flex-1;
+  @apply flex-1 text-left;
 }
 
 .countdown-timer--banner .countdown-title {
-  @apply text-white text-xl mb-1;
+  @apply mb-1 text-xl text-white;
 }
 
 .countdown-timer--banner .countdown-message {
@@ -430,7 +424,7 @@ defineExpose({
   }
 
   .countdown-value {
-    @apply text-3xl min-w-[50px] p-2;
+    @apply min-w-[50px] p-2 text-3xl;
   }
 
   .countdown-separator {
@@ -460,7 +454,7 @@ defineExpose({
 }
 
 /* RTL Support */
-[dir='rtl'] .countdown-cta {
+[dir="rtl"] .countdown-cta {
   @apply flex-row-reverse;
 }
 </style>

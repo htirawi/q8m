@@ -98,7 +98,9 @@ test.describe("One-Click Easy → Start Flow (Auto-Start Enabled)", () => {
     await page.locator(SELECTORS.easyCardFallback).click();
 
     // Wait for loading indicator to appear (sticky bar or skeleton)
-    const loadingIndicator = page.locator('text="Loading session"').or(page.locator('text="Starting"'));
+    const loadingIndicator = page
+      .locator('text="Loading session"')
+      .or(page.locator('text="Starting"'));
 
     try {
       await loadingIndicator.waitFor({ state: "visible", timeout: 500 });
@@ -116,7 +118,9 @@ test.describe("One-Click Easy → Start Flow (Auto-Start Enabled)", () => {
     await page.waitForURL(/\/study|\/login/, { timeout: 5000 });
   });
 
-  test("Medium/Hard cards still require explicit Start button (no auto-start)", async ({ page }) => {
+  test("Medium/Hard cards still require explicit Start button (no auto-start)", async ({
+    page,
+  }) => {
     await page.goto("/en/study");
 
     // Click Medium card
@@ -153,7 +157,9 @@ test.describe("Auto-Start Disabled (Manual Mode)", () => {
     await expect(stickyBar).toBeVisible({ timeout: 2000 });
 
     // Should show trust signal
-    await expect(page.locator('text=/Practice 30 curated questions|Instant feedback/i')).toBeVisible();
+    await expect(
+      page.locator("text=/Practice 30 curated questions|Instant feedback/i")
+    ).toBeVisible();
   });
 
   test("Sticky bar: click Start Studying → navigates to session", async ({ page }) => {
@@ -187,7 +193,7 @@ test.describe("Auto-Start Disabled (Manual Mode)", () => {
     await page.waitForTimeout(500);
 
     // Keyboard hint should be visible
-    const keyboardHint = page.locator('text=/Press.*S.*to start/i');
+    const keyboardHint = page.locator("text=/Press.*S.*to start/i");
     await expect(keyboardHint).toBeVisible({ timeout: 2000 });
   });
 
@@ -301,7 +307,7 @@ test.describe("Session Resume Flow", () => {
     });
 
     // Trust message should say "Continue where you left off"
-    await expect(page.locator('text=/Continue where you left off/i')).toBeVisible();
+    await expect(page.locator("text=/Continue where you left off/i")).toBeVisible();
   });
 
   test("Resume session → navigates with question index preserved", async ({ page }) => {
@@ -454,13 +460,11 @@ test.describe("Accessibility", () => {
     await page.waitForTimeout(500);
 
     // Should have role="region" or aria-label
-    const stickyRegion = page.locator('[role="region"]').or(page.locator('[aria-label]'));
+    const stickyRegion = page.locator('[role="region"]').or(page.locator("[aria-label]"));
     await expect(stickyRegion).toBeVisible({ timeout: 2000 });
   });
 
-  test("Tab navigation: Easy card → Sticky bar Start button → other controls", async ({
-    page,
-  }) => {
+  test("Tab navigation: Easy card → Sticky bar Start button → other controls", async ({ page }) => {
     await setAutoStartPreference(page, false);
     await page.goto("/en/study");
 
@@ -541,9 +545,7 @@ test.describe("Analytics Tracking", () => {
     // Skip for now - would need to intercept analytics calls or check console logs
   });
 
-  test.skip("Auto-start triggers → fires 'study_autostart_triggered' event", async ({
-    page,
-  }) => {
+  test.skip("Auto-start triggers → fires 'study_autostart_triggered' event", async ({ page }) => {
     // Requires analytics mocking
   });
 

@@ -37,9 +37,7 @@
 
 <script setup lang="ts">
 import type { ICardListSkeletonProps as Props } from "@/types/components/skeletons";
-import SkeletonLoader from '@/components/SkeletonLoader.vue';
-
-
+import SkeletonLoader from "@/components/SkeletonLoader.vue";
 
 withDefaults(defineProps<Props>(), {
   count: 3,
@@ -70,7 +68,7 @@ withDefaults(defineProps<Props>(), {
 }
 
 .card-list-skeleton-content {
-  @apply p-6 space-y-4;
+  @apply space-y-4 p-6;
 }
 
 .card-list-skeleton-description {

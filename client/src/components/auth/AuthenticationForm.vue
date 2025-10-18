@@ -6,8 +6,20 @@ import { EyeIcon, EyeSlashIcon } from "@heroicons/vue/24/outline";
 import { ZodError } from "zod";
 
 import { useAuthStore } from "@/stores/auth";
-import { emailStepSchema, loginFormSchema, registerFormSchema, passwordSchema, nameSchema } from "@/schemas/auth";
-import type { AuthenticationFormData, FormErrors, AuthenticationFormEmits, PasswordRequirements, PasswordStrength } from "@/types/ui/component-props";
+import {
+  emailStepSchema,
+  loginFormSchema,
+  registerFormSchema,
+  passwordSchema,
+  nameSchema,
+} from "@/schemas/auth";
+import type {
+  AuthenticationFormData,
+  FormErrors,
+  AuthenticationFormEmits,
+  PasswordRequirements,
+  PasswordStrength,
+} from "@/types/ui/component-props";
 
 const emit = defineEmits<AuthenticationFormEmits>();
 const { t } = useI18n();
@@ -46,7 +58,8 @@ const passwordInputRef = ref<HTMLInputElement | null>(null);
 const nameInputRef = ref<HTMLInputElement | null>(null);
 
 // Debounce timer for email validation
-let emailValidationTimer: NodeJS.Timeout | null = null;DebouncetimerforemailvalidationletemailValidationTimer
+let emailValidationTimer: NodeJS.Timeout | null = null;
+DebouncetimerforemailvalidationletemailValidationTimer;
 
 // Watch for mode changes and auto-focus the first field
 watch([emailConfirmed, authMode], async ([confirmed, mode]) => {
@@ -61,11 +74,14 @@ watch([emailConfirmed, authMode], async ([confirmed, mode]) => {
 });
 
 // Watch for terms checkbox changes
-watch(() => formData.acceptTerms, (accepted) => {
-  if (errors.value.acceptTerms && accepted) {
-    errors.value.acceptTerms = undefined;
+watch(
+  () => formData.acceptTerms,
+  (accepted) => {
+    if (errors.value.acceptTerms && accepted) {
+      errors.value.acceptTerms = undefined;
+    }
   }
-});
+);
 
 // Computed
 const isLoading = computed(() => authStore.isLoading);
@@ -237,9 +253,7 @@ async function checkEmailExists(email: string): Promise<boolean> {
   } catch (err) {
     console.warn("Email check endpoint not implemented, using mock");
     return false;
-  }
-
- finally {
+  } finally {
     isCheckingEmail.value = false;
   }
 }
@@ -252,7 +266,8 @@ async function handleEmailStep() {
   const emailExists = await checkEmailExists(formData.email);
 
   emailConfirmed.value = true;
-  authMode.value = emailExists ? "login" : "register";emailExists
+  authMode.value = emailExists ? "login" : "register";
+  emailExists;
 
   formData.password = "";
   formData.name = "";
@@ -427,7 +442,10 @@ async function handleSubmit(): Promise<void> {
     <!-- Progressive Form -->
     <form @submit.prevent="handleSubmit" novalidate class="progressive-form">
       <!-- Email Field with Floating Label -->
-      <div class="form-group" :class="{ 'has-value': formData.email, 'is-disabled': emailConfirmed }">
+      <div
+        class="form-group"
+        :class="{ 'has-value': formData.email, 'is-disabled': emailConfirmed }"
+      >
         <input
           id="email"
           v-model="formData.email"
@@ -451,8 +469,13 @@ async function handleSubmit(): Promise<void> {
           class="change-email-btn"
           :aria-label="$t('auth.unified.changeEmail')"
         >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+            />
           </svg>
           <span>{{ $t("auth.unified.change") }}</span>
         </button>
@@ -485,7 +508,9 @@ async function handleSubmit(): Promise<void> {
                 type="button"
                 @click="showPassword = !showPassword"
                 class="password-toggle"
-                :aria-label="showPassword ? $t('auth.unified.hidePassword') : $t('auth.unified.showPassword')"
+                :aria-label="
+                  showPassword ? $t('auth.unified.hidePassword') : $t('auth.unified.showPassword')
+                "
               >
                 <EyeIcon v-if="!showPassword" class="icon" />
                 <EyeSlashIcon v-else class="icon" />
@@ -497,25 +522,41 @@ async function handleSubmit(): Promise<void> {
               <div v-if="formData.password && errors.password" class="password-requirements">
                 <div class="requirement-item" :class="{ met: passwordRequirements.minLength }">
                   <svg class="requirement-icon" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                    <path
+                      fill-rule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clip-rule="evenodd"
+                    />
                   </svg>
                   <span>{{ $t("auth.validation.passwordRequirements.minLength") }}</span>
                 </div>
                 <div class="requirement-item" :class="{ met: passwordRequirements.hasUppercase }">
                   <svg class="requirement-icon" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                    <path
+                      fill-rule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clip-rule="evenodd"
+                    />
                   </svg>
                   <span>{{ $t("auth.validation.passwordRequirements.uppercase") }}</span>
                 </div>
                 <div class="requirement-item" :class="{ met: passwordRequirements.hasLowercase }">
                   <svg class="requirement-icon" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                    <path
+                      fill-rule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clip-rule="evenodd"
+                    />
                   </svg>
                   <span>{{ $t("auth.validation.passwordRequirements.lowercase") }}</span>
                 </div>
                 <div class="requirement-item" :class="{ met: passwordRequirements.hasNumber }">
                   <svg class="requirement-icon" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                    <path
+                      fill-rule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clip-rule="evenodd"
+                    />
                   </svg>
                   <span>{{ $t("auth.validation.passwordRequirements.number") }}</span>
                 </div>
@@ -554,7 +595,6 @@ async function handleSubmit(): Promise<void> {
             />
             <label for="name" class="floating-label">
               {{ $t("auth.fields.name") }}
-
             </label>
             <transition name="fade">
               <p v-if="errors.name" class="form-error">{{ errors.name }}</p>
@@ -581,7 +621,9 @@ async function handleSubmit(): Promise<void> {
                 type="button"
                 @click="showPassword = !showPassword"
                 class="password-toggle"
-                :aria-label="showPassword ? $t('auth.unified.hidePassword') : $t('auth.unified.showPassword')"
+                :aria-label="
+                  showPassword ? $t('auth.unified.hidePassword') : $t('auth.unified.showPassword')
+                "
               >
                 <EyeIcon v-if="!showPassword" class="icon" />
                 <EyeSlashIcon v-else class="icon" />
@@ -590,28 +632,47 @@ async function handleSubmit(): Promise<void> {
 
             <!-- Password Requirements Checklist -->
             <transition name="fade">
-              <div v-if="formData.password && authMode === 'register'" class="password-requirements">
+              <div
+                v-if="formData.password && authMode === 'register'"
+                class="password-requirements"
+              >
                 <div class="requirement-item" :class="{ met: passwordRequirements.minLength }">
                   <svg class="requirement-icon" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                    <path
+                      fill-rule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clip-rule="evenodd"
+                    />
                   </svg>
                   <span>{{ $t("auth.validation.passwordRequirements.minLength") }}</span>
                 </div>
                 <div class="requirement-item" :class="{ met: passwordRequirements.hasUppercase }">
                   <svg class="requirement-icon" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                    <path
+                      fill-rule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clip-rule="evenodd"
+                    />
                   </svg>
                   <span>{{ $t("auth.validation.passwordRequirements.uppercase") }}</span>
                 </div>
                 <div class="requirement-item" :class="{ met: passwordRequirements.hasLowercase }">
                   <svg class="requirement-icon" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                    <path
+                      fill-rule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clip-rule="evenodd"
+                    />
                   </svg>
                   <span>{{ $t("auth.validation.passwordRequirements.lowercase") }}</span>
                 </div>
                 <div class="requirement-item" :class="{ met: passwordRequirements.hasNumber }">
                   <svg class="requirement-icon" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                    <path
+                      fill-rule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clip-rule="evenodd"
+                    />
                   </svg>
                   <span>{{ $t("auth.validation.passwordRequirements.number") }}</span>
                 </div>
@@ -629,8 +690,19 @@ async function handleSubmit(): Promise<void> {
                 :class="{ 'input-error': errors.acceptTerms }"
               />
               <span class="checkbox-box">
-                <svg v-if="formData.acceptTerms" class="checkmark" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                <svg
+                  v-if="formData.acceptTerms"
+                  class="checkmark"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="3"
+                    d="M5 13l4 4L19 7"
+                  />
                 </svg>
               </span>
               <span class="checkbox-text">
@@ -638,20 +710,16 @@ async function handleSubmit(): Promise<void> {
 
                 <a href="/terms" target="_blank" class="link" @click.stop>
                   {{ $t("auth.register.termsOfService") }}
-
                 </a>
                 {{ $t("auth.register.and") }}
 
                 <a href="/privacy" target="_blank" class="link" @click.stop>
                   {{ $t("auth.register.privacyPolicy") }}
-
                 </a>
               </span>
             </label>
             <transition name="fade">
-              <p v-if="errors.acceptTerms" class="form-error">{{ errors.acceptTerms }}
-
-</p>
+              <p v-if="errors.acceptTerms" class="form-error">{{ errors.acceptTerms }}</p>
             </transition>
           </div>
         </div>
@@ -660,7 +728,13 @@ async function handleSubmit(): Promise<void> {
       <!-- Error Message -->
       <transition name="slide-fade">
         <div v-if="error" class="error-alert">
-          <svg class="error-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <svg
+            class="error-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
             <circle cx="12" cy="12" r="10" />
             <path d="M12 8v4m0 4h.01" />
           </svg>
@@ -677,20 +751,25 @@ async function handleSubmit(): Promise<void> {
       >
         <span v-if="isLoading || isCheckingEmail" class="btn-content">
           <svg class="spinner" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+              fill="none"
+            ></circle>
             <path
               class="opacity-75"
               fill="currentColor"
               d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
             ></path>
           </svg>
-          <span>{{ getLoadingText }}
-
-</span>
+          <span>{{ getLoadingText }} </span>
         </span>
         <span v-else class="btn-content">
           {{ getButtonText }}
-
         </span>
       </button>
     </form>
@@ -698,22 +777,30 @@ async function handleSubmit(): Promise<void> {
     <!-- Trust Indicators -->
     <div class="trust-section">
       <div class="trust-item">
-        <svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <svg
+          class="trust-icon"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
         </svg>
-        <span>{{ $t("auth.unified.secureEncrypted") }}
-
-</span>
+        <span>{{ $t("auth.unified.secureEncrypted") }} </span>
       </div>
       <div class="trust-item">
-        <svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <svg
+          class="trust-icon"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
           <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
           <circle cx="9" cy="7" r="4" />
           <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
         </svg>
-        <span>{{ $t("auth.unified.joinThousands") }}
-
-</span>
+        <span>{{ $t("auth.unified.joinThousands") }} </span>
       </div>
     </div>
   </div>
@@ -731,33 +818,33 @@ async function handleSubmit(): Promise<void> {
 }
 
 .oauth-button {
-  @apply w-full flex items-center justify-center gap-3;
-  @apply px-6 py-3.5 rounded-xl;
-  @apply bg-white border-2 border-gray-200;
-  @apply text-gray-700 font-semibold text-base;
+  @apply flex w-full items-center justify-center gap-3;
+  @apply rounded-xl px-6 py-3.5;
+  @apply border-2 border-gray-200 bg-white;
+  @apply text-base font-semibold text-gray-700;
   @apply transition-all duration-200;
-  @apply hover:border-gray-300 hover:shadow-md hover:-translate-y-0.5;
+  @apply hover:-translate-y-0.5 hover:border-gray-300 hover:shadow-md;
   @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
-  @apply disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none;
-  @apply dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200;
+  @apply disabled:transform-none disabled:cursor-not-allowed disabled:opacity-50;
+  @apply dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200;
 }
 
 .oauth-icon {
-  @apply w-5 h-5 flex-shrink-0;
+  @apply h-5 w-5 flex-shrink-0;
 }
 
 /* Divider */
 .form-divider {
-  @apply flex items-center gap-4 my-6;
+  @apply my-6 flex items-center gap-4;
 }
 
 .divider-line {
-  @apply flex-1 h-px bg-gray-200;
+  @apply h-px flex-1 bg-gray-200;
   @apply dark:bg-gray-700;
 }
 
 .divider-text {
-  @apply text-sm font-medium text-gray-400 uppercase tracking-wide;
+  @apply text-sm font-medium uppercase tracking-wide text-gray-400;
   @apply dark:text-gray-500;
 }
 
@@ -776,13 +863,13 @@ async function handleSubmit(): Promise<void> {
 }
 
 .form-input {
-  @apply w-full px-4 py-4 rounded-xl;
+  @apply w-full rounded-xl px-4 py-4;
   @apply border-2 border-gray-200 bg-white;
-  @apply text-gray-900 text-base;
+  @apply text-base text-gray-900;
   @apply transition-all duration-200;
   @apply focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10;
   @apply focus:outline-none;
-  @apply dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100;
+  @apply dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100;
   @apply dark:focus:border-primary-400;
   @apply placeholder-transparent;
   @apply leading-6;
@@ -790,11 +877,11 @@ async function handleSubmit(): Promise<void> {
 
 .form-group.has-value .form-input,
 .form-input:focus {
-  @apply pt-6 pb-2;
+  @apply pb-2 pt-6;
 }
 
 .form-input:disabled {
-  @apply bg-gray-50 text-gray-500 cursor-not-allowed;
+  @apply cursor-not-allowed bg-gray-50 text-gray-500;
   @apply dark:bg-gray-700/50 dark:text-gray-400;
 }
 
@@ -813,7 +900,7 @@ async function handleSubmit(): Promise<void> {
 
   top: 1.125rem; /* Center within input: border(2px) + padding-top(16px) + half line-height(12px) - half font(8px) */
 
-  @apply text-gray-500 text-base;
+  @apply text-base text-gray-500;
   @apply transition-all duration-200;
   @apply pointer-events-none;
   @apply dark:text-gray-400;
@@ -843,13 +930,13 @@ async function handleSubmit(): Promise<void> {
 .change-email-btn {
   @apply absolute right-3 top-1/2 -translate-y-1/2;
   @apply flex items-center gap-1.5;
-  @apply px-3 py-1.5 rounded-lg;
+  @apply rounded-lg px-3 py-1.5;
   @apply text-sm font-medium text-primary-600;
-  @apply bg-primary-50 border border-primary-200;
+  @apply border border-primary-200 bg-primary-50;
   @apply transition-all duration-200;
-  @apply hover:bg-primary-100 hover:border-primary-300;
+  @apply hover:border-primary-300 hover:bg-primary-100;
   @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
-  @apply dark:bg-primary-900/20 dark:border-primary-700 dark:text-primary-400;
+  @apply dark:border-primary-700 dark:bg-primary-900/20 dark:text-primary-400;
   @apply dark:hover:bg-primary-900/30;
 }
 
@@ -860,15 +947,15 @@ async function handleSubmit(): Promise<void> {
 
 .password-toggle {
   @apply absolute right-3 top-1/2 -translate-y-1/2;
-  @apply p-2 rounded-lg;
+  @apply rounded-lg p-2;
   @apply text-gray-400 transition-all duration-200;
-  @apply hover:text-gray-600 hover:bg-gray-100;
+  @apply hover:bg-gray-100 hover:text-gray-600;
   @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
-  @apply dark:text-gray-500 dark:hover:text-gray-300 dark:hover:bg-gray-700;
+  @apply dark:text-gray-500 dark:hover:bg-gray-700 dark:hover:text-gray-300;
 }
 
 .password-toggle .icon {
-  @apply w-5 h-5;
+  @apply h-5 w-5;
 }
 
 /* Password Requirements */
@@ -888,7 +975,7 @@ async function handleSubmit(): Promise<void> {
 }
 
 .requirement-icon {
-  @apply w-5 h-5 flex-shrink-0;
+  @apply h-5 w-5 flex-shrink-0;
   @apply transition-all duration-200;
 }
 
@@ -950,7 +1037,7 @@ async function handleSubmit(): Promise<void> {
 }
 
 .checkbox-label {
-  @apply flex items-start gap-3 cursor-pointer;
+  @apply flex cursor-pointer items-start gap-3;
 }
 
 .checkbox-input {
@@ -958,16 +1045,16 @@ async function handleSubmit(): Promise<void> {
 }
 
 .checkbox-box {
-  @apply relative flex-shrink-0 w-5 h-5 mt-0.5;
+  @apply relative mt-0.5 h-5 w-5 flex-shrink-0;
   @apply rounded border-2 border-gray-300;
   @apply bg-white transition-all duration-200;
   @apply group-hover:border-primary-400;
-  @apply dark:bg-gray-800 dark:border-gray-600;
+  @apply dark:border-gray-600 dark:bg-gray-800;
 }
 
 .checkbox-input:checked ~ .checkbox-box {
-  @apply bg-primary-600 border-primary-600;
-  @apply dark:bg-primary-500 dark:border-primary-500;
+  @apply border-primary-600 bg-primary-600;
+  @apply dark:border-primary-500 dark:bg-primary-500;
 }
 
 .checkbox-input:focus ~ .checkbox-box {
@@ -980,11 +1067,11 @@ async function handleSubmit(): Promise<void> {
 }
 
 .checkmark {
-  @apply absolute inset-0 w-full h-full text-white;
+  @apply absolute inset-0 h-full w-full text-white;
 }
 
 .checkbox-text {
-  @apply text-sm text-gray-600 leading-relaxed;
+  @apply text-sm leading-relaxed text-gray-600;
   @apply dark:text-gray-300;
 }
 
@@ -1004,19 +1091,19 @@ async function handleSubmit(): Promise<void> {
   @apply text-sm font-medium text-primary-600;
   @apply transition-all duration-200;
   @apply hover:text-primary-700 hover:underline;
-  @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 rounded;
+  @apply rounded focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
   @apply dark:text-primary-400 dark:hover:text-primary-300;
 }
 
 /* Error Alert */
 .error-alert {
-  @apply flex items-center gap-3 p-4 rounded-xl;
-  @apply bg-red-50 border border-red-200 text-red-700;
-  @apply dark:bg-red-900/20 dark:border-red-800 dark:text-red-400;
+  @apply flex items-center gap-3 rounded-xl p-4;
+  @apply border border-red-200 bg-red-50 text-red-700;
+  @apply dark:border-red-800 dark:bg-red-900/20 dark:text-red-400;
 }
 
 .error-icon {
-  @apply w-5 h-5 flex-shrink-0;
+  @apply h-5 w-5 flex-shrink-0;
 }
 
 .form-error {
@@ -1026,14 +1113,14 @@ async function handleSubmit(): Promise<void> {
 
 /* Submit Button */
 .submit-btn {
-  @apply w-full py-3.5 rounded-xl;
+  @apply w-full rounded-xl py-3.5;
   @apply bg-gradient-to-r from-primary-600 to-primary-700;
-  @apply text-white font-semibold text-base;
+  @apply text-base font-semibold text-white;
   @apply shadow-lg shadow-primary-500/30;
   @apply transition-all duration-200;
-  @apply hover:shadow-xl hover:shadow-primary-500/40 hover:-translate-y-0.5;
+  @apply hover:-translate-y-0.5 hover:shadow-xl hover:shadow-primary-500/40;
   @apply focus:outline-none focus:ring-4 focus:ring-primary-500/50;
-  @apply disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none;
+  @apply disabled:transform-none disabled:cursor-not-allowed disabled:opacity-50;
   @apply dark:from-primary-500 dark:to-primary-600;
 }
 
@@ -1046,12 +1133,12 @@ async function handleSubmit(): Promise<void> {
 }
 
 .spinner {
-  @apply w-5 h-5 animate-spin;
+  @apply h-5 w-5 animate-spin;
 }
 
 /* Trust Section */
 .trust-section {
-  @apply mt-6 pt-6 border-t border-gray-100;
+  @apply mt-6 border-t border-gray-100 pt-6;
   @apply flex items-center justify-center gap-6;
   @apply dark:border-gray-700;
 }
@@ -1063,7 +1150,7 @@ async function handleSubmit(): Promise<void> {
 }
 
 .trust-icon {
-  @apply w-4 h-4;
+  @apply h-4 w-4;
 }
 
 /* Animations */
@@ -1086,26 +1173,26 @@ async function handleSubmit(): Promise<void> {
 }
 
 .slide-fade-enter-from {
-  @apply opacity-0 translate-y-2;
+  @apply translate-y-2 opacity-0;
 }
 
 .slide-fade-leave-to {
-  @apply opacity-0 -translate-y-2;
+  @apply -translate-y-2 opacity-0;
 }
 
 /* Responsive */
 @media (width <= 640px) {
   .oauth-button {
-    @apply text-sm py-3;
+    @apply py-3 text-sm;
   }
 
   .form-input {
-    @apply text-sm py-3;
+    @apply py-3 text-sm;
   }
 
   .form-group.has-value .form-input,
   .form-input:focus {
-    @apply pt-5 pb-2;
+    @apply pb-2 pt-5;
   }
 
   .floating-label {

@@ -90,17 +90,9 @@ export function trackEvent(event: TelemetryEvent, data?: ITelemetryEventData): v
     }
 
     // Try to send to Google Analytics if available
-    if (
-      import.meta.env.PROD &&
-      typeof window !== "undefined" &&
-      "gtag" in window
-    ) {
+    if (import.meta.env.PROD && typeof window !== "undefined" && "gtag" in window) {
       const { gtag } = window as {
-        gtag: (
-          command: string,
-          eventName: string,
-          eventParams?: Record<string, unknown>
-        ) => void;
+        gtag: (command: string, eventName: string, eventParams?: Record<string, unknown>) => void;
       };
       gtag("event", event, data);
     }

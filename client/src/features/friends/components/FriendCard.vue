@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import type { IFriendCardProps as Props, IFriendCardEmits as Emits } from "@/types/components/friends";
-import { computed } from 'vue';
-import { useFriends } from '@/composables/useFriends';
-import type { Friend } from '@/stores/friends';
-
-
-
-
+import type {
+  IFriendCardProps as Props,
+  IFriendCardEmits as Emits,
+} from "@/types/components/friends";
+import { computed } from "vue";
+import { useFriends } from "@/composables/useFriends";
+import type { Friend } from "@/stores/friends";
 
 const props = withDefaults(defineProps<Props>(), {
   showActions: true,
@@ -15,14 +14,8 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<Emits>();
 
-const {
-  getLevelColor,
-  getLevelBadge,
-  getLevelTitle,
-  formatDate,
-  getUserAvatar,
-  getAvatarColor,
-} = useFriends();
+const { getLevelColor, getLevelBadge, getLevelTitle, formatDate, getUserAvatar, getAvatarColor } =
+  useFriends();
 
 // Computed
 const avatar = computed(() => getUserAvatar(props.friend));
@@ -31,26 +24,26 @@ const levelBadge = computed(() => getLevelBadge(props.friend.level));
 const levelTitle = computed(() => getLevelTitle(props.friend.level));
 const avatarColor = computed(() => getAvatarColor(props.friend.name));
 const friendSinceText = computed(() =>
-  props.friend.friendSince ? formatDate(props.friend.friendSince) : 'Recently'
+  props.friend.friendSince ? formatDate(props.friend.friendSince) : "Recently"
 );
 
 // Methods
 const handleUnfriend = () => {
-  emit('unfriend', props.friend._id);
+  emit("unfriend", props.friend._id);
 };
 
 const handleblock = () => {
-  emit('block', props.friend._id);
+  emit("block", props.friend._id);
 };
 
 const handleview = () => {
-  emit('view', props.friend._id);
+  emit("view", props.friend._id);
 };
 </script>
 
 <template>
   <div
-    class="friend-card bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 transition-all hover:shadow-md"
+    class="friend-card rounded-lg border border-gray-200 bg-white transition-all hover:shadow-md dark:border-gray-700 dark:bg-gray-800"
     :class="{ 'p-4': !compact, 'p-3': compact }"
   >
     <div class="flex items-center gap-4">
@@ -60,37 +53,31 @@ const handleview = () => {
           v-if="avatar.type === 'initials'"
           :class="[
             avatarColor,
-            'rounded-full flex items-center justify-center text-white font-bold',
-            compact ? 'w-10 h-10 text-sm' : 'w-12 h-12 text-base',
+            'flex items-center justify-center rounded-full font-bold text-white',
+            compact ? 'h-10 w-10 text-sm' : 'h-12 w-12 text-base',
           ]"
         >
           {{ avatar.value }}
-
         </div>
         <img
           v-else
           :src="avatar.value"
           :alt="friend.name"
-          :class="[
-            'rounded-full object-cover',
-            compact ? 'w-10 h-10' : 'w-12 h-12',
-          ]"
+          :class="['rounded-full object-cover', compact ? 'h-10 w-10' : 'h-12 w-12']"
         />
       </div>
 
       <!-- Info -->
-      <div class="flex-1 min-w-0">
-        <div class="flex items-center gap-2 mb-1">
+      <div class="min-w-0 flex-1">
+        <div class="mb-1 flex items-center gap-2">
           <h3
-            class="font-semibold text-gray-900 dark:text-white truncate"
+            class="truncate font-semibold text-gray-900 dark:text-white"
             :class="compact ? 'text-sm' : 'text-base'"
           >
             {{ friend.name }}
-
           </h3>
           <span :class="['text-sm', levelColor]" :title="levelTitle">
             {{ levelBadge }}
-
           </span>
         </div>
 
@@ -98,44 +85,42 @@ const handleview = () => {
           class="flex items-center gap-2 text-gray-600 dark:text-gray-400"
           :class="compact ? 'text-xs' : 'text-sm'"
         >
-          <span>Level {{ friend.level }}
-
-</span>
+          <span>Level {{ friend.level }} </span>
           <span>•</span>
-          <span>{{ friend.xp.toLocaleString() }}
+          <span
+            >{{ friend.xp.toLocaleString() }}
 
- XP</span>
+            XP</span
+          >
         </div>
 
         <div
           v-if="!compact && friend.friendSince"
-          class="text-xs text-gray-500 dark:text-gray-500 mt-1"
+          class="mt-1 text-xs text-gray-500 dark:text-gray-500"
         >
           Friends since {{ friendSinceText }}
-
         </div>
 
         <div
           v-if="!compact && friend.mutualFriends && friend.mutualFriends > 0"
-          class="text-xs text-indigo-600 dark:text-indigo-400 mt-1"
+          class="mt-1 text-xs text-indigo-600 dark:text-indigo-400"
         >
           {{ friend.mutualFriends }}
 
- mutual friend{{
+          mutual friend{{
             friend.mutualFriends > 1 ? 's' : ''1
           }}
-
         </div>
       </div>
 
       <!-- Actions -->
-      <div v-if="showActions" class="flex-shrink-0 flex items-center gap-2">
+      <div v-if="showActions" class="flex flex-shrink-0 items-center gap-2">
         <button
           @click="handleView"
-          class="p-2 text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+          class="rounded-lg p-2 text-gray-600 transition-colors hover:bg-gray-100 hover:text-indigo-600 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-indigo-400"
           title="View profile"
         >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -146,12 +131,12 @@ const handleview = () => {
         </button>
 
         <!-- More Actions Menu -->
-        <div class="relative group">
+        <div class="group relative">
           <button
-            class="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+            class="rounded-lg p-2 text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
             title="More actions"
           >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -163,17 +148,17 @@ const handleview = () => {
 
           <!-- Dropdown Menu -->
           <div
-            class="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10"
+            class="invisible absolute right-0 top-full z-10 mt-2 w-48 rounded-lg border border-gray-200 bg-white py-1 opacity-0 shadow-lg transition-all group-hover:visible group-hover:opacity-100 dark:border-gray-700 dark:bg-gray-800"
           >
             <button
               @click="handleUnfriend"
-              class="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+              class="w-full px-4 py-2 text-left text-sm text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
             >
               Remove Friend
             </button>
             <button
               @click="handleBlock"
-              class="w-full px-4 py-2 text-left text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+              class="w-full px-4 py-2 text-left text-sm text-red-600 transition-colors hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20"
             >
               Block User
             </button>
@@ -190,6 +175,6 @@ const handleview = () => {
 }
 
 .friend-card:hover {
-  @apply transform scale-[1.02];
+  @apply scale-[1.02] transform;
 }
 </style>

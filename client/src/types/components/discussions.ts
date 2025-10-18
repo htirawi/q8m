@@ -44,4 +44,3 @@ export interface IReplyFormProps {
 export interface IReplyFormEmits {
   (e: "submit", content: string): void;
 }
-

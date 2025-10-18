@@ -1,4 +1,3 @@
-
 import type { AuthOptions } from "@middlewares/auth.middleware.js";
 import { createAuthMiddleware } from "@middlewares/auth.middleware.js";
 import type { FastifyPluginAsync, FastifyReply, FastifyRequest } from "fastify";

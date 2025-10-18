@@ -1,13 +1,12 @@
 <script setup lang="ts">
-import type { IPlanCardProps as IProps, IPlanCardEmits as IEmits } from "@/types/components/pricing";
-import { computed, ref } from 'vue';
-import { useI18n } from 'vue-i18n';
-import type { IPlanConfig } from '@/config/plans';
-import type { BillingCycle, PlanId } from '@/types/pricing';
-
-
-
-
+import type {
+  IPlanCardProps as IProps,
+  IPlanCardEmits as IEmits,
+} from "@/types/components/pricing";
+import { computed, ref } from "vue";
+import { useI18n } from "vue-i18n";
+import type { IPlanConfig } from "@/config/plans";
+import type { BillingCycle, PlanId } from "@/types/pricing";
 
 const props = withDefaults(defineProps<IProps>(), {
   featured: false,
@@ -22,13 +21,13 @@ const showROICalculator = ref(false);
 
 const currentPrice = computed(() => {
   if (!props.plan) return 0;
-  return props.billing === 'monthly'
+  return props.billing === "monthly"
     ? (props.plan.priceMonthly ?? 0)
     : (props.plan.priceYearly ?? 0);
 });
 
 const savingsPercent = computed(() => {
-  if (!props.plan || props.billing !== 'annual' || (props.plan.priceMonthly ?? 0) === 0) return 0;
+  if (!props.plan || props.billing !== "annual" || (props.plan.priceMonthly ?? 0) === 0) return 0;
   const monthlyCost = (props.plan.priceMonthly ?? 0) * 12;
   const annualCost = props.plan.priceYearly ?? 0;
   const savings = monthlyCost - annualCost;
@@ -36,66 +35,85 @@ const savingsPercent = computed(() => {
 });
 
 const handleselect = () => {
-  emit('select', props.plan?.id, props.billing);
+  emit("select", props.plan?.id, props.billing);
 };
 
 defineOptions({
-  name: 'PlanCard',
+  name: "PlanCard",
 });
 </script>
 
 <template>
-  <div class="plan-card" :class="{
-    'plan-card--featured': featured || plan?.metadata?.featured,
-    'plan-card--free': plan?.priceMonthly === 0,
-    'plan-card--selected': selected,
-    'plan-card--rtl': $i18n.locale === 'ar'
-  }" :data-testid="`plan-card-${plan?.id}`">
+  <div
+    class="plan-card"
+    :class="{
+      'plan-card--featured': featured || plan?.metadata?.featured,
+      'plan-card--free': plan?.priceMonthly === 0,
+      'plan-card--selected': selected,
+      'plan-card--rtl': $i18n.locale === 'ar',
+    }"
+    :data-testid="`plan-card-${plan?.id}`"
+  >
     <!-- IBadge -->
-    <div v-if="plan?.badge" class="plan-card-badge" :class="`plan-card-badge--${plan?.badge.color}`">
-      {{ plan?.badge?.textKey ? t(plan.badge.textKey) : '' }}
-
+    <div
+      v-if="plan?.badge"
+      class="plan-card-badge"
+      :class="`plan-card-badge--${plan?.badge.color}`"
+    >
+      {{ plan?.badge?.textKey ? t(plan.badge.textKey) : "" }}
     </div>
 
     <!-- Header -->
     <div class="plan-card-header">
       <div class="plan-card-icon" :aria-hidden="true">
         {{ plan?.visual.icon }}
-
       </div>
       <h3 class="plan-card-title">
-        {{ plan?.labelKey ? t(plan.labelKey) : '' }}
+        {{ plan?.labelKey ? t(plan.labelKey) : "" }}
       </h3>
       <p class="plan-card-description">
-        {{ plan?.descriptionKey ? t(plan.descriptionKey) : '' }}
+        {{ plan?.descriptionKey ? t(plan.descriptionKey) : "" }}
       </p>
     </div>
 
     <!-- Price -->
     <div class="plan-card-price-section">
       <div class="plan-card-price">
-        <span class="plan-card-currency" :class="{ 'plan-card-currency--rtl': $i18n.locale === 'ar' }">$</span>
-        <span class="plan-card-amount">{{ currentPrice }}
-
-        </span>
+        <span
+          class="plan-card-currency"
+          :class="{ 'plan-card-currency--rtl': $i18n.locale === 'ar' }"
+          >$</span
+        >
+        <span class="plan-card-amount">{{ currentPrice }} </span>
       </div>
       <p class="plan-card-period">
-        {{ billing === 'monthly' ? t('pricing.billing.perMonth') : t('pricing.billing.perYear') }}
+        {{ billing === "monthly" ? t("pricing.billing.perMonth") : t("pricing.billing.perYear") }}
       </p>
       <p v-if="savingsPercent > 0" class="plan-card-savings">
-        {{ t('pricing.billing.savePercent', { percent: savingsPercent }) }}
+        {{ t("pricing.billing.savePercent", { percent: savingsPercent }) }}
       </p>
 
       <!-- ROI Calculator for paid plans -->
-      <div v-if="currentPrice > 0" class="plan-card-roi" :class="{ 'plan-card-roi--rtl': $i18n.locale === 'ar' }">
-        <button type="button" class="plan-card-roi-button"
+      <div
+        v-if="currentPrice > 0"
+        class="plan-card-roi"
+        :class="{ 'plan-card-roi--rtl': $i18n.locale === 'ar' }"
+      >
+        <button
+          type="button"
+          class="plan-card-roi-button"
           :class="{ 'plan-card-roi-button--rtl': $i18n.locale === 'ar' }"
-          @click="showROICalculator = !showROICalculator">
+          @click="showROICalculator = !showROICalculator"
+        >
           <svg class="plan-card-roi-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+            />
           </svg>
-          <span>{{ t('pricing.roi.calculator') }}</span>
+          <span>{{ t("pricing.roi.calculator") }}</span>
         </button>
       </div>
 
@@ -103,32 +121,51 @@ defineOptions({
       <div v-if="featured || plan?.metadata?.featured" class="plan-card-social-proof">
         <div class="plan-card-social-proof-stats">
           <div class="plan-card-social-proof-stat">
-            <span class="plan-card-social-proof-label">{{ t('pricing.socialProof.recentPurchases', { count: '2,500' })
-              }}</span>
+            <span class="plan-card-social-proof-label">{{
+              t("pricing.socialProof.recentPurchases", { count: "2,500" })
+            }}</span>
           </div>
         </div>
       </div>
     </div>
 
     <!-- Features -->
-    <ul class="plan-card-features" :class="{ 'plan-card-features--rtl': $i18n.locale === 'ar' }" role="list">
+    <ul
+      class="plan-card-features"
+      :class="{ 'plan-card-features--rtl': $i18n.locale === 'ar' }"
+      role="list"
+    >
       <li v-for="(benefitKey, idx) in plan?.features.benefits" :key="idx" class="plan-card-feature">
         <!-- LTR: icon first, then text -->
         <template v-if="$i18n.locale !== 'ar'">
-          <svg class="plan-card-check-icon" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-            <path fill-rule="evenodd"
+          <svg
+            class="plan-card-check-icon"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+            aria-hidden="true"
+          >
+            <path
+              fill-rule="evenodd"
               d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-              clip-rule="evenodd" />
+              clip-rule="evenodd"
+            />
           </svg>
           <span>{{ t(benefitKey) }}</span>
         </template>
         <!-- RTL: text first, then icon -->
         <template v-else>
           <span>{{ t(benefitKey) }}</span>
-          <svg class="plan-card-check-icon" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-            <path fill-rule="evenodd"
+          <svg
+            class="plan-card-check-icon"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+            aria-hidden="true"
+          >
+            <path
+              fill-rule="evenodd"
               d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-              clip-rule="evenodd" />
+              clip-rule="evenodd"
+            />
           </svg>
         </template>
       </li>
@@ -136,36 +173,66 @@ defineOptions({
 
     <!-- CTA -->
     <div class="plan-card-cta-section">
-      <button type="button" class="plan-card-cta" :class="{
-        'plan-card-cta--primary': featured || plan?.metadata?.featured,
-        'plan-card-cta--secondary': !featured && !plan?.metadata?.featured,
-      }" @click="handleSelect" :data-testid="`plan-cta-${plan?.id}`">
-        {{ plan?.cta?.labelKey ? t(plan.cta.labelKey) : '' }}
+      <button
+        type="button"
+        class="plan-card-cta"
+        :class="{
+          'plan-card-cta--primary': featured || plan?.metadata?.featured,
+          'plan-card-cta--secondary': !featured && !plan?.metadata?.featured,
+        }"
+        @click="handleSelect"
+        :data-testid="`plan-cta-${plan?.id}`"
+      >
+        {{ plan?.cta?.labelKey ? t(plan.cta.labelKey) : "" }}
       </button>
 
       <!-- Trust indicators -->
-      <div v-if="plan?.reassurance?.items?.length" class="plan-card-trust-indicators"
-        :class="{ 'plan-card-trust-indicators--rtl': $i18n.locale === 'ar' }">
-        <div v-for="(item, idx) in plan.reassurance.items.slice(0, 2)" :key="idx" class="plan-card-trust-item"
-          :class="{ 'plan-card-trust-item--rtl': $i18n.locale === 'ar' }">
-          <svg class="plan-card-trust-icon" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-            <path fill-rule="evenodd"
+      <div
+        v-if="plan?.reassurance?.items?.length"
+        class="plan-card-trust-indicators"
+        :class="{ 'plan-card-trust-indicators--rtl': $i18n.locale === 'ar' }"
+      >
+        <div
+          v-for="(item, idx) in plan.reassurance.items.slice(0, 2)"
+          :key="idx"
+          class="plan-card-trust-item"
+          :class="{ 'plan-card-trust-item--rtl': $i18n.locale === 'ar' }"
+        >
+          <svg
+            class="plan-card-trust-icon"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+            aria-hidden="true"
+          >
+            <path
+              fill-rule="evenodd"
               d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-              clip-rule="evenodd" />
+              clip-rule="evenodd"
+            />
           </svg>
           <span class="plan-card-trust-text">{{ t(item) }}</span>
         </div>
       </div>
 
       <!-- Urgency indicator for featured plans -->
-      <div v-if="featured || plan?.metadata?.featured" class="plan-card-urgency"
-        :class="{ 'plan-card-urgency--rtl': $i18n.locale === 'ar' }">
-        <div class="plan-card-urgency-badge" :class="{ 'plan-card-urgency-badge--rtl': $i18n.locale === 'ar' }">
+      <div
+        v-if="featured || plan?.metadata?.featured"
+        class="plan-card-urgency"
+        :class="{ 'plan-card-urgency--rtl': $i18n.locale === 'ar' }"
+      >
+        <div
+          class="plan-card-urgency-badge"
+          :class="{ 'plan-card-urgency-badge--rtl': $i18n.locale === 'ar' }"
+        >
           <svg class="plan-card-urgency-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
           </svg>
-          <span>{{ t('pricing.urgency.limitedTime') }}</span>
+          <span>{{ t("pricing.urgency.limitedTime") }}</span>
         </div>
       </div>
     </div>
@@ -214,8 +281,8 @@ defineOptions({
 
 .plan-card-badge {
   @apply absolute -top-3 left-1/2 -translate-x-1/2;
-  @apply px-4 py-1.5 rounded-full;
-  @apply text-white text-[10px] font-bold uppercase tracking-wider;
+  @apply rounded-full px-4 py-1.5;
+  @apply text-[10px] font-bold uppercase tracking-wider text-white;
   @apply shadow-lg;
   @apply animate-pulse;
 }
@@ -231,16 +298,16 @@ defineOptions({
 }
 
 .plan-card-header {
-  @apply text-center mb-5;
+  @apply mb-5 text-center;
 }
 
 .plan-card-icon {
-  @apply text-4xl mb-2;
+  @apply mb-2 text-4xl;
   @apply drop-shadow-lg;
 }
 
 .plan-card-title {
-  @apply text-xl font-bold text-gray-900 dark:text-white mb-2;
+  @apply mb-2 text-xl font-bold text-gray-900 dark:text-white;
   @apply tracking-tight;
 }
 
@@ -250,20 +317,20 @@ defineOptions({
 }
 
 .plan-card-price-section {
-  @apply text-center mb-5 pb-5 border-b border-gray-100 dark:border-gray-700;
+  @apply mb-5 border-b border-gray-100 pb-5 text-center dark:border-gray-700;
 }
 
 .plan-card-price {
-  @apply flex items-baseline justify-center mb-1;
+  @apply mb-1 flex items-baseline justify-center;
 }
 
 .plan-card-currency {
-  @apply text-2xl font-bold text-gray-900 dark:text-white mr-1;
+  @apply mr-1 text-2xl font-bold text-gray-900 dark:text-white;
   @apply align-top;
 }
 
 .plan-card-currency--rtl {
-  @apply mr-0 ml-1;
+  @apply ml-1 mr-0;
 }
 
 .plan-card-amount {
@@ -288,7 +355,7 @@ defineOptions({
 }
 
 .plan-card-savings {
-  @apply inline-block mt-1.5 px-2.5 py-1 rounded-full;
+  @apply mt-1.5 inline-block rounded-full px-2.5 py-1;
   @apply text-[10px] font-bold text-green-700 dark:text-green-300;
   @apply bg-green-100 dark:bg-green-900/30;
   @apply border border-green-300 dark:border-green-700;
@@ -303,7 +370,7 @@ defineOptions({
 }
 
 .plan-card-roi-button {
-  @apply flex items-center gap-2 px-3 py-1.5 rounded-lg;
+  @apply flex items-center gap-2 rounded-lg px-3 py-1.5;
   @apply text-xs font-medium text-blue-600 dark:text-blue-400;
   @apply bg-blue-50 dark:bg-blue-900/20;
   @apply border border-blue-200 dark:border-blue-800;
@@ -316,11 +383,11 @@ defineOptions({
 }
 
 .plan-card-roi-icon {
-  @apply w-3 h-3;
+  @apply h-3 w-3;
 }
 
 .plan-card-social-proof {
-  @apply mt-3 pt-3 border-t border-gray-100 dark:border-gray-700;
+  @apply mt-3 border-t border-gray-100 pt-3 dark:border-gray-700;
 }
 
 .plan-card-social-proof-text {
@@ -337,7 +404,7 @@ defineOptions({
 }
 
 .plan-card-urgency-badge {
-  @apply flex items-center gap-2 px-3 py-1.5 rounded-lg;
+  @apply flex items-center gap-2 rounded-lg px-3 py-1.5;
   @apply text-xs font-medium text-orange-600 dark:text-orange-400;
   @apply bg-orange-50 dark:bg-orange-900/20;
   @apply border border-orange-200 dark:border-orange-800;
@@ -349,15 +416,15 @@ defineOptions({
 }
 
 .plan-card-urgency-icon {
-  @apply w-3 h-3;
+  @apply h-3 w-3;
 }
 
 .plan-card-features {
-  @apply space-y-2.5 mb-5 flex-grow;
+  @apply mb-5 flex-grow space-y-2.5;
 }
 
 .plan-card-features--rtl {
-  @apply text-right self-end;
+  @apply self-end text-right;
 }
 
 .plan-card-feature {
@@ -365,9 +432,8 @@ defineOptions({
   @apply font-medium leading-tight;
 }
 
-
 .plan-card-check-icon {
-  @apply w-4 h-4 text-green-500 flex-shrink-0 mt-0.5;
+  @apply mt-0.5 h-4 w-4 flex-shrink-0 text-green-500;
   @apply drop-shadow-sm;
 }
 
@@ -376,14 +442,14 @@ defineOptions({
 }
 
 .plan-card-cta {
-  @apply w-full py-3 px-4 rounded-xl font-bold text-sm;
+  @apply w-full rounded-xl px-4 py-3 text-sm font-bold;
   @apply transition-all duration-200;
   @apply focus:outline-none focus:ring-4 focus:ring-offset-2;
   @apply transform hover:scale-[1.02] active:scale-[0.98];
 }
 
 .plan-card-trust-indicators {
-  @apply space-y-2 flex flex-col;
+  @apply flex flex-col space-y-2;
 }
 
 .plan-card-trust-indicators--rtl {
@@ -399,7 +465,7 @@ defineOptions({
 }
 
 .plan-card-trust-icon {
-  @apply w-3 h-3 text-green-500 flex-shrink-0;
+  @apply h-3 w-3 flex-shrink-0 text-green-500;
 }
 
 .plan-card-cta--primary {
@@ -419,16 +485,16 @@ defineOptions({
 }
 
 /* RTL Support */
-[dir='rtl'] .plan-card-price {
+[dir="rtl"] .plan-card-price {
   @apply flex-row-reverse;
 }
 
-[dir='rtl'] .plan-card-feature {
+[dir="rtl"] .plan-card-feature {
   @apply flex-row-reverse text-right;
 }
 
-[dir='rtl'] .plan-card-currency {
-  @apply mr-0 ml-1;
+[dir="rtl"] .plan-card-currency {
+  @apply ml-1 mr-0;
 }
 
 /* Responsive */

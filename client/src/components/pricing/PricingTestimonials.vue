@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { StarIcon } from '@heroicons/vue/24/solid';
+import { StarIcon } from "@heroicons/vue/24/solid";
 
 defineOptions({
-  name: 'PricingTestimonials',
+  name: "PricingTestimonials",
 });
 </script>
 
@@ -11,11 +11,10 @@ defineOptions({
     <div class="pricing-testimonials__container">
       <div class="pricing-testimonials__header">
         <h2 id="testimonials-title" class="pricing-testimonials__title">
-          {{ $t('pricing.testimonials.title') }}
-
+          {{ $t("pricing.testimonials.title") }}
         </h2>
         <p class="pricing-testimonials__subtitle">
-          {{ $t('pricing.testimonials.subtitle') }}
+          {{ $t("pricing.testimonials.subtitle") }}
         </p>
       </div>
 
@@ -26,17 +25,19 @@ defineOptions({
             <StarIcon v-for="i in 5" :key="i" class="testimonial-card__star" aria-hidden="true" />
           </div>
           <blockquote class="testimonial-card__quote">
-            {{ $t('pricing.testimonials.items.sarah.quote') }}
+            {{ $t("pricing.testimonials.items.sarah.quote") }}
           </blockquote>
           <div class="testimonial-card__author">
             <div class="testimonial-card__avatar">
               <div class="testimonial-card__avatar-placeholder">SC</div>
             </div>
             <div class="testimonial-card__author-info">
-              <cite class="testimonial-card__name">{{ $t('pricing.testimonials.items.sarah.name') }}</cite>
+              <cite class="testimonial-card__name">{{
+                $t("pricing.testimonials.items.sarah.name")
+              }}</cite>
               <p class="testimonial-card__role">
-                {{ $t('pricing.testimonials.items.sarah.role') }} at
-                {{ $t('pricing.testimonials.items.sarah.company') }}
+                {{ $t("pricing.testimonials.items.sarah.role") }} at
+                {{ $t("pricing.testimonials.items.sarah.company") }}
               </p>
             </div>
           </div>
@@ -49,22 +50,21 @@ defineOptions({
             <StarIcon v-for="i in 5" :key="i" class="testimonial-card__star" aria-hidden="true" />
           </div>
           <blockquote class="testimonial-card__quote">
-            {{ $t('pricing.testimonials.items.michael.quote') }}
-
+            {{ $t("pricing.testimonials.items.michael.quote") }}
           </blockquote>
           <div class="testimonial-card__author">
             <div class="testimonial-card__avatar">
               <div class="testimonial-card__avatar-placeholder">MR</div>
             </div>
             <div class="testimonial-card__author-info">
-              <cite class="testimonial-card__name">{{ $t('pricing.testimonials.items.michael.name') }}
-
-</cite>
+              <cite class="testimonial-card__name"
+                >{{ $t("pricing.testimonials.items.michael.name") }}
+              </cite>
               <p class="testimonial-card__role">
-                {{ $t('pricing.testimonials.items.michael.role') }}
+                {{ $t("pricing.testimonials.items.michael.role") }}
 
- at
-                {{ $t('pricing.testimonials.items.michael.company') }}
+                at
+                {{ $t("pricing.testimonials.items.michael.company") }}
               </p>
             </div>
           </div>
@@ -76,17 +76,19 @@ defineOptions({
             <StarIcon v-for="i in 5" :key="i" class="testimonial-card__star" aria-hidden="true" />
           </div>
           <blockquote class="testimonial-card__quote">
-            {{ $t('pricing.testimonials.items.emma.quote') }}
+            {{ $t("pricing.testimonials.items.emma.quote") }}
           </blockquote>
           <div class="testimonial-card__author">
             <div class="testimonial-card__avatar">
               <div class="testimonial-card__avatar-placeholder">ET</div>
             </div>
             <div class="testimonial-card__author-info">
-              <cite class="testimonial-card__name">{{ $t('pricing.testimonials.items.emma.name') }}</cite>
+              <cite class="testimonial-card__name">{{
+                $t("pricing.testimonials.items.emma.name")
+              }}</cite>
               <p class="testimonial-card__role">
-                {{ $t('pricing.testimonials.items.emma.role') }} at
-                {{ $t('pricing.testimonials.items.emma.company') }}
+                {{ $t("pricing.testimonials.items.emma.role") }} at
+                {{ $t("pricing.testimonials.items.emma.company") }}
               </p>
             </div>
           </div>
@@ -108,7 +110,7 @@ defineOptions({
 }
 
 .pricing-testimonials__header {
-  @apply text-center mb-12;
+  @apply mb-12 text-center;
 }
 
 .pricing-testimonials__title {
@@ -121,7 +123,7 @@ defineOptions({
 
 .pricing-testimonials__subtitle {
   @apply text-lg text-gray-600 dark:text-gray-300;
-  @apply max-w-2xl mx-auto;
+  @apply mx-auto max-w-2xl;
 }
 
 .pricing-testimonials__grid {
@@ -152,25 +154,25 @@ defineOptions({
 
 .testimonial-card__badge {
   @apply absolute -top-3 left-1/2 -translate-x-1/2;
-  @apply px-4 py-1.5 rounded-full;
-  @apply text-white text-[10px] font-bold uppercase tracking-wider;
+  @apply rounded-full px-4 py-1.5;
+  @apply text-[10px] font-bold uppercase tracking-wider text-white;
   @apply bg-gradient-to-r from-blue-600 via-blue-500 to-purple-600;
   @apply shadow-lg shadow-blue-500/50;
   @apply animate-pulse;
 }
 
 .testimonial-card__rating {
-  @apply flex gap-1 mb-4;
+  @apply mb-4 flex gap-1;
 }
 
 .testimonial-card__star {
-  @apply w-5 h-5 text-yellow-400;
+  @apply h-5 w-5 text-yellow-400;
   @apply drop-shadow-sm;
 }
 
 .testimonial-card__quote {
   @apply text-base text-gray-700 dark:text-gray-300;
-  @apply leading-relaxed mb-6;
+  @apply mb-6 leading-relaxed;
   @apply flex-grow;
   @apply font-medium;
   @apply italic;
@@ -194,7 +196,7 @@ defineOptions({
 
 .testimonial-card__author {
   @apply flex items-center gap-4;
-  @apply pt-6 border-t border-gray-100 dark:border-gray-700;
+  @apply border-t border-gray-100 pt-6 dark:border-gray-700;
 }
 
 .testimonial-card__avatar {
@@ -202,10 +204,10 @@ defineOptions({
 }
 
 .testimonial-card__avatar-placeholder {
-  @apply w-12 h-12 rounded-full;
+  @apply h-12 w-12 rounded-full;
   @apply bg-gradient-to-br from-blue-500 to-purple-600;
   @apply flex items-center justify-center;
-  @apply text-white font-bold text-sm;
+  @apply text-sm font-bold text-white;
   @apply shadow-lg;
 }
 
@@ -224,15 +226,15 @@ defineOptions({
 }
 
 /* RTL Support */
-[dir='rtl'] .testimonial-card__author {
+[dir="rtl"] .testimonial-card__author {
   @apply flex-row-reverse;
 }
 
-[dir='rtl'] .testimonial-card__quote::before {
-  @apply mr-0 ml-1;
+[dir="rtl"] .testimonial-card__quote::before {
+  @apply ml-1 mr-0;
 }
 
-[dir='rtl'] .testimonial-card__quote::after {
+[dir="rtl"] .testimonial-card__quote::after {
   @apply ml-0 mr-1;
 }
 

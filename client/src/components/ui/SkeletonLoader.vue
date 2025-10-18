@@ -1,28 +1,23 @@
 <template>
   <div
     class="skeleton-loader"
-    :class="[
-      `skeleton-loader--${variant}`,
-      customClass
-    ]"
+    :class="[`skeleton-loader--${variant}`, customClass]"
     :style="customStyle"
     role="status"
     aria-live="polite"
     :aria-label="ariaLabel || $t('a11y.loading')"
   >
-    <span class="sr-only">{{ loadingText }}
-
-</span>
+    <span class="sr-only">{{ loadingText }} </span>
     <div class="skeleton-loader__shimmer"></div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import { useI18n } from 'vue-i18n';
+import { computed } from "vue";
+import { useI18n } from "vue-i18n";
 
 export interface skeletonloaderprops {
-  variant?: 'text' | 'heading' | 'paragraph' | 'avatar' | 'card' | 'button' | 'image' | 'custom';
+  variant?: "text" | "heading" | "paragraph" | "avatar" | "card" | "button" | "image" | "custom";
   width?: string | number;
   height?: string | number;
   rounded?: boolean;
@@ -30,42 +25,43 @@ export interface skeletonloaderprops {
   customClass?: string;
   ariaLabel?: string;
   lines?: number; // For paragraph variant
-  delay?: number;Forparagraphvariantdelay? // Animation delay in ms
+  delay?: number;
+  Forparagraphvariantdelay?; // Animation delay in ms
 }
 
 const props = withDefaults(defineProps<SkeletonLoaderProps>(), {
-  variant: 'text',
+  variant: "text",
   animated: true,
   rounded: false,
   lines: 3,
-  delay: 0
+  delay: 0,
 });
 
 const { t } = useI18n();
 
 const loadingText = computed(() => {
   const variantTexts: Record<string, string> = {
-    text: t('skeleton.loadingText'),
-    heading: t('skeleton.loadingHeading'),
-    paragraph: t('skeleton.loadingParagraph'),
-    avatar: t('skeleton.loadingAvatar'),
-    card: t('skeleton.loadingCard'),
-    button: t('skeleton.loadingButton'),
-    image: t('skeleton.loadingImage'),
-    custom: t('skeleton.loading')
+    text: t("skeleton.loadingText"),
+    heading: t("skeleton.loadingHeading"),
+    paragraph: t("skeleton.loadingParagraph"),
+    avatar: t("skeleton.loadingAvatar"),
+    card: t("skeleton.loadingCard"),
+    button: t("skeleton.loadingButton"),
+    image: t("skeleton.loadingImage"),
+    custom: t("skeleton.loading"),
   };
-  return variantTexts[props.variant] || t('skeleton.loading');
+  return variantTexts[props.variant] || t("skeleton.loading");
 });
 
 const customStyle = computed(() => {
   const styles: Record<string, any> = {};
 
   if (props.width) {
-    styles.width = typeof props.width === 'number' ? `${props.width}px` : props.width;
+    styles.width = typeof props.width === "number" ? `${props.width}px` : props.width;
   }
 
   if (props.height) {
-    styles.height = typeof props.height === 'number' ? `${props.height}px` : props.height;
+    styles.height = typeof props.height === "number" ? `${props.height}px` : props.height;
   }
 
   if (props.delay) {
@@ -105,23 +101,13 @@ const customStyle = computed(() => {
 .skeleton-loader__shimmer {
   @apply absolute inset-0;
 
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgb(255, 255, 255, 0.3) 50%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg, transparent 0%, rgb(255, 255, 255, 0.3) 50%, transparent 100%);
   animation: skeleton-shimmer 1.5s ease-in-out infinite;
   transform: translateX(-100%);
 }
 
 .dark .skeleton-loader__shimmer {
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgb(255, 255, 255, 0.1) 50%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg, transparent 0%, rgb(255, 255, 255, 0.1) 50%, transparent 100%);
 }
 
 @keyframes skeleton-shimmer {
@@ -154,15 +140,15 @@ const customStyle = computed(() => {
 
 .skeleton-loader--paragraph::before,
 .skeleton-loader--paragraph::after {
-  content: '';
+  content: "";
 
-  @apply block h-4 bg-gray-200 dark:bg-gray-700 rounded;
+  @apply block h-4 rounded bg-gray-200 dark:bg-gray-700;
 
   background: inherit;
 }
 
 .skeleton-loader--paragraph::before {
-  @apply w-full mb-2;
+  @apply mb-2 w-full;
 }
 
 .skeleton-loader--paragraph::after {

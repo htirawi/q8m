@@ -13,4 +13,3 @@ export interface IFrameworkAccessRule {
     description?: string;
   };
 }
-

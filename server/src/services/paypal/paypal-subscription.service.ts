@@ -73,18 +73,10 @@ export class PayPalSubscriptionService {
    */
   private calculatePeriodEnd(startDate: Date, billingCycle: string): Date {
     if (billingCycle === "yearly") {
-      return new Date(
-        startDate.getFullYear() + 1,
-        startDate.getMonth(),
-        startDate.getDate()
-      );
+      return new Date(startDate.getFullYear() + 1, startDate.getMonth(), startDate.getDate());
     }
 
-    return new Date(
-      startDate.getFullYear(),
-      startDate.getMonth() + 1,
-      startDate.getDate()
-    );
+    return new Date(startDate.getFullYear(), startDate.getMonth() + 1, startDate.getDate());
   }
 }
 

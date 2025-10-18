@@ -13,20 +13,20 @@ defineOptions({
       <div class="pricing-hero-content">
         <h1 id="pricing-hero-title" class="pricing-hero-title">
           {{ $t(heroData.titleKey) }}
-
         </h1>
         <p class="pricing-hero-subtitle">
           {{ $t(heroData.subtitleKey) }}
-
         </p>
 
         <!-- Value Props -->
         <div class="pricing-hero-value-props">
-          <div v-for="(valuePropKey, index) in heroData.valuePropsKeys" :key="index" class="pricing-hero-value-prop">
+          <div
+            v-for="(valuePropKey, index) in heroData.valuePropsKeys"
+            :key="index"
+            class="pricing-hero-value-prop"
+          >
             <CheckIcon class="pricing-hero-check-icon" aria-hidden="true" />
-            <span>{{ $t(valuePropKey) }}
-
-</span>
+            <span>{{ $t(valuePropKey) }} </span>
           </div>
         </div>
 
@@ -34,21 +34,21 @@ defineOptions({
         <div class="pricing-hero-stats">
           <div class="pricing-hero-stat">
             <div class="pricing-hero-stat-number">10,000+</div>
-            <div class="pricing-hero-stat-label">{{ $t('pricing.socialProof.recentPurchases', { count: '10,000' }) }}
-
+            <div class="pricing-hero-stat-label">
+              {{ $t("pricing.socialProof.recentPurchases", { count: "10,000" }) }}
             </div>
           </div>
           <div class="pricing-hero-stat">
             <div class="pricing-hero-stat-number">4.9/5</div>
-            <div class="pricing-hero-stat-label">{{ $t('pricing.socialProof.rating', { rating: '4.9', count: '500' }) }}
-
+            <div class="pricing-hero-stat-label">
+              {{ $t("pricing.socialProof.rating", { rating: "4.9", count: "500" }) }}
             </div>
           </div>
           <div class="pricing-hero-stat">
             <div class="pricing-hero-stat-number">83%</div>
-            <div class="pricing-hero-stat-label">{{ $t('pricing.roi.stats.jobOfferRate.label') }}
-
-</div>
+            <div class="pricing-hero-stat-label">
+              {{ $t("pricing.roi.stats.jobOfferRate.label") }}
+            </div>
           </div>
         </div>
 
@@ -56,7 +56,6 @@ defineOptions({
         <div class="pricing-hero-trust">
           <p class="pricing-hero-trust-text">
             {{ $t("pricing.hero.trustedBy") }}
-
           </p>
           <div class="pricing-hero-trust-badges">
             <div v-for="badge in trustBadges" :key="badge.name" class="pricing-hero-trust-badge">

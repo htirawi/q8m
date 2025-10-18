@@ -3,8 +3,7 @@ import * as crypto from "crypto";
 import type { Document, ObjectId } from "mongoose";
 import mongoose, { Schema } from "mongoose";
 
-export interface IVerificationToken
-  extends Omit<Document, "expiresAt" | "usedAt"> {
+export interface IVerificationToken extends Omit<Document, "expiresAt" | "usedAt"> {
   userId: mongoose.Types.ObjectId;
   token: string;
   type: "email_verification" | "password_reset" | "two_factor";

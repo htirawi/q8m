@@ -14,7 +14,7 @@
           :key="tab.id"
           @click="activeTab = tab.id"
           :class="[
-            'whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium transition-colors',
+            'whitespace-nowrap border-b-2 px-1 py-4 text-sm font-medium transition-colors',
             activeTab === tab.id
               ? 'border-blue-500 text-blue-600'
               : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700',
@@ -31,7 +31,6 @@
             ]"
           >
             {{ tab.count }}
-
           </span>
         </button>
       </nav>
@@ -70,32 +69,32 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from "vue";
 
-import { useFriendsStore } from '@/stores/friends';
+import { useFriendsStore } from "@/stores/friends";
 
-import FriendList from '../components/FriendList.vue';
-import FriendRequests from '../components/FriendRequests.vue';
-import FriendSuggestions from '../components/FriendSuggestions.vue';
-import UserSearch from '../components/UserSearch.vue';
+import FriendList from "../components/FriendList.vue";
+import FriendRequests from "../components/FriendRequests.vue";
+import FriendSuggestions from "../components/FriendSuggestions.vue";
+import UserSearch from "../components/UserSearch.vue";
 
 const friendsStore = useFriendsStore();
-const activeTab = ref<'friends' | 'requests' | 'find'>('friends');
+const activeTab = ref<"friends" | "requests" | "find">("friends");
 
 const tabs = computed(() => [
   {
-    id: 'friends' as const,
-    label: 'My Friends',
+    id: "friends" as const,
+    label: "My Friends",
     count: friendsStore.friends.length,
   },
   {
-    id: 'requests' as const,
-    label: 'Requests',
+    id: "requests" as const,
+    label: "Requests",
     count: friendsStore.receivedRequests.length,
   },
   {
-    id: 'find' as const,
-    label: 'Find Friends',
+    id: "find" as const,
+    label: "Find Friends",
     count: 0,
   },
 ]);

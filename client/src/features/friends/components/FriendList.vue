@@ -1,17 +1,16 @@
 <script setup lang="ts">
-import type { IFriendListProps as Props, IFriendListEmits as Emits } from "@/types/components/friends";
-import { ref, computed, onMounted } from 'vue';
-import { useFriends } from '@/composables/useFriends';
-import FriendCard from './FriendCard.vue';
-
-
-
-
+import type {
+  IFriendListProps as Props,
+  IFriendListEmits as Emits,
+} from "@/types/components/friends";
+import { ref, computed, onMounted } from "vue";
+import { useFriends } from "@/composables/useFriends";
+import FriendCard from "./FriendCard.vue";
 
 const props = withDefaults(defineProps<Props>(), {
   showSearch: true,
   showFilters: true,
-  initialSort: 'recent',
+  initialSort: "recent",
 });
 
 const emit = defineEmits<Emits>();
@@ -31,9 +30,9 @@ const {
 } = useFriends();
 
 // State
-const searchQuery = ref('');
-const sortBy = ref<'name' | 'level' | 'recent'>(props.initialSort);
-const filterLevel = ref<'all' | 'novice' | 'apprentice' | 'expert' | 'master' | 'legend'>('all');
+const searchQuery = ref("");
+const sortBy = ref<"name" | "level" | "recent">(props.initialSort);
+const filterLevel = ref<"all" | "novice" | "apprentice" | "expert" | "master" | "legend">("all");
 const showUnfriendConfirm = ref<string | null>(null);
 const showBlockConfirm = ref<string | null>(null);
 
@@ -47,7 +46,7 @@ const filteredAndSortedFriends = computed(() => {
   }
 
   // Apply level filter
-  if (filterLevel.value !== 'all') {
+  if (filterLevel.value !== "all") {
     const levelRanges = {
       novice: { min: 0, max: 9 },
       apprentice: { min: 10, max: 19 },
@@ -63,15 +62,10 @@ const filteredAndSortedFriends = computed(() => {
   return sortFriends(result, sortBy.value);
 });
 
-const showEmptyState = computed(
-  () => !loading.value && friends.value.length === 0
-);
+const showEmptyState = computed(() => !loading.value && friends.value.length === 0);
 
 const showFilteredEmptyState = computed(
-  () =>
-    !loading.value &&
-    friends.value.length > 0 &&
-    filteredAndSortedFriends.value.length === 0
+  () => !loading.value && friends.value.length > 0 && filteredAndSortedFriends.value.length === 0
 );
 
 // Methods
@@ -100,7 +94,7 @@ const handleblock = async (userId: string) => {
 };
 
 const handleview = (userId: string) => {
-  emit('view-friend', userId);
+  emit("view-friend", userId);
 };
 
 const handleloadmore = async () => {
@@ -108,8 +102,8 @@ const handleloadmore = async () => {
 };
 
 const clearfilters = () => {
-  searchQuery.value = '';
-  filterLevel.value = 'all';
+  searchQuery.value = "";
+  filterLevel.value = "all";
   sortBy.value = props.initialSort;
 };
 
@@ -132,10 +126,10 @@ onMounted(async () => {
             v-model="searchQuery"
             type="text"
             placeholder="Search friends by name or email..."
-            class="w-full px-4 py-2 pl-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+            class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 pl-10 text-gray-900 focus:border-transparent focus:ring-2 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
           />
           <svg
-            class="absolute left-3 top-2.5 w-5 h-5 text-gray-400"
+            class="absolute left-3 top-2.5 h-5 w-5 text-gray-400"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -152,7 +146,7 @@ onMounted(async () => {
             @click="searchQuery = ''"
             class="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
           >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -165,11 +159,11 @@ onMounted(async () => {
       </div>
 
       <!-- Filters and Sort -->
-      <div v-if="showFilters" class="flex flex-col sm:flex-row gap-4">
+      <div v-if="showFilters" class="flex flex-col gap-4 sm:flex-row">
         <!-- Level Filter -->
         <select
           v-model="filterLevel"
-          class="flex-1 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+          class="flex-1 rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 focus:border-transparent focus:ring-2 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
         >
           <option value="all">All Levels</option>
           <option value="novice">🌱 Novice (0-9)</option>
@@ -182,7 +176,7 @@ onMounted(async () => {
         <!-- Sort -->
         <select
           v-model="sortBy"
-          class="flex-1 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+          class="flex-1 rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 focus:border-transparent focus:ring-2 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
         >
           <option value="recent">Recently Added</option>
           <option value="name">Name (A-Z)</option>
@@ -193,7 +187,7 @@ onMounted(async () => {
         <button
           v-if="searchQuery || filterLevel !== 'all' || sortBy !== initialSort"
           @click="clearFilters"
-          class="px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg font-medium transition-colors whitespace-nowrap"
+          class="whitespace-nowrap rounded-lg bg-gray-200 px-4 py-2 font-medium text-gray-700 transition-colors hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
         >
           Clear Filters
         </button>
@@ -203,45 +197,34 @@ onMounted(async () => {
     <!-- Error State -->
     <div
       v-if="error"
-      class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6"
+      class="mb-6 rounded-lg border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-900/20"
     >
-      <p class="text-red-700 dark:text-red-400">{{ error }}
-
-</p>
+      <p class="text-red-700 dark:text-red-400">{{ error }}</p>
     </div>
 
     <!-- Loading State -->
     <div v-if="loading && friends.length === 0" class="space-y-4">
-      <div
-        v-for="i in 5"
-        :key="i"
-        class="bg-white dark:bg-gray-800 rounded-lg p-4 animate-pulse"
-      >
+      <div v-for="i in 5" :key="i" class="animate-pulse rounded-lg bg-white p-4 dark:bg-gray-800">
         <div class="flex items-center gap-4">
-          <div class="w-12 h-12 bg-gray-300 dark:bg-gray-700 rounded-full"></div>
+          <div class="h-12 w-12 rounded-full bg-gray-300 dark:bg-gray-700"></div>
           <div class="flex-1 space-y-2">
-            <div class="h-4 bg-gray-300 dark:bg-gray-700 rounded w-1/4"></div>
-            <div class="h-3 bg-gray-300 dark:bg-gray-700 rounded w-1/2"></div>
+            <div class="h-4 w-1/4 rounded bg-gray-300 dark:bg-gray-700"></div>
+            <div class="h-3 w-1/2 rounded bg-gray-300 dark:bg-gray-700"></div>
           </div>
         </div>
       </div>
     </div>
 
     <!-- Empty State (No Friends) -->
-    <div
-      v-else-if="showEmptyState"
-      class="bg-gray-50 dark:bg-gray-800 rounded-lg p-12 text-center"
-    >
-      <div class="text-6xl mb-4">👥</div>
-      <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-        No friends yet
-      </h3>
-      <p class="text-gray-600 dark:text-gray-400 mb-6">
+    <div v-else-if="showEmptyState" class="rounded-lg bg-gray-50 p-12 text-center dark:bg-gray-800">
+      <div class="mb-4 text-6xl">👥</div>
+      <h3 class="mb-2 text-xl font-semibold text-gray-900 dark:text-white">No friends yet</h3>
+      <p class="mb-6 text-gray-600 dark:text-gray-400">
         Start building your network by searching for users and sending friend requests!
       </p>
       <button
         @click="$emit('view-friend', 'search')"
-        class="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-colors"
+        class="rounded-lg bg-indigo-600 px-6 py-3 font-medium text-white transition-colors hover:bg-indigo-700"
       >
         Find Friends
       </button>
@@ -250,18 +233,16 @@ onMounted(async () => {
     <!-- Filtered Empty State -->
     <div
       v-else-if="showFilteredEmptyState"
-      class="bg-gray-50 dark:bg-gray-800 rounded-lg p-12 text-center"
+      class="rounded-lg bg-gray-50 p-12 text-center dark:bg-gray-800"
     >
-      <div class="text-6xl mb-4">🔍</div>
-      <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+      <div class="mb-4 text-6xl">🔍</div>
+      <h3 class="mb-2 text-xl font-semibold text-gray-900 dark:text-white">
         No friends match your filters
       </h3>
-      <p class="text-gray-600 dark:text-gray-400 mb-6">
-        Try adjusting your search or filters
-      </p>
+      <p class="mb-6 text-gray-600 dark:text-gray-400">Try adjusting your search or filters</p>
       <button
         @click="clearFilters"
-        class="px-6 py-3 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg font-medium transition-colors"
+        class="rounded-lg bg-gray-200 px-6 py-3 font-medium text-gray-700 transition-colors hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
       >
         Clear Filters
       </button>
@@ -280,11 +261,11 @@ onMounted(async () => {
       />
 
       <!-- Load More Button -->
-      <div v-if="pagination.hasMore" class="text-center pt-4">
+      <div v-if="pagination.hasMore" class="pt-4 text-center">
         <button
           @click="handleLoadMore"
           :disabled="loading"
-          class="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-400 text-white rounded-lg font-medium transition-colors"
+          class="rounded-lg bg-indigo-600 px-6 py-2 font-medium text-white transition-colors hover:bg-indigo-700 disabled:bg-gray-400"
         >
           <span v-if="loading">Loading...</span>
           <span v-else>Load More</span>
@@ -294,7 +275,7 @@ onMounted(async () => {
       <!-- End of List -->
       <div
         v-else-if="filteredAndSortedFriends.length > 5"
-        class="text-center text-gray-500 dark:text-gray-400 text-sm py-4"
+        class="py-4 text-center text-sm text-gray-500 dark:text-gray-400"
       >
         You've reached the end of your friends list
       </div>

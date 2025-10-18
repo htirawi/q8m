@@ -48,7 +48,6 @@ const availableMethods = computed((): PaymentMethod[] => {
 const selectmethod = (methodId: string) => {
   selectedMethod.value = methodId;
 };
-
 </script>
 
 <template>
@@ -56,22 +55,29 @@ const selectmethod = (methodId: string) => {
     <h3 class="section-title">{{ $t("checkout.paymentMethod") }}</h3>
 
     <div class="payment-methods">
-      <div v-for="method in availableMethods" :key="method.id" class="payment-method"
-        :class="{ 'payment-method--selected': selectedMethod === method.id }" @click="selectMethod(method.id)">
+      <div
+        v-for="method in availableMethods"
+        :key="method.id"
+        class="payment-method"
+        :class="{ 'payment-method--selected': selectedMethod === method.id }"
+        @click="selectMethod(method.id)"
+      >
         <div class="payment-method-content">
           <div class="payment-method-icon">
             <component :is="method.icon" class="h-8 w-8" />
           </div>
           <div class="payment-method-info">
-            <h4 class="payment-method-name">{{ method.name }}
-
-            </h4>
-            <p class="payment-method-description">{{ method.description }}
-
-            </p>
+            <h4 class="payment-method-name">{{ method.name }}</h4>
+            <p class="payment-method-description">{{ method.description }}</p>
           </div>
           <div class="payment-method-radio">
-            <input :id="method.id" v-model="selectedMethod" type="radio" :value="method.id" class="radio-input" />
+            <input
+              :id="method.id"
+              v-model="selectedMethod"
+              type="radio"
+              :value="method.id"
+              class="radio-input"
+            />
             <span class="radio-checkmark" />
           </div>
         </div>
@@ -83,27 +89,21 @@ const selectmethod = (methodId: string) => {
       <div v-if="selectedMethod === 'paypal'" class="paypal-info">
         <div class="info-box">
           <CheckCircleIcon class="h-5 w-5 text-green-500" />
-          <p>{{ $t("checkout.paypalInfo") }}
-
-          </p>
+          <p>{{ $t("checkout.paypalInfo") }}</p>
         </div>
       </div>
 
       <div v-if="selectedMethod === 'aps'" class="aps-info">
         <div class="info-box">
           <CheckCircleIcon class="h-5 w-5 text-green-500" />
-          <p>{{ $t("checkout.apsInfo") }}
-
-          </p>
+          <p>{{ $t("checkout.apsInfo") }}</p>
         </div>
       </div>
 
       <div v-if="selectedMethod === 'hyperpay'" class="hyperpay-info">
         <div class="info-box">
           <CheckCircleIcon class="h-5 w-5 text-green-500" />
-          <p>{{ $t("checkout.hyperpayInfo") }}
-
-          </p>
+          <p>{{ $t("checkout.hyperpayInfo") }}</p>
         </div>
       </div>
     </div>

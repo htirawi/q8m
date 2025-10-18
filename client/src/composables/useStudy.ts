@@ -9,8 +9,8 @@
  * - Loading states with brief skeleton
  */
 
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref } from "vue";
+import { useRouter } from "vue-router";
 import type { StudyLoadingState } from "@shared/types/composables";
 
 // Re-export types for use in other modules
@@ -22,7 +22,7 @@ export type { StudyLoadingState, StudyFlowVariant } from "@shared/types/composab
 export function useStudy() {
   const router = useRouter();
 
-  const loadingState = ref<StudyLoadingState>('idle');
+  const loadingState = ref<StudyLoadingState>("idle");
   const errorMessage = ref<string | null>(null);
   const isAutoStartEnabled = ref(false);
   const hasLastSession = ref(false);
@@ -32,18 +32,18 @@ export function useStudy() {
    */
   const startEasySession = async (locale: string) => {
     try {
-      loadingState.value = 'loading';
+      loadingState.value = "loading";
       errorMessage.value = null;
 
       // Navigate to framework selection for easy difficulty
       await router.push(`/${locale}/study/easy`);
     } catch (error) {
-      loadingState.value = 'error';
-      errorMessage.value = error instanceof Error ? error.message : 'Failed to start session';
+      loadingState.value = "error";
+      errorMessage.value = error instanceof Error ? error.message : "Failed to start session";
       throw error;
     } finally {
-      if (loadingState.value === 'loading') {
-        loadingState.value = 'idle';
+      if (loadingState.value === "loading") {
+        loadingState.value = "idle";
       }
     }
   };

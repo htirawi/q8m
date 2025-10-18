@@ -3,25 +3,25 @@
     <Transition name="modal">
       <div
         v-if="isOpen"
-        class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm"
         @click.self="close"
       >
         <div
-          class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+          class="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-xl bg-white shadow-2xl dark:bg-gray-800"
         >
           <!-- Header -->
           <div
-            class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700"
+            class="flex items-center justify-between border-b border-gray-200 p-6 dark:border-gray-700"
           >
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+            <h2 class="flex items-center gap-2 text-2xl font-bold text-gray-900 dark:text-white">
               <span>🎮</span>
               Create Challenge
             </h2>
             <button
               @click="close"
-              class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+              class="text-gray-400 transition-colors hover:text-gray-600 dark:hover:text-gray-300"
             >
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
@@ -33,23 +33,19 @@
           </div>
 
           <!-- Body -->
-          <form @submit.prevent="handleSubmit" class="p-6 space-y-6">
+          <form @submit.prevent="handleSubmit" class="space-y-6 p-6">
             <!-- Select Friend -->
             <div>
-              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                 Challenge Friend <span class="text-red-500">*</span>
               </label>
               <select
                 v-model="formData.challengedUserId"
                 required
-                class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 focus:border-transparent focus:ring-2 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
               >
                 <option value="">Select a friend...</option>
-                <option
-                  v-for="friend in friends"
-                  :key="friend._id"
-                  :value="friend._id"
-                >
+                <option v-for="friend in friends" :key="friend._id" :value="friend._id">
                   {{ friend.name }} (Level {{ friend.level }})
                 </option>
               </select>
@@ -57,7 +53,7 @@
 
             <!-- Difficulty -->
             <div>
-              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                 Difficulty <span class="text-red-500">*</span>
               </label>
               <div class="grid grid-cols-3 gap-3">
@@ -67,18 +63,15 @@
                   type="button"
                   @click="formData.difficulty = diff.value"
                   :class="[
-                    'p-4 rounded-lg border-2 transition-all',
+                    'rounded-lg border-2 p-4 transition-all',
                     formData.difficulty === diff.value
                       ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/20'
-                      : 'border-gray-300 dark:border-gray-600 hover:border-gray-400',
+                      : 'border-gray-300 hover:border-gray-400 dark:border-gray-600',
                   ]"
                 >
-                  <div class="text-2xl mb-1">{{ diff.emoji }}
-
-</div>
-                  <div class="font-medium text-gray-900 dark:text-white capitalize">
+                  <div class="mb-1 text-2xl">{{ diff.emoji }}</div>
+                  <div class="font-medium capitalize text-gray-900 dark:text-white">
                     {{ diff.value }}
-
                   </div>
                 </button>
               </div>
@@ -86,7 +79,7 @@
 
             <!-- Framework -->
             <div>
-              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                 Framework (Optional)
               </label>
               <div class="grid grid-cols-3 gap-3">
@@ -94,18 +87,18 @@
                   v-for="fw in frameworks"
                   :key="fw.value"
                   type="button"
-                  @click="formData.framework = formData.framework === fw.value ? undefined : fw.value"
+                  @click="
+                    formData.framework = formData.framework === fw.value ? undefined : fw.value
+                  "
                   :class="[
-                    'p-4 rounded-lg border-2 transition-all',
+                    'rounded-lg border-2 p-4 transition-all',
                     formData.framework === fw.value
                       ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/20'
-                      : 'border-gray-300 dark:border-gray-600 hover:border-gray-400',
+                      : 'border-gray-300 hover:border-gray-400 dark:border-gray-600',
                   ]"
                 >
-                  <div class="text-2xl mb-1">{{ fw.emoji }}
-
-</div>
-                  <div class="font-medium text-gray-900 dark:text-white capitalize">
+                  <div class="mb-1 text-2xl">{{ fw.emoji }}</div>
+                  <div class="font-medium capitalize text-gray-900 dark:text-white">
                     {{ fw.label }}
                   </div>
                 </button>
@@ -114,7 +107,7 @@
 
             <!-- Question Count -->
             <div>
-              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                 Number of Questions: {{ formData.questionCount }}
               </label>
               <input
@@ -123,9 +116,9 @@
                 min="5"
                 max="20"
                 step="5"
-                class="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+                class="h-2 w-full cursor-pointer appearance-none rounded-lg bg-gray-200 accent-indigo-600 dark:bg-gray-700"
               />
-              <div class="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
+              <div class="mt-1 flex justify-between text-xs text-gray-500 dark:text-gray-400">
                 <span>5 questions</span>
                 <span>10 questions</span>
                 <span>15 questions</span>
@@ -135,9 +128,8 @@
 
             <!-- Time Limit -->
             <div>
-              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                 Time Limit: {{ formatTimeLimit(formData.timeLimit) }}
-
               </label>
               <input
                 v-model.number="formData.timeLimit"
@@ -145,9 +137,9 @@
                 min="300"
                 max="1800"
                 step="300"
-                class="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+                class="h-2 w-full cursor-pointer appearance-none rounded-lg bg-gray-200 accent-indigo-600 dark:bg-gray-700"
               />
-              <div class="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
+              <div class="mt-1 flex justify-between text-xs text-gray-500 dark:text-gray-400">
                 <span>5 min</span>
                 <span>10 min</span>
                 <span>15 min</span>
@@ -159,7 +151,7 @@
 
             <!-- Message -->
             <div>
-              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                 Message (Optional)
               </label>
               <textarea
@@ -167,23 +159,21 @@
                 rows="3"
                 maxlength="200"
                 placeholder="Add a friendly message..."
-                class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
+                class="w-full resize-none rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 focus:border-transparent focus:ring-2 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
               ></textarea>
-              <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 text-right">
+              <p class="mt-1 text-right text-xs text-gray-500 dark:text-gray-400">
                 {{ formData.message?.length || 0 }}
 
-/200
+                /200
               </p>
             </div>
 
             <!-- Error Message -->
             <div
               v-if="errorMessage"
-              class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4"
+              class="rounded-lg border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-900/20"
             >
-              <p class="text-sm text-red-600 dark:text-red-400">{{ errorMessage }}
-
-</p>
+              <p class="text-sm text-red-600 dark:text-red-400">{{ errorMessage }}</p>
             </div>
 
             <!-- Actions -->
@@ -192,17 +182,16 @@
                 type="button"
                 @click="close"
                 :disabled="loading"
-                class="flex-1 px-6 py-3 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors disabled:opacity-50"
+                class="flex-1 rounded-lg border border-gray-300 px-6 py-3 font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:opacity-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 :disabled="loading || !isFormValid"
-                class="flex-1 px-6 py-3 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                class="flex-1 rounded-lg bg-indigo-600 px-6 py-3 font-medium text-white transition-colors hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                {{ loading ? 'Creating...' : 'Send Challenge' }}
-
+                {{ loading ? "Creating..." : "Send Challenge" }}
               </button>
             </div>
           </form>

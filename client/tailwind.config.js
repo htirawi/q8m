@@ -227,11 +227,11 @@ export default {
         // Loading animations
         "spin-slow": "spin 3s linear infinite",
         "pulse-slow": "pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-        "skeleton": "skeleton 1.5s ease-in-out infinite",
+        skeleton: "skeleton 1.5s ease-in-out infinite",
         // Decorative animations
-        "blob": "blob 7s infinite",
-        "float": "float 6s ease-in-out infinite",
-        "shimmer": "shimmer 2s linear infinite",
+        blob: "blob 7s infinite",
+        float: "float 6s ease-in-out infinite",
+        shimmer: "shimmer 2s linear infinite",
       },
       transitionDuration: {
         instant: "100ms",

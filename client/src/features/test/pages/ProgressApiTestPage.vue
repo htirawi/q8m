@@ -19,7 +19,6 @@ async function refreshData() {
 function formatDate(date: Date | string): string {
   return new Date(date).toLocaleDateString();
 }
-
 </script>
 
 <template>
@@ -28,7 +27,6 @@ function formatDate(date: Date | string): string {
       <h1>Progress Dashboard (Test)</h1>
       <button @click="refreshData" :disabled="isLoading" class="refresh-btn">
         {{ isLoading ? "Loading..." : "Refresh Data" }}
-
       </button>
     </header>
 
@@ -36,9 +34,7 @@ function formatDate(date: Date | string): string {
       {{ error }}
     </div>
 
-    <div v-if="isLoading && !progress" class="loading-state">
-      Loading progress data...
-    </div>
+    <div v-if="isLoading && !progress" class="loading-state">Loading progress data...</div>
 
     <div v-else-if="progress" class="dashboard-content">
       <!-- Tabs -->
@@ -67,21 +63,15 @@ function formatDate(date: Date | string): string {
           <div class="stats-grid">
             <div class="stat-card">
               <div class="stat-label">Current XP</div>
-              <div class="stat-value">{{ progress.xp }}
-
-</div>
+              <div class="stat-value">{{ progress.xp }}</div>
             </div>
             <div class="stat-card">
               <div class="stat-label">Level</div>
-              <div class="stat-value">{{ progress.level }}
-
-</div>
+              <div class="stat-value">{{ progress.level }}</div>
             </div>
             <div class="stat-card">
               <div class="stat-label">Total Badges</div>
-              <div class="stat-value">{{ progress.badges.length }}
-
-</div>
+              <div class="stat-value">{{ progress.badges.length }}</div>
             </div>
           </div>
         </section>
@@ -92,35 +82,25 @@ function formatDate(date: Date | string): string {
           <div class="stats-grid">
             <div class="stat-card">
               <div class="stat-label">Mastered</div>
-              <div class="stat-value mastered">{{ progress.masteryStats.mastered }}
-
-</div>
+              <div class="stat-value mastered">{{ progress.masteryStats.mastered }}</div>
             </div>
             <div class="stat-card">
               <div class="stat-label">Familiar</div>
-              <div class="stat-value familiar">{{ progress.masteryStats.familiar }}
-
-</div>
+              <div class="stat-value familiar">{{ progress.masteryStats.familiar }}</div>
             </div>
             <div class="stat-card">
               <div class="stat-label">Learning</div>
-              <div class="stat-value learning">{{ progress.masteryStats.learning }}
-
-</div>
+              <div class="stat-value learning">{{ progress.masteryStats.learning }}</div>
             </div>
             <div class="stat-card">
               <div class="stat-label">New</div>
-              <div class="stat-value new">{{ progress.masteryStats.new }}
-
-</div>
+              <div class="stat-value new">{{ progress.masteryStats.new }}</div>
             </div>
           </div>
           <div class="stats-grid">
             <div class="stat-card">
               <div class="stat-label">Total Questions</div>
-              <div class="stat-value">{{ progress.masteryStats.totalQuestions }}
-
-</div>
+              <div class="stat-value">{{ progress.masteryStats.totalQuestions }}</div>
             </div>
             <div class="stat-card">
               <div class="stat-label">Accuracy</div>
@@ -128,15 +108,11 @@ function formatDate(date: Date | string): string {
             </div>
             <div class="stat-card">
               <div class="stat-label">Due for Review</div>
-              <div class="stat-value">{{ progress.masteryStats.dueForReview }}
-
-</div>
+              <div class="stat-value">{{ progress.masteryStats.dueForReview }}</div>
             </div>
             <div class="stat-card">
               <div class="stat-label">Overdue Reviews</div>
-              <div class="stat-value">{{ progress.masteryStats.overdueReviews }}
-
-</div>
+              <div class="stat-value">{{ progress.masteryStats.overdueReviews }}</div>
             </div>
           </div>
         </section>
@@ -147,21 +123,23 @@ function formatDate(date: Date | string): string {
           <div class="stats-grid">
             <div class="stat-card">
               <div class="stat-label">Current Streak</div>
-              <div class="stat-value streak">{{ progress.streaks.currentStreak }}
+              <div class="stat-value streak">
+                {{ progress.streaks.currentStreak }}
 
- days</div>
+                days
+              </div>
             </div>
             <div class="stat-card">
               <div class="stat-label">Longest Streak</div>
-              <div class="stat-value">{{ progress.streaks.longestStreak }}
+              <div class="stat-value">
+                {{ progress.streaks.longestStreak }}
 
- days</div>
+                days
+              </div>
             </div>
             <div class="stat-card">
               <div class="stat-label">Last Activity</div>
-              <div class="stat-value">{{ formatDate(progress.streaks.lastActivityDate) }}
-
-</div>
+              <div class="stat-value">{{ formatDate(progress.streaks.lastActivityDate) }}</div>
             </div>
           </div>
         </section>
@@ -172,48 +150,48 @@ function formatDate(date: Date | string): string {
           <div class="difficulty-grid">
             <div class="difficulty-card">
               <h3>Easy</h3>
-              <p>Mastered: <strong>{{ progress.difficultyProgress.easy.mastered }}
-
-</strong></p>
-              <p>Familiar: <strong>{{ progress.difficultyProgress.easy.familiar }}
-
-</strong></p>
-              <p>Learning: <strong>{{ progress.difficultyProgress.easy.learning }}
-
-</strong></p>
-              <p>New: <strong>{{ progress.difficultyProgress.easy.new }}
-
-</strong></p>
+              <p>
+                Mastered: <strong>{{ progress.difficultyProgress.easy.mastered }} </strong>
+              </p>
+              <p>
+                Familiar: <strong>{{ progress.difficultyProgress.easy.familiar }} </strong>
+              </p>
+              <p>
+                Learning: <strong>{{ progress.difficultyProgress.easy.learning }} </strong>
+              </p>
+              <p>
+                New: <strong>{{ progress.difficultyProgress.easy.new }} </strong>
+              </p>
             </div>
             <div class="difficulty-card">
               <h3>Medium</h3>
-              <p>Mastered: <strong>{{ progress.difficultyProgress.medium.mastered }}
-
-</strong></p>
-              <p>Familiar: <strong>{{ progress.difficultyProgress.medium.familiar }}
-
-</strong></p>
-              <p>Learning: <strong>{{ progress.difficultyProgress.medium.learning }}
-
-</strong></p>
-              <p>New: <strong>{{ progress.difficultyProgress.medium.new }}
-
-</strong></p>
+              <p>
+                Mastered: <strong>{{ progress.difficultyProgress.medium.mastered }} </strong>
+              </p>
+              <p>
+                Familiar: <strong>{{ progress.difficultyProgress.medium.familiar }} </strong>
+              </p>
+              <p>
+                Learning: <strong>{{ progress.difficultyProgress.medium.learning }} </strong>
+              </p>
+              <p>
+                New: <strong>{{ progress.difficultyProgress.medium.new }} </strong>
+              </p>
             </div>
             <div class="difficulty-card">
               <h3>Hard</h3>
-              <p>Mastered: <strong>{{ progress.difficultyProgress.hard.mastered }}
-
-</strong></p>
-              <p>Familiar: <strong>{{ progress.difficultyProgress.hard.familiar }}
-
-</strong></p>
-              <p>Learning: <strong>{{ progress.difficultyProgress.hard.learning }}
-
-</strong></p>
-              <p>New: <strong>{{ progress.difficultyProgress.hard.new }}
-
-</strong></p>
+              <p>
+                Mastered: <strong>{{ progress.difficultyProgress.hard.mastered }} </strong>
+              </p>
+              <p>
+                Familiar: <strong>{{ progress.difficultyProgress.hard.familiar }} </strong>
+              </p>
+              <p>
+                Learning: <strong>{{ progress.difficultyProgress.hard.learning }} </strong>
+              </p>
+              <p>
+                New: <strong>{{ progress.difficultyProgress.hard.new }} </strong>
+              </p>
             </div>
           </div>
         </section>
@@ -227,37 +205,47 @@ function formatDate(date: Date | string): string {
             <table>
               <tr>
                 <td>Total Study Time</td>
-                <td><strong>{{ Math.round(stats.totalStudyTimeMinutes) }}
+                <td>
+                  <strong
+                    >{{ Math.round(stats.totalStudyTimeMinutes) }}
 
- minutes</strong></td>
+                    minutes</strong
+                  >
+                </td>
               </tr>
               <tr>
                 <td>Total Study Sessions</td>
-                <td><strong>{{ stats.totalStudySessions }}
-
-</strong></td>
+                <td>
+                  <strong>{{ stats.totalStudySessions }} </strong>
+                </td>
               </tr>
               <tr>
                 <td>Average Session Duration</td>
-                <td><strong>{{ Math.round(stats.averageSessionDurationMinutes) }}
+                <td>
+                  <strong
+                    >{{ Math.round(stats.averageSessionDurationMinutes) }}
 
- minutes</strong></td>
+                    minutes</strong
+                  >
+                </td>
               </tr>
               <tr>
                 <td>Questions Attempted</td>
-                <td><strong>{{ stats.totalQuestionsAttempted }}
-
-</strong></td>
+                <td>
+                  <strong>{{ stats.totalQuestionsAttempted }} </strong>
+                </td>
               </tr>
               <tr>
                 <td>Questions Correct</td>
-                <td><strong>{{ stats.totalQuestionsCorrect }}
-
-</strong></td>
+                <td>
+                  <strong>{{ stats.totalQuestionsCorrect }} </strong>
+                </td>
               </tr>
               <tr>
                 <td>Overall Accuracy</td>
-                <td><strong>{{ stats.overallAccuracy }}%</strong></td>
+                <td>
+                  <strong>{{ stats.overallAccuracy }}%</strong>
+                </td>
               </tr>
             </table>
           </div>

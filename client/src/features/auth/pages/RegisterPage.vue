@@ -50,7 +50,6 @@ function handleregistrationsuccess(_email: string) {
     query: { registered: "true" },
   });
 }
-
 </script>
 
 <template>
@@ -81,11 +80,9 @@ function handleregistrationsuccess(_email: string) {
       <div class="welcome-section">
         <h2 class="welcome-title">
           {{ $t("auth.unified.title") }}
-
         </h2>
         <p class="welcome-subtitle">
           {{ $t("auth.unified.subtitle") }}
-
         </p>
       </div>
 
@@ -97,11 +94,10 @@ function handleregistrationsuccess(_email: string) {
             @login-success="handleLoginSuccess"
             @registration-success="handleRegistrationSuccess"
           />
-
-          </div>
         </div>
       </div>
     </div>
+  </div>
 </template>
 
 <style scoped>
@@ -128,22 +124,18 @@ function handleregistrationsuccess(_email: string) {
 .background-gradient {
   @apply absolute inset-0;
 
-  background: linear-gradient(
-    135deg,
-    rgb(248, 249, 255, 0.95) 0%,
-    rgb(240, 244, 255, 0.95) 100%
-  );
+  background: linear-gradient(135deg, rgb(248, 249, 255, 0.95) 0%, rgb(240, 244, 255, 0.95) 100%);
 }
 
 /* Brand Header at Top */
 .brand-header {
-  @apply relative z-10 pt-8 pb-6;
+  @apply relative z-10 pb-6 pt-8;
   @apply px-4 sm:px-6 lg:px-8;
 }
 
 .logo-section {
   @apply flex items-center justify-center gap-3;
-  @apply max-w-7xl mx-auto;
+  @apply mx-auto max-w-7xl;
 }
 
 .logo-icon {
@@ -172,7 +164,7 @@ function handleregistrationsuccess(_email: string) {
 .register-container {
   @apply relative z-10 flex flex-col items-center justify-center;
   @apply px-4 pb-12 sm:px-6 lg:px-8;
-  @apply max-w-7xl mx-auto;
+  @apply mx-auto max-w-7xl;
 
   min-height: calc(100vh - 140px);
 }
@@ -218,8 +210,6 @@ function handleregistrationsuccess(_email: string) {
 
 /* Social Proof Section */
 
-
-
 /* Responsive Design */
 @media (width <= 640px) {
   .welcome-title {
@@ -246,11 +236,7 @@ function handleregistrationsuccess(_email: string) {
   }
 
   .background-gradient {
-    background: linear-gradient(
-      135deg,
-      rgb(30, 41, 59, 0.95) 0%,
-      rgb(51, 65, 85, 0.95) 100%
-    );
+    background: linear-gradient(135deg, rgb(30, 41, 59, 0.95) 0%, rgb(51, 65, 85, 0.95) 100%);
   }
 
   .welcome-title {
@@ -262,7 +248,7 @@ function handleregistrationsuccess(_email: string) {
   }
 
   .form-card {
-    @apply bg-slate-800 border-slate-700;
+    @apply border-slate-700 bg-slate-800;
 
     box-shadow:
       0 0 0 1px rgb(255, 255, 255, 0.08),

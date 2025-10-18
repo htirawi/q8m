@@ -28,7 +28,6 @@ const togglelanguage = async () => {
     query,
   });
 };
-
 </script>
 
 <template>
@@ -39,9 +38,7 @@ const togglelanguage = async () => {
       :aria-label="$t('a11y.switchLanguage')"
       @click="toggleLanguage"
     >
-      <span class="lang-switch-text">{{ currentLanguage.toUpperCase() }}
-
-</span>
+      <span class="lang-switch-text">{{ currentLanguage.toUpperCase() }} </span>
       <svg class="lang-switch-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path
           stroke-linecap="round"

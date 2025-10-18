@@ -23,9 +23,7 @@
 import { ref, computed, onMounted } from "vue";
 import { useAnalytics } from "@/composables/useAnalytics";
 import type { IABTestAssignmentEvent } from "@/types/analytics";
-import type { IABTestConfig, IABTestResult } from '@shared/types/composables';
-
-
+import type { IABTestConfig, IABTestResult } from "@shared/types/composables";
 
 /**
  * A/B test composable for variant assignment and tracking
@@ -119,10 +117,7 @@ export function useABTest(config: IABTestConfig): IABTestResult {
   /**
    * Track A/B test outcome (conversion, bounce, continue)
    */
-  const trackOutcome = (
-    outcome: "conversion" | "bounce" | "continue",
-    value?: number
-  ): void => {
+  const trackOutcome = (outcome: "conversion" | "bounce" | "continue", value?: number): void => {
     track("ab_test_outcome", {
       testId,
       variant: variant.value,

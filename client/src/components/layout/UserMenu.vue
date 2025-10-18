@@ -1,24 +1,28 @@
 <template>
   <div class="user-menu" :dir="locale === 'ar' ? 'rtl' : 'ltr'">
     <!-- Trigger Button -->
-    <button ref="triggerRef" type="button" class="user-menu__trigger" :class="{ 'user-menu__trigger--active': isOpen }"
-      :aria-expanded="isOpen" :aria-haspopup="true" :aria-label="$t('a11y.userMenu')" @click="toggleMenu"
-      @keydown.escape="closeMenu" @mouseenter="preloadMenu">
+    <button
+      ref="triggerRef"
+      type="button"
+      class="user-menu__trigger"
+      :class="{ 'user-menu__trigger--active': isOpen }"
+      :aria-expanded="isOpen"
+      :aria-haspopup="true"
+      :aria-label="$t('a11y.userMenu')"
+      @click="toggleMenu"
+      @keydown.escape="closeMenu"
+      @mouseenter="preloadMenu"
+    >
       <!-- User Avatar -->
       <div class="user-menu__avatar">
-        <span class="user-menu__avatar-text">{{ userInitials }}
-
-</span>
+        <span class="user-menu__avatar-text">{{ userInitials }} </span>
       </div>
 
       <!-- User Info (Desktop Only) -->
       <div class="user-menu__info">
-        <span class="user-menu__name">{{ userName }}
-
-</span>
+        <span class="user-menu__name">{{ userName }} </span>
         <span v-if="!planStore.isPaid" class="user-menu__badge">
-          {{ $t('plans.names.free') }}
-
+          {{ $t("plans.names.free") }}
         </span>
         <span v-else class="user-menu__badge user-menu__badge--premium">
           {{ planStore.planDisplayName }}
@@ -26,8 +30,14 @@
       </div>
 
       <!-- Chevron Icon -->
-      <svg class="user-menu__chevron" :class="{ 'user-menu__chevron--open': isOpen }" fill="none" stroke="currentColor"
-        viewBox="0 0 24 24" aria-hidden="true">
+      <svg
+        class="user-menu__chevron"
+        :class="{ 'user-menu__chevron--open': isOpen }"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+      >
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
       </svg>
     </button>
@@ -39,28 +49,40 @@
 
     <!-- Dropdown Menu -->
     <Transition :name="isMobile ? 'slide-up' : 'dropdown'">
-      <div v-if="isOpen" ref="menuRef" class="user-menu__dropdown" :class="{ 'user-menu__dropdown--mobile': isMobile }"
-        role="menu" :aria-orientation="'vertical'" @keydown.escape="closeMenu" @keydown.tab="handleTabKey"
-        @keydown.up.prevent="handleArrowUp" @keydown.down.prevent="handleArrowDown"
-        @keydown.home.prevent="handleHomeKey" @keydown.end.prevent="handleEndKey" @keydown="handleTypeAhead"
-        @touchstart="handleTouchStart" @touchmove="handleTouchMove" @touchend="handleTouchEnd">
+      <div
+        v-if="isOpen"
+        ref="menuRef"
+        class="user-menu__dropdown"
+        :class="{ 'user-menu__dropdown--mobile': isMobile }"
+        role="menu"
+        :aria-orientation="'vertical'"
+        @keydown.escape="closeMenu"
+        @keydown.tab="handleTabKey"
+        @keydown.up.prevent="handleArrowUp"
+        @keydown.down.prevent="handleArrowDown"
+        @keydown.home.prevent="handleHomeKey"
+        @keydown.end.prevent="handleEndKey"
+        @keydown="handleTypeAhead"
+        @touchstart="handleTouchStart"
+        @touchmove="handleTouchMove"
+        @touchend="handleTouchEnd"
+      >
         <!-- Swipe Handle (Mobile Only) -->
         <div v-if="isMobile" class="user-menu__handle" aria-hidden="true"></div>
 
         <!-- User Info Section -->
         <div class="user-menu__header" role="none">
           <div class="user-menu__header-avatar">
-            <span class="user-menu__header-avatar-text">{{ userInitials }}
-
-</span>
+            <span class="user-menu__header-avatar-text">{{ userInitials }} </span>
           </div>
           <div class="user-menu__header-info">
-            <p class="user-menu__header-name">{{ userName }}
-
-</p>
+            <p class="user-menu__header-name">{{ userName }}</p>
             <p class="user-menu__header-email">{{ userEmail }}</p>
-            <span v-if="planStore.planTier" class="user-menu__header-plan"
-              :class="{ 'user-menu__header-plan--premium': planStore.isPaid }">
+            <span
+              v-if="planStore.planTier"
+              class="user-menu__header-plan"
+              :class="{ 'user-menu__header-plan--premium': planStore.isPaid }"
+            >
               {{ planStore.isPaid ? planStore.planDisplayName : $t('plans.names.free')planStore.planDisplayName }}
             </span>
           </div>
@@ -70,27 +92,39 @@
 
         <!-- Menu Items -->
         <div class="user-menu__section" role="none">
-          <RouterLink v-for="(item, index) in menuItems" :key="item.path" :to="`/${locale}${item.path}`"
-            class="user-menu__item user-menu__item--animated" :style="{ '--item-index': index }" role="menuitem"
-            :tabindex="isOpen ? 0 : -1" @click="handleItemClick">
+          <RouterLink
+            v-for="(item, index) in menuItems"
+            :key="item.path"
+            :to="`/${locale}${item.path}`"
+            class="user-menu__item user-menu__item--animated"
+            :style="{ '--item-index': index }"
+            role="menuitem"
+            :tabindex="isOpen ? 0 : -1"
+            @click="handleItemClick"
+          >
             <!-- Quick Action Number (Desktop Only) -->
             <span v-if="!isMobile && index < 9" class="user-menu__quick-number" aria-hidden="true">
               {{ index + 1 }}
-
             </span>
 
             <component :is="item.icon" class="user-menu__item-icon" aria-hidden="true" />
             <span>{{ $t(item.label) }}</span>
 
             <!-- Badge -->
-            <span v-if="item.badge" class="user-menu__notification-badge" :class="{
-              'user-menu__notification-badge--new': item.badge.type === 'new',
-              'user-menu__notification-badge--count': item.badge.type === 'count',
-              'user-menu__notification-badge--dot': item.badge.type === 'dot'
-            }" :aria-label="item.badge.type === 'new' ? $t('common.new') : item.badge.value?.toString()">
+            <span
+              v-if="item.badge"
+              class="user-menu__notification-badge"
+              :class="{
+                'user-menu__notification-badge--new': item.badge.type === 'new',
+                'user-menu__notification-badge--count': item.badge.type === 'count',
+                'user-menu__notification-badge--dot': item.badge.type === 'dot',
+              }"
+              :aria-label="
+                item.badge.type === 'new' ? $t('common.new') : item.badge.value?.toString()
+              "
+            >
               <template v-if="item.badge.type === 'new'">
-                {{ $t('common.new') }}
-
+                {{ $t("common.new") }}
               </template>
               <template v-else-if="item.badge.type === 'count'">
                 {{ item.badge.value }}
@@ -104,19 +138,29 @@
         <template v-if="!planStore.isPaid">
           <div class="user-menu__divider" role="separator"></div>
           <div class="user-menu__section" role="none">
-            <RouterLink :to="`/${locale}/pricing`" class="user-menu__item user-menu__item--cta" role="menuitem"
-              :tabindex="isOpen ? 0 : -1" @click="handleUpgradeClick">
-              <svg class="user-menu__item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+            <RouterLink
+              :to="`/${locale}/pricing`"
+              class="user-menu__item user-menu__item--cta"
+              role="menuitem"
+              :tabindex="isOpen ? 0 : -1"
+              @click="handleUpgradeClick"
+            >
+              <svg
+                class="user-menu__item-icon"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+                />
               </svg>
-              <span>{{ $t('navigation.upgrade') }}
-
-</span>
-              <span class="user-menu__item-badge">{{ $t('common.new') }}
-
-</span>
+              <span>{{ $t("navigation.upgrade") }} </span>
+              <span class="user-menu__item-badge">{{ $t("common.new") }} </span>
             </RouterLink>
           </div>
         </template>
@@ -125,67 +169,100 @@
 
         <!-- Logout -->
         <div class="user-menu__section" role="none">
-          <button type="button" class="user-menu__item user-menu__item--logout" role="menuitem"
-            :tabindex="isOpen ? 0 : -1" :disabled="isLoggingOut" @click="handleLogout">
-            <svg v-if="!isLoggingOut" class="user-menu__item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-              aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+          <button
+            type="button"
+            class="user-menu__item user-menu__item--logout"
+            role="menuitem"
+            :tabindex="isOpen ? 0 : -1"
+            :disabled="isLoggingOut"
+            @click="handleLogout"
+          >
+            <svg
+              v-if="!isLoggingOut"
+              class="user-menu__item-icon"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+              />
             </svg>
-            <svg v-else class="user-menu__item-icon animate-spin" fill="none" viewBox="0 0 24 24" aria-hidden="true">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-              </path>
+            <svg
+              v-else
+              class="user-menu__item-icon animate-spin"
+              fill="none"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <circle
+                class="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"
+              ></circle>
+              <path
+                class="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
             </svg>
-            <span>{{ isLoggingOut ? $t('navigation.loggingOut') : $t('navigation.logout')$t }}
-
-</span>
+            <span
+              >{{ isLoggingOut ? $t('navigation.loggingOut') : $t('navigation.logout')$t }}
+            </span>
           </button>
         </div>
 
         <!-- Type-ahead Search Indicator -->
         <Transition name="fade">
-          <div v-if="typeAheadSearch" class="user-menu__type-ahead" role="status" aria-live="polite">
-            <svg class="user-menu__type-ahead-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-              aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          <div
+            v-if="typeAheadSearch"
+            class="user-menu__type-ahead"
+            role="status"
+            aria-live="polite"
+          >
+            <svg
+              class="user-menu__type-ahead-icon"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
             </svg>
-            <span class="user-menu__type-ahead-text">{{ typeAheadSearch }}
-
-</span>
+            <span class="user-menu__type-ahead-text">{{ typeAheadSearch }} </span>
           </div>
         </Transition>
 
         <!-- Keyboard Shortcuts Hint (Desktop Only) -->
         <div v-if="!isMobile" class="user-menu__shortcuts" role="none">
-          <div class="user-menu__shortcuts-title">{{ $t('keyboard.shortcuts') }}
-
-</div>
+          <div class="user-menu__shortcuts-title">{{ $t("keyboard.shortcuts") }}</div>
           <div class="user-menu__shortcuts-grid">
             <div class="user-menu__shortcut">
               <kbd class="user-menu__kbd">↑</kbd>
               <kbd class="user-menu__kbd">↓</kbd>
-              <span>{{ $t('keyboard.navigate') }}
-
-</span>
+              <span>{{ $t("keyboard.navigate") }} </span>
             </div>
             <div class="user-menu__shortcut">
               <kbd class="user-menu__kbd">1</kbd>
               <kbd class="user-menu__kbd">-</kbd>
-              <kbd class="user-menu__kbd">{{ menuItems.length }}
-
-</kbd>
-              <span>{{ $t('keyboard.quickSelect') }}
-
-</span>
+              <kbd class="user-menu__kbd">{{ menuItems.length }} </kbd>
+              <span>{{ $t("keyboard.quickSelect") }} </span>
             </div>
             <div class="user-menu__shortcut">
               <kbd class="user-menu__kbd">Esc</kbd>
-              <span>{{ $t('keyboard.close') }}
-
-</span>
+              <span>{{ $t("keyboard.close") }} </span>
             </div>
           </div>
         </div>
@@ -195,17 +272,16 @@
     <!-- Screen Reader Announcements -->
     <div role="status" aria-live="polite" aria-atomic="true" class="sr-only">
       {{ screenReaderAnnouncement }}
-
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, h, nextTick, watch } from 'vue';
-import { useRouter } from 'vue-router';
-import { useAuthStore } from '@/stores/auth';
-import { usePlanStore } from '@/stores/plan';
-import { useI18n } from 'vue-i18n';
+import { ref, computed, onMounted, onUnmounted, h, nextTick, watch } from "vue";
+import { useRouter } from "vue-router";
+import { useAuthStore } from "@/stores/auth";
+import { usePlanStore } from "@/stores/plan";
+import { useI18n } from "vue-i18n";
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -219,7 +295,7 @@ const isMobile = ref(false);
 const triggerRef = ref<HTMLButtonElement | null>(null);
 const menuRef = ref<HTMLDivElement | null>(null);
 const lastFocusedElement = ref<HTMLElement | null>(null);
-const screenReaderAnnouncement = ref('');
+const screenReaderAnnouncement = ref("");
 const menuPreloaded = ref(false);
 
 // Touch gesture state
@@ -228,15 +304,17 @@ const touchCurrentY = ref(0);
 const isDragging = ref(false);
 
 // Type-ahead search state
-const typeAheadSearch = ref('');
+const typeAheadSearch = ref("");
 const typeAheadTimer = ref<number | null>(null);
 const typeAheadHighlightIndex = ref(-1);
 
 // Computed
-const userName = computed(() => authStore.user?.name || authStore.user?.email?.split('@')[0] || 'User');
-const userEmail = computed(() => authStore.user?.email || '');
+const userName = computed(
+  () => authStore.user?.name || authStore.user?.email?.split("@")[0] || "User"
+);
+const userEmail = computed(() => authStore.user?.email || "");
 const userInitials = computed(() => {
-  const name = authStore.user?.name || authStore.user?.email || 'U';
+  const name = authStore.user?.name || authStore.user?.email || "U";
   const parts = name.split(/[\s@]/);
   if (parts.length >= 2) {
     return (parts[0][0] + parts[1][0]).toUpperCase();
@@ -247,28 +325,46 @@ const userInitials = computed(() => {
 // Menu Items Configuration
 const menuItems = computed(() => [
   {
-    path: '/dashboard',
-    label: 'navigation.dashboard',
-    icon: h('svg', { class: 'w-5 h-5', fill: 'none', stroke: 'currentColor', viewBox: '0 0 24 24' }, [
-      h('path', { 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'stroke-width': '2', d: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' })
-    ])
+    path: "/dashboard",
+    label: "navigation.dashboard",
+    icon: h(
+      "svg",
+      { class: "w-5 h-5", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24" },
+      [
+        h("path", {
+          "stroke-linecap": "round",
+          "stroke-linejoin": "round",
+          "stroke-width": "2",
+          d: "M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6",
+        }),
+      ]
+    ),
   },
   {
-    path: '/account',
-    label: 'navigation.account',
-    icon: h('svg', { class: 'w-5 h-5', fill: 'none', stroke: 'currentColor', viewBox: '0 0 24 24' }, [
-      h('path', { 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'stroke-width': '2', d: 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z' })
-    ])
-  }
+    path: "/account",
+    label: "navigation.account",
+    icon: h(
+      "svg",
+      { class: "w-5 h-5", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24" },
+      [
+        h("path", {
+          "stroke-linecap": "round",
+          "stroke-linejoin": "round",
+          "stroke-width": "2",
+          d: "M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z",
+        }),
+      ]
+    ),
+  },
 ]);
 
 // Analytics helper
 const trackEvent = (eventName: string, eventParams?: Record<string, any>) => {
   if (window.gtag) {
-    window.gtag('event', eventName, {
-      event_category: 'user_menu',
-      device_type: isMobile.value ? 'mobile' : 'desktop',
-      ...eventParams
+    window.gtag("event", eventName, {
+      event_category: "user_menu",
+      device_type: isMobile.value ? "mobile" : "desktop",
+      ...eventParams,
     });
   }
 };
@@ -281,9 +377,7 @@ const checkMobile = () => {
 const togglemenu = () => {
   if (isOpen.value) {
     closeMenu();
-  }
-
- else {
+  } else {
     openMenu();
   }
 };
@@ -293,31 +387,33 @@ const openmenu = async () => {
   isOpen.value = true;
 
   // Track analytics
-  trackEvent('menu_opened', {
-    plan_tier: planStore.planTier || 'free',
-    is_paid: planStore.isPaid
+  trackEvent("menu_opened", {
+    plan_tier: planStore.planTier || "free",
+    is_paid: planStore.isPaid,
   });
 
   // Announce to screen readers
   const itemCount = menuItems.value.length + (planStore.isPaid ? 0 : 1) + 1; // items + upgrade (if free) + logout
-  screenReaderAnnouncement.value = t('a11y.menuOpened', {
+  screenReaderAnnouncement.value = t("a11y.menuOpened", {
     name: userName.value,
     email: userEmail.value,
-    plan: planStore.isPaid ? planStore.planDisplayName : t('plans.names.free'),
-    count: itemCount
+    plan: planStore.isPaid ? planStore.planDisplayName : t("plans.names.free"),
+    count: itemCount,
   });
 
   // Focus first menu item
   await nextTick();
   if (menuRef.value) {
-    const firstItem = menuRef.value.querySelector<HTMLElement>('a[role="menuitem"], button[role="menuitem"]');
+    const firstItem = menuRef.value.querySelector<HTMLElement>(
+      'a[role="menuitem"], button[role="menuitem"]'
+    );
     firstItem?.focus();
   }
 };
 
 const closemenu = () => {
   isOpen.value = false;
-  screenReaderAnnouncement.value = t('a11y.menuClosed');
+  screenReaderAnnouncement.value = t("a11y.menuClosed");
 
   // Clear type-ahead search
   clearTypeAhead();
@@ -325,9 +421,7 @@ const closemenu = () => {
   // Restore focus
   if (lastFocusedElement.value) {
     lastFocusedElement.value.focus();
-  }
-
- else {
+  } else {
     triggerRef.value?.focus();
   }
 };
@@ -335,12 +429,12 @@ const closemenu = () => {
 const handleitemclick = (event: Event) => {
   // Track navigation
   const target = event.currentTarget as HTMLAnchorElement;
-  const path = target.getAttribute('href') || '';
-  const label = target.textContent?.trim() || 'unknown';
+  const path = target.getAttribute("href") || "";
+  const label = target.textContent?.trim() || "unknown";
 
-  trackEvent('menu_item_clicked', {
+  trackEvent("menu_item_clicked", {
     destination: path,
-    item_label: label
+    item_label: label,
   });
 
   closeMenu();
@@ -348,19 +442,19 @@ const handleitemclick = (event: Event) => {
 
 const handleupgradeclick = (event: Event) => {
   // Track analytics with enhanced details
-  trackEvent('upgrade_clicked', {
-    event_category: 'monetization',
-    event_label: 'user_menu',
+  trackEvent("upgrade_clicked", {
+    event_category: "monetization",
+    event_label: "user_menu",
     value: 1,
-    current_plan: planStore.planTier || 'free'
+    current_plan: planStore.planTier || "free",
   });
 
   // Track navigation
   const target = event.currentTarget as HTMLAnchorElement;
-  const path = target.getAttribute('href') || '';
-  trackEvent('menu_item_clicked', {
+  const path = target.getAttribute("href") || "";
+  trackEvent("menu_item_clicked", {
     destination: path,
-    item_label: 'upgrade'
+    item_label: "upgrade",
   });
 
   closeMenu();
@@ -370,40 +464,40 @@ const handlelogout = async () => {
   if (isLoggingOut.value) return;
   try {
     isLoggingOut.value = true;
-    screenReaderAnnouncement.value = t('a11y.loggingOut');
+    screenReaderAnnouncement.value = t("a11y.loggingOut");
 
     // Track logout attempt
-    trackEvent('logout_initiated', {
-      plan_tier: planStore.planTier || 'free'
+    trackEvent("logout_initiated", {
+      plan_tier: planStore.planTier || "free",
     });
 
     closeMenu();
     await authStore.logout();
 
     // Track successful logout
-    trackEvent('logout_success');
+    trackEvent("logout_success");
 
-    screenReaderAnnouncement.value = t('a11y.loggedOut');
+    screenReaderAnnouncement.value = t("a11y.loggedOut");
     router.push(`/${locale.value}/login`);
   } catch (error) {
-    console.error('Logout failed:', error);
-    screenReaderAnnouncement.value = t('a11y.logoutFailed');
+    console.error("Logout failed:", error);
+    screenReaderAnnouncement.value = t("a11y.logoutFailed");
     isLoggingOut.value = false;
 
     // Track logout failure
-    trackEvent('logout_failed', {
-      error_message: error instanceof Error ? error.message : 'Unknown error'
+    trackEvent("logout_failed", {
+      error_message: error instanceof Error ? error.message : "Unknown error",
     });
 
     // Show error toast (assuming toast composable exists)
     if (window.showToast) {
       window.showToast({
-        type: 'error',
-        message: t('errors.logoutFailed'),
+        type: "error",
+        message: t("errors.logoutFailed"),
         action: {
-          label: t('common.retry'),
-          onClick: handleLogout
-        }
+          label: t("common.retry"),
+          onClick: handleLogout,
+        },
       });
     }
   }
@@ -454,7 +548,7 @@ const handleArrowUp = () => {
   const items = getFocusableItems();
   if (items.length === 0) return;
 
-  const currentIndex = items.findIndex(item => item === document.activeElement);
+  const currentIndex = items.findIndex((item) => item === document.activeElement);
 
   if (currentIndex === -1) {
     // No item focused, focus last item
@@ -462,9 +556,7 @@ const handleArrowUp = () => {
   } else if (currentIndex === 0) {
     // At first item, wrap to last
     items[items.length - 1]?.focus();
-  }
-
- else {
+  } else {
     // Focus previous item
     items[currentIndex - 1]?.focus();
   }
@@ -475,7 +567,7 @@ const handleArrowDown = () => {
   const items = getFocusableItems();
   if (items.length === 0) return;
 
-  const currentIndex = items.findIndex(item => item === document.activeElement);
+  const currentIndex = items.findIndex((item) => item === document.activeElement);
 
   if (currentIndex === -1) {
     // No item focused, focus first item
@@ -483,9 +575,7 @@ const handleArrowDown = () => {
   } else if (currentIndex === items.length - 1) {
     // At last item, wrap to first
     items[0]?.focus();
-  }
-
- else {
+  } else {
     // Focus next item
     items[currentIndex + 1]?.focus();
   }
@@ -522,9 +612,9 @@ const handleQuickAction = (event: KeyboardEvent) => {
     const targetItem = items[index];
 
     // Track quick action usage
-    trackEvent('quick_action_used', {
+    trackEvent("quick_action_used", {
       item_index: index,
-      item_label: targetItem.textContent?.trim() || 'unknown'
+      item_label: targetItem.textContent?.trim() || "unknown",
     });
 
     // Trigger click on the item
@@ -534,7 +624,7 @@ const handleQuickAction = (event: KeyboardEvent) => {
 
 // Type-ahead search functionality
 const clearTypeAhead = () => {
-  typeAheadSearch.value = '';
+  typeAheadSearch.value = "";
   typeAheadHighlightIndex.value = -1;
   if (typeAheadTimer.value) {
     clearTimeout(typeAheadTimer.value);
@@ -550,7 +640,13 @@ const handletypeahead = (event: KeyboardEvent) => {
   }
 
   // Only handle alphabetic keys (not modifiers, arrow keys, or numbers)
-  if (event.key.length !== 1 || event.ctrlKey || event.metaKey || event.altKey || /^[0-9]$/.test(event.key)) {
+  if (
+    event.key.length !== 1 ||
+    event.ctrlKey ||
+    event.metaKey ||
+    event.altKey ||
+    /^[0-9]$/.test(event.key)
+  ) {
     return;
   }
 
@@ -562,21 +658,19 @@ const handletypeahead = (event: KeyboardEvent) => {
 
   // Get all menu items with their text content
   const items = getFocusableItems();
-  const itemTexts = items.map(item => item.textContent?.toLowerCase().trim() || '');
+  const itemTexts = items.map((item) => item.textContent?.toLowerCase().trim() || "");
 
   // Find first matching item
-  const matchIndex = itemTexts.findIndex(text =>
-    text.startsWith(typeAheadSearch.value)
-  );
+  const matchIndex = itemTexts.findIndex((text) => text.startsWith(typeAheadSearch.value));
 
   if (matchIndex !== -1) {
     typeAheadHighlightIndex.value = matchIndex;
     items[matchIndex]?.focus();
 
     // Track type-ahead usage
-    trackEvent('type_ahead_used', {
+    trackEvent("type_ahead_used", {
       search_term: typeAheadSearch.value,
-      match_found: true
+      match_found: true,
     });
   }
 
@@ -590,13 +684,13 @@ const handletypeahead = (event: KeyboardEvent) => {
 };
 
 // Haptic feedback helper
-const triggerHaptic = (style: 'light' | 'medium' | 'heavy' = 'light') => {
+const triggerHaptic = (style: "light" | "medium" | "heavy" = "light") => {
   // Use Vibration API for haptic feedback
-  if ('vibrate' in navigator) {
+  if ("vibrate" in navigator) {
     const patterns = {
       light: 10,
       medium: 20,
-      heavy: 30
+      heavy: 30,
     };
     navigator.vibrate(patterns[style]);
   }
@@ -609,7 +703,7 @@ const handleTouchStart = (event: TouchEvent) => {
   isDragging.value = true;
 
   // Light haptic feedback on touch start
-  triggerHaptic('light');
+  triggerHaptic("light");
 };
 
 const handletouchmove = (event: TouchEvent) => {
@@ -623,7 +717,7 @@ const handletouchmove = (event: TouchEvent) => {
 
     // Medium haptic feedback when crossing close threshold
     if (deltaY > 100 && deltaY < 110) {
-      triggerHaptic('medium');
+      triggerHaptic("medium");
     }
   }
 };
@@ -636,14 +730,14 @@ const handletouchend = () => {
   // Close if dragged down more than 100px
   if (deltaY > 100) {
     // Heavy haptic feedback on close
-    triggerHaptic('heavy');
-    trackEvent('menu_closed_swipe');
+    triggerHaptic("heavy");
+    trackEvent("menu_closed_swipe");
     closeMenu();
   }
 
   // Reset
   if (menuRef.value) {
-    menuRef.value.style.transform = '';
+    menuRef.value.style.transform = "";
   }
   isDragging.value = false;
 };
@@ -669,9 +763,9 @@ const preloadMenu = () => {
 watch(isOpen, (newValue) => {
   if (isMobile.value) {
     if (newValue) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = '';
+      document.body.style.overflow = "";
     }
   }
 });
@@ -679,20 +773,20 @@ watch(isOpen, (newValue) => {
 // Lifecycle
 onMounted(() => {
   checkMobile();
-  window.addEventListener('resize', checkMobile);
-  document.addEventListener('click', handleClickOutside);
+  window.addEventListener("resize", checkMobile);
+  document.addEventListener("click", handleClickOutside);
 });
 
 onUnmounted(() => {
-  window.removeEventListener('resize', checkMobile);
-  document.removeEventListener('click', handleClickOutside);
+  window.removeEventListener("resize", checkMobile);
+  document.removeEventListener("click", handleClickOutside);
 
   // Cleanup type-ahead timer
   clearTypeAhead();
 
   // Cleanup body scroll lock
   if (isMobile.value) {
-    document.body.style.overflow = '';
+    document.body.style.overflow = "";
   }
 });
 </script>
@@ -730,7 +824,7 @@ onUnmounted(() => {
 }
 
 .user-menu__trigger--active {
-  @apply bg-gray-50 border-gray-200 dark:bg-gray-800/50 dark:border-gray-700;
+  @apply border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800/50;
   @apply shadow-sm;
 }
 
@@ -757,7 +851,7 @@ onUnmounted(() => {
 
 .user-menu__name {
   @apply text-sm font-medium text-gray-700 dark:text-gray-200;
-  @apply truncate max-w-[150px];
+  @apply max-w-[150px] truncate;
 }
 
 .user-menu__badge {
@@ -798,18 +892,18 @@ onUnmounted(() => {
 }
 
 .user-menu__dropdown--mobile {
-  @apply fixed inset-x-4 top-auto bottom-4 right-auto w-auto;
+  @apply fixed inset-x-4 bottom-4 right-auto top-auto w-auto;
   @apply rounded-2xl shadow-2xl;
   @apply border-gray-200 dark:border-gray-700;
 }
 
-[dir='rtl'] .user-menu__dropdown {
+[dir="rtl"] .user-menu__dropdown {
   @apply left-0 right-auto origin-top-left;
 }
 
 /* Swipe Handle (Mobile) */
 .user-menu__handle {
-  @apply mx-auto mt-2 mb-4 h-1.5 w-12 rounded-full bg-gray-300 dark:bg-gray-600;
+  @apply mx-auto mb-4 mt-2 h-1.5 w-12 rounded-full bg-gray-300 dark:bg-gray-600;
 }
 
 /* Header Section */
@@ -857,12 +951,12 @@ onUnmounted(() => {
 
 /* Menu Item - Modern hover states */
 .user-menu__item {
-  @apply flex w-full items-center gap-3 px-4 py-2 mx-1 rounded-lg;
+  @apply mx-1 flex w-full items-center gap-3 rounded-lg px-4 py-2;
   @apply text-left text-sm font-medium text-gray-700 dark:text-gray-300;
   @apply transition-all duration-fast ease-out;
   @apply hover:bg-gray-50 dark:hover:bg-gray-700/30;
   @apply hover:translate-x-0.5;
-  @apply focus:outline-none focus:bg-gray-50 dark:focus:bg-gray-700/30;
+  @apply focus:bg-gray-50 focus:outline-none dark:focus:bg-gray-700/30;
   @apply focus:ring-2 focus:ring-inset focus:ring-primary/50;
 
   position: relative;
@@ -871,7 +965,7 @@ onUnmounted(() => {
 
 /* Subtle hover effect */
 .user-menu__item::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   top: 50%;
@@ -883,7 +977,7 @@ onUnmounted(() => {
   border-radius: 0 2px 2px 0;
 }
 
-[dir='rtl'] .user-menu__item::before {
+[dir="rtl"] .user-menu__item::before {
   left: auto;
   right: 0;
   border-radius: 2px 0 0 2px;
@@ -894,7 +988,7 @@ onUnmounted(() => {
 }
 
 .user-menu__item[disabled] {
-  @apply opacity-40 cursor-not-allowed;
+  @apply cursor-not-allowed opacity-40;
   @apply hover:translate-x-0 hover:bg-transparent;
 }
 
@@ -910,7 +1004,7 @@ onUnmounted(() => {
   transform: translateX(-10px);
 }
 
-[dir='rtl'] .user-menu__item--animated {
+[dir="rtl"] .user-menu__item--animated {
   transform: translateX(10px);
 }
 
@@ -923,7 +1017,7 @@ onUnmounted(() => {
 
 /* Quick Action Number */
 .user-menu__quick-number {
-  @apply flex items-center justify-center w-5 h-5 rounded text-[10px] font-semibold;
+  @apply flex h-5 w-5 items-center justify-center rounded text-[10px] font-semibold;
   @apply bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-400;
   @apply transition-all duration-200;
 }
@@ -956,14 +1050,14 @@ onUnmounted(() => {
 
 .user-menu__notification-badge--count {
   @apply bg-red-500 text-white;
-  @apply min-w-[20px] h-5 flex items-center justify-center;
+  @apply flex h-5 min-w-[20px] items-center justify-center;
   @apply shadow-sm;
 
   animation: pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 .user-menu__notification-badge--dot {
-  @apply w-2 h-2 rounded-full bg-red-500 p-0;
+  @apply h-2 w-2 rounded-full bg-red-500 p-0;
   @apply ring-2 ring-white dark:ring-gray-800;
 
   animation: pulse-dot 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
@@ -1011,7 +1105,9 @@ onUnmounted(() => {
   @apply transform hover:scale-[1.02];
 
   background-size: 100% 100%;
-  transition: all var(--duration-fast) var(--ease-out), background-size 0.3s;
+  transition:
+    all var(--duration-fast) var(--ease-out),
+    background-size 0.3s;
 }
 
 .user-menu__item--cta:hover {
@@ -1028,8 +1124,8 @@ onUnmounted(() => {
 }
 
 .user-menu__item-badge {
-  @apply ml-auto rounded-full bg-white/20 backdrop-blur-sm px-2 py-0.5;
-  @apply text-[10px] font-bold text-white uppercase tracking-wider;
+  @apply ml-auto rounded-full bg-white/20 px-2 py-0.5 backdrop-blur-sm;
+  @apply text-[10px] font-bold uppercase tracking-wider text-white;
   @apply ring-1 ring-white/30;
 
   animation: pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
@@ -1060,7 +1156,7 @@ onUnmounted(() => {
 
 /* Type-ahead Search Indicator */
 .user-menu__type-ahead {
-  @apply flex items-center gap-2 px-4 py-2.5 border-t border-gray-200 dark:border-gray-700;
+  @apply flex items-center gap-2 border-t border-gray-200 px-4 py-2.5 dark:border-gray-700;
   @apply bg-primary-50 dark:bg-primary-900/20;
 }
 
@@ -1075,12 +1171,12 @@ onUnmounted(() => {
 
 /* Keyboard Shortcuts */
 .user-menu__shortcuts {
-  @apply px-4 py-2 border-t border-gray-200 dark:border-gray-700;
+  @apply border-t border-gray-200 px-4 py-2 dark:border-gray-700;
   @apply bg-gray-50 dark:bg-gray-900/50;
 }
 
 .user-menu__shortcuts-title {
-  @apply text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5;
+  @apply mb-1.5 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400;
 }
 
 .user-menu__shortcuts-grid {
@@ -1092,8 +1188,8 @@ onUnmounted(() => {
 }
 
 .user-menu__kbd {
-  @apply inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-[10px] font-semibold;
-  @apply bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600;
+  @apply inline-flex h-5 min-w-[20px] items-center justify-center px-1.5 text-[10px] font-semibold;
+  @apply border border-gray-300 bg-white dark:border-gray-600 dark:bg-gray-800;
   @apply rounded shadow-sm;
 }
 
@@ -1106,11 +1202,11 @@ onUnmounted(() => {
 }
 
 .dropdown-enter-from {
-  @apply scale-95 opacity-0 -translate-y-2;
+  @apply -translate-y-2 scale-95 opacity-0;
 }
 
 .dropdown-leave-to {
-  @apply scale-95 opacity-0 -translate-y-2;
+  @apply -translate-y-2 scale-95 opacity-0;
 }
 
 /* Slide Up Transition (Mobile) */
@@ -1153,22 +1249,22 @@ onUnmounted(() => {
 
 .fade-enter-from,
 .fade-leave-to {
-  @apply opacity-0 scale-95;
+  @apply scale-95 opacity-0;
 }
 
 /* Screen Reader Only */
 .sr-only {
-  @apply absolute w-px h-px p-0 -m-px overflow-hidden whitespace-nowrap border-0;
+  @apply absolute -m-px h-px w-px overflow-hidden whitespace-nowrap border-0 p-0;
 
   clip: rect(0, 0, 0, 0);
 }
 
 /* RTL Support */
-[dir='rtl'] .user-menu__info {
+[dir="rtl"] .user-menu__info {
   @apply items-end;
 }
 
-[dir='rtl'] .user-menu__trigger {
+[dir="rtl"] .user-menu__trigger {
   @apply flex-row-reverse;
 }
 
@@ -1210,7 +1306,7 @@ onUnmounted(() => {
   /* Disable transform animations for reduced motion */
   .dropdown-enter-from,
   .dropdown-leave-to {
-    @apply scale-100 translate-y-0;
+    @apply translate-y-0 scale-100;
   }
 
   .slide-up-enter-from,

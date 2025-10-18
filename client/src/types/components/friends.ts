@@ -49,4 +49,3 @@ export interface IFriendshipButtonProps {
 export interface IUserSearchProps {
   placeholder?: string;
 }
-

@@ -28,7 +28,7 @@
 import { ref, onUnmounted } from "vue";
 import { useAnalytics } from "@/composables/useAnalytics";
 import type { HomepageSection } from "@/types/homepage";
-import type { IHomepageAnalyticsResult } from '@shared/types/composables';
+import type { IHomepageAnalyticsResult } from "@shared/types/composables";
 import type {
   ISectionViewEvent,
   ICTAClickEvent,
@@ -36,7 +36,6 @@ import type {
   IFaqInteractionEvent,
   ISocialProofInteractionEvent,
 } from "@/types/analytics";
-
 
 /**
  * Homepage analytics composable

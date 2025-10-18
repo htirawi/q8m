@@ -204,7 +204,7 @@ describe("CurrencyService", () => {
 
     it("should use stale cache rate before fetching from API", async () => {
       const staleRate = {
-        rate: 0.70,
+        rate: 0.7,
         source: "cache",
         ageInHours: 30,
         isFresh: () => false,
@@ -217,7 +217,7 @@ describe("CurrencyService", () => {
       const result = await currencyService.getExchangeRate("USD", "JOD");
 
       expect(result).toEqual({
-        rate: 0.70,
+        rate: 0.7,
         source: "cache",
         ageInHours: 30,
       });
@@ -462,9 +462,7 @@ describe("CurrencyService", () => {
       (FxRate.getFreshRate as any).mockResolvedValue(null);
       (FxRate.getLatestRate as any).mockResolvedValue(null);
 
-      await expect(
-        currencyService.getExchangeRate("USD", "JOD")
-      ).resolves.toBeTruthy(); // Should use fallback
+      await expect(currencyService.getExchangeRate("USD", "JOD")).resolves.toBeTruthy(); // Should use fallback
 
       process.env.EXCHANGE_RATE_API_KEY = originalApiKey;
     });

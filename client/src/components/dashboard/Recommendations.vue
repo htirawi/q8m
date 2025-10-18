@@ -1,7 +1,7 @@
 <template>
   <div class="recommendations">
     <div class="recommendations__header">
-      <h3 class="recommendations__title">{{ $t('dashboard.recommendations') }}</h3>
+      <h3 class="recommendations__title">{{ $t("dashboard.recommendations") }}</h3>
       <button
         v-if="showRefresh"
         class="recommendations__refresh"
@@ -15,9 +15,11 @@
           fill="none"
           stroke="currentColor"
         >
-          <path d="M1 4v6h6M23 20v-6h-6M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15" />
+          <path
+            d="M1 4v6h6M23 20v-6h-6M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15"
+          />
         </svg>
-        <span class="recommendations__refresh-text">{{ $t('common.refresh') }}</span>
+        <span class="recommendations__refresh-text">{{ $t("common.refresh") }}</span>
       </button>
     </div>
 
@@ -28,18 +30,20 @@
         class="recommendation-card"
         :class="{
           'recommendation-card--new': item.isNew,
-          'recommendation-card--featured': item.isFeatured
+          'recommendation-card--featured': item.isFeatured,
         }"
         :style="{ '--animation-delay': `${index * 100}ms` }"
         @click="handleItemClick(item)"
       >
         <!-- Badge -->
         <div v-if="item.isNew" class="recommendation-card__badge recommendation-card__badge--new">
-          {{ $t('common.new') }}
-
+          {{ $t("common.new") }}
         </div>
-        <div v-else-if="item.isFeatured" class="recommendation-card__badge recommendation-card__badge--featured">
-          {{ $t('common.featured') }}
+        <div
+          v-else-if="item.isFeatured"
+          class="recommendation-card__badge recommendation-card__badge--featured"
+        >
+          {{ $t("common.featured") }}
         </div>
 
         <!-- Icon/Thumbnail -->
@@ -49,8 +53,12 @@
             :src="item.thumbnail"
             :alt="item.title"
             class="recommendation-card__thumbnail"
+          />
+          <div
+            v-else
+            class="recommendation-card__icon"
+            :class="`recommendation-card__icon--${item.type}`"
           >
-          <div v-else class="recommendation-card__icon" :class="`recommendation-card__icon--${item.type}`">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <path
                 v-if="item.type === 'course'"
@@ -60,10 +68,7 @@
                 v-else-if="item.type === 'practice'"
                 d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
               />
-              <path
-                v-else-if="item.type === 'challenge'"
-                d="M13 10V3L4 14h7v7l9-11h-7z"
-              />
+              <path v-else-if="item.type === 'challenge'" d="M13 10V3L4 14h7v7l9-11h-7z" />
               <path
                 v-else
                 d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
@@ -74,12 +79,8 @@
 
         <!-- Content -->
         <div class="recommendation-card__content">
-          <h4 class="recommendation-card__title">{{ item.title }}
-
-</h4>
-          <p class="recommendation-card__description">{{ item.description }}
-
-</p>
+          <h4 class="recommendation-card__title">{{ item.title }}</h4>
+          <p class="recommendation-card__description">{{ item.description }}</p>
 
           <!-- Metadata -->
           <div class="recommendation-card__meta">
@@ -89,44 +90,40 @@
                 <path d="M12 6v6l4 2" />
               </svg>
               {{ item.duration }}
-
             </span>
             <span v-if="item.difficulty" class="recommendation-card__meta-item">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                <path
+                  d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
+                />
               </svg>
               {{ $t(`difficulty.${item.difficulty}`) }}
             </span>
           </div>
 
           <!-- Progress (if continue type) -->
-          <div v-if="item.type === 'continue' && item.progress !== undefined" class="recommendation-card__progress">
+          <div
+            v-if="item.type === 'continue' && item.progress !== undefined"
+            class="recommendation-card__progress"
+          >
             <div class="recommendation-card__progress-bar">
               <div
                 class="recommendation-card__progress-fill"
                 :style="{ width: `${item.progress}%` }"
               ></div>
             </div>
-            <span class="recommendation-card__progress-text">{{ item.progress }}% {{ $t('common.complete') }}
-
-</span>
+            <span class="recommendation-card__progress-text"
+              >{{ item.progress }}% {{ $t("common.complete") }}
+            </span>
           </div>
         </div>
 
         <!-- Action -->
         <button class="recommendation-card__action">
-          <span v-if="item.type === 'continue'">{{ $t('actions.continue') }}
-
-</span>
-          <span v-else-if="item.type === 'practice'">{{ $t('actions.practice') }}
-
-</span>
-          <span v-else-if="item.type === 'challenge'">{{ $t('actions.start') }}
-
-</span>
-          <span v-else>{{ $t('actions.learn') }}
-
-</span>
+          <span v-if="item.type === 'continue'">{{ $t("actions.continue") }} </span>
+          <span v-else-if="item.type === 'practice'">{{ $t("actions.practice") }} </span>
+          <span v-else-if="item.type === 'challenge'">{{ $t("actions.start") }} </span>
+          <span v-else>{{ $t("actions.learn") }} </span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path d="M5 12h14M12 5l7 7-7 7" />
           </svg>
@@ -138,33 +135,32 @@
     <div v-if="items.length === 0" class="recommendations__empty">
       <div class="recommendations__empty-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-          <path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+          <path
+            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+          />
         </svg>
       </div>
-      <p class="recommendations__empty-text">{{ $t('dashboard.noRecommendations') }}
-
-</p>
+      <p class="recommendations__empty-text">{{ $t("dashboard.noRecommendations") }}</p>
       <button class="recommendations__empty-button" @click="$emit('explore')">
-        {{ $t('actions.exploreContent') }}
-
+        {{ $t("actions.exploreContent") }}
       </button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useRouter } from 'vue-router';
+import { ref } from "vue";
+import { useI18n } from "vue-i18n";
+import { useRouter } from "vue-router";
 
 export interface recommendation {
   id: string;
-  type: 'continue' | 'recommended' | 'practice' | 'challenge' | 'course';
+  type: "continue" | "recommended" | "practice" | "challenge" | "course";
   title: string;
   description: string;
   thumbnail?: string;
   duration?: string;
-  difficulty?: 'junior' | 'intermediate' | 'senior';
+  difficulty?: "junior" | "intermediate" | "senior";
   progress?: number;
   isNew?: boolean;
   isFeatured?: boolean;
@@ -178,13 +174,11 @@ interface props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  showRefresh: true
+  showRefresh: true,
 });
 
 const emit = defineEmits<{
-  'item-click': [item: Recommendation];
-  
-  
+  "item-click": [item: Recommendation];
 }>();
 
 const { t } = useI18n();
@@ -193,7 +187,7 @@ const router = useRouter();
 const isRefreshing = ref(false);
 
 const handleitemclick = (item: Recommendation) => {
-  emit('item-click', item);
+  emit("item-click", item);
 
   if (item.actionUrl) {
     router.push(item.actionUrl);
@@ -202,27 +196,26 @@ const handleitemclick = (item: Recommendation) => {
 
 const handlerefresh = async () => {
   isRefreshing.value = true;
-  emit('refresh');
+  emit("refresh");
 
   // Simulate refresh delay
   setTimeout(() => {
     isRefreshing.value = false;
   }, 1000);
 };
-
 </script>
 
 <style scoped>
 /* Container */
 .recommendations {
-  @apply bg-white dark:bg-gray-800 rounded-xl shadow-sm;
+  @apply rounded-xl bg-white shadow-sm dark:bg-gray-800;
   @apply border border-gray-200 dark:border-gray-700;
   @apply p-6;
 }
 
 /* Header */
 .recommendations__header {
-  @apply flex items-center justify-between mb-6;
+  @apply mb-6 flex items-center justify-between;
 }
 
 .recommendations__title {
@@ -231,15 +224,15 @@ const handlerefresh = async () => {
 
 .recommendations__refresh {
   @apply flex items-center gap-2;
-  @apply px-3 py-1.5 rounded-lg;
+  @apply rounded-lg px-3 py-1.5;
   @apply text-sm font-medium text-gray-600 dark:text-gray-400;
   @apply hover:bg-gray-100 dark:hover:bg-gray-700;
   @apply transition-colors duration-fast;
-  @apply disabled:opacity-50 disabled:cursor-not-allowed;
+  @apply disabled:cursor-not-allowed disabled:opacity-50;
 }
 
 .recommendations__refresh-icon {
-  @apply w-4 h-4;
+  @apply h-4 w-4;
 }
 
 .recommendations__refresh-text {
@@ -248,18 +241,18 @@ const handlerefresh = async () => {
 
 /* Grid */
 .recommendations__grid {
-  @apply grid grid-cols-1 md:grid-cols-2 gap-4;
+  @apply grid grid-cols-1 gap-4 md:grid-cols-2;
 }
 
 /* Recommendation card */
 .recommendation-card {
   @apply relative overflow-hidden;
-  @apply bg-gray-50 dark:bg-gray-900/50 rounded-lg;
+  @apply rounded-lg bg-gray-50 dark:bg-gray-900/50;
   @apply border border-gray-200 dark:border-gray-700;
   @apply p-4;
   @apply hover:border-primary-300 dark:hover:border-primary-700;
   @apply hover:shadow-md;
-  @apply transition-all duration-fast cursor-pointer;
+  @apply cursor-pointer transition-all duration-fast;
   @apply flex gap-4;
 
   animation: fade-in-up 0.6s ease-out var(--animation-delay, 0ms) backwards;
@@ -277,8 +270,8 @@ const handlerefresh = async () => {
 
 /* Badge */
 .recommendation-card__badge {
-  @apply absolute top-2 right-2;
-  @apply px-2 py-0.5 rounded-full;
+  @apply absolute right-2 top-2;
+  @apply rounded-full px-2 py-0.5;
   @apply text-xs font-bold uppercase tracking-wider;
 }
 
@@ -296,16 +289,16 @@ const handlerefresh = async () => {
 }
 
 .recommendation-card__thumbnail {
-  @apply w-20 h-20 rounded-lg object-cover;
+  @apply h-20 w-20 rounded-lg object-cover;
 }
 
 .recommendation-card__icon {
-  @apply w-20 h-20 rounded-lg;
+  @apply h-20 w-20 rounded-lg;
   @apply flex items-center justify-center;
 }
 
 .recommendation-card__icon svg {
-  @apply w-10 h-10;
+  @apply h-10 w-10;
 }
 
 .recommendation-card__icon--course {
@@ -327,7 +320,7 @@ const handlerefresh = async () => {
 
 /* Content */
 .recommendation-card__content {
-  @apply flex-1 min-w-0;
+  @apply min-w-0 flex-1;
 }
 
 .recommendation-card__title {
@@ -351,7 +344,7 @@ const handlerefresh = async () => {
 }
 
 .recommendation-card__meta-item svg {
-  @apply w-3 h-3;
+  @apply h-3 w-3;
 }
 
 /* Progress */
@@ -360,7 +353,7 @@ const handlerefresh = async () => {
 }
 
 .recommendation-card__progress-bar {
-  @apply w-full h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden;
+  @apply h-1.5 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700;
 }
 
 .recommendation-card__progress-fill {
@@ -369,14 +362,14 @@ const handlerefresh = async () => {
 }
 
 .recommendation-card__progress-text {
-  @apply text-xs text-gray-600 dark:text-gray-400 mt-1;
+  @apply mt-1 text-xs text-gray-600 dark:text-gray-400;
 }
 
 /* Action button */
 .recommendation-card__action {
   @apply absolute bottom-4 right-4;
   @apply flex items-center gap-1;
-  @apply px-3 py-1.5 rounded-lg;
+  @apply rounded-lg px-3 py-1.5;
   @apply bg-white dark:bg-gray-800;
   @apply text-xs font-medium text-primary-600 dark:text-primary-400;
   @apply border border-primary-200 dark:border-primary-800;
@@ -385,7 +378,7 @@ const handlerefresh = async () => {
 }
 
 .recommendation-card__action svg {
-  @apply w-3 h-3;
+  @apply h-3 w-3;
 }
 
 .recommendation-card:hover .recommendation-card__action {
@@ -398,20 +391,20 @@ const handlerefresh = async () => {
 }
 
 .recommendations__empty-icon {
-  @apply w-16 h-16 mx-auto mb-4;
+  @apply mx-auto mb-4 h-16 w-16;
   @apply text-gray-400 dark:text-gray-600;
 }
 
 .recommendations__empty-icon svg {
-  @apply w-full h-full;
+  @apply h-full w-full;
 }
 
 .recommendations__empty-text {
-  @apply text-gray-600 dark:text-gray-400 mb-4;
+  @apply mb-4 text-gray-600 dark:text-gray-400;
 }
 
 .recommendations__empty-button {
-  @apply px-4 py-2 rounded-lg;
+  @apply rounded-lg px-4 py-2;
   @apply bg-primary text-white;
   @apply hover:bg-primary-700;
   @apply transition-colors duration-fast;

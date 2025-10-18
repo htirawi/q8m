@@ -2,8 +2,8 @@
  * Type declarations for external modules without types
  */
 
-declare module '@fastify/rate-limit' {
-  import type { FastifyPluginCallback } from 'fastify';
+declare module "@fastify/rate-limit" {
+  import type { FastifyPluginCallback } from "fastify";
 
   export interface FastifyRateLimitOptions {
     global?: boolean;
@@ -21,24 +21,28 @@ declare module '@fastify/rate-limit' {
     keyGenerator?: (req: any) => string | number | Promise<string | number>;
     errorResponseBuilder?: (req: any, context: any) => any;
     enableDraftSpec?: boolean;
-    addHeadersOnExceeding?: boolean | {
-      'x-ratelimit-limit'?: boolean;
-      'x-ratelimit-remaining'?: boolean;
-      'x-ratelimit-reset'?: boolean;
-    };
-    addHeaders?: boolean | {
-      'x-ratelimit-limit'?: boolean;
-      'x-ratelimit-remaining'?: boolean;
-      'x-ratelimit-reset'?: boolean;
-      'retry-after'?: boolean;
-    };
+    addHeadersOnExceeding?:
+      | boolean
+      | {
+          "x-ratelimit-limit"?: boolean;
+          "x-ratelimit-remaining"?: boolean;
+          "x-ratelimit-reset"?: boolean;
+        };
+    addHeaders?:
+      | boolean
+      | {
+          "x-ratelimit-limit"?: boolean;
+          "x-ratelimit-remaining"?: boolean;
+          "x-ratelimit-reset"?: boolean;
+          "retry-after"?: boolean;
+        };
   }
 
   const fastifyRateLimit: FastifyPluginCallback<FastifyRateLimitOptions>;
   export default fastifyRateLimit;
 }
 
-declare module '@paypal/checkout-server-sdk' {
+declare module "@paypal/checkout-server-sdk" {
   export namespace core {
     class PayPalHttpClient {
       constructor(environment: PayPalEnvironment);
@@ -89,7 +93,7 @@ declare module '@paypal/checkout-server-sdk' {
   }
 }
 
-declare module 'paypal-rest-sdk' {
+declare module "paypal-rest-sdk" {
   export function configure(options: {
     mode: string;
     client_id: string;
@@ -97,19 +101,9 @@ declare module 'paypal-rest-sdk' {
   }): void;
 
   export const payment: {
-    create(
-      data: any,
-      callback: (error: any, payment: any) => void
-    ): void;
-    execute(
-      paymentId: string,
-      data: any,
-      callback: (error: any, payment: any) => void
-    ): void;
-    get(
-      paymentId: string,
-      callback: (error: any, payment: any) => void
-    ): void;
+    create(data: any, callback: (error: any, payment: any) => void): void;
+    execute(paymentId: string, data: any, callback: (error: any, payment: any) => void): void;
+    get(paymentId: string, callback: (error: any, payment: any) => void): void;
   };
 
   export default {

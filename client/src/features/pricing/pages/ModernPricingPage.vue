@@ -1,31 +1,31 @@
 <script setup lang="ts">
-import PricingCards from '@/components/pricing/PricingCards.vue';
-import PricingTestimonials from '@/components/pricing/PricingTestimonials.vue';
-import RoiSection from '@/components/pricing/RoiSection.vue';
-import CompetitorComparison from '@/components/pricing/CompetitorComparison.vue';
-import ComparisonTable from '@/components/pricing/ComparisonTable.vue';
-import FaqAccordion from '@/components/pricing/FaqAccordion.vue';
-import GuaranteePanel from '@/components/pricing/GuaranteePanel.vue';
-import FinalCta from '@/components/pricing/FinalCta.vue';
-import { onMounted } from 'vue';
-import { useAnalytics } from '@/composables/useAnalytics';
-import { useRoute } from 'vue-router';
+import PricingCards from "@/components/pricing/PricingCards.vue";
+import PricingTestimonials from "@/components/pricing/PricingTestimonials.vue";
+import RoiSection from "@/components/pricing/RoiSection.vue";
+import CompetitorComparison from "@/components/pricing/CompetitorComparison.vue";
+import ComparisonTable from "@/components/pricing/ComparisonTable.vue";
+import FaqAccordion from "@/components/pricing/FaqAccordion.vue";
+import GuaranteePanel from "@/components/pricing/GuaranteePanel.vue";
+import FinalCta from "@/components/pricing/FinalCta.vue";
+import { onMounted } from "vue";
+import { useAnalytics } from "@/composables/useAnalytics";
+import { useRoute } from "vue-router";
 
 const route = useRoute();
 const { track } = useAnalytics();
 
 // Track page view
 onMounted(() => {
-  track('pricing_viewed', {
-    source: (route.query.source as string) || 'direct',
-    locale: (route.params.locale as string) || 'en',
-    rtl: (route.params.locale as string) === 'ar',
-    device: window.innerWidth < 768 ? 'mobile' : 'desktop',
+  track("pricing_viewed", {
+    source: (route.query.source as string) || "direct",
+    locale: (route.params.locale as string) || "en",
+    rtl: (route.params.locale as string) === "ar",
+    device: window.innerWidth < 768 ? "mobile" : "desktop",
   });
 });
 
 defineOptions({
-  name: 'ModernPricingPage',
+  name: "ModernPricingPage",
 });
 </script>
 
@@ -36,35 +36,34 @@ defineOptions({
       href="#main-content"
       class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-blue-600 focus:px-4 focus:py-2 focus:text-white"
     >
-      {{ $t('a11y.skipToMain') }}
-
+      {{ $t("a11y.skipToMain") }}
     </a>
 
     <!-- Header Section -->
     <div class="modern-pricing-page__header">
       <div class="modern-pricing-page__container">
         <h1 id="pricing-page-title" class="modern-pricing-page__title">
-          {{ $t('pricing.hero.title') }}
-
+          {{ $t("pricing.hero.title") }}
         </h1>
         <p class="modern-pricing-page__subtitle">
-          {{ $t('pricing.hero.subtitle') }}
-
+          {{ $t("pricing.hero.subtitle") }}
         </p>
         <!-- Trust badge -->
         <p class="modern-pricing-page__trust">
-          {{ $t('pricing.hero.trustedBy') }}
-
+          {{ $t("pricing.hero.trustedBy") }}
         </p>
       </div>
     </div>
 
     <!-- Pricing Cards Component (includes billing toggle + trust badges) -->
-    <section id="main-content" class="modern-pricing-page__cards-section" aria-labelledby="plans-title">
+    <section
+      id="main-content"
+      class="modern-pricing-page__cards-section"
+      aria-labelledby="plans-title"
+    >
       <div class="modern-pricing-page__container">
         <h2 id="plans-title" class="sr-only">
-          {{ $t('pricing.plans.title') }}
-
+          {{ $t("pricing.plans.title") }}
         </h2>
         <PricingCards />
       </div>
@@ -127,7 +126,7 @@ defineOptions({
 .modern-pricing-page__subtitle {
   @apply text-base text-gray-600 dark:text-gray-300;
   @apply sm:text-lg lg:text-xl;
-  @apply max-w-3xl mx-auto;
+  @apply mx-auto max-w-3xl;
 }
 
 .modern-pricing-page__trust {
@@ -152,7 +151,7 @@ defineOptions({
 }
 
 .modern-pricing-page__section-title {
-  @apply text-2xl font-bold text-center text-gray-900 dark:text-white;
+  @apply text-center text-2xl font-bold text-gray-900 dark:text-white;
   @apply sm:text-3xl lg:text-4xl;
   @apply mb-3;
 
@@ -160,10 +159,10 @@ defineOptions({
 }
 
 .modern-pricing-page__section-subtitle {
-  @apply text-base text-center text-gray-600 dark:text-gray-300;
+  @apply text-center text-base text-gray-600 dark:text-gray-300;
   @apply sm:text-lg;
   @apply mb-8 lg:mb-12;
-  @apply max-w-2xl mx-auto;
+  @apply mx-auto max-w-2xl;
 }
 
 /* Responsive */

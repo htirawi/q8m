@@ -5,14 +5,12 @@
       ref="ctaButtonRef"
       type="button"
       :disabled="disabled"
-      class="group relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 px-12 py-4 text-lg font-bold text-white shadow-2xl transition-all duration-300 hover:scale-105 hover:shadow-3xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
+      class="hover:shadow-3xl group relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 px-12 py-4 text-lg font-bold text-white shadow-2xl transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
       :aria-label="ariaLabel"
       @click="handleClick"
     >
       <span class="relative z-10 flex items-center gap-3">
-        <span>{{ buttonText }}
-
-</span>
+        <span>{{ buttonText }} </span>
         <svg
           class="h-5 w-5 transition-transform group-hover:translate-x-1"
           fill="none"
@@ -35,22 +33,36 @@
     </button>
 
     <!-- Trust signals -->
-    <div class="mt-4 flex flex-wrap items-center justify-center gap-4 text-sm text-gray-600 dark:text-gray-400">
+    <div
+      class="mt-4 flex flex-wrap items-center justify-center gap-4 text-sm text-gray-600 dark:text-gray-400"
+    >
       <div class="flex items-center gap-1.5">
-        <svg class="h-4 w-4 text-primary-500" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-          <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+        <svg
+          class="h-4 w-4 text-primary-500"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+          aria-hidden="true"
+        >
+          <path
+            d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"
+          />
         </svg>
-        <span>{{ t('study.cta.trust.users') }}
-
-</span>
+        <span>{{ t("study.cta.trust.users") }} </span>
       </div>
       <div class="flex items-center gap-1.5">
-        <svg class="h-4 w-4 text-primary-500" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-          <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+        <svg
+          class="h-4 w-4 text-primary-500"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+          aria-hidden="true"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+            clip-rule="evenodd"
+          />
         </svg>
-        <span>{{ t('study.cta.trust.successRate') }}
-
-</span>
+        <span>{{ t("study.cta.trust.successRate") }} </span>
       </div>
     </div>
 
@@ -60,15 +72,14 @@
 </template>
 
 <script setup lang="ts">
-import type { IStartStudyingCtaProps as Props, IStartStudyingCtaEmits as Emits } from "@/types/components/study";
+import type {
+  IStartStudyingCtaProps as Props,
+  IStartStudyingCtaEmits as Emits,
+} from "@/types/components/study";
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useAnalytics } from "@/composables/useAnalytics";
 import type { DifficultyLevel } from "@/types/plan/access";
-
-
-
-
 
 const props = withDefaults(defineProps<Props>(), {
   disabled: false,
@@ -86,40 +97,39 @@ const hasTrackedView = ref(false);
 
 const buttonText = computed(() => {
   if (props.selectedDifficulty) {
-    return t('study.cta.startStudying');
+    return t("study.cta.startStudying");
   }
-  return t('study.cta.chooseDifficultyFirst');
+  return t("study.cta.chooseDifficultyFirst");
 });
 
 const ariaLabel = computed(() => {
   if (props.selectedDifficulty) {
-    return t('study.cta.ariaLabelWithSelection', {
+    return t("study.cta.ariaLabelWithSelection", {
       difficulty: t(`difficulty.${props.selectedDifficulty}.label`),
     });
   }
-  return t('study.cta.ariaLabelNoSelection');
+  return t("study.cta.ariaLabelNoSelection");
 });
 
 const handleclick = () => {
-  track('study_cta_clicked', {
+  track("study_cta_clicked", {
     hasSelection: !!props.selectedDifficulty,
     difficulty: props.selectedDifficulty ?? undefined,
-    source: 'inline',
+    source: "inline",
   });
 
   if (props.selectedDifficulty) {
     // Emit click event to parent
-    emit('click', props.selectedDifficulty);
-  }
-
- else {
+    emit("click", props.selectedDifficulty);
+  } else {
     // Scroll to difficulty selection
     scrollToDifficultySelection();
   }
 };
 
 const scrolltodifficultyselection = () => {
-  let targetElement: HTMLElement | null = null;targetElement
+  let targetElement: HTMLElement | null = null;
+  targetElement;
 
   // Try to find the target element using the selector
   if (props.scrollTargetSelector) {
@@ -127,18 +137,18 @@ const scrolltodifficultyselection = () => {
   }
 
   if (targetElement) {
-    track('study_cta_scroll_prompt', {});
+    track("study_cta_scroll_prompt", {});
 
     // Smooth scroll to the difficulty selection
     targetElement.scrollIntoView({
-      behavior: 'smooth',
-      block: 'center',
+      behavior: "smooth",
+      block: "center",
     });
 
     // Add a gentle shake animation to highlight the section
-    targetElement.classList.add('animate-shake');
+    targetElement.classList.add("animate-shake");
     setTimeout(() => {
-      targetElement?.classList.remove('animate-shake');
+      targetElement?.classList.remove("animate-shake");
     }, 600);
   }
 };
@@ -147,13 +157,14 @@ const scrolltodifficultyselection = () => {
 const handleIntersection: IntersectionObserverCallback = (entries) => {
   entries.forEach((entry) => {
     if (entry.isIntersecting && !hasTrackedView.value) {
-      track('study_cta_viewed', {});
+      track("study_cta_viewed", {});
       hasTrackedView.value = true;
     }
   });
 };
 
-let observer: IntersectionObserver | null = null;observer
+let observer: IntersectionObserver | null = null;
+observer;
 
 onMounted(() => {
   // Set up intersection observer to track when CTA becomes visible
@@ -179,15 +190,23 @@ onUnmounted(() => {
 }
 
 @keyframes shake {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateX(0);
   }
 
-  10%, 30%, 50%, 70%, 90% {
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
     transform: translateX(-4px);
   }
 
-  20%, 40%, 60%, 80% {
+  20%,
+  40%,
+  60%,
+  80% {
     transform: translateX(4px);
   }
 }

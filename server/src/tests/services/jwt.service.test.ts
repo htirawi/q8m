@@ -97,11 +97,9 @@ describe("JWTService", () => {
     });
 
     it("should throw error for token with wrong secret", () => {
-      const wrongToken = jwt.sign(
-        { userId: mockUserId, email: mockUser.email },
-        "wrong-secret",
-        { expiresIn: "15m" }
-      );
+      const wrongToken = jwt.sign({ userId: mockUserId, email: mockUser.email }, "wrong-secret", {
+        expiresIn: "15m",
+      });
 
       expect(() => {
         jwtService.verifyAccessToken(wrongToken);
@@ -170,11 +168,9 @@ describe("JWTService", () => {
     });
 
     it("should return true for expired token", () => {
-      const expiredToken = jwt.sign(
-        { userId: mockUserId },
-        process.env.JWT_SECRET!,
-        { expiresIn: "0s" }
-      );
+      const expiredToken = jwt.sign({ userId: mockUserId }, process.env.JWT_SECRET!, {
+        expiresIn: "0s",
+      });
 
       setTimeout(() => {
         const isExpired = jwtService.isTokenExpired(expiredToken);

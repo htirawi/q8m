@@ -1,86 +1,96 @@
 <template>
   <!-- Only show if notifications are supported, not granted, and not denied -->
-  <div
-    v-if="shouldShow"
-    :class="variantClass"
-  >
+  <div v-if="shouldShow" :class="variantClass">
     <div class="prompt-content">
       <!-- Icon -->
       <div class="prompt-icon">
         <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+          />
         </svg>
       </div>
 
       <!-- Content -->
       <div class="prompt-text">
         <h4 class="prompt-title">
-          {{ title || t('notificationPrompt.title', 'Enable Notifications') }}
-
+          {{ title || t("notificationPrompt.title", "Enable Notifications") }}
         </h4>
         <p class="prompt-description">
-          {{ description || t('notificationPrompt.description', 'Stay on track with your learning goals. Get reminders for streaks, achievements, and challenges.') }}
-
+          {{
+            description ||
+            t(
+              "notificationPrompt.description",
+              "Stay on track with your learning goals. Get reminders for streaks, achievements, and challenges."
+            )
+          }}
         </p>
 
         <!-- Benefits List (optional) -->
         <ul v-if="showBenefits" class="prompt-benefits">
           <li>
             <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+              <path
+                fill-rule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clip-rule="evenodd"
+              />
             </svg>
-            <span>{{ t('notificationPrompt.benefit1', 'Never miss your streak') }}
-
-</span>
+            <span>{{ t("notificationPrompt.benefit1", "Never miss your streak") }} </span>
           </li>
           <li>
             <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+              <path
+                fill-rule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clip-rule="evenodd"
+              />
             </svg>
-            <span>{{ t('notificationPrompt.benefit2', 'Get challenges from friends') }}
-
-</span>
+            <span>{{ t("notificationPrompt.benefit2", "Get challenges from friends") }} </span>
           </li>
           <li>
             <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+              <path
+                fill-rule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clip-rule="evenodd"
+              />
             </svg>
-            <span>{{ t('notificationPrompt.benefit3', 'Celebrate achievements') }}
-
-</span>
+            <span>{{ t("notificationPrompt.benefit3", "Celebrate achievements") }} </span>
           </li>
         </ul>
       </div>
 
       <!-- Actions -->
       <div class="prompt-actions">
-        <button
-          type="button"
-          class="btn-primary"
-          :disabled="isLoading"
-          @click="handleEnable"
-        >
+        <button type="button" class="btn-primary" :disabled="isLoading" @click="handleEnable">
           <span v-if="isLoading" class="flex items-center gap-2">
             <svg class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              <circle
+                class="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"
+              ></circle>
+              <path
+                class="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
             </svg>
-            {{ t('notificationPrompt.enabling', 'Enabling...') }}
-
+            {{ t("notificationPrompt.enabling", "Enabling...") }}
           </span>
           <span v-else>
-            {{ t('notificationPrompt.enable', 'Enable Notifications') }}
-
+            {{ t("notificationPrompt.enable", "Enable Notifications") }}
           </span>
         </button>
-        <button
-          v-if="dismissible"
-          type="button"
-          class="btn-secondary"
-          @click="handleDismiss"
-        >
-          {{ t('notificationPrompt.later', 'Maybe Later') }}
-
+        <button v-if="dismissible" type="button" class="btn-secondary" @click="handleDismiss">
+          {{ t("notificationPrompt.later", "Maybe Later") }}
         </button>
       </div>
 
@@ -92,7 +102,12 @@
         @click="handleDismiss"
       >
         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          />
         </svg>
       </button>
     </div>
@@ -101,14 +116,12 @@
 
 <script setup lang="ts">
 import type { INotificationPromptProps as Props } from "@/types/components/notifications";
-import { ref, computed, onMounted } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useNotifications } from '@/composables/useNotifications';
-
-
+import { ref, computed, onMounted } from "vue";
+import { useI18n } from "vue-i18n";
+import { useNotifications } from "@/composables/useNotifications";
 
 const props = withDefaults(defineProps<Props>(), {
-  variant: 'banner',
+  variant: "banner",
   dismissible: true,
   showBenefits: false,
   autoDismissDelay: 0,
@@ -121,16 +134,11 @@ const emit = defineEmits<{
 
 const { t } = useI18n();
 
-const {
-  isSupported,
-  permissionGranted,
-  permissionDenied,
-  isLoading,
-  requestPermission,
-} = useNotifications();
+const { isSupported, permissionGranted, permissionDenied, isLoading, requestPermission } =
+  useNotifications();
 
 const isDismissed = ref(false);
-const STORAGE_KEY = 'notification_prompt_dismissed';
+const STORAGE_KEY = "notification_prompt_dismissed";
 
 const shouldShow = computed(() => {
   if (!isSupported.value) return false;
@@ -153,14 +161,14 @@ const shouldShow = computed(() => {
 });
 
 const variantClass = computed(() => {
-  const base = 'notification-prompt';
+  const base = "notification-prompt";
   return `${base} ${base}--${props.variant}`;
 });
 
 const handleenable = async () => {
   const granted = await requestPermission();
   if (granted) {
-    emit('enabled');
+    emit("enabled");
     isDismissed.value = true;
     localStorage.removeItem(STORAGE_KEY);
   }
@@ -169,7 +177,7 @@ const handleenable = async () => {
 const handledismiss = () => {
   isDismissed.value = true;
   localStorage.setItem(STORAGE_KEY, Date.now().toString());
-  emit('dismissed');
+  emit("dismissed");
 };
 
 onMounted(() => {
@@ -195,7 +203,7 @@ onMounted(() => {
 }
 
 .prompt-icon {
-  @apply flex-shrink-0 flex items-center justify-center;
+  @apply flex flex-shrink-0 items-center justify-center;
 }
 
 .prompt-text {
@@ -223,15 +231,15 @@ onMounted(() => {
 }
 
 .btn-primary {
-  @apply px-4 py-2 rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
+  @apply rounded-lg px-4 py-2 font-medium transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
 }
 
 .btn-secondary {
-  @apply px-4 py-2 rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-offset-2;
+  @apply rounded-lg px-4 py-2 font-medium transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-offset-2;
 }
 
 .prompt-close {
-  @apply flex-shrink-0 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors;
+  @apply flex-shrink-0 text-gray-400 transition-colors hover:text-gray-600 dark:hover:text-gray-200;
 }
 
 /* Banner Variant */
@@ -247,7 +255,7 @@ onMounted(() => {
 }
 
 .notification-prompt--banner .prompt-icon {
-  @apply w-10 h-10 md:w-12 md:h-12 rounded-full;
+  @apply h-10 w-10 rounded-full md:h-12 md:w-12;
   @apply bg-blue-100 dark:bg-blue-900/30;
   @apply text-blue-600 dark:text-blue-400;
 }
@@ -274,7 +282,7 @@ onMounted(() => {
 }
 
 .notification-prompt--banner .prompt-close {
-  @apply absolute top-4 right-4;
+  @apply absolute right-4 top-4;
 }
 
 /* Card Variant */
@@ -290,7 +298,7 @@ onMounted(() => {
 }
 
 .notification-prompt--card .prompt-icon {
-  @apply w-16 h-16 rounded-2xl;
+  @apply h-16 w-16 rounded-2xl;
   @apply bg-gradient-to-br from-blue-500 to-purple-600;
   @apply text-white;
   @apply shadow-lg;
@@ -330,7 +338,7 @@ onMounted(() => {
 }
 
 .notification-prompt--modal .prompt-content {
-  @apply max-w-md w-full rounded-2xl shadow-2xl;
+  @apply w-full max-w-md rounded-2xl shadow-2xl;
   @apply bg-white dark:bg-gray-800;
   @apply p-8;
   @apply flex-col items-center text-center;
@@ -338,7 +346,7 @@ onMounted(() => {
 }
 
 .notification-prompt--modal .prompt-icon {
-  @apply w-20 h-20 rounded-full;
+  @apply h-20 w-20 rounded-full;
   @apply bg-gradient-to-br from-blue-500 to-purple-600;
   @apply text-white;
   @apply shadow-2xl;
@@ -359,10 +367,10 @@ onMounted(() => {
 
 .notification-prompt--modal .btn-primary {
   @apply w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white;
-  @apply hover:from-blue-700 hover:to-purple-700 hover:scale-105;
+  @apply hover:scale-105 hover:from-blue-700 hover:to-purple-700;
   @apply focus:ring-blue-500;
   @apply shadow-lg;
-  @apply text-base py-3;
+  @apply py-3 text-base;
 }
 
 .notification-prompt--modal .btn-secondary {
@@ -394,7 +402,7 @@ onMounted(() => {
   }
 
   .notification-prompt--banner .prompt-actions {
-    @apply w-full flex-col mt-4;
+    @apply mt-4 w-full flex-col;
   }
 
   .notification-prompt--banner .btn-primary,

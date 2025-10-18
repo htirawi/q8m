@@ -33,14 +33,14 @@
 <style scoped>
 /* Container */
 .header-skeleton {
-  @apply w-full bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800;
+  @apply w-full border-b border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900;
   @apply sticky top-0 z-40;
 
   height: 64px;
 }
 
 .header-skeleton__container {
-  @apply max-w-7xl mx-auto px-4 h-full;
+  @apply mx-auto h-full max-w-7xl px-4;
   @apply flex items-center justify-between;
 }
 
@@ -89,7 +89,7 @@
 
 /* Navigation */
 .header-skeleton__nav {
-  @apply hidden md:flex items-center gap-6;
+  @apply hidden items-center gap-6 md:flex;
 }
 
 .skeleton-nav-item {
@@ -128,7 +128,7 @@
 }
 
 .skeleton-plan-badge {
-  @apply hidden md:block h-6 w-16 rounded-full;
+  @apply hidden h-6 w-16 rounded-full md:block;
 
   animation-delay: 500ms;
   opacity: 0.7;

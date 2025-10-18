@@ -1,17 +1,16 @@
 <script setup lang="ts">
-import type { IPaymentCheckoutModalProps as IProps, IPaymentCheckoutModalEmits as IEmits } from "@/types/components/marketing";
-import { ref, computed, watch } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useCheckout } from '@/composables/useCheckout';
-import { useAnalytics } from '@/composables/useAnalytics';
-import type { PlanId, BillingCycle } from '@/types/pricing';
-
-
-
-
+import type {
+  IPaymentCheckoutModalProps as IProps,
+  IPaymentCheckoutModalEmits as IEmits,
+} from "@/types/components/marketing";
+import { ref, computed, watch } from "vue";
+import { useI18n } from "vue-i18n";
+import { useCheckout } from "@/composables/useCheckout";
+import { useAnalytics } from "@/composables/useAnalytics";
+import type { PlanId, BillingCycle } from "@/types/pricing";
 
 const props = withDefaults(defineProps<IProps>(), {
-  billing: 'annual',
+  billing: "annual",
 });
 
 const emit = defineEmits<IEmits>();
@@ -39,41 +38,44 @@ const useNewPaymentMethod = ref(false);
 // Computed
 const formattedPrice = computed(() => {
   if (!selectedPlan.value) {
-    return '$0';
+    return "$0";
   }
 
-  const price = selectedCycle.value === 'monthly'
-    ? selectedPlan.value.price
-    : Math.round(selectedPlan.value.price * 12 * (1 - (selectedPlan.value.discountPercent || 0) / 100));
+  const price =
+    selectedCycle.value === "monthly"
+      ? selectedPlan.value.price
+      : Math.round(
+          selectedPlan.value.price * 12 * (1 - (selectedPlan.value.discountPercent || 0) / 100)
+        );
 
   return `$${price}`;
 });
 
 const billingLabel = computed(() => {
-  return selectedCycle.value === 'monthly'
-    ? t('pricing.billing.perMonth')
-    : t('pricing.billing.perYear');
+  return selectedCycle.value === "monthly"
+    ? t("pricing.billing.perMonth")
+    : t("pricing.billing.perYear");
 });
 
 // Get display name for plan tier
 const getPlanDisplayName = (tier: string) => {
   const tierMap: Record<string, string> = {
-    'intermediate': t('plans.intermediate.title'),
-    'advanced': t('plans.senior.title'),
-    'pro': t('plans.bundle.title'),
-    'free': t('plans.junior.title'),
+    intermediate: t("plans.intermediate.title"),
+    advanced: t("plans.senior.title"),
+    pro: t("plans.bundle.title"),
+    free: t("plans.junior.title"),
   };
   return tierMap[tier] || tier;
 };
 
 // Methods
 const handleClose = () => {
-  track('checkout_abandoned', {
+  track("checkout_abandoned", {
     plan: selectedPlan.value?.tier,
     billing: selectedCycle.value,
     step: currentStep.value,
   });
-  emit('close');
+  emit("close");
 };
 
 const handlecheckout = async () => {
@@ -81,53 +83,79 @@ const handlecheckout = async () => {
 
   if (hasSavedPayment.value && !useNewPaymentMethod.value) {
     await confirmOneClick();
+  } else {
+    await startCheckout("checkout_modal");
   }
 
- else {
-    await startCheckout('checkout_modal');
-  }
-
-  if (currentStep.value === 'success') {
-    emit('success', 'placeholder-subscription-id');
+  if (currentStep.value === "success") {
+    emit("success", "placeholder-subscription-id");
   }
 };
 
 // Watch props to pre-select plan
-watch(() => [props.planId, props.billing], ([planId, billing]) => {
-  if (planId && billing) {
-    selectPlan(planId as any, billing as BillingCycle);
-  }
-}, { immediate: true });
+watch(
+  () => [props.planId, props.billing],
+  ([planId, billing]) => {
+    if (planId && billing) {
+      selectPlan(planId as any, billing as BillingCycle);
+    }
+  },
+  { immediate: true }
+);
 
 // Track modal opened
-watch(() => props.show, (isOpen) => {
-  if (isOpen) {
-    track('checkout_opened', {
-      plan: props.planId,
-      billing: props.billing,
-      method: 'modal',
-      hasAuth: true, // TODO: Get from auth store
-      hasSavedPayment: hasSavedPayment.value,
-    });
+watch(
+  () => props.show,
+  (isOpen) => {
+    if (isOpen) {
+      track("checkout_opened", {
+        plan: props.planId,
+        billing: props.billing,
+        method: "modal",
+        hasAuth: true, // TODO: Get from auth store
+        hasSavedPayment: hasSavedPayment.value,
+      });
+    }
   }
-});
+);
 
 defineOptions({
-  name: 'PaymentCheckoutModal',
+  name: "PaymentCheckoutModal",
 });
 </script>
 
 <template>
   <Teleport to="body">
     <Transition name="modal-fade">
-      <div v-if="show" class="checkout-modal-overlay" @click.self="handleClose" role="dialog" aria-modal="true"
-        :aria-label="t('plans.checkout.title')">
+      <div
+        v-if="show"
+        class="checkout-modal-overlay"
+        @click.self="handleClose"
+        role="dialog"
+        aria-modal="true"
+        :aria-label="t('plans.checkout.title')"
+      >
         <div class="checkout-modal">
           <!-- Close button -->
-          <button type="button" class="checkout-modal__close" @click="handleClose" :aria-label="t('a11y.closeModal')">
-            <svg class="checkout-modal__close-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-              aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          <button
+            type="button"
+            class="checkout-modal__close"
+            @click="handleClose"
+            :aria-label="t('a11y.closeModal')"
+          >
+            <svg
+              class="checkout-modal__close-icon"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
 
@@ -135,15 +163,10 @@ defineOptions({
           <div class="checkout-modal__header">
             <h2 class="checkout-modal__title">
               {{ selectedPlan ? getPlanDisplayName(selectedPlan.tier) : t('plans.title')getPlanDisplayName }}
-
             </h2>
             <p class="checkout-modal__price">
-              <span class="checkout-modal__price-amount">{{ formattedPrice }}
-
-</span>
-              <span class="checkout-modal__price-period">{{ billingLabel }}
-
-</span>
+              <span class="checkout-modal__price-amount">{{ formattedPrice }} </span>
+              <span class="checkout-modal__price-period">{{ billingLabel }} </span>
             </p>
           </div>
 
@@ -151,31 +174,45 @@ defineOptions({
           <div class="checkout-modal__content">
             <!-- Error message -->
             <div v-if="errorMessage" class="checkout-modal__error" role="alert">
-              <svg class="checkout-modal__error-icon" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                <path fill-rule="evenodd"
+              <svg
+                class="checkout-modal__error-icon"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                aria-hidden="true"
+              >
+                <path
+                  fill-rule="evenodd"
                   d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                  clip-rule="evenodd" />
+                  clip-rule="evenodd"
+                />
               </svg>
-              <span>{{ errorMessage }}
-
-</span>
+              <span>{{ errorMessage }} </span>
             </div>
 
             <!-- Payment method selection -->
-            <div v-if="currentStep === 'plan_selection' || currentStep === 'checkout'" class="checkout-modal__payment">
+            <div
+              v-if="currentStep === 'plan_selection' || currentStep === 'checkout'"
+              class="checkout-modal__payment"
+            >
               <!-- Saved payment method -->
-              <div v-if="hasSavedPayment && savedPaymentMethods.length > 0" class="checkout-modal__saved-payment">
+              <div
+                v-if="hasSavedPayment && savedPaymentMethods.length > 0"
+                class="checkout-modal__saved-payment"
+              >
                 <label class="checkout-modal__payment-option">
-                  <input type="radio" name="payment-method" :checked="!useNewPaymentMethod"
-                    @change="useNewPaymentMethod = false" class="checkout-modal__radio" />
+                  <input
+                    type="radio"
+                    name="payment-method"
+                    :checked="!useNewPaymentMethod"
+                    @change="useNewPaymentMethod = false"
+                    class="checkout-modal__radio"
+                  />
                   <div class="checkout-modal__payment-details">
                     <span class="checkout-modal__payment-label">
-                      {{ t('pricing.payment.savedCard') }}
-
+                      {{ t("pricing.payment.savedCard") }}
                     </span>
                     <span class="checkout-modal__payment-info">
                       •••• {{ savedPaymentMethods[0]?.last4 }}
-
                     </span>
                   </div>
                 </label>
@@ -184,11 +221,15 @@ defineOptions({
               <!-- New payment method -->
               <div class="checkout-modal__new-payment">
                 <label class="checkout-modal__payment-option">
-                  <input type="radio" name="payment-method" :checked="useNewPaymentMethod || !hasSavedPayment"
-                    @change="useNewPaymentMethod = true" class="checkout-modal__radio" />
+                  <input
+                    type="radio"
+                    name="payment-method"
+                    :checked="useNewPaymentMethod || !hasSavedPayment"
+                    @change="useNewPaymentMethod = true"
+                    class="checkout-modal__radio"
+                  />
                   <span class="checkout-modal__payment-label">
-                    {{ t('pricing.payment.newCard') }}
-
+                    {{ t("pricing.payment.newCard") }}
                   </span>
                 </label>
               </div>
@@ -196,7 +237,7 @@ defineOptions({
               <!-- Payment provider placeholder (Stripe/PayPal/etc.) -->
               <div v-if="useNewPaymentMethod || !hasSavedPayment" class="checkout-modal__provider">
                 <p class="checkout-modal__provider-note">
-                  {{ t('pricing.payment.providerNote') }}
+                  {{ t("pricing.payment.providerNote") }}
                 </p>
                 <!-- Placeholder for payment provider SDK integration -->
                 <div class="checkout-modal__provider-iframe">
@@ -208,17 +249,30 @@ defineOptions({
             <!-- Processing state -->
             <div v-if="currentStep === 'processing'" class="checkout-modal__processing">
               <div class="checkout-modal__spinner" aria-live="polite" aria-busy="true">
-                <svg class="checkout-modal__spinner-icon" xmlns="http://www.w3.org/2000/svg" fill="none"
-                  viewBox="0 0 24 24" aria-hidden="true">
-                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                  <path class="opacity-75" fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                  </path>
+                <svg
+                  class="checkout-modal__spinner-icon"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <circle
+                    class="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    stroke-width="4"
+                  ></circle>
+                  <path
+                    class="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
                 </svg>
               </div>
               <p class="checkout-modal__processing-text">
-                {{ t('pricing.payment.processing') }}
-
+                {{ t("pricing.payment.processing") }}
               </p>
             </div>
           </div>
@@ -226,29 +280,34 @@ defineOptions({
           <!-- Footer -->
           <div class="checkout-modal__footer">
             <!-- CTA -->
-            <button type="button" class="checkout-modal__cta" @click="handleCheckout" :disabled="isProcessing"
-              data-testid="checkout-modal-cta">
-              {{ isProcessing ? t('pricing.payment.processing') : t('pricing.payment.confirmSubscribe', {
-                amount:
-              formattedPrice }) }}
-
+            <button
+              type="button"
+              class="checkout-modal__cta"
+              @click="handleCheckout"
+              :disabled="isProcessing"
+              data-testid="checkout-modal-cta"
+            >
+              {{
+                isProcessing
+                  ? t("pricing.payment.processing")
+                  : t("pricing.payment.confirmSubscribe", {
+                      amount: formattedPrice,
+                    })
+              }}
             </button>
 
             <!-- Reassurance -->
             <div class="checkout-modal__reassurance">
               <span class="checkout-modal__reassurance-item">
-                {{ t('pricing.reassurance.cancelAnytime') }}
-
+                {{ t("pricing.reassurance.cancelAnytime") }}
               </span>
               <span class="checkout-modal__reassurance-separator">•</span>
               <span class="checkout-modal__reassurance-item">
-                {{ t('pricing.reassurance.securePayments') }}
-
+                {{ t("pricing.reassurance.securePayments") }}
               </span>
               <span class="checkout-modal__reassurance-separator">•</span>
               <span class="checkout-modal__reassurance-item">
-                {{ t('pricing.reassurance.noHiddenFees') }}
-
+                {{ t("pricing.reassurance.noHiddenFees") }}
               </span>
             </div>
           </div>
@@ -277,8 +336,8 @@ defineOptions({
 
 /* Close button */
 .checkout-modal__close {
-  @apply absolute top-4 right-4 z-10;
-  @apply w-10 h-10 rounded-full;
+  @apply absolute right-4 top-4 z-10;
+  @apply h-10 w-10 rounded-full;
   @apply bg-gray-100 dark:bg-gray-700;
   @apply text-gray-600 dark:text-gray-300;
   @apply hover:bg-gray-200 dark:hover:bg-gray-600;
@@ -287,17 +346,17 @@ defineOptions({
 }
 
 .checkout-modal__close-icon {
-  @apply w-5 h-5 mx-auto;
+  @apply mx-auto h-5 w-5;
 }
 
 /* Header */
 .checkout-modal__header {
-  @apply px-6 pt-8 pb-6 text-center;
+  @apply px-6 pb-6 pt-8 text-center;
   @apply border-b border-gray-200 dark:border-gray-700;
 }
 
 .checkout-modal__title {
-  @apply text-2xl font-bold text-gray-900 dark:text-white mb-3;
+  @apply mb-3 text-2xl font-bold text-gray-900 dark:text-white;
 }
 
 .checkout-modal__price {
@@ -319,7 +378,7 @@ defineOptions({
 
 /* Error */
 .checkout-modal__error {
-  @apply flex items-start gap-3 p-4 mb-6;
+  @apply mb-6 flex items-start gap-3 p-4;
   @apply bg-red-50 dark:bg-red-900/20;
   @apply border border-red-200 dark:border-red-800;
   @apply rounded-lg;
@@ -328,7 +387,7 @@ defineOptions({
 }
 
 .checkout-modal__error-icon {
-  @apply w-5 h-5 flex-shrink-0 mt-0.5;
+  @apply mt-0.5 h-5 w-5 flex-shrink-0;
 }
 
 /* Payment */
@@ -339,13 +398,13 @@ defineOptions({
 .checkout-modal__payment-option {
   @apply flex items-start gap-3 p-4;
   @apply border-2 border-gray-200 dark:border-gray-700;
-  @apply rounded-lg cursor-pointer;
+  @apply cursor-pointer rounded-lg;
   @apply hover:border-blue-300 dark:hover:border-blue-600;
   @apply transition-colors duration-200;
 }
 
 .checkout-modal__radio {
-  @apply w-5 h-5 mt-0.5;
+  @apply mt-0.5 h-5 w-5;
   @apply text-blue-600 focus:ring-blue-500;
 }
 
@@ -366,13 +425,13 @@ defineOptions({
 }
 
 .checkout-modal__provider-note {
-  @apply text-sm text-gray-600 dark:text-gray-400 text-center;
+  @apply text-center text-sm text-gray-600 dark:text-gray-400;
 }
 
 .checkout-modal__provider-iframe {
-  @apply p-8 bg-gray-50 dark:bg-gray-700 rounded-lg;
+  @apply rounded-lg bg-gray-50 p-8 dark:bg-gray-700;
   @apply text-center text-gray-500 dark:text-gray-400;
-  @apply min-h-[200px] flex items-center justify-center;
+  @apply flex min-h-[200px] items-center justify-center;
 }
 
 /* Processing */
@@ -385,7 +444,7 @@ defineOptions({
 }
 
 .checkout-modal__spinner-icon {
-  @apply w-12 h-12 animate-spin text-blue-600;
+  @apply h-12 w-12 animate-spin text-blue-600;
 }
 
 .checkout-modal__processing-text {
@@ -398,12 +457,12 @@ defineOptions({
 }
 
 .checkout-modal__cta {
-  @apply w-full py-4 px-6 rounded-lg;
+  @apply w-full rounded-lg px-6 py-4;
   @apply bg-gradient-to-r from-blue-600 to-purple-600;
-  @apply text-white font-semibold text-lg;
+  @apply text-lg font-semibold text-white;
   @apply hover:from-blue-700 hover:to-purple-700;
   @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
-  @apply disabled:opacity-50 disabled:cursor-not-allowed;
+  @apply disabled:cursor-not-allowed disabled:opacity-50;
   @apply transition-all duration-200;
   @apply shadow-md hover:shadow-lg;
 }
@@ -411,7 +470,7 @@ defineOptions({
 .checkout-modal__reassurance {
   @apply mt-4 text-center;
   @apply text-xs text-gray-500 dark:text-gray-400;
-  @apply flex items-center justify-center flex-wrap gap-2;
+  @apply flex flex-wrap items-center justify-center gap-2;
 }
 
 .checkout-modal__reassurance-separator {
@@ -419,19 +478,19 @@ defineOptions({
 }
 
 /* RTL Support */
-[dir='rtl'] .checkout-modal__close {
-  @apply right-auto left-4;
+[dir="rtl"] .checkout-modal__close {
+  @apply left-4 right-auto;
 }
 
-[dir='rtl'] .checkout-modal__error {
+[dir="rtl"] .checkout-modal__error {
   @apply flex-row-reverse;
 }
 
-[dir='rtl'] .checkout-modal__payment-option {
+[dir="rtl"] .checkout-modal__payment-option {
   @apply flex-row-reverse text-right;
 }
 
-[dir='rtl'] .checkout-modal__reassurance {
+[dir="rtl"] .checkout-modal__reassurance {
   @apply flex-row-reverse;
 }
 
@@ -443,7 +502,9 @@ defineOptions({
 
 .modal-fade-enter-active .checkout-modal,
 .modal-fade-leave-active .checkout-modal {
-  transition: transform 0.3s ease, opacity 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    opacity 0.3s ease;
 }
 
 .modal-fade-enter-from,

@@ -22,4 +22,3 @@ export interface IQuickTip {
   icon?: string;
   category?: string;
 }
-

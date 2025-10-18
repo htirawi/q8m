@@ -67,9 +67,7 @@ const selectcurrency = async (currency: "USD" | "JOD" | "SAR") => {
       :aria-expanded="isOpen"
       :aria-label="$t('currency.selectCurrency')"
     >
-      <span class="currency-flag">{{ getCurrencyFlag(currentCurrency) }}
-
-</span>
+      <span class="currency-flag">{{ getCurrencyFlag(currentCurrency) }} </span>
       <span class="currency-code">{{ currentCurrency }}</span>
       <ChevronDownIcon class="currency-chevron" :class="{ 'rotate-180': isOpen }" />
     </button>
@@ -86,16 +84,10 @@ const selectcurrency = async (currency: "USD" | "JOD" | "SAR") => {
             role="menuitem"
             :aria-label="$t('currency.selectCurrency') + ': ' + currency.name"
           >
-            <span class="currency-flag">{{ currency.flag }}
-
-</span>
+            <span class="currency-flag">{{ currency.flag }} </span>
             <div class="currency-info">
-              <span class="currency-name">{{ currency.name }}
-
-</span>
-              <span class="currency-code">{{ currency.code }}
-
-</span>
+              <span class="currency-name">{{ currency.name }} </span>
+              <span class="currency-code">{{ currency.code }} </span>
             </div>
             <CheckIcon v-if="currency.code === currentCurrency" class="currency-check" />
           </button>

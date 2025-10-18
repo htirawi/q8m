@@ -2,25 +2,38 @@
   <div class="notification-preferences">
     <div class="preferences-header">
       <h3 class="text-xl font-bold text-gray-900 dark:text-white">
-        {{ t('settings.notifications.title', 'Push Notifications') }}
-
+        {{ t("settings.notifications.title", "Push Notifications") }}
       </h3>
       <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-        {{ t('settings.notifications.subtitle', 'Manage your notification preferences') }}
-
+        {{ t("settings.notifications.subtitle", "Manage your notification preferences") }}
       </p>
     </div>
 
     <!-- Notification Support Check -->
-    <div v-if="!isSupported" class="rounded-lg border border-yellow-200 bg-yellow-50 p-4 dark:border-yellow-800 dark:bg-yellow-900/20">
+    <div
+      v-if="!isSupported"
+      class="rounded-lg border border-yellow-200 bg-yellow-50 p-4 dark:border-yellow-800 dark:bg-yellow-900/20"
+    >
       <div class="flex items-start gap-3">
-        <svg class="h-5 w-5 flex-shrink-0 text-yellow-600 dark:text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+        <svg
+          class="h-5 w-5 flex-shrink-0 text-yellow-600 dark:text-yellow-400"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+            clip-rule="evenodd"
+          />
         </svg>
         <div class="flex-1">
           <p class="text-sm font-medium text-yellow-800 dark:text-yellow-300">
-            {{ t('settings.notifications.unsupported', 'Notifications are not supported in your browser') }}
-
+            {{
+              t(
+                "settings.notifications.unsupported",
+                "Notifications are not supported in your browser"
+              )
+            }}
           </p>
           <p class="mt-1 text-xs text-yellow-700 dark:text-yellow-400">
             Try using a modern browser like Chrome, Firefox, or Edge
@@ -31,24 +44,35 @@
 
     <!-- Main Enable/Disable Toggle -->
     <div v-else class="space-y-6">
-      <div class="rounded-lg border-2 border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
+      <div
+        class="rounded-lg border-2 border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800"
+      >
         <div class="flex items-center justify-between">
           <div class="flex-1">
             <div class="flex items-center gap-2">
               <h4 class="text-base font-semibold text-gray-900 dark:text-white">
-                {{ t('settings.notifications.enable', 'Enable Push Notifications') }}
-
+                {{ t("settings.notifications.enable", "Enable Push Notifications") }}
               </h4>
-              <span v-if="permissionGranted" class="rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800 dark:bg-green-900 dark:text-green-200">
+              <span
+                v-if="permissionGranted"
+                class="rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800 dark:bg-green-900 dark:text-green-200"
+              >
                 Active
               </span>
-              <span v-else-if="permissionDenied" class="rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-800 dark:bg-red-900 dark:text-red-200">
+              <span
+                v-else-if="permissionDenied"
+                class="rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-800 dark:bg-red-900 dark:text-red-200"
+              >
                 Blocked
               </span>
             </div>
             <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-              {{ t('settings.notifications.enableDescription', 'Get notified about streaks, challenges, and achievements') }}
-
+              {{
+                t(
+                  "settings.notifications.enableDescription",
+                  "Get notified about streaks, challenges, and achievements"
+                )
+              }}
             </p>
           </div>
 
@@ -61,19 +85,35 @@
           >
             <span v-if="isLoading" class="flex items-center gap-2">
               <svg class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
               </svg>
               Enabling...
             </span>
-            <span v-else>
-              Enable
-            </span>
+            <span v-else> Enable </span>
           </button>
 
-          <span v-else-if="permissionGranted" class="ml-4 flex items-center gap-2 text-sm text-green-600 dark:text-green-400">
+          <span
+            v-else-if="permissionGranted"
+            class="ml-4 flex items-center gap-2 text-sm text-green-600 dark:text-green-400"
+          >
             <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+              <path
+                fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clip-rule="evenodd"
+              />
             </svg>
             Enabled
           </span>
@@ -87,12 +127,13 @@
       <!-- Notification Types -->
       <div v-if="permissionGranted" class="space-y-4">
         <h4 class="text-sm font-semibold text-gray-900 dark:text-white">
-          {{ t('settings.notifications.types', 'Notification Types') }}
-
+          {{ t("settings.notifications.types", "Notification Types") }}
         </h4>
 
         <!-- Streak Reminders -->
-        <label class="flex cursor-pointer items-start gap-4 rounded-lg border border-gray-200 bg-white p-4 transition-all hover:border-purple-300 hover:shadow-md dark:border-gray-700 dark:bg-gray-800 dark:hover:border-purple-600">
+        <label
+          class="flex cursor-pointer items-start gap-4 rounded-lg border border-gray-200 bg-white p-4 transition-all hover:border-purple-300 hover:shadow-md dark:border-gray-700 dark:bg-gray-800 dark:hover:border-purple-600"
+        >
           <input
             v-model="preferences.streak"
             type="checkbox"
@@ -103,19 +144,24 @@
             <div class="flex items-center gap-2">
               <span class="text-lg">🔥</span>
               <h5 class="text-sm font-semibold text-gray-900 dark:text-white">
-                {{ t('settings.notifications.streak.title', 'Streak Reminders') }}
-
+                {{ t("settings.notifications.streak.title", "Streak Reminders") }}
               </h5>
             </div>
             <p class="mt-1 text-xs text-gray-600 dark:text-gray-400">
-              {{ t('settings.notifications.streak.description', 'Daily reminders to maintain your learning streak') }}
-
+              {{
+                t(
+                  "settings.notifications.streak.description",
+                  "Daily reminders to maintain your learning streak"
+                )
+              }}
             </p>
           </div>
         </label>
 
         <!-- New Content -->
-        <label class="flex cursor-pointer items-start gap-4 rounded-lg border border-gray-200 bg-white p-4 transition-all hover:border-purple-300 hover:shadow-md dark:border-gray-700 dark:bg-gray-800 dark:hover:border-purple-600">
+        <label
+          class="flex cursor-pointer items-start gap-4 rounded-lg border border-gray-200 bg-white p-4 transition-all hover:border-purple-300 hover:shadow-md dark:border-gray-700 dark:bg-gray-800 dark:hover:border-purple-600"
+        >
           <input
             v-model="preferences.content"
             type="checkbox"
@@ -126,19 +172,24 @@
             <div class="flex items-center gap-2">
               <span class="text-lg">✨</span>
               <h5 class="text-sm font-semibold text-gray-900 dark:text-white">
-                {{ t('settings.notifications.content.title', 'New Content') }}
-
+                {{ t("settings.notifications.content.title", "New Content") }}
               </h5>
             </div>
             <p class="mt-1 text-xs text-gray-600 dark:text-gray-400">
-              {{ t('settings.notifications.content.description', 'Alerts when new quizzes or questions are added') }}
-
+              {{
+                t(
+                  "settings.notifications.content.description",
+                  "Alerts when new quizzes or questions are added"
+                )
+              }}
             </p>
           </div>
         </label>
 
         <!-- Challenges -->
-        <label class="flex cursor-pointer items-start gap-4 rounded-lg border border-gray-200 bg-white p-4 transition-all hover:border-purple-300 hover:shadow-md dark:border-gray-700 dark:bg-gray-800 dark:hover:border-purple-600">
+        <label
+          class="flex cursor-pointer items-start gap-4 rounded-lg border border-gray-200 bg-white p-4 transition-all hover:border-purple-300 hover:shadow-md dark:border-gray-700 dark:bg-gray-800 dark:hover:border-purple-600"
+        >
           <input
             v-model="preferences.challenges"
             type="checkbox"
@@ -149,19 +200,24 @@
             <div class="flex items-center gap-2">
               <span class="text-lg">⚔️</span>
               <h5 class="text-sm font-semibold text-gray-900 dark:text-white">
-                {{ t('settings.notifications.challenges.title', 'Challenges') }}
-
+                {{ t("settings.notifications.challenges.title", "Challenges") }}
               </h5>
             </div>
             <p class="mt-1 text-xs text-gray-600 dark:text-gray-400">
-              {{ t('settings.notifications.challenges.description', 'When friends challenge you to beat their scores') }}
-
+              {{
+                t(
+                  "settings.notifications.challenges.description",
+                  "When friends challenge you to beat their scores"
+                )
+              }}
             </p>
           </div>
         </label>
 
         <!-- Achievements -->
-        <label class="flex cursor-pointer items-start gap-4 rounded-lg border border-gray-200 bg-white p-4 transition-all hover:border-purple-300 hover:shadow-md dark:border-gray-700 dark:bg-gray-800 dark:hover:border-purple-600">
+        <label
+          class="flex cursor-pointer items-start gap-4 rounded-lg border border-gray-200 bg-white p-4 transition-all hover:border-purple-300 hover:shadow-md dark:border-gray-700 dark:bg-gray-800 dark:hover:border-purple-600"
+        >
           <input
             v-model="preferences.achievements"
             type="checkbox"
@@ -172,19 +228,24 @@
             <div class="flex items-center gap-2">
               <span class="text-lg">🏆</span>
               <h5 class="text-sm font-semibold text-gray-900 dark:text-white">
-                {{ t('settings.notifications.achievements.title', 'Achievements') }}
-
+                {{ t("settings.notifications.achievements.title", "Achievements") }}
               </h5>
             </div>
             <p class="mt-1 text-xs text-gray-600 dark:text-gray-400">
-              {{ t('settings.notifications.achievements.description', 'When you unlock badges, level up, or hit milestones') }}
-
+              {{
+                t(
+                  "settings.notifications.achievements.description",
+                  "When you unlock badges, level up, or hit milestones"
+                )
+              }}
             </p>
           </div>
         </label>
 
         <!-- Trial/Subscription Alerts -->
-        <label class="flex cursor-pointer items-start gap-4 rounded-lg border border-gray-200 bg-white p-4 transition-all hover:border-purple-300 hover:shadow-md dark:border-gray-700 dark:bg-gray-800 dark:hover:border-purple-600">
+        <label
+          class="flex cursor-pointer items-start gap-4 rounded-lg border border-gray-200 bg-white p-4 transition-all hover:border-purple-300 hover:shadow-md dark:border-gray-700 dark:bg-gray-800 dark:hover:border-purple-600"
+        >
           <input
             v-model="preferences.subscription"
             type="checkbox"
@@ -195,23 +256,28 @@
             <div class="flex items-center gap-2">
               <span class="text-lg">💎</span>
               <h5 class="text-sm font-semibold text-gray-900 dark:text-white">
-                {{ t('settings.notifications.subscription.title', 'Account & Subscription') }}
-
+                {{ t("settings.notifications.subscription.title", "Account & Subscription") }}
               </h5>
             </div>
             <p class="mt-1 text-xs text-gray-600 dark:text-gray-400">
-              {{ t('settings.notifications.subscription.description', 'Trial ending reminders and subscription updates') }}
-
+              {{
+                t(
+                  "settings.notifications.subscription.description",
+                  "Trial ending reminders and subscription updates"
+                )
+              }}
             </p>
           </div>
         </label>
       </div>
 
       <!-- Frequency Settings -->
-      <div v-if="permissionGranted" class="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
+      <div
+        v-if="permissionGranted"
+        class="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800"
+      >
         <h4 class="mb-3 text-sm font-semibold text-gray-900 dark:text-white">
-          {{ t('settings.notifications.frequency', 'Notification Frequency') }}
-
+          {{ t("settings.notifications.frequency", "Notification Frequency") }}
         </h4>
         <select
           v-model="preferences.frequency"
@@ -225,11 +291,13 @@
       </div>
 
       <!-- Quiet Hours -->
-      <div v-if="permissionGranted" class="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
+      <div
+        v-if="permissionGranted"
+        class="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800"
+      >
         <div class="mb-3 flex items-center justify-between">
           <h4 class="text-sm font-semibold text-gray-900 dark:text-white">
-            {{ t('settings.notifications.quietHours', 'Quiet Hours') }}
-
+            {{ t("settings.notifications.quietHours", "Quiet Hours") }}
           </h4>
           <label class="flex cursor-pointer items-center">
             <input
@@ -275,14 +343,24 @@
       </div>
 
       <!-- Save Success Message -->
-      <div v-if="showSuccess" class="rounded-lg border border-green-200 bg-green-50 p-3 dark:border-green-800 dark:bg-green-900/20">
+      <div
+        v-if="showSuccess"
+        class="rounded-lg border border-green-200 bg-green-50 p-3 dark:border-green-800 dark:bg-green-900/20"
+      >
         <div class="flex items-center gap-2">
-          <svg class="h-5 w-5 text-green-600 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+          <svg
+            class="h-5 w-5 text-green-600 dark:text-green-400"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+              clip-rule="evenodd"
+            />
           </svg>
           <span class="text-sm font-medium text-green-800 dark:text-green-300">
-            {{ t('settings.notifications.saved', 'Preferences saved successfully') }}
-
+            {{ t("settings.notifications.saved", "Preferences saved successfully") }}
           </span>
         </div>
       </div>
@@ -292,9 +370,9 @@
 
 <script setup lang="ts">
 import type { INotificationPreferences } from "@/types/components/notifications";
-import { ref, reactive, watch, onMounted } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useNotifications } from '@/composables/useNotifications';
+import { ref, reactive, watch, onMounted } from "vue";
+import { useI18n } from "vue-i18n";
+import { useNotifications } from "@/composables/useNotifications";
 
 const { t } = useI18n();
 
@@ -304,12 +382,15 @@ const {
   permissionDenied,
   isLoading,
   requestPermission,
-  showTestNotification: testNotification,permissionGranted,permissionDenied,isLoading,requestPermission,showTestNotification
+  showTestNotification: testNotification,
+  permissionGranted,
+  permissionDenied,
+  isLoading,
+  requestPermission,
+  showTestNotification,
 } = useNotifications();
 
 const showSuccess = ref(false);
-
-
 
 const preferences = reactive<INotificationPreferences>({
   streak: true,
@@ -317,10 +398,10 @@ const preferences = reactive<INotificationPreferences>({
   challenges: true,
   achievements: true,
   subscription: true,
-  frequency: 'realtime',
+  frequency: "realtime",
   quietHoursEnabled: false,
-  quietHoursStart: '22:00',
-  quietHoursEnd: '08:00',
+  quietHoursStart: "22:00",
+  quietHoursEnd: "08:00",
 });
 
 const handleenablenotifications = async () => {
@@ -333,8 +414,8 @@ const handleenablenotifications = async () => {
 
 const loadpreferences = async () => {
   try {
-    const response = await fetch('/api/v1/notifications/preferences', {
-      credentials: 'include',
+    const response = await fetch("/api/v1/notifications/preferences", {
+      credentials: "include",
     });
 
     if (response.ok) {
@@ -344,18 +425,18 @@ const loadpreferences = async () => {
       }
     }
   } catch (error) {
-    console.error('Failed to load notification preferences:', error);
+    console.error("Failed to load notification preferences:", error);
   }
 };
 
 const savepreferences = async () => {
   try {
-    const response = await fetch('/api/v1/notifications/preferences', {
-      method: 'PUT',
+    const response = await fetch("/api/v1/notifications/preferences", {
+      method: "PUT",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
-      credentials: 'include',
+      credentials: "include",
       body: JSON.stringify({ preferences }),
     });
 
@@ -366,7 +447,7 @@ const savepreferences = async () => {
       }, 3000);
     }
   } catch (error) {
-    console.error('Failed to save notification preferences:', error);
+    console.error("Failed to save notification preferences:", error);
   }
 };
 
@@ -387,6 +468,6 @@ onMounted(() => {
 }
 
 .preferences-header {
-  @apply pb-4 border-b border-gray-200 dark:border-gray-700;
+  @apply border-b border-gray-200 pb-4 dark:border-gray-700;
 }
 </style>

@@ -1,10 +1,10 @@
-import mongoose, { type Document, Schema } from 'mongoose';
+import mongoose, { type Document, Schema } from "mongoose";
 
 export interface IShare extends Document {
   userId: mongoose.Types.ObjectId;
-  shareType: 'quiz_result' | 'achievement' | 'streak' | 'challenge_victory' | 'profile' | 'badge';
+  shareType: "quiz_result" | "achievement" | "streak" | "challenge_victory" | "profile" | "badge";
   entityId: mongoose.Types.ObjectId; // ID of the shared entity
-  platform: 'twitter' | 'facebook' | 'linkedin' | 'whatsapp' | 'email' | 'copy_link';
+  platform: "twitter" | "facebook" | "linkedin" | "whatsapp" | "email" | "copy_link";
   metadata: {
     title?: string;
     description?: string;
@@ -24,13 +24,13 @@ const ShareSchema = new Schema<IShare>(
   {
     userId: {
       type: Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "User",
       required: true,
       index: true,
     },
     shareType: {
       type: String,
-      enum: ['quiz_result', 'achievement', 'streak', 'challenge_victory', 'profile', 'badge'],
+      enum: ["quiz_result", "achievement", "streak", "challenge_victory", "profile", "badge"],
       required: true,
     },
     entityId: {
@@ -39,7 +39,7 @@ const ShareSchema = new Schema<IShare>(
     },
     platform: {
       type: String,
-      enum: ['twitter', 'facebook', 'linkedin', 'whatsapp', 'email', 'copy_link'],
+      enum: ["twitter", "facebook", "linkedin", "whatsapp", "email", "copy_link"],
       required: true,
     },
     metadata: {
@@ -60,4 +60,4 @@ const ShareSchema = new Schema<IShare>(
 ShareSchema.index({ userId: 1, shareType: 1, createdAt: -1 });
 ShareSchema.index({ shareType: 1, platform: 1, createdAt: -1 });
 
-export const Share = mongoose.model<IShare>('Share', ShareSchema);
+export const Share = mongoose.model<IShare>("Share", ShareSchema);

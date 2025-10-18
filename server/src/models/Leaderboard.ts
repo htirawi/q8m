@@ -3,10 +3,10 @@
  * Stores weekly/monthly/all-time leaderboard snapshots
  */
 
-import type { LeaderboardType, LeaderboardScope } from '@shared/types/gamification';
-import type { PlanTier } from '@shared/types/plan';
-import type { Document, ObjectId } from 'mongoose';
-import { Schema, model } from 'mongoose';
+import type { LeaderboardType, LeaderboardScope } from "@shared/types/gamification";
+import type { PlanTier } from "@shared/types/plan";
+import type { Document, ObjectId } from "mongoose";
+import { Schema, model } from "mongoose";
 
 /**
  * Leaderboard entry sub-document
@@ -42,7 +42,7 @@ export interface ILeaderboardDoc extends Document {
 const leaderboardEntrySchema = new Schema<ILeaderboardEntryDoc>(
   {
     rank: { type: Number, required: true, min: 1 },
-    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
     displayName: { type: String, required: true },
     avatar: { type: String },
     score: { type: Number, required: true, min: 0 },
@@ -51,7 +51,7 @@ const leaderboardEntrySchema = new Schema<ILeaderboardEntryDoc>(
     badges: { type: [String], default: [] },
     planTier: {
       type: String,
-      enum: ['free', 'intermediate', 'advanced', 'pro'],
+      enum: ["free", "intermediate", "advanced", "pro"],
     },
   },
   { _id: false }
@@ -62,19 +62,19 @@ const leaderboardSchema = new Schema<ILeaderboardDoc>(
   {
     type: {
       type: String,
-      enum: ['weekly', 'monthly', 'all_time'],
+      enum: ["weekly", "monthly", "all_time"],
       required: true,
       index: true,
     },
     scope: {
       type: String,
-      enum: ['global', 'plan_tier'],
+      enum: ["global", "plan_tier"],
       required: true,
-      default: 'global',
+      default: "global",
     },
     planTier: {
       type: String,
-      enum: ['free', 'intermediate', 'advanced', 'pro'],
+      enum: ["free", "intermediate", "advanced", "pro"],
     },
     entries: { type: [leaderboardEntrySchema], required: true, default: [] },
     totalEntries: { type: Number, required: true, default: 0, min: 0 },
@@ -115,7 +115,7 @@ leaderboardSchema.statics.getCurrent = function (
     planTier?: PlanTier;
   } = {}
 ) {
-  const { scope = 'global', planTier } = options;
+  const { scope = "global", planTier } = options;
 
   const query: Record<string, unknown> = {
     type,
@@ -123,7 +123,7 @@ leaderboardSchema.statics.getCurrent = function (
     endDate: { $gte: new Date() }, // Current or future leaderboard
   };
 
-  if (scope === 'plan_tier' && planTier) {
+  if (scope === "plan_tier" && planTier) {
     query.planTier = planTier;
   }
 
@@ -167,18 +167,18 @@ leaderboardSchema.statics.createSnapshot = async function (
     limit?: number;
   } = {}
 ) {
-  const { scope = 'global', planTier, limit = 100 } = options;
+  const { scope = "global", planTier, limit = 100 } = options;
 
   // Import UserProgress model (avoid circular dependency)
-  const { UserProgress } = await import('./UserProgress');
+  const { UserProgress } = await import("./UserProgress");
 
   // Build query for user progress
   const query: Record<string, unknown> = {};
 
-  if (type === 'weekly') {
+  if (type === "weekly") {
     // Get users active in the past week
     query.updatedAt = { $gte: startDate, $lte: endDate };
-  } else if (type === 'monthly') {
+  } else if (type === "monthly") {
     // Get users active in the past month
     query.updatedAt = { $gte: startDate, $lte: endDate };
   }
@@ -188,7 +188,7 @@ leaderboardSchema.statics.createSnapshot = async function (
   const topUsers = await UserProgress.find(query)
     .sort({ xp: -1 })
     .limit(limit)
-    .populate('userId', 'displayName email planTier');
+    .populate("userId", "displayName email planTier");
 
   // Build entries
   const entries: ILeaderboardEntryDoc[] = topUsers.map(
@@ -206,7 +206,7 @@ leaderboardSchema.statics.createSnapshot = async function (
       userId: user.userId as ObjectId,
       displayName:
         (user.userId as { displayName?: string }).displayName ||
-        (user.userId as { email: string }).email.split('@')[0],
+        (user.userId as { email: string }).email.split("@")[0],
       avatar: undefined,
       score: user.xp,
       level: user.level,
@@ -218,9 +218,7 @@ leaderboardSchema.statics.createSnapshot = async function (
 
   // Filter by plan tier if scope is plan_tier
   const filteredEntries =
-    scope === 'plan_tier' && planTier
-      ? entries.filter((e) => e.planTier === planTier)
-      : entries;
+    scope === "plan_tier" && planTier ? entries.filter((e) => e.planTier === planTier) : entries;
 
   // Re-rank after filtering
   filteredEntries.forEach((entry, index) => {
@@ -231,7 +229,7 @@ leaderboardSchema.statics.createSnapshot = async function (
   const leaderboard = await this.create({
     type,
     scope,
-    planTier: scope === 'plan_tier' ? planTier : undefined,
+    planTier: scope === "plan_tier" ? planTier : undefined,
     entries: filteredEntries,
     totalEntries: filteredEntries.length,
     startDate,
@@ -241,4 +239,4 @@ leaderboardSchema.statics.createSnapshot = async function (
   return leaderboard;
 };
 
-export const Leaderboard = model<ILeaderboardDoc>('Leaderboard', leaderboardSchema);
+export const Leaderboard = model<ILeaderboardDoc>("Leaderboard", leaderboardSchema);

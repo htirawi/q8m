@@ -4,15 +4,15 @@
  * Prioritizes: Overdue reviews > Learning > New > Mastered
  */
 
-import type { MasteryLevel } from '@shared/types/progress';
+import type { MasteryLevel } from "@shared/types/progress";
 
-import type { IQuestionProgressDoc } from '../models/UserProgress';
+import type { IQuestionProgressDoc } from "../models/UserProgress";
 
-import { isDueForReview, prioritizeQuestions } from './spacedRepetition';
+import { isDueForReview, prioritizeQuestions } from "./spacedRepetition";
 
 export interface IQuestionWithProgress {
   _id: string;
-  difficulty: 'easy' | 'medium' | 'hard';
+  difficulty: "easy" | "medium" | "hard";
   category: string;
   tags: string[];
   progress?: {
@@ -26,7 +26,7 @@ export interface IQuestionWithProgress {
 }
 
 export interface IAdaptiveSelectionOptions {
-  difficulty?: 'easy' | 'medium' | 'hard';
+  difficulty?: "easy" | "medium" | "hard";
   category?: string;
   excludeQuestionIds?: string[];
   preferWeakCategories?: boolean;
@@ -91,8 +91,7 @@ export function selectNextQuestion(
 
       if (includeReviews && isDueForReview(nextReviewDate)) {
         const now = new Date();
-        const daysSinceReview =
-          (now.getTime() - nextReviewDate.getTime()) / (1000 * 60 * 60 * 24);
+        const daysSinceReview = (now.getTime() - nextReviewDate.getTime()) / (1000 * 60 * 60 * 24);
 
         if (daysSinceReview > 1) {
           overdueReviews.push(q);
@@ -101,16 +100,16 @@ export function selectNextQuestion(
         }
       } else {
         switch (masteryLevel) {
-          case 'learning':
+          case "learning":
             learningQuestions.push(q);
             break;
-          case 'familiar':
+          case "familiar":
             familiarQuestions.push(q);
             break;
-          case 'mastered':
+          case "mastered":
             masteredQuestions.push(q);
             break;
-          case 'new':
+          case "new":
             newQuestions.push(q);
             break;
         }
@@ -238,13 +237,10 @@ export function identifyWeakCategories(
   userProgress: Map<string, IQuestionProgressDoc>,
   threshold: number = 0.7
 ): string[] {
-  const categoryStats = new Map<
-    string,
-    { correct: number; total: number; accuracy: number }
-  >();
+  const categoryStats = new Map<string, { correct: number; total: number; accuracy: number }>();
 
   // Aggregate stats by category
-  for (const [, ] of userProgress) {
+  for (const [,] of userProgress) {
     // Note: We don't have category info in progress, need to pass questions
     // For now, skip this - implement in service layer with full question data
     // This is a placeholder
@@ -268,23 +264,23 @@ export function identifyWeakCategories(
  */
 export function recommendDifficulty(
   userProgress: Map<string, IQuestionProgressDoc>
-): 'easy' | 'medium' | 'hard' {
+): "easy" | "medium" | "hard" {
   // Count mastered questions by difficulty (would need question data)
   // For now, use simple heuristic based on total mastery
 
   const masteredCount = Array.from(userProgress.values()).filter(
-    (p) => p.masteryLevel === 'mastered'
+    (p) => p.masteryLevel === "mastered"
   ).length;
 
   const totalQuestions = userProgress.size;
   const masteryRate = totalQuestions > 0 ? masteredCount / totalQuestions : 0;
 
   if (masteryRate < 0.3) {
-    return 'easy'; // Still learning basics
+    return "easy"; // Still learning basics
   } else if (masteryRate < 0.7) {
-    return 'medium'; // Progressing well
+    return "medium"; // Progressing well
   } else {
-    return 'hard'; // Ready for advanced content
+    return "hard"; // Ready for advanced content
   }
 }
 
@@ -295,7 +291,7 @@ export function recommendDifficulty(
  */
 function randomPick<T>(array: T[]): T {
   if (array.length === 0) {
-    throw new Error('Cannot pick from empty array');
+    throw new Error("Cannot pick from empty array");
   }
 
   // Use crypto.randomBytes for better randomness

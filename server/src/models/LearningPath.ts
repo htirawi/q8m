@@ -28,7 +28,13 @@ export interface ILearningPath extends Document {
     ar: string;
   };
   slug: string;
-  category: "frontend" | "backend" | "fullstack" | "interview" | "framework-specific" | "role-based";
+  category:
+    | "frontend"
+    | "backend"
+    | "fullstack"
+    | "interview"
+    | "framework-specific"
+    | "role-based";
   difficulty: "beginner" | "intermediate" | "advanced" | "mixed";
   frameworks: string[]; // e.g., ["react", "redux", "typescript"]
   modules: IModule[];

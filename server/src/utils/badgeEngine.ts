@@ -4,10 +4,10 @@
  * Awards badges and triggers notifications
  */
 
-import type { IBadgeDoc } from '../models/Badge';
-import { Badge } from '../models/Badge';
-import { QuizResult } from '../models/QuizResult';
-import type { IUserProgressDoc } from '../models/UserProgress';
+import type { IBadgeDoc } from "../models/Badge";
+import { Badge } from "../models/Badge";
+import { QuizResult } from "../models/QuizResult";
+import type { IUserProgressDoc } from "../models/UserProgress";
 
 /**
  * Check all badges for a user and award any newly earned ones
@@ -59,47 +59,31 @@ export async function checkBadgeRequirements(
   const { criteria } = badge;
 
   switch (criteria.type) {
-    case 'xp':
+    case "xp":
       return checkXPBadge(criteria.threshold, userProgress);
 
-    case 'streak':
+    case "streak":
       return checkStreakBadge(criteria.threshold, userProgress);
 
-    case 'study_time':
+    case "study_time":
       return checkStudyTimeBadge(criteria.threshold, userProgress);
 
-    case 'quiz_count':
-      return await checkQuizCountBadge(
-        criteria.threshold,
-        criteria.metadata,
-        userProgress
-      );
+    case "quiz_count":
+      return await checkQuizCountBadge(criteria.threshold, criteria.metadata, userProgress);
 
-    case 'quiz_score':
-      return await checkQuizScoreBadge(
-        criteria.threshold,
-        criteria.metadata,
-        userProgress
-      );
+    case "quiz_score":
+      return await checkQuizScoreBadge(criteria.threshold, criteria.metadata, userProgress);
 
-    case 'perfect_quiz':
+    case "perfect_quiz":
       return checkPerfectQuizBadge(criteria.threshold, userProgress);
 
-    case 'mastery':
-      return checkMasteryBadge(
-        criteria.threshold,
-        criteria.metadata,
-        userProgress
-      );
+    case "mastery":
+      return checkMasteryBadge(criteria.threshold, criteria.metadata, userProgress);
 
-    case 'speed':
-      return await checkSpeedBadge(
-        criteria.threshold,
-        criteria.metadata,
-        userProgress
-      );
+    case "speed":
+      return await checkSpeedBadge(criteria.threshold, criteria.metadata, userProgress);
 
-    case 'custom':
+    case "custom":
       // Custom badges require special logic
       return await checkCustomBadge(badge.id, criteria, userProgress);
 
@@ -190,7 +174,7 @@ function checkMasteryBadge(
   metadata: Record<string, unknown> | undefined,
   userProgress: IUserProgressDoc
 ): boolean {
-  const difficulty = metadata?.difficulty as 'easy' | 'medium' | 'hard' | undefined;
+  const difficulty = metadata?.difficulty as "easy" | "medium" | "hard" | undefined;
   const allDifficulties = metadata?.all_difficulties as boolean | undefined;
 
   if (allDifficulties) {
@@ -199,11 +183,7 @@ function checkMasteryBadge(
     const mediumMastered = userProgress.difficultyProgress.medium.mastered;
     const hardMastered = userProgress.difficultyProgress.hard.mastered;
 
-    return (
-      easyMastered >= threshold &&
-      mediumMastered >= threshold &&
-      hardMastered >= threshold
-    );
+    return easyMastered >= threshold && mediumMastered >= threshold && hardMastered >= threshold;
   }
 
   if (difficulty) {
@@ -213,7 +193,7 @@ function checkMasteryBadge(
 
   // Count all mastered questions
   const masteredCount = Array.from(userProgress.questions.values()).filter(
-    (q) => q.masteryLevel === 'mastered'
+    (q) => q.masteryLevel === "mastered"
   ).length;
 
   return masteredCount >= threshold;
@@ -257,7 +237,7 @@ async function checkCustomBadge(
   // - "Answer 100 questions on mobile" (would need device tracking)
 
   switch (badgeId) {
-    case 'completionist':
+    case "completionist":
       // Master all questions in all difficulties
       return (
         userProgress.difficultyProgress.easy.mastered >= 50 &&
@@ -265,17 +245,17 @@ async function checkCustomBadge(
         userProgress.difficultyProgress.hard.mastered >= 250
       );
 
-    case 'early_bird':
+    case "early_bird":
       // Complete activity before 6am (would need timestamp tracking)
       // Placeholder - implement with session timestamp tracking
       return false;
 
-    case 'night_owl':
+    case "night_owl":
       // Complete activity after 11pm
       // Placeholder - implement with session timestamp tracking
       return false;
 
-    case 'consistency_king':
+    case "consistency_king":
       // Study every day for 30 days (would need daily activity tracking)
       return userProgress.streaks.currentStreak >= 30;
 
@@ -305,22 +285,16 @@ export async function getBadgeProgress(
   const { criteria } = badge;
 
   switch (criteria.type) {
-    case 'xp':
+    case "xp":
       return Math.min((userProgress.xp / criteria.threshold) * 100, 100);
 
-    case 'streak':
-      return Math.min(
-        (userProgress.streaks.currentStreak / criteria.threshold) * 100,
-        100
-      );
+    case "streak":
+      return Math.min((userProgress.streaks.currentStreak / criteria.threshold) * 100, 100);
 
-    case 'study_time':
-      return Math.min(
-        (userProgress.totalStudyTimeMinutes / criteria.threshold) * 100,
-        100
-      );
+    case "study_time":
+      return Math.min((userProgress.totalStudyTimeMinutes / criteria.threshold) * 100, 100);
 
-    case 'quiz_count': {
+    case "quiz_count": {
       const minScore = criteria.metadata?.minScore as number | undefined;
       let count: number;
 
@@ -336,15 +310,12 @@ export async function getBadgeProgress(
       return Math.min((count / criteria.threshold) * 100, 100);
     }
 
-    case 'perfect_quiz':
-      return Math.min(
-        (userProgress.perfectQuizzes / criteria.threshold) * 100,
-        100
-      );
+    case "perfect_quiz":
+      return Math.min((userProgress.perfectQuizzes / criteria.threshold) * 100, 100);
 
-    case 'mastery': {
+    case "mastery": {
       const masteredCount = Array.from(userProgress.questions.values()).filter(
-        (q) => q.masteryLevel === 'mastered'
+        (q) => q.masteryLevel === "mastered"
       ).length;
       return Math.min((masteredCount / criteria.threshold) * 100, 100);
     }
@@ -359,9 +330,7 @@ export async function getBadgeProgress(
  * @param userProgress User's progress
  * @returns Array of badges with earned status and progress
  */
-export async function getUserBadgesWithProgress(
-  userProgress: IUserProgressDoc
-): Promise<
+export async function getUserBadgesWithProgress(userProgress: IUserProgressDoc): Promise<
   Array<{
     badge: IBadgeDoc;
     earned: boolean;

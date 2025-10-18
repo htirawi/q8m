@@ -365,7 +365,10 @@ test.describe("Authentication Flow", () => {
     await expect(page).not.toHaveURL(/evil\.com/);
   });
 
-  test("should redirect authenticated user from Login to signInSuccessUrl", async ({ page, context }) => {
+  test("should redirect authenticated user from Login to signInSuccessUrl", async ({
+    page,
+    context,
+  }) => {
     // First login to create authenticated session
     await page.goto("/en/login");
     await page.fill('input[type="email"]', "e2etest@example.com");

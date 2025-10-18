@@ -3,7 +3,6 @@
  * Handles JWT token extraction and verification
  */
 
-
 import type { JWTPayload } from "@server/types/common";
 import { jwtService } from "@services/jwt.js";
 import type { FastifyRequest } from "fastify";

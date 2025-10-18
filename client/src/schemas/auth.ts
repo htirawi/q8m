@@ -44,11 +44,9 @@ export const nameSchema = z
  * Terms acceptance validation schema
  * - Must be true
  */
-export const acceptTermsSchema = z
-  .boolean()
-  .refine((val) => val === true, {
-    message: "auth.validation.acceptTermsRequired",
-  });
+export const acceptTermsSchema = z.boolean().refine((val) => val === true, {
+  message: "auth.validation.acceptTermsRequired",
+});
 
 /**
  * Email step validation schema

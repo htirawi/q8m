@@ -1,7 +1,7 @@
 /**
  * WebhookEvent Model
  * Stores webhook events for audit trail and deduplication
- * 
+ *
  * SECURITY: Prevents replay attacks and provides idempotency (SEC-003 fix)
  */
 

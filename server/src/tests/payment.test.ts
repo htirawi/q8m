@@ -4,7 +4,6 @@
  * Comprehensive tests for payment processing, webhooks, and entitlements
  */
 
-
 import { Purchase } from "@models/Purchase.js";
 import { Subscription } from "@models/Subscription.js";
 import { User, type IUser } from "@models/User.js";

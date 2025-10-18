@@ -46,4 +46,3 @@ export function getFrameworkIcon(framework: string): string | undefined {
 export function hasFrameworkIcon(framework: string): boolean {
   return framework.toLowerCase() in FRAMEWORK_ICONS;
 }
-

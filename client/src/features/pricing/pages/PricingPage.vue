@@ -12,7 +12,6 @@ import FaqAccordion from "@/components/pricing/FaqAccordion.vue";
 import GuaranteePanel from "@/components/pricing/GuaranteePanel.vue";
 import FinalCta from "@/components/pricing/FinalCta.vue";
 
-
 const trackanalytics = (event: string, properties: Record<string, unknown>) => {
   // Track with your analytics service
   console.log("Analytics:", event, properties);
@@ -28,9 +27,9 @@ const saleEndDate = computed(() => {
 // Methods
 const handleCountdownCTA = () => {
   // Scroll to pricing cards
-  const cardsSection = document.getElementById('main-content');
+  const cardsSection = document.getElementById("main-content");
   if (cardsSection) {
-    cardsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    cardsSection.scrollIntoView({ behavior: "smooth", block: "start" });
   }
   trackAnalytics("countdown_cta_clicked", {
     source: "pricing_banner",
@@ -58,7 +57,6 @@ defineOptions({
       class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-blue-600 focus:px-4 focus:py-2 focus:text-white"
     >
       {{ $t("a11y.skipToMain") }}
-
     </a>
 
     <!-- Hero Section -->
@@ -83,7 +81,6 @@ defineOptions({
       <div class="pricing-page-cards-container">
         <h2 id="plans-title" class="sr-only">
           {{ $t("pricing.plans.title") }}
-
         </h2>
         <PricingCards />
       </div>
@@ -96,10 +93,7 @@ defineOptions({
     <ComparisonTable />
 
     <!-- Testimonials -->
-    <TestimonialCarousel
-      :autoplay="true"
-      :autoplay-interval="6000"
-    />
+    <TestimonialCarousel :autoplay="true" :autoplay-interval="6000" />
 
     <!-- FAQ Section -->
     <FaqAccordion />
@@ -118,7 +112,7 @@ defineOptions({
 }
 
 .pricing-page-cards {
-  @apply bg-white dark:bg-gray-900 py-16 lg:py-24;
+  @apply bg-white py-16 dark:bg-gray-900 lg:py-24;
 }
 
 .pricing-page-cards-container {

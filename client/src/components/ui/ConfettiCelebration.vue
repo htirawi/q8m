@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted } from "vue";
 
 const emit = defineEmits<{
   complete: [];
@@ -34,9 +34,11 @@ interface particle {
   fade: number;
 }
 
-const particles: Particle[] = [];particles
-const colors = ['#5E5CE6', '#32ADE6', '#34C759', '#FF9F0A', '#FF453A', '#AF52DE', '#FFD60A'];
-let animationId: number | null = null;animationId
+const particles: Particle[] = [];
+particles;
+const colors = ["#5E5CE6", "#32ADE6", "#34C759", "#FF9F0A", "#FF453A", "#AF52DE", "#FFD60A"];
+let animationId: number | null = null;
+animationId;
 
 const createparticles = () => {
   const particleCount = 150;
@@ -52,7 +54,7 @@ const createparticles = () => {
       rotation: Math.random() * 360,
       rotationSpeed: Math.random() * 10 - 5,
       opacity: 1,
-      fade: Math.random() * 0.02 + 0.005
+      fade: Math.random() * 0.02 + 0.005,
     });
   }
 };
@@ -60,7 +62,7 @@ const createparticles = () => {
 const drawparticle = (ctx: CanvasRenderingContext2D, particle: Particle) => {
   ctx.save();
   ctx.translate(particle.x, particle.y);
-  ctx.rotate(particle.rotation * Math.PI / 180);
+  ctx.rotate((particle.rotation * Math.PI) / 180);
 
   ctx.fillStyle = particle.color;
   ctx.globalAlpha = particle.opacity;
@@ -68,19 +70,17 @@ const drawparticle = (ctx: CanvasRenderingContext2D, particle: Particle) => {
   // Draw a star shape
   ctx.beginPath();
   for (let i = 0; i < 5; i++) {
-    const angle = (i * 72 - 90) * Math.PI / 180;
+    const angle = ((i * 72 - 90) * Math.PI) / 180;
     const x = Math.cos(angle) * particle.radius;
     const y = Math.sin(angle) * particle.radius;
 
     if (i === 0) {
       ctx.moveTo(x, y);
-    }
-
- else {
+    } else {
       ctx.lineTo(x, y);
     }
 
-    const innerAngle = ((i * 72 + 36) - 90) * Math.PI / 180;
+    const innerAngle = ((i * 72 + 36 - 90) * Math.PI) / 180;
     const innerX = Math.cos(innerAngle) * (particle.radius * 0.5);
     const innerY = Math.sin(innerAngle) * (particle.radius * 0.5);
     ctx.lineTo(innerX, innerY);
@@ -94,7 +94,7 @@ const drawparticle = (ctx: CanvasRenderingContext2D, particle: Particle) => {
 const animate = () => {
   if (!canvasRef.value) return;
 
-  const ctx = canvasRef.value.getContext('2d');
+  const ctx = canvasRef.value.getContext("2d");
   if (!ctx) return;
 
   ctx.clearRect(0, 0, canvasWidth.value, canvasHeight.value);
@@ -114,22 +114,18 @@ const animate = () => {
     if (particle.opacity > 0 && particle.y < canvasHeight.value) {
       drawParticle(ctx, particle);
       activeParticles++;
-    }
-
- else {
+    } else {
       particles.splice(i, 1);
     }
   }
 
   if (activeParticles > 0) {
     animationId = requestAnimationFrame(animate);
-  }
-
- else {
+  } else {
     // All particles have disappeared
     isActive.value = false;
     setTimeout(() => {
-      emit('complete');
+      emit("complete");
     }, 500);
   }
 };
@@ -142,13 +138,13 @@ const handleresize = () => {
 onMounted(() => {
   createParticles();
   animate();
-  window.addEventListener('resize', handleResize);
+  window.addEventListener("resize", handleResize);
 
   // Auto-complete after 3 seconds
   setTimeout(() => {
     if (isActive.value) {
       isActive.value = false;
-      emit('complete');
+      emit("complete");
     }
   }, 3000);
 });
@@ -157,13 +153,13 @@ onUnmounted(() => {
   if (animationId) {
     cancelAnimationFrame(animationId);
   }
-  window.removeEventListener('resize', handleResize);
+  window.removeEventListener("resize", handleResize);
 });
 </script>
 
 <style scoped>
 .confetti-celebration {
-  @apply fixed inset-0 pointer-events-none z-[9999];
+  @apply pointer-events-none fixed inset-0 z-[9999];
   @apply transition-opacity duration-500;
 }
 
@@ -176,7 +172,7 @@ onUnmounted(() => {
 }
 
 .confetti-canvas {
-  @apply w-full h-full;
+  @apply h-full w-full;
 }
 
 @media (prefers-reduced-motion: reduce) {

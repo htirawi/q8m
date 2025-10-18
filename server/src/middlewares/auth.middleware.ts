@@ -1,13 +1,7 @@
-
 import { authorizationService } from "@services/auth/authorization.service.js";
 import { sessionValidationService } from "@services/auth/session-validation.service.js";
 import { tokenVerificationService } from "@services/auth/token-verification.service.js";
-import {
-  attachAuthUser,
-  AuthErrors,
-  handleAuthError,
-  sendAuthError,
-} from "@utils/auth.helpers.js";
+import { attachAuthUser, AuthErrors, handleAuthError, sendAuthError } from "@utils/auth.helpers.js";
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
 import type { AuthOptions } from "../types/middleware/auth";

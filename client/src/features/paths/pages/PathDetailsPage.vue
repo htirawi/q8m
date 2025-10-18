@@ -3,7 +3,9 @@
     <div class="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
       <!-- Loading State -->
       <div v-if="store.loading" class="flex justify-center py-12">
-        <div class="h-8 w-8 animate-spin rounded-full border-4 border-primary-500 border-t-transparent"></div>
+        <div
+          class="h-8 w-8 animate-spin rounded-full border-4 border-primary-500 border-t-transparent"
+        ></div>
       </div>
 
       <!-- Path Details -->
@@ -14,11 +16,9 @@
             <div>
               <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
                 {{ currentTitle }}
-
               </h1>
               <p class="mt-2 text-gray-600 dark:text-gray-300">
                 {{ currentDescription }}
-
               </p>
             </div>
             <span
@@ -33,27 +33,31 @@
           <div class="flex flex-wrap gap-4 text-sm text-gray-600 dark:text-gray-400">
             <div class="flex items-center gap-1">
               <span>📚</span>
-              <span>{{ store.currentPath.totalQuestions }}
+              <span
+                >{{ store.currentPath.totalQuestions }}
 
- Questions</span>
+                Questions</span
+              >
             </div>
             <div class="flex items-center gap-1">
               <span>⏱️</span>
-              <span>{{ store.currentPath.estimatedHours }}
+              <span
+                >{{ store.currentPath.estimatedHours }}
 
- Hours</span>
+                Hours</span
+              >
             </div>
             <div class="flex items-center gap-1">
               <span>📊</span>
-              <span class="capitalize">{{ store.currentPath.difficulty }}
-
-</span>
+              <span class="capitalize">{{ store.currentPath.difficulty }} </span>
             </div>
             <div class="flex items-center gap-1">
               <span>👥</span>
-              <span>{{ store.currentPath.enrollmentCount }}
+              <span
+                >{{ store.currentPath.enrollmentCount }}
 
- Enrolled</span>
+                Enrolled</span
+              >
             </div>
           </div>
 
@@ -86,9 +90,7 @@
 
         <!-- Modules -->
         <div class="rounded-lg bg-white p-6 shadow-sm dark:bg-gray-800">
-          <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">
-            Learning Modules
-          </h2>
+          <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Learning Modules</h2>
           <ModuleList
             :modules="store.currentPath.modules"
             :module-progress="store.currentEnrollment?.moduleProgress || []"
@@ -98,7 +100,7 @@
       </div>
 
       <!-- Error State -->
-      <div v-else class="text-center py-12">
+      <div v-else class="py-12 text-center">
         <p class="text-gray-600 dark:text-gray-400">Learning path not found</p>
       </div>
     </div>
@@ -106,11 +108,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
-import { useLearningPathsStore } from '@/stores/learning-paths';
-import { useAuthStore } from '@/stores/auth';
-import ModuleList from '../components/ModuleList.vue';
+import { computed, onMounted } from "vue";
+import { useRouter, useRoute } from "vue-router";
+import { useLearningPathsStore } from "@/stores/learning-paths";
+import { useAuthStore } from "@/stores/auth";
+import ModuleList from "../components/ModuleList.vue";
 
 const router = useRouter();
 const route = useRoute();
@@ -118,18 +120,18 @@ const store = useLearningPathsStore();
 const authStore = useAuthStore();
 
 const currentTitle = computed(() => {
-  const locale = route.params.locale as string || 'en';
-  return store.currentPath?.title[locale === 'ar' ? 'ar' : 'en'] || '';
+  const locale = (route.params.locale as string) || "en";
+  return store.currentPath?.title[locale === "ar" ? "ar" : "en"] || "";
 });
 
 const currentDescription = computed(() => {
-  const locale = route.params.locale as string || 'en';
-  return store.currentPath?.description[locale === 'ar' ? 'ar' : 'en'] || '';
+  const locale = (route.params.locale as string) || "en";
+  return store.currentPath?.description[locale === "ar" ? "ar" : "en"] || "";
 });
 
 const enrollinpath = async () => {
   if (!authStore.isAuthenticated) {
-    const locale = route.params.locale || 'en';
+    const locale = route.params.locale || "en";
     router.push(`/${locale}/login`);
     return;
   }
@@ -144,7 +146,7 @@ const enrollinpath = async () => {
 };
 
 const continuelearning = () => {
-  const locale = route.params.locale || 'en';
+  const locale = route.params.locale || "en";
   router.push(`/${locale}/paths/${route.params.slug}/learn`);
 };
 

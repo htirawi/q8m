@@ -52,7 +52,7 @@
 <style scoped>
 /* Container */
 .level-selection-skeleton {
-  @apply w-full max-w-7xl mx-auto px-4 py-8 space-y-8;
+  @apply mx-auto w-full max-w-7xl space-y-8 px-4 py-8;
 
   animation: fadeIn 0.3s ease-out;
 }
@@ -106,11 +106,11 @@
 
 /* Header Section */
 .skeleton-header {
-  @apply flex justify-between items-start mb-8;
+  @apply mb-8 flex items-start justify-between;
 }
 
 .skeleton-header__greeting {
-  @apply space-y-3 flex-1;
+  @apply flex-1 space-y-3;
 }
 
 .skeleton-heading--large {
@@ -131,20 +131,20 @@
 
 /* Grid */
 .skeleton-grid {
-  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6;
+  @apply grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4;
 }
 
 /* Card */
 .skeleton-card {
-  @apply p-6 rounded-xl border border-gray-200 dark:border-gray-700;
-  @apply bg-white dark:bg-gray-800 space-y-4;
+  @apply rounded-xl border border-gray-200 p-6 dark:border-gray-700;
+  @apply space-y-4 bg-white dark:bg-gray-800;
   @apply transition-all duration-300;
 
   min-height: 280px;
 }
 
 .skeleton-card__icon {
-  @apply flex justify-center mb-4;
+  @apply mb-4 flex justify-center;
 }
 
 .skeleton-icon {
@@ -156,15 +156,15 @@
 }
 
 .skeleton-text--title {
-  @apply h-7 w-32 mx-auto;
+  @apply mx-auto h-7 w-32;
 }
 
 .skeleton-text--subtitle {
-  @apply h-5 w-24 mx-auto opacity-60;
+  @apply mx-auto h-5 w-24 opacity-60;
 }
 
 .skeleton-card__description {
-  @apply space-y-2 mt-4;
+  @apply mt-4 space-y-2;
 }
 
 .skeleton-text {
@@ -176,20 +176,20 @@
 }
 
 .skeleton-card__footer {
-  @apply mt-4 pt-4 border-t border-gray-100 dark:border-gray-700;
+  @apply mt-4 border-t border-gray-100 pt-4 dark:border-gray-700;
 }
 
 .skeleton-text--small {
-  @apply h-3 w-28 mx-auto;
+  @apply mx-auto h-3 w-28;
 }
 
 /* Recent Activity */
 .skeleton-activity {
-  @apply mt-12 p-6 rounded-xl bg-gray-50 dark:bg-gray-800/50;
+  @apply mt-12 rounded-xl bg-gray-50 p-6 dark:bg-gray-800/50;
 }
 
 .skeleton-heading--small {
-  @apply h-6 w-32 mb-4;
+  @apply mb-4 h-6 w-32;
 }
 
 .skeleton-activity__list {
@@ -201,7 +201,7 @@
 }
 
 .skeleton-dot {
-  @apply h-2 w-2 rounded-full flex-shrink-0;
+  @apply h-2 w-2 flex-shrink-0 rounded-full;
 }
 
 .skeleton-text--medium {
@@ -249,7 +249,7 @@
   }
 
   .skeleton-card {
-    @apply max-w-md mx-auto w-full;
+    @apply mx-auto w-full max-w-md;
   }
 }
 </style>

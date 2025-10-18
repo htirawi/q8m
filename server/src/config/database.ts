@@ -29,7 +29,6 @@ function queryTimeoutPlugin(schema: mongoose.Schema) {
 // Register plugin globally before any models are created
 mongoose.plugin(queryTimeoutPlugin);
 
-
 export const connectDatabase = async (): Promise<void> => {
   try {
     // Check if already connected
@@ -133,7 +132,7 @@ export const connectDatabase = async (): Promise<void> => {
 export const disconnectDatabase = async (): Promise<void> => {
   try {
     await mongoose.connection.close();
-      console.warn("MongoDB connection closed");
+    console.warn("MongoDB connection closed");
   } catch (error) {
     console.error("Error closing MongoDB connection:", error);
   }

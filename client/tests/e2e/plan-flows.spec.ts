@@ -100,7 +100,6 @@ test.describe("Paid Plan Flow (Scaffold)", () => {
   test.skip("paid user logs in and lands on Dashboard", async ({ page }) => {
     // This test is skipped until paid plan mock is implemented
     // Setup: login as paid user (would need mock implementation)
-
     // Expected behavior:
     // - Should redirect to /en/dashboard
     // - Should see "Welcome back" message
@@ -111,7 +110,6 @@ test.describe("Paid Plan Flow (Scaffold)", () => {
   test.skip("paid user can access all paid routes", async ({ page }) => {
     // This test is skipped until paid plan mock is implemented
     // Setup: login as paid user
-
     // Expected behavior:
     // - Can navigate to /en/dashboard
     // - Can navigate to advanced quiz routes

@@ -3,7 +3,13 @@
  */
 
 import { test, expect, describe } from "vitest";
-import { logPaymentEvent, logAuthEvent, logError, maskEmail, maskSensitive } from "@server/security/logging.js";
+import {
+  logPaymentEvent,
+  logAuthEvent,
+  logError,
+  maskEmail,
+  maskSensitive,
+} from "@server/security/logging.js";
 
 describe("Log Injection Prevention", () => {
   test("logPaymentEvent should create structured logs", () => {

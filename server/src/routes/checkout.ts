@@ -132,7 +132,8 @@ export default async function checkoutRoutes(fastify: FastifyInstance) {
 
           // Calculate discount
           try {
-            const { discountAmount: calculatedDiscount, finalAmount: calculatedFinal } = coupon.calculateDiscount(priceInfo.amount, currency);
+            const { discountAmount: calculatedDiscount, finalAmount: calculatedFinal } =
+              coupon.calculateDiscount(priceInfo.amount, currency);
             discountAmount = calculatedDiscount;
             finalAmount = calculatedFinal;
             appliedCoupon = {
@@ -302,7 +303,8 @@ export default async function checkoutRoutes(fastify: FastifyInstance) {
           }
 
           try {
-            const { discountAmount: calculatedDiscount, finalAmount: calculatedFinal } = coupon.calculateDiscount(priceInfo.amount, currency);
+            const { discountAmount: calculatedDiscount, finalAmount: calculatedFinal } =
+              coupon.calculateDiscount(priceInfo.amount, currency);
             discountAmount = calculatedDiscount;
             finalAmount = calculatedFinal;
             appliedCoupon = {

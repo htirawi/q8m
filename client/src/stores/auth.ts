@@ -78,13 +78,12 @@ export const useAuthStore = defineStore("auth", () => {
       const isDevEmail = AUTH_CONSTANTS.DEV_WHITELIST.includes(credentials.email.toLowerCase());
 
       // Note: dev-login not in API_ENDPOINTS, using manual construction for dev
-      const endpoint = isDev && isDevEmail
-        ? `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'}/api/v1/auth/dev-login`
-        : API_ENDPOINTS.auth.login();
+      const endpoint =
+        isDev && isDevEmail
+          ? `${import.meta.env.VITE_API_BASE_URL || "http://localhost:3000"}/api/v1/auth/dev-login`
+          : API_ENDPOINTS.auth.login();
 
-      const body = isDev && isDevEmail
-        ? { email: credentials.email }
-        : credentials;
+      const body = isDev && isDevEmail ? { email: credentials.email } : credentials;
 
       if (isDev && isDevEmail) {
         console.warn(`[DEV] Using dev-login endpoint for: ${credentials.email}`);
@@ -160,7 +159,7 @@ export const useAuthStore = defineStore("auth", () => {
 
     try {
       await httpClient.post(
-        `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'}/api/v1/auth/logout-all`,
+        `${import.meta.env.VITE_API_BASE_URL || "http://localhost:3000"}/api/v1/auth/logout-all`,
         {},
         { requireAuth: true, useBearer: true }
       );
@@ -212,19 +211,16 @@ export const useAuthStore = defineStore("auth", () => {
       const useBearer = !useCookies;
 
       try {
-        const data = await httpClient.get<{ user: User }>(
-          API_ENDPOINTS.auth.me(),
-          {
-            useBearer,
-            requireAuth: useBearer,
-          }
-        );
+        const data = await httpClient.get<{ user: User }>(API_ENDPOINTS.auth.me(), {
+          useBearer,
+          requireAuth: useBearer,
+        });
 
         setUser(data.user);
         return true;
       } catch (err) {
         // If 401, try to refresh token once
-        if (err instanceof Error && err.message.includes('401')) {
+        if (err instanceof Error && err.message.includes("401")) {
           const refreshed = await refreshToken();
           if (refreshed) {
             return getCurrentUser(); // Retry with new token
@@ -326,7 +322,7 @@ export const useAuthStore = defineStore("auth", () => {
   async function checkEmailExists(email: string): Promise<boolean> {
     try {
       const data = await httpClient.post<{ exists: boolean }>(
-        `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'}/api/v1/auth/check-email`,
+        `${import.meta.env.VITE_API_BASE_URL || "http://localhost:3000"}/api/v1/auth/check-email`,
         { email }
       );
 
@@ -347,10 +343,7 @@ export const useAuthStore = defineStore("auth", () => {
     try {
       // Try to get current user from server (will use httpOnly cookies)
       // Use silent mode to avoid console errors when not logged in
-      const data = await httpClient.get<{ user: User }>(
-        API_ENDPOINTS.auth.me(),
-        { silent: true }
-      );
+      const data = await httpClient.get<{ user: User }>(API_ENDPOINTS.auth.me(), { silent: true });
 
       // If we got a response (user is logged in)
       if (data?.user) {

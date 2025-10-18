@@ -46,4 +46,3 @@ export const isProd = (): boolean => {
 export const getMode = (): string => {
   return import.meta.env.MODE ?? "development";
 };
-

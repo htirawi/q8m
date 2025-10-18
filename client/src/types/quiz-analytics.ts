@@ -4,7 +4,7 @@
 
 export interface QuizAttempt {
   id: string;
-  level: 'junior' | 'intermediate' | 'senior';
+  level: "junior" | "intermediate" | "senior";
   score: number;
   correct: number;
   total: number;
@@ -21,7 +21,7 @@ export interface QuizAnswerRecord {
 }
 
 export interface LevelStats {
-  name: 'junior' | 'intermediate' | 'senior';
+  name: "junior" | "intermediate" | "senior";
   attempts: number;
   average: number;
 }
@@ -51,7 +51,7 @@ export interface ProgressStats {
 }
 
 export interface DifficultyProgress {
-  level: 'easy' | 'medium' | 'hard';
+  level: "easy" | "medium" | "hard";
   label: string;
   answered: number;
   total: number;
@@ -61,7 +61,7 @@ export interface DifficultyProgress {
 
 export interface RecentActivity {
   id: string;
-  type: 'quiz' | 'study' | 'achievement';
+  type: "quiz" | "study" | "achievement";
   title: string;
   timestamp: number;
   score?: number;
@@ -70,18 +70,18 @@ export interface RecentActivity {
 // Smart Recommendations Types
 export interface RecommendedQuiz {
   id: string;
-  level: 'junior' | 'intermediate' | 'senior';
+  level: "junior" | "intermediate" | "senior";
   title: string;
   description: string;
-  reason: 'weak_area' | 'next_level' | 'practice' | 'new';
+  reason: "weak_area" | "next_level" | "practice" | "new";
 }
 
 export interface StudyTopic {
   id: string;
   title: string;
-  difficulty: 'easy' | 'medium' | 'hard';
+  difficulty: "easy" | "medium" | "hard";
   reason: string;
-  priority: 'high' | 'medium' | 'low';
+  priority: "high" | "medium" | "low";
   currentAccuracy: number;
   targetAccuracy: number;
 }

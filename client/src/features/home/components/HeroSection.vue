@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import type { IHeroSectionProps as Props } from "@/types/components/home";
-import { computed } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useRouter, useRoute } from 'vue-router';
-import { useHomepageAnalytics } from '@/composables/useHomepageAnalytics';
-import { BoltIcon, FlagIcon, CheckCircleIcon, RocketLaunchIcon } from '@heroicons/vue/24/solid';
+import { computed } from "vue";
+import { useI18n } from "vue-i18n";
+import { useRouter, useRoute } from "vue-router";
+import { useHomepageAnalytics } from "@/composables/useHomepageAnalytics";
+import { BoltIcon, FlagIcon, CheckCircleIcon, RocketLaunchIcon } from "@heroicons/vue/24/solid";
 
 const props = withDefaults(defineProps<Props>(), {
-  headlineVariant: 'control',
+  headlineVariant: "control",
 });
 
 const { locale, t } = useI18n();
@@ -15,11 +15,11 @@ const router = useRouter();
 const route = useRoute();
 const { trackCTAClick } = useHomepageAnalytics();
 
-const currentLocale = computed(() => route.params.locale as string || locale.value);
+const currentLocale = computed(() => (route.params.locale as string) || locale.value);
 
 // Headline text based on A/B test variant
 const headlineText = computed(() => {
-  const variant = props.headlineVariant ?? 'control';
+  const variant = props.headlineVariant ?? "control";
   const key = `home.hero.headline.${variant}`;
   return t(key);
 });
@@ -27,37 +27,36 @@ const headlineText = computed(() => {
 // Handle primary CTA click
 const handlePrimaryCTA = (): void => {
   trackCTAClick({
-    ctaType: 'primary',
-    ctaText: t('home.hero.cta.primary'),
-    ctaLocation: 'hero',
-    destinationUrl: '/register',
+    ctaType: "primary",
+    ctaText: t("home.hero.cta.primary"),
+    ctaLocation: "hero",
+    destinationUrl: "/register",
     variant: props.headlineVariant,
   });
 
   router.push({
-    name: 'register',
+    name: "register",
     params: { locale: currentLocale.value },
-    query: { source: 'hero', trial: '7-day' },
+    query: { source: "hero", trial: "7-day" },
   });
 };
 
 // Handle secondary CTA click (view all plans)
 const handleSecondaryCTA = (): void => {
   trackCTAClick({
-    ctaType: 'secondary',
-    ctaText: t('home.hero.cta.secondary'),
-    ctaLocation: 'hero',
-    destinationUrl: '/pricing',
+    ctaType: "secondary",
+    ctaText: t("home.hero.cta.secondary"),
+    ctaLocation: "hero",
+    destinationUrl: "/pricing",
     variant: props.headlineVariant,
   });
 
   router.push({
-    name: 'pricing',
+    name: "pricing",
     params: { locale: currentLocale.value },
-    query: { source: 'hero' },
+    query: { source: "hero" },
   });
 };
-
 </script>
 
 <template>
@@ -75,26 +74,15 @@ const handleSecondaryCTA = (): void => {
         </h1>
         <p :class="['hero-description', { 'font-arabic-sans': locale === 'ar' }]">
           {{ $t("home.hero.description") }}
-
         </p>
 
         <!-- Tech Stack Badges -->
         <div class="tech-stack">
-          <span class="tech-badge">{{ $t("home.hero.techStack.react") }}
-
-</span>
-          <span class="tech-badge">{{ $t("home.hero.techStack.vue") }}
-
-</span>
-          <span class="tech-badge">{{ $t("home.hero.techStack.angular") }}
-
-</span>
-          <span class="tech-badge">{{ $t("home.hero.techStack.nextjs") }}
-
-</span>
-          <span class="tech-badge">{{ $t("home.hero.techStack.typescript") }}
-
-</span>
+          <span class="tech-badge">{{ $t("home.hero.techStack.react") }} </span>
+          <span class="tech-badge">{{ $t("home.hero.techStack.vue") }} </span>
+          <span class="tech-badge">{{ $t("home.hero.techStack.angular") }} </span>
+          <span class="tech-badge">{{ $t("home.hero.techStack.nextjs") }} </span>
+          <span class="tech-badge">{{ $t("home.hero.techStack.typescript") }} </span>
         </div>
 
         <div class="hero-actions">
@@ -131,56 +119,70 @@ const handleSecondaryCTA = (): void => {
             :aria-label="t('home.hero.cta.secondaryAriaLabel')"
           >
             {{ $t("home.hero.cta.secondary") }}
-
           </button>
         </div>
 
         <!-- Reassurance bullets -->
         <ul class="hero-reassurance" role="list">
           <li class="hero-reassurance__item">
-            <svg class="hero-reassurance__icon" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+            <svg
+              class="hero-reassurance__icon"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+              aria-hidden="true"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clip-rule="evenodd"
+              />
             </svg>
-            <span>{{ $t("home.hero.reassurance.noCard") }}
-
-</span>
+            <span>{{ $t("home.hero.reassurance.noCard") }} </span>
           </li>
           <li class="hero-reassurance__item">
-            <svg class="hero-reassurance__icon" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+            <svg
+              class="hero-reassurance__icon"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+              aria-hidden="true"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clip-rule="evenodd"
+              />
             </svg>
-            <span>{{ $t("home.hero.reassurance.fullAccess") }}
-
-</span>
+            <span>{{ $t("home.hero.reassurance.fullAccess") }} </span>
           </li>
           <li class="hero-reassurance__item">
-            <svg class="hero-reassurance__icon" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+            <svg
+              class="hero-reassurance__icon"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+              aria-hidden="true"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clip-rule="evenodd"
+              />
             </svg>
-            <span>{{ $t("home.hero.reassurance.cancelAnytime") }}
-
-</span>
+            <span>{{ $t("home.hero.reassurance.cancelAnytime") }} </span>
           </li>
         </ul>
 
         <div class="hero-stats">
           <div class="stat-item">
             <span class="stat-number">500+</span>
-            <span class="stat-label">{{ $t("home.hero.stats.questions") }}
-
-</span>
+            <span class="stat-label">{{ $t("home.hero.stats.questions") }} </span>
           </div>
           <div class="stat-item">
             <span class="stat-number">10+</span>
-            <span class="stat-label">{{ $t("home.hero.stats.frameworks") }}
-
-</span>
+            <span class="stat-label">{{ $t("home.hero.stats.frameworks") }} </span>
           </div>
           <div class="stat-item">
             <span class="stat-number">95%</span>
-            <span class="stat-label">{{ $t("home.hero.stats.success") }}
-
-</span>
+            <span class="stat-label">{{ $t("home.hero.stats.success") }} </span>
           </div>
         </div>
       </div>
@@ -194,9 +196,7 @@ const handleSecondaryCTA = (): void => {
                 <div class="dot yellow"></div>
                 <div class="dot green"></div>
               </div>
-              <div class="dashboard-title">{{ $t("home.hero.dashboard.title") }}
-
-</div>
+              <div class="dashboard-title">{{ $t("home.hero.dashboard.title") }}</div>
             </div>
             <div class="dashboard-content">
               <div class="quiz-card">
@@ -204,12 +204,8 @@ const handleSecondaryCTA = (): void => {
                   <BoltIcon class="quiz-icon__svg" aria-hidden="true" />
                 </div>
                 <div class="quiz-info">
-                  <h4>{{ $t("home.hero.dashboard.quiz1.title") }}
-
-</h4>
-                  <p>{{ $t("home.hero.dashboard.quiz1.details") }}
-
-</p>
+                  <h4>{{ $t("home.hero.dashboard.quiz1.title") }}</h4>
+                  <p>{{ $t("home.hero.dashboard.quiz1.details") }}</p>
                 </div>
                 <div class="quiz-progress">
                   <div class="progress-bar">
@@ -223,12 +219,8 @@ const handleSecondaryCTA = (): void => {
                   <FlagIcon class="quiz-icon__svg" aria-hidden="true" />
                 </div>
                 <div class="quiz-info">
-                  <h4>{{ $t("home.hero.dashboard.quiz2.title") }}
-
-</h4>
-                  <p>{{ $t("home.hero.dashboard.quiz2.details") }}
-
-</p>
+                  <h4>{{ $t("home.hero.dashboard.quiz2.title") }}</h4>
+                  <p>{{ $t("home.hero.dashboard.quiz2.details") }}</p>
                 </div>
                 <div class="quiz-progress">
                   <div class="progress-bar">
@@ -242,12 +234,8 @@ const handleSecondaryCTA = (): void => {
                   <CheckCircleIcon class="quiz-icon__svg" aria-hidden="true" />
                 </div>
                 <div class="quiz-info">
-                  <h4>{{ $t("home.hero.dashboard.quiz3.title") }}
-
-</h4>
-                  <p>{{ $t("home.hero.dashboard.quiz3.details") }}
-
-</p>
+                  <h4>{{ $t("home.hero.dashboard.quiz3.title") }}</h4>
+                  <p>{{ $t("home.hero.dashboard.quiz3.details") }}</p>
                 </div>
                 <div class="quiz-progress">
                   <div class="progress-bar">
@@ -368,7 +356,7 @@ const handleSecondaryCTA = (): void => {
 
 .hero-cta-primary {
   @apply inline-flex items-center justify-center gap-2;
-  @apply px-8 py-4 rounded-lg;
+  @apply rounded-lg px-8 py-4;
   @apply text-lg font-bold text-white;
   @apply bg-gradient-to-r from-blue-600 to-purple-600;
   @apply hover:from-blue-700 hover:to-purple-700;
@@ -378,7 +366,7 @@ const handleSecondaryCTA = (): void => {
 }
 
 .hero-cta-icon {
-  @apply w-5 h-5 transition-transform duration-200;
+  @apply h-5 w-5 transition-transform duration-200;
 }
 
 .hero-cta-primary:hover .hero-cta-icon {
@@ -405,7 +393,7 @@ const handleSecondaryCTA = (): void => {
 }
 
 .hero-reassurance__icon {
-  @apply w-5 h-5 text-green-500 flex-shrink-0;
+  @apply h-5 w-5 flex-shrink-0 text-green-500;
 }
 
 .hero-stats {
@@ -548,14 +536,14 @@ const handleSecondaryCTA = (): void => {
 /* Focus styles for keyboard navigation */
 .hero-cta-primary:focus-visible,
 .hero-cta-secondary:focus-visible {
-  @apply outline-2 outline-blue-500 outline-offset-2;
+  @apply outline-2 outline-offset-2 outline-blue-500;
 }
 
 /* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
   .hero-cta-primary,
   .hero-cta-icon {
-    @apply transition-none transform-none;
+    @apply transform-none transition-none;
   }
 
   .hero-cta-primary:hover {

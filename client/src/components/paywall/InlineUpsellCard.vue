@@ -1,5 +1,7 @@
 <template>
-  <div class="overflow-hidden rounded-lg border border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800/50">
+  <div
+    class="overflow-hidden rounded-lg border border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800/50"
+  >
     <!-- Header (always visible) -->
     <button
       type="button"
@@ -9,7 +11,9 @@
       @click="toggleExpanded"
     >
       <div class="flex items-center gap-3">
-        <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-100 dark:bg-primary-900/30">
+        <div
+          class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-100 dark:bg-primary-900/30"
+        >
           <svg
             class="h-5 w-5 text-primary-600 dark:text-primary-400"
             fill="none"
@@ -27,7 +31,6 @@
         <div>
           <h3 class="text-sm font-semibold text-gray-900 dark:text-white">
             {{ title }}
-
           </h3>
           <p class="text-xs text-gray-600 dark:text-gray-400">
             {{ subtitle }}
@@ -43,24 +46,19 @@
         stroke="currentColor"
         viewBox="0 0 24 24"
       >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M19 9l-7 7-7-7"
-        />
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
       </svg>
     </button>
 
     <!-- Expandable content -->
     <Transition name="expand">
-      <div v-if="isExpanded" :id="contentId" class="border-t border-gray-200 p-4 dark:border-gray-700">
+      <div
+        v-if="isExpanded"
+        :id="contentId"
+        class="border-t border-gray-200 p-4 dark:border-gray-700"
+      >
         <ul class="mb-4 space-y-2 text-sm text-gray-700 dark:text-gray-300">
-          <li
-            v-for="(benefit, index) in benefits"
-            :key="index"
-            class="flex items-start"
-          >
+          <li v-for="(benefit, index) in benefits" :key="index" class="flex items-start">
             <svg
               class="mr-2 mt-0.5 h-4 w-4 flex-shrink-0 text-primary-500"
               fill="currentColor"
@@ -72,9 +70,7 @@
                 clip-rule="evenodd"
               />
             </svg>
-            <span>{{ benefit }}
-
-</span>
+            <span>{{ benefit }} </span>
           </li>
         </ul>
 
@@ -84,7 +80,6 @@
           @click="handleUpgrade"
         >
           {{ ctaText }}
-
         </button>
       </div>
     </Transition>
@@ -97,8 +92,6 @@ import { useRouter } from "vue-router";
 import { trackEvent } from "@/utils/telemetry";
 import type { PlanTier } from "@shared/types/plan";
 import type { IInlineUpsellCardProps as Props } from "@/types/components/paywall";
-
-
 
 const props = defineProps<Props>();
 
@@ -132,7 +125,6 @@ const handleupgrade = () => {
     },
   });
 };
-
 </script>
 
 <style scoped>

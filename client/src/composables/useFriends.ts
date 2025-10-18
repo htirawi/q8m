@@ -1,6 +1,6 @@
-import { computed } from 'vue';
-import { useFriendsStore } from '@/stores/friends';
-import type { Friend, FriendStatus } from '@/stores/friends';
+import { computed } from "vue";
+import { useFriendsStore } from "@/stores/friends";
+import type { Friend, FriendStatus } from "@/stores/friends";
 
 /**
  * Composable for managing friends and friend requests
@@ -190,33 +190,33 @@ export const useFriends = () => {
    * Get level color for display
    */
   const getLevelColor = (level: number): string => {
-    if (level >= 40) return 'text-purple-500'; // Legend
-    if (level >= 30) return 'text-yellow-500'; // Master
-    if (level >= 20) return 'text-blue-500'; // Expert
-    if (level >= 10) return 'text-green-500'; // Apprentice
-    return 'text-gray-500'; // Novice
+    if (level >= 40) return "text-purple-500"; // Legend
+    if (level >= 30) return "text-yellow-500"; // Master
+    if (level >= 20) return "text-blue-500"; // Expert
+    if (level >= 10) return "text-green-500"; // Apprentice
+    return "text-gray-500"; // Novice
   };
 
   /**
    * Get level badge emoji
    */
   const getLevelBadge = (level: number): string => {
-    if (level >= 40) return '👑';
-    if (level >= 30) return '⭐';
-    if (level >= 20) return '🎯';
-    if (level >= 10) return '🔰';
-    return '🌱';
+    if (level >= 40) return "👑";
+    if (level >= 30) return "⭐";
+    if (level >= 20) return "🎯";
+    if (level >= 10) return "🔰";
+    return "🌱";
   };
 
   /**
    * Get level title
    */
   const getLevelTitle = (level: number): string => {
-    if (level >= 40) return 'Legend';
-    if (level >= 30) return 'Master';
-    if (level >= 20) return 'Expert';
-    if (level >= 10) return 'Apprentice';
-    return 'Novice';
+    if (level >= 40) return "Legend";
+    if (level >= 30) return "Master";
+    if (level >= 20) return "Expert";
+    if (level >= 10) return "Apprentice";
+    return "Novice";
   };
 
   /**
@@ -230,7 +230,7 @@ export const useFriends = () => {
     const diffHr = Math.floor(diffMin / 60);
     const diffDay = Math.floor(diffHr / 24);
 
-    if (diffSec < 60) return 'just now';
+    if (diffSec < 60) return "just now";
     if (diffMin < 60) return `${diffMin}m ago`;
     if (diffHr < 24) return `${diffHr}h ago`;
     if (diffDay < 7) return `${diffDay}d ago`;
@@ -242,18 +242,15 @@ export const useFriends = () => {
   /**
    * Sort friends by different criteria
    */
-  const sortFriends = (
-    friendsList: Friend[],
-    sortBy: 'name' | 'level' | 'recent'
-  ): Friend[] => {
+  const sortFriends = (friendsList: Friend[], sortBy: "name" | "level" | "recent"): Friend[] => {
     const sorted = [...friendsList];
 
     switch (sortBy) {
-      case 'name':
+      case "name":
         return sorted.sort((a, b) => a.name.localeCompare(b.name));
-      case 'level':
+      case "level":
         return sorted.sort((a, b) => b.level - a.level);
-      case 'recent':
+      case "recent":
         return sorted.sort((a, b) => {
           const dateA = a.friendSince ? new Date(a.friendSince).getTime() : 0;
           const dateB = b.friendSince ? new Date(b.friendSince).getTime() : 0;
@@ -285,8 +282,7 @@ export const useFriends = () => {
       if (filter.searchTerm) {
         const term = filter.searchTerm.toLowerCase();
         return (
-          friend.name.toLowerCase().includes(term) ||
-          friend.email.toLowerCase().includes(term)
+          friend.name.toLowerCase().includes(term) || friend.email.toLowerCase().includes(term)
         );
       }
       return true;
@@ -310,31 +306,31 @@ export const useFriends = () => {
    * Get friendship action label
    */
   const getActionLabel = (status: FriendStatus): string => {
-    if (status.status === 'none') return 'Add Friend';
-    if (status.status === 'pending') {
-      if (status.canAccept) return 'Accept Request';
-      if (status.canCancel) return 'Cancel Request';
+    if (status.status === "none") return "Add Friend";
+    if (status.status === "pending") {
+      if (status.canAccept) return "Accept Request";
+      if (status.canCancel) return "Cancel Request";
     }
-    if (status.status === 'friends') return 'Remove Friend';
-    if (status.status === 'blocked') {
-      if (status.canUnblock) return 'Unblock';
-      return 'Blocked';
+    if (status.status === "friends") return "Remove Friend";
+    if (status.status === "blocked") {
+      if (status.canUnblock) return "Unblock";
+      return "Blocked";
     }
-    return 'Unknown';
+    return "Unknown";
   };
 
   /**
    * Get friendship action color
    */
   const getActionColor = (status: FriendStatus): string => {
-    if (status.status === 'none') return 'bg-indigo-600 hover:bg-indigo-700';
-    if (status.status === 'pending') {
-      if (status.canAccept) return 'bg-green-600 hover:bg-green-700';
-      if (status.canCancel) return 'bg-gray-600 hover:bg-gray-700';
+    if (status.status === "none") return "bg-indigo-600 hover:bg-indigo-700";
+    if (status.status === "pending") {
+      if (status.canAccept) return "bg-green-600 hover:bg-green-700";
+      if (status.canCancel) return "bg-gray-600 hover:bg-gray-700";
     }
-    if (status.status === 'friends') return 'bg-red-600 hover:bg-red-700';
-    if (status.status === 'blocked') return 'bg-gray-400 cursor-not-allowed';
-    return 'bg-gray-600';
+    if (status.status === "friends") return "bg-red-600 hover:bg-red-700";
+    if (status.status === "blocked") return "bg-gray-400 cursor-not-allowed";
+    return "bg-gray-600";
   };
 
   /**
@@ -342,13 +338,13 @@ export const useFriends = () => {
    */
   const validateSearchQuery = (query: string): { valid: boolean; error?: string } => {
     if (!query || query.trim().length === 0) {
-      return { valid: false, error: 'Search query is required' };
+      return { valid: false, error: "Search query is required" };
     }
     if (query.length < 2) {
-      return { valid: false, error: 'Search query must be at least 2 characters' };
+      return { valid: false, error: "Search query must be at least 2 characters" };
     }
     if (query.length > 100) {
-      return { valid: false, error: 'Search query must be less than 100 characters' };
+      return { valid: false, error: "Search query must be less than 100 characters" };
     }
     return { valid: true };
   };
@@ -356,17 +352,17 @@ export const useFriends = () => {
   /**
    * Get user avatar URL or initials
    */
-  const getUserAvatar = (friend: Friend): { type: 'image' | 'initials'; value: string } => {
+  const getUserAvatar = (friend: Friend): { type: "image" | "initials"; value: string } => {
     if (friend.avatar) {
-      return { type: 'image', value: friend.avatar };
+      return { type: "image", value: friend.avatar };
     }
     const initials = friend.name
-      .split(' ')
+      .split(" ")
       .map((n) => n.charAt(0))
-      .join('')
+      .join("")
       .toUpperCase()
       .slice(0, 2);
-    return { type: 'initials', value: initials };
+    return { type: "initials", value: initials };
   };
 
   /**
@@ -374,14 +370,14 @@ export const useFriends = () => {
    */
   const getAvatarColor = (name: string): string => {
     const colors = [
-      'bg-red-500',
-      'bg-orange-500',
-      'bg-yellow-500',
-      'bg-green-500',
-      'bg-blue-500',
-      'bg-indigo-500',
-      'bg-purple-500',
-      'bg-pink-500',
+      "bg-red-500",
+      "bg-orange-500",
+      "bg-yellow-500",
+      "bg-green-500",
+      "bg-blue-500",
+      "bg-indigo-500",
+      "bg-purple-500",
+      "bg-pink-500",
     ];
 
     let hash = 0;
@@ -452,4 +448,3 @@ export const useFriends = () => {
     getAvatarColor,
   };
 };
-

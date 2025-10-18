@@ -6,7 +6,6 @@
         <slot name="icon">
           <div class="empty-state-icon-default">
             {{ icon || defaultIcon }}
-
           </div>
         </slot>
       </div>
@@ -20,11 +19,9 @@
       <div class="empty-state-content">
         <h3 v-if="title" class="empty-state-title">
           {{ title }}
-
         </h3>
         <p v-if="description" class="empty-state-description">
           {{ description }}
-
         </p>
 
         <!-- Additional Content Slot -->
@@ -36,15 +33,19 @@
       <!-- Actions -->
       <div v-if="showActions" class="empty-state-actions">
         <slot name="actions">
-          <button v-if="primaryAction" class="empty-state-btn empty-state-btn--primary"
-            @click="$emit('primary-action')">
+          <button
+            v-if="primaryAction"
+            class="empty-state-btn empty-state-btn--primary"
+            @click="$emit('primary-action')"
+          >
             {{ primaryAction }}
-
           </button>
-          <button v-if="secondaryAction" class="empty-state-btn empty-state-btn--secondary"
-            @click="$emit('secondary-action')">
+          <button
+            v-if="secondaryAction"
+            class="empty-state-btn empty-state-btn--secondary"
+            @click="$emit('secondary-action')"
+          >
             {{ secondaryAction }}
-
           </button>
         </slot>
       </div>
@@ -52,7 +53,6 @@
       <!-- Help Text -->
       <p v-if="helpText" class="empty-state-help">
         {{ helpText }}
-
       </p>
     </div>
   </div>
@@ -60,38 +60,38 @@
 
 <script setup lang="ts">
 import type { IEmptyStateProps as Props } from "@/types/components/ui";
-import { computed } from 'vue';
+import { computed } from "vue";
 
-const props = withDefaults(defineProps<{
-  icon?: string;
-  title?: string;
-  description?: string;
-  illustration?: string;
-  variant?: 'default' | 'compact' | 'large' | 'error' | 'info';
-  showIcon?: boolean;
-  showActions?: boolean;
-  primaryAction?: string;
-  secondaryAction?: string;
-  helpText?: string;
-}>(), {
-  showIcon: true,
-  showActions: true,
-  variant: 'default',
-});
+const props = withDefaults(
+  defineProps<{
+    icon?: string;
+    title?: string;
+    description?: string;
+    illustration?: string;
+    variant?: "default" | "compact" | "large" | "error" | "info";
+    showIcon?: boolean;
+    showActions?: boolean;
+    primaryAction?: string;
+    secondaryAction?: string;
+    helpText?: string;
+  }>(),
+  {
+    showIcon: true,
+    showActions: true,
+    variant: "default",
+  }
+);
 
-defineEmits<{
-  
-  
-}>();
+defineEmits<{}>();
 
 const defaultIcon = computed(() => {
   switch (props.variant) {
-    case 'error':
-      return '⚠️';
-    case 'info':
-      return 'ℹ️';
+    case "error":
+      return "⚠️";
+    case "info":
+      return "ℹ️";
     default:
-      return '📭';
+      return "📭";
   }
 });
 </script>
@@ -99,13 +99,13 @@ const defaultIcon = computed(() => {
 <style scoped>
 .empty-state {
   @apply flex items-center justify-center;
-  @apply py-12 px-4;
+  @apply px-4 py-12;
   @apply min-h-[400px];
 }
 
 .empty-state-container {
   @apply flex flex-col items-center;
-  @apply max-w-md mx-auto text-center;
+  @apply mx-auto max-w-md text-center;
 }
 
 /* Icon */
@@ -119,11 +119,11 @@ const defaultIcon = computed(() => {
 }
 
 .empty-state-illustration {
-  @apply mb-8 w-64 h-64;
+  @apply mb-8 h-64 w-64;
 }
 
 .empty-state-illustration img {
-  @apply w-full h-full object-contain;
+  @apply h-full w-full object-contain;
   @apply opacity-80;
 }
 
@@ -148,13 +148,13 @@ const defaultIcon = computed(() => {
 
 /* Actions */
 .empty-state-actions {
-  @apply flex flex-col sm:flex-row gap-3;
-  @apply justify-center items-center;
+  @apply flex flex-col gap-3 sm:flex-row;
+  @apply items-center justify-center;
   @apply mb-4;
 }
 
 .empty-state-btn {
-  @apply px-6 py-3 rounded-lg font-medium;
+  @apply rounded-lg px-6 py-3 font-medium;
   @apply transition-all duration-200;
   @apply focus:outline-none focus:ring-4 focus:ring-offset-2;
   @apply min-w-[140px];
@@ -186,7 +186,7 @@ const defaultIcon = computed(() => {
 
 /* Compact */
 .empty-state--compact {
-  @apply py-8 min-h-[300px];
+  @apply min-h-[300px] py-8;
 }
 
 .empty-state--compact .empty-state-icon-default {
@@ -203,7 +203,7 @@ const defaultIcon = computed(() => {
 
 /* Large */
 .empty-state--large {
-  @apply py-20 min-h-[600px];
+  @apply min-h-[600px] py-20;
 }
 
 .empty-state--large .empty-state-icon-default {
@@ -253,14 +253,14 @@ const defaultIcon = computed(() => {
 }
 
 /* RTL Support */
-[dir='rtl'] .empty-state-actions {
+[dir="rtl"] .empty-state-actions {
   @apply flex-row-reverse;
 }
 
 /* Responsive */
 @media (width <= 640px) {
   .empty-state {
-    @apply py-8 min-h-[300px];
+    @apply min-h-[300px] py-8;
   }
 
   .empty-state-icon-default {

@@ -5,9 +5,7 @@ import type { OrderSummaryProps } from "@/types/ui/component-props";
 
 const props = defineProps<OrderSummaryProps>();
 
-defineEmits<{
-  
-}>();
+defineEmits<{}>();
 
 const { t } = useI18n();
 
@@ -23,28 +21,18 @@ const pricePeriod = computed(() => {
 
 <template>
   <div class="order-summary">
-    <h3 class="summary-title">{{ $t("checkout.orderSummary") }}
-
-    </h3>
+    <h3 class="summary-title">{{ $t("checkout.orderSummary") }}</h3>
 
     <div class="plan-details">
       <div class="plan-info">
-        <h4 class="plan-name">{{ selectedPlan.name }}
-
-        </h4>
-        <p class="plan-description">{{ selectedPlan.description }}
-
-        </p>
+        <h4 class="plan-name">{{ selectedPlan.name }}</h4>
+        <p class="plan-description">{{ selectedPlan.description }}</p>
       </div>
 
       <div class="plan-pricing">
         <div class="price-container">
-          <span class="price-amount">{{ displayPrice }}
-
-          </span>
-          <span class="price-period">{{ pricePeriod }}
-
-          </span>
+          <span class="price-amount">{{ displayPrice }} </span>
+          <span class="price-period">{{ pricePeriod }} </span>
         </div>
         <p v-if="priceInfo?.isEstimated" class="price-note">
           {{ $t("checkout.estimatedPrice") }}
@@ -58,18 +46,22 @@ const pricePeriod = computed(() => {
         <span class="toggle-label" :class="{ 'toggle-label--active': billingCycle === 'monthly' }">
           {{ $t("checkout.monthly") }}
         </span>
-        <button @click="$emit('toggle-billing-cycle')" class="toggle-switch"
-          :class="{ 'toggle-switch--active': billingCycle === 'annual' }">
-          <span class="toggle-thumb" :class="{ 'toggle-thumb--active': billingCycle === 'annual' }" />
+        <button
+          @click="$emit('toggle-billing-cycle')"
+          class="toggle-switch"
+          :class="{ 'toggle-switch--active': billingCycle === 'annual' }"
+        >
+          <span
+            class="toggle-thumb"
+            :class="{ 'toggle-thumb--active': billingCycle === 'annual' }"
+          />
         </button>
         <span class="toggle-label" :class="{ 'toggle-label--active': billingCycle === 'annual' }">
           {{ $t("checkout.yearly") }}
-
         </span>
       </div>
       <p v-if="billingCycle === 'annual'" class="discount-note">
         {{ $t("checkout.savePercent", { percent: 17 }) }}
-
       </p>
     </div>
   </div>

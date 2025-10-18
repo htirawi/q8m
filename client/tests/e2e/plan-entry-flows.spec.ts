@@ -26,7 +26,9 @@ test.describe("Plan Entry Flows - Unauthenticated Users", () => {
     // This requires mocking auth - skipping actual login for now
   });
 
-  test("Intermediate plan: click Medium Study → login → lands on /study/medium", async ({ page }) => {
+  test("Intermediate plan: click Medium Study → login → lands on /study/medium", async ({
+    page,
+  }) => {
     await page.goto("/en/study");
 
     // Click Medium difficulty card
@@ -39,7 +41,9 @@ test.describe("Plan Entry Flows - Unauthenticated Users", () => {
     await expect(page).toHaveURL(/\/en\/login\?signInSuccessUrl=/);
   });
 
-  test("Bundle plan: click Hard Study → login → lands on /study/hard (or medium for Bundle)", async ({ page }) => {
+  test("Bundle plan: click Hard Study → login → lands on /study/hard (or medium for Bundle)", async ({
+    page,
+  }) => {
     await page.goto("/en/study");
 
     // Click Hard difficulty card
@@ -67,16 +71,22 @@ test.describe("Plan Entry Flows - Unauthenticated Users", () => {
 });
 
 test.describe("Plan Entry Flows - Authenticated Users", () => {
-  test.skip("Free user: logged in, clicks Easy Study → goes directly to /study/easy", async ({ page }) => {
+  test.skip("Free user: logged in, clicks Easy Study → goes directly to /study/easy", async ({
+    page,
+  }) => {
     // This test requires authentication setup
     // Skip for now - would need test auth helpers
   });
 
-  test.skip("Intermediate user: logged in, clicks Medium Study → goes directly to /study/medium", async ({ page }) => {
+  test.skip("Intermediate user: logged in, clicks Medium Study → goes directly to /study/medium", async ({
+    page,
+  }) => {
     // Requires intermediate plan mock
   });
 
-  test.skip("Advanced user: logged in, clicks Hard Study → goes directly to /study/hard", async ({ page }) => {
+  test.skip("Advanced user: logged in, clicks Hard Study → goes directly to /study/hard", async ({
+    page,
+  }) => {
     // Requires advanced plan mock
   });
 
@@ -103,7 +113,9 @@ test.describe("Bundle Plan Visibility", () => {
 });
 
 test.describe("Locale Preservation", () => {
-  test("Arabic locale: unauthenticated user clicks Easy Study → login preserves /ar/ locale", async ({ page }) => {
+  test("Arabic locale: unauthenticated user clicks Easy Study → login preserves /ar/ locale", async ({
+    page,
+  }) => {
     await page.goto("/ar/study");
 
     // Verify RTL layout
@@ -163,12 +175,12 @@ test.describe("Selection Page UI", () => {
     await page.goto("/en/quiz");
 
     // Junior should show 30 questions
-    await expect(page.locator('text=/30.*question/i')).toBeVisible();
+    await expect(page.locator("text=/30.*question/i")).toBeVisible();
 
     // Intermediate should show 40 questions
-    await expect(page.locator('text=/40.*question/i')).toBeVisible();
+    await expect(page.locator("text=/40.*question/i")).toBeVisible();
 
     // Senior should show 50 questions
-    await expect(page.locator('text=/50.*question/i')).toBeVisible();
+    await expect(page.locator("text=/50.*question/i")).toBeVisible();
   });
 });

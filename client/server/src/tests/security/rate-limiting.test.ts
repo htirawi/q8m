@@ -53,7 +53,7 @@ describe("Rate Limiting Security Tests", () => {
       });
 
       // Check for standard rate limit headers
-      const {headers} = response;
+      const { headers } = response;
       // Note: Header names may vary by rate limit library
       expect(headers).toBeDefined();
     });
@@ -293,7 +293,9 @@ describe("Rate Limiting Security Tests", () => {
       }
 
       // Some requests should be rate limited or fail due to invalid token
-      const rateLimitedOrFailedCount = attempts.filter((code) => code === 429 || code === 401).length;
+      const rateLimitedOrFailedCount = attempts.filter(
+        (code) => code === 429 || code === 401
+      ).length;
       expect(rateLimitedOrFailedCount).toBeGreaterThan(0);
     }, 60000);
   });

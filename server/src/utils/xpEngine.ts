@@ -4,7 +4,7 @@
  * Based on action type, performance, and context
  */
 
-import type { XPSource } from '@shared/types/gamification';
+import type { XPSource } from "@shared/types/gamification";
 
 /**
  * XP reward configuration
@@ -61,7 +61,7 @@ export function calculateStudyQuestionXP(
 
   if (timeSpentSeconds < 30) {
     bonus = 5;
-    reason = 'Speed bonus';
+    reason = "Speed bonus";
   }
 
   return {
@@ -76,11 +76,8 @@ export function calculateStudyQuestionXP(
  * @param newMasteryLevel New mastery level
  * @returns XP earned (only if upgraded to mastered)
  */
-export function calculateMasteryXP(
-  previousMasteryLevel: string,
-  newMasteryLevel: string
-): number {
-  if (newMasteryLevel === 'mastered' && previousMasteryLevel !== 'mastered') {
+export function calculateMasteryXP(previousMasteryLevel: string, newMasteryLevel: string): number {
+  if (newMasteryLevel === "mastered" && previousMasteryLevel !== "mastered") {
     return XP_REWARDS.study_master_question;
   }
   return 0;
@@ -113,7 +110,7 @@ export function calculateStudySessionXP(
   if (accuracy >= 0.9 && questionsCompleted >= 10) {
     breakdown.bonuses.push({
       amount: 25,
-      reason: '90%+ accuracy',
+      reason: "90%+ accuracy",
     });
   }
 
@@ -121,7 +118,7 @@ export function calculateStudySessionXP(
   if (questionsCompleted >= 20) {
     breakdown.bonuses.push({
       amount: 30,
-      reason: '20+ questions completed',
+      reason: "20+ questions completed",
     });
   }
 
@@ -129,7 +126,7 @@ export function calculateStudySessionXP(
   if (sessionDurationMinutes >= 60) {
     breakdown.bonuses.push({
       amount: 50,
-      reason: '60+ minute session',
+      reason: "60+ minute session",
     });
   }
 
@@ -162,7 +159,7 @@ export function calculateQuizXP(
   if (score === 100) {
     breakdown.bonuses.push({
       amount: XP_REWARDS.quiz_perfect,
-      reason: 'Perfect score!',
+      reason: "Perfect score!",
     });
   }
 
@@ -170,7 +167,7 @@ export function calculateQuizXP(
   else if (score >= 90) {
     breakdown.bonuses.push({
       amount: 50,
-      reason: 'Excellent score (90%+)',
+      reason: "Excellent score (90%+)",
     });
   }
 
@@ -178,7 +175,7 @@ export function calculateQuizXP(
   else if (score >= 80) {
     breakdown.bonuses.push({
       amount: 25,
-      reason: 'Good score (80%+)',
+      reason: "Good score (80%+)",
     });
   }
 
@@ -187,7 +184,7 @@ export function calculateQuizXP(
   if (averageTimePerQuestion < 10 && score >= 70) {
     breakdown.bonuses.push({
       amount: XP_REWARDS.quiz_bonus_fast * totalQuestions,
-      reason: 'Speed bonus',
+      reason: "Speed bonus",
     });
   }
 
@@ -195,7 +192,7 @@ export function calculateQuizXP(
   if (totalQuestions >= 50) {
     breakdown.bonuses.push({
       amount: 40,
-      reason: 'Long quiz completed',
+      reason: "Long quiz completed",
     });
   }
 
@@ -336,19 +333,19 @@ export function awardXP(
  */
 export function getLevelTitle(level: number): string {
   const titles = [
-    { max: 5, title: 'Beginner' },
-    { max: 10, title: 'Learner' },
-    { max: 20, title: 'Apprentice' },
-    { max: 30, title: 'Practitioner' },
-    { max: 40, title: 'Skilled' },
-    { max: 50, title: 'Expert' },
-    { max: 75, title: 'Master' },
-    { max: 100, title: 'Grandmaster' },
-    { max: Infinity, title: 'Legend' },
+    { max: 5, title: "Beginner" },
+    { max: 10, title: "Learner" },
+    { max: 20, title: "Apprentice" },
+    { max: 30, title: "Practitioner" },
+    { max: 40, title: "Skilled" },
+    { max: 50, title: "Expert" },
+    { max: 75, title: "Master" },
+    { max: 100, title: "Grandmaster" },
+    { max: Infinity, title: "Legend" },
   ];
 
   const titleObj = titles.find((t) => level <= t.max);
-  return titleObj ? titleObj.title : 'Legend';
+  return titleObj ? titleObj.title : "Legend";
 }
 
 /**

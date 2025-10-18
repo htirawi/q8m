@@ -4,15 +4,13 @@ import { ref, computed } from "vue";
 import { CheckIcon } from "@heroicons/vue/24/solid";
 import type { BillingCycle } from "@/components/pricing/pricing.config";
 
-
-
 const props = withDefaults(defineProps<IModernPricingCardProps>(), {
   currency: "USD",
   popular: false,
 });
 
 const emit = defineEmits<{
-  "select-paypal": [planId: string, billingCycle: BillingCycle]
+  "select-paypal": [planId: string, billingCycle: BillingCycle];
 }>();
 
 // State
@@ -47,9 +45,7 @@ const handlepaypalclick = async () => {
   isPayPalLoading.value = true;
   try {
     emit("select-paypal", props.planId, props.billingCycle);
-  }
-
- finally {
+  } finally {
     // Keep loading state until PayPal SDK handles it
     setTimeout(() => {
       isPayPalLoading.value = false;
@@ -63,32 +59,21 @@ defineOptions({
 </script>
 
 <template>
-  <div
-    class="modern-pricing-card"
-    :class="{ 'modern-pricing-card--popular': popular }"
-  >
+  <div class="modern-pricing-card" :class="{ 'modern-pricing-card--popular': popular }">
     <!-- Popular IBadge -->
-    <div v-if="popular" class="modern-pricing-card__badge">
-      Most Popular
-    </div>
+    <div v-if="popular" class="modern-pricing-card__badge">Most Popular</div>
 
     <!-- Plan Header -->
     <div class="modern-pricing-card__header">
-      <h3 class="modern-pricing-card__title">{{ planName }}
-
-</h3>
+      <h3 class="modern-pricing-card__title">{{ planName }}</h3>
 
       <!-- Price Display -->
       <div class="modern-pricing-card__price-section">
         <div class="modern-pricing-card__price">
           <span class="modern-pricing-card__currency">$</span>
-          <span class="modern-pricing-card__amount">{{ displayPrice }}
-
-</span>
+          <span class="modern-pricing-card__amount">{{ displayPrice }} </span>
         </div>
-        <p class="modern-pricing-card__billing">{{ billingText }}
-
-</p>
+        <p class="modern-pricing-card__billing">{{ billingText }}</p>
         <p v-if="savingsText" class="modern-pricing-card__savings">
           {{ savingsText }}
         </p>
@@ -157,15 +142,9 @@ defineOptions({
 
     <!-- Features List -->
     <ul class="modern-pricing-card__features" role="list">
-      <li
-        v-for="(feature, index) in features"
-        :key="index"
-        class="modern-pricing-card__feature"
-      >
+      <li v-for="(feature, index) in features" :key="index" class="modern-pricing-card__feature">
         <CheckIcon class="modern-pricing-card__check-icon" aria-hidden="true" />
-        <span>{{ feature }}
-
-</span>
+        <span>{{ feature }} </span>
       </li>
     </ul>
   </div>
@@ -306,7 +285,7 @@ defineOptions({
 /* Dark Mode Support */
 @media (prefers-color-scheme: dark) {
   .modern-pricing-card {
-    @apply bg-slate-800 border-slate-700;
+    @apply border-slate-700 bg-slate-800;
   }
 
   .modern-pricing-card__title,

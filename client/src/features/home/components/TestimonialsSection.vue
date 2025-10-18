@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { ITestimonialsSectionProps as Props } from '@/types/components/home';
-import { HOMEPAGE_TESTIMONIALS } from '@/data/home';
-import SectionHeader from '@/components/ui/SectionHeader.vue';
-import TestimonialCard from '@/components/ui/TestimonialCard.vue';
+import type { ITestimonialsSectionProps as Props } from "@/types/components/home";
+import { HOMEPAGE_TESTIMONIALS } from "@/data/home";
+import SectionHeader from "@/components/ui/SectionHeader.vue";
+import TestimonialCard from "@/components/ui/TestimonialCard.vue";
 
 const props = withDefaults(defineProps<Props>(), {
   testimonials: () => HOMEPAGE_TESTIMONIALS,
@@ -12,11 +12,18 @@ const props = withDefaults(defineProps<Props>(), {
 <template>
   <section class="testimonials-section" aria-labelledby="testimonials-title">
     <div class="testimonials-container">
-      <SectionHeader title-key="home.testimonials.title" subtitle-key="home.testimonials.subtitle" />
+      <SectionHeader
+        title-key="home.testimonials.title"
+        subtitle-key="home.testimonials.subtitle"
+      />
 
       <div class="testimonials-grid">
-        <TestimonialCard v-for="(testimonial, index) in testimonials" :key="testimonial.id" :testimonial="testimonial"
-          :index="index" />
+        <TestimonialCard
+          v-for="(testimonial, index) in testimonials"
+          :key="testimonial.id"
+          :testimonial="testimonial"
+          :index="index"
+        />
       </div>
     </div>
   </section>

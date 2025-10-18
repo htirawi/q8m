@@ -1,11 +1,7 @@
-import { computed } from 'vue';
-import { useChallengesStore } from '@/stores/challenges';
-import type {
-  Challenge,
-  CreateChallengeData,
-  SubmitChallengeData,
-} from '@/stores/challenges';
-import { useAuthStore } from '@/stores/auth';
+import { computed } from "vue";
+import { useChallengesStore } from "@/stores/challenges";
+import type { Challenge, CreateChallengeData, SubmitChallengeData } from "@/stores/challenges";
+import { useAuthStore } from "@/stores/auth";
 
 /**
  * Composable for managing quiz challenges
@@ -119,7 +115,7 @@ export const useChallenges = () => {
   const isChallenger = (challenge: Challenge): boolean => {
     const userId = authStore.user?._id;
     const challengerId =
-      typeof challenge.challengerId === 'string'
+      typeof challenge.challengerId === "string"
         ? challenge.challengerId
         : challenge.challengerId._id;
     return challengerId === userId;
@@ -132,7 +128,7 @@ export const useChallenges = () => {
     const userId = authStore.user?._id;
     if (!challenge.challengedUserId) return false;
     const challengedUserId =
-      typeof challenge.challengedUserId === 'string'
+      typeof challenge.challengedUserId === "string"
         ? challenge.challengedUserId
         : challenge.challengedUserId._id;
     return challengedUserId === userId;
@@ -185,14 +181,14 @@ export const useChallenges = () => {
    */
   const getDifficultyColor = (difficulty: string): string => {
     switch (difficulty) {
-      case 'easy':
-        return 'text-green-500 bg-green-500/10';
-      case 'medium':
-        return 'text-yellow-500 bg-yellow-500/10';
-      case 'hard':
-        return 'text-red-500 bg-red-500/10';
+      case "easy":
+        return "text-green-500 bg-green-500/10";
+      case "medium":
+        return "text-yellow-500 bg-yellow-500/10";
+      case "hard":
+        return "text-red-500 bg-red-500/10";
       default:
-        return 'text-gray-500 bg-gray-500/10';
+        return "text-gray-500 bg-gray-500/10";
     }
   };
 
@@ -201,14 +197,14 @@ export const useChallenges = () => {
    */
   const getDifficultyBadge = (difficulty: string): string => {
     switch (difficulty) {
-      case 'easy':
-        return '🟢';
-      case 'medium':
-        return '🟡';
-      case 'hard':
-        return '🔴';
+      case "easy":
+        return "🟢";
+      case "medium":
+        return "🟡";
+      case "hard":
+        return "🔴";
       default:
-        return '⚪';
+        return "⚪";
     }
   };
 
@@ -217,18 +213,18 @@ export const useChallenges = () => {
    */
   const getStatusColor = (status: string): string => {
     switch (status) {
-      case 'pending':
-        return 'text-yellow-500 bg-yellow-500/10';
-      case 'accepted':
-        return 'text-blue-500 bg-blue-500/10';
-      case 'completed':
-        return 'text-green-500 bg-green-500/10';
-      case 'rejected':
-        return 'text-red-500 bg-red-500/10';
-      case 'expired':
-        return 'text-gray-500 bg-gray-500/10';
+      case "pending":
+        return "text-yellow-500 bg-yellow-500/10";
+      case "accepted":
+        return "text-blue-500 bg-blue-500/10";
+      case "completed":
+        return "text-green-500 bg-green-500/10";
+      case "rejected":
+        return "text-red-500 bg-red-500/10";
+      case "expired":
+        return "text-gray-500 bg-gray-500/10";
       default:
-        return 'text-gray-500 bg-gray-500/10';
+        return "text-gray-500 bg-gray-500/10";
     }
   };
 
@@ -237,18 +233,18 @@ export const useChallenges = () => {
    */
   const getStatusBadge = (status: string): string => {
     switch (status) {
-      case 'pending':
-        return '⏳';
-      case 'accepted':
-        return '🎮';
-      case 'completed':
-        return '✅';
-      case 'rejected':
-        return '❌';
-      case 'expired':
-        return '⌛';
+      case "pending":
+        return "⏳";
+      case "accepted":
+        return "🎮";
+      case "completed":
+        return "✅";
+      case "rejected":
+        return "❌";
+      case "expired":
+        return "⌛";
       default:
-        return '❓';
+        return "❓";
     }
   };
 
@@ -257,18 +253,18 @@ export const useChallenges = () => {
    */
   const getFrameworkBadge = (framework?: string): string => {
     switch (framework) {
-      case 'angular':
-        return '🅰️';
-      case 'react':
-        return '⚛️';
-      case 'nextjs':
-        return '▲';
-      case 'redux':
-        return '🔄';
-      case 'random':
-        return '🎲';
+      case "angular":
+        return "🅰️";
+      case "react":
+        return "⚛️";
+      case "nextjs":
+        return "▲";
+      case "redux":
+        return "🔄";
+      case "random":
+        return "🎲";
       default:
-        return '📚';
+        return "📚";
     }
   };
 
@@ -276,7 +272,7 @@ export const useChallenges = () => {
    * Format time in seconds to readable string
    */
   const formatTime = (seconds?: number): string => {
-    if (seconds === undefined) return '--';
+    if (seconds === undefined) return "--";
 
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
@@ -295,7 +291,7 @@ export const useChallenges = () => {
    * Format score with percentage
    */
   const formatScore = (score?: number): string => {
-    if (score === undefined) return '--';
+    if (score === undefined) return "--";
     return `${score.toFixed(1)}%`;
   };
 
@@ -303,7 +299,7 @@ export const useChallenges = () => {
    * Get result message for a challenge
    */
   const getResultMessage = (challenge: Challenge): string => {
-    if (challenge.status !== 'completed') return '';
+    if (challenge.status !== "completed") return "";
 
     const userId = authStore.user?._id;
 
@@ -312,29 +308,29 @@ export const useChallenges = () => {
     }
 
     if (challenge.winnerId === userId) {
-      return 'You won! 🎉';
+      return "You won! 🎉";
     }
 
-    return 'You lost 😔';
+    return "You lost 😔";
   };
 
   /**
    * Get result color class
    */
   const getResultColor = (challenge: Challenge): string => {
-    if (challenge.status !== 'completed') return 'text-gray-500';
+    if (challenge.status !== "completed") return "text-gray-500";
 
     const userId = authStore.user?._id;
 
     if (challenge.isTie) {
-      return 'text-yellow-500';
+      return "text-yellow-500";
     }
 
     if (challenge.winnerId === userId) {
-      return 'text-green-500';
+      return "text-green-500";
     }
 
-    return 'text-red-500';
+    return "text-red-500";
   };
 
   /**
@@ -343,7 +339,7 @@ export const useChallenges = () => {
   const isExpired = (challenge: Challenge): boolean => {
     const now = new Date();
     const expiresAt = new Date(challenge.expiresAt);
-    return now > expiresAt && challenge.status !== 'completed';
+    return now > expiresAt && challenge.status !== "completed";
   };
 
   /**
@@ -354,7 +350,7 @@ export const useChallenges = () => {
     const expiresAt = new Date(challenge.expiresAt);
     const diff = expiresAt.getTime() - now.getTime();
 
-    if (diff <= 0) return 'Expired';
+    if (diff <= 0) return "Expired";
 
     const hours = Math.floor(diff / (1000 * 60 * 60));
     const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
@@ -382,7 +378,7 @@ export const useChallenges = () => {
     const diffHr = Math.floor(diffMin / 60);
     const diffDay = Math.floor(diffHr / 24);
 
-    if (diffSec < 60) return 'just now';
+    if (diffSec < 60) return "just now";
     if (diffMin < 60) return `${diffMin}m ago`;
     if (diffHr < 24) return `${diffHr}h ago`;
     if (diffDay < 7) return `${diffDay}d ago`;
@@ -395,48 +391,46 @@ export const useChallenges = () => {
    * Get level color for display
    */
   const getLevelColor = (level: number): string => {
-    if (level >= 40) return 'text-purple-500';
-    if (level >= 30) return 'text-yellow-500';
-    if (level >= 20) return 'text-blue-500';
-    if (level >= 10) return 'text-green-500';
-    return 'text-gray-500';
+    if (level >= 40) return "text-purple-500";
+    if (level >= 30) return "text-yellow-500";
+    if (level >= 20) return "text-blue-500";
+    if (level >= 10) return "text-green-500";
+    return "text-gray-500";
   };
 
   /**
    * Get level badge emoji
    */
   const getLevelBadge = (level: number): string => {
-    if (level >= 40) return '👑';
-    if (level >= 30) return '⭐';
-    if (level >= 20) return '🎯';
-    if (level >= 10) return '🔰';
-    return '🌱';
+    if (level >= 40) return "👑";
+    if (level >= 30) return "⭐";
+    if (level >= 20) return "🎯";
+    if (level >= 10) return "🔰";
+    return "🌱";
   };
 
   /**
    * Validate challenge creation data
    */
-  const validateChallengeData = (
-    data: CreateChallengeData
-  ): { valid: boolean; error?: string } => {
+  const validateChallengeData = (data: CreateChallengeData): { valid: boolean; error?: string } => {
     if (!data.challengedUserId) {
-      return { valid: false, error: 'Opponent is required' };
+      return { valid: false, error: "Opponent is required" };
     }
 
     if (!data.difficulty) {
-      return { valid: false, error: 'Difficulty is required' };
+      return { valid: false, error: "Difficulty is required" };
     }
 
     if (!data.questionCount || data.questionCount < 1 || data.questionCount > 20) {
-      return { valid: false, error: 'Question count must be between 1 and 20' };
+      return { valid: false, error: "Question count must be between 1 and 20" };
     }
 
     if (!data.timeLimit || data.timeLimit < 60 || data.timeLimit > 3600) {
-      return { valid: false, error: 'Time limit must be between 1 and 60 minutes' };
+      return { valid: false, error: "Time limit must be between 1 and 60 minutes" };
     }
 
     if (data.message && data.message.length > 200) {
-      return { valid: false, error: 'Message must be less than 200 characters' };
+      return { valid: false, error: "Message must be less than 200 characters" };
     }
 
     return { valid: true };
@@ -447,21 +441,19 @@ export const useChallenges = () => {
    */
   const sortChallenges = (
     challengesList: Challenge[],
-    sortBy: 'date' | 'difficulty' | 'score'
+    sortBy: "date" | "difficulty" | "score"
   ): Challenge[] => {
     const sorted = [...challengesList];
     const difficultyOrder: Record<string, number> = { easy: 1, medium: 2, hard: 3 };
 
     switch (sortBy) {
-      case 'date':
+      case "date":
         return sorted.sort(
           (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         );
-      case 'difficulty':
-        return sorted.sort(
-          (a, b) => difficultyOrder[b.difficulty] - difficultyOrder[a.difficulty]
-        );
-      case 'score':
+      case "difficulty":
+        return sorted.sort((a, b) => difficultyOrder[b.difficulty] - difficultyOrder[a.difficulty]);
+      case "score":
         return sorted.sort((a, b) => {
           const scoreA = getUserScore(a) || 0;
           const scoreB = getUserScore(b) || 0;
@@ -517,11 +509,11 @@ export const useChallenges = () => {
    */
   const getPerformanceRating = (): string => {
     const rate = winRate.value;
-    if (rate >= 80) return 'Elite';
-    if (rate >= 60) return 'Advanced';
-    if (rate >= 40) return 'Intermediate';
-    if (rate >= 20) return 'Novice';
-    return 'Beginner';
+    if (rate >= 80) return "Elite";
+    if (rate >= 60) return "Advanced";
+    if (rate >= 40) return "Intermediate";
+    if (rate >= 20) return "Novice";
+    return "Beginner";
   };
 
   /**
@@ -529,18 +521,23 @@ export const useChallenges = () => {
    */
   const getPerformanceColor = (): string => {
     const rate = winRate.value;
-    if (rate >= 80) return 'text-purple-500';
-    if (rate >= 60) return 'text-blue-500';
-    if (rate >= 40) return 'text-green-500';
-    if (rate >= 20) return 'text-yellow-500';
-    return 'text-gray-500';
+    if (rate >= 80) return "text-purple-500";
+    if (rate >= 60) return "text-blue-500";
+    if (rate >= 40) return "text-green-500";
+    if (rate >= 20) return "text-yellow-500";
+    return "text-gray-500";
   };
 
   /**
    * Calculate accuracy from answers
    */
   const calculateAccuracy = (
-    answers: Array<{ questionId: string; answer: string | string[]; correct: boolean; timeSpent: number }>
+    answers: Array<{
+      questionId: string;
+      answer: string | string[];
+      correct: boolean;
+      timeSpent: number;
+    }>
   ): number => {
     if (!answers || answers.length === 0) return 0;
     const correct = answers.filter((a) => a.correct).length;

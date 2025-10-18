@@ -330,7 +330,7 @@ export class MockPaymentService {
 
     const mockPayment = this.mockPayments.get(paymentId);
     if (!mockPayment) return null;
-    
+
     return {
       status: mockPayment.status,
       details: {

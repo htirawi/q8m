@@ -62,7 +62,6 @@ function handleRetry() {
     params: { locale },
   });
 }
-
 </script>
 
 <template>
@@ -70,12 +69,8 @@ function handleRetry() {
     <div class="callback-container">
       <div v-if="isLoading" class="loading-state">
         <div class="spinner"></div>
-        <h2 class="loading-title">{{ $t("auth.oauth.processing") }}
-
-</h2>
-        <p class="loading-subtitle">{{ $t("auth.oauth.pleaseWait") }}
-
-</p>
+        <h2 class="loading-title">{{ $t("auth.oauth.processing") }}</h2>
+        <p class="loading-subtitle">{{ $t("auth.oauth.pleaseWait") }}</p>
       </div>
 
       <div v-else-if="error" class="error-state">
@@ -86,15 +81,10 @@ function handleRetry() {
             <line x1="9" y1="9" x2="15" y2="15" />
           </svg>
         </div>
-        <h2 class="error-title">{{ $t("auth.oauth.error") }}
-
-</h2>
-        <p class="error-message">{{ error }}
-
-</p>
+        <h2 class="error-title">{{ $t("auth.oauth.error") }}</h2>
+        <p class="error-message">{{ error }}</p>
         <button @click="handleRetry" class="retry-button">
           {{ $t("auth.oauth.tryAgain") }}
-
         </button>
       </div>
 
@@ -105,12 +95,8 @@ function handleRetry() {
             <path d="M9 12l2 2 4-4" />
           </svg>
         </div>
-        <h2 class="success-title">{{ $t("auth.oauth.success") }}
-
-</h2>
-        <p class="success-message">{{ $t("auth.oauth.redirecting") }}
-
-</p>
+        <h2 class="success-title">{{ $t("auth.oauth.success") }}</h2>
+        <p class="success-message">{{ $t("auth.oauth.redirecting") }}</p>
       </div>
     </div>
   </div>
@@ -119,30 +105,30 @@ function handleRetry() {
 <style scoped>
 /* Main Layout */
 .oauth-callback-page {
-  @apply relative min-h-screen flex items-center justify-center;
+  @apply relative flex min-h-screen items-center justify-center;
 
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
 /* Container */
 .callback-container {
-  @apply max-w-md w-full mx-auto px-4;
+  @apply mx-auto w-full max-w-md px-4;
 }
 
 /* Loading State */
 .loading-state {
-  @apply text-center bg-white/95 backdrop-blur-sm rounded-2xl p-12;
+  @apply rounded-2xl bg-white/95 p-12 text-center backdrop-blur-sm;
   @apply border border-white/20 shadow-2xl;
-  @apply dark:bg-slate-900/95 dark:border-slate-700/50;
+  @apply dark:border-slate-700/50 dark:bg-slate-900/95;
 }
 
 .spinner {
-  @apply mx-auto mb-6 w-16 h-16 border-4 border-primary-200 border-t-primary-600;
-  @apply rounded-full animate-spin;
+  @apply mx-auto mb-6 h-16 w-16 border-4 border-primary-200 border-t-primary-600;
+  @apply animate-spin rounded-full;
 }
 
 .loading-title {
-  @apply text-2xl font-bold text-gray-900 mb-2;
+  @apply mb-2 text-2xl font-bold text-gray-900;
   @apply dark:text-white;
 }
 
@@ -153,52 +139,52 @@ function handleRetry() {
 
 /* Error State */
 .error-state {
-  @apply text-center bg-white/95 backdrop-blur-sm rounded-2xl p-12;
+  @apply rounded-2xl bg-white/95 p-12 text-center backdrop-blur-sm;
   @apply border border-white/20 shadow-2xl;
-  @apply dark:bg-slate-900/95 dark:border-slate-700/50;
+  @apply dark:border-slate-700/50 dark:bg-slate-900/95;
 }
 
 .error-icon {
-  @apply mx-auto mb-6 w-16 h-16 text-red-500;
+  @apply mx-auto mb-6 h-16 w-16 text-red-500;
 }
 
 .error-icon svg {
-  @apply w-full h-full;
+  @apply h-full w-full;
 }
 
 .error-title {
-  @apply text-2xl font-bold text-gray-900 mb-2;
+  @apply mb-2 text-2xl font-bold text-gray-900;
   @apply dark:text-white;
 }
 
 .error-message {
-  @apply text-gray-600 mb-6;
+  @apply mb-6 text-gray-600;
   @apply dark:text-gray-400;
 }
 
 .retry-button {
-  @apply px-6 py-3 bg-primary-600 text-white font-medium rounded-xl;
+  @apply rounded-xl bg-primary-600 px-6 py-3 font-medium text-white;
   @apply hover:bg-primary-700 focus:outline-none focus:ring-4 focus:ring-primary-500/20;
   @apply transition-all duration-200;
 }
 
 /* Success State */
 .success-state {
-  @apply text-center bg-white/95 backdrop-blur-sm rounded-2xl p-12;
+  @apply rounded-2xl bg-white/95 p-12 text-center backdrop-blur-sm;
   @apply border border-white/20 shadow-2xl;
-  @apply dark:bg-slate-900/95 dark:border-slate-700/50;
+  @apply dark:border-slate-700/50 dark:bg-slate-900/95;
 }
 
 .success-icon {
-  @apply mx-auto mb-6 w-16 h-16 text-green-500;
+  @apply mx-auto mb-6 h-16 w-16 text-green-500;
 }
 
 .success-icon svg {
-  @apply w-full h-full;
+  @apply h-full w-full;
 }
 
 .success-title {
-  @apply text-2xl font-bold text-gray-900 mb-2;
+  @apply mb-2 text-2xl font-bold text-gray-900;
   @apply dark:text-white;
 }
 

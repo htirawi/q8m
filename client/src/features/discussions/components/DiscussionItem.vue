@@ -1,13 +1,11 @@
 <script setup lang="ts">
 import type { IDiscussionItemProps as Props } from "@/types/components/discussions";
-import { ref, computed } from 'vue';
-import { useDiscussions } from '@/composables/useDiscussions';
-import { useAuthStore } from '@/stores/auth';
-import type { Discussion } from '@/stores/discussions';
-import DiscussionActions from './DiscussionActions.vue';
-import ReplyForm from './ReplyForm.vue';
-
-
+import { ref, computed } from "vue";
+import { useDiscussions } from "@/composables/useDiscussions";
+import { useAuthStore } from "@/stores/auth";
+import type { Discussion } from "@/stores/discussions";
+import DiscussionActions from "./DiscussionActions.vue";
+import ReplyForm from "./ReplyForm.vue";
 
 const props = withDefaults(defineProps<Props>(), {
   isReply: false,
@@ -86,7 +84,7 @@ const togglereplies = () => {
   <div
     :class="[
       'discussion-item',
-      'bg-white dark:bg-gray-800 rounded-lg p-6 transition-all',
+      'rounded-lg bg-white p-6 transition-all dark:bg-gray-800',
       {
         'border-2 border-yellow-400 dark:border-yellow-500': discussion.isPinned,
         'border-2 border-green-400 dark:border-green-500': discussion.isBestAnswer,
@@ -98,33 +96,27 @@ const togglereplies = () => {
     ]"
   >
     <!-- Header -->
-    <div class="flex items-start gap-4 mb-4">
+    <div class="mb-4 flex items-start gap-4">
       <!-- Avatar -->
       <div class="flex-shrink-0">
         <div
-          class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white font-bold"
+          class="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 font-bold text-white"
         >
           {{ discussion.userId.name.charAt(0).toUpperCase() }}
-
         </div>
       </div>
 
       <!-- Content -->
-      <div class="flex-1 min-w-0">
+      <div class="min-w-0 flex-1">
         <!-- User Info -->
-        <div class="flex items-center gap-2 mb-2">
+        <div class="mb-2 flex items-center gap-2">
           <span class="font-semibold text-gray-900 dark:text-white">
             {{ discussion.userId.name }}
-
           </span>
-          <span :class="['text-sm', levelColor]">
-            {{ levelBadge }} level {{ userLevel }}
-
-          </span>
+          <span :class="['text-sm', levelColor]"> {{ levelBadge }} level {{ userLevel }} </span>
           <span class="text-sm text-gray-500 dark:text-gray-400">•</span>
           <span class="text-sm text-gray-500 dark:text-gray-400">
             {{ timeAgo }}
-
           </span>
           <span
             v-if="discussion.isEdited"
@@ -136,16 +128,16 @@ const togglereplies = () => {
         </div>
 
         <!-- Badges -->
-        <div v-if="discussion.isPinned || discussion.isBestAnswer" class="flex gap-2 mb-2">
+        <div v-if="discussion.isPinned || discussion.isBestAnswer" class="mb-2 flex gap-2">
           <span
             v-if="discussion.isPinned"
-            class="inline-flex items-center gap-1 px-2 py-1 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-400 text-xs font-medium rounded"
+            class="inline-flex items-center gap-1 rounded bg-yellow-100 px-2 py-1 text-xs font-medium text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400"
           >
             📌 Pinned
           </span>
           <span
             v-if="discussion.isBestAnswer"
-            class="inline-flex items-center gap-1 px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400 text-xs font-medium rounded"
+            class="inline-flex items-center gap-1 rounded bg-green-100 px-2 py-1 text-xs font-medium text-green-800 dark:bg-green-900/30 dark:text-green-400"
           >
             ✓ Best Answer
           </span>
@@ -156,19 +148,19 @@ const togglereplies = () => {
           <textarea
             v-model="editContent"
             rows="4"
-            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
+            class="w-full resize-none rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 focus:border-transparent focus:ring-2 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
             placeholder="Edit your discussion..."
           />
-          <div class="flex gap-2 mt-2">
+          <div class="mt-2 flex gap-2">
             <button
               @click="handleEdit"
-              class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium transition-colors"
+              class="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-700"
             >
               Save
             </button>
             <button
               @click="cancelEdit"
-              class="px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium transition-colors"
+              class="rounded-lg bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
             >
               Cancel
             </button>
@@ -176,10 +168,7 @@ const togglereplies = () => {
         </div>
 
         <!-- Content (View Mode) -->
-        <div
-          v-else
-          class="text-gray-700 dark:text-gray-300 whitespace-pre-wrap break-words mb-4"
-        >
+        <div v-else class="mb-4 whitespace-pre-wrap break-words text-gray-700 dark:text-gray-300">
           {{ discussion.content }}
         </div>
 
@@ -197,7 +186,7 @@ const togglereplies = () => {
     </div>
 
     <!-- Reply Form -->
-    <div v-if="showReplyForm" class="mt-4 ml-14">
+    <div v-if="showReplyForm" class="ml-14 mt-4">
       <ReplyForm
         @submit="handleReply"
         @cancel="showReplyForm = false"
@@ -210,16 +199,12 @@ const togglereplies = () => {
       <!-- Toggle Replies Button -->
       <button
         @click="toggleReplies"
-        class="ml-14 text-sm text-indigo-600 dark:text-indigo-400 hover:underline font-medium mb-2"
+        class="mb-2 ml-14 text-sm font-medium text-indigo-600 hover:underline dark:text-indigo-400"
       >
         <span v-if="showReplies">
           ▼ Hide {{ replyCount }} {{ replyCount === 1 ? 'reply' : 'replies'1 }}
-
         </span>
-        <span v-else>
-          ▶ Show {{ replyCount }} {{ replyCount === 1 ? 'reply' : 'replies'1 }}
-
-        </span>
+        <span v-else> ▶ Show {{ replyCount }} {{ replyCount === 1 ? 'reply' : 'replies'1 }} </span>
       </button>
 
       <!-- Replies List -->
@@ -238,7 +223,7 @@ const togglereplies = () => {
     <!-- Reported Notice -->
     <div
       v-if="discussion.isReported"
-      class="mt-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg"
+      class="mt-4 rounded-lg border border-red-200 bg-red-50 p-3 dark:border-red-800 dark:bg-red-900/20"
     >
       <p class="text-sm text-red-700 dark:text-red-400">
         ⚠️ This discussion has been reported and is under review.

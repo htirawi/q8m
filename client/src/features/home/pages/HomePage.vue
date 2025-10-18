@@ -1,30 +1,30 @@
 <script setup lang="ts">
-import { onMounted } from 'vue';
-import { useHead } from '@unhead/vue';
-import { useRoute } from 'vue-router';
-import { useI18n } from 'vue-i18n';
-import { useABTest } from '@/composables/useABTest';
-import { useScrollTracking } from '@/composables/useScrollTracking';
-import { useHomepageAnalytics } from '@/composables/useHomepageAnalytics';
-import { useSEO } from '@/composables/useSEO';
-import { HOMEPAGE_FAQS } from '@/data/home';
-import HeroSection from '@/features/home/components/HeroSection.vue';
-import HomeCredibility from '@/features/home/components/HomeCredibility.vue';
-import FeaturesGrid from '@/features/home/components/FeaturesGrid.vue';
-import HomeHowItWorks from '@/features/home/components/HomeHowItWorks.vue';
-import HomepagePricingTeaser from '@/features/home/components/HomepagePricingTeaser.vue';
-import TestimonialsSection from '@/features/home/components/TestimonialsSection.vue';
-import FaqSection from '@/features/home/components/FaqSection.vue';
-import FooterCta from '@/features/home/components/FooterCta.vue';
-import MobileStickyBar from '@/features/home/components/MobileStickyBar.vue';
+import { onMounted } from "vue";
+import { useHead } from "@unhead/vue";
+import { useRoute } from "vue-router";
+import { useI18n } from "vue-i18n";
+import { useABTest } from "@/composables/useABTest";
+import { useScrollTracking } from "@/composables/useScrollTracking";
+import { useHomepageAnalytics } from "@/composables/useHomepageAnalytics";
+import { useSEO } from "@/composables/useSEO";
+import { HOMEPAGE_FAQS } from "@/data/home";
+import HeroSection from "@/features/home/components/HeroSection.vue";
+import HomeCredibility from "@/features/home/components/HomeCredibility.vue";
+import FeaturesGrid from "@/features/home/components/FeaturesGrid.vue";
+import HomeHowItWorks from "@/features/home/components/HomeHowItWorks.vue";
+import HomepagePricingTeaser from "@/features/home/components/HomepagePricingTeaser.vue";
+import TestimonialsSection from "@/features/home/components/TestimonialsSection.vue";
+import FaqSection from "@/features/home/components/FaqSection.vue";
+import FooterCta from "@/features/home/components/FooterCta.vue";
+import MobileStickyBar from "@/features/home/components/MobileStickyBar.vue";
 
 const route = useRoute();
 const { t, locale } = useI18n();
 
 // A/B Test: Hero headline variants
 const { variant: headlineVariant, trackAssignment: trackHeadlineAssignment } = useABTest({
-  testId: 'homepage_hero_headline_v1',
-  variants: ['control', 'variant_a', 'variant_b'],
+  testId: "homepage_hero_headline_v1",
+  variants: ["control", "variant_a", "variant_b"],
   weights: [0.34, 0.33, 0.33],
 });
 
@@ -53,14 +53,14 @@ onMounted(() => {
   setupSectionObserver();
 
   // Add structured data
-  if (typeof document !== 'undefined') {
+  if (typeof document !== "undefined") {
     // WebSite schema
     const websiteSchema = generateWebSiteStructuredData();
-    addStructuredData(websiteSchema, 'website-schema');
+    addStructuredData(websiteSchema, "website-schema");
 
     // Organization schema
     const orgSchema = generateOrganizationStructuredData();
-    addStructuredData(orgSchema, 'organization-schema');
+    addStructuredData(orgSchema, "organization-schema");
 
     // FAQPage schema
     const faqSchema = generateFAQPageStructuredData(
@@ -69,7 +69,7 @@ onMounted(() => {
         answer: t(faq.aKey),
       }))
     );
-    addStructuredData(faqSchema, 'faq-schema');
+    addStructuredData(faqSchema, "faq-schema");
   }
 });
 
@@ -79,8 +79,8 @@ const addStructuredData = (data: object, id: string): void => {
     existingScript.remove();
   }
 
-  const script = document.createElement('script');
-  script.type = 'application/ld+json';
+  const script = document.createElement("script");
+  script.type = "application/ld+json";
   script.id = id;
   script.textContent = JSON.stringify(data);
   document.head.appendChild(script);
@@ -91,84 +91,84 @@ const currentLocale = (route.params.locale as string) || locale.value;
 const canonicalUrl = `https://q8m.com/${currentLocale}`;
 
 useHead({
-  title: t('home.meta.title'),
+  title: t("home.meta.title"),
   meta: [
     {
-      name: 'description',
-      content: t('home.meta.description'),
+      name: "description",
+      content: t("home.meta.description"),
     },
     {
-      name: 'keywords',
-      content: t('home.meta.keywords'),
+      name: "keywords",
+      content: t("home.meta.keywords"),
     },
     {
-      property: 'og:title',
-      content: t('home.meta.ogTitle'),
+      property: "og:title",
+      content: t("home.meta.ogTitle"),
     },
     {
-      property: 'og:description',
-      content: t('home.meta.ogDescription'),
+      property: "og:description",
+      content: t("home.meta.ogDescription"),
     },
     {
-      property: 'og:type',
-      content: 'website',
+      property: "og:type",
+      content: "website",
     },
     {
-      property: 'og:url',
+      property: "og:url",
       content: canonicalUrl,
     },
     {
-      property: 'og:locale',
-      content: currentLocale === 'ar' ? 'ar_SA' : 'en_US',
+      property: "og:locale",
+      content: currentLocale === "ar" ? "ar_SA" : "en_US",
     },
     {
-      property: 'og:image',
-      content: 'https://q8m.com/images/og-home.jpg',
+      property: "og:image",
+      content: "https://q8m.com/images/og-home.jpg",
     },
     {
-      name: 'twitter:card',
-      content: 'summary_large_image',
+      name: "twitter:card",
+      content: "summary_large_image",
     },
     {
-      name: 'twitter:title',
-      content: t('home.meta.ogTitle'),
+      name: "twitter:title",
+      content: t("home.meta.ogTitle"),
     },
     {
-      name: 'twitter:description',
-      content: t('home.meta.ogDescription'),
+      name: "twitter:description",
+      content: t("home.meta.ogDescription"),
     },
     {
-      name: 'twitter:image',
-      content: 'https://q8m.com/images/og-home.jpg',
+      name: "twitter:image",
+      content: "https://q8m.com/images/og-home.jpg",
     },
   ],
   link: [
     {
-      rel: 'canonical',
+      rel: "canonical",
       href: canonicalUrl,
     },
     {
-      rel: 'alternate',
-      hreflang: 'en',
-      href: 'https://q8m.com/en',
+      rel: "alternate",
+      hreflang: "en",
+      href: "https://q8m.com/en",
     },
     {
-      rel: 'alternate',
-      hreflang: 'ar',
-      href: 'https://q8m.com/ar',
+      rel: "alternate",
+      hreflang: "ar",
+      href: "https://q8m.com/ar",
     },
     {
-      rel: 'alternate',
-      hreflang: 'x-default',
-      href: 'https://q8m.com/en',
+      rel: "alternate",
+      hreflang: "x-default",
+      href: "https://q8m.com/en",
     },
     // Preload critical resources for LCP optimization
     {
-      rel: 'preload',
-      as: 'font',
-      href: '/fonts/inter-var.woff2',
-      type: 'font/woff2',
-      crossorigin: 'anonymous',
+      rel: "preload",
+      as: "font",
+      href: "/fonts/inter-var.woff2",
+      type: "font/woff2",
+      crossorigin: "anonymous",
     },
   ],
 });
@@ -177,8 +177,7 @@ useHead({
 <template>
   <!-- Skip to main content link (a11y) -->
   <a href="#main-content" class="skip-to-main">
-    {{ $t('a11y.skipToMain') }}
-
+    {{ $t("a11y.skipToMain") }}
   </a>
 
   <main id="main-content" class="home-page">
@@ -230,44 +229,44 @@ useHead({
 }
 
 /* Add subtle animations to page sections */
-.home-page>* {
+.home-page > * {
   animation: fadeInUp 0.8s ease-out forwards;
   opacity: 0;
 }
 
-.home-page>*:nth-child(1) {
+.home-page > *:nth-child(1) {
   animation-delay: 0.05s;
 }
 
-.home-page>*:nth-child(2) {
+.home-page > *:nth-child(2) {
   animation-delay: 0.1s;
 }
 
-.home-page>*:nth-child(3) {
+.home-page > *:nth-child(3) {
   animation-delay: 0.15s;
 }
 
-.home-page>*:nth-child(4) {
+.home-page > *:nth-child(4) {
   animation-delay: 0.2s;
 }
 
-.home-page>*:nth-child(5) {
+.home-page > *:nth-child(5) {
   animation-delay: 0.25s;
 }
 
-.home-page>*:nth-child(6) {
+.home-page > *:nth-child(6) {
   animation-delay: 0.3s;
 }
 
-.home-page>*:nth-child(7) {
+.home-page > *:nth-child(7) {
   animation-delay: 0.35s;
 }
 
-.home-page>*:nth-child(8) {
+.home-page > *:nth-child(8) {
   animation-delay: 0.4s;
 }
 
-.home-page>*:nth-child(9) {
+.home-page > *:nth-child(9) {
   animation-delay: 0.45s;
 }
 
@@ -289,7 +288,7 @@ useHead({
     scroll-behavior: auto;
   }
 
-  .home-page>* {
+  .home-page > * {
     animation: none;
     opacity: 1;
     transform: none;
@@ -297,7 +296,7 @@ useHead({
 }
 
 /* Performance: Contain layout shifts */
-.home-page>* {
+.home-page > * {
   contain: layout style paint;
 }
 </style>

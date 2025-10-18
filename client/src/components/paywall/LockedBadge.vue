@@ -17,9 +17,7 @@
         d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
       />
     </svg>
-    <span>{{ label }}
-
-</span>
+    <span>{{ label }} </span>
   </div>
 </template>
 
@@ -28,8 +26,6 @@ import type { ILockedBadgeProps as Props } from "@/types/components/paywall";
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import type { PlanTier } from "@shared/types/plan";
-
-
 
 const props = withDefaults(defineProps<Props>(), {
   requiredPlan: "intermediate",

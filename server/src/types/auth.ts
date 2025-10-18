@@ -17,5 +17,5 @@ export interface SessionValidationResult {
  */
 export interface TokenExtractionResult {
   token: string | null;
-  source: 'header' | 'cookie' | 'none';
+  source: "header" | "cookie" | "none";
 }

@@ -28,39 +28,39 @@ describe("StickyStartBar", () => {
 
   describe("Props Validation", () => {
     it("should accept isVisible prop", () => {
-      const {props} = StickyStartBar;
+      const { props } = StickyStartBar;
       expect(props).toHaveProperty("isVisible");
     });
 
     it("should accept selectedDifficulty prop", () => {
-      const {props} = StickyStartBar;
+      const { props } = StickyStartBar;
       expect(props).toHaveProperty("selectedDifficulty");
     });
 
     it("should accept state prop", () => {
-      const {props} = StickyStartBar;
+      const { props } = StickyStartBar;
       expect(props).toHaveProperty("state");
     });
 
     it("should accept errorMessage prop with default", () => {
-      const {props} = StickyStartBar;
+      const { props } = StickyStartBar;
       expect(props).toHaveProperty("errorMessage");
     });
 
     it("should accept hasLastSession prop with default", () => {
-      const {props} = StickyStartBar;
+      const { props } = StickyStartBar;
       expect(props).toHaveProperty("hasLastSession");
     });
   });
 
   describe("Emits Configuration", () => {
     it("should declare start emit", () => {
-      const {emits} = StickyStartBar;
+      const { emits } = StickyStartBar;
       expect(emits).toContain("start");
     });
 
     it("should declare retry emit", () => {
-      const {emits} = StickyStartBar;
+      const { emits } = StickyStartBar;
       expect(emits).toContain("retry");
     });
   });
@@ -105,13 +105,17 @@ describe("StickyStartBar", () => {
   describe("Trust Message Logic", () => {
     it("should show new session message when no last session", () => {
       const hasLastSession = false;
-      const message = hasLastSession ? "Continue where you left off" : "Practice 30 curated questions";
+      const message = hasLastSession
+        ? "Continue where you left off"
+        : "Practice 30 curated questions";
       expect(message).toContain("Practice");
     });
 
     it("should show resume message when last session exists", () => {
       const hasLastSession = true;
-      const message = hasLastSession ? "Continue where you left off" : "Practice 30 curated questions";
+      const message = hasLastSession
+        ? "Continue where you left off"
+        : "Practice 30 curated questions";
       expect(message).toContain("Continue");
     });
   });
@@ -169,7 +173,9 @@ describe("StickyStartBar", () => {
 
     it("should have generic aria label when difficulty is not set", () => {
       const difficulty = null;
-      const ariaLabel = difficulty ? `Start studying at ${difficulty} difficulty` : "Start studying";
+      const ariaLabel = difficulty
+        ? `Start studying at ${difficulty} difficulty`
+        : "Start studying";
       expect(ariaLabel).toBe("Start studying");
     });
   });
@@ -182,7 +188,7 @@ describe("StickyStartBar", () => {
     });
 
     it("should have proper TypeScript types", () => {
-      const {props} = StickyStartBar;
+      const { props } = StickyStartBar;
       expect(props).toBeDefined();
     });
   });

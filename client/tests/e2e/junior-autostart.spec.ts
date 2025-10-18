@@ -3,38 +3,41 @@
  * Tests the immediate study start functionality for free tier users
  */
 
-import { test, expect } from '@playwright/test';
+import { test, expect } from "@playwright/test";
 
-test.describe('Junior Autostart - Basic Functionality', () => {
+test.describe("Junior Autostart - Basic Functionality", () => {
   test.beforeEach(async ({ page }) => {
     // Clear localStorage to reset autostart preference
-    await page.goto('/en/study');
+    await page.goto("/en/study");
     await page.evaluate(() => localStorage.clear());
     await page.reload();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState("networkidle");
   });
 
-  test('should auto-start study session when clicking Junior card (first time)', async ({ page }) => {
+  test("should auto-start study session when clicking Junior card (first time)", async ({
+    page,
+  }) => {
     // Click Junior card
-    const juniorCard = page.getByTestId('level-card-easy');
+    const juniorCard = page.getByTestId("level-card-easy");
     await juniorCard.click();
 
     // Should navigate to study page immediately (auto-start enabled by default)
-    await page.waitForURL('**/study/easy**', { timeout: 3000 });
+    await page.waitForURL("**/study/easy**", { timeout: 3000 });
 
     // Verify we're on the study page
     const url = page.url();
-    expect(url).toContain('/study/easy');
+    expect(url).toContain("/study/easy");
 
     // Should see study content (questions or study guide items)
     await page.waitForTimeout(1000);
-    const hasStudyContent = await page.locator('article, [role="article"], .study-content, .question').count() > 0;
+    const hasStudyContent =
+      (await page.locator('article, [role="article"], .study-content, .question').count()) > 0;
     expect(hasStudyContent).toBe(true);
   });
 
-  test('should show loading state during auto-start', async ({ page }) => {
+  test("should show loading state during auto-start", async ({ page }) => {
     // Click Junior card
-    const juniorCard = page.getByTestId('level-card-easy');
+    const juniorCard = page.getByTestId("level-card-easy");
     await juniorCard.click();
 
     // Should briefly show loading indicator (may be too fast to catch)
@@ -42,28 +45,28 @@ test.describe('Junior Autostart - Basic Functionality', () => {
     await page.waitForTimeout(100);
 
     // Should navigate
-    await page.waitForURL('**/study/**', { timeout: 5000 });
+    await page.waitForURL("**/study/**", { timeout: 5000 });
   });
 
-  test('should persist auto-start preference in localStorage', async ({ page }) => {
+  test("should persist auto-start preference in localStorage", async ({ page }) => {
     // Click Junior card to trigger auto-start
-    const juniorCard = page.getByTestId('level-card-easy');
+    const juniorCard = page.getByTestId("level-card-easy");
     await juniorCard.click();
 
-    await page.waitForURL('**/study/**');
+    await page.waitForURL("**/study/**");
 
     // Check localStorage for autostart preference
     const autostartEnabled = await page.evaluate(() => {
-      return localStorage.getItem('study_autostart_enabled');
+      return localStorage.getItem("study_autostart_enabled");
     });
 
     // Should be enabled by default
     expect(autostartEnabled).toBeTruthy();
   });
 
-  test('should NOT auto-start Intermediate or Senior levels', async ({ page }) => {
+  test("should NOT auto-start Intermediate or Senior levels", async ({ page }) => {
     // Click Intermediate card
-    const intermediateCard = page.getByTestId('level-card-medium');
+    const intermediateCard = page.getByTestId("level-card-medium");
     await intermediateCard.click();
 
     // Wait a moment
@@ -81,25 +84,25 @@ test.describe('Junior Autostart - Basic Functionality', () => {
   });
 });
 
-test.describe('Junior Autostart - Resume Session', () => {
-  test('should offer to resume previous Junior session', async ({ page }) => {
+test.describe("Junior Autostart - Resume Session", () => {
+  test("should offer to resume previous Junior session", async ({ page }) => {
     // Simulate having a previous session
-    await page.goto('/en/study');
+    await page.goto("/en/study");
     await page.evaluate(() => {
       const session = {
-        difficulty: 'easy',
+        difficulty: "easy",
         startedAt: Date.now() - 30 * 60 * 1000, // 30 mins ago
         itemsCompleted: 5,
         totalItems: 20,
       };
-      localStorage.setItem('study_session', JSON.stringify(session));
+      localStorage.setItem("study_session", JSON.stringify(session));
     });
 
     await page.reload();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState("networkidle");
 
     // Click Junior card
-    const juniorCard = page.getByTestId('level-card-easy');
+    const juniorCard = page.getByTestId("level-card-easy");
     await juniorCard.click();
 
     // Should show resume prompt or auto-resume
@@ -108,34 +111,34 @@ test.describe('Junior Autostart - Resume Session', () => {
     const currentUrl = page.url();
 
     // Should navigate to study page (either resume or new session)
-    expect(currentUrl).toContain('/study');
+    expect(currentUrl).toContain("/study");
   });
 
-  test('should start new session if previous session is expired', async ({ page }) => {
+  test("should start new session if previous session is expired", async ({ page }) => {
     // Simulate having an expired session (> 24 hours old)
-    await page.goto('/en/study');
+    await page.goto("/en/study");
     await page.evaluate(() => {
       const session = {
-        difficulty: 'easy',
+        difficulty: "easy",
         startedAt: Date.now() - 25 * 60 * 60 * 1000, // 25 hours ago
         itemsCompleted: 5,
         totalItems: 20,
       };
-      localStorage.setItem('study_session', JSON.stringify(session));
+      localStorage.setItem("study_session", JSON.stringify(session));
     });
 
     await page.reload();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState("networkidle");
 
     // Click Junior card
-    const juniorCard = page.getByTestId('level-card-easy');
+    const juniorCard = page.getByTestId("level-card-easy");
     await juniorCard.click();
 
     // Should start new session (expired sessions are cleared)
-    await page.waitForURL('**/study/**');
+    await page.waitForURL("**/study/**");
 
     const sessionData = await page.evaluate(() => {
-      return localStorage.getItem('study_session');
+      return localStorage.getItem("study_session");
     });
 
     // Should have new session data
@@ -143,39 +146,39 @@ test.describe('Junior Autostart - Resume Session', () => {
   });
 });
 
-test.describe('Junior Autostart - A/B Test Variants', () => {
-  test('should respect A/B test variant assignment', async ({ page }) => {
+test.describe("Junior Autostart - A/B Test Variants", () => {
+  test("should respect A/B test variant assignment", async ({ page }) => {
     // Set A/B test variant to autostart
-    await page.goto('/en/study');
+    await page.goto("/en/study");
     await page.evaluate(() => {
-      localStorage.setItem('study_autostart_variant', 'autostart');
-      localStorage.setItem('study_autostart_enabled', 'true');
+      localStorage.setItem("study_autostart_variant", "autostart");
+      localStorage.setItem("study_autostart_enabled", "true");
     });
 
     await page.reload();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState("networkidle");
 
     // Click Junior card
-    const juniorCard = page.getByTestId('level-card-easy');
+    const juniorCard = page.getByTestId("level-card-easy");
     await juniorCard.click();
 
     // Should auto-start immediately
-    await page.waitForURL('**/study/**', { timeout: 3000 });
+    await page.waitForURL("**/study/**", { timeout: 3000 });
   });
 
-  test('should show manual flow for control variant', async ({ page }) => {
+  test("should show manual flow for control variant", async ({ page }) => {
     // Set A/B test variant to control (manual)
-    await page.goto('/en/study');
+    await page.goto("/en/study");
     await page.evaluate(() => {
-      localStorage.setItem('study_autostart_variant', 'manual');
-      localStorage.setItem('study_autostart_enabled', 'false');
+      localStorage.setItem("study_autostart_variant", "manual");
+      localStorage.setItem("study_autostart_enabled", "false");
     });
 
     await page.reload();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState("networkidle");
 
     // Click Junior card
-    const juniorCard = page.getByTestId('level-card-easy');
+    const juniorCard = page.getByTestId("level-card-easy");
     await juniorCard.click();
 
     // Wait a moment
@@ -188,14 +191,14 @@ test.describe('Junior Autostart - A/B Test Variants', () => {
   });
 });
 
-test.describe('Junior Autostart - Error Handling', () => {
-  test('should handle navigation errors gracefully', async ({ page }) => {
+test.describe("Junior Autostart - Error Handling", () => {
+  test("should handle navigation errors gracefully", async ({ page }) => {
     // Navigate to study page
-    await page.goto('/en/study');
-    await page.waitForLoadState('networkidle');
+    await page.goto("/en/study");
+    await page.waitForLoadState("networkidle");
 
     // Click Junior card
-    const juniorCard = page.getByTestId('level-card-easy');
+    const juniorCard = page.getByTestId("level-card-easy");
     await juniorCard.click();
 
     // Even if there's an error, should not crash
@@ -203,30 +206,30 @@ test.describe('Junior Autostart - Error Handling', () => {
 
     // Should either be on study page or still on selection page (with error message)
     const currentUrl = page.url();
-    const isValidState = currentUrl.includes('/study');
+    const isValidState = currentUrl.includes("/study");
 
     // As long as we don't crash, test passes
     expect(currentUrl).toBeTruthy();
   });
 });
 
-test.describe('Junior Autostart - Analytics', () => {
-  test('should track autostart event', async ({ page }) => {
+test.describe("Junior Autostart - Analytics", () => {
+  test("should track autostart event", async ({ page }) => {
     // Mock analytics tracking
     const trackingEvents: string[] = [];
 
-    page.on('console', (msg) => {
+    page.on("console", (msg) => {
       const text = msg.text();
-      if (text.includes('level_card_selected') || text.includes('auto_start')) {
+      if (text.includes("level_card_selected") || text.includes("auto_start")) {
         trackingEvents.push(text);
       }
     });
 
-    await page.goto('/en/study');
-    await page.waitForLoadState('networkidle');
+    await page.goto("/en/study");
+    await page.waitForLoadState("networkidle");
 
     // Click Junior card
-    const juniorCard = page.getByTestId('level-card-easy');
+    const juniorCard = page.getByTestId("level-card-easy");
     await juniorCard.click();
 
     // Wait for tracking
@@ -237,30 +240,30 @@ test.describe('Junior Autostart - Analytics', () => {
   });
 });
 
-test.describe('Junior Autostart - Mobile', () => {
+test.describe("Junior Autostart - Mobile", () => {
   test.use({ viewport: { width: 375, height: 667 } });
 
-  test('should work on mobile devices', async ({ page }) => {
-    await page.goto('/en/study');
-    await page.waitForLoadState('networkidle');
+  test("should work on mobile devices", async ({ page }) => {
+    await page.goto("/en/study");
+    await page.waitForLoadState("networkidle");
 
     // Tap Junior card
-    const juniorCard = page.getByTestId('level-card-easy');
+    const juniorCard = page.getByTestId("level-card-easy");
     await juniorCard.tap();
 
     // Should auto-start on mobile too
-    await page.waitForURL('**/study/**', { timeout: 3000 });
+    await page.waitForURL("**/study/**", { timeout: 3000 });
 
     const url = page.url();
-    expect(url).toContain('/study');
+    expect(url).toContain("/study");
   });
 
-  test('should handle touch interactions correctly', async ({ page }) => {
-    await page.goto('/en/study');
-    await page.waitForLoadState('networkidle');
+  test("should handle touch interactions correctly", async ({ page }) => {
+    await page.goto("/en/study");
+    await page.waitForLoadState("networkidle");
 
     // Get Junior card
-    const juniorCard = page.getByTestId('level-card-easy');
+    const juniorCard = page.getByTestId("level-card-easy");
 
     // Tap and hold briefly
     await juniorCard.tap();
@@ -270,73 +273,73 @@ test.describe('Junior Autostart - Mobile', () => {
     await page.waitForTimeout(500);
 
     const url = page.url();
-    const didNavigate = url.includes('/study');
+    const didNavigate = url.includes("/study");
 
     // Should handle the tap correctly
     expect(url).toBeTruthy();
   });
 });
 
-test.describe('Junior Autostart - Accessibility', () => {
-  test('should announce auto-start to screen readers', async ({ page }) => {
-    await page.goto('/en/study');
-    await page.waitForLoadState('networkidle');
+test.describe("Junior Autostart - Accessibility", () => {
+  test("should announce auto-start to screen readers", async ({ page }) => {
+    await page.goto("/en/study");
+    await page.waitForLoadState("networkidle");
 
-    const juniorCard = page.getByTestId('level-card-easy');
+    const juniorCard = page.getByTestId("level-card-easy");
 
     // Check for screen reader hints
-    const ariaLabel = await juniorCard.getAttribute('aria-label');
+    const ariaLabel = await juniorCard.getAttribute("aria-label");
     expect(ariaLabel).toBeTruthy();
 
     // Should mention Junior in the label
-    expect(ariaLabel).toContain('Junior');
+    expect(ariaLabel).toContain("Junior");
   });
 
-  test('should support keyboard activation', async ({ page }) => {
-    await page.goto('/en/study');
-    await page.waitForLoadState('networkidle');
+  test("should support keyboard activation", async ({ page }) => {
+    await page.goto("/en/study");
+    await page.waitForLoadState("networkidle");
 
     // Focus Junior card
-    const juniorCard = page.getByTestId('level-card-easy');
+    const juniorCard = page.getByTestId("level-card-easy");
     await juniorCard.focus();
 
     // Press Enter
-    await page.keyboard.press('Enter');
+    await page.keyboard.press("Enter");
 
     // Should auto-start
-    await page.waitForURL('**/study/**', { timeout: 3000 });
+    await page.waitForURL("**/study/**", { timeout: 3000 });
   });
 
-  test('should support Space key activation', async ({ page }) => {
-    await page.goto('/en/study');
-    await page.waitForLoadState('networkidle');
+  test("should support Space key activation", async ({ page }) => {
+    await page.goto("/en/study");
+    await page.waitForLoadState("networkidle");
 
     // Focus Junior card
-    const juniorCard = page.getByTestId('level-card-easy');
+    const juniorCard = page.getByTestId("level-card-easy");
     await juniorCard.focus();
 
     // Press Space
-    await page.keyboard.press('Space');
+    await page.keyboard.press("Space");
 
     // Should auto-start
-    await page.waitForURL('**/study/**', { timeout: 3000 });
+    await page.waitForURL("**/study/**", { timeout: 3000 });
   });
 });
 
-test.describe('Junior Autostart - Performance', () => {
-  test('should start quickly (< 150ms perceived delay)', async ({ page }) => {
-    await page.goto('/en/study');
-    await page.waitForLoadState('networkidle');
+test.describe("Junior Autostart - Performance", () => {
+  test("should start quickly (< 150ms perceived delay)", async ({ page }) => {
+    await page.goto("/en/study");
+    await page.waitForLoadState("networkidle");
 
     // Record start time
     const startTime = Date.now();
 
     // Click Junior card
-    const juniorCard = page.getByTestId('level-card-easy');
+    const juniorCard = page.getByTestId("level-card-easy");
     await juniorCard.click();
 
     // Wait for navigation
-    await page.waitForURL('**/study/**', { timeout: 3000 });
+    await page.waitForURL("**/study/**", { timeout: 3000 });
 
     const endTime = Date.now();
     const duration = endTime - startTime;

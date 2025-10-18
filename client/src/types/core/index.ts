@@ -83,7 +83,13 @@ export interface ErrorDetails {
   cause?: Error;
   statusCode?: number;
   response?: Record<string, string | number | boolean>;
-  [key: string]: string | number | boolean | Error | Record<string, string | number | boolean> | undefined;
+  [key: string]:
+    | string
+    | number
+    | boolean
+    | Error
+    | Record<string, string | number | boolean>
+    | undefined;
 }
 
 /**

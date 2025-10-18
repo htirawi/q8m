@@ -17,4 +17,3 @@ export interface ICreateChallengeModalProps {
   open: boolean;
   friendId?: string;
 }
-

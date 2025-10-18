@@ -42,17 +42,19 @@ const getStrengthClass = (level: number): string => {
 
   return "bg-gray-200 dark:bg-gray-600";
 };
-
 </script>
 
 <template>
   <div v-if="password" class="password-strength">
     <div class="strength-bars">
-      <div v-for="level in 4" :key="level" class="strength-bar" :class="getStrengthClass(level)"></div>
+      <div
+        v-for="level in 4"
+        :key="level"
+        class="strength-bar"
+        :class="getStrengthClass(level)"
+      ></div>
     </div>
-    <span class="strength-text">{{ strengthText }}
-
-</span>
+    <span class="strength-text">{{ strengthText }} </span>
   </div>
 </template>
 

@@ -1,8 +1,7 @@
 import type { Document, ObjectId } from "mongoose";
 import mongoose, { Schema } from "mongoose";
 
-export interface IFxRate
-  extends Omit<Document, "fetchedAt" | "expiresAt" | "createdAt"> {
+export interface IFxRate extends Omit<Document, "fetchedAt" | "expiresAt" | "createdAt"> {
   baseCurrency: "USD";
   targetCurrency: "JOD" | "SAR";
   rate: number;

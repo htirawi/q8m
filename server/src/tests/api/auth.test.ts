@@ -2,7 +2,6 @@ import { buildApp } from "@server/app.js";
 import type { FastifyInstance } from "fastify";
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 
-
 describe.skip("Authentication API", () => {
   let app: FastifyInstance;
 

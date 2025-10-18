@@ -38,9 +38,7 @@
 
 <script setup lang="ts">
 import type { IQuestionCardSkeletonProps as Props } from "@/types/components/skeletons";
-import SkeletonLoader from '@/components/SkeletonLoader.vue';
-
-
+import SkeletonLoader from "@/components/SkeletonLoader.vue";
 
 withDefaults(defineProps<Props>(), {
   showCode: false,
@@ -60,7 +58,7 @@ withDefaults(defineProps<Props>(), {
 }
 
 .question-card-skeleton-header {
-  @apply flex justify-between items-center;
+  @apply flex items-center justify-between;
 }
 
 .question-card-skeleton-question {
@@ -77,12 +75,12 @@ withDefaults(defineProps<Props>(), {
 
 .question-card-skeleton-option {
   @apply flex items-center gap-3;
-  @apply p-3 rounded-lg;
+  @apply rounded-lg p-3;
   @apply border-2 border-gray-200 dark:border-gray-700;
 }
 
 .question-card-skeleton-actions {
-  @apply flex gap-4 justify-center;
-  @apply pt-4 border-t border-gray-200 dark:border-gray-700;
+  @apply flex justify-center gap-4;
+  @apply border-t border-gray-200 pt-4 dark:border-gray-700;
 }
 </style>

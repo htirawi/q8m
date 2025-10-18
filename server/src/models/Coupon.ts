@@ -44,7 +44,7 @@ const couponSchema = new Schema(
       required: true,
       min: 0,
       validate: {
-        validator (this: ICoupon, v: number) {
+        validator(this: ICoupon, v: number) {
           if (this.type === "percentage") {
             return v >= 0 && v <= 100;
           }
@@ -56,7 +56,7 @@ const couponSchema = new Schema(
     currency: {
       type: String,
       enum: ["USD", "JOD", "SAR"],
-      required (this: ICoupon) {
+      required(this: ICoupon) {
         return this.type === "fixed";
       },
     },
@@ -132,8 +132,7 @@ couponSchema.virtual("remainingUses").get(function (this: ICoupon) {
 // Virtual for is valid
 couponSchema.virtual("isValid").get(function (this: ICoupon) {
   const now = new Date();
-  const isInValidityPeriod =
-    this.validFrom <= now && (!this.validUntil || this.validUntil > now);
+  const isInValidityPeriod = this.validFrom <= now && (!this.validUntil || this.validUntil > now);
   const hasUsesRemaining = !this.usageLimit || this.usedCount < this.usageLimit;
   return this.isActive && isInValidityPeriod && hasUsesRemaining;
 });
@@ -155,7 +154,9 @@ couponSchema.methods.calculateDiscount = function (
       discountAmount = this.value;
     } else {
       // Currency mismatch - cannot apply fixed discount
-      throw new Error(`Coupon currency (${this.currency}) does not match purchase currency (${currency})`);
+      throw new Error(
+        `Coupon currency (${this.currency}) does not match purchase currency (${currency})`
+      );
     }
   }
 

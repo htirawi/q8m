@@ -8,23 +8,23 @@
 // ============================================
 
 export const HTTP_METHODS = {
-  GET: 'GET',
-  POST: 'POST',
-  PUT: 'PUT',
-  PATCH: 'PATCH',
-  DELETE: 'DELETE',
+  GET: "GET",
+  POST: "POST",
+  PUT: "PUT",
+  PATCH: "PATCH",
+  DELETE: "DELETE",
 } as const;
 
 export const HTTP_HEADERS = {
-  CONTENT_TYPE: 'Content-Type',
-  AUTHORIZATION: 'Authorization',
-  ACCEPT: 'Accept',
+  CONTENT_TYPE: "Content-Type",
+  AUTHORIZATION: "Authorization",
+  ACCEPT: "Accept",
 } as const;
 
 export const CONTENT_TYPES = {
-  JSON: 'application/json',
-  FORM_DATA: 'multipart/form-data',
-  URL_ENCODED: 'application/x-www-form-urlencoded',
+  JSON: "application/json",
+  FORM_DATA: "multipart/form-data",
+  URL_ENCODED: "application/x-www-form-urlencoded",
 } as const;
 
 // Common headers object
@@ -37,10 +37,10 @@ export const JSON_HEADERS = {
 // ============================================
 
 export const AUTH_CONSTANTS = {
-  COOKIE_BASED_TOKEN: 'cookie-based',
+  COOKIE_BASED_TOKEN: "cookie-based",
   TOKEN_EXPIRY_SECONDS: 15 * 60, // 15 minutes
-  BEARER_PREFIX: 'Bearer',
-  DEV_WHITELIST: ['dev@example.com'] as readonly string[],
+  BEARER_PREFIX: "Bearer",
+  DEV_WHITELIST: ["dev@example.com"] as readonly string[],
 } as const;
 
 // ============================================
@@ -48,12 +48,12 @@ export const AUTH_CONSTANTS = {
 // ============================================
 
 export const STORAGE_KEYS = {
-  ACCESS_TOKEN: 'accessToken',
-  REFRESH_TOKEN: 'refreshToken',
-  AUTH_TOKEN: 'auth_token', // Legacy - should be removed
-  PREFERRED_CURRENCY: 'preferred_currency',
-  THEME: 'theme',
-  LOCALE: 'locale',
+  ACCESS_TOKEN: "accessToken",
+  REFRESH_TOKEN: "refreshToken",
+  AUTH_TOKEN: "auth_token", // Legacy - should be removed
+  PREFERRED_CURRENCY: "preferred_currency",
+  THEME: "theme",
+  LOCALE: "locale",
 } as const;
 
 // ============================================
@@ -83,34 +83,30 @@ export const VALIDATION = {
 // ============================================
 
 export const CURRENCIES = {
-  USD: 'USD',
-  JOD: 'JOD',
-  SAR: 'SAR',
+  USD: "USD",
+  JOD: "JOD",
+  SAR: "SAR",
 } as const;
 
-export const SUPPORTED_CURRENCIES = [
-  CURRENCIES.USD,
-  CURRENCIES.JOD,
-  CURRENCIES.SAR,
-] as const;
+export const SUPPORTED_CURRENCIES = [CURRENCIES.USD, CURRENCIES.JOD, CURRENCIES.SAR] as const;
 
 export const DIFFICULTY_LEVELS = {
-  EASY: 'easy',
-  MEDIUM: 'medium',
-  HARD: 'hard',
+  EASY: "easy",
+  MEDIUM: "medium",
+  HARD: "hard",
 } as const;
 
 export const EXPERIENCE_LEVELS = {
-  JUNIOR: 'junior',
-  INTERMEDIATE: 'intermediate',
-  SENIOR: 'senior',
+  JUNIOR: "junior",
+  INTERMEDIATE: "intermediate",
+  SENIOR: "senior",
 } as const;
 
 export const PLAN_TIERS = {
-  FREE: 'free',
-  INTERMEDIATE: 'intermediate',
-  ADVANCED: 'advanced',
-  PRO: 'pro',
+  FREE: "free",
+  INTERMEDIATE: "intermediate",
+  ADVANCED: "advanced",
+  PRO: "pro",
 } as const;
 
 // ============================================
@@ -133,8 +129,8 @@ export const ANIMATION_DURATION = {
 // Type Exports
 // ============================================
 
-export type HttpMethod = typeof HTTP_METHODS[keyof typeof HTTP_METHODS];
-export type Currency = typeof CURRENCIES[keyof typeof CURRENCIES];
-export type DifficultyLevel = typeof DIFFICULTY_LEVELS[keyof typeof DIFFICULTY_LEVELS];
-export type ExperienceLevel = typeof EXPERIENCE_LEVELS[keyof typeof EXPERIENCE_LEVELS];
-export type PlanTier = typeof PLAN_TIERS[keyof typeof PLAN_TIERS];
+export type HttpMethod = (typeof HTTP_METHODS)[keyof typeof HTTP_METHODS];
+export type Currency = (typeof CURRENCIES)[keyof typeof CURRENCIES];
+export type DifficultyLevel = (typeof DIFFICULTY_LEVELS)[keyof typeof DIFFICULTY_LEVELS];
+export type ExperienceLevel = (typeof EXPERIENCE_LEVELS)[keyof typeof EXPERIENCE_LEVELS];
+export type PlanTier = (typeof PLAN_TIERS)[keyof typeof PLAN_TIERS];

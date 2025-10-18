@@ -778,7 +778,8 @@ export default async function questionRoutes(fastify: FastifyInstance) {
             : String(answer).toLowerCase().trim() === correctAnswerLower;
         } else if (question.type === "multiple-checkbox") {
           // Get all correct option IDs
-          const correctOptions = content.options?.filter((opt: QuestionOption) => opt.isCorrect) || [];
+          const correctOptions =
+            content.options?.filter((opt: QuestionOption) => opt.isCorrect) || [];
           correctAnswer = correctOptions.map((opt: QuestionOption) => opt.id).sort();
           const userAnswerArray = Array.isArray(answer) ? answer.sort() : [answer].sort();
           isCorrect = JSON.stringify(correctAnswer) === JSON.stringify(userAnswerArray);

@@ -2,16 +2,8 @@
 import { ref, onMounted } from "vue";
 import { useQuizResults } from "@/composables/useQuizResults";
 
-const {
-  isLoading,
-  error,
-  quizHistory,
-  quizStats,
-  weakAreas,
-  getHistory,
-  getStats,
-  getWeakAreas,
-} = useQuizResults();
+const { isLoading, error, quizHistory, quizStats, weakAreas, getHistory, getStats, getWeakAreas } =
+  useQuizResults();
 
 const activeTab = ref<"history" | "stats" | "weak-areas">("history");
 const historyLimit = ref(10);
@@ -47,7 +39,6 @@ function getScoreColor(score: number): string {
   if (score >= 70) return "#f59e0b";
   return "#ef4444";
 }
-
 </script>
 
 <template>
@@ -56,7 +47,6 @@ function getScoreColor(score: number): string {
       <h1>Quiz Results (Test)</h1>
       <button @click="refreshData" :disabled="isLoading" class="refresh-btn">
         {{ isLoading ? "Loading..." : "Refresh Data" }}
-
       </button>
     </header>
 
@@ -64,9 +54,7 @@ function getScoreColor(score: number): string {
       {{ error }}
     </div>
 
-    <div v-if="isLoading && !quizHistory.length" class="loading-state">
-      Loading quiz results...
-    </div>
+    <div v-if="isLoading && !quizHistory.length" class="loading-state">Loading quiz results...</div>
 
     <div v-else class="dashboard-content">
       <!-- Tabs -->
@@ -104,15 +92,9 @@ function getScoreColor(score: number): string {
           </div>
 
           <div v-else class="quiz-history-list">
-            <div
-              v-for="quiz in quizHistory"
-              :key="quiz.id"
-              class="quiz-card"
-            >
+            <div v-for="quiz in quizHistory" :key="quiz.id" class="quiz-card">
               <div class="quiz-header">
-                <div class="quiz-type-badge">{{ quiz.quizType }}
-
-</div>
+                <div class="quiz-type-badge">{{ quiz.quizType }}</div>
                 <div class="quiz-level-badge">{{ quiz.level }}</div>
                 <div class="quiz-score" :style="{ color: getScoreColor(quiz.score) }">
                   {{ quiz.score }}%
@@ -125,38 +107,37 @@ function getScoreColor(score: number): string {
                   <span class="detail-value">
                     {{ quiz.correctAnswers }} / {{ quiz.totalQuestions }}
 
- correct
+                    correct
                   </span>
                 </div>
                 <div class="detail-row">
                   <span class="detail-label">Duration:</span>
-                  <span class="detail-value">{{ formatDuration(quiz.totalTimeSeconds) }}
-
-</span>
+                  <span class="detail-value">{{ formatDuration(quiz.totalTimeSeconds) }} </span>
                 </div>
                 <div class="detail-row">
                   <span class="detail-label">XP Earned:</span>
-                  <span class="detail-value">+{{ quiz.xpEarned }}
+                  <span class="detail-value"
+                    >+{{ quiz.xpEarned }}
 
- XP</span>
+                    XP</span
+                  >
                 </div>
                 <div v-if="quiz.badgesEarned.length > 0" class="detail-row">
                   <span class="detail-label">Badges:</span>
-                  <span class="detail-value">{{ quiz.badgesEarned.length }}
+                  <span class="detail-value"
+                    >{{ quiz.badgesEarned.length }}
 
- earned 🏆</span>
+                    earned 🏆</span
+                  >
                 </div>
                 <div v-if="quiz.weakCategories.length > 0" class="detail-row">
                   <span class="detail-label">Weak Categories:</span>
-                  <span class="detail-value weak">{{ quiz.weakCategories.join(", ") }}
-
-</span>
+                  <span class="detail-value weak">{{ quiz.weakCategories.join(", ") }} </span>
                 </div>
               </div>
 
               <div class="quiz-date">
                 {{ new Date(quiz.createdAt).toLocaleString() }}
-
               </div>
             </div>
 
@@ -180,15 +161,11 @@ function getScoreColor(score: number): string {
           <div class="stats-grid">
             <div class="stat-card">
               <div class="stat-label">Total Quizzes</div>
-              <div class="stat-value">{{ quizStats.totalQuizzes }}
-
-</div>
+              <div class="stat-value">{{ quizStats.totalQuizzes }}</div>
             </div>
             <div class="stat-card">
               <div class="stat-label">Total Questions</div>
-              <div class="stat-value">{{ quizStats.totalQuestions }}
-
-</div>
+              <div class="stat-value">{{ quizStats.totalQuestions }}</div>
             </div>
             <div class="stat-card">
               <div class="stat-label">Overall Accuracy</div>
@@ -196,57 +173,49 @@ function getScoreColor(score: number): string {
             </div>
             <div class="stat-card">
               <div class="stat-label">Total XP</div>
-              <div class="stat-value">{{ quizStats.totalXPFromQuizzes }}
-
-</div>
+              <div class="stat-value">{{ quizStats.totalXPFromQuizzes }}</div>
             </div>
           </div>
 
           <div class="stats-grid">
             <div class="stat-card">
               <div class="stat-label">Perfect Quizzes</div>
-              <div class="stat-value perfect">{{ quizStats.perfectQuizzes }}
-
-</div>
+              <div class="stat-value perfect">{{ quizStats.perfectQuizzes }}</div>
             </div>
             <div class="stat-card">
               <div class="stat-label">Excellent (90%+)</div>
-              <div class="stat-value excellent">{{ quizStats.excellentQuizzes }}
-
-</div>
+              <div class="stat-value excellent">{{ quizStats.excellentQuizzes }}</div>
             </div>
             <div class="stat-card">
               <div class="stat-label">Good (80-89%)</div>
-              <div class="stat-value good">{{ quizStats.goodQuizzes }}
-
-</div>
+              <div class="stat-value good">{{ quizStats.goodQuizzes }}</div>
             </div>
             <div class="stat-card">
               <div class="stat-label">Passing (70-79%)</div>
-              <div class="stat-value passing">{{ quizStats.passingQuizzes }}
-
-</div>
+              <div class="stat-value passing">{{ quizStats.passingQuizzes }}</div>
             </div>
           </div>
 
           <div class="stats-grid">
             <div class="stat-card">
               <div class="stat-label">Total Time</div>
-              <div class="stat-value">{{ Math.round(quizStats.totalTimeMinutes) }}
+              <div class="stat-value">
+                {{ Math.round(quizStats.totalTimeMinutes) }}
 
-m</div>
+                m
+              </div>
             </div>
             <div class="stat-card">
               <div class="stat-label">Avg Quiz Duration</div>
-              <div class="stat-value">{{ quizStats.averageQuizDuration }}
+              <div class="stat-value">
+                {{ quizStats.averageQuizDuration }}
 
-m</div>
+                m
+              </div>
             </div>
             <div class="stat-card">
               <div class="stat-label">Fastest Quiz</div>
-              <div class="stat-value">{{ formatDuration(quizStats.fastestQuiz) }}
-
-</div>
+              <div class="stat-value">{{ formatDuration(quizStats.fastestQuiz) }}</div>
             </div>
             <div class="stat-card">
               <div class="stat-label">Recent Accuracy</div>
@@ -260,23 +229,20 @@ m</div>
       <div v-if="activeTab === 'weak-areas'" class="tab-content">
         <section class="section">
           <h2>Weak Areas</h2>
-          <p class="section-subtitle">
-            Categories where your accuracy is below 70%
-          </p>
+          <p class="section-subtitle">Categories where your accuracy is below 70%</p>
 
           <div v-if="weakAreas.length === 0" class="empty-state">
             No weak areas detected! Great job! 🎉
           </div>
 
           <div v-else class="weak-areas-list">
-            <div
-              v-for="area in weakAreas"
-              :key="area.category"
-              class="weak-area-card"
-            >
+            <div v-for="area in weakAreas" :key="area.category" class="weak-area-card">
               <div class="weak-area-header">
                 <h3>{{ area.category }}</h3>
-                <div class="accuracy-badge" :style="{ backgroundColor: getScoreColor(area.accuracy) }">
+                <div
+                  class="accuracy-badge"
+                  :style="{ backgroundColor: getScoreColor(area.accuracy) }"
+                >
                   {{ Math.round(area.accuracy) }}%
                 </div>
               </div>
@@ -284,15 +250,11 @@ m</div>
               <div class="weak-area-details">
                 <div class="detail-row">
                   <span class="detail-label">Questions Attempted:</span>
-                  <span class="detail-value">{{ area.questionsAttempted }}
-
-</span>
+                  <span class="detail-value">{{ area.questionsAttempted }} </span>
                 </div>
                 <div class="detail-row">
                   <span class="detail-label">Questions Correct:</span>
-                  <span class="detail-value">{{ area.questionsCorrect }}
-
-</span>
+                  <span class="detail-value">{{ area.questionsCorrect }} </span>
                 </div>
                 <div class="detail-row">
                   <span class="detail-label">Last Attempt:</span>

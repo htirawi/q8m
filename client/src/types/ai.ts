@@ -3,12 +3,12 @@
  */
 
 // AI Provider types
-export type AIProvider = 'openai' | 'anthropic' | 'gemini' | 'local';
+export type AIProvider = "openai" | "anthropic" | "gemini" | "local";
 
 // Chat message types
 export interface IChatMessage {
   id: string;
-  role: 'user' | 'assistant' | 'system' | 'error';
+  role: "user" | "assistant" | "system" | "error";
   content: string;
   timestamp: Date;
   metadata?: {
@@ -35,14 +35,14 @@ export interface ICodeBlock {
 }
 
 export interface IChatReaction {
-  type: 'helpful' | 'unhelpful' | 'copy' | 'share' | 'bookmark';
+  type: "helpful" | "unhelpful" | "copy" | "share" | "bookmark";
   count: number;
   userReacted: boolean;
 }
 
 export interface IChatAttachment {
   id: string;
-  type: 'image' | 'code' | 'document' | 'link';
+  type: "image" | "code" | "document" | "link";
   url?: string;
   content?: string;
   filename?: string;
@@ -58,7 +58,7 @@ export interface IChatSession {
   createdAt: Date;
   updatedAt: Date;
   context?: IChatContext;
-  status: 'active' | 'archived' | 'deleted';
+  status: "active" | "archived" | "deleted";
   model?: string;
   tags?: string[];
   sharedWith?: string[];
@@ -67,7 +67,7 @@ export interface IChatSession {
 
 export interface IChatContext {
   topic?: string;
-  difficulty?: 'junior' | 'intermediate' | 'senior';
+  difficulty?: "junior" | "intermediate" | "senior";
   framework?: string;
   questionId?: string;
   lessonId?: string;
@@ -100,7 +100,7 @@ export interface ISmartExplanation {
   questionId: string;
   concept: string;
   explanation: string;
-  difficulty: 'beginner' | 'intermediate' | 'advanced';
+  difficulty: "beginner" | "intermediate" | "advanced";
   examples?: ICodeExample[];
   visualAids?: IVisualAid[];
   relatedConcepts?: string[];
@@ -126,7 +126,7 @@ export interface ICodeExample {
 }
 
 export interface IVisualAid {
-  type: 'diagram' | 'flowchart' | 'animation' | 'infographic';
+  type: "diagram" | "flowchart" | "animation" | "infographic";
   url?: string;
   svg?: string;
   description: string;
@@ -136,14 +136,14 @@ export interface IVisualAid {
 export interface IPracticeProblem {
   id: string;
   question: string;
-  difficulty: 'easy' | 'medium' | 'hard';
+  difficulty: "easy" | "medium" | "hard";
   hints?: string[];
   solution?: string;
   explanation?: string;
 }
 
 export interface ILearningResource {
-  type: 'article' | 'video' | 'documentation' | 'tutorial' | 'course';
+  type: "article" | "video" | "documentation" | "tutorial" | "course";
   title: string;
   url: string;
   description?: string;
@@ -168,7 +168,7 @@ export interface IStudyPlan {
   createdAt: Date;
   updatedAt: Date;
   completedAt?: Date;
-  status: 'draft' | 'active' | 'paused' | 'completed';
+  status: "draft" | "active" | "paused" | "completed";
 }
 
 export interface IStudyDuration {
@@ -189,9 +189,9 @@ export interface IStudySchedule {
     enabled: boolean;
     email?: boolean;
     push?: boolean;
-    frequency: 'daily' | 'weekly' | 'custom';
+    frequency: "daily" | "weekly" | "custom";
   };
-  flexibility: 'strict' | 'moderate' | 'flexible';
+  flexibility: "strict" | "moderate" | "flexible";
 }
 
 export interface ICurriculumModule {
@@ -201,7 +201,7 @@ export interface ICurriculumModule {
   topics: ITopic[];
   estimatedHours: number;
   order: number;
-  status: 'locked' | 'available' | 'in-progress' | 'completed';
+  status: "locked" | "available" | "in-progress" | "completed";
   completedAt?: Date;
   quiz?: {
     id: string;
@@ -214,10 +214,10 @@ export interface ICurriculumModule {
 export interface ITopic {
   id: string;
   title: string;
-  type: 'lesson' | 'practice' | 'quiz' | 'project';
+  type: "lesson" | "practice" | "quiz" | "project";
   content: ITopicContent;
   estimatedMinutes: number;
-  difficulty: 'beginner' | 'intermediate' | 'advanced';
+  difficulty: "beginner" | "intermediate" | "advanced";
   prerequisites?: string[];
   completed: boolean;
   completedAt?: Date;
@@ -251,12 +251,12 @@ export interface IStudyProgress {
 
 export interface IAdaptiveSettings {
   enabled: boolean;
-  difficultyAdjustment: 'auto' | 'manual';
-  paceAdjustment: 'auto' | 'manual';
+  difficultyAdjustment: "auto" | "manual";
+  paceAdjustment: "auto" | "manual";
   focusOnWeakAreas: boolean;
   skipMasteredTopics: boolean;
   personalizedRecommendations: boolean;
-  learningStyle: 'visual' | 'reading' | 'practice' | 'mixed';
+  learningStyle: "visual" | "reading" | "practice" | "mixed";
 }
 
 export interface IMilestone {
@@ -267,11 +267,11 @@ export interface IMilestone {
   achieved: boolean;
   achievedDate?: Date;
   reward?: {
-    type: 'badge' | 'certificate' | 'discount' | 'feature';
+    type: "badge" | "certificate" | "discount" | "feature";
     value: string;
   };
   criteria: {
-    type: 'modules_completed' | 'hours_studied' | 'score_achieved' | 'streak_maintained';
+    type: "modules_completed" | "hours_studied" | "score_achieved" | "streak_maintained";
     value: number;
   };
 }
@@ -280,7 +280,7 @@ export interface IMilestone {
 export interface IAIFeedback {
   id: string;
   userId: string;
-  type: 'code_review' | 'answer_analysis' | 'concept_explanation' | 'improvement_suggestion';
+  type: "code_review" | "answer_analysis" | "concept_explanation" | "improvement_suggestion";
   context: Record<string, unknown>;
   feedback: string;
   suggestions?: string[];
@@ -294,7 +294,7 @@ export interface IAIFeedback {
 // AI Learning Analytics
 export interface ILearningAnalytics {
   userId: string;
-  period: 'daily' | 'weekly' | 'monthly' | 'all-time';
+  period: "daily" | "weekly" | "monthly" | "all-time";
   metrics: {
     studyTime: number;
     topicsCompleted: number;
@@ -310,25 +310,25 @@ export interface ILearningAnalytics {
 }
 
 export interface ILearningInsight {
-  type: 'strength' | 'weakness' | 'trend' | 'milestone' | 'warning';
+  type: "strength" | "weakness" | "trend" | "milestone" | "warning";
   title: string;
   description: string;
-  importance: 'low' | 'medium' | 'high';
+  importance: "low" | "medium" | "high";
   actionable: boolean;
   action?: {
     label: string;
-    type: 'navigate' | 'study' | 'practice' | 'review';
+    type: "navigate" | "study" | "practice" | "review";
     target?: string;
   };
 }
 
 export interface ILearningRecommendation {
   id: string;
-  type: 'topic' | 'practice' | 'review' | 'challenge' | 'break';
+  type: "topic" | "practice" | "review" | "challenge" | "break";
   title: string;
   description: string;
   reason: string;
-  priority: 'low' | 'medium' | 'high' | 'urgent';
+  priority: "low" | "medium" | "high" | "urgent";
   estimatedTime: number;
   deadline?: Date;
   resources?: ILearningResource[];
@@ -373,7 +373,7 @@ export interface ICodeAnalysis {
   code: string;
   language: string;
   analysis: {
-    complexity: 'low' | 'medium' | 'high';
+    complexity: "low" | "medium" | "high";
     issues: ICodeIssue[];
     suggestions: ICodeSuggestion[];
     patterns: ICodePattern[];
@@ -391,7 +391,7 @@ export interface ICodeAnalysis {
 }
 
 export interface ICodeIssue {
-  severity: 'error' | 'warning' | 'info';
+  severity: "error" | "warning" | "info";
   line: number;
   column?: number;
   message: string;
@@ -401,11 +401,11 @@ export interface ICodeIssue {
 }
 
 export interface ICodeSuggestion {
-  type: 'optimization' | 'refactor' | 'style' | 'pattern';
+  type: "optimization" | "refactor" | "style" | "pattern";
   description: string;
   before: string;
   after: string;
-  impact: 'low' | 'medium' | 'high';
+  impact: "low" | "medium" | "high";
 }
 
 export interface ICodePattern {
@@ -425,7 +425,7 @@ export interface IPerformanceAnalysis {
 export interface ISecurityAnalysis {
   vulnerabilities: Array<{
     type: string;
-    severity: 'low' | 'medium' | 'high' | 'critical';
+    severity: "low" | "medium" | "high" | "critical";
     description: string;
     fix?: string;
   }>;
@@ -451,5 +451,5 @@ export type {
   IAIFeedback,
   ILearningAnalytics,
   IVoiceSettings,
-  ICodeAnalysis
+  ICodeAnalysis,
 };

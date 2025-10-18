@@ -3,22 +3,25 @@
     <Transition name="level-up">
       <div
         v-if="isVisible"
-        class="fixed inset-0 bg-black/90 backdrop-blur-lg flex items-center justify-center p-4 z-50"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 backdrop-blur-lg"
         @click="close"
       >
-        <div
-          class="relative max-w-2xl w-full"
-          @click.stop
-        >
+        <div class="relative w-full max-w-2xl" @click.stop>
           <!-- Animated background rays -->
           <div class="absolute inset-0 overflow-hidden opacity-30">
-            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px]">
-              <div class="absolute inset-0 bg-gradient-conic from-purple-500 via-pink-500 to-purple-500 animate-spin-slow opacity-50 blur-3xl"></div>
+            <div
+              class="absolute left-1/2 top-1/2 h-[800px] w-[800px] -translate-x-1/2 -translate-y-1/2"
+            >
+              <div
+                class="bg-gradient-conic absolute inset-0 animate-spin-slow from-purple-500 via-pink-500 to-purple-500 opacity-50 blur-3xl"
+              ></div>
             </div>
           </div>
 
           <!-- Content card -->
-          <div class="relative bg-gradient-to-br from-purple-900 via-indigo-900 to-purple-900 rounded-3xl shadow-2xl overflow-hidden border-4 border-yellow-400">
+          <div
+            class="relative overflow-hidden rounded-3xl border-4 border-yellow-400 bg-gradient-to-br from-purple-900 via-indigo-900 to-purple-900 shadow-2xl"
+          >
             <!-- Sparkles animation -->
             <div class="absolute inset-0 overflow-hidden">
               <div v-for="i in 20" :key="i" class="sparkle" :style="getSparkleStyle(i)"></div>
@@ -27,110 +30,118 @@
             <!-- Close button -->
             <button
               @click="close"
-              class="absolute top-4 right-4 z-10 text-white/80 hover:text-white transition-colors"
+              class="absolute right-4 top-4 z-10 text-white/80 transition-colors hover:text-white"
             >
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </button>
 
             <div class="relative z-10 p-8 text-center">
               <!-- Level badge -->
               <div class="mb-6 animate-scale-in">
-                <div class="inline-block relative">
-                  <div class="w-32 h-32 rounded-full bg-gradient-to-br from-yellow-300 to-orange-500 flex items-center justify-center shadow-2xl ring-8 ring-yellow-400/30 animate-pulse-glow">
+                <div class="relative inline-block">
+                  <div
+                    class="animate-pulse-glow flex h-32 w-32 items-center justify-center rounded-full bg-gradient-to-br from-yellow-300 to-orange-500 shadow-2xl ring-8 ring-yellow-400/30"
+                  >
                     <div class="text-6xl font-black text-white drop-shadow-lg">
                       {{ newLevel }}
-
                     </div>
                   </div>
                   <!-- Star burst -->
                   <div class="absolute inset-0 flex items-center justify-center">
-                    <div class="text-8xl animate-rotate-slow opacity-50">✨</div>
+                    <div class="animate-rotate-slow text-8xl opacity-50">✨</div>
                   </div>
                 </div>
               </div>
 
               <!-- Title -->
-              <h2 class="text-5xl font-black text-white mb-3 drop-shadow-lg animate-fade-in-up">
+              <h2 class="mb-3 animate-fade-in-up text-5xl font-black text-white drop-shadow-lg">
                 LEVEL UP!
               </h2>
 
               <!-- Level title -->
-              <div class="text-2xl font-bold text-yellow-300 mb-6 animate-fade-in-up animation-delay-200">
+              <div
+                class="animation-delay-200 mb-6 animate-fade-in-up text-2xl font-bold text-yellow-300"
+              >
                 {{ levelTitle }}
-
               </div>
 
               <!-- Stats -->
-              <div class="grid grid-cols-2 gap-4 mb-8 max-w-md mx-auto">
-                <div class="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20 animate-fade-in-up animation-delay-300">
-                  <div class="text-3xl font-bold text-white">{{ previousLevel }} → {{ newLevel }}
-
-</div>
+              <div class="mx-auto mb-8 grid max-w-md grid-cols-2 gap-4">
+                <div
+                  class="animation-delay-300 animate-fade-in-up rounded-xl border border-white/20 bg-white/10 p-4 backdrop-blur-sm"
+                >
+                  <div class="text-3xl font-bold text-white">
+                    {{ previousLevel }} → {{ newLevel }}
+                  </div>
                   <div class="text-sm text-white/80">Level Progress</div>
                 </div>
-                <div class="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20 animate-fade-in-up animation-delay-400">
-                  <div class="text-3xl font-bold text-yellow-300">+{{ xpEarned }}
-
-</div>
+                <div
+                  class="animation-delay-400 animate-fade-in-up rounded-xl border border-white/20 bg-white/10 p-4 backdrop-blur-sm"
+                >
+                  <div class="text-3xl font-bold text-yellow-300">+{{ xpEarned }}</div>
                   <div class="text-sm text-white/80">XP Earned</div>
                 </div>
               </div>
 
               <!-- Rewards unlocked -->
-              <div v-if="rewards && rewards.length > 0" class="mb-6 animate-fade-in-up animation-delay-500">
-                <div class="text-lg font-semibold text-white mb-3">Rewards Unlocked</div>
-                <div class="flex flex-wrap gap-3 justify-center">
+              <div
+                v-if="rewards && rewards.length > 0"
+                class="animation-delay-500 mb-6 animate-fade-in-up"
+              >
+                <div class="mb-3 text-lg font-semibold text-white">Rewards Unlocked</div>
+                <div class="flex flex-wrap justify-center gap-3">
                   <div
                     v-for="(reward, index) in rewards"
                     :key="index"
-                    class="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-lg border border-white/30 flex items-center gap-2"
+                    class="flex items-center gap-2 rounded-lg border border-white/30 bg-white/20 px-4 py-2 backdrop-blur-sm"
                   >
-                    <span class="text-2xl">{{ reward.icon }}
-
-</span>
-                    <span class="text-white font-medium">{{ reward.label }}
-
-</span>
+                    <span class="text-2xl">{{ reward.icon }} </span>
+                    <span class="font-medium text-white">{{ reward.label }} </span>
                   </div>
                 </div>
               </div>
 
               <!-- Message -->
-              <p class="text-white/90 mb-8 text-lg animate-fade-in-up animation-delay-600">
+              <p class="animation-delay-600 mb-8 animate-fade-in-up text-lg text-white/90">
                 {{ message || `You've reached Level ${newLevel}! Keep up the amazing work!` }}
               </p>
 
               <!-- Action button -->
               <button
                 @click="close"
-                class="px-8 py-4 bg-gradient-to-r from-yellow-400 to-orange-500 text-white font-black text-lg rounded-xl hover:from-yellow-500 hover:to-orange-600 transition-all shadow-xl hover:shadow-2xl hover:scale-105 animate-fade-in-up animation-delay-700"
+                class="animation-delay-700 animate-fade-in-up rounded-xl bg-gradient-to-r from-yellow-400 to-orange-500 px-8 py-4 text-lg font-black text-white shadow-xl transition-all hover:scale-105 hover:from-yellow-500 hover:to-orange-600 hover:shadow-2xl"
               >
-                {{ actionText || 'Continue' }}
+                {{ actionText || "Continue" }}
               </button>
 
               <!-- Social share -->
-              <div v-if="shareable" class="mt-6 animate-fade-in-up animation-delay-800">
-                <div class="text-sm text-white/70 mb-2">Share your achievement</div>
-                <div class="flex gap-2 justify-center">
+              <div v-if="shareable" class="animation-delay-800 mt-6 animate-fade-in-up">
+                <div class="mb-2 text-sm text-white/70">Share your achievement</div>
+                <div class="flex justify-center gap-2">
                   <button
                     @click="share('twitter')"
-                    class="p-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors"
+                    class="rounded-lg bg-white/10 p-2 transition-colors hover:bg-white/20"
                     title="Share on Twitter"
                   >
                     <span class="text-xl">🐦</span>
                   </button>
                   <button
                     @click="share('facebook')"
-                    class="p-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors"
+                    class="rounded-lg bg-white/10 p-2 transition-colors hover:bg-white/20"
                     title="Share on Facebook"
                   >
                     <span class="text-xl">📘</span>
                   </button>
                   <button
                     @click="share('copy')"
-                    class="p-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors"
+                    class="rounded-lg bg-white/10 p-2 transition-colors hover:bg-white/20"
                     title="Copy link"
                   >
                     <span class="text-xl">🔗</span>
@@ -147,12 +158,8 @@
 
 <script setup lang="ts">
 import type { IReward, ILevelUpCelebrationProps as Props } from "@/types/components/gamification";
-import { ref, watch, onMounted } from 'vue';
-import { useConfetti } from '@/composables/useConfetti';
-
-
-
-
+import { ref, watch, onMounted } from "vue";
+import { useConfetti } from "@/composables/useConfetti";
 
 const props = withDefaults(defineProps<Props>(), {
   show: false,
@@ -211,23 +218,23 @@ function hide() {
 
 function close() {
   hide();
-  emit('close');
+  emit("close");
 }
 
 function share(platform: string) {
-  emit('share', platform);
+  emit("share", platform);
 
   const shareText = `I just reached Level ${props.newLevel} (${props.levelTitle})! 🎉`;
 
-  if (platform === 'copy') {
+  if (platform === "copy") {
     navigator.clipboard.writeText(`${shareText}\n\n${window.location.origin}`);
-  } else if (platform === 'twitter') {
+  } else if (platform === "twitter") {
     const text = encodeURIComponent(shareText);
     const url = encodeURIComponent(window.location.origin);
-    window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
-  } else if (platform === 'facebook') {
+    window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, "_blank");
+  } else if (platform === "facebook") {
     const url = encodeURIComponent(window.location.origin);
-    window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, "_blank");
   }
 }
 
@@ -256,7 +263,9 @@ defineExpose({
 <style scoped>
 /* Level up transition */
 .level-up-enter-active {
-  animation: fadeIn 0.5s ease-out, scaleIn 0.5s ease-out;
+  animation:
+    fadeIn 0.5s ease-out,
+    scaleIn 0.5s ease-out;
 }
 
 .level-up-leave-active {
@@ -264,25 +273,43 @@ defineExpose({
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes fadeOut {
-  from { opacity: 1; }
-  to { opacity: 0; }
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
 
 @keyframes scaleIn {
-  from { transform: scale(0.8); }
-  to { transform: scale(1); }
+  from {
+    transform: scale(0.8);
+  }
+  to {
+    transform: scale(1);
+  }
 }
 
 /* Scale in animation */
 @keyframes scale-in {
-  0% { transform: scale(0); }
-  50% { transform: scale(1.1); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 .animate-scale-in {
@@ -343,12 +370,17 @@ defineExpose({
 
 /* Pulse glow animation */
 @keyframes pulse-glow {
-  0%, 100% {
-    box-shadow: 0 0 40px rgb(251, 191, 36, 0.5), 0 0 80px rgb(251, 191, 36, 0.3);
+  0%,
+  100% {
+    box-shadow:
+      0 0 40px rgb(251, 191, 36, 0.5),
+      0 0 80px rgb(251, 191, 36, 0.3);
   }
 
   50% {
-    box-shadow: 0 0 60px rgb(251, 191, 36, 0.8), 0 0 120px rgb(251, 191, 36, 0.5);
+    box-shadow:
+      0 0 60px rgb(251, 191, 36, 0.8),
+      0 0 120px rgb(251, 191, 36, 0.5);
   }
 }
 
@@ -358,8 +390,12 @@ defineExpose({
 
 /* Slow spin */
 @keyframes spin-slow {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .animate-spin-slow {
@@ -368,8 +404,12 @@ defineExpose({
 
 /* Rotate slow */
 @keyframes rotate-slow {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .animate-rotate-slow {

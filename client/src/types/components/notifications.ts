@@ -23,4 +23,3 @@ export interface INotificationPromptProps {
   showBenefits?: boolean;
   variant?: "default" | "minimal" | "feature";
 }
-

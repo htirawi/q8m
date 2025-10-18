@@ -4,7 +4,6 @@
  * This file sets up the test environment for payment system testing
  */
 
-
 import { connectDatabase, disconnectDatabase } from "@config/database.js";
 import { FxRate } from "@models/FxRate.js";
 import { Purchase } from "@models/Purchase.js";

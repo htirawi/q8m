@@ -1,7 +1,6 @@
 import { secureCookieService } from "@services/secure-cookie.js";
 import type { FastifyRequest, FastifyReply } from "fastify";
 
-
 /**
  * CSRF protection middleware
  * Validates CSRF tokens for state-changing operations

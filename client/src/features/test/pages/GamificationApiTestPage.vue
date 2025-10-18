@@ -56,7 +56,6 @@ function getRarityColor(rarity?: string): string {
       return "#6b7280";
   }
 }
-
 </script>
 
 <template>
@@ -65,7 +64,6 @@ function getRarityColor(rarity?: string): string {
       <h1>Gamification Dashboard (Test)</h1>
       <button @click="refreshData" :disabled="isLoading" class="refresh-btn">
         {{ isLoading ? "Loading..." : "Refresh Data" }}
-
       </button>
     </header>
 
@@ -73,9 +71,7 @@ function getRarityColor(rarity?: string): string {
       {{ error }}
     </div>
 
-    <div v-if="isLoading && !summary" class="loading-state">
-      Loading gamification data...
-    </div>
+    <div v-if="isLoading && !summary" class="loading-state">Loading gamification data...</div>
 
     <div v-else class="dashboard-content">
       <!-- Tabs -->
@@ -117,24 +113,16 @@ function getRarityColor(rarity?: string): string {
           <div class="stats-grid">
             <div class="stat-card">
               <div class="stat-label">XP</div>
-              <div class="stat-value">{{ summary.xp }}
-
-</div>
+              <div class="stat-value">{{ summary.xp }}</div>
             </div>
             <div class="stat-card">
               <div class="stat-label">Level</div>
-              <div class="stat-value">{{ summary.level }}
-
-</div>
-              <div class="stat-sublabel">{{ summary.levelTitle }}
-
-</div>
+              <div class="stat-value">{{ summary.level }}</div>
+              <div class="stat-sublabel">{{ summary.levelTitle }}</div>
             </div>
             <div class="stat-card">
               <div class="stat-label">XP to Next Level</div>
-              <div class="stat-value">{{ summary.xpToNextLevel }}
-
-</div>
+              <div class="stat-value">{{ summary.xpToNextLevel }}</div>
               <div class="stat-sublabel">{{ Math.round(summary.xpProgress) }}% Complete</div>
             </div>
           </div>
@@ -142,36 +130,34 @@ function getRarityColor(rarity?: string): string {
           <div class="stats-grid">
             <div class="stat-card">
               <div class="stat-label">Total Badges</div>
-              <div class="stat-value">{{ summary.totalBadges }}
-
-</div>
+              <div class="stat-value">{{ summary.totalBadges }}</div>
             </div>
             <div class="stat-card">
               <div class="stat-label">Rare+ Badges</div>
-              <div class="stat-value legendary">{{ summary.rareBadges }}
-
-</div>
+              <div class="stat-value legendary">{{ summary.rareBadges }}</div>
             </div>
             <div class="stat-card">
               <div class="stat-label">Current Streak</div>
-              <div class="stat-value streak">{{ summary.currentStreak }}
+              <div class="stat-value streak">
+                {{ summary.currentStreak }}
 
- days</div>
+                days
+              </div>
             </div>
             <div class="stat-card">
               <div class="stat-label">Longest Streak</div>
-              <div class="stat-value">{{ summary.longestStreak }}
+              <div class="stat-value">
+                {{ summary.longestStreak }}
 
- days</div>
+                days
+              </div>
             </div>
           </div>
 
           <div v-if="summary.leaderboardRank" class="stats-grid">
             <div class="stat-card">
               <div class="stat-label">Leaderboard Rank</div>
-              <div class="stat-value rank">#{{ summary.leaderboardRank }}
-
-</div>
+              <div class="stat-value rank">#{{ summary.leaderboardRank }}</div>
             </div>
             <div class="stat-card">
               <div class="stat-label">Percentile</div>
@@ -199,14 +185,11 @@ function getRarityColor(rarity?: string): string {
                 <span v-else>🔒</span>
               </div>
               <div class="badge-info">
-                <h3>{{ badge.name }}
-
-</h3>
+                <h3>{{ badge.name }}</h3>
                 <p class="badge-description">{{ badge.description }}</p>
                 <div class="badge-meta">
                   <span class="badge-rarity" :style="{ color: getRarityColor(badge.rarity) }">
                     {{ badge.rarity }}
-
                   </span>
                   <span class="badge-xp">{{ badge.xpReward }} XP</span>
                 </div>
@@ -256,12 +239,12 @@ function getRarityColor(rarity?: string): string {
           </div>
 
           <div v-if="userRank" class="user-rank-banner">
-            <strong>Your Rank:</strong> #{{ userRank.rank }} out of {{ userRank.totalEntries }}
-            (Top {{ userRank.percentile }}%)
+            <strong>Your Rank:</strong> #{{ userRank.rank }} out of {{ userRank.totalEntries }} (Top
+            {{ userRank.percentile }}%)
             <br />
             <strong>Your Score:</strong> {{ userRank.score }}
 
- XP
+            XP
           </div>
 
           <div v-if="leaderboard" class="leaderboard-table">
@@ -278,24 +261,22 @@ function getRarityColor(rarity?: string): string {
               </thead>
               <tbody>
                 <tr v-for="entry in leaderboard.entries" :key="entry.userId">
-                  <td><strong>#{{ entry.rank }}
+                  <td>
+                    <strong>#{{ entry.rank }} </strong>
+                  </td>
+                  <td>{{ entry.displayName }}</td>
+                  <td>{{ entry.level }}</td>
+                  <td>
+                    {{ entry.score }}
 
-</strong></td>
-                  <td>{{ entry.displayName }}
+                    XP
+                  </td>
+                  <td>
+                    {{ entry.streak }}
 
-</td>
-                  <td>{{ entry.level }}
-
-</td>
-                  <td>{{ entry.score }}
-
- XP</td>
-                  <td>{{ entry.streak }}
-
- days</td>
-                  <td>{{ entry.badges.length }}
-
-</td>
+                    days
+                  </td>
+                  <td>{{ entry.badges.length }}</td>
                 </tr>
               </tbody>
             </table>
@@ -310,9 +291,7 @@ function getRarityColor(rarity?: string): string {
           <div class="streak-display">
             <div class="streak-main">
               <div class="streak-icon">🔥</div>
-              <div class="streak-number">{{ streak.currentStreak }}
-
-</div>
+              <div class="streak-number">{{ streak.currentStreak }}</div>
               <div class="streak-label">Day Streak</div>
             </div>
           </div>
@@ -320,32 +299,34 @@ function getRarityColor(rarity?: string): string {
           <div class="stats-grid">
             <div class="stat-card">
               <div class="stat-label">Current Streak</div>
-              <div class="stat-value streak">{{ streak.currentStreak }}
+              <div class="stat-value streak">
+                {{ streak.currentStreak }}
 
- days</div>
+                days
+              </div>
             </div>
             <div class="stat-card">
               <div class="stat-label">Longest Streak</div>
-              <div class="stat-value">{{ streak.longestStreak }}
+              <div class="stat-value">
+                {{ streak.longestStreak }}
 
- days</div>
+                days
+              </div>
             </div>
             <div class="stat-card">
               <div class="stat-label">Missed Days</div>
-              <div class="stat-value">{{ streak.missedDays || 0 }}
-
-</div>
+              <div class="stat-value">{{ streak.missedDays || 0 }}</div>
             </div>
           </div>
 
           <div class="streak-dates">
             <p v-if="streak.lastActivityDate">
-              <strong>Last Activity:</strong> {{ new Date(streak.lastActivityDate).toLocaleDateString() }}
-
+              <strong>Last Activity:</strong>
+              {{ new Date(streak.lastActivityDate).toLocaleDateString() }}
             </p>
             <p v-if="streak.streakStartDate">
-              <strong>Streak Started:</strong> {{ new Date(streak.streakStartDate).toLocaleDateString() }}
-
+              <strong>Streak Started:</strong>
+              {{ new Date(streak.streakStartDate).toLocaleDateString() }}
             </p>
           </div>
         </section>

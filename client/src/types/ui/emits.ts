@@ -13,4 +13,3 @@ export interface LoginFormEmits {
   (e: "show-forgot-password"): void;
   (e: "show-register"): void;
 }
-

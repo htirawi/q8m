@@ -1,9 +1,7 @@
 <template>
   <div class="recent-activity">
     <div class="recent-activity__header">
-      <h3 class="recent-activity__title">{{ $t('dashboard.recentActivity') }}
-
-</h3>
+      <h3 class="recent-activity__title">{{ $t("dashboard.recentActivity") }}</h3>
       <button
         v-if="activities.length > displayLimit"
         class="recent-activity__toggle"
@@ -21,9 +19,7 @@
         @click="handleActivityClick(activity)"
       >
         <div class="activity-item__icon" :class="`activity-item__icon--${activity.type}`">
-          <span v-if="activity.icon">{{ activity.icon }}
-
-</span>
+          <span v-if="activity.icon">{{ activity.icon }} </span>
           <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <circle cx="12" cy="12" r="10" />
             <path d="M12 6v6l4 2" />
@@ -31,12 +27,9 @@
         </div>
 
         <div class="activity-item__content">
-          <h4 class="activity-item__title">{{ activity.title }}
-
-</h4>
+          <h4 class="activity-item__title">{{ activity.title }}</h4>
           <p v-if="activity.description" class="activity-item__description">
             {{ activity.description }}
-
           </p>
           <time class="activity-item__time" :datetime="activity.timestamp">
             {{ formatTime(activity.timestamp) }}
@@ -71,21 +64,19 @@
           <path d="M12 2v6m0 4v8m0-16a4 4 0 110 8 4 4 0 010-8z" />
         </svg>
       </div>
-      <p class="recent-activity__empty-text">{{ $t('dashboard.noRecentActivity') }}
-
-</p>
+      <p class="recent-activity__empty-text">{{ $t("dashboard.noRecentActivity") }}</p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useRouter } from 'vue-router';
+import { ref, computed } from "vue";
+import { useI18n } from "vue-i18n";
+import { useRouter } from "vue-router";
 
 export interface activity {
   id: string;
-  type: 'completion' | 'achievement' | 'progress' | 'unlock' | 'milestone';
+  type: "completion" | "achievement" | "progress" | "unlock" | "milestone";
   title: string;
   description?: string;
   timestamp: Date | string;
@@ -102,11 +93,11 @@ interface props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  displayLimit: 5
+  displayLimit: 5,
 });
 
 const emit = defineEmits<{
-  'action-click': [activity: Activity];
+  "action-click": [activity: Activity];
 }>();
 
 const { t, locale } = useI18n();
@@ -122,7 +113,8 @@ const displayedActivities = computed(() => {
 });
 
 const formatTime = (timestamp: Date | string): string => {
-  const date = typeof timestamp === 'string' ? new Date(timestamp) : timestamp;datetypeoftimestampnewDate
+  const date = typeof timestamp === "string" ? new Date(timestamp) : timestamp;
+  datetypeoftimestampnewDate;
   const now = new Date();
   const diff = now.getTime() - date.getTime();
 
@@ -130,21 +122,21 @@ const formatTime = (timestamp: Date | string): string => {
   const hours = Math.floor(diff / 3600000);
   const days = Math.floor(diff / 86400000);
 
-  if (minutes < 1) return t('time.justNow');
-  if (minutes < 60) return t('time.minutesAgo', { count: minutes });
-  if (hours < 24) return t('time.hoursAgo', { count: hours });
-  if (days < 7) return t('time.daysAgo', { count: days });
+  if (minutes < 1) return t("time.justNow");
+  if (minutes < 60) return t("time.minutesAgo", { count: minutes });
+  if (hours < 24) return t("time.hoursAgo", { count: hours });
+  if (days < 7) return t("time.daysAgo", { count: days });
 
   // Format as date for older activities
   return date.toLocaleDateString(locale.value, {
-    month: 'short',
-    day: 'numeric',
-    year: date.getFullYear() !== now.getFullYear() ? 'numeric' : undefined
+    month: "short",
+    day: "numeric",
+    year: date.getFullYear() !== now.getFullYear() ? "numeric" : undefined,
   });
 };
 
 const handleactivityclick = (activity: Activity) => {
-  emit('activity-click', activity);
+  emit("activity-click", activity);
 
   if (activity.actionUrl) {
     router.push(activity.actionUrl);
@@ -152,22 +144,21 @@ const handleactivityclick = (activity: Activity) => {
 };
 
 const handleaction = (activity: Activity) => {
-  emit('action-click', activity);
+  emit("action-click", activity);
 };
-
 </script>
 
 <style scoped>
 /* Container */
 .recent-activity {
-  @apply bg-white dark:bg-gray-800 rounded-xl shadow-sm;
+  @apply rounded-xl bg-white shadow-sm dark:bg-gray-800;
   @apply border border-gray-200 dark:border-gray-700;
   @apply p-6;
 }
 
 /* Header */
 .recent-activity__header {
-  @apply flex items-center justify-between mb-4;
+  @apply mb-4 flex items-center justify-between;
 }
 
 .recent-activity__title {
@@ -186,21 +177,21 @@ const handleaction = (activity: Activity) => {
 
 /* Activity item */
 .activity-item {
-  @apply flex items-start gap-3 p-3 rounded-lg;
+  @apply flex items-start gap-3 rounded-lg p-3;
   @apply hover:bg-gray-50 dark:hover:bg-gray-700/30;
-  @apply transition-colors duration-fast cursor-pointer;
+  @apply cursor-pointer transition-colors duration-fast;
   @apply border border-transparent hover:border-gray-200 dark:hover:border-gray-600;
 }
 
 /* Activity icon */
 .activity-item__icon {
-  @apply flex-shrink-0 w-10 h-10 rounded-lg;
+  @apply h-10 w-10 flex-shrink-0 rounded-lg;
   @apply flex items-center justify-center;
   @apply text-lg;
 }
 
 .activity-item__icon svg {
-  @apply w-5 h-5;
+  @apply h-5 w-5;
 }
 
 .activity-item__icon--completion {
@@ -225,7 +216,7 @@ const handleaction = (activity: Activity) => {
 
 /* Content */
 .activity-item__content {
-  @apply flex-1 min-w-0;
+  @apply min-w-0 flex-1;
 }
 
 .activity-item__title {
@@ -234,12 +225,12 @@ const handleaction = (activity: Activity) => {
 }
 
 .activity-item__description {
-  @apply text-xs text-gray-600 dark:text-gray-400 mt-0.5;
+  @apply mt-0.5 text-xs text-gray-600 dark:text-gray-400;
   @apply line-clamp-2;
 }
 
 .activity-item__time {
-  @apply text-xs text-gray-500 dark:text-gray-500 mt-1;
+  @apply mt-1 text-xs text-gray-500 dark:text-gray-500;
 }
 
 /* Progress */
@@ -248,7 +239,7 @@ const handleaction = (activity: Activity) => {
 }
 
 .activity-item__progress-bar {
-  @apply w-20 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden;
+  @apply h-1.5 w-20 overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700;
   @apply mb-1;
 }
 
@@ -263,14 +254,14 @@ const handleaction = (activity: Activity) => {
 
 /* Action button */
 .activity-item__action {
-  @apply flex-shrink-0 w-6 h-6 rounded;
+  @apply h-6 w-6 flex-shrink-0 rounded;
   @apply text-gray-400 hover:text-gray-600 dark:hover:text-gray-300;
   @apply hover:bg-gray-100 dark:hover:bg-gray-700;
   @apply transition-all duration-fast;
 }
 
 .activity-item__action svg {
-  @apply w-full h-full;
+  @apply h-full w-full;
 }
 
 /* Empty state */
@@ -279,12 +270,12 @@ const handleaction = (activity: Activity) => {
 }
 
 .recent-activity__empty-icon {
-  @apply w-12 h-12 mx-auto mb-3;
+  @apply mx-auto mb-3 h-12 w-12;
   @apply text-gray-400 dark:text-gray-600;
 }
 
 .recent-activity__empty-icon svg {
-  @apply w-full h-full;
+  @apply h-full w-full;
 }
 
 .recent-activity__empty-text {
@@ -298,11 +289,11 @@ const handleaction = (activity: Activity) => {
 }
 
 .activity-list-enter-from {
-  @apply opacity-0 translate-x-4;
+  @apply translate-x-4 opacity-0;
 }
 
 .activity-list-leave-to {
-  @apply opacity-0 -translate-x-4;
+  @apply -translate-x-4 opacity-0;
 }
 
 .activity-list-move {

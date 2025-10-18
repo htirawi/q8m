@@ -7,10 +7,13 @@ import { ref } from "vue";
 import { httpClient, getErrorMessage } from "@/utils/httpClient";
 import { API_ENDPOINTS } from "@/config/api";
 import type { ExperienceLevel } from "@shared/types/plan";
-import type { ISubmitQuizPayload, ISubmitQuizResponse, IQuizResult, IWeakArea } from '@shared/types/composables';
 import type {
-  IQuizStats,
-} from "@shared/types/quiz-result";
+  ISubmitQuizPayload,
+  ISubmitQuizResponse,
+  IQuizResult,
+  IWeakArea,
+} from "@shared/types/composables";
+import type { IQuizStats } from "@shared/types/quiz-result";
 export function useQuizResults() {
   const isLoading = ref(false);
   const error = ref<string | null>(null);
@@ -22,9 +25,7 @@ export function useQuizResults() {
   /**
    * Submit quiz results
    */
-  async function submitQuiz(
-    payload: ISubmitQuizPayload
-  ): Promise<ISubmitQuizResponse | null> {
+  async function submitQuiz(payload: ISubmitQuizPayload): Promise<ISubmitQuizResponse | null> {
     isLoading.value = true;
     error.value = null;
 
@@ -45,11 +46,13 @@ export function useQuizResults() {
   /**
    * Get quiz history
    */
-  async function getHistory(options: {
-    level?: ExperienceLevel;
-    limit?: number;
-    offset?: number;
-  } = {}): Promise<IQuizResult[] | null> {
+  async function getHistory(
+    options: {
+      level?: ExperienceLevel;
+      limit?: number;
+      offset?: number;
+    } = {}
+  ): Promise<IQuizResult[] | null> {
     isLoading.value = true;
     error.value = null;
 
@@ -103,9 +106,11 @@ export function useQuizResults() {
   /**
    * Get weak areas
    */
-  async function getWeakAreas(options: {
-    level?: ExperienceLevel;
-  } = {}): Promise<IWeakArea[] | null> {
+  async function getWeakAreas(
+    options: {
+      level?: ExperienceLevel;
+    } = {}
+  ): Promise<IWeakArea[] | null> {
     isLoading.value = true;
     error.value = null;
 

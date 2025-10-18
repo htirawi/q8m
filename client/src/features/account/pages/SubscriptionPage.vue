@@ -111,21 +111,15 @@ onMounted(async () => {
     <div class="subscription-container">
       <!-- Header -->
       <div class="subscription-header">
-        <h1 class="subscription-title">{{ $t("subscription.title") }}
-
-</h1>
-        <p class="subscription-subtitle">{{ $t("subscription.subtitle") }}
-
-</p>
+        <h1 class="subscription-title">{{ $t("subscription.title") }}</h1>
+        <p class="subscription-subtitle">{{ $t("subscription.subtitle") }}</p>
       </div>
 
       <!-- Loading State -->
       <div v-if="paymentStore.isLoading" class="loading-container">
         <div class="loading-spinner">
           <div class="h-12 w-12 animate-spin rounded-full border-b-2 border-indigo-600"></div>
-          <p class="mt-4 text-gray-600 dark:text-gray-300">{{ $t("common.loading") }}
-
-</p>
+          <p class="mt-4 text-gray-600 dark:text-gray-300">{{ $t("common.loading") }}</p>
         </div>
       </div>
 
@@ -150,15 +144,10 @@ onMounted(async () => {
               />
             </svg>
           </div>
-          <h2 class="no-subscription-title">{{ $t("subscription.noSubscription.title") }}
-
-</h2>
-          <p class="no-subscription-message">{{ $t("subscription.noSubscription.message") }}
-
-</p>
+          <h2 class="no-subscription-title">{{ $t("subscription.noSubscription.title") }}</h2>
+          <p class="no-subscription-message">{{ $t("subscription.noSubscription.message") }}</p>
           <button @click="goToPricing" class="btn-primary">
             {{ $t("subscription.noSubscription.choosePlan") }}
-
           </button>
         </div>
       </div>

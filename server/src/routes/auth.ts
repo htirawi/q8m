@@ -1191,7 +1191,8 @@ export default async function authRoutes(fastify: FastifyInstance) {
   fastify.get("/google/callback", async (request, reply) => {
     try {
       // Get the OAuth2 token from Google
-      const tokenResponse = await fastify.googleOAuth2.getAccessTokenFromAuthorizationCodeFlow(request);
+      const tokenResponse =
+        await fastify.googleOAuth2.getAccessTokenFromAuthorizationCodeFlow(request);
 
       // Runtime behavior: tokenResponse has a nested 'token' property despite type definition
       // Type assertion needed because fastify-oauth2 types don't match actual runtime structure
@@ -1218,7 +1219,9 @@ export default async function authRoutes(fastify: FastifyInstance) {
           statusText: response.statusText,
           errorBody,
         });
-        throw new Error(`Failed to fetch user profile from Google: ${response.status} ${errorBody}`);
+        throw new Error(
+          `Failed to fetch user profile from Google: ${response.status} ${errorBody}`
+        );
       }
 
       const googleUser = (await response.json()) as {
@@ -1401,7 +1404,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
           }
 
           // Only allow whitelisted emails (if configured)
-          const devWhitelist = env.DEV_LOGIN_WHITELIST?.split(',').map(e => e.trim()) || [];
+          const devWhitelist = env.DEV_LOGIN_WHITELIST?.split(",").map((e) => e.trim()) || [];
           if (devWhitelist.length > 0 && !devWhitelist.includes(email)) {
             return reply.status(403).send({
               code: 403,
@@ -1415,7 +1418,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
 
           if (!user) {
             // Create new dev user with secure random password
-            const randomPassword = crypto.randomBytes(32).toString('hex');
+            const randomPassword = crypto.randomBytes(32).toString("hex");
             user = new User({
               email,
               name: "Dev User",
