@@ -40,6 +40,7 @@ export interface ISubmitQuizResponse {
   totalXP?: number;
   currentXP?: number;
   xpToNextLevel?: number;
+  xpBreakdown?: Record<string, unknown>; // Detailed XP breakdown
   streak?: number;
   coins?: number;
   badges?: Array<{
