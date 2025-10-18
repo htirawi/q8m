@@ -6,7 +6,6 @@
 import { ref, onMounted, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
-import { useI18n } from "vue-i18n";
 
 export interface SessionTimeoutOptions {
   /** Timeout duration in milliseconds (default: 1 hour) */
@@ -48,6 +47,9 @@ export function useSessionTimeout(options: SessionTimeoutOptions = {}) {
     "click",
   ] as const;
 
+  // Define debounce timer variable
+  let debounceTimer: number | null = null;
+
   const resetTimeout = () => {
     if (!resetOnActivity) return;
 
@@ -68,17 +70,13 @@ export function useSessionTimeout(options: SessionTimeoutOptions = {}) {
     showWarningDialog.value = false;
 
     // Set new timeouts (debounced to prevent excessive calls)
-    if (resetTimeout.debounceTimer) {
-      clearTimeout(resetTimeout.debounceTimer);
+    if (debounceTimer) {
+      clearTimeout(debounceTimer);
     }
-    resetTimeout.debounceTimer = window.setTimeout(() => {
+    debounceTimer = window.setTimeout(() => {
       setTimeouts();
     }, 100); // Debounce timeout resets
   };
-
-  // Add debounce timer property
-  type ResetTimeoutWithDebounce = typeof resetTimeout & { debounceTimer: ReturnType<typeof setTimeout> | null };
-  (resetTimeout as ResetTimeoutWithDebounce).debounceTimer = null;
 
   const setTimeouts = () => {
     // Set warning timeout
