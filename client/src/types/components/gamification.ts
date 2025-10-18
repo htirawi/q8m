@@ -118,8 +118,11 @@ export interface IStreakDisplayProps {
 export interface IXPSource {
   label: string;
   amount: number;
+  xp?: number; // Alias for amount
   icon?: string;
   color?: string;
+  description?: string;
+  detail?: string;
 }
 
 export interface IMultiplier {
@@ -131,6 +134,9 @@ export interface IXPBreakdownProps {
   sources: IXPSource[];
   multipliers?: IMultiplier[];
   totalXP: number;
+  variant?: "compact" | "detailed" | "card";
+  showTips?: boolean;
+  breakdown?: Record<string, unknown>; // For detailed breakdown data
 }
 
 export interface IXPDisplayProps {
