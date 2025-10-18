@@ -370,7 +370,7 @@
 
 <script setup lang="ts">
 import type { INotificationPreferences } from "@/types/components/notifications";
-import { ref, reactive, watch, onMounted } from "vue";
+import { ref, reactive, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useNotifications } from "@/composables/useNotifications";
 

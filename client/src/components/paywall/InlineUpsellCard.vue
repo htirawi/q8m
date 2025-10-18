@@ -87,7 +87,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { trackEvent } from "@/utils/telemetry";
 import type { IInlineUpsellCardProps as Props } from "@/types/components/paywall";

@@ -436,8 +436,6 @@ const emit = defineEmits<{
   "open-chat": [context: any];
 }>();
 
-// i18n
-const { t } = useI18n();
 
 // State
 const isExpanded = ref(props.autoExpand);

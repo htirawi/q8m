@@ -146,7 +146,6 @@ const emit = defineEmits<{
   "item-click": [item: IRecommendation];
 }>();
 
-const { t } = useI18n();
 const router = useRouter();
 
 const isRefreshing = ref(false);
