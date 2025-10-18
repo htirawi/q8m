@@ -114,7 +114,7 @@
           :question="currentQuestion"
           :level="level"
           :locale="locale"
-          v-model:selected-answer="selectedAnswer ?? undefined"
+          v-model:selected-answer="selectedAnswer"
           v-model:text-answer="textAnswer"
           v-model:multiple-answers="multipleAnswers"
           :has-answered="hasAnswered"
@@ -287,7 +287,7 @@ const badgeNotificationRef = ref<InstanceType<typeof BadgeUnlockNotification> | 
 
 const questions = ref<Question[]>([]);
 const currentIndex = ref(0);
-const selectedAnswer = ref<string | string[] | null>(null);
+const selectedAnswer = ref<string | string[] | undefined>(undefined);
 const textAnswer = ref("");
 const multipleAnswers = ref<string[]>([]);
 const hasAnswered = ref(false);
@@ -489,7 +489,7 @@ const nextQuestion = () => {
 };
 
 const resetQuestionState = () => {
-  selectedAnswer.value = null;
+  selectedAnswer.value = undefined;
   textAnswer.value = "";
   multipleAnswers.value = [];
   hasAnswered.value = false;
