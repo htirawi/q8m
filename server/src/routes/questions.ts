@@ -753,17 +753,23 @@ export default async function questionRoutes(fastify: FastifyInstance) {
 
         let isCorrect = false;
         let correctAnswer: string | string[] = "";
-        let points = question.points || 1;
+        const points = question.points || 1;
+
+        interface QuestionOption {
+          id: string;
+          text: string;
+          isCorrect: boolean;
+        }
 
         // Validate answer based on question type
         if (question.type === "multiple-choice" || question.type === "true-false") {
           // Find the correct option
-          const correctOption = content.options?.find((opt: any) => opt.isCorrect);
+          const correctOption = content.options?.find((opt: QuestionOption) => opt.isCorrect);
           correctAnswer = correctOption?.id || "";
           isCorrect = answer === correctAnswer;
         } else if (question.type === "fill-blank") {
           // Find the correct text answer
-          const correctOption = content.options?.find((opt: any) => opt.isCorrect);
+          const correctOption = content.options?.find((opt: QuestionOption) => opt.isCorrect);
           correctAnswer = correctOption?.text || "";
           const correctAnswerStr = String(correctAnswer);
           const correctAnswerLower = correctAnswerStr.toLowerCase().trim();
@@ -772,8 +778,8 @@ export default async function questionRoutes(fastify: FastifyInstance) {
             : String(answer).toLowerCase().trim() === correctAnswerLower;
         } else if (question.type === "multiple-checkbox") {
           // Get all correct option IDs
-          const correctOptions = content.options?.filter((opt: any) => opt.isCorrect) || [];
-          correctAnswer = correctOptions.map((opt: any) => opt.id).sort();
+          const correctOptions = content.options?.filter((opt: QuestionOption) => opt.isCorrect) || [];
+          correctAnswer = correctOptions.map((opt: QuestionOption) => opt.id).sort();
           const userAnswerArray = Array.isArray(answer) ? answer.sort() : [answer].sort();
           isCorrect = JSON.stringify(correctAnswer) === JSON.stringify(userAnswerArray);
         }

@@ -1,4 +1,10 @@
-import { FastifyInstance } from "fastify";
+import type { FastifyInstance } from "fastify";
+
+interface AIChatBody {
+  message: string;
+  context?: Record<string, unknown>;
+  sessionId?: string;
+}
 
 export default async function aiRoutes(fastify: FastifyInstance) {
   // AI Chat endpoint
@@ -19,7 +25,7 @@ export default async function aiRoutes(fastify: FastifyInstance) {
     },
     async (request, reply) => {
       try {
-        const { message, context } = request.body as any;
+        const { message, context } = request.body as AIChatBody;
 
         // For now, return a mock response until we integrate with a real AI service
         const mockResponse = {
