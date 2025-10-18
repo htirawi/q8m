@@ -38,7 +38,7 @@ export default async function aiRoutes(fastify: FastifyInstance) {
           data: mockResponse,
         });
       } catch (error) {
-        fastify.log.error("AI chat error:", error);
+        fastify.log.error({ err: error }, "AI chat error");
         return reply.status(500).send({
           success: false,
           message: "Failed to process AI request",
