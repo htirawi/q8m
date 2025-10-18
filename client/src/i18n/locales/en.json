@@ -8,15 +8,75 @@
     "new": "New",
     "retry": "Retry",
     "refresh": "Refresh",
-    "complete": "Complete"
+    "complete": "Complete",
+    "goBack": "Go Back",
+    "retrying": "Retrying",
+    "showDetails": "Show Details",
+    "error": "Error"
+  },
+  "seo": {
+    "siteName": "q8m - Quiz 8 Mastery"
+  },
+  "sessionTimeout": {
+    "title": "Session Timeout Warning",
+    "message": "You've been inactive for a while. Your session will expire soon.",
+    "logout": "Logout Now",
+    "stayLoggedIn": "Stay Logged In"
+  },
+  "ai": {
+    "openChat": "Open AI Assistant",
+    "closeChat": "Close AI Assistant",
+    "toggleVoice": "Toggle Voice Input",
+    "toggleFullscreen": "Toggle Fullscreen",
+    "settings": "AI Settings",
+    "assistantName": "Q8M AI Assistant",
+    "statusOnline": "Online",
+    "statusThinking": "Thinking...",
+    "statusListening": "Listening...",
+    "thinking": "Thinking...",
+    "listening": "Listening...",
+    "inputPlaceholder": "Ask me anything about your learning...",
+    "send": "Send Message",
+    "copy": "Copy",
+    "regenerate": "Regenerate",
+    "speak": "Read Aloud",
+    "helpful": "Helpful",
+    "attach": "Attach File",
+    "voiceInput": "Voice Input",
+    "justNow": "Just now",
+    "minutesAgo": "{count} minutes ago",
+    "hoursAgo": "{count} hours ago",
+    "welcomeTitle": "👋 Hello! I'm your AI Learning Assistant",
+    "welcomeText": "I'm here to help you understand concepts, debug code, and improve your skills. How can I assist you today?",
+    "errorSending": "Sorry, I couldn't process your message. Please try again.",
+    "quickActions": {
+      "explain": "Explain Concept",
+      "explainDesc": "Get detailed explanations",
+      "debug": "Debug Code",
+      "debugDesc": "Find and fix issues",
+      "improve": "Improve Code",
+      "improveDesc": "Get optimization tips",
+      "learn": "Study Plan",
+      "learnDesc": "Create learning roadmap"
+    }
   },
   "errors": {
-    "logoutFailed": "Failed to log out. Please try again."
+    "logoutFailed": "Failed to log out. Please try again.",
+    "somethingWentWrong": "Something Went Wrong",
+    "defaultMessage": "An unexpected error occurred. Please try again.",
+    "networkError": "Unable to connect. Please check your internet connection.",
+    "sessionExpired": "Your session has expired. Please log in again.",
+    "validationError": "Please check your input and try again.",
+    "serverError": "Server error. Please try again later.",
+    "notFound": "The requested resource was not found.",
+    "forbidden": "You don't have permission to access this resource.",
+    "unauthorized": "You need to be logged in to perform this action."
   },
   "actions": {
     "continue": "Continue",
     "skipForNow": "Skip for now",
-    "learn": "Learn More"
+    "learn": "Learn More",
+    "loading": "Loading..."
   },
   "stats": {
     "streak": "Streak",
@@ -24,7 +84,9 @@
     "dayStreak": "{count} day streak",
     "coins": "Coins",
     "level": "Level",
-    "streakWeekWarrior": "Week Warrior"
+    "streakWeekWarrior": "Week Warrior",
+    "streakBuildingMomentum": "Building momentum",
+    "streakConsistent": "Consistent learner"
   },
   "time": {
     "hoursAgo": "{count} hours ago",
@@ -54,28 +116,79 @@
       "title": "Junior",
       "subtitle": "Perfect for beginners",
       "description": "Master the fundamentals with carefully curated questions for those starting their frontend journey",
-      "duration": "15-20 mins per session"
+      "duration": "15-20 mins per session",
+      "label": "Junior"
     },
     "intermediate": {
       "title": "Intermediate",
       "subtitle": "Level up your skills",
       "description": "Challenge yourself with complex scenarios and deepen your understanding of advanced concepts",
-      "duration": "20-30 mins per session"
+      "duration": "20-30 mins per session",
+      "label": "Intermediate"
     },
     "senior": {
       "title": "Senior",
       "subtitle": "Master level challenges",
       "description": "Tackle expert-level questions covering architecture, performance, and best practices",
-      "duration": "30-45 mins per session"
+      "duration": "30-45 mins per session",
+      "label": "Senior"
     },
     "custom": {
       "title": "Custom",
       "subtitle": "Create your own path",
       "description": "Mix and match topics to create a personalized learning experience tailored to your needs",
-      "duration": "Flexible"
+      "duration": "Flexible",
+      "label": "Custom"
     },
     "lockedCard": "{title} level requires {plan} plan",
-    "selectCard": "Select {title} difficulty level"
+    "selectCard": "Select {title} difficulty level",
+    "badgePro": "premium feature",
+    "badgeNew": "just added",
+    "badgePopular": "trending",
+    "badgeRecommended": "for you"
+  },
+  "select": {
+    "title": "Choose Your Learning Path",
+    "subtitle": "Select the difficulty level that matches your experience and start your journey",
+    "subtitleWithStreak": "You're on a {streak} day streak! Keep it going!",
+    "breadcrumb": "Select Level",
+    "cardAriaLabel": "Select {title} level",
+    "requiresPlan": "Requires {plan} plan",
+    "progressLabel": "{progress}% complete",
+    "complete": "complete",
+    "selected": "✓ Selected",
+    "choose": "Choose",
+    "upgrade": "Upgrade",
+    "continue": "Continue",
+    "continueAriaLabel": "Continue with selected level",
+    "skip": "Skip for now",
+    "skipAriaLabel": "Skip level selection",
+    "loading": "Loading...",
+    "helpLink": "What should I choose?",
+    "closeHelp": "Close help dialog",
+    "helpModalTitle": "Choosing Your Level",
+    "helpModalSubtitle": "Find the perfect learning path that matches your experience and goals",
+    "helpJuniorDesc": "Perfect for developers starting their frontend journey or those with less than 1 year of experience.",
+    "helpJuniorFeature1": "Foundational concepts and best practices",
+    "helpJuniorFeature2": "Core JavaScript, HTML, and CSS knowledge",
+    "helpJuniorFeature3": "Introduction to modern frameworks",
+    "helpIntermediateDesc": "Ideal for developers with 1-3 years of experience looking to deepen their skills.",
+    "helpIntermediateFeature1": "Advanced component patterns and architecture",
+    "helpIntermediateFeature2": "State management and performance optimization",
+    "helpIntermediateFeature3": "Testing strategies and CI/CD workflows",
+    "helpSeniorDesc": "Designed for experienced developers (3+ years) seeking expert-level challenges.",
+    "helpSeniorFeature1": "System design and scalability patterns",
+    "helpSeniorFeature2": "Advanced performance tuning and debugging",
+    "helpSeniorFeature3": "Team leadership and architectural decisions",
+    "helpCustomDesc": "Create your own personalized learning path by mixing topics from different levels.",
+    "helpCustomFeature1": "Choose specific topics that interest you",
+    "helpCustomFeature2": "Flexible learning tailored to your needs",
+    "helpNote": "Don't worry! You can always switch levels later as you progress.",
+    "gotIt": "Got it, thanks!",
+    "emptyTitle": "No Options Available",
+    "emptyMessage": "We couldn't find any levels that match your criteria. Try adjusting your filters or contact support if the problem persists.",
+    "resetFilters": "Reset Filters",
+    "dismiss": "Dismiss"
   },
   "navigation": {
     "home": "Home",
@@ -125,7 +238,7 @@
   },
   "home": {
     "hero": {
-      "badge": "🚀 Professional Interview Prep",
+      "badge": "Professional Interview Prep",
       "title": "Master Frontend Development Interviews",
       "headline": {
         "control": "Master Frontend Development Interviews",
@@ -181,6 +294,7 @@
     },
     "features": {
       "title": "Why Choose q8m?",
+      "subtitle": "Everything you need to ace your frontend interviews",
       "description": "Comprehensive interview preparation designed by industry experts",
       "comprehensive": {
         "title": "Comprehensive Coverage",
@@ -188,11 +302,29 @@
       },
       "interactive": {
         "title": "Interactive Learning",
+        "body": "Hands-on practice with instant feedback and detailed explanations",
         "description": "Real-time feedback and explanations to help you understand concepts deeply"
       },
+      "curated": {
+        "title": "Expert-Curated Content",
+        "body": "500+ questions carefully selected by industry professionals"
+      },
       "analytics": {
-        "title": "Progress Analytics",
+        "title": "Progress Tracking",
+        "body": "Monitor your improvement with comprehensive analytics",
         "description": "Track your progress and identify areas for improvement"
+      },
+      "ai": {
+        "title": "AI-Powered Assistance",
+        "body": "Get personalized hints and explanations powered by AI"
+      },
+      "multilang": {
+        "title": "Multi-Language Support",
+        "body": "Available in English and Arabic with full RTL support"
+      },
+      "gamification": {
+        "title": "Gamified Experience",
+        "body": "Stay motivated with XP, badges, and achievements"
       },
       "community": {
         "title": "Expert Community",
@@ -207,12 +339,39 @@
         "description": "Practice anywhere with our mobile-first design"
       }
     },
+    "credibility": {
+      "title": "Powered by Industry-Leading Technologies",
+      "react": { "alt": "React logo" },
+      "vue": { "alt": "Vue.js logo" },
+      "angular": { "alt": "Angular logo" },
+      "nextjs": { "alt": "Next.js logo" },
+      "redux": { "alt": "Redux logo" },
+      "svelte": { "alt": "Svelte logo" },
+      "typescript": { "alt": "TypeScript logo" }
+    },
+    "howItWorks": {
+      "title": "How It Works",
+      "subtitle": "Get started in 3 simple steps",
+      "step1": {
+        "title": "Choose Your Path",
+        "description": "Select your experience level and preferred learning mode"
+      },
+      "step2": {
+        "title": "Learn & Practice",
+        "description": "Work through curated questions with real-time feedback"
+      },
+      "step3": {
+        "title": "Track Progress",
+        "description": "Monitor your growth and identify areas for improvement"
+      }
+    },
     "banner": {
       "title": "Ready to land your dream job?",
       "description": "Unlock your dream job with a 5-minute evaluator for a personalized learning plan!"
     },
     "testimonials": {
       "title": "Success Stories from Our Community",
+      "subtitle": "See what developers are saying about q8m",
       "description": "Join thousands of developers who have successfully landed their dream jobs",
       "sarah": {
         "text": "q8m completely transformed my interview preparation. The structured approach and real-time feedback helped me land my dream job at Google. I couldn't have done it without this platform!",
@@ -231,6 +390,26 @@
         "name": "Emma Thompson",
         "role": "Frontend Engineer",
         "company": "Meta"
+      },
+      "items": {
+        "sarah": {
+          "quote": "q8m helped me land my dream job at Google. The structured approach and real-time feedback were game-changers!",
+          "name": "Sarah Chen",
+          "role": "Senior Frontend Developer",
+          "company": "Google"
+        },
+        "ahmed": {
+          "quote": "Within 2 weeks of using q8m, I went from failing interviews to getting multiple offers. Highly recommended!",
+          "name": "Ahmed Al-Rashid",
+          "role": "Lead Developer",
+          "company": "Amazon"
+        },
+        "emma": {
+          "quote": "The comprehensive coverage and interactive learning made all the difference. I finally understand frontend concepts deeply!",
+          "name": "Emma Thompson",
+          "role": "Frontend Engineer",
+          "company": "Meta"
+        }
       }
     },
     "learningPath": {
@@ -330,6 +509,7 @@
     "pricing": {
       "title": "Choose the Plan That Fits Your Goals",
       "subtitle": "No credit card required to start your free trial",
+      "popular": "Most Popular",
       "monthly": "Monthly",
       "yearly": "Yearly",
       "perMonth": "/month",
@@ -337,6 +517,45 @@
       "savingsMessage": "Save over 2 months with annual billing",
       "popularBadge": "Most Popular",
       "viewAllPlans": "View All Plans & Features",
+      "tiers": {
+        "free": {
+          "title": "Junior",
+          "price": "Free",
+          "description": "Perfect for beginners",
+          "bullets": {
+            "questions": "50 curated questions",
+            "frameworks": "All major frameworks",
+            "community": "Community support"
+          },
+          "cta": "Start Learning Free"
+        },
+        "intermediate": {
+          "title": "Intermediate",
+          "price": "$15/mo",
+          "description": "Most popular for serious learners",
+          "bullets": {
+            "allBasic": "Everything in Junior, plus:",
+            "questions": "250+ practice questions",
+            "analytics": "Detailed analytics dashboard",
+            "bookmarks": "Bookmarks & notes",
+            "support": "Priority email support"
+          },
+          "cta": "Start Free Trial"
+        },
+        "pro": {
+          "title": "All-Access",
+          "price": "$30/mo",
+          "description": "For professionals seeking mastery",
+          "bullets": {
+            "allIntermediate": "Everything in Intermediate, plus:",
+            "unlimited": "Unlimited questions",
+            "ai": "AI-powered explanations",
+            "coaching": "1-on-1 coaching sessions",
+            "priority": "24/7 priority support"
+          },
+          "cta": "Start Free Trial"
+        }
+      },
       "billing": {
         "perMonth": "/month",
         "perYear": "/year"
@@ -391,7 +610,32 @@
     },
     "faq": {
       "title": "Frequently Asked Questions",
-      "subtitle": "Everything you need to know before you start",
+      "subtitle": "Everything you need to know about q8m",
+      "search": {
+        "placeholder": "Search frequently asked questions...",
+        "clear": "Clear search"
+      },
+      "categories": {
+        "all": "All",
+        "billing": "Billing",
+        "features": "Features",
+        "support": "Support"
+      },
+      "stats": {
+        "questions": "Questions",
+        "open": "Open"
+      },
+      "noResults": {
+        "title": "No results found",
+        "description": "Try searching with different keywords or browse different categories",
+        "cta": "Reset search"
+      },
+      "support": {
+        "title": "Still need help?",
+        "description": "Our support team is available 24/7 to help you with any questions",
+        "chat": "Live Chat",
+        "email": "Send Email"
+      },
       "noCreditCard": {
         "question": "Do I need a credit card for the free trial?",
         "answer": "No! Start your 7-day free trial with just an email address. No credit card required. After the trial, you can choose to upgrade to a paid plan or continue with the free tier."
@@ -415,7 +659,38 @@
       "studentDiscount": {
         "question": "Do you offer student discounts?",
         "answer": "Yes! Students get 50% off all paid plans. Simply email us your valid student ID or proof of enrollment, and we'll send you a discount code within 24 hours."
+      },
+      "items": {
+        "trial": {
+          "question": "Do I need a credit card for the free trial?",
+          "answer": "No! You can start with our Junior plan immediately, no credit card required. Upgrade anytime to access premium features."
+        },
+        "payment": {
+          "question": "What payment methods do you accept?",
+          "answer": "We accept all major credit cards (Visa, Mastercard, Amex), PayPal, and local payment methods for Middle Eastern countries through HyperPay and APS."
+        },
+        "content": {
+          "question": "What topics are covered in the questions?",
+          "answer": "We cover all major frontend frameworks (React, Vue, Angular, Next.js), TypeScript, JavaScript fundamentals, CSS, performance optimization, testing, and system design."
+        },
+        "cancel": {
+          "question": "Can I cancel my subscription anytime?",
+          "answer": "Yes, you can cancel your subscription at any time with no questions asked. You'll retain access until the end of your current billing period."
+        },
+        "refund": {
+          "question": "Do you offer refunds?",
+          "answer": "We offer a 7-day money-back guarantee on all paid plans. If you're not satisfied for any reason, contact our support team for a full refund."
+        },
+        "support": {
+          "question": "What kind of support do you provide?",
+          "answer": "All users get email support. Intermediate plan users get priority email support (24h response), and All-Access users get 24/7 priority support with 1-on-1 coaching sessions."
+        }
       }
+    },
+    "finalCta": {
+      "title": "Ready to Master Frontend Interviews?",
+      "subtitle": "Join thousands of developers who have successfully landed their dream jobs",
+      "cta": "Start Your Free Trial"
     },
     "mobileStickyBar": {
       "message": "Ready to master frontend interviews?",
@@ -1002,6 +1277,12 @@
       "recentPurchases": "{count} developers upgraded this week",
       "liveCounter": "{count} studying now"
     },
+    "roi": {
+      "calculator": "See ROI"
+    },
+    "urgency": {
+      "limitedTime": "Limited Time Offer"
+    },
     "sticky": {
       "title": "Start your journey",
       "price": "From ${price}",
@@ -1247,7 +1528,8 @@
       "chooseDifficulty": "Choose Difficulty Level",
       "startStudy": "Start Studying"
     },
-    "loading": "Loading questions...",
+    "sessionTime": "Study Session",
+    "sessionTimeDescription": "Time spent studying will be added to your total study time",
     "backToSelection": "Back to Selection",
     "typeAnswer": "Type your answer:",
     "fillBlankPlaceholder": "Type your answer here...",
@@ -1541,7 +1823,7 @@
     "fillBlankPlaceholder": "Type your answer here...",
     "confirmExit": "Are you sure you want to exit? Your progress will be lost.",
     "countdown": "Time Remaining",
-    "timeWarning": "Hurry! Only {minutes} minutes remaining!",
+    "timeWarning": "Hurry! Only {minutes} {minutesText} remaining!",
     "timeUp": "Time's up! Quiz submitted automatically.",
     "metadata": {
       "testedSkills": "Tested Skills",
@@ -1586,6 +1868,11 @@
       "accuracy": "Accuracy",
       "timeSpent": "Time Spent",
       "tryAgain": "Try Again",
+      "rewards": "Rewards",
+      "xpEarned": "XP Earned",
+      "keepLearning": "Keep Learning",
+      "streakMaintained": "Streak Maintained",
+      "needsPractice": "Needs Practice",
       "backToSelection": "Back to Selection"
     },
     "error": {

@@ -19,11 +19,11 @@ const props = withDefaults(defineProps<InputProps>(), {
   required: false,
 });
 
-const emit = defineEmits<{
+const emit = defineemits<{
   "update:modelValue": [value: string | number];
-  input: [event: Event];
-  blur: [event: FocusEvent];
-  focus: [event: FocusEvent];
+  input: [;
+  blur: [;
+  focus: [;event: FocusEvent]
 }>();
 
 const { error, type } = toRefs(props);
@@ -57,20 +57,21 @@ const inputClasses = computed(() => {
   return baseClasses.join(" ");
 });
 
-const handleInput = (event: Event) => {
+const handleinput = (event: Event) => {
   const target = event.target as HTMLInputElement;
-  const value = type.value === "number" ? Number(target.value) : target.value;
+  const value = type.value === "number" ? Number(target.value) : target.value;valuetype.valueNumber
   emit("update:modelValue", value);
   emit("input", event);
 };
 
-const handleBlur = (event: FocusEvent) => {
+const handleblur = (event: FocusEvent) => {
   emit("blur", event);
 };
 
-const handleFocus = (event: FocusEvent) => {
+const handlefocus = (event: FocusEvent) => {
   emit("focus", event);
 };
+
 </script>
 
 <template>

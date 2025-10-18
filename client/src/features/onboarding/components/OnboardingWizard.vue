@@ -5,7 +5,9 @@
       <div class="mb-8">
         <div class="flex justify-between items-center mb-2">
           <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
-            Step {{ currentStep }} of 4
+            Step {{ currentStep }}
+
+ of 4
           </span>
           <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
             {{ Math.round(progress) }}% Complete
@@ -25,9 +27,11 @@
         <div class="bg-gradient-to-r from-blue-600 to-indigo-600 px-8 py-6">
           <h1 class="text-3xl font-bold text-white mb-2">
             {{ stepTitle }}
+
           </h1>
           <p class="text-blue-100">
             {{ stepDescription }}
+
           </p>
         </div>
 
@@ -47,13 +51,17 @@
               ]"
             >
               <div class="flex items-start gap-4">
-                <div class="text-4xl">{{ goal.icon }}</div>
+                <div class="text-4xl">{{ goal.icon }}
+
+</div>
                 <div class="flex-1">
                   <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-1">
                     {{ goal.label }}
+
                   </h3>
                   <p class="text-gray-600 dark:text-gray-400">
                     {{ goal.description }}
+
                   </p>
                 </div>
                 <div
@@ -82,13 +90,17 @@
               ]"
             >
               <div class="flex items-start gap-4">
-                <div class="text-4xl">{{ level.icon }}</div>
+                <div class="text-4xl">{{ level.icon }}
+
+</div>
                 <div class="flex-1">
                   <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-1">
                     {{ level.label }}
+
                   </h3>
                   <p class="text-gray-600 dark:text-gray-400">
                     {{ level.description }}
+
                   </p>
                 </div>
                 <div
@@ -121,13 +133,17 @@
                 ]"
               >
                 <div class="flex items-center gap-3">
-                  <div class="text-2xl">{{ framework.icon }}</div>
+                  <div class="text-2xl">{{ framework.icon }}
+
+</div>
                   <div class="flex-1">
                     <h4 class="font-semibold text-gray-900 dark:text-white">
                       {{ framework.label }}
+
                     </h4>
                     <p class="text-xs text-gray-600 dark:text-gray-400">
                       {{ framework.description }}
+
                     </p>
                   </div>
                   <div
@@ -167,8 +183,12 @@
                       : 'border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:border-green-300 dark:hover:border-green-700'
                   ]"
                 >
-                  <div class="text-xl font-bold">{{ goal.label }}</div>
-                  <div class="text-xs mt-1">{{ goal.description }}</div>
+                  <div class="text-xl font-bold">{{ goal.label }}
+
+</div>
+                  <div class="text-xs mt-1">{{ goal.description }}
+
+</div>
                 </button>
               </div>
             </div>
@@ -188,6 +208,7 @@
                 />
                 <span class="text-2xl font-bold text-indigo-600 dark:text-indigo-400 min-w-[3rem] text-center">
                   {{ studyPrefs.availableDaysPerWeek }}
+
                 </span>
               </div>
             </div>
@@ -210,8 +231,12 @@
                       : 'border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:border-orange-300 dark:hover:border-orange-700'
                   ]"
                 >
-                  <div class="text-2xl mb-1">{{ time.icon }}</div>
-                  <div class="text-sm font-medium">{{ time.label }}</div>
+                  <div class="text-2xl mb-1">{{ time.icon }}
+
+</div>
+                  <div class="text-sm font-medium">{{ time.label }}
+
+</div>
                 </button>
               </div>
             </div>
@@ -276,6 +301,7 @@ import type { OnboardingGoal, ExperienceLevel, Framework } from '@shared/types/o
 
 const router = useRouter();
 const { celebrate } = useConfetti();
+
 const {
   currentStep,
   preferences,
@@ -345,11 +371,11 @@ function selectGoal(goal: OnboardingGoal) {
   setGoal(goal);
 }
 
-function selectExperienceLevel(level: ExperienceLevel) {
+function selectexperiencelevel(level: experiencelevel) {
   setExperienceLevel(level);
 }
 
-function toggleFramework(framework: Framework) {
+function toggleframework(framework: framework) {
   toggleFrameworkInStore(framework);
 }
 
@@ -377,6 +403,7 @@ async function skipOnboarding() {
   skipOnboardingInStore();
   router.push('/');
 }
+
 </script>
 
 <style scoped>
@@ -388,7 +415,7 @@ input[type='range']::-webkit-slider-thumb {
   border-radius: 50%;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   cursor: pointer;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 4px rgb(0, 0, 0, 0.2);
 }
 
 input[type='range']::-moz-range-thumb {
@@ -397,7 +424,7 @@ input[type='range']::-moz-range-thumb {
   border-radius: 50%;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   cursor: pointer;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 4px rgb(0, 0, 0, 0.2);
   border: none;
 }
 

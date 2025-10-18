@@ -17,6 +17,7 @@ import { errorHandler } from "@middlewares/error.middleware";
 import { requestLogger } from "@middlewares/logger.middleware";
 import { permissionsPolicyMiddleware } from "@middlewares/permissions-policy.middleware";
 import adminRoutes from "@routes/admin";
+import aiRoutes from "@routes/ai";
 import authRoutes from "@routes/auth";
 import challengeRoutes from "@routes/challenges";
 import checkoutRoutes from "@routes/checkout";
@@ -361,6 +362,7 @@ async function registerRoutes() {
 
   // API routes (v1)
   await fastify.register(authRoutes, { prefix: "/api/v1/auth" });
+  await fastify.register(aiRoutes, { prefix: "/api/v1" });
   await fastify.register(usersRoutes, { prefix: "/api/v1/users" });
   await fastify.register(pricingRoutes, { prefix: "/api/v1/pricing" });
   await fastify.register(paymentRoutes, { prefix: "/api/v1/payments" });

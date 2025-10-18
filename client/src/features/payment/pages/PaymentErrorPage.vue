@@ -43,26 +43,28 @@ const retryPayment = () => {
   const plan = route.query.plan as string;
   if (plan) {
     router.push(`/checkout?plan=${plan}`);
-  } else {
+  }
+
+ else {
     router.push("/subscribe");
   }
 };
 
-const goToPricing = () => {
+const gotopricing = () => {
   router.push("/subscribe");
 };
 
-const parseErrorDetails = () => {
+const parseerrordetails = () => {
   const errorCode = route.query.error as string;
   const orderId = route.query.orderId as string;
   const plan = route.query.plan as string;
 
   if (errorCode) {
-    errorDetails.value = {
+    errordetails.value = {
       errorCode,
       orderId,
       plan,
-      timestamp: new Date().toISOString(),
+      timestamp: new Date().toISOString(),orderId,plan,timestamp
     };
   }
 };
@@ -89,33 +91,55 @@ onMounted(() => {
 
       <!-- Error Content -->
       <div class="error-content">
-        <h1 class="error-title">{{ $t("payment.error.title") }}</h1>
-        <p class="error-message">{{ errorMessage }}</p>
+        <h1 class="error-title">{{ $t("payment.error.title") }}
+
+</h1>
+        <p class="error-message">{{ errorMessage }}
+
+</p>
 
         <!-- Error Details -->
         <div v-if="errorDetails" class="error-details">
           <div class="error-card">
-            <h3 class="error-details-title">{{ $t("payment.error.details") }}</h3>
+            <h3 class="error-details-title">{{ $t("payment.error.details") }}
+
+</h3>
 
             <div class="error-info">
               <div class="error-row">
-                <span class="error-label">{{ $t("payment.error.errorCode") }} </span>
-                <span class="error-value">{{ errorDetails.errorCode }} </span>
+                <span class="error-label">{{ $t("payment.error.errorCode") }}
+
+ </span>
+                <span class="error-value">{{ errorDetails.errorCode }}
+
+ </span>
               </div>
 
               <div v-if="errorDetails.orderId" class="error-row">
-                <span class="error-label">{{ $t("payment.error.orderId") }} </span>
-                <span class="error-value">{{ errorDetails.orderId }} </span>
+                <span class="error-label">{{ $t("payment.error.orderId") }}
+
+ </span>
+                <span class="error-value">{{ errorDetails.orderId }}
+
+ </span>
               </div>
 
               <div v-if="errorDetails.plan" class="error-row">
-                <span class="error-label">{{ $t("payment.error.plan") }} </span>
-                <span class="error-value">{{ errorDetails.plan }} </span>
+                <span class="error-label">{{ $t("payment.error.plan") }}
+
+ </span>
+                <span class="error-value">{{ errorDetails.plan }}
+
+ </span>
               </div>
 
               <div class="error-row">
-                <span class="error-label">{{ $t("payment.error.timestamp") }} </span>
-                <span class="error-value">{{ formattedTimestamp }} </span>
+                <span class="error-label">{{ $t("payment.error.timestamp") }}
+
+ </span>
+                <span class="error-value">{{ formattedTimestamp }}
+
+ </span>
               </div>
             </div>
           </div>
@@ -123,7 +147,9 @@ onMounted(() => {
 
         <!-- Common Solutions -->
         <div class="solutions-section">
-          <h3 class="solutions-title">{{ $t("payment.error.solutions.title") }}</h3>
+          <h3 class="solutions-title">{{ $t("payment.error.solutions.title") }}
+
+</h3>
           <div class="solutions-list">
             <div class="solution-item">
               <div class="solution-icon">
@@ -137,9 +163,12 @@ onMounted(() => {
                 </svg>
               </div>
               <div class="solution-content">
-                <h4 class="solution-title">{{ $t("payment.error.solutions.card.title") }}</h4>
+                <h4 class="solution-title">{{ $t("payment.error.solutions.card.title") }}
+
+</h4>
                 <p class="solution-description">
                   {{ $t("payment.error.solutions.card.description") }}
+
                 </p>
               </div>
             </div>
@@ -156,9 +185,12 @@ onMounted(() => {
                 </svg>
               </div>
               <div class="solution-content">
-                <h4 class="solution-title">{{ $t("payment.error.solutions.billing.title") }}</h4>
+                <h4 class="solution-title">{{ $t("payment.error.solutions.billing.title") }}
+
+</h4>
                 <p class="solution-description">
                   {{ $t("payment.error.solutions.billing.description") }}
+
                 </p>
               </div>
             </div>
@@ -175,9 +207,12 @@ onMounted(() => {
                 </svg>
               </div>
               <div class="solution-content">
-                <h4 class="solution-title">{{ $t("payment.error.solutions.network.title") }}</h4>
+                <h4 class="solution-title">{{ $t("payment.error.solutions.network.title") }}
+
+</h4>
                 <p class="solution-description">
                   {{ $t("payment.error.solutions.network.description") }}
+
                 </p>
               </div>
             </div>
@@ -196,6 +231,7 @@ onMounted(() => {
               />
             </svg>
             {{ $t("payment.error.retryPayment") }}
+
           </button>
 
           <button @click="goToPricing" class="btn-secondary">
@@ -208,6 +244,7 @@ onMounted(() => {
               />
             </svg>
             {{ $t("payment.error.backToPricing") }}
+
           </button>
         </div>
 
@@ -225,8 +262,12 @@ onMounted(() => {
               </svg>
             </div>
             <div class="support-content">
-              <h3 class="support-title">{{ $t("payment.error.support.title") }}</h3>
-              <p class="support-description">{{ $t("payment.error.support.description") }}</p>
+              <h3 class="support-title">{{ $t("payment.error.support.title") }}
+
+</h3>
+              <p class="support-description">{{ $t("payment.error.support.description") }}
+
+</p>
               <div class="support-actions">
                 <a href="mailto:support@quizplatform.com" class="support-link">
                   <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -238,6 +279,7 @@ onMounted(() => {
                     />
                   </svg>
                   {{ $t("payment.error.support.email") }}
+
                 </a>
                 <a href="/contact" class="support-link">
                   <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -249,6 +291,7 @@ onMounted(() => {
                     />
                   </svg>
                   {{ $t("payment.error.support.chat") }}
+
                 </a>
               </div>
             </div>

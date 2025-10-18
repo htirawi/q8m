@@ -32,6 +32,7 @@
             <div class="py-4">
               <p class="text-3xl font-bold text-primary-600 dark:text-primary-400">
                 {{ certificate.userName }}
+
               </p>
             </div>
 
@@ -42,6 +43,7 @@
               </p>
               <p class="text-2xl font-semibold text-gray-900 dark:text-white">
                 {{ pathTitle }}
+
               </p>
             </div>
 
@@ -50,12 +52,15 @@
               <div class="text-center">
                 <p class="text-2xl font-bold text-gray-900 dark:text-white">
                   {{ certificate.moduleCount }}
+
                 </p>
                 <p class="text-sm text-gray-600 dark:text-gray-400">Modules</p>
               </div>
               <div class="text-center">
                 <p class="text-2xl font-bold text-gray-900 dark:text-white">
-                  {{ Math.round(certificate.totalTimeSpent / 60) }}h
+                  {{ Math.round(certificate.totalTimeSpent / 60) }}
+
+h
                 </p>
                 <p class="text-sm text-gray-600 dark:text-gray-400">Time Invested</p>
               </div>
@@ -74,6 +79,7 @@
               </p>
               <p class="mt-1 text-xs text-gray-500 dark:text-gray-500">
                 Certificate ID: {{ certificate.certificateId }}
+
               </p>
             </div>
           </div>
@@ -126,7 +132,7 @@ const pathTitle = computed(() => {
   return certificate.value.pathTitle[locale.value === 'ar' ? 'ar' : 'en'];
 });
 
-const formatDate = (dateString: string) => {
+const formatdate = (dateString: string) => {
   const date = new Date(dateString);
   return date.toLocaleDateString('en-US', {
     year: 'numeric',
@@ -135,11 +141,11 @@ const formatDate = (dateString: string) => {
   });
 };
 
-const goBack = () => {
+const goback = () => {
   router.push(`/${locale.value}/paths/${route.params.slug}`);
 };
 
-const downloadCertificate = () => {
+const downloadcertificate = () => {
   // Simple download using print functionality
   window.print();
 };

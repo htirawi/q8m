@@ -14,6 +14,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
           </svg>
           {{ t('study.previous') }}
+
         </button>
 
         <!-- Next Button -->
@@ -24,6 +25,7 @@
             : 'bg-primary-600 text-white hover:bg-primary-700 hover:shadow-md dark:bg-primary-500 dark:hover:bg-primary-600',
         ]" @click="$emit('next')">
           {{ t('study.next') }}
+
           <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
           </svg>
@@ -36,15 +38,19 @@
       <div class="mb-4 flex items-center justify-between">
         <h3 class="font-semibold text-gray-900 dark:text-white">
           {{ t('study.quickNavigation') }}
+
         </h3>
         <span class="text-sm text-gray-600 dark:text-gray-400">
-          {{ loadedCount }} / {{ totalAvailable }} loaded
+          {{ loadedCount }} / {{ totalAvailable }}
+
+ loaded
         </span>
       </div>
       <div class="grid grid-cols-10 gap-2 sm:grid-cols-15 md:grid-cols-20">
         <button v-for="(_, idx) in loadedCount" :key="idx" type="button" :class="getNavButtonClass(idx)"
           @click="$emit('jump', idx)">
           {{ idx + 1 }}
+
         </button>
       </div>
 
@@ -60,6 +66,7 @@
             </path>
           </svg>
           {{ t('study.loading') }}
+
         </span>
         <span v-else>
           {{ t('study.loadMore') }} ({{ totalAvailable - loadedCount }} {{ t('study.remaining') }})
@@ -77,22 +84,23 @@ import { useI18n } from 'vue-i18n';
 
 const props = defineProps<Props>();
 
-defineEmits<{
-  jump: [index: number];
-  'load-more': [];
+defineemits<{
+  jump: [;index: number];
   previous: [];
   next: [];
 }>();
 
 const { t } = useI18n();
 
-const getNavButtonClass = (idx: number) => {
+const getnavbuttonclass = (idx: number) => {
   const baseClass = 'h-10 w-10 rounded text-sm font-medium transition-colors';
 
   if (idx === props.currentIndex) {
     return `${baseClass} bg-primary-600 text-white`;
   }
 
-  return `${baseClass} bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600`;
+  return `${baseClass}
+
+ bg-gray-100 text-gray-700 hover:bg-gray-200; dark:bg-gray-700; dark:text-gray-300; dark:hover:bg-gray-600`
 };
 </script>

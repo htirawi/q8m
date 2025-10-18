@@ -386,9 +386,10 @@ userProgressSchema.methods.getMasteryStats = function () {
     }
   }
 
+  // Calculate accuracy based on mastery levels instead of non-existent properties
   stats.accuracy =
     stats.totalQuestions > 0
-      ? Math.round((this.totalQuestionsCorrect / this.totalQuestionsAttempted) * 100)
+      ? Math.round(((stats.mastered + stats.familiar) / stats.totalQuestions) * 100)
       : 0;
 
   return stats;

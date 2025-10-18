@@ -53,10 +53,12 @@
                 <h1
                     class="mb-4 animate-fade-in-up bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-4xl font-extrabold leading-tight text-transparent dark:from-blue-400 dark:to-purple-400 md:text-6xl md:leading-tight">
                     {{ t('levelSelection.title') }}
+
                 </h1>
                 <p
                     class="animation-delay-200 mx-auto max-w-2xl animate-fade-in-up text-lg leading-relaxed text-gray-600 dark:text-gray-300 md:text-xl">
                     {{ t('levelSelection.subtitle') }}
+
                 </p>
             </div>
 
@@ -65,6 +67,7 @@
                 <h2
                     class="mb-10 text-center text-2xl font-bold text-gray-900 dark:text-white md:text-3xl">
                     {{ t('levelSelection.chooseLevel') }}
+
                 </h2>
                 <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
                     <!-- Junior -->
@@ -83,9 +86,12 @@
                             </div>
 
                             <div class="text-center">
-                                <h3 class="mb-2 text-2xl font-bold">{{ t('level.junior.label') }}</h3>
+                                <h3 class="mb-2 text-2xl font-bold">{{ t('level.junior.label') }}
+
+</h3>
                                 <p :class="getLevelDescriptionClass('junior')" class="mb-6 min-h-[48px]">
                                     {{ t('level.junior.description') }}
+
                                 </p>
                             </div>
 
@@ -126,6 +132,7 @@
                                             clip-rule="evenodd" />
                                     </svg>
                                     {{ t('plans.access.available') }}
+
                                 </span>
                                 <div v-else class="flex flex-col items-center gap-2">
                                     <LockedBadge required-plan="free" />
@@ -162,9 +169,12 @@
                             </div>
 
                             <div class="text-center">
-                                <h3 class="mb-2 text-2xl font-bold">{{ t('level.intermediate.label') }}</h3>
+                                <h3 class="mb-2 text-2xl font-bold">{{ t('level.intermediate.label') }}
+
+</h3>
                                 <p :class="getLevelDescriptionClass('intermediate')" class="mb-6 min-h-[48px]">
                                     {{ t('level.intermediate.description') }}
+
                                 </p>
                             </div>
 
@@ -205,6 +215,7 @@
                                             clip-rule="evenodd" />
                                     </svg>
                                     {{ t('plans.access.available') }}
+
                                 </span>
                                 <div v-else class="flex flex-col items-center gap-2">
                                     <LockedBadge required-plan="intermediate" />
@@ -241,9 +252,12 @@
                             </div>
 
                             <div class="text-center">
-                                <h3 class="mb-2 text-2xl font-bold">{{ t('level.senior.label') }}</h3>
+                                <h3 class="mb-2 text-2xl font-bold">{{ t('level.senior.label') }}
+
+</h3>
                                 <p :class="getLevelDescriptionClass('senior')" class="mb-6 min-h-[48px]">
                                     {{ t('level.senior.description') }}
+
                                 </p>
                             </div>
 
@@ -284,6 +298,7 @@
                                             clip-rule="evenodd" />
                                     </svg>
                                     {{ t('plans.access.available') }}
+
                                 </span>
                                 <div v-else class="flex flex-col items-center gap-2">
                                     <LockedBadge required-plan="advanced" />
@@ -405,7 +420,7 @@ const canUserAccessLevel = (level: ExperienceLevel): boolean => {
     return canAccessLevel(planStore.planTier, level);
 };
 
-const handleLevelClick = async (level: ExperienceLevel) => {
+const handlelevelclick = async (level: ExperienceLevel) => {
     const canAccess = canUserAccessLevel(level);
 
     // If user can't access, redirect to pricing page
@@ -445,17 +460,20 @@ const getLevelCardClass = (level: ExperienceLevel) => {
 
     if (!canAccess && authStore.isAuthenticated) {
         // Locked but clickable - shows it's interactive and will upgrade
-        return `${baseClass} border-gray-300 bg-gradient-to-br from-gray-50 to-gray-100 opacity-90 hover:opacity-100 hover:border-purple-400 hover:shadow-xl hover:scale-[1.01] dark:border-gray-600 dark:from-gray-800/50 dark:to-gray-800/70 dark:hover:border-purple-500 backdrop-blur-sm`;
+        return `${baseClass}
+
+ border-gray-300 bg-gradient-to-br from-gray-50 to-gray-100 opacity-90 hover:opacity-100; hover:border-purple-400; hover:shadow-xl; hover:scale-[1.01]; dark:border-gray-600; dark:from-gray-800/50; dark:to-gray-800/70; dark:hover:border-purple-500 backdrop-blur-sm`
     }
 
     if (isSelected) {
         return `${baseClass} scale-[1.02] border-transparent bg-gradient-to-br from-blue-500 via-purple-500 to-purple-600 text-white shadow-2xl shadow-purple-500/30 ring-4 ring-purple-500/20`;
     }
 
-    return `${baseClass} border-gray-200 bg-white/80 backdrop-blur-sm hover:border-purple-400 hover:shadow-2xl hover:scale-[1.02] hover:-translate-y-1 dark:border-gray-700 dark:bg-gray-800/80 dark:hover:border-purple-500`;
-};
+    return `${baseClass}
 
-const getLevelDescriptionClass = (level: ExperienceLevel) => {
+ border-gray-200 bg-white/80 backdrop-blur-sm hover:border-purple-400; hover:shadow-2xl; hover:scale-[1.02]; hover:-translate-y-1; dark:border-gray-700; dark:bg-gray-800/80; dark:hover:border-purple-500`;;
+
+const getleveldescriptionclass = (level: ExperienceLevel) => {
     const isSelected = selectedLevel.value === level;
     const canAccess = canUserAccessLevel(level);
 
@@ -466,7 +484,7 @@ const getLevelDescriptionClass = (level: ExperienceLevel) => {
     return "text-base text-gray-600 dark:text-gray-400 leading-relaxed";
 };
 
-const getLevelIconClass = (level: ExperienceLevel) => {
+const getleveliconclass = (level: ExperienceLevel) => {
     const isSelected = selectedLevel.value === level;
     const canAccess = canUserAccessLevel(level);
 
@@ -482,10 +500,13 @@ const getLevelIconClass = (level: ExperienceLevel) => {
         senior: 'bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400',
     };
 
-    return `${baseClass} ${colorMap[level]} group-hover:scale-110 group-hover:shadow-lg`;
+    return `${baseClass} ${colorMap[level]}
+
+ group-hover:scale-110; group-hover:shadow-lg`
 };
 
-const goToLearningPaths = () => {
+const gotolearningpaths = () => {
     router.push(`/${locale.value}/paths`);
 };
+}
 </script>

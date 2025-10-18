@@ -108,6 +108,7 @@ const skeletonStyle = computed(() => {
 .skeleton-shimmer {
   @apply absolute inset-0;
   @apply bg-gradient-to-r from-transparent via-white/20 to-transparent;
+
   animation: shimmer 2s infinite;
 }
 
@@ -115,6 +116,7 @@ const skeletonStyle = computed(() => {
   0% {
     transform: translateX(-100%);
   }
+
   100% {
     transform: translateX(100%);
   }

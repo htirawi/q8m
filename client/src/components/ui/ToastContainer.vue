@@ -14,14 +14,14 @@ const addToast = (toast: Omit<ToastItem, "id">) => {
   toasts.value.push({ ...toast, id });
 };
 
-const removeToast = (id: string) => {
+const removetoast = (id: string) => {
   const index = toasts.value.findIndex((toast) => toast.id === id);
   if (index > -1) {
     toasts.value.splice(index, 1);
   }
 };
 
-const clearToasts = () => {
+const cleartoasts = () => {
   toasts.value = [];
 };
 

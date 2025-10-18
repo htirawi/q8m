@@ -276,6 +276,45 @@ export function useSEO(initialData: Partial<SEOData> = {}) {
     };
   };
 
+  const generateWebSiteStructuredData = (): StructuredData => {
+    const baseUrl = getBaseUrl();
+    return {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      name: "q8m - Quiz 8 Mastery",
+      url: baseUrl,
+      description:
+        "Master frontend development with 500+ curated interview questions. Interactive learning with real-time feedback.",
+      publisher: {
+        "@type": "Organization",
+        name: "q8m - Quiz 8 Mastery",
+      },
+      inLanguage: ["en", "ar"],
+      potentialAction: {
+        "@type": "SearchAction",
+        target: `${baseUrl}/search?q={search_term_string}`,
+        "query-input": "required name=search_term_string",
+      },
+    };
+  };
+
+  const generateFAQPageStructuredData = (
+    faqs: Array<{ question: string; answer: string }>
+  ): StructuredData => {
+    return {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: faqs.map((faq) => ({
+        "@type": "Question",
+        name: faq.question,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: faq.answer,
+        },
+      })),
+    };
+  };
+
   return {
     seoData: computed(() => seoData.value),
     pageTitle,
@@ -286,6 +325,8 @@ export function useSEO(initialData: Partial<SEOData> = {}) {
     generateQuizStructuredData,
     generatePricingStructuredData,
     generateOrganizationStructuredData,
+    generateWebSiteStructuredData,
+    generateFAQPageStructuredData,
     updateMetaTags,
   };
 }

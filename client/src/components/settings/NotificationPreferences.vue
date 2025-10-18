@@ -3,9 +3,11 @@
     <div class="preferences-header">
       <h3 class="text-xl font-bold text-gray-900 dark:text-white">
         {{ t('settings.notifications.title', 'Push Notifications') }}
+
       </h3>
       <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
         {{ t('settings.notifications.subtitle', 'Manage your notification preferences') }}
+
       </p>
     </div>
 
@@ -18,6 +20,7 @@
         <div class="flex-1">
           <p class="text-sm font-medium text-yellow-800 dark:text-yellow-300">
             {{ t('settings.notifications.unsupported', 'Notifications are not supported in your browser') }}
+
           </p>
           <p class="mt-1 text-xs text-yellow-700 dark:text-yellow-400">
             Try using a modern browser like Chrome, Firefox, or Edge
@@ -34,6 +37,7 @@
             <div class="flex items-center gap-2">
               <h4 class="text-base font-semibold text-gray-900 dark:text-white">
                 {{ t('settings.notifications.enable', 'Enable Push Notifications') }}
+
               </h4>
               <span v-if="permissionGranted" class="rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800 dark:bg-green-900 dark:text-green-200">
                 Active
@@ -44,6 +48,7 @@
             </div>
             <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
               {{ t('settings.notifications.enableDescription', 'Get notified about streaks, challenges, and achievements') }}
+
             </p>
           </div>
 
@@ -83,6 +88,7 @@
       <div v-if="permissionGranted" class="space-y-4">
         <h4 class="text-sm font-semibold text-gray-900 dark:text-white">
           {{ t('settings.notifications.types', 'Notification Types') }}
+
         </h4>
 
         <!-- Streak Reminders -->
@@ -98,10 +104,12 @@
               <span class="text-lg">🔥</span>
               <h5 class="text-sm font-semibold text-gray-900 dark:text-white">
                 {{ t('settings.notifications.streak.title', 'Streak Reminders') }}
+
               </h5>
             </div>
             <p class="mt-1 text-xs text-gray-600 dark:text-gray-400">
               {{ t('settings.notifications.streak.description', 'Daily reminders to maintain your learning streak') }}
+
             </p>
           </div>
         </label>
@@ -119,10 +127,12 @@
               <span class="text-lg">✨</span>
               <h5 class="text-sm font-semibold text-gray-900 dark:text-white">
                 {{ t('settings.notifications.content.title', 'New Content') }}
+
               </h5>
             </div>
             <p class="mt-1 text-xs text-gray-600 dark:text-gray-400">
               {{ t('settings.notifications.content.description', 'Alerts when new quizzes or questions are added') }}
+
             </p>
           </div>
         </label>
@@ -140,10 +150,12 @@
               <span class="text-lg">⚔️</span>
               <h5 class="text-sm font-semibold text-gray-900 dark:text-white">
                 {{ t('settings.notifications.challenges.title', 'Challenges') }}
+
               </h5>
             </div>
             <p class="mt-1 text-xs text-gray-600 dark:text-gray-400">
               {{ t('settings.notifications.challenges.description', 'When friends challenge you to beat their scores') }}
+
             </p>
           </div>
         </label>
@@ -161,10 +173,12 @@
               <span class="text-lg">🏆</span>
               <h5 class="text-sm font-semibold text-gray-900 dark:text-white">
                 {{ t('settings.notifications.achievements.title', 'Achievements') }}
+
               </h5>
             </div>
             <p class="mt-1 text-xs text-gray-600 dark:text-gray-400">
               {{ t('settings.notifications.achievements.description', 'When you unlock badges, level up, or hit milestones') }}
+
             </p>
           </div>
         </label>
@@ -182,10 +196,12 @@
               <span class="text-lg">💎</span>
               <h5 class="text-sm font-semibold text-gray-900 dark:text-white">
                 {{ t('settings.notifications.subscription.title', 'Account & Subscription') }}
+
               </h5>
             </div>
             <p class="mt-1 text-xs text-gray-600 dark:text-gray-400">
               {{ t('settings.notifications.subscription.description', 'Trial ending reminders and subscription updates') }}
+
             </p>
           </div>
         </label>
@@ -195,6 +211,7 @@
       <div v-if="permissionGranted" class="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
         <h4 class="mb-3 text-sm font-semibold text-gray-900 dark:text-white">
           {{ t('settings.notifications.frequency', 'Notification Frequency') }}
+
         </h4>
         <select
           v-model="preferences.frequency"
@@ -212,6 +229,7 @@
         <div class="mb-3 flex items-center justify-between">
           <h4 class="text-sm font-semibold text-gray-900 dark:text-white">
             {{ t('settings.notifications.quietHours', 'Quiet Hours') }}
+
           </h4>
           <label class="flex cursor-pointer items-center">
             <input
@@ -264,6 +282,7 @@
           </svg>
           <span class="text-sm font-medium text-green-800 dark:text-green-300">
             {{ t('settings.notifications.saved', 'Preferences saved successfully') }}
+
           </span>
         </div>
       </div>
@@ -285,7 +304,7 @@ const {
   permissionDenied,
   isLoading,
   requestPermission,
-  showTestNotification: testNotification,
+  showTestNotification: testNotification,permissionGranted,permissionDenied,isLoading,requestPermission,showTestNotification
 } = useNotifications();
 
 const showSuccess = ref(false);
@@ -304,7 +323,7 @@ const preferences = reactive<INotificationPreferences>({
   quietHoursEnd: '08:00',
 });
 
-const handleEnableNotifications = async () => {
+const handleenablenotifications = async () => {
   const granted = await requestPermission();
   if (granted) {
     // Load preferences after enabling
@@ -312,7 +331,7 @@ const handleEnableNotifications = async () => {
   }
 };
 
-const loadPreferences = async () => {
+const loadpreferences = async () => {
   try {
     const response = await fetch('/api/v1/notifications/preferences', {
       credentials: 'include',
@@ -329,7 +348,7 @@ const loadPreferences = async () => {
   }
 };
 
-const savePreferences = async () => {
+const savepreferences = async () => {
   try {
     const response = await fetch('/api/v1/notifications/preferences', {
       method: 'PUT',
@@ -351,7 +370,7 @@ const savePreferences = async () => {
   }
 };
 
-const showTestNotification = () => {
+const showtestnotification = () => {
   testNotification();
 };
 

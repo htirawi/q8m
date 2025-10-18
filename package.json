@@ -76,11 +76,19 @@
     "*.{json,md,yml,yaml}": [
       "prettier --write"
     ],
-    "client/**/*.{ts,vue,js}": [
-      "cd client && eslint --fix"
+    "client/**/*.{ts,vue}": [
+      "cd client && eslint --fix --max-warnings 0",
+      "cd client && pnpm typecheck --noEmit"
     ],
-    "server/**/*.{ts,js}": [
-      "cd server && eslint --fix"
+    "client/**/*.js": [
+      "cd client && eslint --fix --max-warnings 0"
+    ],
+    "server/**/*.ts": [
+      "cd server && eslint --fix --max-warnings 0",
+      "cd server && pnpm typecheck --noEmit"
+    ],
+    "server/**/*.js": [
+      "cd server && eslint --fix --max-warnings 0"
     ]
   },
   "engines": {

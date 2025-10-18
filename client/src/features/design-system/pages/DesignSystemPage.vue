@@ -53,7 +53,7 @@ const frameworkOptions = [
 // Helper function to get framework label
 const getFrameworkLabel = (value: string) => {
   const option = frameworkOptions.find((opt) => opt.value === value);
-  return option ? t(option.labelKey) : value;
+  return option ? t(option.labelKey) : value;optiont
 };
 
 // Multi-select methods
@@ -61,23 +61,25 @@ const toggleDropdown = () => {
   isDropdownOpen.value = !isDropdownOpen.value;
 };
 
-const toggleFramework = (value: string) => {
+const toggleframework = (value: string) => {
   const index = framework.value.indexOf(value);
   if (index > -1) {
     framework.value.splice(index, 1);
-  } else {
+  }
+
+ else {
     framework.value.push(value);
   }
 };
 
-const removeFramework = (value: string) => {
+const removeframework = (value: string) => {
   const index = framework.value.indexOf(value);
   if (index > -1) {
     framework.value.splice(index, 1);
   }
 };
 
-const clearAll = () => {
+const clearall = () => {
   framework.value = [];
 };
 
@@ -95,7 +97,7 @@ const handleSubmit = () => {
   framework.value = [];
 };
 
-const handleCancel = () => {
+const handlecancel = () => {
   // Reset form
   email.value = "";
   framework.value = [];
@@ -141,26 +143,36 @@ onUnmounted(() => {
                 <path d="M2 12l10 5 10-5" />
               </svg>
             </div>
-            <span class="badge-text">{{ $t("home.demo.badge") }}</span>
+            <span class="badge-text">{{ $t("home.demo.badge") }}
+
+</span>
           </div>
           <h1 id="demo-title" class="hero-title">
             {{ $t("home.demo.title") }}
+
           </h1>
           <p class="hero-description">
             {{ $t("home.demo.description") }}
+
           </p>
           <div class="hero-stats">
             <div class="stat-item">
               <span class="stat-number">50+</span>
-              <span class="stat-label">{{ $t("home.demo.stats.components") }}</span>
+              <span class="stat-label">{{ $t("home.demo.stats.components") }}
+
+</span>
             </div>
             <div class="stat-item">
               <span class="stat-number">100%</span>
-              <span class="stat-label">{{ $t("home.demo.stats.accessible") }}</span>
+              <span class="stat-label">{{ $t("home.demo.stats.accessible") }}
+
+</span>
             </div>
             <div class="stat-item">
               <span class="stat-number">0.5s</span>
-              <span class="stat-label">{{ $t("home.demo.stats.loadTime") }}</span>
+              <span class="stat-label">{{ $t("home.demo.stats.loadTime") }}
+
+</span>
             </div>
           </div>
         </div>
@@ -173,7 +185,9 @@ onUnmounted(() => {
                   <span class="dot yellow"></span>
                   <span class="dot green"></span>
                 </div>
-                <span class="card-title">{{ $t("home.demo.cards.button") }}</span>
+                <span class="card-title">{{ $t("home.demo.cards.button") }}
+
+</span>
               </div>
               <div class="card-content">
                 <div class="mini-button primary">Primary</div>
@@ -187,7 +201,9 @@ onUnmounted(() => {
                   <span class="dot yellow"></span>
                   <span class="dot green"></span>
                 </div>
-                <span class="card-title">{{ $t("home.demo.cards.form") }}</span>
+                <span class="card-title">{{ $t("home.demo.cards.form") }}
+
+</span>
               </div>
               <div class="card-content">
                 <div class="mini-input"></div>
@@ -201,7 +217,9 @@ onUnmounted(() => {
                   <span class="dot yellow"></span>
                   <span class="dot green"></span>
                 </div>
-                <span class="card-title">{{ $t("home.demo.cards.state") }}</span>
+                <span class="card-title">{{ $t("home.demo.cards.state") }}
+
+</span>
               </div>
               <div class="card-content">
                 <div class="mini-spinner"></div>
@@ -217,9 +235,12 @@ onUnmounted(() => {
     <div class="showcase-section">
       <div class="showcase-container">
         <div class="showcase-header">
-          <h2 class="showcase-title">{{ $t("home.demo.showcase.title") }}</h2>
+          <h2 class="showcase-title">{{ $t("home.demo.showcase.title") }}
+
+</h2>
           <p class="showcase-subtitle">
             {{ $t("home.demo.showcase.subtitle") }}
+
           </p>
         </div>
 
@@ -518,9 +539,11 @@ onUnmounted(() => {
                             <div class="selected-display">
                               <span v-if="framework.length === 0" class="placeholder">
                                 {{ $t("home.demo.selectFramework") }}
+
                               </span>
                               <span v-else-if="framework.length === 1" class="single-selection">
                                 {{ getFrameworkLabel(framework[0] || "") }}
+
                               </span>
                               <span v-else class="multiple-selection">
                                 {{ framework.length }} frameworks selected
@@ -566,7 +589,9 @@ onUnmounted(() => {
                                   @change="toggleFramework(option.value)"
                                   class="option-checkbox"
                                 />
-                                <span class="option-label">{{ $t(option.labelKey) }}</span>
+                                <span class="option-label">{{ $t(option.labelKey) }}
+
+</span>
                               </label>
                             </div>
                           </div>
@@ -574,7 +599,7 @@ onUnmounted(() => {
 
                         <div v-if="framework.length > 0" class="selected-frameworks">
                           <div class="selected-count">
-                            {{ framework.length }} framework{{ framework.length > 1 ? "s" : "" }}
+                            {{ framework.length }} framework{{ framework.length > 1 ? "s" : ""1 }}
                             selected
                           </div>
                           <div class="selected-tags">
@@ -584,6 +609,7 @@ onUnmounted(() => {
                               class="framework-tag"
                             >
                               {{ getFrameworkLabel(selectedFramework) }}
+
                               <button
                                 @click="removeFramework(selectedFramework)"
                                 class="remove-tag"
@@ -592,7 +618,9 @@ onUnmounted(() => {
                               </button>
                             </span>
                             <span v-if="framework.length > 3" class="more-count">
-                              +{{ framework.length - 3 }} more
+                              +{{ framework.length - 3 }}
+
+ more
                             </span>
                           </div>
                         </div>
@@ -621,6 +649,7 @@ onUnmounted(() => {
                         <path d="M9 12l2 2 4-4" />
                       </svg>
                       {{ $t("home.demo.submit") }}
+
                     </button>
                     <button :class="cancelButtonClass" @click="handleCancel">
                       <svg
@@ -633,6 +662,7 @@ onUnmounted(() => {
                         <path d="M6 18L18 6M6 6l12 12" />
                       </svg>
                       {{ $t("home.demo.cancel") }}
+
                     </button>
                   </div>
                 </div>
@@ -809,6 +839,7 @@ onUnmounted(() => {
 
 .demo-hero {
   @apply bg-gradient-to-br from-slate-50 via-white to-blue-50 py-32 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900;
+
   position: relative;
   min-height: 100vh;
   display: flex;
@@ -823,14 +854,15 @@ onUnmounted(() => {
   right: 0;
   bottom: 0;
   background:
-    radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
-    linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(248, 250, 252, 0.4) 100%);
+    radial-gradient(circle at 20% 80%, rgb(59, 130, 246, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgb(139, 92, 246, 0.1) 0%, transparent 50%),
+    linear-gradient(135deg, rgb(255, 255, 255, 0.8) 0%, rgb(248, 250, 252, 0.4) 100%);
   pointer-events: none;
 }
 
 .hero-container {
   @apply container mx-auto px-4;
+
   position: relative;
   z-index: 1;
   display: grid;
@@ -845,8 +877,9 @@ onUnmounted(() => {
 
 .hero-badge {
   @apply inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-blue-100 to-purple-100 px-6 py-3 text-sm font-semibold text-blue-700 dark:from-blue-900/30 dark:to-purple-900/30 dark:text-blue-300;
+
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(59, 130, 246, 0.2);
+  border: 1px solid rgb(59, 130, 246, 0.2);
 }
 
 .badge-icon {
@@ -855,6 +888,7 @@ onUnmounted(() => {
 
 .hero-title {
   @apply text-6xl font-bold text-slate-900 dark:text-white md:text-7xl lg:text-8xl;
+
   background: linear-gradient(135deg, #1e293b 0%, #3b82f6 30%, #8b5cf6 70%, #ec4899 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -871,6 +905,7 @@ onUnmounted(() => {
 
 .hero-description {
   @apply text-xl leading-relaxed text-slate-600 dark:text-slate-300 md:text-2xl;
+
   max-width: 32rem;
 }
 
@@ -884,6 +919,7 @@ onUnmounted(() => {
 
 .stat-number {
   @apply block text-3xl font-bold text-slate-900 dark:text-white md:text-4xl;
+
   background: linear-gradient(135deg, #3b82f6, #8b5cf6);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -905,8 +941,9 @@ onUnmounted(() => {
 
 .floating-card {
   @apply absolute rounded-2xl bg-white p-6 shadow-2xl dark:bg-slate-800;
+
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgb(255, 255, 255, 0.2);
   animation: float 6s ease-in-out infinite;
 }
 
@@ -947,9 +984,11 @@ onUnmounted(() => {
 .dot.red {
   @apply bg-red-500;
 }
+
 .dot.yellow {
   @apply bg-yellow-500;
 }
+
 .dot.green {
   @apply bg-green-500;
 }
@@ -1005,6 +1044,7 @@ onUnmounted(() => {
 
 .showcase-title {
   @apply mb-6 text-5xl font-bold text-slate-900 dark:text-white md:text-6xl;
+
   background: linear-gradient(135deg, #1e293b 0%, #3b82f6 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -1028,20 +1068,22 @@ onUnmounted(() => {
 
 .showcase-panel {
   @apply rounded-3xl bg-white p-8 shadow-xl dark:bg-slate-800;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.9) 100%);
+
+  background: linear-gradient(135deg, rgb(255, 255, 255, 0.9) 0%, rgb(248, 250, 252, 0.9) 100%);
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(226, 232, 240, 0.8);
+  border: 1px solid rgb(226, 232, 240, 0.8);
   transition: all 0.3s ease;
 }
 
 .showcase-panel:hover {
   @apply shadow-2xl;
+
   transform: translateY(-4px);
 }
 
 .dark .showcase-panel {
-  background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(51, 65, 85, 0.9) 100%);
-  border: 1px solid rgba(71, 85, 105, 0.8);
+  background: linear-gradient(135deg, rgb(30, 41, 59, 0.9) 0%, rgb(51, 65, 85, 0.9) 100%);
+  border: 1px solid rgb(71, 85, 105, 0.8);
 }
 
 .showcase-panel--wide {
@@ -1054,7 +1096,8 @@ onUnmounted(() => {
 
 .panel-icon {
   @apply flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-blue-100 to-purple-100 text-blue-600 dark:from-blue-900/30 dark:to-purple-900/30 dark:text-blue-400;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+
+  box-shadow: 0 4px 12px rgb(59, 130, 246, 0.15);
 }
 
 .panel-info {
@@ -1075,6 +1118,7 @@ onUnmounted(() => {
 
 .badge-dot {
   @apply h-2 w-2 rounded-full bg-green-500;
+
   animation: pulse 2s infinite;
 }
 
@@ -1116,15 +1160,17 @@ onUnmounted(() => {
 
 .button-preview {
   @apply flex justify-center rounded-lg bg-white p-4 shadow-sm dark:bg-slate-800;
-  border: 1px solid rgba(226, 232, 240, 0.8);
+
+  border: 1px solid rgb(226, 232, 240, 0.8);
   transition: all 0.2s ease;
   min-height: 60px;
 }
 
 .button-preview:hover {
   @apply bg-slate-50 dark:bg-slate-700;
-  border-color: rgba(59, 130, 246, 0.3);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+
+  border-color: rgb(59, 130, 246, 0.3);
+  box-shadow: 0 4px 12px rgb(59, 130, 246, 0.15);
   transform: translateY(-1px);
 }
 
@@ -1170,6 +1216,7 @@ onUnmounted(() => {
 /* ===== ENHANCED BUTTON SYSTEM ===== */
 .demo-btn {
   @apply relative inline-flex items-center justify-center gap-2 rounded-lg font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
+
   position: relative;
   overflow: hidden;
 }
@@ -1181,7 +1228,7 @@ onUnmounted(() => {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  background: linear-gradient(90deg, transparent, rgb(255, 255, 255, 0.2), transparent);
   transition: left 0.5s ease-in-out;
 }
 
@@ -1192,22 +1239,26 @@ onUnmounted(() => {
 /* Button Sizes */
 .demo-btn--sm {
   @apply px-3 py-1.5 text-sm;
+
   min-height: 32px;
 }
 
 .demo-btn--md {
   @apply px-4 py-2 text-sm;
+
   min-height: 40px;
 }
 
 .demo-btn--lg {
   @apply px-6 py-3 text-base;
+
   min-height: 48px;
 }
 
 /* Button Variants */
 .demo-btn--primary {
   @apply bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg hover:from-blue-700 hover:to-blue-800 hover:shadow-xl focus:ring-blue-500;
+
   transform: translateY(0);
 }
 
@@ -1221,6 +1272,7 @@ onUnmounted(() => {
 
 .demo-btn--secondary {
   @apply bg-gradient-to-r from-slate-100 to-slate-200 text-slate-700 shadow-sm hover:from-slate-200 hover:to-slate-300 hover:shadow-md focus:ring-slate-500 dark:from-slate-700 dark:to-slate-600 dark:text-slate-200 dark:hover:from-slate-600 dark:hover:to-slate-500;
+
   transform: translateY(0);
 }
 
@@ -1230,6 +1282,7 @@ onUnmounted(() => {
 
 .demo-btn--outline {
   @apply border-2 border-blue-600 bg-transparent text-blue-600 shadow-sm hover:bg-blue-600 hover:text-white hover:shadow-md focus:ring-blue-500 dark:border-blue-400 dark:text-blue-400 dark:hover:bg-blue-400 dark:hover:text-white;
+
   transform: translateY(0);
 }
 
@@ -1239,6 +1292,7 @@ onUnmounted(() => {
 
 .demo-btn--destructive {
   @apply bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg hover:from-red-700 hover:to-red-800 hover:shadow-xl focus:ring-red-500;
+
   transform: translateY(0);
 }
 
@@ -1248,6 +1302,7 @@ onUnmounted(() => {
 
 .demo-btn--ghost {
   @apply bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:ring-slate-500 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200;
+
   transform: translateY(0);
 }
 
@@ -1257,6 +1312,7 @@ onUnmounted(() => {
 
 .demo-btn--success {
   @apply bg-gradient-to-r from-green-600 to-green-700 text-white shadow-lg hover:from-green-700 hover:to-green-800 hover:shadow-xl focus:ring-green-500;
+
   transform: translateY(0);
 }
 
@@ -1297,6 +1353,7 @@ onUnmounted(() => {
 /* Disabled State */
 .demo-btn:disabled {
   @apply cursor-not-allowed opacity-50;
+
   transform: none !important;
 }
 
@@ -1307,7 +1364,8 @@ onUnmounted(() => {
 /* Design System Indicator */
 .design-system-indicator {
   @apply mb-4 rounded-lg bg-blue-50 p-3 dark:bg-blue-900/20;
-  border: 1px solid rgba(59, 130, 246, 0.2);
+
+  border: 1px solid rgb(59, 130, 246, 0.2);
 }
 
 .indicator-text {
@@ -1321,6 +1379,7 @@ onUnmounted(() => {
 
 .unified-input {
   @apply w-full rounded-lg border-2 border-slate-200 bg-white px-3 py-2 text-slate-700 shadow-sm transition-all duration-200 hover:border-blue-300 focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-300 dark:hover:border-blue-400 dark:focus:border-blue-400 dark:focus:ring-blue-900/20;
+
   min-height: 40px;
 }
 
@@ -1375,6 +1434,7 @@ onUnmounted(() => {
 
 .multi-select-trigger {
   @apply flex cursor-pointer items-center justify-between rounded-lg border-2 border-slate-200 bg-white px-3 py-2 shadow-sm transition-all duration-200 focus-within:border-blue-500 focus-within:ring-4 focus-within:ring-blue-100 hover:border-blue-300 dark:border-slate-600 dark:bg-slate-800 dark:focus-within:border-blue-400 dark:focus-within:ring-blue-900/20 dark:hover:border-blue-400;
+
   min-height: 40px;
 }
 
@@ -1404,6 +1464,7 @@ onUnmounted(() => {
 
 .multi-select-dropdown {
   @apply absolute left-0 right-0 top-full z-50 mt-1 rounded-lg border border-slate-200 bg-white shadow-xl dark:border-slate-600 dark:bg-slate-800;
+
   max-height: 200px;
   overflow-y: auto;
 }
@@ -1442,7 +1503,8 @@ onUnmounted(() => {
 
 .selected-frameworks {
   @apply rounded-lg bg-gradient-to-r from-blue-50 to-purple-50 p-3 dark:from-blue-900/20 dark:to-purple-900/20;
-  border: 1px solid rgba(59, 130, 246, 0.2);
+
+  border: 1px solid rgb(59, 130, 246, 0.2);
 }
 
 .selected-count {
@@ -1455,11 +1517,13 @@ onUnmounted(() => {
 
 .framework-tag {
   @apply flex items-center gap-1 rounded-full bg-blue-600 px-2 py-0.5 text-xs font-medium text-white;
-  box-shadow: 0 1px 2px rgba(59, 130, 246, 0.2);
+
+  box-shadow: 0 1px 2px rgb(59, 130, 246, 0.2);
 }
 
 .remove-tag {
   @apply ml-1 flex h-3 w-3 items-center justify-center rounded-full bg-blue-700 text-white hover:bg-blue-800;
+
   font-size: 10px;
   line-height: 1;
 }
@@ -1483,6 +1547,7 @@ onUnmounted(() => {
 
 .state-title {
   @apply mb-6 text-5xl font-bold text-slate-900 dark:text-white md:text-6xl;
+
   background: linear-gradient(135deg, #1e293b 0%, #3b82f6 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -1506,20 +1571,22 @@ onUnmounted(() => {
 
 .state-card {
   @apply rounded-3xl bg-white p-8 shadow-xl dark:bg-slate-800;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.9) 100%);
+
+  background: linear-gradient(135deg, rgb(255, 255, 255, 0.9) 0%, rgb(248, 250, 252, 0.9) 100%);
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(226, 232, 240, 0.8);
+  border: 1px solid rgb(226, 232, 240, 0.8);
   transition: all 0.3s ease;
 }
 
 .state-card:hover {
   @apply shadow-2xl;
+
   transform: translateY(-4px);
 }
 
 .dark .state-card {
-  background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(51, 65, 85, 0.9) 100%);
-  border: 1px solid rgba(71, 85, 105, 0.8);
+  background: linear-gradient(135deg, rgb(30, 41, 59, 0.9) 0%, rgb(51, 65, 85, 0.9) 100%);
+  border: 1px solid rgb(71, 85, 105, 0.8);
 }
 
 .state-card--loading {
@@ -1610,6 +1677,7 @@ onUnmounted(() => {
 
 .principles-title {
   @apply mb-6 text-5xl font-bold text-slate-900 dark:text-white md:text-6xl;
+
   background: linear-gradient(135deg, #1e293b 0%, #3b82f6 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -1633,20 +1701,22 @@ onUnmounted(() => {
 
 .principle-card {
   @apply rounded-3xl bg-white p-8 text-center shadow-xl dark:bg-slate-800;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.9) 100%);
+
+  background: linear-gradient(135deg, rgb(255, 255, 255, 0.9) 0%, rgb(248, 250, 252, 0.9) 100%);
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(226, 232, 240, 0.8);
+  border: 1px solid rgb(226, 232, 240, 0.8);
   transition: all 0.3s ease;
 }
 
 .principle-card:hover {
   @apply shadow-2xl;
+
   transform: translateY(-4px);
 }
 
 .dark .principle-card {
-  background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(51, 65, 85, 0.9) 100%);
-  border: 1px solid rgba(71, 85, 105, 0.8);
+  background: linear-gradient(135deg, rgb(30, 41, 59, 0.9) 0%, rgb(51, 65, 85, 0.9) 100%);
+  border: 1px solid rgb(71, 85, 105, 0.8);
 }
 
 .principle-icon {
@@ -1669,8 +1739,9 @@ onUnmounted(() => {
 @keyframes float {
   0%,
   100% {
-    transform: translateY(0px);
+    transform: translateY(0);
   }
+
   50% {
     transform: translateY(-20px);
   }
@@ -1681,6 +1752,7 @@ onUnmounted(() => {
     opacity: 0;
     transform: translateY(40px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -1692,6 +1764,7 @@ onUnmounted(() => {
   100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.5;
   }
@@ -1704,12 +1777,15 @@ onUnmounted(() => {
 .hero-badge {
   animation-delay: 0.1s;
 }
+
 .hero-title {
   animation-delay: 0.2s;
 }
+
 .hero-description {
   animation-delay: 0.3s;
 }
+
 .hero-stats {
   animation-delay: 0.4s;
 }
@@ -1723,9 +1799,11 @@ onUnmounted(() => {
 .showcase-section {
   animation-delay: 0.1s;
 }
+
 .state-section {
   animation-delay: 0.2s;
 }
+
 .principles-section {
   animation-delay: 0.3s;
 }
@@ -1748,6 +1826,7 @@ onUnmounted(() => {
   .card-2,
   .card-3 {
     @apply relative bottom-auto left-auto right-auto top-auto transform-none;
+
     width: 100%;
     margin-bottom: 1rem;
   }

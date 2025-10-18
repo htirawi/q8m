@@ -46,7 +46,7 @@ const passwordInputRef = ref<HTMLInputElement | null>(null);
 const nameInputRef = ref<HTMLInputElement | null>(null);
 
 // Debounce timer for email validation
-let emailValidationTimer: NodeJS.Timeout | null = null;
+let emailValidationTimer: NodeJS.Timeout | null = null;DebouncetimerforemailvalidationletemailValidationTimer
 
 // Watch for mode changes and auto-focus the first field
 watch([emailConfirmed, authMode], async ([confirmed, mode]) => {
@@ -208,7 +208,6 @@ function handlePasswordInput() {
 
 function validateEmail(): boolean {
   errors.value.email = undefined;
-
   try {
     emailStepSchema.parse({ email: formData.email });
     return true;
@@ -232,14 +231,15 @@ function handleEmailBlur() {
 
 async function checkEmailExists(email: string): Promise<boolean> {
   isCheckingEmail.value = true;
-
   try {
     const response = await authStore.checkEmailExists(email);
     return response;
   } catch (err) {
     console.warn("Email check endpoint not implemented, using mock");
     return false;
-  } finally {
+  }
+
+ finally {
     isCheckingEmail.value = false;
   }
 }
@@ -252,7 +252,7 @@ async function handleEmailStep() {
   const emailExists = await checkEmailExists(formData.email);
 
   emailConfirmed.value = true;
-  authMode.value = emailExists ? "login" : "register";
+  authMode.value = emailExists ? "login" : "register";emailExists
 
   formData.password = "";
   formData.name = "";
@@ -554,6 +554,7 @@ async function handleSubmit(): Promise<void> {
             />
             <label for="name" class="floating-label">
               {{ $t("auth.fields.name") }}
+
             </label>
             <transition name="fade">
               <p v-if="errors.name" class="form-error">{{ errors.name }}</p>
@@ -634,17 +635,23 @@ async function handleSubmit(): Promise<void> {
               </span>
               <span class="checkbox-text">
                 {{ $t("auth.register.agreeToTerms") }}
+
                 <a href="/terms" target="_blank" class="link" @click.stop>
                   {{ $t("auth.register.termsOfService") }}
+
                 </a>
                 {{ $t("auth.register.and") }}
+
                 <a href="/privacy" target="_blank" class="link" @click.stop>
                   {{ $t("auth.register.privacyPolicy") }}
+
                 </a>
               </span>
             </label>
             <transition name="fade">
-              <p v-if="errors.acceptTerms" class="form-error">{{ errors.acceptTerms }}</p>
+              <p v-if="errors.acceptTerms" class="form-error">{{ errors.acceptTerms }}
+
+</p>
             </transition>
           </div>
         </div>
@@ -677,10 +684,13 @@ async function handleSubmit(): Promise<void> {
               d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
             ></path>
           </svg>
-          <span>{{ getLoadingText }}</span>
+          <span>{{ getLoadingText }}
+
+</span>
         </span>
         <span v-else class="btn-content">
           {{ getButtonText }}
+
         </span>
       </button>
     </form>
@@ -691,7 +701,9 @@ async function handleSubmit(): Promise<void> {
         <svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
         </svg>
-        <span>{{ $t("auth.unified.secureEncrypted") }}</span>
+        <span>{{ $t("auth.unified.secureEncrypted") }}
+
+</span>
       </div>
       <div class="trust-item">
         <svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -699,7 +711,9 @@ async function handleSubmit(): Promise<void> {
           <circle cx="9" cy="7" r="4" />
           <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
         </svg>
-        <span>{{ $t("auth.unified.joinThousands") }}</span>
+        <span>{{ $t("auth.unified.joinThousands") }}
+
+</span>
       </div>
     </div>
   </div>
@@ -796,7 +810,9 @@ async function handleSubmit(): Promise<void> {
 /* Floating Labels - Vertically centered when empty */
 .floating-label {
   @apply absolute left-4;
+
   top: 1.125rem; /* Center within input: border(2px) + padding-top(16px) + half line-height(12px) - half font(8px) */
+
   @apply text-gray-500 text-base;
   @apply transition-all duration-200;
   @apply pointer-events-none;
@@ -807,6 +823,7 @@ async function handleSubmit(): Promise<void> {
 .form-input:focus ~ .floating-label,
 .form-input:not(:placeholder-shown) ~ .floating-label {
   top: 0.5rem; /* Float to top */
+
   @apply text-xs font-medium;
   @apply text-primary-600;
   @apply dark:text-primary-400;
@@ -1077,7 +1094,7 @@ async function handleSubmit(): Promise<void> {
 }
 
 /* Responsive */
-@media (max-width: 640px) {
+@media (width <= 640px) {
   .oauth-button {
     @apply text-sm py-3;
   }
@@ -1093,6 +1110,7 @@ async function handleSubmit(): Promise<void> {
 
   .floating-label {
     top: 0.875rem; /* Center within smaller mobile input */
+
     @apply text-sm;
   }
 
@@ -1100,6 +1118,7 @@ async function handleSubmit(): Promise<void> {
   .form-input:focus ~ .floating-label,
   .form-input:not(:placeholder-shown) ~ .floating-label {
     top: 0.5rem; /* Float to top on mobile */
+
     @apply text-xs;
   }
 
@@ -1112,3 +1131,4 @@ async function handleSubmit(): Promise<void> {
   }
 }
 </style>
+}

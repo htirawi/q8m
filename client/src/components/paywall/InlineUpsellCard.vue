@@ -27,6 +27,7 @@
         <div>
           <h3 class="text-sm font-semibold text-gray-900 dark:text-white">
             {{ title }}
+
           </h3>
           <p class="text-xs text-gray-600 dark:text-gray-400">
             {{ subtitle }}
@@ -71,7 +72,9 @@
                 clip-rule="evenodd"
               />
             </svg>
-            <span>{{ benefit }}</span>
+            <span>{{ benefit }}
+
+</span>
           </li>
         </ul>
 
@@ -81,6 +84,7 @@
           @click="handleUpgrade"
         >
           {{ ctaText }}
+
         </button>
       </div>
     </Transition>
@@ -100,9 +104,9 @@ const props = defineProps<Props>();
 
 const router = useRouter();
 const isExpanded = ref(false);
-const contentId = `upsell-${Math.random().toString(36).substring(7)}`;
+const contentid = `upsell-${Math.random().toString(36).substring(7)}`;
 
-const toggleExpanded = () => {
+const toggleexpanded = () => {
   isExpanded.value = !isExpanded.value;
 
   if (isExpanded.value) {
@@ -113,7 +117,7 @@ const toggleExpanded = () => {
   }
 };
 
-const handleUpgrade = () => {
+const handleupgrade = () => {
   trackEvent("upsell_card_cta_clicked", {
     targetPlan: props.targetPlan,
     title: props.title,
@@ -128,6 +132,7 @@ const handleUpgrade = () => {
     },
   });
 };
+
 </script>
 
 <style scoped>

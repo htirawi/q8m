@@ -32,6 +32,7 @@
           <div class="text-sm text-gray-600 dark:text-gray-400 mb-1">Total Wins</div>
           <div class="text-2xl font-bold text-green-600 dark:text-green-400">
             {{ stats.wins }}
+
           </div>
         </div>
         <div
@@ -48,6 +49,7 @@
           <div class="text-sm text-gray-600 dark:text-gray-400 mb-1">Performance</div>
           <div :class="['text-2xl font-bold', getPerformanceColor()]">
             {{ getPerformanceRating() }}
+
           </div>
         </div>
       </div>
@@ -71,8 +73,12 @@
             ]"
           >
             <span class="flex items-center justify-center gap-2">
-              <span>{{ tab.icon }}</span>
-              <span>{{ tab.label }}</span>
+              <span>{{ tab.icon }}
+
+</span>
+              <span>{{ tab.label }}
+
+</span>
               <span
                 v-if="tab.count > 0"
                 :class="[
@@ -85,6 +91,7 @@
                 ]"
               >
                 {{ tab.count }}
+
               </span>
             </span>
             <div
@@ -266,33 +273,33 @@ const tabs = computed(() => [
   },
 ]);
 
-const handleAccept = async (challengeId: string) => {
+const handleaccept = async (challengeId: string) => {
   const success = await acceptChallenge(challengeId);
   if (success) {
     await loadChallenges();
   }
 };
 
-const handleReject = async (challengeId: string) => {
+const handlereject = async (challengeId: string) => {
   const success = await rejectChallenge(challengeId);
   if (success) {
     await loadChallenges();
   }
 };
 
-const handleStart = (challengeId: string) => {
+const handlestart = (challengeId: string) => {
   router.push(`/challenges/${challengeId}/take`);
 };
 
-const handleViewDetails = (challengeId: string) => {
+const handleviewdetails = (challengeId: string) => {
   router.push(`/challenges/${challengeId}`);
 };
 
-const handleLoadMore = async () => {
+const handleloadmore = async () => {
   await loadMore();
 };
 
-const handleCreateChallenge = async (data: CreateChallengeData) => {
+const handlecreatechallenge = async (data: CreateChallengeData) => {
   createLoading.value = true;
   const success = await createChallenge(data);
   createLoading.value = false;

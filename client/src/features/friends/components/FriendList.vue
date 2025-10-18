@@ -87,7 +87,7 @@ const handleUnfriend = async (userId: string) => {
   }
 };
 
-const handleBlock = async (userId: string) => {
+const handleblock = async (userId: string) => {
   if (showBlockConfirm.value !== userId) {
     showBlockConfirm.value = userId;
     return;
@@ -99,15 +99,15 @@ const handleBlock = async (userId: string) => {
   }
 };
 
-const handleView = (userId: string) => {
+const handleview = (userId: string) => {
   emit('view-friend', userId);
 };
 
-const handleLoadMore = async () => {
+const handleloadmore = async () => {
   await loadMore();
 };
 
-const clearFilters = () => {
+const clearfilters = () => {
   searchQuery.value = '';
   filterLevel.value = 'all';
   sortBy.value = props.initialSort;
@@ -205,7 +205,9 @@ onMounted(async () => {
       v-if="error"
       class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6"
     >
-      <p class="text-red-700 dark:text-red-400">{{ error }}</p>
+      <p class="text-red-700 dark:text-red-400">{{ error }}
+
+</p>
     </div>
 
     <!-- Loading State -->

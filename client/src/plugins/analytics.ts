@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
- 
-import type { App } from 'vue';
-import type { Router } from 'vue-router';
-import { analytics, EventCategory, EventAction } from '@/services/analytics';
+// Removed eslint-disable - fixing any types below
+
+import type { App } from "vue";
+import type { Router } from "vue-router";
+import { analytics, EventCategory, EventAction } from "@/services/analytics";
 
 export interface AnalyticsPluginOptions {
   debug?: boolean;
@@ -25,12 +24,15 @@ export default {
   install(app: App, options: AnalyticsPluginOptions = {}) {
     // Initialize analytics service
     const initializeAnalytics = async () => {
-      const providers: Record<string, any> = {};
+      const providers: Record<
+        string,
+        { measurementId?: string; endpoint?: string; apiKey?: string }
+      > = {};
 
       // Add Google Analytics provider if ID provided
       if (options.googleAnalyticsId) {
         providers.google = {
-          measurementId: options.googleAnalyticsId
+          measurementId: options.googleAnalyticsId,
         };
       }
 
@@ -38,7 +40,7 @@ export default {
       if (options.customApiEndpoint) {
         providers.custom = {
           endpoint: options.customApiEndpoint,
-          apiKey: options.customApiKey
+          apiKey: options.customApiKey,
         };
       }
 
@@ -46,7 +48,7 @@ export default {
         providers,
         debug: options.debug,
         batchSize: options.batchSize,
-        batchInterval: options.batchInterval
+        batchInterval: options.batchInterval,
       });
 
       // Setup router tracking if router provided
@@ -67,7 +69,7 @@ export default {
     initializeAnalytics().catch(console.error);
 
     // Provide analytics via inject
-    app.provide('analytics', analytics);
+    app.provide("analytics", analytics);
 
     // Add global properties
     app.config.globalProperties.$analytics = analytics;
@@ -76,93 +78,104 @@ export default {
     // Add convenient tracking methods
     app.config.globalProperties.$trackClick = (
       elementName: string,
-      properties?: Record<string, any>
+      properties?: Record<string, string | number | boolean | null>
     ) => {
       analytics.track(`${elementName}_clicked`, properties, {
         category: EventCategory.Engagement,
-        action: EventAction.Click
+        action: EventAction.Click,
       });
     };
 
     app.config.globalProperties.$trackView = (
       viewName: string,
-      properties?: Record<string, any>
+      properties?: Record<string, string | number | boolean | null>
     ) => {
       analytics.track(`${viewName}_viewed`, properties, {
         category: EventCategory.Navigation,
-        action: EventAction.View
+        action: EventAction.View,
       });
     };
 
     app.config.globalProperties.$trackError = (
       error: Error | string,
-      context?: Record<string, any>
+      context?: Record<string, string | number | boolean | null>
     ) => {
       analytics.trackError(error, context);
     };
 
     // Add directive for click tracking
-    app.directive('track-click', {
+    app.directive("track-click", {
       mounted(el: HTMLElement, binding) {
-        const eventName = binding.arg || 'element_clicked';
+        const eventName = binding.arg || "element_clicked";
         const properties = binding.value || {};
 
-        el.addEventListener('click', () => {
-          analytics.track(eventName, {
-            ...properties,
-            element_tag: el.tagName.toLowerCase(),
-            element_text: el.textContent?.trim().substring(0, 50),
-            element_classes: el.className
-          }, {
-            category: EventCategory.Engagement,
-            action: EventAction.Click
-          });
+        el.addEventListener("click", () => {
+          analytics.track(
+            eventName,
+            {
+              ...properties,
+              element_tag: el.tagName.toLowerCase(),
+              element_text: el.textContent?.trim().substring(0, 50),
+              element_classes: el.className,
+            },
+            {
+              category: EventCategory.Engagement,
+              action: EventAction.Click,
+            }
+          );
         });
-      }
+      },
     });
 
     // Add directive for visibility tracking
-    app.directive('track-view', {
+    app.directive("track-view", {
       mounted(el: HTMLElement, binding) {
-        const eventName = binding.arg || 'element_viewed';
+        const eventName = binding.arg || "element_viewed";
         const properties = binding.value || {};
         let hasBeenVisible = false;
 
         const observer = new IntersectionObserver(
           (entries) => {
-            entries.forEach(entry => {
+            entries.forEach((entry) => {
               if (entry.isIntersecting && !hasBeenVisible) {
                 hasBeenVisible = true;
-                analytics.track(eventName, {
-                  ...properties,
-                  element_tag: el.tagName.toLowerCase(),
-                  viewport_percentage: Math.round(entry.intersectionRatio * 100)
-                }, {
-                  category: EventCategory.Engagement,
-                  action: EventAction.View
-                });
+                analytics.track(
+                  eventName,
+                  {
+                    ...properties,
+                    element_tag: el.tagName.toLowerCase(),
+                    viewport_percentage: Math.round(entry.intersectionRatio * 100),
+                  },
+                  {
+                    category: EventCategory.Engagement,
+                    action: EventAction.View,
+                  }
+                );
               }
             });
           },
           {
-            threshold: 0.5 // Trigger when 50% visible
+            threshold: 0.5, // Trigger when 50% visible
           }
         );
 
         observer.observe(el);
 
         // Cleanup on unmount
-        (el as any)._visibilityObserver = observer;
+        (el as HTMLElement & { _visibilityObserver?: IntersectionObserver })._visibilityObserver =
+          observer;
       },
       unmounted(el: HTMLElement) {
-        const observer = (el as any)._visibilityObserver;
+        const observer = (el as HTMLElement & { _visibilityObserver?: IntersectionObserver })
+          ._visibilityObserver;
         if (observer) {
           observer.disconnect();
-          delete (el as any)._visibilityObserver;
+          delete (el as HTMLElement & { _visibilityObserver?: IntersectionObserver })
+            ._visibilityObserver;
         }
-      }
+      },
     });
-  }
+  },
 };
 
 /**
@@ -170,18 +183,21 @@ export default {
  */
 function setupPerformanceTracking() {
   // Track Web Vitals
-  if ('PerformanceObserver' in window) {
+  if ("PerformanceObserver" in window) {
     // Track Largest Contentful Paint (LCP)
     try {
       const lcpObserver = new PerformanceObserver((list) => {
         const entries = list.getEntries();
-        const lastEntry = entries[entries.length - 1] as any;
+        const lastEntry = entries[entries.length - 1] as PerformanceEntry & {
+          renderTime?: number;
+          loadTime?: number;
+        };
         analytics.trackPerformance({
-          lcp: Math.round(lastEntry.renderTime || lastEntry.loadTime)
+          lcp: Math.round(lastEntry.renderTime || lastEntry.loadTime || 0),
         });
       });
-      lcpObserver.observe({ type: 'largest-contentful-paint', buffered: true });
-    } catch (e) {
+      lcpObserver.observe({ type: "largest-contentful-paint", buffered: true });
+    } catch (_e) {
       // LCP observer not supported
     }
 
@@ -189,23 +205,36 @@ function setupPerformanceTracking() {
     try {
       const fidObserver = new PerformanceObserver((list) => {
         const entries = list.getEntries();
-        const firstEntry = entries[0] as any;
+        const firstEntry = entries[0] as PerformanceEntry & {
+          processingStart?: number;
+          startTime?: number;
+        };
         analytics.trackPerformance({
-          fid: Math.round(firstEntry.processingStart - firstEntry.startTime)
+          fid: Math.round((firstEntry.processingStart || 0) - (firstEntry.startTime || 0)),
         });
       });
-      fidObserver.observe({ type: 'first-input', buffered: true });
-    } catch (e) {
+      fidObserver.observe({ type: "first-input", buffered: true });
+    } catch (_e) {
       // FID observer not supported
     }
 
     // Track Cumulative Layout Shift (CLS)
     let clsValue = 0;
-    let clsEntries: any[] = [];
+    let clsEntries: (PerformanceEntry & {
+      hadRecentInput?: boolean;
+      value?: number;
+      startTime?: number;
+      endTime?: number;
+    })[] = [];
 
     try {
       const clsObserver = new PerformanceObserver((list) => {
-        for (const entry of list.getEntries() as any[]) {
+        for (const entry of list.getEntries() as (PerformanceEntry & {
+          hadRecentInput?: boolean;
+          value?: number;
+          startTime?: number;
+          endTime?: number;
+        })[]) {
           if (!entry.hadRecentInput) {
             const firstSessionEntry = clsEntries[0];
             const lastSessionEntry = clsEntries[clsEntries.length - 1];
@@ -226,31 +255,31 @@ function setupPerformanceTracking() {
         // Report CLS when it stabilizes
         if (clsEntries.length > 0) {
           analytics.trackPerformance({
-            cls: Math.round(clsValue * 1000) / 1000
+            cls: Math.round(clsValue * 1000) / 1000,
           });
         }
       });
-      clsObserver.observe({ type: 'layout-shift', buffered: true });
-    } catch (e) {
+      clsObserver.observe({ type: "layout-shift", buffered: true });
+    } catch (_e) {
       // CLS observer not supported
     }
   }
 
   // Track page load performance
-  window.addEventListener('load', () => {
+  window.addEventListener("load", () => {
     setTimeout(() => {
-      const perfData = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
+      const perfData = performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming;
       if (perfData) {
         analytics.trackPerformance({
           ttfb: Math.round(perfData.responseStart - perfData.requestStart),
           fcp: Math.round(perfData.responseStart),
-          tti: Math.round(perfData.domInteractive - perfData.fetchStart)
+          tti: Math.round(perfData.domInteractive - perfData.fetchStart),
         });
 
         // Track page load timing
         analytics.trackTiming(
-          'page',
-          'load',
+          "page",
+          "load",
           Math.round(perfData.loadEventEnd - perfData.fetchStart),
           window.location.pathname
         );
@@ -259,19 +288,19 @@ function setupPerformanceTracking() {
   });
 
   // Track errors
-  window.addEventListener('error', (event) => {
+  window.addEventListener("error", (event) => {
     analytics.trackError(event.error || event.message, {
       filename: event.filename,
       line: event.lineno,
       column: event.colno,
-      type: 'uncaught_error'
+      type: "uncaught_error",
     });
   });
 
-  window.addEventListener('unhandledrejection', (event) => {
+  window.addEventListener("unhandledrejection", (event) => {
     analytics.trackError(event.reason, {
-      type: 'unhandled_rejection',
-      promise: event.promise?.toString()
+      type: "unhandled_rejection",
+      promise: event.promise?.toString(),
     });
   });
 }
@@ -280,12 +309,21 @@ function setupPerformanceTracking() {
 export { analytics, EventCategory, EventAction };
 
 // TypeScript module augmentation
-declare module '@vue/runtime-core' {
+declare module "@vue/runtime-core" {
   export interface ComponentCustomProperties {
     $analytics: typeof analytics;
     $track: typeof analytics.track;
-    $trackClick: (elementName: string, properties?: Record<string, any>) => void;
-    $trackView: (viewName: string, properties?: Record<string, any>) => void;
-    $trackError: (error: Error | string, context?: Record<string, any>) => void;
+    $trackClick: (
+      elementName: string,
+      properties?: Record<string, string | number | boolean | null>
+    ) => void;
+    $trackView: (
+      viewName: string,
+      properties?: Record<string, string | number | boolean | null>
+    ) => void;
+    $trackError: (
+      error: Error | string,
+      context?: Record<string, string | number | boolean | null>
+    ) => void;
   }
 }

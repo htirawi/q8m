@@ -73,9 +73,12 @@
                       : 'border-gray-300 dark:border-gray-600 hover:border-gray-400',
                   ]"
                 >
-                  <div class="text-2xl mb-1">{{ diff.emoji }}</div>
+                  <div class="text-2xl mb-1">{{ diff.emoji }}
+
+</div>
                   <div class="font-medium text-gray-900 dark:text-white capitalize">
                     {{ diff.value }}
+
                   </div>
                 </button>
               </div>
@@ -99,7 +102,9 @@
                       : 'border-gray-300 dark:border-gray-600 hover:border-gray-400',
                   ]"
                 >
-                  <div class="text-2xl mb-1">{{ fw.emoji }}</div>
+                  <div class="text-2xl mb-1">{{ fw.emoji }}
+
+</div>
                   <div class="font-medium text-gray-900 dark:text-white capitalize">
                     {{ fw.label }}
                   </div>
@@ -132,6 +137,7 @@
             <div>
               <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Time Limit: {{ formatTimeLimit(formData.timeLimit) }}
+
               </label>
               <input
                 v-model.number="formData.timeLimit"
@@ -164,7 +170,9 @@
                 class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
               ></textarea>
               <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 text-right">
-                {{ formData.message?.length || 0 }}/200
+                {{ formData.message?.length || 0 }}
+
+/200
               </p>
             </div>
 
@@ -173,7 +181,9 @@
               v-if="errorMessage"
               class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4"
             >
-              <p class="text-sm text-red-600 dark:text-red-400">{{ errorMessage }}</p>
+              <p class="text-sm text-red-600 dark:text-red-400">{{ errorMessage }}
+
+</p>
             </div>
 
             <!-- Actions -->
@@ -192,6 +202,7 @@
                 class="flex-1 px-6 py-3 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {{ loading ? 'Creating...' : 'Send Challenge' }}
+
               </button>
             </div>
           </form>
@@ -214,9 +225,9 @@ const props = withDefaults(defineProps<Props>(), {
   loading: false,
 });
 
-const emit = defineEmits<{
+const emit = defineemits<{
   close: [];
-  submit: [data: CreateChallengeData];
+  submit: [;data: CreateChallengeData]
 }>();
 
 const { validateChallengeData } = useChallenges();
@@ -262,8 +273,8 @@ const close = () => {
   }
 };
 
-const resetForm = () => {
-  formData.value = {
+const resetform = () => {
+  formdata.value = {
     challengedUserId: '',
     difficulty: 'medium',
     framework: undefined,
@@ -274,7 +285,7 @@ const resetForm = () => {
   errorMessage.value = '';
 };
 
-const handleSubmit = () => {
+const handlesubmit = () => {
   errorMessage.value = '';
 
   const validation = validateChallengeData(formData.value);

@@ -12,6 +12,7 @@ defineOptions({
       <div class="pricing-testimonials__header">
         <h2 id="testimonials-title" class="pricing-testimonials__title">
           {{ $t('pricing.testimonials.title') }}
+
         </h2>
         <p class="pricing-testimonials__subtitle">
           {{ $t('pricing.testimonials.subtitle') }}
@@ -49,15 +50,20 @@ defineOptions({
           </div>
           <blockquote class="testimonial-card__quote">
             {{ $t('pricing.testimonials.items.michael.quote') }}
+
           </blockquote>
           <div class="testimonial-card__author">
             <div class="testimonial-card__avatar">
               <div class="testimonial-card__avatar-placeholder">MR</div>
             </div>
             <div class="testimonial-card__author-info">
-              <cite class="testimonial-card__name">{{ $t('pricing.testimonials.items.michael.name') }}</cite>
+              <cite class="testimonial-card__name">{{ $t('pricing.testimonials.items.michael.name') }}
+
+</cite>
               <p class="testimonial-card__role">
-                {{ $t('pricing.testimonials.items.michael.role') }} at
+                {{ $t('pricing.testimonials.items.michael.role') }}
+
+ at
                 {{ $t('pricing.testimonials.items.michael.company') }}
               </p>
             </div>
@@ -109,6 +115,7 @@ defineOptions({
   @apply text-3xl font-bold text-gray-900 dark:text-white;
   @apply sm:text-4xl lg:text-5xl;
   @apply mb-4;
+
   letter-spacing: -0.02em;
 }
 
@@ -171,6 +178,7 @@ defineOptions({
 
 .testimonial-card__quote::before {
   content: '"';
+
   @apply text-4xl text-blue-500 dark:text-blue-400;
   @apply font-serif;
   @apply mr-1;
@@ -178,6 +186,7 @@ defineOptions({
 
 .testimonial-card__quote::after {
   content: '"';
+
   @apply text-4xl text-blue-500 dark:text-blue-400;
   @apply font-serif;
   @apply ml-1;
@@ -228,7 +237,7 @@ defineOptions({
 }
 
 /* Responsive */
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .testimonial-card--featured {
     @apply scale-100;
   }

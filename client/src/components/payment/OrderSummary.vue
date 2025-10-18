@@ -5,8 +5,8 @@ import type { OrderSummaryProps } from "@/types/ui/component-props";
 
 const props = defineProps<OrderSummaryProps>();
 
-defineEmits<{
-  "toggle-billing-cycle": [];
+defineemits<{
+  
 }>();
 
 const { t } = useI18n();

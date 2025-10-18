@@ -22,7 +22,9 @@
     <div class="relative z-0">
       <!-- Compact variant -->
       <div v-if="variant === 'compact'" class="flex items-center gap-2">
-        <div class="text-3xl">{{ badge.icon }}</div>
+        <div class="text-3xl">{{ badge.icon }}
+
+</div>
         <div class="flex-1 min-w-0">
           <div class="font-semibold text-sm truncate" :class="earned ? 'text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-400'">
             {{ badge.name }}
@@ -47,12 +49,14 @@
             :class="earned ? 'animate-bounce-subtle' : 'grayscale opacity-50'"
           >
             {{ badge.icon }}
+
             <div v-if="badge.tier" class="absolute -top-1 -right-1">
               <span
                 class="inline-flex items-center justify-center w-5 h-5 text-xs font-bold rounded-full"
                 :class="getTierClass(badge.tier)"
               >
                 {{ getTierIcon(badge.tier) }}
+
               </span>
             </div>
           </div>
@@ -61,6 +65,7 @@
         <!-- IBadge Name -->
         <h4 class="font-bold text-center mb-1" :class="earned ? 'text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-400'">
           {{ badge.name }}
+
         </h4>
 
         <!-- Rarity IBadge -->
@@ -70,12 +75,14 @@
             :class="getRarityClass(badge.rarity)"
           >
             {{ badge.rarity.toUpperCase() }}
+
           </span>
         </div>
 
         <!-- Description -->
         <p class="text-xs text-center mb-3" :class="earned ? 'text-gray-600 dark:text-gray-400' : 'text-gray-500 dark:text-gray-500'">
           {{ badge.description }}
+
         </p>
 
         <!-- Progress Bar (for unearned badges) -->
@@ -95,12 +102,15 @@
         <!-- XP IReward -->
         <div class="flex items-center justify-center gap-1 text-xs font-semibold" :class="earned ? 'text-purple-600 dark:text-purple-400' : 'text-gray-500 dark:text-gray-500'">
           <span>⭐</span>
-          <span>{{ badge.xpReward }} XP</span>
+          <span>{{ badge.xpReward }}
+
+ XP</span>
         </div>
 
         <!-- Earned Date -->
         <div v-if="earned && earnedAt" class="text-xs text-center text-gray-500 dark:text-gray-400 mt-2">
           Earned {{ formatDate(earnedAt) }}
+
         </div>
       </div>
     </div>
@@ -124,8 +134,8 @@ const props = withDefaults(defineProps<Props>(), {
   clickable: false,
 });
 
-const emit = defineEmits<{
-  click: [badge: IBadge];
+const emit = defineemits<{
+  click: [;badge: IBadge]
 }>();
 
 function handleClick() {
@@ -174,14 +184,15 @@ function formatDate(date: Date): string {
   if (days < 7) return `${days} days ago`;
   if (days < 30) {
     const weeks = Math.floor(days / 7);
-    return `${weeks} week${weeks > 1 ? 's' : ''} ago`;
+    return `${weeks} week${weeks > 1 ? 's' : ''1} ago`;
   }
   if (days < 365) {
     const months = Math.floor(days / 30);
-    return `${months} month${months > 1 ? 's' : ''} ago`;
+    return `${months} month${months > 1 ? 's' : ''1} ago`;
   }
   return new Date(date).toLocaleDateString();
 }
+
 </script>
 
 <style scoped>
@@ -190,6 +201,7 @@ function formatDate(date: Date): string {
   0% {
     transform: translateX(-100%) translateY(-100%) rotate(30deg);
   }
+
   100% {
     transform: translateX(100%) translateY(100%) rotate(30deg);
   }
@@ -204,6 +216,7 @@ function formatDate(date: Date): string {
   0%, 100% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(-4px);
   }

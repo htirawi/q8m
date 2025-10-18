@@ -1,37 +1,55 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-echo "Running validation on modified files..."
+echo "🚀 Running pre-push validation..."
 
-# Lint modified client source files (exclude deleted, config, test, style files, and Phase 2 features)
-MODIFIED_CLIENT_FILES=$(git diff --name-only --diff-filter=ACMR HEAD | grep "^client/src/.*\.\(ts\|vue\)$" | grep -v "\.test\.ts$" | grep -v "\.spec\.ts$" | grep -v "\.css$" | grep -v "features/challenges/" | grep -v "features/friends/" | grep -v "features/discussions/" | grep -v "features/test/" | grep -v "stores/challenges" | grep -v "stores/discussions" | grep -v "components/notifications/" | grep -v "composables/useNotifications" | grep -v "composables/useChallenges" | grep -v "composables/useFriends" | grep -v "composables/useDiscussions" | sed 's|^client/||' || true)
+# Lint modified client source files (exclude deleted, config, test, style files)
+MODIFIED_CLIENT_FILES=$(git diff --name-only --diff-filter=ACMR HEAD | grep "^client/src/.*\.\(ts\|vue\)$" | grep -v "\.test\.ts$" | grep -v "\.spec\.ts$" | grep -v "\.css$" | sed 's|^client/||' || true)
 if [ -n "$MODIFIED_CLIENT_FILES" ]; then
-  echo "Linting modified client files (excluding Phase 2 features)..."
+  echo "📝 Linting modified client files..."
   cd client
-  echo "$MODIFIED_CLIENT_FILES" | tr '\n' ' ' | xargs pnpm eslint --max-warnings 0 || exit 1
+  echo "$MODIFIED_CLIENT_FILES" | tr '\n' ' ' | xargs pnpm eslint --max-warnings 0 || {
+    echo "❌ Client linting failed. Please fix the errors above."
+    exit 1
+  }
   cd ..
 else
-  echo "ℹ️  No client files to lint (all changes in excluded Phase 2 features)"
+  echo "ℹ️  No client files to lint"
 fi
 
 # Lint modified server source files (exclude deleted files and tests)
 MODIFIED_SERVER_FILES=$(git diff --name-only --diff-filter=ACMR HEAD | grep "^server/src/.*\.\(ts\)$" | grep -v "\.test\.ts$" | grep -v "\.spec\.ts$" | sed 's|^server/||' || true)
 if [ -n "$MODIFIED_SERVER_FILES" ]; then
-  echo "Linting modified server files..."
+  echo "📝 Linting modified server files..."
   cd server
-  echo "$MODIFIED_SERVER_FILES" | tr '\n' ' ' | xargs pnpm eslint --max-warnings 999 || exit 1
+  echo "$MODIFIED_SERVER_FILES" | tr '\n' ' ' | xargs pnpm eslint --max-warnings 0 || {
+    echo "❌ Server linting failed. Please fix the errors above."
+    exit 1
+  }
   cd ..
+else
+  echo "ℹ️  No server files to lint"
 fi
 
-# Run typecheck and tests on all code
-echo "Running typecheck..."
-pnpm typecheck || exit 1
+# Run typecheck on all code
+echo "🔍 Running typecheck..."
+pnpm typecheck || {
+  echo "❌ Type check failed. Please fix the type errors above."
+  exit 1
+}
 
-echo "Running tests..."
-pnpm test:unit || exit 1
+# Run unit tests
+echo "🧪 Running tests..."
+pnpm test:unit || {
+  echo "❌ Tests failed. Please fix the failing tests above."
+  exit 1
+}
 
-# Build disabled - Phase 2 features cause build errors
-# echo "Building..."
-# pnpm build || exit 1
+# Build the project
+echo "🔨 Building project..."
+pnpm build || {
+  echo "❌ Build failed. Please fix the build errors above."
+  exit 1
+}
 
-echo "✅ Pre-push validation passed!"
+echo "✅ Pre-push validation passed! All checks completed successfully."

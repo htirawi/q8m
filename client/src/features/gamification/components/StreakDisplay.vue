@@ -5,13 +5,17 @@
       <button @click="$emit('click')"
         class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
         :class="statusColorClass">
-        <span class="text-2xl">{{ streakIcon }}</span>
+        <span class="text-2xl">{{ streakIcon }}
+
+</span>
         <div class="text-left">
           <div class="text-sm font-bold text-gray-900 dark:text-white">
-            {{ streak.currentStreak }} day{{ streak.currentStreak !== 1 ? 's' : '' }}
+            {{ streak.currentStreak }} day{{ streak.currentStreak !== 1 ? 's' : ''1 }}
+
           </div>
           <div class="text-xs text-gray-500 dark:text-gray-400">
             {{ streakStatusMessage }}
+
           </div>
         </div>
       </button>
@@ -23,7 +27,9 @@
         <!-- Header -->
         <div class="flex items-center justify-between mb-4">
           <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
-            <span class="text-3xl">{{ streakIcon }}</span>
+            <span class="text-3xl">{{ streakIcon }}
+
+</span>
             Streak
           </h3>
           <div v-if="isStreakInDanger" class="flex items-center gap-1 text-orange-600 dark:text-orange-400">
@@ -40,6 +46,7 @@
         <div class="text-center mb-6">
           <div class="text-5xl font-bold bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent">
             {{ streak.currentStreak }}
+
           </div>
           <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">
             {{ formatStreakDuration(streak.currentStreak) }}
@@ -49,7 +56,9 @@
         <!-- Progress to next milestone -->
         <div class="mb-6">
           <div class="flex justify-between text-xs text-gray-600 dark:text-gray-400 mb-2">
-            <span>Next: {{ nextMilestone }} days</span>
+            <span>Next: {{ nextMilestone }}
+
+ days</span>
             <span>{{ daysUntilNextMilestone }} to go</span>
           </div>
           <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 overflow-hidden">
@@ -63,6 +72,7 @@
           <div class="text-center p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
             <div class="text-2xl font-bold text-gray-900 dark:text-white">
               {{ streak.longestStreak }}
+
             </div>
             <div class="text-xs text-gray-600 dark:text-gray-400">Longest Streak</div>
           </div>
@@ -77,6 +87,7 @@
         <!-- Last Activity -->
         <div class="text-center text-xs text-gray-500 dark:text-gray-400">
           Last activity: {{ formatRelativeDate(streak.lastActivityDate) }}
+
         </div>
 
         <!-- Streak Saver Info -->
@@ -88,7 +99,8 @@
                 d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
                 clip-rule="evenodd" />
             </svg>
-            <span>You have {{ streak.freezesAvailable }} free freeze{{ streak.freezesAvailable !== 1 ? 's' : '' }}
+            <span>You have {{ streak.freezesAvailable }} free freeze{{ streak.freezesAvailable !== 1 ? 's' : ''1 }}
+
               available!</span>
           </div>
         </div>
@@ -100,12 +112,17 @@
       <div class="space-y-6">
         <!-- Hero Section -->
         <div class="text-center">
-          <div class="text-6xl mb-4">{{ streakIcon }}</div>
+          <div class="text-6xl mb-4">{{ streakIcon }}
+
+</div>
           <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-            {{ streak.currentStreak }} Day Streak
+            {{ streak.currentStreak }}
+
+ Day Streak
           </h2>
           <p class="text-gray-600 dark:text-gray-400">
             {{ streakStatusMessage }}
+
           </p>
         </div>
 
@@ -114,12 +131,14 @@
           <div class="text-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
             <div class="text-3xl font-bold text-orange-500">
               {{ streak.currentStreak }}
+
             </div>
             <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">Current</div>
           </div>
           <div class="text-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
             <div class="text-3xl font-bold text-red-500">
               {{ streak.longestStreak }}
+
             </div>
             <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">Longest</div>
           </div>
@@ -145,14 +164,19 @@
                     d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
                     clip-rule="evenodd" />
                 </svg>
-                <span v-else class="text-xs text-gray-600 dark:text-gray-400">{{ milestone }}</span>
+                <span v-else class="text-xs text-gray-600 dark:text-gray-400">{{ milestone }}
+
+</span>
               </div>
               <div class="flex-1">
                 <div class="font-medium text-gray-900 dark:text-white">
-                  {{ milestone }} Days
+                  {{ milestone }}
+
+ Days
                 </div>
                 <div class="text-xs text-gray-500 dark:text-gray-400">
                   {{ getMilestoneMessage(milestone) }}
+
                 </div>
               </div>
             </div>
@@ -168,13 +192,17 @@
           <div class="flex items-center justify-between text-sm">
             <span class="text-blue-700 dark:text-blue-300">Free freezes:</span>
             <span class="font-bold text-blue-900 dark:text-blue-100">
-              {{ streak.freezesAvailable }} / 2
+              {{ streak.freezesAvailable }}
+
+ / 2
             </span>
           </div>
           <div class="flex items-center justify-between text-sm mt-1">
             <span class="text-blue-700 dark:text-blue-300">Used this week:</span>
             <span class="font-bold text-blue-900 dark:text-blue-100">
-              {{ streak.freezesUsed }} / 2
+              {{ streak.freezesUsed }}
+
+ / 2
             </span>
           </div>
         </div>
@@ -194,7 +222,7 @@ const props = withDefaults(defineProps<Props>(), {
   variant: 'card',
 });
 
-defineEmits<{
+defineemits<{
   click: [];
 }>();
 

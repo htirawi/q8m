@@ -4,7 +4,7 @@ import { finalCtaData } from "@/components/pricing/pricing.config";
 
 const emit = defineEmits<FinalCtaEmits>();
 
-const handleCtaClick = () => {
+const handlectaclick = () => {
   emit("cta-click");
 };
 
@@ -19,14 +19,17 @@ defineOptions({
       <div class="final-cta-content">
         <h2 id="final-cta-title" class="final-cta-title">
           {{ $t(finalCtaData.titleKey) }}
+
         </h2>
         <p class="final-cta-description">
           {{ $t(finalCtaData.subtitleKey) }}
+
         </p>
 
         <div class="final-cta-actions">
           <button @click="handleCtaClick" class="final-cta-button">
             {{ $t(finalCtaData.ctaLabelKey) }}
+
           </button>
         </div>
       </div>

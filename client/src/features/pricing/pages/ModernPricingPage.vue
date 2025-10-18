@@ -37,6 +37,7 @@ defineOptions({
       class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-blue-600 focus:px-4 focus:py-2 focus:text-white"
     >
       {{ $t('a11y.skipToMain') }}
+
     </a>
 
     <!-- Header Section -->
@@ -44,13 +45,16 @@ defineOptions({
       <div class="modern-pricing-page__container">
         <h1 id="pricing-page-title" class="modern-pricing-page__title">
           {{ $t('pricing.hero.title') }}
+
         </h1>
         <p class="modern-pricing-page__subtitle">
           {{ $t('pricing.hero.subtitle') }}
+
         </p>
         <!-- Trust badge -->
         <p class="modern-pricing-page__trust">
           {{ $t('pricing.hero.trustedBy') }}
+
         </p>
       </div>
     </div>
@@ -60,6 +64,7 @@ defineOptions({
       <div class="modern-pricing-page__container">
         <h2 id="plans-title" class="sr-only">
           {{ $t('pricing.plans.title') }}
+
         </h2>
         <PricingCards />
       </div>
@@ -115,6 +120,7 @@ defineOptions({
 .modern-pricing-page__title {
   @apply mb-4 text-3xl font-bold text-gray-900 dark:text-white;
   @apply sm:text-4xl lg:text-5xl;
+
   letter-spacing: -0.02em;
 }
 
@@ -149,6 +155,7 @@ defineOptions({
   @apply text-2xl font-bold text-center text-gray-900 dark:text-white;
   @apply sm:text-3xl lg:text-4xl;
   @apply mb-3;
+
   letter-spacing: -0.02em;
 }
 
@@ -160,7 +167,7 @@ defineOptions({
 }
 
 /* Responsive */
-@media (max-width: 640px) {
+@media (width <= 640px) {
   .modern-pricing-page__title {
     @apply text-3xl;
   }

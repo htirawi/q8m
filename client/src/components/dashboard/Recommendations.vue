@@ -36,6 +36,7 @@
         <!-- Badge -->
         <div v-if="item.isNew" class="recommendation-card__badge recommendation-card__badge--new">
           {{ $t('common.new') }}
+
         </div>
         <div v-else-if="item.isFeatured" class="recommendation-card__badge recommendation-card__badge--featured">
           {{ $t('common.featured') }}
@@ -73,8 +74,12 @@
 
         <!-- Content -->
         <div class="recommendation-card__content">
-          <h4 class="recommendation-card__title">{{ item.title }}</h4>
-          <p class="recommendation-card__description">{{ item.description }}</p>
+          <h4 class="recommendation-card__title">{{ item.title }}
+
+</h4>
+          <p class="recommendation-card__description">{{ item.description }}
+
+</p>
 
           <!-- Metadata -->
           <div class="recommendation-card__meta">
@@ -84,6 +89,7 @@
                 <path d="M12 6v6l4 2" />
               </svg>
               {{ item.duration }}
+
             </span>
             <span v-if="item.difficulty" class="recommendation-card__meta-item">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -101,16 +107,26 @@
                 :style="{ width: `${item.progress}%` }"
               ></div>
             </div>
-            <span class="recommendation-card__progress-text">{{ item.progress }}% {{ $t('common.complete') }}</span>
+            <span class="recommendation-card__progress-text">{{ item.progress }}% {{ $t('common.complete') }}
+
+</span>
           </div>
         </div>
 
         <!-- Action -->
         <button class="recommendation-card__action">
-          <span v-if="item.type === 'continue'">{{ $t('actions.continue') }}</span>
-          <span v-else-if="item.type === 'practice'">{{ $t('actions.practice') }}</span>
-          <span v-else-if="item.type === 'challenge'">{{ $t('actions.start') }}</span>
-          <span v-else>{{ $t('actions.learn') }}</span>
+          <span v-if="item.type === 'continue'">{{ $t('actions.continue') }}
+
+</span>
+          <span v-else-if="item.type === 'practice'">{{ $t('actions.practice') }}
+
+</span>
+          <span v-else-if="item.type === 'challenge'">{{ $t('actions.start') }}
+
+</span>
+          <span v-else>{{ $t('actions.learn') }}
+
+</span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path d="M5 12h14M12 5l7 7-7 7" />
           </svg>
@@ -125,9 +141,12 @@
           <path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
         </svg>
       </div>
-      <p class="recommendations__empty-text">{{ $t('dashboard.noRecommendations') }}</p>
+      <p class="recommendations__empty-text">{{ $t('dashboard.noRecommendations') }}
+
+</p>
       <button class="recommendations__empty-button" @click="$emit('explore')">
         {{ $t('actions.exploreContent') }}
+
       </button>
     </div>
   </div>
@@ -138,7 +157,7 @@ import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
-export interface Recommendation {
+export interface recommendation {
   id: string;
   type: 'continue' | 'recommended' | 'practice' | 'challenge' | 'course';
   title: string;
@@ -153,7 +172,7 @@ export interface Recommendation {
   metadata?: Record<string, any>;
 }
 
-interface Props {
+interface props {
   items: Recommendation[];
   showRefresh?: boolean;
 }
@@ -162,10 +181,10 @@ const props = withDefaults(defineProps<Props>(), {
   showRefresh: true
 });
 
-const emit = defineEmits<{
+const emit = defineemits<{
   'item-click': [item: Recommendation];
-  'refresh': [];
-  'explore': [];
+  
+  
 }>();
 
 const { t } = useI18n();
@@ -173,7 +192,7 @@ const router = useRouter();
 
 const isRefreshing = ref(false);
 
-const handleItemClick = (item: Recommendation) => {
+const handleitemclick = (item: Recommendation) => {
   emit('item-click', item);
 
   if (item.actionUrl) {
@@ -181,7 +200,7 @@ const handleItemClick = (item: Recommendation) => {
   }
 };
 
-const handleRefresh = async () => {
+const handlerefresh = async () => {
   isRefreshing.value = true;
   emit('refresh');
 
@@ -190,6 +209,7 @@ const handleRefresh = async () => {
     isRefreshing.value = false;
   }, 1000);
 };
+
 </script>
 
 <style scoped>
@@ -241,6 +261,7 @@ const handleRefresh = async () => {
   @apply hover:shadow-md;
   @apply transition-all duration-fast cursor-pointer;
   @apply flex gap-4;
+
   animation: fade-in-up 0.6s ease-out var(--animation-delay, 0ms) backwards;
 }
 
@@ -402,6 +423,7 @@ const handleRefresh = async () => {
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);

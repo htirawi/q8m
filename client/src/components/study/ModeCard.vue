@@ -17,7 +17,9 @@
         class="relative flex h-24 w-24 items-center justify-center rounded-2xl bg-gradient-to-r text-white shadow-xl transition-all duration-500 group-hover:rotate-6 group-hover:scale-110 group-hover:shadow-2xl"
         :class="gradient"
       >
-        <span class="text-5xl" role="img" :aria-label="`${mode} mode icon`">{{ icon }}</span>
+        <span class="text-5xl" role="img" :aria-label="`${mode} mode icon`">{{ icon }}
+
+</span>
       </div>
     </div>
 
@@ -28,10 +30,12 @@
         :class="titleHoverClass"
       >
         {{ title }}
+
       </h2>
 
       <p class="mb-8 text-center text-base leading-relaxed text-gray-600 dark:text-gray-400">
         {{ description }}
+
       </p>
 
       <!-- Features List -->
@@ -56,7 +60,9 @@
               />
             </svg>
           </div>
-          <span class="leading-relaxed">{{ feature }}</span>
+          <span class="leading-relaxed">{{ feature }}
+
+</span>
         </div>
       </div>
     </div>
@@ -67,7 +73,9 @@
         class="flex items-center justify-center gap-2 rounded-xl border border-white/20 bg-gradient-to-r px-8 py-4 text-lg font-bold text-white shadow-xl transition-all duration-300 group-hover:scale-105 group-hover:shadow-2xl group-hover:brightness-110 group-hover:border-white/40"
         :class="gradient"
       >
-        <span>{{ cta }}</span>
+        <span>{{ cta }}
+
+</span>
         <svg
           class="h-5 w-5 transition-transform duration-300 group-hover:translate-x-2"
           fill="none"
@@ -104,7 +112,7 @@ import type { DifficultyLevel } from '@/types/plan/access';
 
 const props = defineProps<Props>();
 
-defineEmits<{
+defineemits<{
   select: [];
 }>();
 

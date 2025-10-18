@@ -11,9 +11,8 @@ const props = withDefaults(defineProps<IModernPricingCardProps>(), {
   popular: false,
 });
 
-const emit = defineEmits<{
-  "select-credit-card": [planId: string, billingCycle: BillingCycle];
-  "select-paypal": [planId: string, billingCycle: BillingCycle];
+const emit = defineemits<{
+  "select-paypal": [planId: string, billingCycle: BillingCycle]
 }>();
 
 // State
@@ -44,11 +43,13 @@ const handleCreditCardClick = () => {
   emit("select-credit-card", props.planId, props.billingCycle);
 };
 
-const handlePayPalClick = async () => {
+const handlepaypalclick = async () => {
   isPayPalLoading.value = true;
   try {
     emit("select-paypal", props.planId, props.billingCycle);
-  } finally {
+  }
+
+ finally {
     // Keep loading state until PayPal SDK handles it
     setTimeout(() => {
       isPayPalLoading.value = false;
@@ -73,15 +74,21 @@ defineOptions({
 
     <!-- Plan Header -->
     <div class="modern-pricing-card__header">
-      <h3 class="modern-pricing-card__title">{{ planName }}</h3>
+      <h3 class="modern-pricing-card__title">{{ planName }}
+
+</h3>
 
       <!-- Price Display -->
       <div class="modern-pricing-card__price-section">
         <div class="modern-pricing-card__price">
           <span class="modern-pricing-card__currency">$</span>
-          <span class="modern-pricing-card__amount">{{ displayPrice }}</span>
+          <span class="modern-pricing-card__amount">{{ displayPrice }}
+
+</span>
         </div>
-        <p class="modern-pricing-card__billing">{{ billingText }}</p>
+        <p class="modern-pricing-card__billing">{{ billingText }}
+
+</p>
         <p v-if="savingsText" class="modern-pricing-card__savings">
           {{ savingsText }}
         </p>
@@ -156,7 +163,9 @@ defineOptions({
         class="modern-pricing-card__feature"
       >
         <CheckIcon class="modern-pricing-card__check-icon" aria-hidden="true" />
-        <span>{{ feature }}</span>
+        <span>{{ feature }}
+
+</span>
       </li>
     </ul>
   </div>
@@ -187,6 +196,7 @@ defineOptions({
 
 .modern-pricing-card__title {
   @apply mb-6 text-2xl font-bold text-gray-900;
+
   letter-spacing: -0.02em;
 }
 
@@ -205,6 +215,7 @@ defineOptions({
 
 .modern-pricing-card__amount {
   @apply text-6xl font-bold text-gray-900;
+
   letter-spacing: -0.03em;
 }
 

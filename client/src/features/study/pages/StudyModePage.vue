@@ -12,7 +12,9 @@
             </div>
           </div>
           <!-- Loading text with pulse animation -->
-          <p class="animate-pulse text-lg font-medium text-gray-700 dark:text-gray-300">{{ t('study.loading') }}</p>
+          <p class="animate-pulse text-lg font-medium text-gray-700 dark:text-gray-300">{{ t('study.loading') }}
+
+</p>
           <p class="mt-2 text-sm text-gray-500 dark:text-gray-500">Preparing your questions...</p>
         </div>
       </div>
@@ -30,8 +32,11 @@
           </div>
           <h3 class="mb-2 text-xl font-bold text-red-900 dark:text-red-200">
             {{ t('study.error.title') }}
+
           </h3>
-          <p class="mb-6 max-w-md text-red-700 dark:text-red-300">{{ error }}</p>
+          <p class="mb-6 max-w-md text-red-700 dark:text-red-300">{{ error }}
+
+</p>
           <button type="button"
             class="rounded-lg bg-red-600 px-6 py-3 font-medium text-white shadow-sm transition-all duration-200 hover:bg-red-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
             @click="() => loadQuestions(false)">
@@ -41,6 +46,7 @@
                   d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
               </svg>
               {{ t('study.error.retry') }}
+
             </span>
           </button>
         </div>
@@ -67,6 +73,28 @@
       <div v-else-if="currentQuestion">
         <StudyHeader :difficulty="difficulty" :current-index="currentIndex" :total-questions="questions.length"
           :loaded-count="questions.length" @back="goBack" />
+
+        <!-- Study Time Indicator -->
+        <div class="mb-4 rounded-lg bg-blue-50 px-4 py-3 dark:bg-blue-900/20">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              <div class="h-2 w-2 rounded-full bg-blue-500 animate-pulse"></div>
+              <span class="text-sm font-medium text-blue-700 dark:text-blue-300">
+                {{ t('study.sessionTime', 'Study Session') }}
+
+              </span>
+            </div>
+            <div class="text-sm font-semibold text-blue-800 dark:text-blue-200">
+              {{ Math.floor(currentSessionDurationSeconds / 60) }}:{{ String(currentSessionDurationSeconds %
+                60).padStart(2, '0') }}
+
+            </div>
+          </div>
+          <div class="mt-1 text-xs text-blue-600 dark:text-blue-400">
+            {{ t('study.sessionTimeDescription', 'Time spent studying will be added to your total study time') }}
+
+          </div>
+        </div>
 
         <StudyFilters v-model:search-query="searchQuery" v-model:question-type-filter="questionTypeFilter"
           v-model:answered-filter="answeredFilter" :practice-mode="practiceMode" :bookmark-count="bookmarkCount"
@@ -109,6 +137,7 @@ const { t, locale } = useI18n();
 const router = useRouter();
 const route = useRoute();
 const { track } = useAnalytics();
+
 const {
   bookmarkedQuestions,
   bookmarkCount,
@@ -150,7 +179,27 @@ const sessionElapsedTime = ref(0);
 const isTimerPaused = ref(false);
 const isExplicitlyLeaving = ref(false);
 const lastActiveTime = ref(Date.now()); // Track when user was last active in this framework
-let sessionTimerInterval: ReturnType<typeof setInterval> | null = null;
+let sessionTimerInterval: ReturnType<typeof setInterval> | null = null;TrackwhenuserwaslastactiveinthisframeworkletsessionTimerInterval
+
+// Current session duration in minutes - reactive timer
+const currentSessionDuration = ref(0);
+
+// Current session duration in seconds for more precise display
+const currentSessionDurationSeconds = ref(0);
+
+// Update timer display every second
+const updateSessionDisplay = () => {
+  if (isTimerPaused.value) {
+    currentSessionDuration.value = Math.floor(sessionElapsedTime.value / 60);
+    currentSessionDurationSeconds.value = sessionElapsedTime.value;
+  }
+
+ else {
+    const totalSeconds = Math.floor((Date.now() - sessionStartTime.value) / 1000);
+    currentSessionDuration.value = Math.floor(totalSeconds / 60);
+    currentSessionDurationSeconds.value = totalSeconds;
+  }
+};
 
 // Practice modes
 type PracticeMode = 'sequential' | 'random' | 'bookmarked';
@@ -198,13 +247,13 @@ const isBookmarked = computed(() =>
   currentQuestion.value ? isQuestionBookmarked(currentQuestion.value._id) : false
 );
 
-const clearFilters = () => {
+const clearfilters = () => {
   searchQuery.value = '';
   questionTypeFilter.value = 'all';
   answeredFilter.value = 'all';
 };
 
-const getDisplayTotal = () => {
+const getdisplaytotal = () => {
   // For bookmarked mode, show bookmark count
   if (practiceMode.value === 'bookmarked') {
     return bookmarkCount.value;
@@ -222,7 +271,7 @@ const getLevelFromDifficulty = (diff: string): string => {
   return levelMap[diff] || 'junior';
 };
 
-const setPracticeMode = async (mode: PracticeMode) => {
+const setpracticemode = async (mode: PracticeMode) => {
   // Always allow switching to bookmarked mode, even if no bookmarks yet
   // (user might have bookmarked questions in other modes)
   if (mode === 'bookmarked' && !hasBookmarks.value) {
@@ -256,7 +305,9 @@ const setPracticeMode = async (mode: PracticeMode) => {
     await loadBookmarkedQuestions();
   } else if (mode === 'random') {
     shuffleQuestions();
-  } else {
+  }
+
+ else {
     // Sequential mode - reset to original questions and restore original total
     allQuestions.value = [...originalQuestions.value];
     // Restore the original totalAvailable value for sequential mode
@@ -265,7 +316,7 @@ const setPracticeMode = async (mode: PracticeMode) => {
   }
 };
 
-const loadBookmarkedQuestions = async () => {
+const loadbookmarkedquestions = async () => {
   if (bookmarkCount.value === 0) {
     error.value = t('study.error.noBookmarks');
     return;
@@ -294,7 +345,7 @@ const loadBookmarkedQuestions = async () => {
       error.value = t('study.error.noBookmarks');
     }
   } catch (err) {
-    const errorMessage = err instanceof Error ? err.message : t('study.error.generic');
+    const errorMessage = err instanceof Error ? err.message : t('study.error.generic');errorMessageerrinstanceofErrorerr.message
     error.value = errorMessage;
 
     track('error', {
@@ -302,14 +353,16 @@ const loadBookmarkedQuestions = async () => {
       context: 'study_load_bookmarked_questions',
       difficulty: difficulty.value,
     });
-  } finally {
+  }
+
+ finally {
     isLoading.value = false;
   }
 };
 
-const shuffleQuestions = () => {
+const shufflequestions = () => {
   // Use originalQuestions if available, otherwise use allQuestions
-  const questionsToShuffle = originalQuestions.value.length > 0 ? originalQuestions.value : allQuestions.value;
+  const questionsToShuffle = originalQuestions.value.length > 0 ? originalQuestions.value : allQuestions.value;UseoriginalQuestionsifavailable,otherwiseuseallQuestionsconstquestionsToShuffleoriginalQuestions.value.length0originalQuestions.value
   const shuffled = [...questionsToShuffle];
 
   for (let i = shuffled.length - 1; i > 0; i--) {
@@ -324,10 +377,12 @@ const shuffleQuestions = () => {
   allQuestions.value = shuffled;
 };
 
-const loadQuestions = async (append = false) => {
+const loadquestions = async (append = false) => {
   if (append) {
     isLoadingMore.value = true;
-  } else {
+  }
+
+ else {
     isLoading.value = true;
     currentOffset.value = 0;
     allQuestions.value = [];
@@ -382,7 +437,9 @@ const loadQuestions = async (append = false) => {
     if (append) {
       allQuestions.value = [...allQuestions.value, ...(data.questions || [])];
       originalQuestions.value = [...originalQuestions.value, ...(data.questions || [])];
-    } else {
+    }
+
+ else {
       allQuestions.value = data.questions || [];
       originalQuestions.value = data.questions || [];
     }
@@ -397,7 +454,9 @@ const loadQuestions = async (append = false) => {
     if (append) {
       // For append, update offset to current total loaded
       currentOffset.value = allQuestions.value.length;
-    } else {
+    }
+
+ else {
       // For initial load, offset should be the number of questions loaded
       currentOffset.value = (data.questions || []).length;
     }
@@ -434,7 +493,7 @@ const loadQuestions = async (append = false) => {
       loadBookmarkedQuestions();
     }
   } catch (err) {
-    const errorMessage = err instanceof Error ? err.message : t('study.error.generic');
+    const errorMessage = err instanceof Error ? err.message : t('study.error.generic');errorMessageerrinstanceofErrorerr.message
     error.value = errorMessage;
 
     track('error', {
@@ -443,22 +502,22 @@ const loadQuestions = async (append = false) => {
       difficulty: difficulty.value,
       append,
     });
-  } finally {
+  }
+
+ finally {
     isLoading.value = false;
     isLoadingMore.value = false;
   }
 };
 
-const loadMore = () => {
+const loadmore = () => {
   if (!hasMore.value || isLoadingMore.value) return;
   loadQuestions(true);
 };
 
-const revealAnswer = async () => {
+const revealanswer = async () => {
   if (!currentQuestion.value) return;
-
   const questionId = currentQuestion.value._id;
-
   try {
     // For Study Mode questions (open-ended), explanation is already available
     if (currentQuestion.value.type === 'open-ended') {
@@ -641,8 +700,56 @@ const onMultipleAnswersChanged = (value: string[]) => {
   studyMultipleAnswers.value = value;
 };
 
-const goBack = () => {
+const completeStudySession = async () => {
+  try {
+    const sessionDuration = Math.floor((Date.now() - sessionStartTime.value) / 1000 / 60); // minutes
+    const correctAnswers = answeredQuestions.value.size; // For study mode, we count revealed questions as "correct"
+
+    const response = await fetch('/api/v1/progress/session/complete', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({
+        questionsCompleted: answeredQuestions.value.size,
+        correctAnswers: correctAnswers,
+        sessionDurationMinutes: sessionDuration,
+        startTime: new Date(sessionStartTime.value).toISOString(),
+        endTime: new Date().toISOString(),
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to complete study session');
+    }
+
+    const result = await response.json();
+    console.log('Study session completed:', result);
+
+    // Track successful completion
+    track('study_session_completed', {
+      difficulty: difficulty.value,
+      framework: framework.value,
+      sessionDuration,
+      questionsCompleted: answeredQuestions.value.size,
+      xpEarned: result.xpEarned || 0,
+      newLevel: result.newLevel || 0,
+    });
+  } catch (error) {
+    console.error('Failed to complete study session:', error);
+    // Don't block navigation on API failure
+  }
+};
+
+const goBack = async () => {
   const currentLocale = route.params.locale || 'en';
+
+  // Complete study session if user answered questions
+  if (answeredQuestions.value.size > 0) {
+    await completeStudySession();
+  }
+
   // Mark as explicitly leaving and clear session state
   isExplicitlyLeaving.value = true;
   if (framework.value) {
@@ -678,12 +785,16 @@ const startSessionTimer = () => {
         saveSessionState();
       }
     }
+
+    // Update display every second
+    updateSessionDisplay();
   }, 1000);
 };
 
 const pauseSessionTimer = () => {
   isTimerPaused.value = true;
   saveSessionState();
+  updateSessionDisplay();
 };
 
 const resumeSessionTimer = () => {
@@ -691,6 +802,7 @@ const resumeSessionTimer = () => {
   sessionStartTime.value += pausedDuration;
   isTimerPaused.value = false;
   saveSessionState();
+  updateSessionDisplay();
 };
 
 const resetSessionTimer = () => {
@@ -699,6 +811,7 @@ const resetSessionTimer = () => {
   isTimerPaused.value = false;
   lastActiveTime.value = Date.now();
   saveSessionState();
+  updateSessionDisplay();
 };
 
 const saveSessionState = () => {
@@ -747,6 +860,7 @@ const loadSessionState = () => {
 
           // Save the updated state
           saveSessionState();
+          updateSessionDisplay();
         } else {
           // User was away for more than 5 minutes - start fresh
           localStorage.removeItem(`study_session_${difficulty.value}_${framework.value}`);
@@ -898,17 +1012,28 @@ onMounted(() => {
   loadQuestions();
   loadSessionState();
   startSessionTimer();
+  updateSessionDisplay(); // Initial display update
   window.addEventListener('keydown', handleKeyboard);
   window.addEventListener('touchstart', handleTouchStart, { passive: true });
   window.addEventListener('touchend', handleTouchEnd, { passive: true });
   window.addEventListener('scroll', handleScroll, { passive: true });
 });
 
-onUnmounted(() => {
+onUnmounted(async () => {
   if (sessionTimerInterval) {
     clearInterval(sessionTimerInterval);
     sessionTimerInterval = null;
   }
+
+  // Complete study session if user answered questions and hasn't already completed it
+  if (answeredQuestions.value.size > 0 && !isExplicitlyLeaving.value) {
+    try {
+      await completeStudySession();
+    } catch (error) {
+      console.error('Failed to complete study session on unmount:', error);
+    }
+  }
+
   // Only save session state if user is not explicitly leaving
   if (!isExplicitlyLeaving.value) {
     saveSessionState();
@@ -919,3 +1044,4 @@ onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll);
 });
 </script>
+}}}

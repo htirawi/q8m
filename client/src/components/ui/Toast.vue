@@ -10,14 +10,14 @@ const props = withDefaults(defineProps<ToastInternalProps>(), {
   persistent: false,
 });
 
-const emit = defineEmits<{
+const emit = defineemits<{
   dismiss: [];
   "update:isVisible": [value: boolean];
 }>();
 
 // State
 const isVisible = ref(true);
-let timeoutId: number | null = null;
+let timeoutId: number | null = null;timeoutId
 
 // Computed properties
 const toastClasses = computed(() => {
@@ -44,7 +44,7 @@ const handleDismiss = () => {
   emit("update:isVisible", false);
 };
 
-const handleEnter = () => {
+const handleenter = () => {
   if (!props.persistent && props.duration > 0) {
     timeoutId = window.setTimeout(() => {
       handleDismiss();
@@ -52,7 +52,7 @@ const handleEnter = () => {
   }
 };
 
-const handleLeave = () => {
+const handleleave = () => {
   if (timeoutId) {
     clearTimeout(timeoutId);
     timeoutId = null;
@@ -83,6 +83,7 @@ onUnmounted(() => {
         <div class="toast-message">
           <slot>
             {{ message }}
+
           </slot>
         </div>
         <button v-if="dismissible" type="button" class="toast-close" :aria-label="$t('a11y.dismissNotification')"

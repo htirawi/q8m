@@ -11,10 +11,10 @@ const route = useRoute();
 const { getCurrentLocale } = useAuthRedirect();
 const { routeAfterLogin } = usePostLoginRouter();
 
-function handleOAuthLogin(provider: "google") {
+function handleoauthlogin(provider: "google") {
   // Redirect to OAuth endpoint on the backend
   const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
-  const oauthUrl = `${apiBaseUrl}/api/v1/auth/${provider}`;
+  const oauthurl = `${apiBaseUrl}/api/v1/auth/${provider}`;
 
   // Store the intended redirect URL (from signInSuccessUrl query param) or default to study
   const signInSuccessUrl = route.query.signInSuccessUrl as string | undefined;
@@ -41,7 +41,7 @@ async function handleLoginSuccess() {
   await routeAfterLogin();
 }
 
-function handleRegistrationSuccess(_email: string) {
+function handleregistrationsuccess(_email: string) {
   // After successful registration, redirect to login page with success message
   // No sensitive data stored or exposed in URL
   const locale = getCurrentLocale();
@@ -50,6 +50,7 @@ function handleRegistrationSuccess(_email: string) {
     query: { registered: "true" },
   });
 }
+
 </script>
 
 <template>
@@ -80,9 +81,11 @@ function handleRegistrationSuccess(_email: string) {
       <div class="welcome-section">
         <h2 class="welcome-title">
           {{ $t("auth.unified.title") }}
+
         </h2>
         <p class="welcome-subtitle">
           {{ $t("auth.unified.subtitle") }}
+
         </p>
       </div>
 
@@ -105,6 +108,7 @@ function handleRegistrationSuccess(_email: string) {
 /* Main Layout */
 .register-page {
   @apply relative min-h-screen overflow-hidden;
+
   background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
 }
 
@@ -115,17 +119,19 @@ function handleRegistrationSuccess(_email: string) {
 
 .background-pattern {
   @apply absolute inset-0 opacity-30;
+
   background-image:
-    radial-gradient(circle at 20% 20%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.06) 0%, transparent 50%);
+    radial-gradient(circle at 20% 20%, rgb(99, 102, 241, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgb(139, 92, 246, 0.06) 0%, transparent 50%);
 }
 
 .background-gradient {
   @apply absolute inset-0;
+
   background: linear-gradient(
     135deg,
-    rgba(248, 249, 255, 0.95) 0%,
-    rgba(240, 244, 255, 0.95) 100%
+    rgb(248, 249, 255, 0.95) 0%,
+    rgb(240, 244, 255, 0.95) 100%
   );
 }
 
@@ -144,6 +150,7 @@ function handleRegistrationSuccess(_email: string) {
   @apply h-11 w-11 rounded-xl;
   @apply flex items-center justify-center;
   @apply shadow-sm;
+
   background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
   color: white;
 }
@@ -154,6 +161,7 @@ function handleRegistrationSuccess(_email: string) {
 
 .logo-text {
   @apply text-3xl font-bold;
+
   background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -165,6 +173,7 @@ function handleRegistrationSuccess(_email: string) {
   @apply relative z-10 flex flex-col items-center justify-center;
   @apply px-4 pb-12 sm:px-6 lg:px-8;
   @apply max-w-7xl mx-auto;
+
   min-height: calc(100vh - 140px);
 }
 
@@ -176,6 +185,7 @@ function handleRegistrationSuccess(_email: string) {
 .welcome-title {
   @apply mb-3 text-4xl font-bold;
   @apply sm:text-5xl;
+
   color: #1e293b;
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -184,6 +194,7 @@ function handleRegistrationSuccess(_email: string) {
 .welcome-subtitle {
   @apply text-lg leading-relaxed;
   @apply sm:text-xl;
+
   color: #64748b;
   font-weight: 400;
 }
@@ -197,11 +208,12 @@ function handleRegistrationSuccess(_email: string) {
   @apply w-full rounded-2xl bg-white;
   @apply border border-gray-100;
   @apply p-10;
+
   box-shadow:
-    0 0 0 1px rgba(0, 0, 0, 0.02),
-    0 4px 6px -1px rgba(0, 0, 0, 0.04),
-    0 10px 15px -3px rgba(0, 0, 0, 0.06),
-    0 20px 25px -5px rgba(0, 0, 0, 0.04);
+    0 0 0 1px rgb(0, 0, 0, 0.02),
+    0 4px 6px -1px rgb(0, 0, 0, 0.04),
+    0 10px 15px -3px rgb(0, 0, 0, 0.06),
+    0 20px 25px -5px rgb(0, 0, 0, 0.04);
 }
 
 /* Social Proof Section */
@@ -209,7 +221,7 @@ function handleRegistrationSuccess(_email: string) {
 
 
 /* Responsive Design */
-@media (max-width: 640px) {
+@media (width <= 640px) {
   .welcome-title {
     @apply text-3xl;
   }
@@ -236,8 +248,8 @@ function handleRegistrationSuccess(_email: string) {
   .background-gradient {
     background: linear-gradient(
       135deg,
-      rgba(30, 41, 59, 0.95) 0%,
-      rgba(51, 65, 85, 0.95) 100%
+      rgb(30, 41, 59, 0.95) 0%,
+      rgb(51, 65, 85, 0.95) 100%
     );
   }
 
@@ -251,11 +263,12 @@ function handleRegistrationSuccess(_email: string) {
 
   .form-card {
     @apply bg-slate-800 border-slate-700;
+
     box-shadow:
-      0 0 0 1px rgba(255, 255, 255, 0.08),
-      0 4px 6px -1px rgba(0, 0, 0, 0.3),
-      0 10px 15px -3px rgba(0, 0, 0, 0.4),
-      0 20px 25px -5px rgba(0, 0, 0, 0.3);
+      0 0 0 1px rgb(255, 255, 255, 0.08),
+      0 4px 6px -1px rgb(0, 0, 0, 0.3),
+      0 10px 15px -3px rgb(0, 0, 0, 0.4),
+      0 20px 25px -5px rgb(0, 0, 0, 0.3);
   }
 }
 
@@ -265,6 +278,7 @@ function handleRegistrationSuccess(_email: string) {
     opacity: 0;
     transform: translateY(30px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);

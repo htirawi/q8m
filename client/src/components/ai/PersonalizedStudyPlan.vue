@@ -3,22 +3,30 @@
     <!-- Header with Progress Overview -->
     <div class="study-plan__header">
       <div class="study-plan__header-content">
-        <h2 class="study-plan__title">{{ plan.title }}</h2>
-        <p class="study-plan__description">{{ plan.description }}</p>
+        <h2 class="study-plan__title">{{ plan.title }}
+
+</h2>
+        <p class="study-plan__description">{{ plan.description }}
+
+</p>
 
         <div class="study-plan__meta">
           <div class="study-plan__meta-item">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
-            <span>{{ formatDate(plan.duration.startDate) }} - {{ formatDate(plan.duration.targetEndDate) }}</span>
+            <span>{{ formatDate(plan.duration.startDate) }} - {{ formatDate(plan.duration.targetEndDate) }}
+
+</span>
           </div>
           <div class="study-plan__meta-item">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <circle cx="12" cy="12" r="10" />
               <path d="M12 6v6l4 2" />
             </svg>
-            <span>{{ plan.duration.hoursPerWeek }}h/week • {{ plan.duration.weeks }} weeks</span>
+            <span>{{ plan.duration.hoursPerWeek }}h/week • {{ plan.duration.weeks }}
+
+ weeks</span>
           </div>
           <div class="study-plan__meta-item">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -53,7 +61,9 @@
         </svg>
         <div class="progress-ring__content">
           <span class="progress-ring__value">{{ Math.round(progressPercentage) }}%</span>
-          <span class="progress-ring__label">{{ $t('common.complete') }}</span>
+          <span class="progress-ring__label">{{ $t('common.complete') }}
+
+</span>
         </div>
       </div>
     </div>
@@ -67,8 +77,12 @@
           </svg>
         </div>
         <div class="stat-card__content">
-          <span class="stat-card__value">{{ plan.progress.currentStreak }}</span>
-          <span class="stat-card__label">{{ $t('stats.dayStreak') }}</span>
+          <span class="stat-card__value">{{ plan.progress.currentStreak }}
+
+</span>
+          <span class="stat-card__label">{{ $t('stats.dayStreak') }}
+
+</span>
         </div>
       </div>
 
@@ -80,8 +94,12 @@
           </svg>
         </div>
         <div class="stat-card__content">
-          <span class="stat-card__value">{{ plan.progress.totalHoursStudied }}</span>
-          <span class="stat-card__label">{{ $t('stats.hoursStudied') }}</span>
+          <span class="stat-card__value">{{ plan.progress.totalHoursStudied }}
+
+</span>
+          <span class="stat-card__label">{{ $t('stats.hoursStudied') }}
+
+</span>
         </div>
       </div>
 
@@ -93,7 +111,9 @@
         </div>
         <div class="stat-card__content">
           <span class="stat-card__value">{{ Math.round(plan.progress.averageScore) }}%</span>
-          <span class="stat-card__label">{{ $t('stats.avgScore') }}</span>
+          <span class="stat-card__label">{{ $t('stats.avgScore') }}
+
+</span>
         </div>
       </div>
 
@@ -104,8 +124,12 @@
           </svg>
         </div>
         <div class="stat-card__content">
-          <span class="stat-card__value">{{ plan.progress.velocity }}</span>
-          <span class="stat-card__label">{{ $t('stats.topicsPerWeek') }}</span>
+          <span class="stat-card__value">{{ plan.progress.velocity }}
+
+</span>
+          <span class="stat-card__label">{{ $t('stats.topicsPerWeek') }}
+
+</span>
         </div>
       </div>
     </div>
@@ -118,18 +142,25 @@
         </svg>
       </div>
       <div class="adaptive-alert__content">
-        <h4 class="adaptive-alert__title">{{ $t('ai.adaptiveLearning') }}</h4>
-        <p class="adaptive-alert__text">{{ $t('ai.adaptiveDescription') }}</p>
+        <h4 class="adaptive-alert__title">{{ $t('ai.adaptiveLearning') }}
+
+</h4>
+        <p class="adaptive-alert__text">{{ $t('ai.adaptiveDescription') }}
+
+</p>
       </div>
       <button class="adaptive-alert__settings" @click="showAdaptiveSettings = true">
         {{ $t('common.configure') }}
+
       </button>
     </div>
 
     <!-- Curriculum Modules -->
     <div class="study-plan__curriculum">
       <div class="curriculum-header">
-        <h3 class="curriculum-header__title">{{ $t('ai.curriculum') }}</h3>
+        <h3 class="curriculum-header__title">{{ $t('ai.curriculum') }}
+
+</h3>
         <div class="curriculum-header__actions">
           <button class="curriculum-header__filter" @click="showFilters = !showFilters">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -179,18 +210,24 @@
 
           <div class="timeline-module__marker">
             <div class="timeline-module__dot"></div>
-            <span class="timeline-module__week">{{ $t('ai.week') }} {{ Math.ceil((index + 1) * plan.duration.weeks / plan.curriculum.length) }}</span>
+            <span class="timeline-module__week">{{ $t('ai.week') }} {{ Math.ceil((index + 1) * plan.duration.weeks / plan.curriculum.length) }}
+
+</span>
           </div>
 
           <div class="timeline-module__card" @click="expandModule(module.id)">
             <div class="timeline-module__header">
-              <h4 class="timeline-module__title">{{ module.title }}</h4>
+              <h4 class="timeline-module__title">{{ module.title }}
+
+</h4>
               <span class="timeline-module__duration">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                   <circle cx="12" cy="12" r="10" />
                   <path d="M12 6v6l4 2" />
                 </svg>
-                {{ module.estimatedHours }}h
+                {{ module.estimatedHours }}
+
+h
               </span>
             </div>
 
@@ -233,11 +270,14 @@
                   </svg>
                 </div>
                 <div class="topic-item__content">
-                  <h5 class="topic-item__title">{{ topic.title }}</h5>
+                  <h5 class="topic-item__title">{{ topic.title }}
+
+</h5>
                   <div class="topic-item__meta">
                     <span class="topic-item__duration">{{ topic.estimatedMinutes }} min</span>
                     <span class="topic-item__difficulty" :class="`topic-item__difficulty--${topic.difficulty}`">
                       {{ topic.difficulty }}
+
                     </span>
                   </div>
                 </div>
@@ -247,6 +287,7 @@
                   </svg>
                   <button v-else class="topic-item__start">
                     {{ $t('actions.start') }}
+
                   </button>
                 </div>
               </div>
@@ -258,7 +299,9 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                   <path d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
                 </svg>
-                <span>{{ $t('ai.moduleQuiz') }}: {{ module.quiz.passingScore }}% {{ $t('ai.toPass') }}</span>
+                <span>{{ $t('ai.moduleQuiz') }}: {{ module.quiz.passingScore }}% {{ $t('ai.toPass') }}
+
+</span>
                 <span v-if="module.quiz.bestScore" class="quiz-info__score">
                   {{ $t('ai.bestScore') }}: {{ module.quiz.bestScore }}%
                 </span>
@@ -292,17 +335,27 @@
               <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <h4 class="milestone-card__title">{{ milestone.title }}</h4>
-          <p class="milestone-card__description">{{ milestone.description }}</p>
+          <h4 class="milestone-card__title">{{ milestone.title }}
+
+</h4>
+          <p class="milestone-card__description">{{ milestone.description }}
+
+</p>
           <div class="milestone-card__target">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
-            <span>{{ formatDate(milestone.targetDate) }}</span>
+            <span>{{ formatDate(milestone.targetDate) }}
+
+</span>
           </div>
           <div v-if="milestone.reward" class="milestone-card__reward">
-            <span class="milestone-card__reward-label">{{ $t('ai.reward') }}:</span>
-            <span class="milestone-card__reward-value">{{ milestone.reward.value }}</span>
+            <span class="milestone-card__reward-label">{{ $t('ai.reward') }}
+
+:</span>
+            <span class="milestone-card__reward-value">{{ milestone.reward.value }}
+
+</span>
           </div>
         </div>
       </div>
@@ -315,6 +368,7 @@
           <path d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
         </svg>
         {{ $t('ai.adjustPlan') }}
+
       </button>
 
       <button class="footer-btn footer-btn--secondary" @click="exportPlan">
@@ -322,6 +376,7 @@
           <path d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
         </svg>
         {{ $t('ai.exportPlan') }}
+
       </button>
 
       <button class="footer-btn footer-btn--primary" @click="continueStudying">
@@ -330,6 +385,7 @@
           <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
         {{ $t('ai.continueStudying') }}
+
       </button>
     </div>
   </div>
@@ -352,7 +408,6 @@ const props = defineProps<Props>();
 // Emits
 const emit = defineEmits<{
   'topic-start': [topic: any];
-  'plan-adjust': [];
   'module-expand': [moduleId: string];
 }>();
 
@@ -405,7 +460,7 @@ const filteredModules = computed(() => {
 
 // Methods
 const formatDate = (date: Date | string): string => {
-  const d = typeof date === 'string' ? new Date(date) : date;
+  const d = typeof date === 'string' ? new Date(date) : date;dtypeofdatenewDate
   return d.toLocaleDateString(locale.value, {
     month: 'short',
     day: 'numeric',
@@ -413,20 +468,24 @@ const formatDate = (date: Date | string): string => {
   });
 };
 
-const toggleFilter = (filterId: string) => {
+const togglefilter = (filterId: string) => {
   const index = activeFilters.value.indexOf(filterId);
   if (index > -1) {
     activeFilters.value.splice(index, 1);
-  } else {
+  }
+
+ else {
     activeFilters.value.push(filterId);
   }
 };
 
-const expandModule = (moduleId: string) => {
+const expandmodule = (moduleId: string) => {
   const index = expandedModules.value.indexOf(moduleId);
   if (index > -1) {
     expandedModules.value.splice(index, 1);
-  } else {
+  }
+
+ else {
     expandedModules.value.push(moduleId);
   }
   emit('module-expand', moduleId);
@@ -446,7 +505,7 @@ const getCompletedTopics = (module: ICurriculumModule): number => {
   return module.topics.filter(t => t.completed).length;
 };
 
-const startTopic = (topic: any) => {
+const starttopic = (topic: any) => {
   emit('topic-start', topic);
 
   analytics.track('study_plan_topic_started', {
@@ -465,7 +524,7 @@ const startTopic = (topic: any) => {
   }
 };
 
-const continueStudying = () => {
+const continuestudying = () => {
   // Find next incomplete topic
   for (const module of props.plan.curriculum) {
     if (module.status === 'in-progress' || module.status === 'available') {
@@ -479,12 +538,12 @@ const continueStudying = () => {
   }
 };
 
-const adjustPlan = () => {
+const adjustplan = () => {
   emit('plan-adjust');
   showAdaptiveSettings.value = true;
 };
 
-const exportPlan = () => {
+const exportplan = () => {
   // Export plan as PDF or JSON
   const data = JSON.stringify(props.plan, null, 2);
   const blob = new Blob([data], { type: 'application/json' });
@@ -567,6 +626,7 @@ onMounted(() => {
 
 .progress-ring__fill {
   @apply stroke-primary-DEFAULT;
+
   stroke-linecap: round;
   transition: stroke-dasharray 0.5s ease;
 }
@@ -1019,12 +1079,14 @@ onMounted(() => {
 .collapse-enter-from,
 .collapse-leave-to {
   @apply opacity-0;
+
   max-height: 0;
 }
 
 .collapse-enter-to,
 .collapse-leave-from {
   @apply opacity-100;
+
   max-height: 200px;
 }
 </style>

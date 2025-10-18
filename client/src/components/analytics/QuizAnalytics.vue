@@ -5,15 +5,18 @@
       <div class="rounded-lg bg-gradient-to-br from-blue-50 to-blue-100 p-4 dark:from-blue-900/20 dark:to-blue-800/20">
         <div class="mb-2 text-sm font-medium text-blue-600 dark:text-blue-400">
           {{ t('analytics.totalAttempts') }}
+
         </div>
         <div class="text-2xl font-bold text-blue-900 dark:text-blue-100">
           {{ stats.totalAttempts }}
+
         </div>
       </div>
 
       <div class="rounded-lg bg-gradient-to-br from-green-50 to-green-100 p-4 dark:from-green-900/20 dark:to-green-800/20">
         <div class="mb-2 text-sm font-medium text-green-600 dark:text-green-400">
           {{ t('analytics.averageScore') }}
+
         </div>
         <div class="text-2xl font-bold text-green-900 dark:text-green-100">
           {{ stats.averageScore }}%
@@ -23,6 +26,7 @@
       <div class="rounded-lg bg-gradient-to-br from-purple-50 to-purple-100 p-4 dark:from-purple-900/20 dark:to-purple-800/20">
         <div class="mb-2 text-sm font-medium text-purple-600 dark:text-purple-400">
           {{ t('analytics.bestScore') }}
+
         </div>
         <div class="text-2xl font-bold text-purple-900 dark:text-purple-100">
           {{ stats.bestScore }}%
@@ -32,6 +36,7 @@
       <div class="rounded-lg bg-gradient-to-br from-orange-50 to-orange-100 p-4 dark:from-orange-900/20 dark:to-orange-800/20">
         <div class="mb-2 text-sm font-medium text-orange-600 dark:text-orange-400">
           {{ t('analytics.improvement') }}
+
         </div>
         <div class="flex items-center gap-1 text-2xl font-bold text-orange-900 dark:text-orange-100">
           <svg v-if="stats.improvement > 0" class="h-6 w-6 text-green-600" fill="currentColor" viewBox="0 0 20 20">
@@ -49,11 +54,13 @@
     <div class="rounded-2xl bg-white p-6 shadow-lg dark:bg-gray-800">
       <h3 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
         {{ t('analytics.scoreTrends') }}
+
       </h3>
       <div class="space-y-2">
         <div v-for="attempt in recentAttempts" :key="attempt.id" class="flex items-center gap-4">
           <div class="flex-shrink-0 text-sm text-gray-500 dark:text-gray-400">
             {{ formatDate(attempt.timestamp) }}
+
           </div>
           <div class="flex-shrink-0">
             <span
@@ -76,6 +83,7 @@
           </div>
           <div class="flex-shrink-0 text-sm text-gray-600 dark:text-gray-400">
             {{ attempt.correct }}/{{ attempt.total }}
+
           </div>
         </div>
       </div>
@@ -85,6 +93,7 @@
     <div class="rounded-2xl bg-white p-6 shadow-lg dark:bg-gray-800">
       <h3 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
         {{ t('analytics.performanceByLevel') }}
+
       </h3>
       <div class="space-y-4">
         <div v-for="level in levels" :key="level.name">
@@ -92,14 +101,17 @@
             <div class="flex items-center gap-2">
               <span :class="getLevelIconClass(level.name)">
                 {{ getLevelIcon(level.name) }}
+
               </span>
               <span class="font-medium text-gray-900 dark:text-white">
                 {{ t(`level.${level.name}.label`) }}
+
               </span>
             </div>
             <div class="flex items-center gap-4 text-sm">
               <span class="text-gray-600 dark:text-gray-400">
                 {{ level.attempts }} {{ t('analytics.attempts') }}
+
               </span>
               <span class="font-semibold text-gray-900 dark:text-white">
                 {{ level.average }}%
@@ -121,6 +133,7 @@
     <div v-if="weakAreas.length > 0" class="rounded-2xl bg-white p-6 shadow-lg dark:bg-gray-800">
       <h3 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
         {{ t('analytics.weakAreas') }}
+
       </h3>
       <div class="space-y-3">
         <div
@@ -131,9 +144,11 @@
           <div>
             <div class="font-medium text-red-900 dark:text-red-200">
               {{ area.category }}
+
             </div>
             <div class="text-sm text-red-600 dark:text-red-400">
               {{ area.correctCount }}/{{ area.totalCount }} {{ t('analytics.correct') }}
+
             </div>
           </div>
           <div class="text-2xl font-bold text-red-600 dark:text-red-400">
@@ -143,6 +158,7 @@
       </div>
       <p class="mt-4 text-sm text-gray-600 dark:text-gray-400">
         {{ t('analytics.weakAreasHint') }}
+
       </p>
     </div>
 
@@ -150,6 +166,7 @@
     <div v-if="strongAreas.length > 0" class="rounded-2xl bg-white p-6 shadow-lg dark:bg-gray-800">
       <h3 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
         {{ t('analytics.strongAreas') }}
+
       </h3>
       <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
         <div
@@ -160,6 +177,7 @@
           <div class="flex items-center justify-between">
             <div class="font-medium text-green-900 dark:text-green-200">
               {{ area.category }}
+
             </div>
             <svg class="h-5 w-5 text-green-600 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
@@ -167,6 +185,7 @@
           </div>
           <div class="mt-1 text-sm text-green-600 dark:text-green-400">
             {{ area.accuracy }}% {{ t('analytics.accuracy') }}
+
           </div>
         </div>
       </div>
@@ -280,12 +299,12 @@ const strongAreas = computed(() => {
     .slice(0, 4);
 });
 
-const getLevelIcon = (level: string) => {
+const getlevelicon = (level: string) => {
   const icons = { junior: '🟢', intermediate: '🟡', senior: '🔴' };
   return icons[level as keyof typeof icons] || '⚪';
 };
 
-const getLevelIconClass = (level: string) => {
+const getleveliconclass = (level: string) => {
   const classes = {
     junior: 'text-green-600 dark:text-green-400',
     intermediate: 'text-yellow-600 dark:text-yellow-400',
@@ -294,7 +313,7 @@ const getLevelIconClass = (level: string) => {
   return classes[level as keyof typeof classes] || 'text-gray-600';
 };
 
-const getLevelBadgeClass = (level: string) => {
+const getlevelbadgeclass = (level: string) => {
   const classes = {
     junior: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
     intermediate: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
@@ -303,7 +322,7 @@ const getLevelBadgeClass = (level: string) => {
   return classes[level as keyof typeof classes] || 'bg-gray-100 text-gray-800';
 };
 
-const getLevelProgressClass = (level: string) => {
+const getlevelprogressclass = (level: string) => {
   const classes = {
     junior: 'bg-green-600 dark:bg-green-400',
     intermediate: 'bg-yellow-600 dark:bg-yellow-400',
@@ -312,7 +331,7 @@ const getLevelProgressClass = (level: string) => {
   return classes[level as keyof typeof classes] || 'bg-gray-600';
 };
 
-const getScoreBarClass = (score: number) => {
+const getscorebarclass = (score: number) => {
   if (score >= 90) return 'bg-green-600';
   if (score >= 80) return 'bg-blue-600';
   if (score >= 70) return 'bg-yellow-600';
@@ -320,7 +339,7 @@ const getScoreBarClass = (score: number) => {
   return 'bg-red-600';
 };
 
-const formatDate = (timestamp: number) => {
+const formatdate = (timestamp: number) => {
   const date = new Date(timestamp);
   const now = new Date();
   const diffDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
@@ -332,7 +351,7 @@ const formatDate = (timestamp: number) => {
   return date.toLocaleDateString();
 };
 
-const loadHistory = () => {
+const loadhistory = () => {
   try {
     const historyData = localStorage.getItem('quiz_history');
     if (historyData) {

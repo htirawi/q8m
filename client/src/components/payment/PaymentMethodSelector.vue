@@ -6,7 +6,7 @@ import type { PaymentMethodSelectorProps, PaymentMethod } from "@/types/ui/compo
 
 const props = defineProps<PaymentMethodSelectorProps>();
 
-const emit = defineEmits<{
+const emit = defineemits<{
   "update:modelValue": [value: string];
 }>();
 
@@ -45,7 +45,7 @@ const availableMethods = computed((): PaymentMethod[] => {
   return methods.filter((method) => method.available);
 });
 
-const selectMethod = (methodId: string) => {
+const selectmethod = (methodId: string) => {
   selectedMethod.value = methodId;
 };
 

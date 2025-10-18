@@ -3,8 +3,12 @@
     <div class="testimonial-carousel-container">
       <!-- Header -->
       <div class="testimonial-header">
-        <h2 class="testimonial-title">{{ $t('pricing.testimonials.title') }}</h2>
-        <p class="testimonial-subtitle">{{ $t('pricing.testimonials.subtitle') }}</p>
+        <h2 class="testimonial-title">{{ $t('pricing.testimonials.title') }}
+
+</h2>
+        <p class="testimonial-subtitle">{{ $t('pricing.testimonials.subtitle') }}
+
+</p>
       </div>
 
       <!-- Carousel -->
@@ -40,7 +44,9 @@
 
               <!-- ITestimonial Content -->
               <blockquote class="testimonial-content">
-                <p class="testimonial-text">{{ testimonial.text }}</p>
+                <p class="testimonial-text">{{ testimonial.text }}
+
+</p>
               </blockquote>
 
               <!-- Author Info -->
@@ -54,13 +60,19 @@
                   />
                   <div v-else class="testimonial-author-initials">
                     {{ getInitials(testimonial.name) }}
+
                   </div>
                 </div>
                 <div class="testimonial-author-info">
-                  <div class="testimonial-author-name">{{ testimonial.name }}</div>
-                  <div class="testimonial-author-title">{{ testimonial.title }}</div>
+                  <div class="testimonial-author-name">{{ testimonial.name }}
+
+</div>
+                  <div class="testimonial-author-title">{{ testimonial.title }}
+
+</div>
                   <div v-if="testimonial.company" class="testimonial-author-company">
                     {{ testimonial.company }}
+
                   </div>
                 </div>
               </div>
@@ -116,15 +128,21 @@
       <div class="testimonial-stats">
         <div class="testimonial-stat">
           <div class="testimonial-stat-value">15,000+</div>
-          <div class="testimonial-stat-label">{{ $t('pricing.stats.developers') }}</div>
+          <div class="testimonial-stat-label">{{ $t('pricing.stats.developers') }}
+
+</div>
         </div>
         <div class="testimonial-stat">
           <div class="testimonial-stat-value">4.9/5</div>
-          <div class="testimonial-stat-label">{{ $t('pricing.stats.rating') }}</div>
+          <div class="testimonial-stat-label">{{ $t('pricing.stats.rating') }}
+
+</div>
         </div>
         <div class="testimonial-stat">
           <div class="testimonial-stat-value">98%</div>
-          <div class="testimonial-stat-label">{{ $t('pricing.stats.satisfaction') }}</div>
+          <div class="testimonial-stat-label">{{ $t('pricing.stats.satisfaction') }}
+
+</div>
         </div>
       </div>
     </div>
@@ -186,7 +204,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const currentIndex = ref(0);
 const isTransitioning = ref(false);
-let autoplayTimer: ReturnType<typeof setTimeout> | null = null;
+let autoplayTimer: ReturnType<typeof setTimeout> | null = null;autoplayTimer
 
 const visibleTestimonials = computed(() => props.testimonials);
 
@@ -212,14 +230,14 @@ function next() {
 function prev() {
   if (isTransitioning.value) return;
   isTransitioning.value = true;
-  currentIndex.value = currentIndex.value === 0 ? props.testimonials.length - 1 : currentIndex.value - 1;
+  currentIndex.value = currentIndex.value === 0 ? props.testimonials.length - 1 : currentIndex.value - 1;currentIndex.value0props.testimonials.length1
   setTimeout(() => {
     isTransitioning.value = false;
   }, 300);
   resetAutoplay();
 }
 
-function goTo(index: number) {
+function goto(index: number) {
   if (isTransitioning.value || index === currentIndex.value) return;
   isTransitioning.value = true;
   currentIndex.value = index;
@@ -274,6 +292,7 @@ onUnmounted(() => {
 
 .testimonial-title {
   @apply text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4;
+
   background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -453,7 +472,7 @@ onUnmounted(() => {
 }
 
 /* Responsive */
-@media (max-width: 640px) {
+@media (width <= 640px) {
   .testimonial-card {
     @apply p-6;
   }

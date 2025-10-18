@@ -40,9 +40,11 @@
             </div>
             <h3 :id="headingId" class="mt-4 text-center text-2xl font-bold">
               {{ t('study.upsell.title') }}
+
             </h3>
             <p class="mt-2 text-center text-sm text-white/90">
               {{ t('study.upsell.subtitle', { difficulty: difficultyLabel }) }}
+
             </p>
           </div>
 
@@ -52,6 +54,7 @@
             <div class="mb-6">
               <h4 class="mb-4 font-semibold text-gray-900 dark:text-white">
                 {{ t('study.upsell.comparison.title') }}
+
               </h4>
               <div class="overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700">
                 <table class="w-full text-sm">
@@ -59,12 +62,15 @@
                     <tr>
                       <th class="px-4 py-3 text-left font-medium text-gray-900 dark:text-white">
                         {{ t('study.upsell.comparison.feature') }}
+
                       </th>
                       <th class="px-4 py-3 text-center font-medium text-gray-500 dark:text-gray-400">
                         {{ t('plans.names.free') }}
+
                       </th>
                       <th class="px-4 py-3 text-center font-medium text-white dark:text-white bg-gradient-to-r from-primary-500 to-purple-500 rounded-t">
                         {{ targetPlanName }}
+
                       </th>
                     </tr>
                   </thead>
@@ -72,6 +78,7 @@
                     <tr v-for="(feature, idx) in comparisonFeatures" :key="idx" class="hover:bg-gray-50 dark:hover:bg-gray-800/50">
                       <td class="px-4 py-3 text-gray-700 dark:text-gray-300">
                         {{ feature.label }}
+
                       </td>
                       <td class="px-4 py-3 bg-gray-50/50 dark:bg-gray-900/50">
                         <div class="flex justify-center">
@@ -99,13 +106,16 @@
             <div class="mb-6">
               <h4 class="mb-4 font-semibold text-gray-900 dark:text-white">
                 {{ t('study.upsell.benefits.title', { plan: targetPlanName }) }}
+
               </h4>
               <ul class="space-y-3">
                 <li v-for="(benefit, idx) in benefits" :key="idx" class="flex items-start gap-3">
                   <svg class="mt-0.5 h-5 w-5 flex-shrink-0 text-primary-500" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                   </svg>
-                  <span class="text-sm text-gray-700 dark:text-gray-300">{{ benefit }}</span>
+                  <span class="text-sm text-gray-700 dark:text-gray-300">{{ benefit }}
+
+</span>
                 </li>
               </ul>
             </div>
@@ -119,9 +129,11 @@
               </div>
               <p class="mb-2 text-sm italic text-gray-700 dark:text-gray-300">
                 {{ t('study.upsell.testimonial.text') }}
+
               </p>
               <p class="text-xs font-medium text-gray-600 dark:text-gray-400">
                 {{ t('study.upsell.testimonial.author') }}
+
               </p>
             </div>
 
@@ -129,17 +141,20 @@
             <div class="mb-6">
               <h4 class="mb-3 font-semibold text-gray-900 dark:text-white">
                 {{ t('study.upsell.faq.title') }}
+
               </h4>
               <div class="space-y-3">
                 <details v-for="(faq, idx) in faqs" :key="idx" class="group rounded-lg border border-gray-200 dark:border-gray-700">
                   <summary class="flex cursor-pointer items-center justify-between px-4 py-3 text-sm font-medium text-gray-900 hover:bg-gray-50 dark:text-white dark:hover:bg-gray-700/50">
                     {{ faq.question }}
+
                     <svg class="h-5 w-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                     </svg>
                   </summary>
                   <div class="px-4 pb-3 text-sm text-gray-600 dark:text-gray-400">
                     {{ faq.answer }}
+
                   </div>
                 </details>
               </div>
@@ -154,6 +169,7 @@
                 @click="handleUpgrade"
               >
                 {{ t('study.upsell.cta.upgrade', { plan: targetPlanName }) }}
+
               </button>
 
               <!-- Secondary CTA -->
@@ -163,6 +179,7 @@
                 @click="handleViewAllPlans"
               >
                 {{ t('study.upsell.cta.viewAllPlans') }}
+
               </button>
 
               <!-- Tertiary CTA -->
@@ -172,6 +189,7 @@
                 @click="handleDismiss('maybe_later_button')"
               >
                 {{ t('study.upsell.cta.maybeLater') }}
+
               </button>
             </div>
 
@@ -182,6 +200,7 @@
                   <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                 </svg>
                 {{ t('study.upsell.trust.secure') }}
+
               </div>
               <div class="flex items-center gap-1">
                 <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
@@ -189,6 +208,7 @@
                   <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clip-rule="evenodd" />
                 </svg>
                 {{ t('study.upsell.trust.moneyBack') }}
+
               </div>
             </div>
           </div>
@@ -295,7 +315,7 @@ const faqs = computed((): IFaq[] => [
   },
 ]);
 
-const handleUpgrade = () => {
+const handleupgrade = () => {
   track('upsell_cta_clicked', {
     action: 'upgrade',
     difficulty: props.difficulty,
@@ -315,7 +335,7 @@ const handleUpgrade = () => {
   emit('dismiss', 'close_button');
 };
 
-const handleViewAllPlans = () => {
+const handleviewallplans = () => {
   track('upsell_cta_clicked', {
     action: 'view_plans',
     difficulty: props.difficulty,
@@ -328,7 +348,7 @@ const handleViewAllPlans = () => {
   emit('dismiss', 'close_button');
 };
 
-const handleDismiss = (method: 'esc' | 'backdrop' | 'close_button' | 'maybe_later_button') => {
+const handledismiss = (method: 'esc' | 'backdrop' | 'close_button' | 'maybe_later_button') => {
   track('upsell_cta_clicked', {
     action: 'maybe_later',
     difficulty: props.difficulty,
@@ -353,7 +373,9 @@ const trapFocus = (e: KeyboardEvent) => {
       lastElement?.focus();
       e.preventDefault();
     }
-  } else {
+  }
+
+ else {
     if (document.activeElement === lastElement) {
       firstElement?.focus();
       e.preventDefault();

@@ -10,7 +10,9 @@
       @click="handleClick"
     >
       <span class="relative z-10 flex items-center gap-3">
-        <span>{{ buttonText }}</span>
+        <span>{{ buttonText }}
+
+</span>
         <svg
           class="h-5 w-5 transition-transform group-hover:translate-x-1"
           fill="none"
@@ -38,13 +40,17 @@
         <svg class="h-4 w-4 text-primary-500" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
           <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
         </svg>
-        <span>{{ t('study.cta.trust.users') }}</span>
+        <span>{{ t('study.cta.trust.users') }}
+
+</span>
       </div>
       <div class="flex items-center gap-1.5">
         <svg class="h-4 w-4 text-primary-500" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
           <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
         </svg>
-        <span>{{ t('study.cta.trust.successRate') }}</span>
+        <span>{{ t('study.cta.trust.successRate') }}
+
+</span>
       </div>
     </div>
 
@@ -94,7 +100,7 @@ const ariaLabel = computed(() => {
   return t('study.cta.ariaLabelNoSelection');
 });
 
-const handleClick = () => {
+const handleclick = () => {
   track('study_cta_clicked', {
     hasSelection: !!props.selectedDifficulty,
     difficulty: props.selectedDifficulty ?? undefined,
@@ -104,14 +110,16 @@ const handleClick = () => {
   if (props.selectedDifficulty) {
     // Emit click event to parent
     emit('click', props.selectedDifficulty);
-  } else {
+  }
+
+ else {
     // Scroll to difficulty selection
     scrollToDifficultySelection();
   }
 };
 
-const scrollToDifficultySelection = () => {
-  let targetElement: HTMLElement | null = null;
+const scrolltodifficultyselection = () => {
+  let targetElement: HTMLElement | null = null;targetElement
 
   // Try to find the target element using the selector
   if (props.scrollTargetSelector) {
@@ -145,7 +153,7 @@ const handleIntersection: IntersectionObserverCallback = (entries) => {
   });
 };
 
-let observer: IntersectionObserver | null = null;
+let observer: IntersectionObserver | null = null;observer
 
 onMounted(() => {
   // Set up intersection observer to track when CTA becomes visible
@@ -174,9 +182,11 @@ onUnmounted(() => {
   0%, 100% {
     transform: translateX(0);
   }
+
   10%, 30%, 50%, 70%, 90% {
     transform: translateX(-4px);
   }
+
   20%, 40%, 60%, 80% {
     transform: translateX(4px);
   }

@@ -40,9 +40,11 @@
             </div>
             <h2 :id="headingId" class="mt-4 text-center text-2xl font-bold">
               {{ t(`convert.headline.${variant}`) }}
+
             </h2>
             <p class="mt-2 text-center text-sm text-white/90">
               {{ t('convert.subhead', { difficulty: difficultyLabel, count: developerCount }) }}
+
             </p>
           </div>
 
@@ -53,6 +55,7 @@
               <div class="mb-3 flex items-center justify-between">
                 <h3 class="font-semibold text-gray-900 dark:text-white">
                   {{ t('convert.planSelection.title') }}
+
                 </h3>
                 <button
                   type="button"
@@ -60,6 +63,7 @@
                   @click="toggleCoupon"
                 >
                   {{ t('convert.coupon.toggle') }}
+
                 </button>
               </div>
 
@@ -85,18 +89,21 @@
                       <div class="flex items-center gap-2">
                         <span class="font-semibold text-gray-900 dark:text-white">
                           {{ t(`convert.cycle.${option.cycle}`) }}
+
                         </span>
                         <span
                           v-if="option.discountPercent"
                           class="rounded-full bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-700 dark:bg-green-900/30 dark:text-green-400"
                         >
                           {{ t('convert.cycle.save', { percent: option.discountPercent }) }}
+
                         </span>
                         <span
                           v-if="option.isRecommended"
                           class="rounded-full bg-purple-100 px-2 py-0.5 text-xs font-semibold text-purple-700 dark:bg-purple-900/30 dark:text-purple-400"
                         >
                           {{ t('convert.cycle.recommended') }}
+
                         </span>
                       </div>
                     </div>
@@ -104,9 +111,11 @@
                   <div class="text-right">
                     <div class="text-2xl font-bold text-gray-900 dark:text-white">
                       ${{ option.price }}
+
                     </div>
                     <div class="text-xs text-gray-500 dark:text-gray-400">
                       {{ option.cycle === 'monthly' ? 'per month' : 'per year' }}
+
                     </div>
                   </div>
                 </label>
@@ -128,6 +137,7 @@
                       @click="handleApplyCoupon"
                     >
                       {{ t('convert.coupon.apply') }}
+
                     </button>
                   </div>
                 </div>
@@ -137,13 +147,17 @@
             <!-- Price summary -->
             <div class="mb-6 rounded-lg bg-gray-50 p-4 dark:bg-gray-900/50">
               <div class="flex items-center justify-between">
-                <span class="text-sm text-gray-600 dark:text-gray-400">{{ t('convert.summary.total') }}</span>
+                <span class="text-sm text-gray-600 dark:text-gray-400">{{ t('convert.summary.total') }}
+
+</span>
                 <span class="text-xl font-bold text-gray-900 dark:text-white">
                   {{ formatPrice(currentPlanOption?.price || 0, currentPlanOption?.currency || 'USD') }}
+
                 </span>
               </div>
               <div class="mt-1 text-xs text-gray-500 dark:text-gray-400">
                 {{ t('convert.summary.billedAs', { cycle: t(`convert.cycle.${selectedCycle}`) }) }}
+
               </div>
             </div>
 
@@ -160,6 +174,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
                   {{ ctaText }}
+
                 </span>
                 <span v-else class="flex items-center justify-center gap-2">
                   <svg class="h-6 w-6 animate-spin" fill="none" viewBox="0 0 24 24">
@@ -167,6 +182,7 @@
                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
                   {{ t('convert.cta.processing') }}
+
                 </span>
               </button>
             </div>
@@ -174,6 +190,7 @@
             <!-- Reassurance -->
             <div class="mt-4 text-center text-sm text-gray-600 dark:text-gray-400">
               {{ t('convert.reassurance.cancel') }} · {{ t('convert.reassurance.secure') }} · {{ t('convert.reassurance.guarantee') }}
+
             </div>
 
             <!-- Social proof -->
@@ -189,6 +206,7 @@
               </p>
               <p class="mt-1 text-center text-xs font-medium text-gray-600 dark:text-gray-400">
                 {{ t('convert.testimonial.author') }}
+
               </p>
             </div>
 
@@ -199,6 +217,7 @@
                   <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                 </svg>
                 {{ t('convert.trustBadges.secure') }}
+
               </div>
               <div class="flex items-center gap-1.5">
                 <svg class="h-5 w-5 text-blue-600 dark:text-blue-500" fill="currentColor" viewBox="0 0 20 20">
@@ -206,12 +225,14 @@
                   <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clip-rule="evenodd" />
                 </svg>
                 {{ t('convert.trustBadges.moneyBack') }}
+
               </div>
               <div class="flex items-center gap-1.5">
                 <svg class="h-5 w-5 text-green-600 dark:text-green-500" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                 </svg>
                 {{ t('convert.trustBadges.cancelAnytime') }}
+
               </div>
             </div>
 
@@ -223,7 +244,9 @@
                 @click="toggleComparison"
               >
                 {{ t('convert.comparison.toggle') }}
-                <span class="ml-1.5">{{ showComparison ? '▲' : '▼' }}</span>
+                <span class="ml-1.5">{{ showComparison ? '▲' : '▼' }}
+
+</span>
               </button>
               <button
                 type="button"
@@ -231,7 +254,9 @@
                 @click="toggleFaq"
               >
                 {{ t('convert.faq.toggle') }}
-                <span class="ml-1.5">{{ showFaq ? '▲' : '▼' }}</span>
+                <span class="ml-1.5">{{ showFaq ? '▲' : '▼' }}
+
+</span>
               </button>
             </div>
 
@@ -248,12 +273,14 @@
                 <details v-for="(faq, idx) in faqs" :key="idx" class="group rounded-lg border border-gray-200 dark:border-gray-700">
                   <summary class="flex cursor-pointer items-center justify-between px-4 py-3 text-sm font-medium text-gray-900 hover:bg-gray-50 dark:text-white dark:hover:bg-gray-700/50">
                     {{ faq.question }}
+
                     <svg class="h-5 w-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                     </svg>
                   </summary>
                   <div class="px-4 pb-3 text-sm text-gray-600 dark:text-gray-400">
                     {{ faq.answer }}
+
                   </div>
                 </details>
               </div>
@@ -287,6 +314,7 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<Emits>();
 
 const { t } = useI18n();
+
 const {
   selectedCycle,
   isProcessing,
@@ -345,27 +373,29 @@ const formatPrice = (price: number, currency: string): string => {
   }).format(price);
 };
 
-const handleCycleChange = (cycle: BillingCycle) => {
+const handlecyclechange = (cycle: BillingCycle) => {
   selectPlan(props.requiredPlan, cycle);
 };
 
-const toggleCoupon = () => {
+const togglecoupon = () => {
   showCoupon.value = !showCoupon.value;
 };
 
-const handleApplyCoupon = async () => {
+const handleapplycoupon = async () => {
   if (!couponInput.value) return;
 
   const success = await applyCoupon(couponInput.value);
   if (success) {
     // TODO: Show success message
-    couponInput.value = "";
-  } else {
-    // TODO: Show error message
+    couponInput.value = "";TODO
+  }
+
+ else {
+    // TODO: Show error messageTODO
   }
 };
 
-const handleSubscribe = async () => {
+const handlesubscribe = async () => {
   track("subscribe_click", {
     difficulty: props.difficulty,
     plan: props.requiredPlan,
@@ -376,7 +406,7 @@ const handleSubscribe = async () => {
   await startCheckout("convert_modal");
 };
 
-const toggleComparison = () => {
+const togglecomparison = () => {
   showComparison.value = !showComparison.value;
 
   if (showComparison.value) {
@@ -387,7 +417,7 @@ const toggleComparison = () => {
   }
 };
 
-const toggleFaq = () => {
+const togglefaq = () => {
   showFaq.value = !showFaq.value;
 
   if (showFaq.value) {
@@ -398,7 +428,7 @@ const toggleFaq = () => {
   }
 };
 
-const handleDismiss = () => {
+const handledismiss = () => {
   track("convert_modal_dismissed", {
     difficulty: props.difficulty,
     plan: props.requiredPlan,
@@ -423,7 +453,9 @@ const trapFocus = (e: KeyboardEvent) => {
       lastElement?.focus();
       e.preventDefault();
     }
-  } else {
+  }
+
+ else {
     if (document.activeElement === lastElement) {
       firstElement?.focus();
       e.preventDefault();

@@ -1,43 +1,24 @@
 <template>
-  <button
-    type="button"
-    :class="cardClasses"
-    :disabled="isLocked && !canClickLocked"
-    :aria-label="ariaLabel"
-    :aria-pressed="isSelected"
-    :data-testid="`level-card-${difficulty}`"
-    @click="handleClick"
-  >
+  <button type="button" :class="cardClasses" :disabled="isLocked && !canClickLocked" :aria-label="ariaLabel"
+    :aria-pressed="isSelected" :data-testid="`level-card-${difficulty}`" @click="handleClick">
     <!-- Current Plan IBadge (shown for user's active subscription) -->
-    <div
-      v-if="isCurrentPlan && !isLocked"
-      class="absolute top-4 right-4 z-10"
-      aria-label="Your current plan"
-    >
+    <div v-if="isCurrentPlan && !isLocked" class="absolute top-4 right-4 z-10" aria-label="Your current plan">
       <div class="flex h-8 w-8 items-center justify-center rounded-full bg-green-500 shadow-lg">
         <svg class="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-          <path
-            fill-rule="evenodd"
+          <path fill-rule="evenodd"
             d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-            clip-rule="evenodd"
-          />
+            clip-rule="evenodd" />
         </svg>
       </div>
     </div>
 
     <!-- Selection indicator (shown when user selects a difficulty for this session) -->
-    <div
-      v-else-if="isSelected && !isLocked"
-      class="absolute top-4 right-4 z-10"
-      aria-hidden="true"
-    >
+    <div v-else-if="isSelected && !isLocked" class="absolute top-4 right-4 z-10" aria-hidden="true">
       <div class="flex h-8 w-8 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm">
         <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-          <path
-            fill-rule="evenodd"
+          <path fill-rule="evenodd"
             d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-            clip-rule="evenodd"
-          />
+            clip-rule="evenodd" />
         </svg>
       </div>
     </div>
@@ -58,18 +39,13 @@
       <!-- Status badge -->
       <div class="mt-4">
         <!-- Current Plan IBadge -->
-        <span
-          v-if="!isLocked && isCurrentPlan"
-          class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
-        >
+        <span v-if="!isLocked && isCurrentPlan"
+          class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
           {{ t('study.levelCard.currentPlan') }}
         </span>
         <!-- Available IBadge -->
-        <span
-          v-else-if="!isLocked"
-          class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium"
-          :class="availableBadgeClass"
-        >
+        <span v-else-if="!isLocked" class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium"
+          :class="availableBadgeClass">
           {{ t('plans.access.available') }}
         </span>
         <!-- Locked IBadge -->
@@ -78,24 +54,13 @@
 
       <!-- Features list (visible for locked cards) -->
       <div v-if="isLocked && features.length > 0" class="mt-4 space-y-2">
-        <div
-          v-for="(feature, idx) in features"
-          :key="idx"
-          class="flex items-start gap-2 text-left text-sm"
-          :class="featureTextClass"
-        >
-          <svg
-            class="mt-0.5 h-4 w-4 flex-shrink-0"
-            :class="featureIconClass"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-            aria-hidden="true"
-          >
-            <path
-              fill-rule="evenodd"
+        <div v-for="(feature, idx) in features" :key="idx" class="flex items-start gap-2 text-left text-sm"
+          :class="featureTextClass">
+          <svg class="mt-0.5 h-4 w-4 flex-shrink-0" :class="featureIconClass" fill="currentColor" viewBox="0 0 20 20"
+            aria-hidden="true">
+            <path fill-rule="evenodd"
               d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-              clip-rule="evenodd"
-            />
+              clip-rule="evenodd" />
           </svg>
           <span>{{ feature }}</span>
         </div>
@@ -103,8 +68,7 @@
         <!-- Upgrade button for locked cards -->
         <div class="mt-4">
           <span
-            class="inline-flex items-center gap-1 rounded-lg bg-primary-100 px-3 py-1.5 text-xs font-medium text-primary-700 dark:bg-primary-900/30 dark:text-primary-400"
-          >
+            class="inline-flex items-center gap-1 rounded-lg bg-primary-100 px-3 py-1.5 text-xs font-medium text-primary-700 dark:bg-primary-900/30 dark:text-primary-400">
             <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
@@ -265,8 +229,8 @@ onMounted(() => {
     difficulty: props.difficulty,
     isLocked: props.isLocked,
     requiredPlan: props.isLocked ? props.requiredPlan : undefined,
-  });
-});
+  }););
+
 </script>
 
 <style scoped>
@@ -294,6 +258,7 @@ onMounted(() => {
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);

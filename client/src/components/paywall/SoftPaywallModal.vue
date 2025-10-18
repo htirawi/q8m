@@ -65,11 +65,13 @@
               class="mt-4 text-center text-lg font-semibold text-gray-900 dark:text-white"
             >
               {{ t('paywall.title') }}
+
             </h3>
 
             <!-- Description -->
             <p class="mt-2 text-center text-sm text-gray-600 dark:text-gray-300">
               {{ t('paywall.description', { plan: suggestedPlanName }) }}
+
             </p>
 
             <!-- Features list -->
@@ -90,7 +92,9 @@
                     clip-rule="evenodd"
                   />
                 </svg>
-                <span>{{ feature }}</span>
+                <span>{{ feature }}
+
+</span>
               </li>
             </ul>
 
@@ -103,6 +107,7 @@
                 @click="handleSeePlans"
               >
                 {{ t('paywall.cta.seePlans') }}
+
               </button>
 
               <!-- Secondary CTA -->
@@ -112,6 +117,7 @@
                 @click="handleContinueFree"
               >
                 {{ t('paywall.cta.continueFree') }}
+
               </button>
             </div>
           </div>
@@ -160,7 +166,7 @@ const features = computed(() => {
   ];
 });
 
-const handleSeePlans = () => {
+const handleseeplans = () => {
   trackEvent("free_soft_paywall_cta_clicked", {
     cta: "see_plans",
     targetPlan: props.suggestedPlan,
@@ -179,7 +185,7 @@ const handleSeePlans = () => {
   emit("dismiss");
 };
 
-const handleContinueFree = () => {
+const handlecontinuefree = () => {
   trackEvent("free_soft_paywall_cta_clicked", {
     cta: "continue_free",
     targetPlan: props.suggestedPlan,
@@ -192,7 +198,7 @@ const handleContinueFree = () => {
   emit("dismiss");
 };
 
-const handleDismiss = () => {
+const handledismiss = () => {
   trackEvent("free_soft_paywall_dismissed", {
     targetRoute: props.targetRoute,
   });
@@ -215,7 +221,9 @@ const trapFocus = (e: KeyboardEvent) => {
       lastElement?.focus();
       e.preventDefault();
     }
-  } else {
+  }
+
+ else {
     if (document.activeElement === lastElement) {
       firstElement?.focus();
       e.preventDefault();

@@ -4,11 +4,14 @@
       <!-- Icon/Emoji -->
       <div v-if="showIcon" class="countdown-icon">
         {{ icon }}
+
       </div>
 
       <!-- Header -->
       <div class="countdown-header">
-        <h3 v-if="title" class="countdown-title">{{ title }}</h3>
+        <h3 v-if="title" class="countdown-title">{{ title }}
+
+</h3>
         <p v-if="message" class="countdown-message">{{ message }}</p>
       </div>
 
@@ -17,17 +20,22 @@
         <!-- Days -->
         <div v-if="showDays && timeLeft.days > 0" class="countdown-unit">
           <div class="countdown-value">
-            <AnimatedCounter :value="timeLeft.days" :duration="500" />
+            <AnimatedCounter :value="timeLeft.days" :duration="500" :format="(value) => Math.round(value).toString()" />
           </div>
-          <div class="countdown-label">{{ $t('pricing.countdown.days') }}</div>
+          <div class="countdown-label">{{ $t('pricing.countdown.days') }}
+
+</div>
         </div>
 
         <!-- Hours -->
         <div v-if="showHours" class="countdown-unit">
           <div class="countdown-value">
             {{ formatTime(timeLeft.hours) }}
+
           </div>
-          <div class="countdown-label">{{ $t('pricing.countdown.hours') }}</div>
+          <div class="countdown-label">{{ $t('pricing.countdown.hours') }}
+
+</div>
         </div>
 
         <!-- Separator -->
@@ -37,8 +45,11 @@
         <div v-if="showMinutes" class="countdown-unit">
           <div class="countdown-value">
             {{ formatTime(timeLeft.minutes) }}
+
           </div>
-          <div class="countdown-label">{{ $t('pricing.countdown.minutes') }}</div>
+          <div class="countdown-label">{{ $t('pricing.countdown.minutes') }}
+
+</div>
         </div>
 
         <!-- Separator -->
@@ -48,8 +59,11 @@
         <div v-if="showSeconds" class="countdown-unit">
           <div class="countdown-value">
             {{ formatTime(timeLeft.seconds) }}
+
           </div>
-          <div class="countdown-label">{{ $t('pricing.countdown.seconds') }}</div>
+          <div class="countdown-label">{{ $t('pricing.countdown.seconds') }}
+
+</div>
         </div>
       </div>
 
@@ -57,6 +71,7 @@
       <slot name="cta">
         <button v-if="ctaText" class="countdown-cta" @click="$emit('cta-click')">
           {{ ctaText }}
+
           <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
           </svg>
@@ -66,6 +81,7 @@
       <!-- Expired Message -->
       <div v-if="isExpired" class="countdown-expired">
         {{ expiredMessage || $t('pricing.countdown.expired') }}
+
       </div>
     </div>
   </div>
@@ -92,9 +108,7 @@ const props = withDefaults(defineProps<Props>(), {
   resetDuration: 86400, // 24 hours in seconds
 });
 
-const emit = defineEmits<{
-  'cta-click': [];
-  'expired': [];
+const emit = defineemits<{
   'tick': [timeLeft: TimeLeft];
 }>();
 
@@ -107,23 +121,25 @@ const timeLeft = ref<TimeLeft>({
 });
 
 const isExpired = ref(false);
-let intervalId: ReturnType<typeof setInterval> | null = null;
+let intervalId: ReturnType<typeof setInterval> | null = null;intervalId
 
 function calculateTimeLeft(): TimeLeft {
-  let endTime: number;
+  let endTime: number;endTime
 
   if (props.targetDate) {
     const target = typeof props.targetDate === 'string'
       ? new Date(props.targetDate)
-      : props.targetDate;
+      : props.targetDate;targettypeofprops.targetDatenewDate
     endTime = target.getTime();
   } else if (props.duration) {
     // If duration is provided, calculate end time from now
     const now = Date.now();
     endTime = now + (props.duration * 1000);
-  } else {
+  }
+
+ else {
     // Default: 24 hours from now
-    const now = Date.now();
+    const now = Date.now();Default
     endTime = now + (86400 * 1000);
   }
 
@@ -386,25 +402,29 @@ defineExpose({
 
 /* Animations */
 @keyframes bounce {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(-10px);
   }
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.5;
   }
 }
 
 /* Responsive */
-@media (max-width: 640px) {
+@media (width <= 640px) {
   .countdown-display {
     @apply gap-2;
   }

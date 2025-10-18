@@ -3,6 +3,7 @@
     <div class="mb-6 flex items-center justify-between">
       <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
         {{ t('recommendations.title') }}
+
       </h2>
       <button
         type="button"
@@ -13,6 +14,7 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
         </svg>
         {{ t('recommendations.refresh') }}
+
       </button>
     </div>
 
@@ -25,9 +27,11 @@
         <div>
           <h3 class="font-semibold text-blue-900 dark:text-blue-200">
             {{ personalizedMessage.title }}
+
           </h3>
           <p class="mt-1 text-sm text-blue-700 dark:text-blue-300">
             {{ personalizedMessage.message }}
+
           </p>
         </div>
       </div>
@@ -37,6 +41,7 @@
     <div v-if="recommendedQuizzes.length > 0" class="mb-6">
       <h3 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
         {{ t('recommendations.recommendedQuizzes') }}
+
       </h3>
       <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         <div
@@ -50,19 +55,23 @@
               :class="getLevelBadgeClass(quiz.level)"
             >
               {{ t(`level.${quiz.level}.label`) }}
+
             </span>
             <span
               class="inline-flex items-center rounded-full px-2 py-1 text-xs font-semibold"
               :class="getRecommendationBadgeClass(quiz.reason)"
             >
               {{ t(`recommendations.reasons.${quiz.reason}`) }}
+
             </span>
           </div>
           <h4 class="mb-2 font-semibold text-gray-900 dark:text-white">
             {{ quiz.title }}
+
           </h4>
           <p class="mb-3 text-sm text-gray-600 dark:text-gray-400">
             {{ quiz.description }}
+
           </p>
           <button
             type="button"
@@ -70,6 +79,7 @@
             @click="startQuiz(quiz.level)"
           >
             {{ t('recommendations.startQuiz') }}
+
           </button>
         </div>
       </div>
@@ -79,6 +89,7 @@
     <div v-if="studyTopics.length > 0" class="mb-6">
       <h3 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
         {{ t('recommendations.studyTopics') }}
+
       </h3>
       <div class="space-y-3">
         <div
@@ -92,16 +103,19 @@
               <div class="flex items-center gap-2">
                 <h4 class="font-semibold text-gray-900 dark:text-white">
                   {{ topic.title }}
+
                 </h4>
                 <span
                   class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold"
                   :class="getPriorityBadgeClass(topic.priority)"
                 >
                   {{ t(`recommendations.priority.${topic.priority}`) }}
+
                 </span>
               </div>
               <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
                 {{ topic.reason }}
+
               </p>
               <div class="mt-2 text-xs text-gray-500 dark:text-gray-500">
                 {{ t('recommendations.accuracy') }}: {{ topic.currentAccuracy }}% → {{ t('recommendations.target') }}: {{ topic.targetAccuracy }}%
@@ -113,6 +127,7 @@
               @click="startStudying(topic.difficulty)"
             >
               {{ t('recommendations.study') }}
+
             </button>
           </div>
         </div>
@@ -123,6 +138,7 @@
     <div v-if="learningPath" class="mb-6">
       <h3 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
         {{ t('recommendations.learningPath') }}
+
       </h3>
       <div class="relative">
         <div class="absolute left-4 top-0 h-full w-0.5 bg-gray-200 dark:bg-gray-700"></div>
@@ -145,19 +161,24 @@
               <svg v-if="step.completed" class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
               </svg>
-              <span v-else class="text-sm font-semibold">{{ index + 1 }}</span>
+              <span v-else class="text-sm font-semibold">{{ index + 1 }}
+
+</span>
             </div>
             <div class="flex-1 pb-6">
               <div class="flex items-center justify-between">
                 <h4 class="font-semibold text-gray-900 dark:text-white">
                   {{ step.title }}
+
                 </h4>
                 <span v-if="step.current" class="text-xs font-medium text-blue-600 dark:text-blue-400">
                   {{ t('recommendations.current') }}
+
                 </span>
               </div>
               <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
                 {{ step.description }}
+
               </p>
               <button
                 v-if="step.current"
@@ -166,6 +187,7 @@
                 @click="startLearningStep(step)"
               >
                 {{ t('recommendations.continue') }}
+
               </button>
             </div>
           </div>
@@ -177,6 +199,7 @@
     <div v-if="quickTips.length > 0">
       <h3 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
         {{ t('recommendations.quickTips') }}
+
       </h3>
       <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
         <div
@@ -191,9 +214,11 @@
             <div>
               <h4 class="text-sm font-semibold text-yellow-900 dark:text-yellow-200">
                 {{ tip.title }}
+
               </h4>
               <p class="mt-1 text-xs text-yellow-700 dark:text-yellow-300">
                 {{ tip.tip }}
+
               </p>
             </div>
           </div>
@@ -254,7 +279,7 @@ const personalizedMessage = computed(() => {
   }
 });
 
-const getLevelBadgeClass = (level: string) => {
+const getlevelbadgeclass = (level: string) => {
   const classes = {
     junior: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
     intermediate: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
@@ -263,7 +288,7 @@ const getLevelBadgeClass = (level: string) => {
   return classes[level as keyof typeof classes] || 'bg-gray-100 text-gray-800';
 };
 
-const getRecommendationBadgeClass = (reason: string) => {
+const getrecommendationbadgeclass = (reason: string) => {
   const classes = {
     weak_area: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300',
     next_level: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300',
@@ -273,7 +298,7 @@ const getRecommendationBadgeClass = (reason: string) => {
   return classes[reason as keyof typeof classes] || 'bg-gray-100 text-gray-700';
 };
 
-const getPriorityBadgeClass = (priority: string) => {
+const getprioritybadgeclass = (priority: string) => {
   const classes = {
     high: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300',
     medium: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300',
@@ -282,7 +307,7 @@ const getPriorityBadgeClass = (priority: string) => {
   return classes[priority as keyof typeof classes] || 'bg-gray-100 text-gray-700';
 };
 
-const getPriorityBorderClass = (priority: string) => {
+const getpriorityborderclass = (priority: string) => {
   const classes = {
     high: 'border-red-500',
     medium: 'border-yellow-500',
@@ -291,7 +316,7 @@ const getPriorityBorderClass = (priority: string) => {
   return classes[priority as keyof typeof classes] || 'border-gray-500';
 };
 
-const generateRecommendations = () => {
+const generaterecommendations = () => {
   if (history.value.length === 0) {
     // New user recommendations
     recommendedQuizzes.value = [
@@ -356,7 +381,7 @@ const generateRecommendations = () => {
   });
 
   // Generate quiz recommendations
-  const quizRecs: RecommendedQuiz[] = [];
+  const quizRecs: RecommendedQuiz[] = [];GeneratequizrecommendationsconstquizRecs
 
   // If struggling with a level, recommend practice
   Object.entries(levelStats).forEach(([level, stats]) => {
@@ -399,7 +424,7 @@ const generateRecommendations = () => {
   recommendedQuizzes.value = quizRecs.slice(0, 3);
 
   // Generate study topic recommendations
-  const topics: StudyTopic[] = [];
+  const topics: StudyTopic[] = [];Generatestudytopicrecommendationsconsttopics
 
   if (juniorStats && juniorStats.avgScore < 60 && juniorStats.attempts > 0) {
     topics.push({
@@ -430,32 +455,24 @@ const generateRecommendations = () => {
   // Generate learning path
   learningPath.value = {
     steps: [
-      {
-        title: t('recommendations.path.step1'),
-        description: t('recommendations.path.step1Desc'),
-        completed: juniorStats ? juniorStats.avgScore >= 70 : false,
-        current: juniorStats ? juniorStats.avgScore < 70 && juniorStats.attempts > 0 : false,
+      {; 0 : false,
         action: 'junior_quiz',
       },
-      {
-        title: t('recommendations.path.step2'),
-        description: t('recommendations.path.step2Desc'),
-        completed: intermediateStats ? intermediateStats.avgScore >= 70 : false,
-        current: juniorStats && intermediateStats ? juniorStats.avgScore >= 70 && intermediateStats.avgScore < 70 : false,
+      {;
         action: 'intermediate_quiz',
       },
-      {
+      {;
         title: t('recommendations.path.step3'),
         description: t('recommendations.path.step3Desc'),
-        completed: seniorStats ? seniorStats.avgScore >= 70 : false,
-        current: intermediateStats && seniorStats ? intermediateStats.avgScore >= 70 && seniorStats.avgScore < 70 : false,
+        completed: seniorStats ? seniorStats.avgScore >=;
+        current: intermediateStats && seniorStats ? intermediateStats.avgScore >= 70 && seniorStats.avgScore <; 70 : false,
         action: 'senior_quiz',
       },
     ],
   };
 
   // Quick tips based on performance
-  const tips: IQuickTip[] = [];
+  const tips: IQuickTip[] = [];Quicktipsbasedonperformanceconsttips
 
   const recentScores = history.value.slice(0, 3).map(h => h.score);
   const avgRecentScore = recentScores.reduce((sum, s) => sum + s, 0) / recentScores.length;
@@ -479,12 +496,12 @@ const generateRecommendations = () => {
   quickTips.value = tips;
 };
 
-const refreshRecommendations = () => {
+const refreshrecommendations = () => {
   loadHistory();
   generateRecommendations();
 };
 
-const loadHistory = () => {
+const loadhistory = () => {
   try {
     const historyData = localStorage.getItem('quiz_history');
     if (historyData) {
@@ -495,15 +512,15 @@ const loadHistory = () => {
   }
 };
 
-const startQuiz = (level: string) => {
+const startquiz = (level: string) => {
   router.push(`/en/quiz/${level}`);
 };
 
-const startStudying = (difficulty: string) => {
+const startstudying = (difficulty: string) => {
   router.push(`/en/study/${difficulty}`);
 };
 
-const startLearningStep = (step: ILearningStep) => {
+const startlearningstep = (step: ILearningStep) => {
   if (step.action.includes('quiz')) {
     const level = step.action.replace('_quiz', '');
     startQuiz(level);

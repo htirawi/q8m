@@ -30,17 +30,21 @@
 
             <!-- Icon/Emoji -->
             <div class="text-center mb-6 animate-bounce">
-              <div class="text-8xl">{{ milestone.icon }}</div>
+              <div class="text-8xl">{{ milestone.icon }}
+
+</div>
             </div>
 
             <!-- Title -->
             <h2 class="text-4xl font-black text-white text-center mb-4 drop-shadow-lg">
               {{ milestone.title }}
+
             </h2>
 
             <!-- Description -->
             <p class="text-xl text-white/90 text-center mb-6 font-medium">
               {{ milestone.description }}
+
             </p>
 
             <!-- Stats -->
@@ -50,8 +54,12 @@
                 :key="index"
                 class="bg-white/20 backdrop-blur-sm rounded-xl p-4 text-center"
               >
-                <div class="text-3xl font-bold text-white">{{ stat.value }}</div>
-                <div class="text-sm text-white/80">{{ stat.label }}</div>
+                <div class="text-3xl font-bold text-white">{{ stat.value }}
+
+</div>
+                <div class="text-sm text-white/80">{{ stat.label }}
+
+</div>
               </div>
             </div>
 
@@ -65,10 +73,16 @@
                   class="bg-white/20 backdrop-blur-sm rounded-lg p-3 flex items-center justify-between"
                 >
                   <div class="flex items-center gap-3">
-                    <span class="text-2xl">{{ reward.icon }}</span>
-                    <span class="text-white font-medium">{{ reward.label }}</span>
+                    <span class="text-2xl">{{ reward.icon }}
+
+</span>
+                    <span class="text-white font-medium">{{ reward.label }}
+
+</span>
                   </div>
-                  <span class="text-white font-bold">{{ reward.value }}</span>
+                  <span class="text-white font-bold">{{ reward.value }}
+
+</span>
                 </div>
               </div>
             </div>
@@ -106,6 +120,7 @@
               class="w-full py-4 bg-white text-purple-600 font-bold rounded-xl hover:bg-gray-100 transition-all shadow-xl text-lg"
             >
               {{ milestone.actionText || 'Awesome!' }}
+
             </button>
           </div>
         </div>
@@ -134,14 +149,15 @@ const props = withDefaults(defineProps<Props>(), {
   celebrationStyle: 'fireworks',
 });
 
-const emit = defineEmits<{
+const emit = defineemits<{
   close: [];
-  share: [platform: string];
+  share: [;platform: string]
 }>();
 
 const { celebrate, fireworks, burst, rain } = useConfetti();
+
 const isVisible = ref(false);
-let autoHideTimeout: ReturnType<typeof setTimeout> | null = null;
+let autoHideTimeout: ReturnType<typeof setTimeout> | null = null;autoHideTimeout
 
 watch(
   () => props.show,
@@ -233,6 +249,7 @@ defineExpose({
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -242,6 +259,7 @@ defineExpose({
   from {
     opacity: 1;
   }
+
   to {
     opacity: 0;
   }
@@ -251,6 +269,7 @@ defineExpose({
   from {
     transform: scale(0.8);
   }
+
   to {
     transform: scale(1);
   }
@@ -261,6 +280,7 @@ defineExpose({
   0%, 100% {
     opacity: 0.2;
   }
+
   50% {
     opacity: 0.4;
   }

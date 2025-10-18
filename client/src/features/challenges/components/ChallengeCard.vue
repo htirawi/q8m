@@ -18,7 +18,9 @@
             :alt="opponent.name"
             class="w-full h-full rounded-full object-cover"
           />
-          <span v-else>{{ getInitials(opponent.name) }}</span>
+          <span v-else>{{ getInitials(opponent.name) }}
+
+</span>
         </div>
 
         <!-- Opponent Info -->
@@ -27,13 +29,16 @@
             <h3 class="font-semibold text-gray-900 dark:text-white">
               {{ isChallenger(challenge) ? 'Challenge to' : 'Challenge from' }}
               {{ opponent.name }}
+
             </h3>
             <span :class="getLevelColor(opponentLevel)">
               {{ getLevelBadge(opponentLevel) }}
+
             </span>
           </div>
           <p class="text-sm text-gray-500 dark:text-gray-400">
             {{ formatDate(challenge.createdAt) }}
+
           </p>
         </div>
       </div>
@@ -45,8 +50,12 @@
           getStatusColor(challenge.status),
         ]"
       >
-        <span>{{ getStatusBadge(challenge.status) }}</span>
-        <span class="capitalize">{{ challenge.status }}</span>
+        <span>{{ getStatusBadge(challenge.status) }}
+
+</span>
+        <span class="capitalize">{{ challenge.status }}
+
+</span>
       </div>
     </div>
 
@@ -62,7 +71,9 @@
           ]"
         >
           {{ getDifficultyBadge(challenge.difficulty) }}
-          <span class="capitalize">{{ challenge.difficulty }}</span>
+          <span class="capitalize">{{ challenge.difficulty }}
+
+</span>
         </span>
       </div>
 
@@ -71,7 +82,9 @@
         <span class="text-gray-500 dark:text-gray-400 text-sm">Framework:</span>
         <span class="font-medium text-gray-900 dark:text-white text-sm">
           {{ getFrameworkBadge(challenge.framework) }}
-          <span class="capitalize">{{ challenge.framework }}</span>
+          <span class="capitalize">{{ challenge.framework }}
+
+</span>
         </span>
       </div>
 
@@ -80,6 +93,7 @@
         <span class="text-gray-500 dark:text-gray-400 text-sm">Questions:</span>
         <span class="font-medium text-gray-900 dark:text-white text-sm">
           {{ challenge.questionCount }}
+
         </span>
       </div>
 
@@ -112,6 +126,7 @@
           </p>
           <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
             Time: {{ formatTime(isChallenger(challenge) ? challenge.challengerTime : challenge.challengedTime) }}
+
           </p>
         </div>
 
@@ -123,6 +138,7 @@
           </p>
           <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
             Time: {{ formatTime(isChallenger(challenge) ? challenge.challengedTime : challenge.challengerTime) }}
+
           </p>
         </div>
       </div>
@@ -130,6 +146,7 @@
       <!-- Result Message -->
       <div :class="['mt-3 text-center font-semibold text-lg', getResultColor(challenge)]">
         {{ getResultMessage(challenge) }}
+
       </div>
     </div>
 
@@ -142,6 +159,7 @@
         <span class="text-yellow-600 dark:text-yellow-400">⏰</span>
         <p class="text-sm text-yellow-700 dark:text-yellow-300">
           Expires in {{ getTimeRemaining(challenge) }}
+
         </p>
       </div>
     </div>
@@ -156,6 +174,7 @@
         class="flex-1 bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white font-medium py-2 px-4 rounded-lg transition-colors"
       >
         {{ loading ? 'Loading...' : 'Accept Challenge' }}
+
       </button>
 
       <!-- Reject Button (for received pending challenges) -->
@@ -166,6 +185,7 @@
         class="flex-1 bg-red-600 hover:bg-red-700 disabled:bg-gray-400 text-white font-medium py-2 px-4 rounded-lg transition-colors"
       >
         {{ loading ? 'Loading...' : 'Reject' }}
+
       </button>
 
       <!-- Start Button (for in-progress challenges) -->
@@ -176,6 +196,7 @@
         class="flex-1 bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-400 text-white font-medium py-2 px-4 rounded-lg transition-colors"
       >
         {{ loading ? 'Loading...' : 'Start Challenge' }}
+
       </button>
 
       <!-- Waiting Message (for in-progress challenges where user has submitted) -->
@@ -209,10 +230,10 @@ const props = withDefaults(defineProps<Props>(), {
   loading: false,
 });
 
-defineEmits<{
-  accept: [challengeId: string];
-  reject: [challengeId: string];
-  start: [challengeId: string];
+defineemits<{
+  accept: [;
+  reject: [;
+  start: [;
   'view-details': [challengeId: string];
 }>();
 

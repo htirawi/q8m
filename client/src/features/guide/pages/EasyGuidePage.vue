@@ -5,9 +5,11 @@
       <div class="mb-8">
         <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
           {{ t('plans.free.landingTitle') }}
+
         </h1>
         <p class="mt-2 text-lg text-gray-600 dark:text-gray-300">
           {{ t('plans.free.landingSubtitle') }}
+
         </p>
       </div>
 
@@ -17,6 +19,7 @@
           <div>
             <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
               {{ t('plans.free.startQuizzes') }}
+
             </h2>
             <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
               Practice with easy-level questions to build your foundation
@@ -104,7 +107,7 @@ import InlineUpsellCard from "@/components/paywall/InlineUpsellCard.vue";
 const { t } = useI18n();
 const router = useRouter();
 
-const goToEasyQuizzes = () => {
+const gotoeasyquizzes = () => {
   const locale = router.currentRoute.value.params.locale || "en";
   router.push(`/${locale}/quizzes/easy`);
 };

@@ -87,7 +87,7 @@ withDefaults(defineProps<Props>(), {
 }
 
 /* Responsive */
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .card-list-skeleton {
     @apply grid-cols-1;
   }

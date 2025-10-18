@@ -48,34 +48,36 @@ const characterCountColor = computed(() => {
 // Methods
 const handleSubmit = async () => {
   if (!canSubmit.value) return;
-
   isSubmitting.value = true;
   try {
     emit('submit', content.value.trim());
     content.value = '';
     isFocused.value = false;
-  } finally {
+  }
+
+ finally {
     isSubmitting.value = false;
   }
 };
 
-const handleCancel = () => {
+const handlecancel = () => {
   content.value = '';
   isFocused.value = false;
   emit('cancel');
 };
 
-const handleFocus = () => {
+const handlefocus = () => {
   isFocused.value = true;
 };
 
-const handleKeydown = (event: KeyboardEvent) => {
+const handlekeydown = (event: KeyboardEvent) => {
   // Submit on Ctrl/Cmd + Enter
   if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
     event.preventDefault();
     handleSubmit();
   }
 };
+
 </script>
 
 <template>
@@ -104,7 +106,9 @@ const handleKeydown = (event: KeyboardEvent) => {
         class="absolute bottom-2 right-2 text-xs font-medium"
         :class="characterCountColor"
       >
-        {{ remainingCharacters }} characters remaining
+        {{ remainingCharacters }}
+
+ characters remaining
       </div>
     </div>
 
@@ -114,6 +118,7 @@ const handleKeydown = (event: KeyboardEvent) => {
       class="mt-2 text-sm text-red-600 dark:text-red-400"
     >
       {{ validation.error }}
+
     </div>
 
     <!-- Actions -->

@@ -3,31 +3,31 @@
  * Endpoints for user progress tracking, mastery management, and study sessions
  */
 
-import type { FastifyInstance } from 'fastify';
-import { z } from 'zod';
-import { zodToJsonSchema } from 'zod-to-json-schema';
+import type { FastifyInstance } from "fastify";
+import { z } from "zod";
+import { zodToJsonSchema } from "zod-to-json-schema";
 
-import type { IQuestion } from '../models/Question';
-import { Question } from '../models/Question';
-import { UserProgress } from '../models/UserProgress';
-import { selectNextQuestion, selectSessionQuestions } from '../utils/adaptiveQuestionSelection';
-import { checkAndAwardBadges } from '../utils/badgeEngine';
+import type { IQuestion } from "../models/Question";
+import { Question } from "../models/Question";
+import { UserProgress } from "../models/UserProgress";
+import { selectNextQuestion, selectSessionQuestions } from "../utils/adaptiveQuestionSelection";
+import { checkAndAwardBadges } from "../utils/badgeEngine";
 import {
   calculateNextReviewDate,
   calculateMasteryLevel,
   getCurrentInterval,
-} from '../utils/spacedRepetition';
-import { calculateStudyQuestionXP, calculateStudySessionXP, awardXP } from '../utils/xpEngine';
+} from "../utils/spacedRepetition";
+import { calculateStudyQuestionXP, calculateStudySessionXP, awardXP } from "../utils/xpEngine";
 
 export default async function progressRoutes(fastify: FastifyInstance) {
   // Get user progress
   fastify.get(
-    '/',
+    "/",
     {
       onRequest: [fastify.authenticate()],
       schema: {
-        description: 'Get current user progress',
-        tags: ['progress'],
+        description: "Get current user progress",
+        tags: ["progress"],
         response: {
           200: zodToJsonSchema(
             z.object({
@@ -77,8 +77,8 @@ export default async function progressRoutes(fastify: FastifyInstance) {
         fastify.log.error(error);
         reply.status(500).send({
           code: 500,
-          error: 'Internal Server Error',
-          message: 'Failed to fetch progress',
+          error: "Internal Server Error",
+          message: "Failed to fetch progress",
         });
       }
     }
@@ -86,12 +86,12 @@ export default async function progressRoutes(fastify: FastifyInstance) {
 
   // Update question progress (after answering)
   fastify.post(
-    '/question/:questionId',
+    "/question/:questionId",
     {
       onRequest: [fastify.authenticate()],
       schema: {
-        description: 'Update progress for a specific question',
-        tags: ['progress'],
+        description: "Update progress for a specific question",
+        tags: ["progress"],
         params: zodToJsonSchema(
           z.object({
             questionId: z.string(),
@@ -101,7 +101,7 @@ export default async function progressRoutes(fastify: FastifyInstance) {
           z.object({
             isCorrect: z.boolean(),
             timeSpentSeconds: z.number().min(0),
-            difficulty: z.enum(['easy', 'medium', 'hard']),
+            difficulty: z.enum(["easy", "medium", "hard"]),
           })
         ),
         response: {
@@ -126,7 +126,7 @@ export default async function progressRoutes(fastify: FastifyInstance) {
         const { isCorrect, timeSpentSeconds, difficulty } = request.body as {
           isCorrect: boolean;
           timeSpentSeconds: number;
-          difficulty: 'easy' | 'medium' | 'hard';
+          difficulty: "easy" | "medium" | "hard";
         };
 
         let progress = await UserProgress.findOne({ userId });
@@ -137,7 +137,7 @@ export default async function progressRoutes(fastify: FastifyInstance) {
         // Get or create question progress
         const questionProgress = progress.questions.get(questionId) || {
           questionId,
-          masteryLevel: 'new' as const,
+          masteryLevel: "new" as const,
           attempts: 0,
           correctCount: 0,
           wrongCount: 0,
@@ -194,12 +194,12 @@ export default async function progressRoutes(fastify: FastifyInstance) {
 
         // Update difficulty progress
         const diffProgress = progress.difficultyProgress[difficulty];
-        if (previousMasteryLevel !== 'mastered' && questionProgress.masteryLevel === 'mastered') {
+        if (previousMasteryLevel !== "mastered" && questionProgress.masteryLevel === "mastered") {
           diffProgress.mastered++;
         }
-        if (previousMasteryLevel === 'new') {
+        if (previousMasteryLevel === "new") {
           diffProgress.new = Math.max(0, diffProgress.new - 1);
-          if (questionProgress.masteryLevel === 'learning') {
+          if (questionProgress.masteryLevel === "learning") {
             diffProgress.learning++;
           }
         }
@@ -214,10 +214,7 @@ export default async function progressRoutes(fastify: FastifyInstance) {
 
         // Check for mastery XP
         let masteryXP = 0;
-        if (
-          previousMasteryLevel !== 'mastered' &&
-          questionProgress.masteryLevel === 'mastered'
-        ) {
+        if (previousMasteryLevel !== "mastered" && questionProgress.masteryLevel === "mastered") {
           masteryXP = 30; // XP_REWARDS.study_master_question
         }
 
@@ -246,8 +243,8 @@ export default async function progressRoutes(fastify: FastifyInstance) {
         fastify.log.error(error);
         reply.status(500).send({
           code: 500,
-          error: 'Internal Server Error',
-          message: 'Failed to update progress',
+          error: "Internal Server Error",
+          message: "Failed to update progress",
         });
       }
     }
@@ -255,15 +252,15 @@ export default async function progressRoutes(fastify: FastifyInstance) {
 
   // Get next question (adaptive selection)
   fastify.get(
-    '/next-question',
+    "/next-question",
     {
       onRequest: [fastify.authenticate()],
       schema: {
-        description: 'Get next question using adaptive algorithm',
-        tags: ['progress'],
+        description: "Get next question using adaptive algorithm",
+        tags: ["progress"],
         querystring: zodToJsonSchema(
           z.object({
-            difficulty: z.enum(['easy', 'medium', 'hard']).optional(),
+            difficulty: z.enum(["easy", "medium", "hard"]).optional(),
             category: z.string().optional(),
             count: z.coerce.number().min(1).max(50).default(1),
           })
@@ -274,7 +271,7 @@ export default async function progressRoutes(fastify: FastifyInstance) {
       try {
         const userId = request.authUser!.id;
         const { difficulty, category, count } = request.query as {
-          difficulty?: 'easy' | 'medium' | 'hard';
+          difficulty?: "easy" | "medium" | "hard";
           category?: string;
           count: number;
         };
@@ -294,8 +291,8 @@ export default async function progressRoutes(fastify: FastifyInstance) {
         if (availableQuestions.length === 0) {
           return reply.status(404).send({
             code: 404,
-            error: 'Not Found',
-            message: 'No questions available',
+            error: "Not Found",
+            message: "No questions available",
           });
         }
 
@@ -327,8 +324,8 @@ export default async function progressRoutes(fastify: FastifyInstance) {
         fastify.log.error(error);
         reply.status(500).send({
           code: 500,
-          error: 'Internal Server Error',
-          message: 'Failed to get next question',
+          error: "Internal Server Error",
+          message: "Failed to get next question",
         });
       }
     }
@@ -336,12 +333,12 @@ export default async function progressRoutes(fastify: FastifyInstance) {
 
   // Complete study session
   fastify.post(
-    '/session/complete',
+    "/session/complete",
     {
       onRequest: [fastify.authenticate()],
       schema: {
-        description: 'Complete study session and calculate rewards',
-        tags: ['progress'],
+        description: "Complete study session and calculate rewards",
+        tags: ["progress"],
         body: zodToJsonSchema(
           z.object({
             questionsCompleted: z.number().min(1),
@@ -443,8 +440,8 @@ export default async function progressRoutes(fastify: FastifyInstance) {
         fastify.log.error(error);
         reply.status(500).send({
           code: 500,
-          error: 'Internal Server Error',
-          message: 'Failed to complete session',
+          error: "Internal Server Error",
+          message: "Failed to complete session",
         });
       }
     }
@@ -452,12 +449,12 @@ export default async function progressRoutes(fastify: FastifyInstance) {
 
   // Get study statistics
   fastify.get(
-    '/stats',
+    "/stats",
     {
       onRequest: [fastify.authenticate()],
       schema: {
-        description: 'Get detailed study statistics',
-        tags: ['progress'],
+        description: "Get detailed study statistics",
+        tags: ["progress"],
       },
     },
     async (request, reply) => {
@@ -498,8 +495,8 @@ export default async function progressRoutes(fastify: FastifyInstance) {
         fastify.log.error(error);
         reply.status(500).send({
           code: 500,
-          error: 'Internal Server Error',
-          message: 'Failed to fetch statistics',
+          error: "Internal Server Error",
+          message: "Failed to fetch statistics",
         });
       }
     }

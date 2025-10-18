@@ -28,6 +28,30 @@ app.use(i18n);
 const head = createHead();
 app.use(head);
 
+// Session timeout plugin (only in production or when explicitly enabled)
+// Load synchronously to prevent multiple refreshes
+if (import.meta.env.PROD || import.meta.env.VITE_ENABLE_SESSION_TIMEOUT === "true") {
+  // Import synchronously to prevent async loading issues
+  import("@/plugins/sessionTimeout").then((sessionTimeoutPlugin) => {
+    // Only initialize after app is fully mounted
+    setTimeout(() => {
+      app.use(sessionTimeoutPlugin.default, {
+        timeoutMs: 60 * 60 * 1000, // 1 hour
+        warningMs: 5 * 60 * 1000, // 5 minutes warning
+        showWarning: true,
+        resetOnActivity: true,
+        excludeRoutes: [
+          "/login",
+          "/register",
+          "/verify-email",
+          "/reset-password",
+          "/forgot-password",
+        ],
+      });
+    }, 100); // Small delay to ensure app is mounted
+  });
+}
+
 // Standalone locale initialization function (doesn't use Vue composables)
 function initializeLocaleFromUrl() {
   const { currentRoute } = router;

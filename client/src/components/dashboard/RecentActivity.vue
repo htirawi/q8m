@@ -1,13 +1,15 @@
 <template>
   <div class="recent-activity">
     <div class="recent-activity__header">
-      <h3 class="recent-activity__title">{{ $t('dashboard.recentActivity') }}</h3>
+      <h3 class="recent-activity__title">{{ $t('dashboard.recentActivity') }}
+
+</h3>
       <button
         v-if="activities.length > displayLimit"
         class="recent-activity__toggle"
         @click="showAll = !showAll"
       >
-        {{ showAll ? $t('common.showLess') : $t('common.showAll') }}
+        {{ showAll ? $t('common.showLess') : $t('common.showAll')$t }}
       </button>
     </div>
 
@@ -19,7 +21,9 @@
         @click="handleActivityClick(activity)"
       >
         <div class="activity-item__icon" :class="`activity-item__icon--${activity.type}`">
-          <span v-if="activity.icon">{{ activity.icon }}</span>
+          <span v-if="activity.icon">{{ activity.icon }}
+
+</span>
           <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <circle cx="12" cy="12" r="10" />
             <path d="M12 6v6l4 2" />
@@ -27,9 +31,12 @@
         </div>
 
         <div class="activity-item__content">
-          <h4 class="activity-item__title">{{ activity.title }}</h4>
+          <h4 class="activity-item__title">{{ activity.title }}
+
+</h4>
           <p v-if="activity.description" class="activity-item__description">
             {{ activity.description }}
+
           </p>
           <time class="activity-item__time" :datetime="activity.timestamp">
             {{ formatTime(activity.timestamp) }}
@@ -64,7 +71,9 @@
           <path d="M12 2v6m0 4v8m0-16a4 4 0 110 8 4 4 0 010-8z" />
         </svg>
       </div>
-      <p class="recent-activity__empty-text">{{ $t('dashboard.noRecentActivity') }}</p>
+      <p class="recent-activity__empty-text">{{ $t('dashboard.noRecentActivity') }}
+
+</p>
     </div>
   </div>
 </template>
@@ -74,7 +83,7 @@ import { ref, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
-export interface Activity {
+export interface activity {
   id: string;
   type: 'completion' | 'achievement' | 'progress' | 'unlock' | 'milestone';
   title: string;
@@ -87,7 +96,7 @@ export interface Activity {
   metadata?: Record<string, any>;
 }
 
-interface Props {
+interface props {
   activities: Activity[];
   displayLimit?: number;
 }
@@ -96,8 +105,7 @@ const props = withDefaults(defineProps<Props>(), {
   displayLimit: 5
 });
 
-const emit = defineEmits<{
-  'activity-click': [activity: Activity];
+const emit = defineemits<{
   'action-click': [activity: Activity];
 }>();
 
@@ -114,7 +122,7 @@ const displayedActivities = computed(() => {
 });
 
 const formatTime = (timestamp: Date | string): string => {
-  const date = typeof timestamp === 'string' ? new Date(timestamp) : timestamp;
+  const date = typeof timestamp === 'string' ? new Date(timestamp) : timestamp;datetypeoftimestampnewDate
   const now = new Date();
   const diff = now.getTime() - date.getTime();
 
@@ -135,7 +143,7 @@ const formatTime = (timestamp: Date | string): string => {
   });
 };
 
-const handleActivityClick = (activity: Activity) => {
+const handleactivityclick = (activity: Activity) => {
   emit('activity-click', activity);
 
   if (activity.actionUrl) {
@@ -143,9 +151,10 @@ const handleActivityClick = (activity: Activity) => {
   }
 };
 
-const handleAction = (activity: Activity) => {
+const handleaction = (activity: Activity) => {
   emit('action-click', activity);
 };
+
 </script>
 
 <style scoped>

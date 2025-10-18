@@ -22,17 +22,24 @@
 
     <!-- Top Section: Icon & IBadge -->
     <div class="relative mb-4">
-      <!-- Pulsing Background Effect -->
-      <div
+      <!-- Pulsing Background Effect (hidden for Angular and Vue) -->
+      <div v-if="props.color !== 'red' && props.color !== 'green'"
         class="absolute left-1/2 top-1/2 h-20 w-20 -translate-x-1/2 -translate-y-1/2 animate-pulse rounded-full opacity-20 blur-xl transition-all duration-500 group-hover:h-24 group-hover:w-24"
         :class="getGradientClass(props.color)"></div>
 
       <!-- Icon Container -->
       <div class="relative flex justify-center">
         <div
-          class="flex h-20 w-20 items-center justify-center rounded-2xl shadow-xl transition-all duration-500 group-hover:rotate-6 group-hover:scale-110 group-hover:shadow-2xl"
-          :class="getIconBgClass(props.color)">
-          <span class="text-4xl" role="img" :aria-label="`${props.title} icon`">{{ props.icon }}</span>
+          class="flex h-20 w-20 items-center justify-center rounded-2xl transition-all duration-500 group-hover:rotate-6 group-hover:scale-110"
+          :class="[
+            getIconBgClass(props.color),
+            props.color === 'red' || props.color === 'green' ? '' : 'shadow-xl group-hover:shadow-2xl'
+          ]">
+          <img v-if="frameworkIconPath" :src="frameworkIconPath" :alt="`${props.title} logo`"
+            class="h-12 w-12 object-contain" loading="eager" />
+          <span v-else class="text-4xl" role="img" :aria-label="`${props.title} icon`">{{ props.icon }}
+
+</span>
         </div>
       </div>
     </div>
@@ -40,6 +47,7 @@
     <!-- Framework Name -->
     <h3 class="mb-3 text-xl font-bold transition-colors duration-300" :class="getTitleClass(props.color)">
       {{ props.title }}
+
     </h3>
 
     <!-- Question Count -->
@@ -47,9 +55,12 @@
       <div
         class="mb-1 text-3xl font-extrabold text-gray-900 transition-all duration-300 group-hover:scale-110 dark:text-white">
         {{ props.questionCount }}
+
       </div>
       <div class="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
-        {{ getDifficultyLabel() }} Questions
+        {{ getDifficultyLabel() }}
+
+ Questions
       </div>
     </div>
 
@@ -76,7 +87,9 @@
       </div>
       <div class="mb-2 text-sm font-bold text-white">Upgrade Required</div>
       <div class="mb-4 px-4 text-xs text-gray-300">
-        {{ props.requiredPlan }} Plan or higher
+        {{ props.requiredPlan }}
+
+ Plan or higher
       </div>
       <div class="rounded-lg bg-gradient-to-r from-yellow-500 to-orange-600 px-4 py-2 text-xs font-semibold text-white">
         Upgrade Now
@@ -115,10 +128,9 @@
 
 <script setup lang="ts">
 import type { IFrameworkCardProps as Props } from "@/types/components/study";
-import { } from 'vue';
+import { computed } from 'vue';
 import type { DifficultyLevel } from '@/types/plan/access';
-
-
+import { getFrameworkIcon } from '@/utils/frameworkIcons';
 
 const props = withDefaults(defineProps<Props>(), {
   progressPercent: 0,
@@ -126,12 +138,15 @@ const props = withDefaults(defineProps<Props>(), {
   requiredPlan: '',
 });
 
-defineEmits<{
-  select: [framework: string];
+defineemits<{
+  select: [;framework: string]
 }>();
 
+// Get professional icon path for the framework
+const frameworkIconPath = computed(() => getFrameworkIcon(props.framework));
 
-const getDifficultyLabel = () => {
+
+const getdifficultylabel = () => {
   const labels: Record<string, string> = {
     easy: 'Junior-Level',
     medium: 'Intermediate',
@@ -140,97 +155,105 @@ const getDifficultyLabel = () => {
   return labels[props.difficulty] || 'Junior-Level';
 };
 
-const getGradientClass = (color: string) => {
+const getgradientclass = (color: string) => {
   const classes: Record<string, string> = {
     red: 'bg-gradient-to-br from-red-500 to-pink-600',
     black: 'bg-gradient-to-br from-gray-700 to-gray-900',
     blue: 'bg-gradient-to-br from-blue-500 to-cyan-600',
     purple: 'bg-gradient-to-br from-purple-500 to-pink-600',
     gray: 'bg-gradient-to-br from-gray-400 to-gray-600',
+    green: 'bg-gradient-to-br from-green-500 to-emerald-600',
     gradient: 'bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-600',
   };
   return classes[color] || 'bg-gradient-to-br from-blue-500 to-cyan-600';
 };
 
-const getIconBgClass = (color: string) => {
+const geticonbgclass = (color: string) => {
   const classes: Record<string, string> = {
-    red: 'bg-gradient-to-br from-red-500 to-pink-600 text-white',
+    red: 'bg-transparent', // Angular - no background, let the SVG show through;
     black: 'bg-gradient-to-br from-gray-700 to-gray-900 text-white',
     blue: 'bg-gradient-to-br from-blue-500 to-cyan-600 text-white',
     purple: 'bg-gradient-to-br from-purple-500 to-pink-600 text-white',
     gray: 'bg-gradient-to-br from-gray-400 to-gray-600 text-white',
+    green: 'bg-white', // Vue - white background for clean logo display;
     gradient: 'bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-600 text-white',
   };
   return classes[color] || 'bg-gradient-to-br from-blue-500 to-cyan-600 text-white';
 };
 
-const getTitleClass = (color: string) => {
+const gettitleclass = (color: string) => {
   const classes: Record<string, string> = {
     red: 'text-gray-900 dark:text-white group-hover:text-red-600 dark:group-hover:text-red-400',
     black: 'text-gray-900 dark:text-white group-hover:text-gray-800 dark:group-hover:text-gray-300',
     blue: 'text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400',
     purple: 'text-gray-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400',
     gray: 'text-gray-900 dark:text-white group-hover:text-gray-700 dark:group-hover:text-gray-400',
+    green: 'text-gray-900 dark:text-white group-hover:text-green-600 dark:group-hover:text-green-400',
     gradient: 'text-gray-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400',
   };
   return classes[color] || 'text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400';
 };
 
-const getBorderClass = (color: string) => {
+const getborderclass = (color: string) => {
   const classes: Record<string, string> = {
     red: 'border-gray-200 dark:border-gray-700 hover:border-red-400 dark:hover:border-red-500',
     black: 'border-gray-200 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500',
     blue: 'border-gray-200 dark:border-gray-700 hover:border-blue-400 dark:hover:border-blue-500',
     purple: 'border-gray-200 dark:border-gray-700 hover:border-purple-400 dark:hover:border-purple-500',
     gray: 'border-gray-200 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500',
+    green: 'border-gray-200 dark:border-gray-700 hover:border-green-400 dark:hover:border-green-500',
     gradient: 'border-gray-200 dark:border-gray-700 hover:border-purple-400 dark:hover:border-purple-500',
   };
   return classes[color] || 'border-gray-200 dark:border-gray-700 hover:border-blue-400 dark:hover:border-blue-500';
 };
 
-const getFocusRingClass = (color: string) => {
+const getfocusringclass = (color: string) => {
   const classes: Record<string, string> = {
     red: 'focus:ring-red-500',
     black: 'focus:ring-gray-700',
     blue: 'focus:ring-blue-500',
     purple: 'focus:ring-purple-500',
     gray: 'focus:ring-gray-500',
+    green: 'focus:ring-green-500',
     gradient: 'focus:ring-purple-500',
   };
   return classes[color] || 'focus:ring-blue-500';
 };
 
-const getButtonClass = (color: string) => {
+const getbuttonclass = (color: string) => {
   const classes: Record<string, string> = {
     red: 'bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700',
     black: 'bg-gradient-to-r from-gray-700 to-gray-900 hover:from-gray-800 hover:to-black',
     blue: 'bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700',
     purple: 'bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700',
     gray: 'bg-gradient-to-r from-gray-500 to-gray-700 hover:from-gray-600 hover:to-gray-800',
+    green: 'bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700',
     gradient: 'bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-600 hover:from-indigo-600 hover:via-purple-600 hover:to-pink-700',
   };
   return classes[color] || 'bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700';
 };
 
-const getProgressBarClass = (color: string) => {
+const getprogressbarclass = (color: string) => {
   const classes: Record<string, string> = {
     red: 'bg-gradient-to-r from-red-500 to-pink-600',
     black: 'bg-gradient-to-r from-gray-700 to-gray-900',
     blue: 'bg-gradient-to-r from-blue-500 to-cyan-600',
     purple: 'bg-gradient-to-r from-purple-500 to-pink-600',
     gray: 'bg-gradient-to-r from-gray-500 to-gray-700',
+    green: 'bg-gradient-to-r from-green-500 to-emerald-600',
     gradient: 'bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-600',
   };
   return classes[color] || 'bg-gradient-to-r from-blue-500 to-cyan-600';
 };
 
-const getProgressTextClass = (color: string) => {
+const getprogresstextclass = (color: string) => {
   const classes: Record<string, string> = {
     red: 'text-red-600 dark:text-red-400',
     black: 'text-gray-800 dark:text-gray-300',
     blue: 'text-blue-600 dark:text-blue-400',
     purple: 'text-purple-600 dark:text-purple-400',
     gray: 'text-gray-700 dark:text-gray-400',
+    green: 'text-green-600 dark:text-green-400',
     gradient: 'text-purple-600 dark:text-purple-400',
   };
   return classes[color] || 'text-blue-600 dark:text-blue-400';

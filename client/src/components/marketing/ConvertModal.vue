@@ -31,9 +31,11 @@
             class="mb-2 text-3xl font-bold text-gray-900 dark:text-white"
           >
             {{ t('convert.headline.a') }}
+
           </h2>
           <p class="mb-6 text-gray-600 dark:text-gray-300">
             {{ t('convert.subhead', { difficulty: 'Medium', count: 300 }) }}
+
           </p>
 
           <!-- Billing Cycle Toggle -->
@@ -50,6 +52,7 @@
               :aria-pressed="billingCycle === 'monthly'"
             >
               {{ t('convert.cycle.monthly') }}
+
             </button>
             <button
               type="button"
@@ -63,10 +66,12 @@
               :aria-pressed="billingCycle === 'annual'"
             >
               {{ t('convert.cycle.annual') }}
+
               <span
                 class="ml-2 rounded bg-green-500 px-2 py-0.5 text-xs font-bold text-white"
               >
                 {{ t('convert.cycle.save', { percent: 20 }) }}
+
               </span>
             </button>
           </div>
@@ -75,6 +80,7 @@
           <div v-if="showPlanSelection" class="mb-6">
             <p class="mb-3 text-center text-sm font-medium text-gray-700 dark:text-gray-300">
               {{ t('convert.planSelection.title') }}
+
             </p>
             <div class="flex justify-center gap-4">
               <button
@@ -90,6 +96,7 @@
                 @click="selectPlan(plan)"
               >
                 {{ t(`plans.names.${plan}`) }}
+
               </button>
             </div>
           </div>
@@ -99,13 +106,16 @@
             <div class="flex items-center justify-between">
               <span class="text-lg font-medium text-gray-700 dark:text-gray-300">
                 {{ t('convert.summary.total') }}
+
               </span>
               <div class="text-right">
                 <div class="text-3xl font-bold text-gray-900 dark:text-white">
                   {{ formatPrice(calculatedPrice) }}
+
                 </div>
                 <div class="text-sm text-gray-500 dark:text-gray-400">
                   {{ t('convert.summary.billedAs', { cycle: billingCycle }) }}
+
                 </div>
               </div>
             </div>
@@ -119,6 +129,7 @@
               @click="showCouponInput = !showCouponInput"
             >
               {{ t('convert.coupon.toggle') }}
+
             </button>
             <div v-if="showCouponInput" class="mt-2 flex gap-2">
               <input
@@ -134,10 +145,12 @@
                 @click="applyCoupon"
               >
                 {{ t('convert.coupon.apply') }}
+
               </button>
             </div>
             <p v-if="couponApplied" class="mt-2 text-sm text-green-600 dark:text-green-400">
               ✓ {{ t('convert.coupon.applied') }}
+
             </p>
           </div>
 
@@ -149,8 +162,12 @@
               @click="handlePayPalCheckout"
               :disabled="isProcessing"
             >
-              <span v-if="!isProcessing">{{ t('convert.cta.primary') }}</span>
-              <span v-else>{{ t('convert.cta.processing') }}</span>
+              <span v-if="!isProcessing">{{ t('convert.cta.primary') }}
+
+</span>
+              <span v-else>{{ t('convert.cta.processing') }}
+
+</span>
             </button>
           </div>
 
@@ -161,24 +178,28 @@
                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
               </svg>
               {{ t('convert.reassurance.cancel') }}
+
             </span>
             <span class="flex items-center gap-1">
               <svg class="h-4 w-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
               </svg>
               {{ t('convert.reassurance.secure') }}
+
             </span>
             <span class="flex items-center gap-1">
               <svg class="h-4 w-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
               </svg>
               {{ t('convert.reassurance.guarantee') }}
+
             </span>
           </div>
 
           <!-- Social Proof -->
           <p class="mb-4 text-center text-sm text-gray-500 dark:text-gray-400">
             {{ t('convert.socialProof.trust') }}
+
           </p>
 
           <!-- Maybe Later -->
@@ -188,6 +209,7 @@
             @click="handleMaybeLater"
           >
             {{ t('convert.cta.maybeLater') }}
+
           </button>
         </div>
       </div>
@@ -238,7 +260,7 @@ const formatPrice = (price: number): string => {
   return `$${price}${billingCycle.value === 'monthly' ? '/mo' : '/yr'}`;
 };
 
-const setBillingCycle = (cycle: 'monthly' | 'annual') => {
+const setbillingcycle = (cycle: 'monthly' | 'annual') => {
   billingCycle.value = cycle;
   track('convert_plan_changed', {
     fromPlan: selectedPlan.value,
@@ -247,7 +269,7 @@ const setBillingCycle = (cycle: 'monthly' | 'annual') => {
   });
 };
 
-const selectPlan = (plan: PlanTier) => {
+const selectplan = (plan: PlanTier) => {
   const oldPlan = selectedPlan.value;
   selectedPlan.value = plan;
   track('convert_plan_changed', {
@@ -257,7 +279,7 @@ const selectPlan = (plan: PlanTier) => {
   });
 };
 
-const applyCoupon = () => {
+const applycoupon = () => {
   if (couponCode.value.trim()) {
     // Validate coupon (placeholder logic)
     couponApplied.value = true;
@@ -269,7 +291,7 @@ const applyCoupon = () => {
   }
 };
 
-const handlePayPalCheckout = () => {
+const handlepaypalcheckout = () => {
   isProcessing.value = true;
 
   track('checkout_opened', {
@@ -293,7 +315,7 @@ const handlePayPalCheckout = () => {
   isProcessing.value = false;
 };
 
-const handleClose = () => {
+const handleclose = () => {
   track('convert_dismissed', {
     source: 'close_button',
     timeSpentSeconds: Math.floor((Date.now() - openedAt.value) / 1000),
@@ -301,7 +323,7 @@ const handleClose = () => {
   hide();
 };
 
-const handleBackdropClick = () => {
+const handlebackdropclick = () => {
   track('convert_dismissed', {
     source: 'backdrop_click',
     timeSpentSeconds: Math.floor((Date.now() - openedAt.value) / 1000),
@@ -309,7 +331,7 @@ const handleBackdropClick = () => {
   hide();
 };
 
-const handleMaybeLater = () => {
+const handlemaybelater = () => {
   track('convert_dismissed', {
     source: 'maybe_later',
     timeSpentSeconds: Math.floor((Date.now() - openedAt.value) / 1000),

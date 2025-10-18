@@ -25,6 +25,7 @@
               />
             </svg>
             {{ t('modeChooser.backToLevels') }}
+
           </button>
           <UserMenu v-if="authStore.isAuthenticated" />
         </div>
@@ -39,9 +40,11 @@
 
         <h1 class="mb-3 animate-fade-in-up bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-3xl font-extrabold leading-tight text-transparent dark:from-blue-400 dark:to-purple-400 md:text-4xl md:leading-tight">
           {{ t('modeChooser.title') }}
+
         </h1>
         <p class="animation-delay-200 mx-auto max-w-2xl animate-fade-in-up text-base leading-relaxed text-gray-600 dark:text-gray-300">
-          {{ t('modeChooser.subtitle', { difficulty: t(`difficulty.${difficulty}.label`) }) }}
+          {{ t('modeChooser.subtitle', { difficulty: t(`difficulty.${getDifficultyTranslationKey(difficulty)}.label`) }) }}
+
         </p>
 
         <!-- Difficulty IBadge -->
@@ -50,8 +53,12 @@
             class="inline-flex items-center gap-2 rounded-full px-5 py-2 text-sm font-semibold shadow-md backdrop-blur-sm transition-all duration-300 hover:scale-105"
             :class="getDifficultyBadgeClass(difficulty)"
           >
-            <span class="text-base">{{ getDifficultyIcon(difficulty) }}</span>
-            <span>{{ t(`difficulty.${difficulty}.label`) }}</span>
+            <span class="text-base">{{ getDifficultyIcon(difficulty) }}
+
+</span>
+            <span>{{ t(`difficulty.${getDifficultyTranslationKey(difficulty)}.label`) }}
+
+</span>
           </span>
         </div>
       </div>
@@ -92,6 +99,7 @@
         <div class="mb-8 text-center">
           <h2 class="mb-2 text-3xl font-bold text-gray-900 dark:text-white">
             {{ t('modeChooser.comparison.title') }}
+
           </h2>
           <p class="text-base text-gray-600 dark:text-gray-400">Compare features side by side</p>
         </div>
@@ -102,13 +110,16 @@
               <tr class="border-b-2 border-gray-200 dark:border-gray-700">
                 <th class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
                   {{ t('modeChooser.comparison.feature') }}
+
                 </th>
                 <th class="px-6 py-4 text-center">
                   <div class="inline-flex flex-col items-center gap-2">
                     <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 text-2xl shadow-md">
                       📚
                     </div>
-                    <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ t('modeChooser.studyMode.title') }}</span>
+                    <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ t('modeChooser.studyMode.title') }}
+
+</span>
                   </div>
                 </th>
                 <th class="px-6 py-4 text-center">
@@ -116,7 +127,9 @@
                     <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-2xl shadow-md">
                       🎯
                     </div>
-                    <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ t('modeChooser.quizMode.title') }}</span>
+                    <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ t('modeChooser.quizMode.title') }}
+
+</span>
                   </div>
                 </th>
               </tr>
@@ -125,6 +138,7 @@
               <tr v-for="comparison in comparisonFeatures" :key="comparison.key" class="transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/50">
                 <td class="px-6 py-5 text-sm font-medium text-gray-900 dark:text-white">
                   {{ t(`modeChooser.comparison.features.${comparison.key}`) }}
+
                 </td>
                 <td class="px-6 py-5 text-center">
                   <span v-if="comparison.study" class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400">
@@ -177,8 +191,23 @@ const { track } = useAnalytics();
 const authStore = useAuthStore();
 const preferencesStore = usePreferencesStore();
 
-const difficulty = computed(() => route.params.difficulty as DifficultyLevel);
+const difficulty = computed(() => route.params.difficulty as string);
 const locale = computed(() => (route.params.locale as string) || 'en');
+
+// Helper to get the translation key for difficulty
+const getDifficultyTranslationKey = (diff: string): string => {
+  // Map new values to old translation keys
+  const keyMapping: Record<string, string> = {
+    junior: 'easy',
+    intermediate: 'medium',
+    senior: 'hard',
+    custom: 'custom',
+    easy: 'easy',
+    medium: 'medium',
+    hard: 'hard'
+  };
+  return keyMapping[diff] || diff;
+};
 
 // Study mode features
 const studyFeatures = computed(() => [
@@ -207,27 +236,43 @@ const comparisonFeatures = [
   { key: 'analytics', study: true, quiz: true },
 ];
 
-const getDifficultyIcon = (diff: DifficultyLevel) => {
-  const icons = { easy: '🟢', medium: '🟡', hard: '🔴' };
+const getdifficultyicon = (diff: string) => {
+  const icons: Record<string, string> = {
+    easy: '🟢',
+    medium: '🟡',
+    hard: '🔴',
+    junior: '🟢',
+    intermediate: '🟡',
+    senior: '🔴',
+    custom: '⚡'
+  };
   return icons[diff] || '⚪';
 };
 
-const getDifficultyBadgeClass = (diff: DifficultyLevel) => {
-  const classes = {
+const getdifficultybadgeclass = (diff: string) => {
+  const classes: Record<string, string> = {
     easy: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
     medium: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
     hard: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
+    junior: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
+    intermediate: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
+    senior: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
+    custom: 'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200'
   };
   return classes[diff] || 'bg-gray-100 text-gray-800';
 };
 
-const handleModeSelect = async (mode: 'study' | 'quiz') => {
+const handlemodeselect = async (mode: 'study' | 'quiz') => {
   // Check if user is authenticated
   if (!authStore.isAuthenticated) {
     // Redirect to login with return URL
+    const mappedDifficulty = mapToOldDifficulty(difficulty.value);
+    const quizLevel = difficultyToLevelMap[difficulty.value];
     const returnUrl = mode === 'study'
-      ? `/${locale.value}/study/${difficulty.value}`
-      : `/${locale.value}/quiz/${difficultyToLevelMap[difficulty.value]}`;
+      ? `/${locale.value}/study/${mappedDifficulty}
+
+`
+      : `/${locale.value}/quiz/${quizLevel}`;
 
     track('auth_required', {
       mode,
@@ -254,22 +299,45 @@ const handleModeSelect = async (mode: 'study' | 'quiz') => {
   // Navigate to the appropriate page
   if (mode === 'study') {
     // Study mode: Navigate to framework selection page
-    router.push(`/${locale.value}/study/${difficulty.value}`);
-  } else {
+    // Map new difficulty values to old ones for study routes
+    const mappedDifficulty = mapToOldDifficulty(difficulty.value);Studymode
+    router.push(`/${locale.value}/study/${mappedDifficulty}`);
+  }
+
+ else {
     // Quiz mode: Map difficulty to quiz level and navigate directly
-    const level = difficultyToLevelMap[difficulty.value];
+    const level = difficultyToLevelMap[difficulty.value];Quizmode
     router.push(`/${locale.value}/quiz/${level}`);
   }
 };
 
-// Helper map for difficulty to level conversion
-const difficultyToLevelMap: Record<DifficultyLevel, 'junior' | 'intermediate' | 'senior'> = {
+// Helper function to map new difficulty values to old ones for study routes
+const mapToOldDifficulty = (diff: string): 'easy' | 'medium' | 'hard' => {
+  const mapping: Record<string, 'easy' | 'medium' | 'hard'> = {
+    junior: 'easy',
+    intermediate: 'medium',
+    senior: 'hard',
+    custom: 'medium', // Default custom to medium
+    // Old values map to themselves;
+    easy: 'easy',
+    medium: 'medium',
+    hard: 'hard'
+  };
+  return mapping[diff] || 'easy';
+};
+
+// Helper map for difficulty to level conversion (for quiz routes)
+const difficultyToLevelMap: Record<string, 'junior' | 'intermediate' | 'senior'> = {
   easy: 'junior',
   medium: 'intermediate',
   hard: 'senior',
+  junior: 'junior',
+  intermediate: 'intermediate',
+  senior: 'senior',
+  custom: 'intermediate' // Default custom to intermediate
 };
 
-const goBack = () => {
+const goback = () => {
   router.push(`/${locale.value}/select`);
 };
 </script>

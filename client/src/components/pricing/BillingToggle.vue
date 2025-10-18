@@ -5,7 +5,7 @@ import type { BillingToggleEmits, BillingToggleProps } from "@/types/ui/componen
 defineProps<BillingToggleProps>();
 const emit = defineEmits<BillingToggleEmits>();
 
-const setBillingCycle = (cycle: BillingCycle) => {
+const setbillingcycle = (cycle: BillingCycle) => {
   emit("update:modelValue", cycle);
 };
 
@@ -32,8 +32,10 @@ defineOptions({
           :class="{ 'billing-toggle-option--active': modelValue === 'annual' }" :aria-pressed="modelValue === 'annual'"
           type="button">
           {{ $t("pricing.billing.yearly") }}
+
           <span v-if="modelValue === 'annual'" class="billing-toggle-save-badge">
             {{ $t("pricing.billing.savePercent", { percent: 17 }) }}
+
           </span>
         </button>
       </div>

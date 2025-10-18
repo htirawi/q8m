@@ -95,6 +95,11 @@ class HttpClient {
 
       clearTimeout(timeoutId);
 
+      // Handle response based on silent mode
+      if (silent && !response.ok) {
+        return null as T;
+      }
+
       // Use existing API response handler
       return await handleApiResponse<T>(response);
     } catch (error) {

@@ -62,6 +62,7 @@ function handleRetry() {
     params: { locale },
   });
 }
+
 </script>
 
 <template>
@@ -69,8 +70,12 @@ function handleRetry() {
     <div class="callback-container">
       <div v-if="isLoading" class="loading-state">
         <div class="spinner"></div>
-        <h2 class="loading-title">{{ $t("auth.oauth.processing") }}</h2>
-        <p class="loading-subtitle">{{ $t("auth.oauth.pleaseWait") }}</p>
+        <h2 class="loading-title">{{ $t("auth.oauth.processing") }}
+
+</h2>
+        <p class="loading-subtitle">{{ $t("auth.oauth.pleaseWait") }}
+
+</p>
       </div>
 
       <div v-else-if="error" class="error-state">
@@ -81,10 +86,15 @@ function handleRetry() {
             <line x1="9" y1="9" x2="15" y2="15" />
           </svg>
         </div>
-        <h2 class="error-title">{{ $t("auth.oauth.error") }}</h2>
-        <p class="error-message">{{ error }}</p>
+        <h2 class="error-title">{{ $t("auth.oauth.error") }}
+
+</h2>
+        <p class="error-message">{{ error }}
+
+</p>
         <button @click="handleRetry" class="retry-button">
           {{ $t("auth.oauth.tryAgain") }}
+
         </button>
       </div>
 
@@ -95,8 +105,12 @@ function handleRetry() {
             <path d="M9 12l2 2 4-4" />
           </svg>
         </div>
-        <h2 class="success-title">{{ $t("auth.oauth.success") }}</h2>
-        <p class="success-message">{{ $t("auth.oauth.redirecting") }}</p>
+        <h2 class="success-title">{{ $t("auth.oauth.success") }}
+
+</h2>
+        <p class="success-message">{{ $t("auth.oauth.redirecting") }}
+
+</p>
       </div>
     </div>
   </div>
@@ -106,6 +120,7 @@ function handleRetry() {
 /* Main Layout */
 .oauth-callback-page {
   @apply relative min-h-screen flex items-center justify-center;
+
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
@@ -198,6 +213,7 @@ function handleRetry() {
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);

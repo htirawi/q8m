@@ -3,30 +3,30 @@
  * Endpoints for quiz submission, history, analytics, and retry functionality
  */
 
-import type { FastifyInstance } from 'fastify';
-import { z } from 'zod';
-import { zodToJsonSchema } from 'zod-to-json-schema';
+import type { FastifyInstance } from "fastify";
+import { z } from "zod";
+import { zodToJsonSchema } from "zod-to-json-schema";
 
-import type { IQuizResultDoc } from '../models/QuizResult';
-import { QuizResult } from '../models/QuizResult';
-import { UserProgress } from '../models/UserProgress';
-import { checkAndAwardBadges } from '../utils/badgeEngine';
-import { calculateQuizXP, awardXP } from '../utils/xpEngine';
+import type { IQuizResultDoc } from "../models/QuizResult";
+import { QuizResult } from "../models/QuizResult";
+import { UserProgress } from "../models/UserProgress";
+import { checkAndAwardBadges } from "../utils/badgeEngine";
+import { calculateQuizXP, awardXP } from "../utils/xpEngine";
 
 export default async function quizResultsRoutes(fastify: FastifyInstance) {
   // Submit quiz results
   fastify.post(
-    '/submit',
+    "/submit",
     {
       onRequest: [fastify.authenticate()],
       schema: {
-        description: 'Submit quiz results and calculate rewards',
-        tags: ['quiz'],
+        description: "Submit quiz results and calculate rewards",
+        tags: ["quiz"],
         body: zodToJsonSchema(
           z.object({
-            quizType: z.enum(['practice', 'exam', 'retry_wrong', 'review']),
-            level: z.enum(['junior', 'intermediate', 'senior']),
-            framework: z.enum(['vue', 'react', 'angular', 'nextjs']).optional(),
+            quizType: z.enum(["practice", "exam", "retry_wrong", "review"]),
+            level: z.enum(["junior", "intermediate", "senior"]),
+            framework: z.enum(["vue", "react", "angular", "nextjs"]).optional(),
             answers: z.array(
               z.object({
                 questionId: z.string(),
@@ -34,7 +34,7 @@ export default async function quizResultsRoutes(fastify: FastifyInstance) {
                 correctAnswer: z.union([z.string(), z.array(z.string())]),
                 isCorrect: z.boolean(),
                 timeSpentSeconds: z.number().min(0),
-                difficultyLevel: z.enum(['easy', 'medium', 'hard']),
+                difficultyLevel: z.enum(["easy", "medium", "hard"]),
                 category: z.string(),
                 tags: z.array(z.string()),
                 points: z.number().min(0),
@@ -67,16 +67,16 @@ export default async function quizResultsRoutes(fastify: FastifyInstance) {
       try {
         const userId = request.authUser!.id;
         const quizData = request.body as {
-          quizType: 'practice' | 'exam' | 'retry_wrong' | 'review';
-          level: 'junior' | 'intermediate' | 'senior';
-          framework?: 'vue' | 'react' | 'angular' | 'nextjs';
+          quizType: "practice" | "exam" | "retry_wrong" | "review";
+          level: "junior" | "intermediate" | "senior";
+          framework?: "vue" | "react" | "angular" | "nextjs";
           answers: Array<{
             questionId: string;
             userAnswer: string | string[];
             correctAnswer: string | string[];
             isCorrect: boolean;
             timeSpentSeconds: number;
-            difficultyLevel: 'easy' | 'medium' | 'hard';
+            difficultyLevel: "easy" | "medium" | "hard";
             category: string;
             tags: string[];
             points: number;
@@ -165,7 +165,7 @@ export default async function quizResultsRoutes(fastify: FastifyInstance) {
 
         const difficultyPerformance = Array.from(difficultyMap.entries()).map(
           ([difficulty, stats]) => ({
-            difficulty: difficulty as 'easy' | 'medium' | 'hard',
+            difficulty: difficulty as "easy" | "medium" | "hard",
             totalQuestions: stats.totalQuestions,
             correctAnswers: stats.correctAnswers,
             accuracy: (stats.correctAnswers / stats.totalQuestions) * 100,
@@ -227,8 +227,7 @@ export default async function quizResultsRoutes(fastify: FastifyInstance) {
 
         // Update average quiz score
         progress.averageQuizScore =
-          (progress.averageQuizScore * (progress.quizzesTaken - 1) + score) /
-          progress.quizzesTaken;
+          (progress.averageQuizScore * (progress.quizzesTaken - 1) + score) / progress.quizzesTaken;
 
         // Update best score
         if (score > progress.bestQuizScore) {
@@ -239,6 +238,41 @@ export default async function quizResultsRoutes(fastify: FastifyInstance) {
         if (isPerfect) {
           progress.perfectQuizzes++;
         }
+
+        // Update streak - this was missing!
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const lastActivity = new Date(progress.streaks.lastActivityDate);
+        lastActivity.setHours(0, 0, 0, 0);
+
+        const daysSinceLastActivity = Math.floor(
+          (today.getTime() - lastActivity.getTime()) / (1000 * 60 * 60 * 24)
+        );
+
+        // Always update streak when completing a quiz
+        if (daysSinceLastActivity === 0) {
+          // Same day - if streak is 0, start it
+          if (progress.streaks.currentStreak === 0) {
+            progress.streaks.currentStreak = 1;
+            progress.streaks.longestStreak = Math.max(progress.streaks.longestStreak, 1);
+          }
+        } else if (daysSinceLastActivity === 1) {
+          // Consecutive day - increment streak
+          progress.streaks.currentStreak++;
+          if (progress.streaks.currentStreak > progress.streaks.longestStreak) {
+            progress.streaks.longestStreak = progress.streaks.currentStreak;
+          }
+        } else if (daysSinceLastActivity > 1 && daysSinceLastActivity <= 2) {
+          // Grace period (1 day miss)
+          progress.streaks.missedDays++;
+        } else {
+          // Streak broken - start new streak
+          progress.streaks.currentStreak = 1;
+          progress.streaks.missedDays = 0;
+        }
+
+        // Update last activity date
+        progress.streaks.lastActivityDate = new Date();
 
         // Check for badges
         const newBadges = await checkAndAwardBadges(progress);
@@ -265,8 +299,8 @@ export default async function quizResultsRoutes(fastify: FastifyInstance) {
         fastify.log.error(error);
         reply.status(500).send({
           code: 500,
-          error: 'Internal Server Error',
-          message: 'Failed to submit quiz results',
+          error: "Internal Server Error",
+          message: "Failed to submit quiz results",
         });
       }
     }
@@ -274,15 +308,15 @@ export default async function quizResultsRoutes(fastify: FastifyInstance) {
 
   // Get quiz history
   fastify.get(
-    '/history',
+    "/history",
     {
       onRequest: [fastify.authenticate()],
       schema: {
-        description: 'Get quiz history for current user',
-        tags: ['quiz'],
+        description: "Get quiz history for current user",
+        tags: ["quiz"],
         querystring: zodToJsonSchema(
           z.object({
-            level: z.enum(['junior', 'intermediate', 'senior']).optional(),
+            level: z.enum(["junior", "intermediate", "senior"]).optional(),
             limit: z.coerce.number().min(1).max(100).default(10),
             offset: z.coerce.number().min(0).default(0),
           })
@@ -293,7 +327,7 @@ export default async function quizResultsRoutes(fastify: FastifyInstance) {
       try {
         const userId = request.authUser!.id;
         const { level, limit, offset } = request.query as {
-          level?: 'junior' | 'intermediate' | 'senior';
+          level?: "junior" | "intermediate" | "senior";
           limit: number;
           offset: number;
         };
@@ -310,8 +344,8 @@ export default async function quizResultsRoutes(fastify: FastifyInstance) {
         fastify.log.error(error);
         reply.status(500).send({
           code: 500,
-          error: 'Internal Server Error',
-          message: 'Failed to fetch quiz history',
+          error: "Internal Server Error",
+          message: "Failed to fetch quiz history",
         });
       }
     }
@@ -319,15 +353,15 @@ export default async function quizResultsRoutes(fastify: FastifyInstance) {
 
   // Get quiz statistics
   fastify.get(
-    '/stats',
+    "/stats",
     {
       onRequest: [fastify.authenticate()],
       schema: {
-        description: 'Get detailed quiz statistics',
-        tags: ['quiz'],
+        description: "Get detailed quiz statistics",
+        tags: ["quiz"],
         querystring: zodToJsonSchema(
           z.object({
-            level: z.enum(['junior', 'intermediate', 'senior']).optional(),
+            level: z.enum(["junior", "intermediate", "senior"]).optional(),
           })
         ),
       },
@@ -335,7 +369,7 @@ export default async function quizResultsRoutes(fastify: FastifyInstance) {
     async (request, reply) => {
       try {
         const userId = request.authUser!.id;
-        const { level } = request.query as { level?: 'junior' | 'intermediate' | 'senior' };
+        const { level } = request.query as { level?: "junior" | "intermediate" | "senior" };
 
         const stats = await QuizResult.getUserStats(userId, level);
 
@@ -344,8 +378,8 @@ export default async function quizResultsRoutes(fastify: FastifyInstance) {
         fastify.log.error(error);
         reply.status(500).send({
           code: 500,
-          error: 'Internal Server Error',
-          message: 'Failed to fetch quiz statistics',
+          error: "Internal Server Error",
+          message: "Failed to fetch quiz statistics",
         });
       }
     }
@@ -353,15 +387,15 @@ export default async function quizResultsRoutes(fastify: FastifyInstance) {
 
   // Get weak areas
   fastify.get(
-    '/weak-areas',
+    "/weak-areas",
     {
       onRequest: [fastify.authenticate()],
       schema: {
-        description: 'Get weak areas based on quiz performance',
-        tags: ['quiz'],
+        description: "Get weak areas based on quiz performance",
+        tags: ["quiz"],
         querystring: zodToJsonSchema(
           z.object({
-            level: z.enum(['junior', 'intermediate', 'senior']).optional(),
+            level: z.enum(["junior", "intermediate", "senior"]).optional(),
           })
         ),
       },
@@ -369,7 +403,7 @@ export default async function quizResultsRoutes(fastify: FastifyInstance) {
     async (request, reply) => {
       try {
         const userId = request.authUser!.id;
-        const { level } = request.query as { level?: 'junior' | 'intermediate' | 'senior' };
+        const { level } = request.query as { level?: "junior" | "intermediate" | "senior" };
 
         const weakAreas = await QuizResult.getWeakAreas(userId, level);
 
@@ -381,8 +415,8 @@ export default async function quizResultsRoutes(fastify: FastifyInstance) {
         fastify.log.error(error);
         reply.status(500).send({
           code: 500,
-          error: 'Internal Server Error',
-          message: 'Failed to fetch weak areas',
+          error: "Internal Server Error",
+          message: "Failed to fetch weak areas",
         });
       }
     }
@@ -390,12 +424,12 @@ export default async function quizResultsRoutes(fastify: FastifyInstance) {
 
   // Get wrong questions from a quiz
   fastify.get(
-    '/:quizId/wrong-questions',
+    "/:quizId/wrong-questions",
     {
       onRequest: [fastify.authenticate()],
       schema: {
-        description: 'Get wrong questions from a quiz for retry',
-        tags: ['quiz'],
+        description: "Get wrong questions from a quiz for retry",
+        tags: ["quiz"],
         params: zodToJsonSchema(
           z.object({
             quizId: z.string(),
@@ -417,8 +451,8 @@ export default async function quizResultsRoutes(fastify: FastifyInstance) {
         fastify.log.error(error);
         reply.status(500).send({
           code: 500,
-          error: 'Internal Server Error',
-          message: 'Failed to fetch wrong questions',
+          error: "Internal Server Error",
+          message: "Failed to fetch wrong questions",
         });
       }
     }
@@ -426,12 +460,12 @@ export default async function quizResultsRoutes(fastify: FastifyInstance) {
 
   // Get quiz result details
   fastify.get(
-    '/:quizId',
+    "/:quizId",
     {
       onRequest: [fastify.authenticate()],
       schema: {
-        description: 'Get detailed quiz result',
-        tags: ['quiz'],
+        description: "Get detailed quiz result",
+        tags: ["quiz"],
         params: zodToJsonSchema(
           z.object({
             quizId: z.string(),
@@ -449,8 +483,8 @@ export default async function quizResultsRoutes(fastify: FastifyInstance) {
         if (!result) {
           return reply.status(404).send({
             code: 404,
-            error: 'Not Found',
-            message: 'Quiz result not found',
+            error: "Not Found",
+            message: "Quiz result not found",
           });
         }
 
@@ -461,8 +495,8 @@ export default async function quizResultsRoutes(fastify: FastifyInstance) {
         fastify.log.error(error);
         reply.status(500).send({
           code: 500,
-          error: 'Internal Server Error',
-          message: 'Failed to fetch quiz result',
+          error: "Internal Server Error",
+          message: "Failed to fetch quiz result",
         });
       }
     }

@@ -10,7 +10,9 @@
     aria-live="polite"
     :aria-label="ariaLabel || $t('a11y.loading')"
   >
-    <span class="sr-only">{{ loadingText }}</span>
+    <span class="sr-only">{{ loadingText }}
+
+</span>
     <div class="skeleton-loader__shimmer"></div>
   </div>
 </template>
@@ -19,7 +21,7 @@
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-export interface SkeletonLoaderProps {
+export interface skeletonloaderprops {
   variant?: 'text' | 'heading' | 'paragraph' | 'avatar' | 'card' | 'button' | 'image' | 'custom';
   width?: string | number;
   height?: string | number;
@@ -28,7 +30,7 @@ export interface SkeletonLoaderProps {
   customClass?: string;
   ariaLabel?: string;
   lines?: number; // For paragraph variant
-  delay?: number; // Animation delay in ms
+  delay?: number;Forparagraphvariantdelay? // Animation delay in ms
 }
 
 const props = withDefaults(defineProps<SkeletonLoaderProps>(), {
@@ -79,6 +81,7 @@ const customStyle = computed(() => {
 .skeleton-loader {
   @apply relative overflow-hidden bg-gray-200 dark:bg-gray-700;
   @apply rounded-md;
+
   background: linear-gradient(
     90deg,
     var(--color-gray-200) 0%,
@@ -101,10 +104,11 @@ const customStyle = computed(() => {
 /* Shimmer animation */
 .skeleton-loader__shimmer {
   @apply absolute inset-0;
+
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(255, 255, 255, 0.3) 50%,
+    rgb(255, 255, 255, 0.3) 50%,
     transparent 100%
   );
   animation: skeleton-shimmer 1.5s ease-in-out infinite;
@@ -115,7 +119,7 @@ const customStyle = computed(() => {
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(255, 255, 255, 0.1) 50%,
+    rgb(255, 255, 255, 0.1) 50%,
     transparent 100%
   );
 }
@@ -124,6 +128,7 @@ const customStyle = computed(() => {
   0% {
     transform: translateX(-100%);
   }
+
   100% {
     transform: translateX(100%);
   }
@@ -132,6 +137,7 @@ const customStyle = computed(() => {
 /* Variant: Text */
 .skeleton-loader--text {
   @apply h-4 w-full;
+
   max-width: 100%;
 }
 
@@ -149,7 +155,9 @@ const customStyle = computed(() => {
 .skeleton-loader--paragraph::before,
 .skeleton-loader--paragraph::after {
   content: '';
+
   @apply block h-4 bg-gray-200 dark:bg-gray-700 rounded;
+
   background: inherit;
 }
 

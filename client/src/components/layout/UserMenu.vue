@@ -6,14 +6,19 @@
       @keydown.escape="closeMenu" @mouseenter="preloadMenu">
       <!-- User Avatar -->
       <div class="user-menu__avatar">
-        <span class="user-menu__avatar-text">{{ userInitials }}</span>
+        <span class="user-menu__avatar-text">{{ userInitials }}
+
+</span>
       </div>
 
       <!-- User Info (Desktop Only) -->
       <div class="user-menu__info">
-        <span class="user-menu__name">{{ userName }}</span>
+        <span class="user-menu__name">{{ userName }}
+
+</span>
         <span v-if="!planStore.isPaid" class="user-menu__badge">
           {{ $t('plans.names.free') }}
+
         </span>
         <span v-else class="user-menu__badge user-menu__badge--premium">
           {{ planStore.planDisplayName }}
@@ -45,14 +50,18 @@
         <!-- User Info Section -->
         <div class="user-menu__header" role="none">
           <div class="user-menu__header-avatar">
-            <span class="user-menu__header-avatar-text">{{ userInitials }}</span>
+            <span class="user-menu__header-avatar-text">{{ userInitials }}
+
+</span>
           </div>
           <div class="user-menu__header-info">
-            <p class="user-menu__header-name">{{ userName }}</p>
+            <p class="user-menu__header-name">{{ userName }}
+
+</p>
             <p class="user-menu__header-email">{{ userEmail }}</p>
             <span v-if="planStore.planTier" class="user-menu__header-plan"
               :class="{ 'user-menu__header-plan--premium': planStore.isPaid }">
-              {{ planStore.isPaid ? planStore.planDisplayName : $t('plans.names.free') }}
+              {{ planStore.isPaid ? planStore.planDisplayName : $t('plans.names.free')planStore.planDisplayName }}
             </span>
           </div>
         </div>
@@ -67,6 +76,7 @@
             <!-- Quick Action Number (Desktop Only) -->
             <span v-if="!isMobile && index < 9" class="user-menu__quick-number" aria-hidden="true">
               {{ index + 1 }}
+
             </span>
 
             <component :is="item.icon" class="user-menu__item-icon" aria-hidden="true" />
@@ -80,6 +90,7 @@
             }" :aria-label="item.badge.type === 'new' ? $t('common.new') : item.badge.value?.toString()">
               <template v-if="item.badge.type === 'new'">
                 {{ $t('common.new') }}
+
               </template>
               <template v-else-if="item.badge.type === 'count'">
                 {{ item.badge.value }}
@@ -100,8 +111,12 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
               </svg>
-              <span>{{ $t('navigation.upgrade') }}</span>
-              <span class="user-menu__item-badge">{{ $t('common.new') }}</span>
+              <span>{{ $t('navigation.upgrade') }}
+
+</span>
+              <span class="user-menu__item-badge">{{ $t('common.new') }}
+
+</span>
             </RouterLink>
           </div>
         </template>
@@ -123,7 +138,9 @@
                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
               </path>
             </svg>
-            <span>{{ isLoggingOut ? $t('navigation.loggingOut') : $t('navigation.logout') }}</span>
+            <span>{{ isLoggingOut ? $t('navigation.loggingOut') : $t('navigation.logout')$t }}
+
+</span>
           </button>
         </div>
 
@@ -135,28 +152,40 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
-            <span class="user-menu__type-ahead-text">{{ typeAheadSearch }}</span>
+            <span class="user-menu__type-ahead-text">{{ typeAheadSearch }}
+
+</span>
           </div>
         </Transition>
 
         <!-- Keyboard Shortcuts Hint (Desktop Only) -->
         <div v-if="!isMobile" class="user-menu__shortcuts" role="none">
-          <div class="user-menu__shortcuts-title">{{ $t('keyboard.shortcuts') }}</div>
+          <div class="user-menu__shortcuts-title">{{ $t('keyboard.shortcuts') }}
+
+</div>
           <div class="user-menu__shortcuts-grid">
             <div class="user-menu__shortcut">
               <kbd class="user-menu__kbd">↑</kbd>
               <kbd class="user-menu__kbd">↓</kbd>
-              <span>{{ $t('keyboard.navigate') }}</span>
+              <span>{{ $t('keyboard.navigate') }}
+
+</span>
             </div>
             <div class="user-menu__shortcut">
               <kbd class="user-menu__kbd">1</kbd>
               <kbd class="user-menu__kbd">-</kbd>
-              <kbd class="user-menu__kbd">{{ menuItems.length }}</kbd>
-              <span>{{ $t('keyboard.quickSelect') }}</span>
+              <kbd class="user-menu__kbd">{{ menuItems.length }}
+
+</kbd>
+              <span>{{ $t('keyboard.quickSelect') }}
+
+</span>
             </div>
             <div class="user-menu__shortcut">
               <kbd class="user-menu__kbd">Esc</kbd>
-              <span>{{ $t('keyboard.close') }}</span>
+              <span>{{ $t('keyboard.close') }}
+
+</span>
             </div>
           </div>
         </div>
@@ -166,6 +195,7 @@
     <!-- Screen Reader Announcements -->
     <div role="status" aria-live="polite" aria-atomic="true" class="sr-only">
       {{ screenReaderAnnouncement }}
+
     </div>
   </div>
 </template>
@@ -248,15 +278,17 @@ const checkMobile = () => {
   isMobile.value = window.innerWidth < 768;
 };
 
-const toggleMenu = () => {
+const togglemenu = () => {
   if (isOpen.value) {
     closeMenu();
-  } else {
+  }
+
+ else {
     openMenu();
   }
 };
 
-const openMenu = async () => {
+const openmenu = async () => {
   lastFocusedElement.value = document.activeElement as HTMLElement;
   isOpen.value = true;
 
@@ -283,7 +315,7 @@ const openMenu = async () => {
   }
 };
 
-const closeMenu = () => {
+const closemenu = () => {
   isOpen.value = false;
   screenReaderAnnouncement.value = t('a11y.menuClosed');
 
@@ -293,12 +325,14 @@ const closeMenu = () => {
   // Restore focus
   if (lastFocusedElement.value) {
     lastFocusedElement.value.focus();
-  } else {
+  }
+
+ else {
     triggerRef.value?.focus();
   }
 };
 
-const handleItemClick = (event: Event) => {
+const handleitemclick = (event: Event) => {
   // Track navigation
   const target = event.currentTarget as HTMLAnchorElement;
   const path = target.getAttribute('href') || '';
@@ -312,7 +346,7 @@ const handleItemClick = (event: Event) => {
   closeMenu();
 };
 
-const handleUpgradeClick = (event: Event) => {
+const handleupgradeclick = (event: Event) => {
   // Track analytics with enhanced details
   trackEvent('upgrade_clicked', {
     event_category: 'monetization',
@@ -332,9 +366,8 @@ const handleUpgradeClick = (event: Event) => {
   closeMenu();
 };
 
-const handleLogout = async () => {
+const handlelogout = async () => {
   if (isLoggingOut.value) return;
-
   try {
     isLoggingOut.value = true;
     screenReaderAnnouncement.value = t('a11y.loggingOut');
@@ -376,7 +409,7 @@ const handleLogout = async () => {
   }
 };
 
-const handleClickOutside = (event: MouseEvent) => {
+const handleclickoutside = (event: MouseEvent) => {
   if (
     isOpen.value &&
     triggerRef.value &&
@@ -388,7 +421,7 @@ const handleClickOutside = (event: MouseEvent) => {
   }
 };
 
-const handleTabKey = (event: KeyboardEvent) => {
+const handletabkey = (event: KeyboardEvent) => {
   if (!menuRef.value) return;
 
   const focusableElements = menuRef.value.querySelectorAll<HTMLElement>(
@@ -429,7 +462,9 @@ const handleArrowUp = () => {
   } else if (currentIndex === 0) {
     // At first item, wrap to last
     items[items.length - 1]?.focus();
-  } else {
+  }
+
+ else {
     // Focus previous item
     items[currentIndex - 1]?.focus();
   }
@@ -448,7 +483,9 @@ const handleArrowDown = () => {
   } else if (currentIndex === items.length - 1) {
     // At last item, wrap to first
     items[0]?.focus();
-  } else {
+  }
+
+ else {
     // Focus next item
     items[currentIndex + 1]?.focus();
   }
@@ -505,7 +542,7 @@ const clearTypeAhead = () => {
   }
 };
 
-const handleTypeAhead = (event: KeyboardEvent) => {
+const handletypeahead = (event: KeyboardEvent) => {
   // Handle quick actions first (number keys 1-9)
   if (/^[1-9]$/.test(event.key)) {
     handleQuickAction(event);
@@ -575,7 +612,7 @@ const handleTouchStart = (event: TouchEvent) => {
   triggerHaptic('light');
 };
 
-const handleTouchMove = (event: TouchEvent) => {
+const handletouchmove = (event: TouchEvent) => {
   if (!isMobile.value || !isDragging.value) return;
   touchCurrentY.value = event.touches[0].clientY;
 
@@ -591,7 +628,7 @@ const handleTouchMove = (event: TouchEvent) => {
   }
 };
 
-const handleTouchEnd = () => {
+const handletouchend = () => {
   if (!isMobile.value || !isDragging.value) return;
 
   const deltaY = touchCurrentY.value - touchStartY.value;
@@ -673,18 +710,22 @@ onUnmounted(() => {
   @apply border border-transparent hover:border-gray-200 dark:hover:border-gray-700;
   @apply transition-all duration-fast ease-out;
   @apply focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-gray-900;
+
   will-change: background-color, border-color, transform;
   transform: translateZ(0);
+
   /* Force GPU acceleration */
 }
 
 .user-menu__trigger:hover {
   transform: translateY(-1px);
+
   @apply shadow-sm;
 }
 
 .user-menu__trigger:active {
   transform: translateY(0);
+
   @apply shadow-none;
 }
 
@@ -747,12 +788,13 @@ onUnmounted(() => {
   @apply rounded-xl bg-white dark:bg-gray-800;
   @apply border border-gray-200/50 dark:border-gray-700/50;
   @apply shadow-lg backdrop-blur-xl;
-  background: rgba(255, 255, 255, 0.98);
+
+  background: rgb(255, 255, 255, 0.98);
   will-change: transform, opacity;
 }
 
 :global(.dark) .user-menu__dropdown {
-  background: rgba(24, 24, 27, 0.98);
+  background: rgb(24, 24, 27, 0.98);
 }
 
 .user-menu__dropdown--mobile {
@@ -822,6 +864,7 @@ onUnmounted(() => {
   @apply hover:translate-x-0.5;
   @apply focus:outline-none focus:bg-gray-50 dark:focus:bg-gray-700/30;
   @apply focus:ring-2 focus:ring-inset focus:ring-primary/50;
+
   position: relative;
   overflow: hidden;
 }
@@ -907,6 +950,7 @@ onUnmounted(() => {
 .user-menu__notification-badge--new {
   @apply bg-gradient-to-r from-emerald-500 to-teal-500 text-white;
   @apply shadow-sm;
+
   animation: pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
@@ -914,24 +958,26 @@ onUnmounted(() => {
   @apply bg-red-500 text-white;
   @apply min-w-[20px] h-5 flex items-center justify-center;
   @apply shadow-sm;
+
   animation: pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 .user-menu__notification-badge--dot {
   @apply w-2 h-2 rounded-full bg-red-500 p-0;
   @apply ring-2 ring-white dark:ring-gray-800;
+
   animation: pulse-dot 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 /* Animate badge on hover */
 .user-menu__item:hover .user-menu__notification-badge {
   @apply scale-110;
+
   animation: none;
 }
 
 /* Pulse animations */
 @keyframes pulse-subtle {
-
   0%,
   100% {
     opacity: 1;
@@ -945,7 +991,6 @@ onUnmounted(() => {
 }
 
 @keyframes pulse-dot {
-
   0%,
   100% {
     opacity: 1;
@@ -964,6 +1009,7 @@ onUnmounted(() => {
   @apply bg-gradient-to-r from-primary to-secondary;
   @apply text-white hover:shadow-md;
   @apply transform hover:scale-[1.02];
+
   background-size: 100% 100%;
   transition: all var(--duration-fast) var(--ease-out), background-size 0.3s;
 }
@@ -985,11 +1031,11 @@ onUnmounted(() => {
   @apply ml-auto rounded-full bg-white/20 backdrop-blur-sm px-2 py-0.5;
   @apply text-[10px] font-bold text-white uppercase tracking-wider;
   @apply ring-1 ring-white/30;
+
   animation: pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 @keyframes pulse-glow {
-
   0%,
   100% {
     opacity: 1;
@@ -999,7 +1045,7 @@ onUnmounted(() => {
   50% {
     opacity: 0.8;
     transform: scale(1.05);
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    box-shadow: 0 0 10px rgb(255, 255, 255, 0.3);
   }
 }
 
@@ -1055,6 +1101,7 @@ onUnmounted(() => {
 .dropdown-enter-active,
 .dropdown-leave-active {
   @apply transition-all duration-200;
+
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -1069,11 +1116,13 @@ onUnmounted(() => {
 /* Slide Up Transition (Mobile) */
 .slide-up-enter-active {
   @apply transition-all duration-300;
+
   transition-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 .slide-up-leave-active {
   @apply transition-all duration-200;
+
   transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
 }
 
@@ -1110,6 +1159,7 @@ onUnmounted(() => {
 /* Screen Reader Only */
 .sr-only {
   @apply absolute w-px h-px p-0 -m-px overflow-hidden whitespace-nowrap border-0;
+
   clip: rect(0, 0, 0, 0);
 }
 
@@ -1133,7 +1183,6 @@ onUnmounted(() => {
 
 /* Reduced Motion Support */
 @media (prefers-reduced-motion: reduce) {
-
   .user-menu__trigger,
   .user-menu__chevron,
   .user-menu__dropdown,

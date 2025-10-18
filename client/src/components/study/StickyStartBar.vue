@@ -21,7 +21,9 @@
               class="flex items-center gap-3 text-gray-700 dark:text-gray-300"
             >
               <div class="h-5 w-5 animate-spin rounded-full border-2 border-blue-600 border-t-transparent" aria-hidden="true" />
-              <span class="text-sm font-medium">{{ t('study.sticky.loading') }}</span>
+              <span class="text-sm font-medium">{{ t('study.sticky.loading') }}
+
+</span>
             </div>
 
             <!-- Error state -->
@@ -36,7 +38,9 @@
                   clip-rule="evenodd"
                 />
               </svg>
-              <span class="text-sm font-medium">{{ errorMessage || t('study.sticky.error') }}</span>
+              <span class="text-sm font-medium">{{ errorMessage || t('study.sticky.error') }}
+
+</span>
             </div>
 
             <!-- Idle state - show trust signals -->
@@ -52,7 +56,9 @@
                     clip-rule="evenodd"
                   />
                 </svg>
-                <span class="font-medium">{{ trustMessage }}</span>
+                <span class="font-medium">{{ trustMessage }}
+
+</span>
               </div>
             </div>
           </div>
@@ -69,6 +75,7 @@
               @click="handleRetry"
             >
               {{ t('study.sticky.retry') }}
+
             </button>
 
             <!-- Start button -->
@@ -82,7 +89,9 @@
               @click="handleStart"
             >
               <span class="relative z-10 flex items-center gap-2">
-                <span>{{ startButtonText }}</span>
+                <span>{{ startButtonText }}
+
+</span>
                 <svg
                   v-if="state !== 'loading'"
                   class="h-4 w-4 transition-transform group-hover:translate-x-1"
@@ -114,6 +123,7 @@
           data-testid="keyboard-hint"
         >
           {{ t('study.sticky.keyboardHint') }}
+
         </div>
       </div>
     </div>
@@ -185,7 +195,7 @@ const handleStart = () => {
   emit("start", props.selectedDifficulty);
 };
 
-const handleRetry = () => {
+const handleretry = () => {
   track("sticky_start_retry", {
     difficulty: props.selectedDifficulty ?? "easy",
   });
@@ -193,11 +203,11 @@ const handleRetry = () => {
   emit("retry");
 };
 
-const handleBeforeEnter = () => {
+const handlebeforeenter = () => {
   // Animation hook
 };
 
-const handleAfterEnter = () => {
+const handleafterenter = () => {
   // Track view once after animation completes
   if (!hasTrackedView.value) {
     track("sticky_start_shown", {

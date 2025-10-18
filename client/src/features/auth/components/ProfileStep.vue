@@ -10,8 +10,7 @@ import type { ProfileStepProps } from "@/types/ui/component-props";
 
 const props = defineProps<ProfileStepProps>();
 
-defineEmits<{
-  "update:name": [value: string];
+defineemits<{
   "update:password": [value: string];
   "update:acceptTerms": [value: boolean];
   back: [];
@@ -35,7 +34,9 @@ const isValid = computed(() => {
   <div class="form-step">
     <div class="step-indicator">
       <div class="step-number">2</div>
-      <span class="step-text">{{ $t("auth.register.completeProfile") }}</span>
+      <span class="step-text">{{ $t("auth.register.completeProfile") }}
+
+</span>
     </div>
 
     <div class="form-group">
@@ -45,7 +46,9 @@ const isValid = computed(() => {
       <input id="name" :model-value="name" @input="$emit('update:name', ($event.target as HTMLInputElement).value)"
         type="text" autocomplete="name" required class="form-input" :class="{ 'form-input-error': nameError }"
         :placeholder="$t('auth.fields.namePlaceholder')" />
-      <p v-if="nameError" class="form-error">{{ nameError }}</p>
+      <p v-if="nameError" class="form-error">{{ nameError }}
+
+</p>
     </div>
 
     <div class="form-group">
@@ -65,7 +68,9 @@ const isValid = computed(() => {
           <EyeSlashIcon v-else class="toggle-icon" />
         </button>
       </div>
-      <p v-if="passwordError" class="form-error">{{ passwordError }}</p>
+      <p v-if="passwordError" class="form-error">{{ passwordError }}
+
+</p>
 
       <!-- Password Strength Indicator -->
       <PasswordStrengthIndicator :password="password" />
@@ -79,29 +84,38 @@ const isValid = computed(() => {
         <span class="checkbox-custom"></span>
         <span class="terms-text">
           {{ $t("auth.register.agreeToTerms") }}
+
           <a href="/terms" target="_blank" class="terms-link">
             {{ $t("auth.register.termsOfService") }}
+
           </a>
           {{ $t("auth.register.and") }}
+
           <a href="/privacy" target="_blank" class="terms-link">
             {{ $t("auth.register.privacyPolicy") }}
+
           </a>
         </span>
       </label>
-      <p v-if="termsError" class="form-error">{{ termsError }}</p>
+      <p v-if="termsError" class="form-error">{{ termsError }}
+
+</p>
     </div>
 
     <div class="form-actions">
       <button type="button" @click="$emit('back')" class="form-button-secondary">
         {{ $t("auth.register.back") }}
+
       </button>
       <button type="submit" :disabled="!isValid || isLoading" class="form-button">
         <span v-if="isLoading" class="button-content">
           <LoadingSpinner size="sm" color="white" />
           {{ $t("auth.register.creating") }}
+
         </span>
         <span v-else class="button-content">
           {{ $t("auth.register.createAccount") }}
+
         </span>
       </button>
     </div>
@@ -178,6 +192,7 @@ const isValid = computed(() => {
 
 .checkbox-input:checked+.checkbox-custom::after {
   content: "✓";
+
   @apply text-sm font-bold text-white;
 }
 
@@ -207,7 +222,7 @@ const isValid = computed(() => {
 
 
 /* Responsive Design */
-@media (max-width: 640px) {
+@media (width <= 640px) {
   .form-actions {
     @apply flex-col;
   }

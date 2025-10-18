@@ -87,6 +87,7 @@
           class="px-6 py-3 rounded-lg bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-400 text-white font-medium transition-colors"
         >
           {{ loading ? 'Loading...' : 'Load More' }}
+
         </button>
       </div>
     </div>
@@ -99,9 +100,11 @@
       <div class="text-6xl mb-4">🎮</div>
       <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">
         {{ emptyStateTitle }}
+
       </h3>
       <p class="text-gray-600 dark:text-gray-400 mb-6">
         {{ emptyStateMessage }}
+
       </p>
       <button
         v-if="showCreateButton"
@@ -139,13 +142,13 @@ const props = withDefaults(defineProps<Props>(), {
   showCreateButton: true,
 });
 
-const emit = defineEmits<{
-  accept: [challengeId: string];
-  reject: [challengeId: string];
-  start: [challengeId: string];
+const emit = defineemits<{
+  accept: [;
+  reject: [;
+  start: [;
   'view-details': [challengeId: string];
-  'load-more': [];
-  'create-challenge': [];
+  
+  
 }>();
 
 const { sortChallenges, filterChallenges } = useChallenges();
@@ -173,13 +176,13 @@ const filteredAndSortedChallenges = computed(() => {
   return result;
 });
 
-const clearFilters = () => {
+const clearfilters = () => {
   sortBy.value = 'date';
   filterDifficulty.value = '';
   filterFramework.value = '';
 };
 
-const handleAccept = async (challengeId: string) => {
+const handleaccept = async (challengeId: string) => {
   loadingChallengeId.value = challengeId;
   emit('accept', challengeId);
   setTimeout(() => {
@@ -187,7 +190,7 @@ const handleAccept = async (challengeId: string) => {
   }, 2000);
 };
 
-const handleReject = async (challengeId: string) => {
+const handlereject = async (challengeId: string) => {
   loadingChallengeId.value = challengeId;
   emit('reject', challengeId);
   setTimeout(() => {
@@ -195,11 +198,11 @@ const handleReject = async (challengeId: string) => {
   }, 2000);
 };
 
-const handleStart = (challengeId: string) => {
+const handlestart = (challengeId: string) => {
   emit('start', challengeId);
 };
 
-const handleViewDetails = (challengeId: string) => {
+const handleviewdetails = (challengeId: string) => {
   emit('view-details', challengeId);
 };
 </script>

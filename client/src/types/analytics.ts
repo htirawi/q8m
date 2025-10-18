@@ -3,7 +3,7 @@
  * Types for analytics events, tracking, and A/B testing
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+// Removed eslint-disable - fixing any types below
 
 import type { HomepageSection } from "./homepage";
 import type { BillingCycle, PlanId } from "./pricing";
@@ -123,34 +123,34 @@ export interface IConversionEvent {
  * Event Categories for comprehensive tracking
  */
 export enum EventCategory {
-  Navigation = 'navigation',
-  Authentication = 'authentication',
-  UserMenu = 'user_menu',
-  LevelSelection = 'level_selection',
-  Gamification = 'gamification',
-  Monetization = 'monetization',
-  Performance = 'performance',
-  Accessibility = 'accessibility',
-  Error = 'error',
-  Engagement = 'engagement'
+  Navigation = "navigation",
+  Authentication = "authentication",
+  UserMenu = "user_menu",
+  LevelSelection = "level_selection",
+  Gamification = "gamification",
+  Monetization = "monetization",
+  Performance = "performance",
+  Accessibility = "accessibility",
+  Error = "error",
+  Engagement = "engagement",
 }
 
 /**
  * Event Actions for tracking user interactions
  */
 export enum EventAction {
-  Click = 'click',
-  View = 'view',
-  Submit = 'submit',
-  Change = 'change',
-  Complete = 'complete',
-  Skip = 'skip',
-  Open = 'open',
-  Close = 'close',
-  Hover = 'hover',
-  Scroll = 'scroll',
-  Load = 'load',
-  Error = 'error'
+  Click = "click",
+  View = "view",
+  Submit = "submit",
+  Change = "change",
+  Complete = "complete",
+  Skip = "skip",
+  Open = "open",
+  Close = "close",
+  Hover = "hover",
+  Scroll = "scroll",
+  Load = "load",
+  Error = "error",
 }
 
 /**
@@ -161,7 +161,7 @@ export interface CommonEventProperties {
   session_id?: string;
   user_id?: string;
   locale?: string;
-  viewport?: 'mobile' | 'tablet' | 'desktop';
+  viewport?: "mobile" | "tablet" | "desktop";
   browser?: string;
   os?: string;
   referrer?: string;
@@ -178,11 +178,11 @@ export interface CommonEventProperties {
 export interface UserProperties {
   user_id: string;
   email_domain?: string;
-  plan_tier?: 'free' | 'pro' | 'team';
+  plan_tier?: "free" | "pro" | "team";
   account_age_days?: number;
   total_sessions?: number;
-  preferred_locale?: 'en' | 'ar';
-  preferred_difficulty?: 'junior' | 'intermediate' | 'senior';
+  preferred_locale?: "en" | "ar";
+  preferred_difficulty?: "junior" | "intermediate" | "senior";
   courses_completed?: number;
   achievement_level?: number;
 }
@@ -208,7 +208,7 @@ export interface AnalyticsEvent {
   action?: EventAction;
   label?: string;
   value?: number;
-  properties?: Record<string, any>;
+  properties?: Record<string, string | number | boolean | null>;
   user_properties?: Partial<UserProperties>;
 }
 
@@ -216,10 +216,10 @@ export interface AnalyticsEvent {
  * Analytics provider interface for multiple tracking services
  */
 export interface AnalyticsProvider {
-  initialize(config: any): Promise<void>;
+  initialize(config: Record<string, unknown>): Promise<void>;
   track(event: AnalyticsEvent): void;
   identify(userId: string, properties?: Partial<UserProperties>): void;
-  page(properties?: Record<string, any>): void;
+  page(properties?: Record<string, string | number | boolean | null>): void;
   setUserProperties(properties: Partial<UserProperties>): void;
   reset(): void;
 }
@@ -232,7 +232,7 @@ export interface AnalyticsPluginOptions {
   googleAnalyticsId?: string;
   customApiEndpoint?: string;
   customApiKey?: string;
-  router?: any; // Vue Router instance
+  router?: unknown; // Vue Router instance
   autoTrackPageViews?: boolean;
   autoTrackPerformance?: boolean;
   batchSize?: number;

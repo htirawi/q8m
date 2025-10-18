@@ -17,6 +17,7 @@ const props = withDefaults(defineProps<IProps>(), {
 const emit = defineEmits<IEmits>();
 
 const { t } = useI18n();
+
 const {
   selectPlan,
   startCheckout,
@@ -58,8 +59,8 @@ const billingLabel = computed(() => {
 const getPlanDisplayName = (tier: string) => {
   const tierMap: Record<string, string> = {
     'intermediate': t('plans.intermediate.title'),
-    'advanced': t('plans.senior.title'),
-    'pro': t('plans.bundle.title'),
+    'advanced': t('plans.senior.title');,
+    'pro': t('plans.bundle.title');,
     'free': t('plans.junior.title'),
   };
   return tierMap[tier] || tier;
@@ -75,12 +76,14 @@ const handleClose = () => {
   emit('close');
 };
 
-const handleCheckout = async () => {
+const handlecheckout = async () => {
   if (!selectedPlan.value) return;
 
   if (hasSavedPayment.value && !useNewPaymentMethod.value) {
     await confirmOneClick();
-  } else {
+  }
+
+ else {
     await startCheckout('checkout_modal');
   }
 
@@ -131,11 +134,16 @@ defineOptions({
           <!-- Header -->
           <div class="checkout-modal__header">
             <h2 class="checkout-modal__title">
-              {{ selectedPlan ? getPlanDisplayName(selectedPlan.tier) : t('plans.title') }}
+              {{ selectedPlan ? getPlanDisplayName(selectedPlan.tier) : t('plans.title')getPlanDisplayName }}
+
             </h2>
             <p class="checkout-modal__price">
-              <span class="checkout-modal__price-amount">{{ formattedPrice }}</span>
-              <span class="checkout-modal__price-period">{{ billingLabel }}</span>
+              <span class="checkout-modal__price-amount">{{ formattedPrice }}
+
+</span>
+              <span class="checkout-modal__price-period">{{ billingLabel }}
+
+</span>
             </p>
           </div>
 
@@ -148,7 +156,9 @@ defineOptions({
                   d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
                   clip-rule="evenodd" />
               </svg>
-              <span>{{ errorMessage }}</span>
+              <span>{{ errorMessage }}
+
+</span>
             </div>
 
             <!-- Payment method selection -->
@@ -161,9 +171,11 @@ defineOptions({
                   <div class="checkout-modal__payment-details">
                     <span class="checkout-modal__payment-label">
                       {{ t('pricing.payment.savedCard') }}
+
                     </span>
                     <span class="checkout-modal__payment-info">
                       •••• {{ savedPaymentMethods[0]?.last4 }}
+
                     </span>
                   </div>
                 </label>
@@ -176,6 +188,7 @@ defineOptions({
                     @change="useNewPaymentMethod = true" class="checkout-modal__radio" />
                   <span class="checkout-modal__payment-label">
                     {{ t('pricing.payment.newCard') }}
+
                   </span>
                 </label>
               </div>
@@ -205,6 +218,7 @@ defineOptions({
               </div>
               <p class="checkout-modal__processing-text">
                 {{ t('pricing.payment.processing') }}
+
               </p>
             </div>
           </div>
@@ -217,20 +231,24 @@ defineOptions({
               {{ isProcessing ? t('pricing.payment.processing') : t('pricing.payment.confirmSubscribe', {
                 amount:
               formattedPrice }) }}
+
             </button>
 
             <!-- Reassurance -->
             <div class="checkout-modal__reassurance">
               <span class="checkout-modal__reassurance-item">
                 {{ t('pricing.reassurance.cancelAnytime') }}
+
               </span>
               <span class="checkout-modal__reassurance-separator">•</span>
               <span class="checkout-modal__reassurance-item">
                 {{ t('pricing.reassurance.securePayments') }}
+
               </span>
               <span class="checkout-modal__reassurance-separator">•</span>
               <span class="checkout-modal__reassurance-item">
                 {{ t('pricing.reassurance.noHiddenFees') }}
+
               </span>
             </div>
           </div>
@@ -445,7 +463,6 @@ defineOptions({
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
-
   .modal-fade-enter-active,
   .modal-fade-leave-active,
   .modal-fade-enter-active .checkout-modal,

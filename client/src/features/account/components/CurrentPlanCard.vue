@@ -57,41 +57,56 @@ const getEntitlementBadgeClass = (entitlement: string) => {
     "bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400"
   );
 };
+
 </script>
 
 <template>
   <div class="plan-card">
     <div class="plan-header">
       <div class="plan-info">
-        <h2 class="plan-name">{{ subscription.planType }}</h2>
+        <h2 class="plan-name">{{ subscription.planType }}
+
+</h2>
         <div class="plan-badge" :class="statusBadgeClass">
           {{ $t(`subscription.status.${subscription.status}`) }}
+
         </div>
       </div>
       <div class="plan-price">
-        <span class="price-amount">{{ subscription.price.amount }} </span>
-        <span class="price-currency">{{ subscription.price.currency }} </span>
+        <span class="price-amount">{{ subscription.price.amount }}
+
+ </span>
+        <span class="price-currency">{{ subscription.price.currency }}
+
+ </span>
         <span class="price-period">{{ $t(`subscription.billing.${subscription.billingCycle}`) }}
+
         </span>
       </div>
     </div>
 
     <!-- Plan Features -->
     <div class="plan-features">
-      <h3 class="features-title">{{ $t("subscription.features.title") }}</h3>
+      <h3 class="features-title">{{ $t("subscription.features.title") }}
+
+</h3>
       <ul class="features-list">
         <li v-for="feature in features" :key="feature" class="feature-item">
           <svg class="h-5 w-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
           </svg>
-          <span>{{ feature }} </span>
+          <span>{{ feature }}
+
+ </span>
         </li>
       </ul>
     </div>
 
     <!-- Current Entitlements -->
     <div class="entitlements-section">
-      <h3 class="entitlements-title">{{ $t("subscription.entitlements.title") }}</h3>
+      <h3 class="entitlements-title">{{ $t("subscription.entitlements.title") }}
+
+</h3>
       <div class="entitlements-grid">
         <div v-for="entitlement in entitlements" :key="entitlement" class="entitlement-badge"
           :class="getEntitlementBadgeClass(entitlement)">
@@ -99,36 +114,49 @@ const getEntitlementBadgeClass = (entitlement: string) => {
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
-          <span>{{ $t(`entitlements.${entitlement}`) }} </span>
+          <span>{{ $t(`entitlements.${entitlement}`) }}
+
+ </span>
         </div>
       </div>
       <p class="entitlements-description">
         {{ $t("subscription.entitlements.description") }}
+
       </p>
     </div>
 
     <!-- Subscription Status -->
     <div class="subscription-status">
       <div class="status-item">
-        <span class="status-label">{{ $t("subscription.status.label") }} </span>
+        <span class="status-label">{{ $t("subscription.status.label") }}
+
+ </span>
         <span class="status-value" :class="statusClass">
           {{ $t(`subscription.status.${subscription.status}`) }}
+
         </span>
       </div>
 
       <div v-if="subscription.isActive" class="status-item">
-        <span class="status-label">{{ $t("subscription.nextBilling") }} </span>
-        <span class="status-value">{{ formattedNextBilling }} </span>
+        <span class="status-label">{{ $t("subscription.nextBilling") }}
+
+ </span>
+        <span class="status-value">{{ formattedNextBilling }}
+
+ </span>
       </div>
 
       <div v-if="subscription.isInTrial" class="status-item">
-        <span class="status-label">{{ $t("subscription.trialRemaining") }} </span>
+        <span class="status-label">{{ $t("subscription.trialRemaining") }}
+
+ </span>
         <span class="status-value text-blue-600 dark:text-blue-400">
           {{
             $t("subscription.daysRemaining", {
               days: subscription.daysRemaining,
             })
           }}
+
         </span>
       </div>
     </div>

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { IFormDividerProps } from "@/types/components/ui";
+
 /**
  * FormDivider Component
  * Displays a horizontal divider with centered text (e.g., "Or continue with")
@@ -18,6 +19,7 @@ withDefaults(defineProps<IFormDividerProps>(), {
     <div class="form-divider-line" />
     <span v-if="text" class="form-divider-text">
       {{ text }}
+
     </span>
     <span v-else class="form-divider-text">
       <slot />

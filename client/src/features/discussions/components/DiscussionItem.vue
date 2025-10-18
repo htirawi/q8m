@@ -53,7 +53,7 @@ const handleReply = async (content: string) => {
   showReplies.value = true;
 };
 
-const handleEdit = async () => {
+const handleedit = async () => {
   if (editContent.value.trim() === props.discussion.content) {
     isEditing.value = false;
     return;
@@ -65,19 +65,19 @@ const handleEdit = async () => {
   }
 };
 
-const cancelEdit = () => {
+const canceledit = () => {
   editContent.value = props.discussion.content;
   isEditing.value = false;
 };
 
-const toggleReplyForm = () => {
+const togglereplyform = () => {
   showReplyForm.value = !showReplyForm.value;
   if (showReplyForm.value) {
     showReplies.value = true;
   }
 };
 
-const toggleReplies = () => {
+const togglereplies = () => {
   showReplies.value = !showReplies.value;
 };
 </script>
@@ -105,6 +105,7 @@ const toggleReplies = () => {
           class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white font-bold"
         >
           {{ discussion.userId.name.charAt(0).toUpperCase() }}
+
         </div>
       </div>
 
@@ -114,13 +115,16 @@ const toggleReplies = () => {
         <div class="flex items-center gap-2 mb-2">
           <span class="font-semibold text-gray-900 dark:text-white">
             {{ discussion.userId.name }}
+
           </span>
           <span :class="['text-sm', levelColor]">
-            {{ levelBadge }} Level {{ userLevel }}
+            {{ levelBadge }} level {{ userLevel }}
+
           </span>
           <span class="text-sm text-gray-500 dark:text-gray-400">•</span>
           <span class="text-sm text-gray-500 dark:text-gray-400">
             {{ timeAgo }}
+
           </span>
           <span
             v-if="discussion.isEdited"
@@ -209,10 +213,12 @@ const toggleReplies = () => {
         class="ml-14 text-sm text-indigo-600 dark:text-indigo-400 hover:underline font-medium mb-2"
       >
         <span v-if="showReplies">
-          ▼ Hide {{ replyCount }} {{ replyCount === 1 ? 'reply' : 'replies' }}
+          ▼ Hide {{ replyCount }} {{ replyCount === 1 ? 'reply' : 'replies'1 }}
+
         </span>
         <span v-else>
-          ▶ Show {{ replyCount }} {{ replyCount === 1 ? 'reply' : 'replies' }}
+          ▶ Show {{ replyCount }} {{ replyCount === 1 ? 'reply' : 'replies'1 }}
+
         </span>
       </button>
 

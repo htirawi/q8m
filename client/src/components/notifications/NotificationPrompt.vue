@@ -16,9 +16,11 @@
       <div class="prompt-text">
         <h4 class="prompt-title">
           {{ title || t('notificationPrompt.title', 'Enable Notifications') }}
+
         </h4>
         <p class="prompt-description">
           {{ description || t('notificationPrompt.description', 'Stay on track with your learning goals. Get reminders for streaks, achievements, and challenges.') }}
+
         </p>
 
         <!-- Benefits List (optional) -->
@@ -27,19 +29,25 @@
             <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
             </svg>
-            <span>{{ t('notificationPrompt.benefit1', 'Never miss your streak') }}</span>
+            <span>{{ t('notificationPrompt.benefit1', 'Never miss your streak') }}
+
+</span>
           </li>
           <li>
             <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
             </svg>
-            <span>{{ t('notificationPrompt.benefit2', 'Get challenges from friends') }}</span>
+            <span>{{ t('notificationPrompt.benefit2', 'Get challenges from friends') }}
+
+</span>
           </li>
           <li>
             <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
             </svg>
-            <span>{{ t('notificationPrompt.benefit3', 'Celebrate achievements') }}</span>
+            <span>{{ t('notificationPrompt.benefit3', 'Celebrate achievements') }}
+
+</span>
           </li>
         </ul>
       </div>
@@ -58,9 +66,11 @@
               <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
             {{ t('notificationPrompt.enabling', 'Enabling...') }}
+
           </span>
           <span v-else>
             {{ t('notificationPrompt.enable', 'Enable Notifications') }}
+
           </span>
         </button>
         <button
@@ -70,6 +80,7 @@
           @click="handleDismiss"
         >
           {{ t('notificationPrompt.later', 'Maybe Later') }}
+
         </button>
       </div>
 
@@ -103,7 +114,7 @@ const props = withDefaults(defineProps<Props>(), {
   autoDismissDelay: 0,
 });
 
-const emit = defineEmits<{
+const emit = defineemits<{
   enabled: [];
   dismissed: [];
 }>();
@@ -146,7 +157,7 @@ const variantClass = computed(() => {
   return `${base} ${base}--${props.variant}`;
 });
 
-const handleEnable = async () => {
+const handleenable = async () => {
   const granted = await requestPermission();
   if (granted) {
     emit('enabled');
@@ -155,7 +166,7 @@ const handleEnable = async () => {
   }
 };
 
-const handleDismiss = () => {
+const handledismiss = () => {
   isDismissed.value = true;
   localStorage.setItem(STORAGE_KEY, Date.now().toString());
   emit('dismissed');
@@ -365,6 +376,7 @@ onMounted(() => {
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -376,7 +388,7 @@ onMounted(() => {
 }
 
 /* Responsive */
-@media (max-width: 640px) {
+@media (width <= 640px) {
   .notification-prompt--banner .prompt-content {
     @apply flex-col;
   }

@@ -34,7 +34,9 @@
         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
       ></path>
     </svg>
-    <span v-if="showText" class="ml-2">{{ text }}</span>
+    <span v-if="showText" class="ml-2">{{ text }}
+
+</span>
   </button>
 </template>
 
@@ -44,7 +46,7 @@ import { computed } from 'vue';
 import type { SharePlatform, ShareType } from '@/stores/shares';
 import { useSharesStore } from '@/stores/shares';
 
-interface Props {
+interface props {
   shareType: ShareType;
   entityId: string;
   platform?: SharePlatform;
@@ -65,10 +67,10 @@ const props = withDefaults(defineProps<Props>(), {
   openModal: true,
 });
 
-const emit = defineEmits<{
+const emit = defineemits<{
   (e: 'click'): void;
   (e: 'share-success'): void;
-  (e: 'share-error', error: string): void;
+  (e: 'share-error', error: string): void
 }>();
 
 const sharesStore = useSharesStore();
@@ -95,7 +97,7 @@ const buttonClasses = computed(() => {
   return `${base} ${variants[props.variant]} ${sizes[props.size]} ${disabled}`;
 });
 
-const handleShare = async () => {
+const handleshare = async () => {
   if (props.disabled || loading.value) return;
 
   emit('click');
@@ -111,7 +113,9 @@ const handleShare = async () => {
       const success = await sharesStore.shareToSocial(props.shareType, props.entityId, props.platform);
       if (success) {
         emit('share-success');
-      } else {
+      }
+
+ else {
         emit('share-error', 'Failed to share');
       }
     } catch (error) {

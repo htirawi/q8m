@@ -39,11 +39,11 @@ const handleUnfriend = () => {
   emit('unfriend', props.friend._id);
 };
 
-const handleBlock = () => {
+const handleblock = () => {
   emit('block', props.friend._id);
 };
 
-const handleView = () => {
+const handleview = () => {
   emit('view', props.friend._id);
 };
 </script>
@@ -65,6 +65,7 @@ const handleView = () => {
           ]"
         >
           {{ avatar.value }}
+
         </div>
         <img
           v-else
@@ -85,9 +86,11 @@ const handleView = () => {
             :class="compact ? 'text-sm' : 'text-base'"
           >
             {{ friend.name }}
+
           </h3>
           <span :class="['text-sm', levelColor]" :title="levelTitle">
             {{ levelBadge }}
+
           </span>
         </div>
 
@@ -95,9 +98,13 @@ const handleView = () => {
           class="flex items-center gap-2 text-gray-600 dark:text-gray-400"
           :class="compact ? 'text-xs' : 'text-sm'"
         >
-          <span>Level {{ friend.level }}</span>
+          <span>Level {{ friend.level }}
+
+</span>
           <span>•</span>
-          <span>{{ friend.xp.toLocaleString() }} XP</span>
+          <span>{{ friend.xp.toLocaleString() }}
+
+ XP</span>
         </div>
 
         <div
@@ -105,15 +112,19 @@ const handleView = () => {
           class="text-xs text-gray-500 dark:text-gray-500 mt-1"
         >
           Friends since {{ friendSinceText }}
+
         </div>
 
         <div
           v-if="!compact && friend.mutualFriends && friend.mutualFriends > 0"
           class="text-xs text-indigo-600 dark:text-indigo-400 mt-1"
         >
-          {{ friend.mutualFriends }} mutual friend{{
-            friend.mutualFriends > 1 ? 's' : ''
+          {{ friend.mutualFriends }}
+
+ mutual friend{{
+            friend.mutualFriends > 1 ? 's' : ''1
           }}
+
         </div>
       </div>
 
