@@ -73,11 +73,15 @@ export interface ICoinBalanceProps {
 export interface ILeaderboardEntry {
   rank: number;
   userId: string;
+  currentUserId?: string; // For comparison
   name: string;
   displayName?: string; // Alias for name
   avatar?: string;
   score: number;
+  xp?: number; // Alias for score
+  level?: number;
   change?: number;
+  badges?: unknown[];
 }
 
 export interface IUserRank {
@@ -89,6 +93,10 @@ export interface ILeaderboardProps {
   entries: ILeaderboardEntry[];
   userRank?: IUserRank;
   type?: "weekly" | "monthly" | "all_time";
+  variant?: "compact" | "detailed" | "card";
+  loading?: boolean;
+  getLevelDescriptionClass?: (level: number) => string;
+  scrollTargetSelector?: string;
 }
 
 export interface IReward {

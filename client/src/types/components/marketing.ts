@@ -41,10 +41,14 @@ export interface IComparisonFeature {
 
 export interface IPlanConversionModalProps {
   open: boolean;
+  isVisible?: boolean; // Alias for open
   targetPlan?: PlanId;
   currentPlan?: PlanId;
   requiredPlan?: PlanId | string;
   difficulty?: string;
+  selectedDifficulty?: string;
+  reassurance?: string;
+  variant?: string;
 }
 
 export interface IPlanConversionModalEmits {
@@ -54,9 +58,15 @@ export interface IPlanConversionModalEmits {
 
 export interface IPlanUpsellModalProps {
   open: boolean;
+  isVisible?: boolean; // Alias for open
   feature?: string;
   requiredPlan?: PlanId | string;
   difficulty?: string;
+  selectedDifficulty?: string;
+  target?: string;
+  contentId?: string;
+  reassurance?: string;
+  variant?: string;
 }
 
 export interface IPlanUpsellModalEmits {

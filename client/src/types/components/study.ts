@@ -27,6 +27,7 @@ export interface ILevelCardProps {
   requiredPlan?: PlanTier;
   locked?: boolean;
   isLocked?: boolean; // Alias for locked
+  isSelected?: boolean;
   recommended?: boolean;
   features?: string[];
   canClickLocked?: boolean;

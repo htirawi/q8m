@@ -1,7 +1,6 @@
 <template>
   <div
-    class="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900"
-  >
+    class="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
     <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       <!-- Header -->
       <div class="mb-12 text-center">
@@ -20,59 +19,35 @@
         </h2>
         <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
           <!-- Easy -->
-          <LevelCard
-            difficulty="easy"
-            :is-locked="!canUserAccessDifficulty('easy') && authStore.isAuthenticated"
-            :is-selected="selectedDifficulty === 'easy'"
-            :is-current-plan="isUserCurrentPlan('easy')"
-            :features="easyFeatures"
-            :auto-start-enabled="isAutoStartEnabled"
-            required-plan="free"
-            @select="handleDifficultySelect"
-            @auto-start="handleAutoStart"
-            @unlock-click="handleUnlockClick"
-          />
+          <LevelCard difficulty="easy" :is-locked="!canUserAccessDifficulty('easy') && authStore.isAuthenticated"
+            :is-selected="selectedDifficulty === 'easy'" :is-current-plan="isUserCurrentPlan('easy')"
+            :features="easyFeatures" :auto-start-enabled="isAutoStartEnabled" required-plan="free"
+            @select="handleDifficultySelect" @auto-start="handleAutoStart" @unlock-click="handleUnlockClick" />
 
           <!-- Medium -->
-          <LevelCard
-            difficulty="medium"
-            :is-locked="!canUserAccessDifficulty('medium') && authStore.isAuthenticated"
-            :is-selected="selectedDifficulty === 'medium'"
-            :is-current-plan="isUserCurrentPlan('medium')"
-            :features="mediumFeatures"
-            required-plan="intermediate"
-            @select="handleDifficultySelect"
-            @unlock-click="handleUnlockClick"
-          />
+          <LevelCard difficulty="medium" :is-locked="!canUserAccessDifficulty('medium') && authStore.isAuthenticated"
+            :is-selected="selectedDifficulty === 'medium'" :is-current-plan="isUserCurrentPlan('medium')"
+            :features="mediumFeatures" required-plan="intermediate" @select="handleDifficultySelect"
+            @unlock-click="handleUnlockClick" />
 
           <!-- Hard -->
-          <LevelCard
-            difficulty="hard"
-            :is-locked="!canUserAccessDifficulty('hard') && authStore.isAuthenticated"
-            :is-selected="selectedDifficulty === 'hard'"
-            :is-current-plan="isUserCurrentPlan('hard')"
-            :features="hardFeatures"
-            required-plan="advanced"
-            @select="handleDifficultySelect"
-            @unlock-click="handleUnlockClick"
-          />
+          <LevelCard difficulty="hard" :is-locked="!canUserAccessDifficulty('hard') && authStore.isAuthenticated"
+            :is-selected="selectedDifficulty === 'hard'" :is-current-plan="isUserCurrentPlan('hard')"
+            :features="hardFeatures" required-plan="advanced" @select="handleDifficultySelect"
+            @unlock-click="handleUnlockClick" />
         </div>
       </div>
 
       <!-- Start Button (Visible when auto-start is disabled or no selection) -->
-      <StartStudyingCta
-        v-if="!isAutoStartEnabled || selectedDifficulty !== 'easy'"
+      <StartStudyingCta v-if="!isAutoStartEnabled || selectedDifficulty !== 'easy'"
         :selected-difficulty="selectedDifficulty"
         :disabled="selectedDifficulty !== null && !canUserAccessDifficulty(selectedDifficulty)"
-        scroll-target-selector="#difficulty-selection"
-        @click="startStudy"
-      />
+        scroll-target-selector="#difficulty-selection" @click="startStudy" />
 
       <!-- Features -->
       <div class="mt-16 grid grid-cols-1 gap-6 md:grid-cols-3">
         <div
-          class="rounded-xl border border-gray-200 bg-white/50 p-6 backdrop-blur dark:border-gray-700 dark:bg-gray-800/50"
-        >
+          class="rounded-xl border border-gray-200 bg-white/50 p-6 backdrop-blur dark:border-gray-700 dark:bg-gray-800/50">
           <div class="mb-3 text-3xl">📚</div>
           <h3 class="mb-2 font-semibold text-gray-900 dark:text-white">
             {{ t("study.features.selfPaced?.title") }}
@@ -83,8 +58,7 @@
         </div>
 
         <div
-          class="rounded-xl border border-gray-200 bg-white/50 p-6 backdrop-blur dark:border-gray-700 dark:bg-gray-800/50"
-        >
+          class="rounded-xl border border-gray-200 bg-white/50 p-6 backdrop-blur dark:border-gray-700 dark:bg-gray-800/50">
           <div class="mb-3 text-3xl">💡</div>
           <h3 class="mb-2 font-semibold text-gray-900 dark:text-white">
             {{ t("study.features.detailedExplanations?.title") }}
@@ -95,8 +69,7 @@
         </div>
 
         <div
-          class="rounded-xl border border-gray-200 bg-white/50 p-6 backdrop-blur dark:border-gray-700 dark:bg-gray-800/50"
-        >
+          class="rounded-xl border border-gray-200 bg-white/50 p-6 backdrop-blur dark:border-gray-700 dark:bg-gray-800/50">
           <div class="mb-3 text-3xl">🔖</div>
           <h3 class="mb-2 font-semibold text-gray-900 dark:text-white">
             {{ t("study.features.bookmarks?.title") }}
@@ -109,24 +82,14 @@
     </div>
 
     <!-- Sticky Start Bar (secondary affordance when auto-start is off) -->
-    <StickyStartBar
-      :is-visible="!isAutoStartEnabled && selectedDifficulty === 'easy'"
-      :selected-difficulty="selectedDifficulty"
-      :state="loadingState"
-      :error-message="errorMessage"
-      :has-last-session="hasLastSession"
-      @start="handleStickyStart"
-      @retry="handleStickyRetry"
-    />
+    <StickyStartBar :is-visible="!isAutoStartEnabled && selectedDifficulty === 'easy'"
+      :selected-difficulty="selectedDifficulty" :state="loadingState" :error-message="errorMessage"
+      :has-last-session="hasLastSession" @start="handleStickyStart" @retry="handleStickyRetry" />
 
     <!-- Convert Modal -->
-    <PlanConversionModal
-      v-if="upsellModalContext"
-      :is-visible="isUpsellModalVisible"
-      :difficulty="upsellModalContext.difficulty"
-      :required-plan="upsellModalContext.requiredPlan"
-      @dismiss="handleUpsellDismiss"
-    />
+    <PlanConversionModal v-if="upsellModalContext" :is-visible="isUpsellModalVisible"
+      :difficulty="upsellModalContext.difficulty" :required-plan="upsellModalContext.requiredPlan"
+      @dismiss="handleUpsellDismiss" />
   </div>
 </template>
 
