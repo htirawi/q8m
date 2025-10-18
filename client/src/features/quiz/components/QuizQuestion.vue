@@ -29,8 +29,7 @@
           <span class="font-semibold text-gray-700 dark:text-gray-300"
             >{{ question.points }}
 
-            point{{ question.points !==
-            1 ? 's' : ''1 }}
+            point{{ question.points !== 1 ? "s" : "" }}
           </span>
         </div>
 

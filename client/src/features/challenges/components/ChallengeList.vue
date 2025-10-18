@@ -125,34 +125,31 @@
 
 <script setup lang="ts">
 import type { IChallengeListProps as Props } from "@/types/components/challenges";
-import { ref, computed } from 'vue';
-import type { Challenge } from '@/stores/challenges';
-import { useChallenges } from '@/composables/useChallenges';
-import ChallengeCard from './ChallengeCard.vue';
-
+import { ref, computed } from "vue";
+import type { Challenge } from "@/stores/challenges";
+import { useChallenges } from "@/composables/useChallenges";
+import ChallengeCard from "./ChallengeCard.vue";
 
 const props = withDefaults(defineProps<Props>(), {
   loading: false,
   pagination: () => ({ page: 1, limit: 20, total: 0, hasMore: false }),
-  emptyStateTitle: 'No challenges yet',
-  emptyStateMessage: 'Challenge your friends to a quiz battle!',
+  emptyStateTitle: "No challenges yet",
+  emptyStateMessage: "Challenge your friends to a quiz battle!",
   showCreateButton: true,
 });
 
 const emit = defineEmits<{
-  accept: [;
-  reject: [;
-  start: [;
-  'view-details': [challengeId: string];
-
-
+  accept: [challengeId: string];
+  reject: [challengeId: string];
+  start: [challengeId: string];
+  "view-details": [challengeId: string];
 }>();
 
 const { sortChallenges, filterChallenges } = useChallenges();
 
-const sortBy = ref<'date' | 'difficulty' | 'score'>('date');
-const filterDifficulty = ref('');
-const filterFramework = ref('');
+const sortBy = ref<"date" | "difficulty" | "score">("date");
+const filterDifficulty = ref("");
+const filterFramework = ref("");
 const loadingChallengeId = ref<string | null>(null);
 
 const filteredAndSortedChallenges = computed(() => {
@@ -174,14 +171,14 @@ const filteredAndSortedChallenges = computed(() => {
 });
 
 const clearfilters = () => {
-  sortBy.value = 'date';
-  filterDifficulty.value = '';
-  filterFramework.value = '';
+  sortBy.value = "date";
+  filterDifficulty.value = "";
+  filterFramework.value = "";
 };
 
 const handleaccept = async (challengeId: string) => {
   loadingChallengeId.value = challengeId;
-  emit('accept', challengeId);
+  emit("accept", challengeId);
   setTimeout(() => {
     loadingChallengeId.value = null;
   }, 2000);
@@ -189,17 +186,17 @@ const handleaccept = async (challengeId: string) => {
 
 const handlereject = async (challengeId: string) => {
   loadingChallengeId.value = challengeId;
-  emit('reject', challengeId);
+  emit("reject", challengeId);
   setTimeout(() => {
     loadingChallengeId.value = null;
   }, 2000);
 };
 
 const handlestart = (challengeId: string) => {
-  emit('start', challengeId);
+  emit("start", challengeId);
 };
 
 const handleviewdetails = (challengeId: string) => {
-  emit('view-details', challengeId);
+  emit("view-details", challengeId);
 };
 </script>

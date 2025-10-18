@@ -50,7 +50,7 @@ function animateValue(start: number, end: number) {
   animationFrame = requestAnimationFrame(animate);
 }
 
-const valueRef = toRef(props, 'value');
+const valueRef = toRef(props, "value");
 
 watch(
   valueRef,
@@ -59,7 +59,7 @@ watch(
       animateValue(currentValue.value, newValue);
     }
   },
-  { flush: 'post' }
+  { flush: "post" }
 );
 
 onMounted(() => {

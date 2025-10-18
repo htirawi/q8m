@@ -51,12 +51,12 @@
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 
-interface props {
+interface Props {
   showWarningDialog: boolean;
   timeRemaining: number;
 }
 
-interface emits {
+interface Emits {
   (e: "extend"): void;
   (e: "logout"): void;
 }
@@ -79,7 +79,7 @@ const formatTime = (ms: number): string => {
   return `${minutes}:${seconds.toString().padStart(2, "0")}`;
 };
 
-const extendsession = () => {
+const extendSession = () => {
   emit("extend");
 };
 

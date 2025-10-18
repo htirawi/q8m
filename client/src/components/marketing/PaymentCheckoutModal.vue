@@ -162,7 +162,7 @@ defineOptions({
           <!-- Header -->
           <div class="checkout-modal__header">
             <h2 class="checkout-modal__title">
-              {{ selectedPlan ? getPlanDisplayName(selectedPlan.tier) : t('plans.title')getPlanDisplayName }}
+              {{ selectedPlan ? getPlanDisplayName(selectedPlan.tier) : t("plans.title") }}
             </h2>
             <p class="checkout-modal__price">
               <span class="checkout-modal__price-amount">{{ formattedPrice }} </span>

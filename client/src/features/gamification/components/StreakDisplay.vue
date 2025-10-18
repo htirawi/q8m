@@ -10,7 +10,7 @@
         <span class="text-2xl">{{ streakIcon }} </span>
         <div class="text-left">
           <div class="text-sm font-bold text-gray-900 dark:text-white">
-            {{ streak.currentStreak }} day{{ streak.currentStreak !== 1 ? 's' : ''1 }}
+            {{ streak.currentStreak }} day{{ streak.currentStreak !== 1 ? "s" : "" }}
           </div>
           <div class="text-xs text-gray-500 dark:text-gray-400">
             {{ streakStatusMessage }}
@@ -111,7 +111,9 @@
               />
             </svg>
             <span
-              >You have {{ streak.freezesAvailable }} free freeze{{ streak.freezesAvailable !== 1 ? 's' : ''1 }}
+              >You have {{ streak.freezesAvailable }} free freeze{{
+                streak.freezesAvailable !== 1 ? "s" : ""
+              }}
 
               available!</span
             >

@@ -107,9 +107,7 @@ const handleview = () => {
         >
           {{ friend.mutualFriends }}
 
-          mutual friend{{
-            friend.mutualFriends > 1 ? 's' : ''1
-          }}
+          mutual friend{{ friend.mutualFriends > 1 ? "s" : "" }}
         </div>
       </div>
 

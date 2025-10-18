@@ -86,7 +86,7 @@ import { computed } from "vue";
 import { useRoute } from "vue-router";
 import type { ILearningPath } from "@shared/types/learning-paths";
 
-interface props {
+interface Props {
   path: ILearningPath;
 }
 

@@ -112,7 +112,11 @@
       <div class="mb-4 text-6xl">🎖️</div>
       <h3 class="mb-2 text-lg font-semibold text-gray-900 dark:text-white">No badges found</h3>
       <p class="text-gray-600 dark:text-gray-400">
-        {{ selectedCategory || selectedRarity ? 'Try changing your filters' : 'Start earning badges by completing activities!'selectedRarity }}
+        {{
+          selectedCategory || selectedRarity
+            ? "Try changing your filters"
+            : "Start earning badges by completing activities!"
+        }}
       </p>
     </div>
 

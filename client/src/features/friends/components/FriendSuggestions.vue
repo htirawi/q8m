@@ -208,8 +208,9 @@ onMounted(async () => {
                 v-if="showMutualFriends && suggestion.mutualFriends && suggestion.mutualFriends > 0"
                 class="text-xs text-indigo-600 dark:text-indigo-400"
               >
-                {{ suggestion.mutualFriends }} mutual friend{{ suggestion.mutualFriends > 1 ? 's' :
-                '' ;
+                {{ suggestion.mutualFriends }} mutual friend{{
+                  suggestion.mutualFriends > 1 ? "s" : ""
+                }}
               </div>
             </div>
 

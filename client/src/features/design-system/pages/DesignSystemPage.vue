@@ -575,7 +575,7 @@ onUnmounted(() => {
 
                         <div v-if="framework.length > 0" class="selected-frameworks">
                           <div class="selected-count">
-                            {{ framework.length }} framework{{ framework.length > 1 ? "s" : ""1 }}
+                            {{ framework.length }} framework{{ framework.length > 1 ? "s" : "" }}
                             selected
                           </div>
                           <div class="selected-tags">
