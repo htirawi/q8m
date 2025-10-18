@@ -210,21 +210,19 @@
 
 <script setup lang="ts">
 import type { IChallengeCardProps as Props } from "@/types/components/challenges";
-import { computed } from 'vue';
-import type { Challenge } from '@/stores/challenges';
-import { useChallenges } from '@/composables/useChallenges';
-
-
+import { computed } from "vue";
+import type { Challenge } from "@/stores/challenges";
+import { useChallenges } from "@/composables/useChallenges";
 
 const props = withDefaults(defineProps<Props>(), {
   loading: false,
 });
 
 defineEmits<{
-  accept: [;
-  reject: [;
-  start: [;
-  'view-details': [challengeId: string];
+  accept: [challengeId: string];
+  reject: [challengeId: string];
+  start: [challengeId: string];
+  "view-details": [challengeId: string];
 }>();
 
 const {
@@ -254,23 +252,23 @@ const opponentLevel = computed(() => opponent.value.gamification?.level || 1);
 
 const getInitials = (name: string): string => {
   return name
-    .split(' ')
+    .split(" ")
     .map((n) => n.charAt(0))
-    .join('')
+    .join("")
     .toUpperCase()
     .slice(0, 2);
 };
 
 const getAvatarColor = (name: string): string => {
   const colors = [
-    'bg-red-500',
-    'bg-orange-500',
-    'bg-yellow-500',
-    'bg-green-500',
-    'bg-blue-500',
-    'bg-indigo-500',
-    'bg-purple-500',
-    'bg-pink-500',
+    "bg-red-500",
+    "bg-orange-500",
+    "bg-yellow-500",
+    "bg-green-500",
+    "bg-blue-500",
+    "bg-indigo-500",
+    "bg-purple-500",
+    "bg-pink-500",
   ];
 
   let hash = 0;

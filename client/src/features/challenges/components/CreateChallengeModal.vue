@@ -203,12 +203,10 @@
 
 <script setup lang="ts">
 import type { ICreateChallengeModalProps as Props } from "@/types/components/challenges";
-import { ref, computed, watch } from 'vue';
-import type { Friend } from '@/stores/friends';
-import type { CreateChallengeData } from '@/stores/challenges';
-import { useChallenges } from '@/composables/useChallenges';
-
-
+import { ref, computed, watch } from "vue";
+import type { Friend } from "@/stores/friends";
+import type { CreateChallengeData } from "@/stores/challenges";
+import { useChallenges } from "@/composables/useChallenges";
 
 const props = withDefaults(defineProps<Props>(), {
   loading: false,
@@ -216,34 +214,34 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<{
   close: [];
-  submit: [;data: CreateChallengeData]
+  submit: [data: CreateChallengeData];
 }>();
 
 const { validateChallengeData } = useChallenges();
 
 const formData = ref<CreateChallengeData>({
-  challengedUserId: '',
-  difficulty: 'medium',
+  challengedUserId: "",
+  difficulty: "medium",
   framework: undefined,
   questionCount: 10,
   timeLimit: 600,
-  message: '',
+  message: "",
 });
 
-const errorMessage = ref('');
+const errorMessage = ref("");
 
 const difficulties = [
-  { value: 'easy' as const, emoji: '🟢', label: 'Easy' },
-  { value: 'medium' as const, emoji: '🟡', label: 'Medium' },
-  { value: 'hard' as const, emoji: '🔴', label: 'Hard' },
+  { value: "easy" as const, emoji: "🟢", label: "Easy" },
+  { value: "medium" as const, emoji: "🟡", label: "Medium" },
+  { value: "hard" as const, emoji: "🔴", label: "Hard" },
 ];
 
 const frameworks = [
-  { value: 'angular' as const, emoji: '🅰️', label: 'Angular' },
-  { value: 'react' as const, emoji: '⚛️', label: 'React' },
-  { value: 'nextjs' as const, emoji: '▲', label: 'Next.js' },
-  { value: 'redux' as const, emoji: '🔄', label: 'Redux' },
-  { value: 'random' as const, emoji: '🎲', label: 'Random' },
+  { value: "angular" as const, emoji: "🅰️", label: "Angular" },
+  { value: "react" as const, emoji: "⚛️", label: "React" },
+  { value: "nextjs" as const, emoji: "▲", label: "Next.js" },
+  { value: "redux" as const, emoji: "🔄", label: "Redux" },
+  { value: "random" as const, emoji: "🎲", label: "Random" },
 ];
 
 const isFormValid = computed(() => {
@@ -257,33 +255,33 @@ const formatTimeLimit = (seconds: number): string => {
 
 const close = () => {
   if (!props.loading) {
-    emit('close');
+    emit("close");
     resetForm();
   }
 };
 
 const resetform = () => {
   formdata.value = {
-    challengedUserId: '',
-    difficulty: 'medium',
+    challengedUserId: "",
+    difficulty: "medium",
     framework: undefined,
     questionCount: 10,
     timeLimit: 600,
-    message: '',
+    message: "",
   };
-  errorMessage.value = '';
+  errorMessage.value = "";
 };
 
 const handlesubmit = () => {
-  errorMessage.value = '';
+  errorMessage.value = "";
 
   const validation = validateChallengeData(formData.value);
   if (!validation.valid) {
-    errorMessage.value = validation.error || 'Invalid form data';
+    errorMessage.value = validation.error || "Invalid form data";
     return;
   }
 
-  emit('submit', { ...formData.value });
+  emit("submit", { ...formData.value });
 };
 
 // Reset form when modal closes

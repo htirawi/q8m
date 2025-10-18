@@ -10,6 +10,12 @@ export default defineConfig({
         defineModel: true,
         propsDestructure: true,
       },
+      template: {
+        compilerOptions: {
+          // Enable stricter template checking
+          isCustomElement: (tag) => tag.startsWith("ion-"),
+        },
+      },
     }),
     VitePWA({
       registerType: "autoUpdate",

@@ -80,7 +80,7 @@ import { computed } from "vue";
 import { useRoute } from "vue-router";
 import type { IModule, IModuleProgress } from "@shared/types/learning-paths";
 
-interface props {
+interface Props {
   modules: IModule[];
   moduleProgress: IModuleProgress[];
   isEnrolled: boolean;

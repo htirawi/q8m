@@ -59,8 +59,7 @@
           >
             Master
             <span class="font-bold text-purple-600 dark:text-purple-400"
-              >{{ totalQuestions > 0 ? totalQuestions + '+' :
-              ''0totalQuestions }}
+              >{{ totalQuestions > 0 ? totalQuestions + "+" : totalQuestions }}
             </span>
             {{ getDifficultyLabel(difficulty) }}
 

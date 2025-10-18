@@ -1,0 +1,12 @@
+# Build output
+dist/
+coverage/
+.vite/
+
+# Dependencies
+node_modules/
+
+# Generated files
+*.log
+.DS_Store
+

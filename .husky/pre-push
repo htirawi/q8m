@@ -31,6 +31,13 @@ else
   echo "ℹ️  No server files to lint"
 fi
 
+# Run format check
+echo "💅 Checking code formatting..."
+pnpm format:check || {
+  echo "❌ Code formatting check failed. Run 'pnpm format' to fix."
+  exit 1
+}
+
 # Run typecheck on all code
 echo "🔍 Running typecheck..."
 pnpm typecheck || {
@@ -45,10 +52,11 @@ pnpm test:unit || {
   exit 1
 }
 
-# Build the project
+# Build the project (this will run vue-tsc again + vite build)
 echo "🔨 Building project..."
 pnpm build || {
   echo "❌ Build failed. Please fix the build errors above."
+  echo "💡 Tip: Run 'pnpm build' locally to catch build errors before pushing."
   exit 1
 }
 

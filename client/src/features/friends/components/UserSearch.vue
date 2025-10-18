@@ -254,9 +254,7 @@ if (props.showSuggestions) {
               >
                 {{ user.mutualFriends }}
 
-                mutual friend{{
-                  user.mutualFriends > 1 ? 's' : ''1
-                }}
+                mutual friend{{ user.mutualFriends > 1 ? "s" : "" }}
               </div>
             </div>
 
@@ -341,9 +339,7 @@ if (props.showSuggestions) {
               >
                 {{ suggestion.mutualFriends }}
 
-                mutual friend{{
-                  suggestion.mutualFriends > 1 ? 's' : ''1
-                }}
+                mutual friend{{ suggestion.mutualFriends > 1 ? "s" : "" }}
               </div>
             </div>
 

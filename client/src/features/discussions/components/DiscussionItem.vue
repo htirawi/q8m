@@ -202,9 +202,9 @@ const togglereplies = () => {
         class="mb-2 ml-14 text-sm font-medium text-indigo-600 hover:underline dark:text-indigo-400"
       >
         <span v-if="showReplies">
-          ▼ Hide {{ replyCount }} {{ replyCount === 1 ? 'reply' : 'replies'1 }}
+          ▼ Hide {{ replyCount }} {{ replyCount === 1 ? "reply" : "replies" }}
         </span>
-        <span v-else> ▶ Show {{ replyCount }} {{ replyCount === 1 ? 'reply' : 'replies'1 }} </span>
+        <span v-else> ▶ Show {{ replyCount }} {{ replyCount === 1 ? "reply" : "replies" }} </span>
       </button>
 
       <!-- Replies List -->
