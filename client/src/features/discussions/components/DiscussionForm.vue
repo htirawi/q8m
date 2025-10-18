@@ -6,7 +6,7 @@ import type {
 import { ref, computed } from "vue";
 import { useDiscussions } from "@/composables/useDiscussions";
 
-const props = withDefaults(defineProps<Props>(), {
+const _props = withDefaults(defineProps<Props>(), {
   placeholder: "Start a discussion...",
   minRows: 3,
   maxRows: 10,

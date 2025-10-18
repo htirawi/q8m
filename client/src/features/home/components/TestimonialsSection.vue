@@ -4,7 +4,7 @@ import { HOMEPAGE_TESTIMONIALS } from "@/data/home";
 import SectionHeader from "@/components/ui/SectionHeader.vue";
 import TestimonialCard from "@/components/ui/TestimonialCard.vue";
 
-const props = withDefaults(defineProps<Props>(), {
+const _props = withDefaults(defineProps<Props>(), {
   testimonials: () => HOMEPAGE_TESTIMONIALS,
 });
 </script>

@@ -87,8 +87,8 @@ const refreshMetrics = () => {
   performance.analyzeResourceTimings();
 };
 
-const exportmetrics = () => {
-  const exportdata = {
+const _exportmetrics = () => {
+  const _exportdata = {
     timestamp: new Date().toISOString(),
     metrics: metrics.value,
     resourceTimings: resourceTimings.value,

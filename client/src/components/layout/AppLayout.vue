@@ -15,7 +15,7 @@ const authStore = useAuthStore();
 const themeStore = useThemeStore();
 
 // Router
-const router = useRouter();
+const _router = useRouter();
 
 // Composables
 const seo = useSEO();

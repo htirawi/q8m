@@ -97,7 +97,7 @@ const props = defineProps<Props>();
 
 const router = useRouter();
 const isExpanded = ref(false);
-const contentid = `upsell-${Math.random().toString(36).substring(7)}`;
+const _contentid = `upsell-${Math.random().toString(36).substring(7)}`;
 
 const toggleExpanded = () => {
   isExpanded.value = !isExpanded.value;

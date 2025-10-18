@@ -3,7 +3,7 @@ import type { IHomeCredibilityProps as Props } from "@/types/components/home";
 import { useI18n } from "vue-i18n";
 import { HOMEPAGE_CREDIBILITY } from "@/data/home";
 
-const props = withDefaults(defineProps<Props>(), {
+const _props = withDefaults(defineProps<Props>(), {
   logos: () => HOMEPAGE_CREDIBILITY,
   titleKey: "home.credibility.title",
 });

@@ -428,7 +428,7 @@ const formatPrice = (price: number, currency: string): string => {
   }).format(price);
 };
 
-const handlecyclechange = (cycle: BillingCycle) => {
+const _handlecyclechange = (cycle: BillingCycle) => {
   selectPlan(props.requiredPlan, cycle);
 };
 
@@ -436,7 +436,7 @@ const toggleCoupon = () => {
   showCoupon.value = !showCoupon.value;
 };
 
-const handleapplycoupon = async () => {
+const _handleapplycoupon = async () => {
   if (!couponInput.value) return;
 
   const success = await applyCoupon(couponInput.value);
@@ -449,7 +449,7 @@ const handleapplycoupon = async () => {
   }
 };
 
-const handlesubscribe = async () => {
+const _handlesubscribe = async () => {
   track("subscribe_click", {
     difficulty: props.difficulty,
     plan: props.requiredPlan,

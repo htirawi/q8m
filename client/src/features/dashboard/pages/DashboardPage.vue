@@ -383,7 +383,7 @@ const { t } = useI18n();
 const router = useRouter();
 const planStore = usePlanStore();
 const streakStore = useStreakStore();
-const authStore = useAuthStore();
+const _authStore = useAuthStore();
 
 // Dashboard data
 const dashboardStats = ref({
@@ -650,7 +650,7 @@ const goToBilling = () => {
   router.push("/en/pricing");
 };
 
-const goToProgress = () => {
+const _goToProgress = () => {
   router.push("/en/progress");
 };
 

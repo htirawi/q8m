@@ -143,7 +143,7 @@ const goBack = () => {
   router.push(`/${locale.value}/paths/${route.params.slug}`);
 };
 
-const downloadcertificate = () => {
+const _downloadcertificate = () => {
   // Simple download using print functionality
   window.print();
 };

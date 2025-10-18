@@ -309,7 +309,7 @@ const updateTextAnswer = (event: Event) => {
   emit("update:textAnswer", target.value);
 };
 
-const togglecheckbox = (optionId: string) => {
+const _togglecheckbox = (optionId: string) => {
   const newAnswers = props.multipleAnswers.includes(optionId)
     ? props.multipleAnswers.filter((id) => id !== optionId)
     : [...props.multipleAnswers, optionId];

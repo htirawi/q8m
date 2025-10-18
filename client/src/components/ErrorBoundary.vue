@@ -106,11 +106,11 @@ const errorDetails = computed(() => {
   return JSON.stringify(parsed, null, 2);
 });
 
-const displayTitle = computed(() => {
+const _displayTitle = computed(() => {
   return props.title || t("errors.somethingWentWrong");
 });
 
-const displayMessage = computed(() => {
+const _displayMessage = computed(() => {
   if (props.message) return props.message;
   if (props.error) return getUserFriendlyMessage(props.error, props.context);
   return t("errors.defaultMessage");

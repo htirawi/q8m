@@ -329,7 +329,7 @@ const clearFilters = () => {
   answeredFilter.value = "all";
 };
 
-const getdisplaytotal = () => {
+const _getdisplaytotal = () => {
   // For bookmarked mode, show bookmark count
   if (practiceMode.value === "bookmarked") {
     return bookmarkCount.value;
@@ -865,13 +865,13 @@ const startSessionTimer = () => {
   }, 1000);
 };
 
-const pauseSessionTimer = () => {
+const _pauseSessionTimer = () => {
   isTimerPaused.value = true;
   saveSessionState();
   updateSessionDisplay();
 };
 
-const resumeSessionTimer = () => {
+const _resumeSessionTimer = () => {
   const pausedDuration = Date.now() - (sessionStartTime.value + sessionElapsedTime.value * 1000);
   sessionStartTime.value += pausedDuration;
   isTimerPaused.value = false;

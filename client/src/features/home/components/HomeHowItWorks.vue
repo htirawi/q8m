@@ -4,7 +4,7 @@ import { useI18n } from "vue-i18n";
 import { HOMEPAGE_STEPS } from "@/data/home";
 import SectionHeader from "@/components/ui/SectionHeader.vue";
 
-const props = withDefaults(defineProps<Props>(), {
+const _props = withDefaults(defineProps<Props>(), {
   steps: () => HOMEPAGE_STEPS,
 });
 

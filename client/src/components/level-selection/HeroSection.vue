@@ -183,7 +183,7 @@ const props = withDefaults(defineProps<Props>(), {
   recentBadges: () => [],
 });
 
-const emit = defineEmits<{}>();
+const _emit = defineEmits<{}>();
 
 const { t, locale } = useI18n();
 

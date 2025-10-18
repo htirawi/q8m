@@ -36,7 +36,7 @@ const handleBlur = () => {
   }
 };
 
-const handlecontinue = () => {
+const _handlecontinue = () => {
   if (isValid.value) {
     emit("continue");
   }

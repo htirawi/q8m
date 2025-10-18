@@ -4,7 +4,7 @@ import { HOMEPAGE_FEATURES } from "@/data/home";
 import SectionHeader from "@/components/ui/SectionHeader.vue";
 import FeatureCard from "@/components/ui/FeatureCard.vue";
 
-const props = withDefaults(defineProps<Props>(), {
+const _props = withDefaults(defineProps<Props>(), {
   features: () => HOMEPAGE_FEATURES,
 });
 </script>

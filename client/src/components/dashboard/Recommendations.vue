@@ -173,7 +173,7 @@ interface props {
   showRefresh?: boolean;
 }
 
-const props = withDefaults(defineProps<Props>(), {
+const _props = withDefaults(defineProps<Props>(), {
   showRefresh: true,
 });
 

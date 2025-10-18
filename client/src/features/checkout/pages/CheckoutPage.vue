@@ -37,7 +37,7 @@ const retry = async () => {
   }
 };
 
-const initializecheckout = async () => {
+const _initializecheckout = async () => {
   try {
     // Ensure user is authenticated
     if (!authStore.isAuthenticated) {

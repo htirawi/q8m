@@ -13,7 +13,7 @@ const { routeAfterLogin } = usePostLoginRouter();
 function handleOAuthLogin(provider: "google") {
   // Redirect to OAuth endpoint on the backend
   const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
-  const oauthurl = `${apiBaseUrl}/api/v1/auth/${provider}`;
+  const _oauthurl = `${apiBaseUrl}/api/v1/auth/${provider}`;
 
   // Store the intended redirect URL (from signInSuccessUrl query param) or default to study
   const signInSuccessUrl = route.query.signInSuccessUrl as string | undefined;

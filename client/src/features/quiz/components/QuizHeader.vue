@@ -112,7 +112,7 @@ const { t, locale } = useI18n();
 
 const progress = computed(() => ((props.currentIndex + 1) / props.totalQuestions) * 100);
 
-const levelDotClass = computed(() => {
+const _levelDotClass = computed(() => {
   const classes = {
     junior: "bg-green-500",
     intermediate: "bg-yellow-500",
