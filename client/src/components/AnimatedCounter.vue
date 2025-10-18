@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 import type { IAnimatedCounterProps as Props } from "@/types/components/ui";
-import { ref, watch, onMounted } from "vue";
+import { ref, watch, onMounted, toRef } from "vue";
 
 const props = withDefaults(defineProps<Props>(), {
   value: 0,
@@ -50,8 +50,10 @@ function animateValue(start: number, end: number) {
   animationFrame = requestAnimationFrame(animate);
 }
 
+const valueRef = toRef(props, 'value');
+
 watch(
-  () => props.value,
+  valueRef,
   (newValue, oldValue) => {
     if (oldValue !== undefined) {
       animateValue(currentValue.value, newValue);
