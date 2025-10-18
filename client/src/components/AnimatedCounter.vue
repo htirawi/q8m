@@ -56,7 +56,8 @@ watch(
     if (oldValue !== undefined) {
       animateValue(currentValue.value, newValue);
     }
-  }
+  },
+  { flush: 'post' }
 );
 
 onMounted(() => {
