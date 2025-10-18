@@ -436,9 +436,6 @@ const shuffleQuestions = () => {
   // Use originalQuestions if available, otherwise use allQuestions
   const questionsToShuffle =
     originalQuestions.value.length > 0 ? originalQuestions.value : allQuestions.value;
-  (UseoriginalQuestionsifavailable,
-    otherwiseuseallQuestionsconstquestionsToShuffleoriginalQuestions.value.length0originalQuestions
-      .value);
   const shuffled = [...questionsToShuffle];
 
   for (let i = shuffled.length - 1; i > 0; i--) {

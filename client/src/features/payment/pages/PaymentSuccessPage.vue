@@ -32,16 +32,12 @@ const parseOrderDetails = () => {
   const billingCycle = route.query.billing as string;
 
   if (orderId && planName && amount) {
-    orderdetails.value = {
+    orderDetails.value = {
       orderId,
       planName,
-      amount: `${amount} ${currency}
-
-`,
+      amount: `${amount} ${currency}`,
       billingCycle,
       date: new Date().toISOString(),
-      billingCycle,
-      date,
     };
   }
 };

@@ -312,13 +312,6 @@ const handleKeyboardShortcut = (event: KeyboardEvent) => {
   ) {
     // Don't trigger if user is typing in an input/textarea
     const target = event.target as HTMLElement;
-    Determineifadifficultylevelrepresentstheuserpromediumhardproeasymediumhardstudy.levelCard
-      .features.easy.feature1study.levelCard.features.easy.feature2study.levelCard.features.easy
-      .feature3study.levelCard.features.medium.feature1study.levelCard.features.medium.feature2study
-      .levelCard.features.medium.feature3study.levelCard.features.medium.feature4study.levelCard
-      .features.hard.feature1study.levelCard.features.hard.feature2study.levelCard.features.hard
-      .feature3study.levelCard.features.hard.feature4study.levelCard.features.hard
-      .feature5easyAuto - startfailed;
     if (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable) {
       return;
     }
