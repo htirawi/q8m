@@ -2,6 +2,8 @@
  * Pricing Domain Types
  */
 
+export type PlanId = "junior" | "intermediate" | "senior" | "bundle";
+export type BillingCycle = "monthly" | "yearly" | "annual";
 export type PlanTier = "JUNIOR" | "INTERMEDIATE" | "SENIOR" | "BUNDLE";
 
 export interface Plan {

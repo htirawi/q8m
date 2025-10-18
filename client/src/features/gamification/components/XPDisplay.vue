@@ -187,7 +187,7 @@
               </div>
               <div class="flex-1">
                 <div class="font-semibold text-gray-900 dark:text-white">
-                  {{ levelInfo.title }}
+                  {{ levelInfo.title ?? "" }}
                 </div>
                 <div class="text-xs text-gray-500 dark:text-gray-400">
                   Levels {{ levelInfo.min }}-{{ levelInfo.max }}
@@ -293,7 +293,7 @@
 </template>
 
 <script setup lang="ts">
-import type { IXPDisplayProps as Props } from "@/types/components/gamification";
+import type { IXPDisplayProps as Props } from "../../../types/components/gamification";
 
 const props = withDefaults(defineProps<Props>(), {
   variant: "card",
@@ -322,10 +322,10 @@ const levelTitles = [
 function getLevelTitleForLevel(level: number): string {
   const titleObj = levelTitles.find((t) => level >= t.min && level <= t.max);
   return titleObj ? titleObj.title : "Legend";
-  titleObjtitleObj.title;
 }
 
-function formatNumber(num: number): string {
+function formatNumber(num: number | undefined): string {
+  if (num === undefined) return "0";
   if (num >= 1000000) {
     return `${(num / 1000000).toFixed(1)}M`;
   }

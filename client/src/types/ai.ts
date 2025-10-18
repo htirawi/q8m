@@ -19,6 +19,8 @@ export interface IChatMessage {
     codeBlocks?: ICodeBlock[];
     suggestions?: string[];
     relatedTopics?: string[];
+    originalError?: string;
+    retryable?: boolean;
   };
   streaming?: boolean;
   edited?: boolean;
@@ -100,6 +102,9 @@ export interface ISmartExplanation {
   questionId: string;
   concept: string;
   explanation: string;
+  definition?: string; // Short definition of the concept
+  importance?: string; // Why this concept matters
+  pitfalls?: string[]; // Common mistakes
   difficulty: "beginner" | "intermediate" | "advanced";
   examples?: ICodeExample[];
   visualAids?: IVisualAid[];
@@ -438,18 +443,3 @@ export interface IBestPracticeViolation {
   line?: number;
   suggestion: string;
 }
-
-// Export all types
-export type {
-  AIProvider,
-  IChatMessage,
-  IChatSession,
-  IChatContext,
-  IAIConfig,
-  ISmartExplanation,
-  IStudyPlan,
-  IAIFeedback,
-  ILearningAnalytics,
-  IVoiceSettings,
-  ICodeAnalysis,
-};

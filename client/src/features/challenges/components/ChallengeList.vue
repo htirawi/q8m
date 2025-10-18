@@ -124,15 +124,14 @@
 </template>
 
 <script setup lang="ts">
-import type { IChallengeListProps as Props } from "@/types/components/challenges";
 import { ref, computed } from "vue";
-import type { Challenge } from "@/stores/challenges";
-import { useChallenges } from "@/composables/useChallenges";
+import { useChallenges } from "../../../composables/useChallenges";
 import ChallengeCard from "./ChallengeCard.vue";
+import type { IChallengeListProps as Props } from "../../../types/components/challenges";
 
 const props = withDefaults(defineProps<Props>(), {
   loading: false,
-  pagination: () => ({ page: 1, limit: 20, total: 0, hasMore: false }),
+  pagination: () => ({ currentPage: 1, totalPages: 1, pageSize: 20, hasMore: false }),
   emptyStateTitle: "No challenges yet",
   emptyStateMessage: "Challenge your friends to a quiz battle!",
   showCreateButton: true,
@@ -143,6 +142,8 @@ const emit = defineEmits<{
   reject: [challengeId: string];
   start: [challengeId: string];
   "view-details": [challengeId: string];
+  "load-more": [];
+  "create-challenge": [];
 }>();
 
 const { sortChallenges, filterChallenges } = useChallenges();
@@ -170,13 +171,13 @@ const filteredAndSortedChallenges = computed(() => {
   return result;
 });
 
-const clearfilters = () => {
+const clearFilters = () => {
   sortBy.value = "date";
   filterDifficulty.value = "";
   filterFramework.value = "";
 };
 
-const handleaccept = async (challengeId: string) => {
+const handleAccept = async (challengeId: string) => {
   loadingChallengeId.value = challengeId;
   emit("accept", challengeId);
   setTimeout(() => {
@@ -184,7 +185,7 @@ const handleaccept = async (challengeId: string) => {
   }, 2000);
 };
 
-const handlereject = async (challengeId: string) => {
+const handleReject = async (challengeId: string) => {
   loadingChallengeId.value = challengeId;
   emit("reject", challengeId);
   setTimeout(() => {
@@ -192,11 +193,11 @@ const handlereject = async (challengeId: string) => {
   }, 2000);
 };
 
-const handlestart = (challengeId: string) => {
+const handleStart = (challengeId: string) => {
   emit("start", challengeId);
 };
 
-const handleviewdetails = (challengeId: string) => {
+const handleViewDetails = (challengeId: string) => {
   emit("view-details", challengeId);
 };
 </script>

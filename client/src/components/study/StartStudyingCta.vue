@@ -47,7 +47,7 @@
             d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"
           />
         </svg>
-        <span>{{ t("study.cta.trust.users") }} </span>
+        <span>{{ t("study.cta.trust?.users") }} </span>
       </div>
       <div class="flex items-center gap-1.5">
         <svg
@@ -62,7 +62,7 @@
             clip-rule="evenodd"
           />
         </svg>
-        <span>{{ t("study.cta.trust.successRate") }} </span>
+        <span>{{ t("study.cta.trust?.successRate") }} </span>
       </div>
     </div>
 
@@ -75,11 +75,10 @@
 import type {
   IStartStudyingCtaProps as Props,
   IStartStudyingCtaEmits as Emits,
-} from "@/types/components/study";
+} from "../../types/components/study";
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useI18n } from "vue-i18n";
-import { useAnalytics } from "@/composables/useAnalytics";
-import type { DifficultyLevel } from "@/types/plan/access";
+import { useAnalytics } from "../../composables/useAnalytics";
 
 const props = withDefaults(defineProps<Props>(), {
   disabled: false,
@@ -111,7 +110,7 @@ const ariaLabel = computed(() => {
   return t("study.cta.ariaLabelNoSelection");
 });
 
-const handleclick = () => {
+const handleClick = () => {
   track("study_cta_clicked", {
     hasSelection: !!props.selectedDifficulty,
     difficulty: props.selectedDifficulty ?? undefined,
@@ -127,7 +126,7 @@ const handleclick = () => {
   }
 };
 
-const scrolltodifficultyselection = () => {
+const scrollToDifficultySelection = () => {
   let targetElement: HTMLElement | null = null;
   targetElement;
 

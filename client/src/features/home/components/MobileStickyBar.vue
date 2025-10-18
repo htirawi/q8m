@@ -11,7 +11,7 @@
         <!-- Message -->
         <div class="mobile-sticky-bar__message">
           <span class="mobile-sticky-bar__text">
-            {{ t("home.mobileStickyBar.message") }}
+            {{ t("home.mobileStickyBar?.message") }}
           </span>
         </div>
 
@@ -25,7 +25,7 @@
             :aria-label="t('home.mobileStickyBar.ctaAriaLabel')"
             data-testid="mobile-sticky-cta"
           >
-            {{ t("home.mobileStickyBar.cta") }}
+            {{ t("home.mobileStickyBar?.cta") }}
           </button>
 
           <!-- Dismiss button -->
@@ -58,12 +58,12 @@
 </template>
 
 <script setup lang="ts">
-import type { IMobileStickyBarEmits as Emits } from "@/types/components/home";
+import type { IMobileStickyBarEmits as Emits } from "../../../types/components/home";
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter, useRoute } from "vue-router";
-import { useScrollTracking } from "@/composables/useScrollTracking";
-import { useHomepageAnalytics } from "@/composables/useHomepageAnalytics";
+import { useScrollTracking } from "../../../composables/useScrollTracking";
+import { useHomepageAnalytics } from "../../../composables/useHomepageAnalytics";
 
 const emit = defineEmits<Emits>();
 

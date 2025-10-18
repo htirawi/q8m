@@ -35,11 +35,11 @@
           class="rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
           @change="updateQuestionType"
         >
-          <option value="all">{{ t("study.filters.allTypes") }}</option>
-          <option value="multiple-choice">{{ t("study.filters.multipleChoice") }}</option>
-          <option value="true-false">{{ t("study.filters.trueFalse") }}</option>
-          <option value="fill-blank">{{ t("study.filters.fillBlank") }}</option>
-          <option value="multiple-checkbox">{{ t("study.filters.multipleCheckbox") }}</option>
+          <option value="all">{{ t("study.filters?.allTypes") }}</option>
+          <option value="multiple-choice">{{ t("study.filters?.multipleChoice") }}</option>
+          <option value="true-false">{{ t("study.filters?.trueFalse") }}</option>
+          <option value="fill-blank">{{ t("study.filters?.fillBlank") }}</option>
+          <option value="multiple-checkbox">{{ t("study.filters?.multipleCheckbox") }}</option>
         </select>
 
         <!-- Answered Status Filter -->
@@ -48,9 +48,9 @@
           class="rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
           @change="updateAnsweredFilter"
         >
-          <option value="all">{{ t("study.filters.allQuestions") }}</option>
-          <option value="answered">{{ t("study.filters.answered") }}</option>
-          <option value="unanswered">{{ t("study.filters.unanswered") }}</option>
+          <option value="all">{{ t("study.filters?.allQuestions") }}</option>
+          <option value="answered">{{ t("study.filters?.answered") }}</option>
+          <option value="unanswered">{{ t("study.filters?.unanswered") }}</option>
         </select>
 
         <!-- Clear Filters -->
@@ -60,20 +60,20 @@
           class="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
           @click="$emit('clear')"
         >
-          {{ t("study.filters.clear") }}
+          {{ t("study.filters?.clear") }}
         </button>
       </div>
 
       <!-- Results Count -->
       <div v-if="hasActiveFilters" class="text-sm text-gray-600 dark:text-gray-400">
-        {{ t("study.filters.resultsCount", { count: filteredCount, total: totalCount }) }}
+        {{ t("study.filters?.resultsCount", { count: filteredCount, total: totalCount }) }}
       </div>
     </div>
 
     <!-- Practice Mode Selector -->
     <div class="mb-6 flex flex-wrap items-center gap-2">
       <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
-        {{ t("study.practiceMode.label") }}
+        {{ t("study.practiceMode?.label") }}
 
         :
       </span>
@@ -88,7 +88,7 @@
           ]"
           @click="$emit('mode-change', 'sequential')"
         >
-          🔢 {{ t("study.practiceMode.sequential") }}
+          🔢 {{ t("study.practiceMode?.sequential") }}
         </button>
         <button
           type="button"
@@ -100,7 +100,7 @@
           ]"
           @click="$emit('mode-change', 'random')"
         >
-          🎲 {{ t("study.practiceMode.random") }}
+          🎲 {{ t("study.practiceMode?.random") }}
         </button>
         <button
           type="button"
@@ -112,7 +112,7 @@
           ]"
           @click="$emit('mode-change', 'bookmarked')"
         >
-          🔖 {{ t("study.practiceMode.bookmarked") }}
+          🔖 {{ t("study.practiceMode?.bookmarked") }}
 
           <span v-if="bookmarkCount > 0" class="ml-1 rounded-full bg-white/20 px-2 py-0.5 text-xs">
             {{ bookmarkCount }}
@@ -132,7 +132,7 @@
 </template>
 
 <script setup lang="ts">
-import type { IStudyFiltersProps as Props } from "@/types/components/study";
+import type { IStudyFiltersProps as Props } from "../../../types/components/study";
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 
@@ -140,6 +140,8 @@ const props = defineProps<Props>();
 
 const emit = defineEmits<{
   "update:answeredFilter": [value: string];
+  "update:searchQuery": [value: string];
+  "update:questionTypeFilter": [value: string];
   "mode-change": [mode: "sequential" | "random" | "bookmarked"];
   clear: [];
 }>();
@@ -154,17 +156,17 @@ const hasActiveFilters = computed(() => {
   );
 });
 
-const updatesearch = (event: Event) => {
+const updateSearch = (event: Event) => {
   const target = event.target as HTMLInputElement;
   emit("update:searchQuery", target.value);
 };
 
-const updatequestiontype = (event: Event) => {
+const updateQuestionType = (event: Event) => {
   const target = event.target as HTMLSelectElement;
   emit("update:questionTypeFilter", target.value);
 };
 
-const updateansweredfilter = (event: Event) => {
+const updateAnsweredFilter = (event: Event) => {
   const target = event.target as HTMLSelectElement;
   emit("update:answeredFilter", target.value);
 };

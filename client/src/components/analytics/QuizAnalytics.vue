@@ -81,7 +81,7 @@
       <div class="space-y-2">
         <div v-for="attempt in recentAttempts" :key="attempt.id" class="flex items-center gap-4">
           <div class="flex-shrink-0 text-sm text-gray-500 dark:text-gray-400">
-            {{ formatDate(attempt.timestamp) }}
+            {{ formatDate(new Date(attempt.timestamp as number)) }}
           </div>
           <div class="flex-shrink-0">
             <span
@@ -98,12 +98,12 @@
                 class="flex h-full items-center justify-end px-2 text-xs font-semibold text-white transition-all duration-500"
                 :style="{ width: `${attempt.score}%` }"
               >
-                {{ attempt.score }}%
+                {{ attempt.score ?? 0 }}%
               </div>
             </div>
           </div>
           <div class="flex-shrink-0 text-sm text-gray-600 dark:text-gray-400">
-            {{ attempt.correct }}/{{ attempt.total }}
+            {{ attempt.correct }}/{{ attempt.total ?? 0 }}
           </div>
         </div>
       </div>
@@ -211,7 +211,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
-import type { QuizAttempt, LevelStats, CategoryStats } from "@/types/quiz-analytics";
+import type { QuizAttempt, LevelStats, CategoryStats } from "../../types/quiz-analytics";
 
 const { t } = useI18n();
 
@@ -315,12 +315,12 @@ const strongAreas = computed(() => {
     .slice(0, 4);
 });
 
-const getlevelicon = (level: string) => {
+const getLevelIcon = (level: string) => {
   const icons = { junior: "🟢", intermediate: "🟡", senior: "🔴" };
   return icons[level as keyof typeof icons] || "⚪";
 };
 
-const getleveliconclass = (level: string) => {
+const getLevelIconClass = (level: string) => {
   const classes = {
     junior: "text-green-600 dark:text-green-400",
     intermediate: "text-yellow-600 dark:text-yellow-400",
@@ -329,7 +329,7 @@ const getleveliconclass = (level: string) => {
   return classes[level as keyof typeof classes] || "text-gray-600";
 };
 
-const getlevelbadgeclass = (level: string) => {
+const getLevelBadgeClass = (level: string) => {
   const classes = {
     junior: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
     intermediate: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200",
@@ -338,7 +338,7 @@ const getlevelbadgeclass = (level: string) => {
   return classes[level as keyof typeof classes] || "bg-gray-100 text-gray-800";
 };
 
-const getlevelprogressclass = (level: string) => {
+const getLevelProgressClass = (level: string) => {
   const classes = {
     junior: "bg-green-600 dark:bg-green-400",
     intermediate: "bg-yellow-600 dark:bg-yellow-400",
@@ -347,7 +347,7 @@ const getlevelprogressclass = (level: string) => {
   return classes[level as keyof typeof classes] || "bg-gray-600";
 };
 
-const getscorebarclass = (score: number) => {
+const getScoreBarClass = (score: number) => {
   if (score >= 90) return "bg-green-600";
   if (score >= 80) return "bg-blue-600";
   if (score >= 70) return "bg-yellow-600";
@@ -355,8 +355,11 @@ const getscorebarclass = (score: number) => {
   return "bg-red-600";
 };
 
-const formatdate = (timestamp: number) => {
-  const date = new Date(timestamp);
+const formatDate = (timestamp: number | string | Date) => {
+  const date =
+    typeof timestamp === "number" || typeof timestamp === "string"
+      ? new Date(timestamp)
+      : timestamp;
   const now = new Date();
   const diffDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
 
@@ -367,7 +370,7 @@ const formatdate = (timestamp: number) => {
   return date.toLocaleDateString();
 };
 
-const loadhistory = () => {
+const loadHistory = () => {
   try {
     const historyData = localStorage.getItem("quiz_history");
     if (historyData) {

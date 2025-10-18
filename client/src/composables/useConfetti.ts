@@ -132,8 +132,9 @@ export function useConfetti() {
    */
   function emoji(emojis: string[], options?: confetti.Options) {
     const scalar = 2;
+    const emojiText = emojis[Math.floor(Math.random() * emojis.length)] || "🎉";
     const emoji = confetti.shapeFromText({
-      text: emojis[Math.floor(Math.random() * emojis.length)],
+      text: emojiText,
       scalar,
     });
 

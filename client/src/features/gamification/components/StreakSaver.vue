@@ -180,8 +180,8 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { useStreak } from "@/composables/useStreak";
-import { useConfetti } from "@/composables/useConfetti";
+import { useStreak } from "../../../composables/useStreak";
+import { useConfetti } from "../../../composables/useConfetti";
 
 const {
   streak,
@@ -235,7 +235,7 @@ async function buyFreezeWithCoins() {
     const result = await useStreakFreeze(true, false);
 
     if (result.success) {
-      successmessage.value = `streak saved for ${result.cost} coins! 🎉`;
+      successMessage.value = `Streak saved for ${result.cost} coins! 🎉`;
       burst();
 
       setTimeout(() => {
@@ -260,7 +260,7 @@ async function buyFreezeWithXP() {
     const result = await useStreakFreeze(false, true);
 
     if (result.success) {
-      successmessage.value = `streak saved for ${result.cost} XP! 🎉`;
+      successMessage.value = `Streak saved for ${result.cost} XP! 🎉`;
       burst();
 
       setTimeout(() => {

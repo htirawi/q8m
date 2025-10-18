@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
-import type { ButtonProps } from "@/types/ui/component-props";
+import type { ButtonProps } from "../../types/ui/component-props";
 
 /**
  * Button Component

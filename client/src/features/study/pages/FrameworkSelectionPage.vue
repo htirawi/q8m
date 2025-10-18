@@ -209,14 +209,15 @@
             :key="rule.framework"
             :framework="rule.framework"
             :question-count="frameworkCounts[rule.framework as keyof typeof frameworkCounts] || 0"
-            :icon="rule.metadata.icon"
-            :title="rule.displayName"
-            :description="rule.description"
+            :icon="rule.metadata?.icon ?? ''"
+            :title="rule.displayName ?? rule.framework"
+            :description="rule.description ?? ''"
             :color="
-              rule.metadata.color as 'red' | 'black' | 'blue' | 'purple' | 'gray' | 'gradient'
+              (rule.metadata?.color as 'red' | 'black' | 'blue' | 'purple' | 'gray' | 'gradient') ??
+              'gray'
             "
             :difficulty="difficulty"
-            :is-locked="rule.isLocked"
+            :is-locked="rule.isLocked ?? false"
             :required-plan="rule.requiredPlanTier"
             @select="selectFramework"
           />
@@ -263,13 +264,14 @@
 </template>
 
 <script setup lang="ts">
-import type { IFrameworkAccessRule } from "@/types/components/pages";
+import type { IFrameworkAccessRule } from "../../../types/components/pages";
+import type { PlanTier } from "@shared/types/plan";
 import { ref, computed, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import { useAnalytics } from "@/composables/useAnalytics";
-import { useAuthStore } from "@/stores/auth";
-import FrameworkCard from "@/components/study/FrameworkCard.vue";
-import type { DifficultyLevel } from "@/types/plan/access";
+import { useAnalytics } from "../../../composables/useAnalytics";
+import { useAuthStore } from "../../../stores/auth";
+import FrameworkCard from "../../../components/study/FrameworkCard.vue";
+import type { DifficultyLevel } from "../../../types/plan/access";
 
 const router = useRouter();
 const route = useRoute();
@@ -296,14 +298,15 @@ const frameworkAccessRules = ref<IFrameworkAccessRule[]>([]);
 
 // Fallback frameworks if database is empty or API fails
 const getFallbackFrameworks = (): IFrameworkAccessRule[] => {
-  const userPlan = authStore.user?.subscription?.plan?.tier || "free";
+  const userPlan = authStore.user?.subscription?.plan || "free";
 
   const defaultFrameworks = [
     {
       framework: "angular",
       displayName: "Angular",
       description: "Requires Intermediate plan or higher",
-      requiredPlanTier: "Intermediate",
+      requiredPlanTier: "Intermediate" as PlanTier,
+      isActive: true,
       isLocked: userPlan === "free",
       metadata: { icon: "🅰️", color: "red", order: 1 },
     },
@@ -311,7 +314,8 @@ const getFallbackFrameworks = (): IFrameworkAccessRule[] => {
       framework: "nextjs",
       displayName: "Next.js",
       description: "Requires Advanced plan or higher",
-      requiredPlanTier: "Advanced",
+      requiredPlanTier: "Advanced" as PlanTier,
+      isActive: true,
       isLocked: userPlan === "free" || userPlan === "intermediate",
       metadata: { icon: "▲", color: "black", order: 2 },
     },
@@ -319,7 +323,8 @@ const getFallbackFrameworks = (): IFrameworkAccessRule[] => {
       framework: "react",
       displayName: "React",
       description: "Available to all users",
-      requiredPlanTier: "Free",
+      requiredPlanTier: "Free" as PlanTier,
+      isActive: true,
       isLocked: false,
       metadata: { icon: "⚛️", color: "blue", order: 3 },
     },
@@ -327,7 +332,8 @@ const getFallbackFrameworks = (): IFrameworkAccessRule[] => {
       framework: "redux",
       displayName: "Redux",
       description: "Requires Advanced plan or higher",
-      requiredPlanTier: "Advanced",
+      requiredPlanTier: "Advanced" as PlanTier,
+      isActive: true,
       isLocked: userPlan === "free" || userPlan === "intermediate",
       metadata: { icon: "🔄", color: "purple", order: 4 },
     },
@@ -335,7 +341,8 @@ const getFallbackFrameworks = (): IFrameworkAccessRule[] => {
       framework: "vue",
       displayName: "Vue",
       description: "Requires Pro plan",
-      requiredPlanTier: "Pro",
+      requiredPlanTier: "Pro" as PlanTier,
+      isActive: true,
       isLocked: userPlan !== "pro",
       metadata: { icon: "💚", color: "green", order: 5 },
     },
@@ -343,7 +350,8 @@ const getFallbackFrameworks = (): IFrameworkAccessRule[] => {
       framework: "random",
       displayName: "Random Mix",
       description: "Available to all users",
-      requiredPlanTier: "Free",
+      requiredPlanTier: "Free" as PlanTier,
+      isActive: true,
       isLocked: false,
       metadata: { icon: "🎲", color: "gradient", order: 6 },
     },
@@ -356,7 +364,7 @@ const totalQuestions = computed(() => {
   return Object.values(frameworkCounts.value).reduce((sum, count) => sum + count, 0);
 });
 
-const getdifficultylabel = (diff: DifficultyLevel) => {
+const getDifficultyLabel = (diff: DifficultyLevel) => {
   const labels = {
     easy: "Junior",
     medium: "Intermediate",
@@ -365,12 +373,12 @@ const getdifficultylabel = (diff: DifficultyLevel) => {
   return labels[diff] || "Junior";
 };
 
-const getdifficultyicon = (diff: DifficultyLevel) => {
+const getDifficultyIcon = (diff: DifficultyLevel) => {
   const icons = { easy: "🟢", medium: "🟡", hard: "🔴" };
   return icons[diff] || "🟢";
 };
 
-const getdifficultybadgeclass = (diff: DifficultyLevel) => {
+const getDifficultyBadgeClass = (diff: DifficultyLevel) => {
   const classes = {
     easy: "bg-green-100 text-green-800 border border-green-200 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800",
     medium:
@@ -380,7 +388,7 @@ const getdifficultybadgeclass = (diff: DifficultyLevel) => {
   return classes[diff] || classes.easy;
 };
 
-const selectframework = (framework: string) => {
+const selectFramework = (framework: string) => {
   track("framework_selected", {
     framework,
     difficulty: difficulty.value,
@@ -392,7 +400,7 @@ const selectframework = (framework: string) => {
   router.push(`/${locale.value}/study/${difficulty.value}/${framework}`);
 };
 
-const goback = () => {
+const goBack = () => {
   track("back_to_mode_chooser", {
     from: "framework_selection",
     difficulty: difficulty.value,

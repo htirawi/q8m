@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { reactive, watch, toRefs } from "vue";
 import { useI18n } from "vue-i18n";
-import type { BillingFormProps, BillingFormData } from "@/types/ui/component-props";
+import type { BillingFormProps, BillingFormData } from "../../types/ui/component-props";
 
 const props = defineProps<BillingFormProps>();
 
@@ -50,7 +50,7 @@ watch(
           :class="{ 'form-input--error': errors.name }"
           :placeholder="$t('checkout.namePlaceholder')"
         />
-        <p v-if="errors.name" class="form-error">{{ errors.name }}</p>
+        <p v-if="errors.name" class="form-error">{{ errors.name ?? "" }}</p>
       </div>
 
       <!-- Email -->

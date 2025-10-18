@@ -11,7 +11,9 @@
           <span class="text-lg">{{ source.icon }} </span>
           <span class="text-gray-700 dark:text-gray-300">{{ source.label }} </span>
         </div>
-        <span class="font-bold text-purple-600 dark:text-purple-400"> +{{ source.xp }} XP </span>
+        <span class="font-bold text-purple-600 dark:text-purple-400">
+          +{{ source.xp ?? 0 }} XP
+        </span>
       </div>
     </div>
 
@@ -61,13 +63,13 @@
                   {{ source.label }}
                 </div>
                 <div v-if="source.description" class="text-xs text-gray-500 dark:text-gray-400">
-                  {{ source.description }}
+                  {{ source.description ?? "" }}
                 </div>
               </div>
             </div>
             <div class="flex items-center gap-2">
               <div class="text-2xl font-black text-purple-600 dark:text-purple-400">
-                +{{ source.xp }}
+                +{{ source.xp ?? 0 }}
               </div>
               <span class="text-xs font-medium text-purple-500 dark:text-purple-400">XP</span>
             </div>
@@ -94,7 +96,7 @@
           >
             <span class="text-yellow-700 dark:text-yellow-400">{{ multiplier.label }} </span>
             <span class="font-bold text-yellow-600 dark:text-yellow-300"
-              >×{{ multiplier.value }}
+              >×{{ multiplier.value ?? 0 }}
             </span>
           </div>
         </div>
@@ -152,7 +154,7 @@
           class="rounded-xl border-2 border-green-200 bg-gradient-to-br from-green-50 to-green-100 p-6 text-center dark:border-green-800 dark:from-green-900/20 dark:to-green-900/30"
         >
           <div class="mb-2 text-4xl font-black text-green-600 dark:text-green-400">
-            {{ breakdownItems.length }}
+            {{ breakdownItems.length ?? 0 }}
           </div>
           <div
             class="text-xs font-semibold uppercase tracking-wide text-green-700 dark:text-green-300"
@@ -195,7 +197,7 @@
                     {{ source.label }}
                   </div>
                   <div v-if="source.description" class="text-sm text-gray-500 dark:text-gray-400">
-                    {{ source.description }}
+                    {{ source.description ?? "" }}
                   </div>
                   <div
                     v-if="source.detail"
@@ -207,7 +209,7 @@
               </div>
               <div class="text-right">
                 <div class="text-3xl font-black text-purple-600 dark:text-purple-400">
-                  +{{ source.xp }}
+                  +{{ source.xp ?? 0 }}
                 </div>
                 <div class="text-xs font-medium text-purple-500 dark:text-purple-400">XP</div>
                 <div v-if="source.percentage" class="mt-1 text-xs text-gray-500 dark:text-gray-400">
@@ -245,7 +247,7 @@
               >{{ multiplier.label }}
             </span>
             <span class="text-xl font-black text-yellow-600 dark:text-yellow-300"
-              >×{{ multiplier.value }}
+              >×{{ multiplier.value ?? 0 }}
             </span>
           </div>
         </div>
@@ -301,18 +303,16 @@
 </template>
 
 <script setup lang="ts">
-import type {
-  IXPSource,
-  IMultiplier,
-  IXPBreakdownProps as Props,
-} from "@/types/components/gamification";
+import type { IXPSource, IXPBreakdownProps as Props } from "../../../types/components/gamification";
 import { computed } from "vue";
-import AnimatedCounter from "@/components/AnimatedCounter.vue";
+import AnimatedCounter from "../../../components/AnimatedCounter.vue";
 
 const props = withDefaults(defineProps<Props>(), {
+  sources: () => [],
   multipliers: () => [],
   variant: "card",
   showTips: true,
+  breakdown: () => ({}),
 });
 
 const sourceLabels: Record<string, { label: string; icon: string; description?: string }> = {
@@ -328,25 +328,32 @@ const sourceLabels: Record<string, { label: string; icon: string; description?: 
 };
 
 const breakdownItems = computed<(IXPSource & { percentage?: number })[]>(() => {
+  if (!props.breakdown) return [];
   return Object.entries(props.breakdown)
     .map(([key, xp]) => {
       const sourceInfo = sourceLabels[key] || { label: key, icon: "⭐" };
+      const total = totalXP.value;
       const percentage =
-        props.variant === "detailed" ? Math.round((xp / totalXP.value) * 100) : undefined;
+        props.variant === "detailed" && total > 0 ? Math.round((xp / total) * 100) : undefined;
 
       return {
         label: sourceInfo.label,
-        icon: sourceInfo.icon,
+        amount: xp,
         xp,
+        icon: sourceInfo.icon,
         description: sourceInfo.description,
         percentage,
       };
     })
-    .sort((a, b) => b.xp - a.xp); // Sort by XP descending
+    .sort((a, b) => b.amount - a.amount); // Sort by XP descending
 });
 
-const totalXP = computed(() => {
-  return Object.values(props.breakdown).reduce((sum, xp) => sum + xp, 0);
+const totalXP = computed<number>(() => {
+  if (!props.breakdown) return props.totalXP ?? 0;
+  return Object.values(props.breakdown).reduce(
+    (sum, xp) => (sum as number) + (xp as number),
+    0
+  ) as number;
 });
 
 const averageXP = computed(() => {

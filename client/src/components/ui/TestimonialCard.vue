@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import type { ITestimonialCardProps as Props } from "@/types/components/home";
+import type { ITestimonialCardProps as Props } from "../../types/components/home";
 import { useI18n } from "vue-i18n";
-import { computed } from "vue";
 
 defineProps<Props>();
 

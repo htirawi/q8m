@@ -33,14 +33,14 @@ const aiContext = computed(() => {
   if (route.path.includes("/study")) {
     return {
       topic: "Study Mode",
-      difficulty: route.params.difficulty as string,
+      difficulty: route.params.difficulty as "junior" | "intermediate" | "senior" | undefined,
       framework: route.params.framework as string,
     };
   }
   if (route.path.includes("/quiz")) {
     return {
       topic: "Quiz Mode",
-      difficulty: route.params.difficulty as string,
+      difficulty: route.params.difficulty as "junior" | "intermediate" | "senior" | undefined,
       framework: route.params.framework as string,
     };
   }

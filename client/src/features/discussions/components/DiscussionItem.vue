@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import type { IDiscussionItemProps as Props } from "@/types/components/discussions";
 import { ref, computed } from "vue";
-import { useDiscussions } from "@/composables/useDiscussions";
-import { useAuthStore } from "@/stores/auth";
-import type { Discussion } from "@/stores/discussions";
+import type { IDiscussionItemProps as Props } from "@/types/components/discussions";
+import { useDiscussions } from "../../../composables/useDiscussions";
+import { useAuthStore } from "../../../stores/auth";
 import DiscussionActions from "./DiscussionActions.vue";
 import ReplyForm from "./ReplyForm.vue";
 
@@ -34,7 +33,13 @@ const replyCount = computed(() => getReplyCount(props.discussion));
 const userLevel = computed(() => props.discussion.userId.gamification?.level || 0);
 const levelColor = computed(() => getLevelColor(userLevel.value));
 const levelBadge = computed(() => getLevelBadge(userLevel.value));
-const timeAgo = computed(() => formatDate(props.discussion.createdAt));
+const timeAgo = computed(() =>
+  formatDate(
+    typeof props.discussion.createdAt === "string"
+      ? new Date(props.discussion.createdAt)
+      : props.discussion.createdAt
+  )
+);
 
 const canEditDiscussion = computed(() =>
   canEdit(props.discussion, authStore.user?.userId, authStore.user?.role)
@@ -51,7 +56,7 @@ const handleReply = async (content: string) => {
   showReplies.value = true;
 };
 
-const handleedit = async () => {
+const handleEdit = async () => {
   if (editContent.value.trim() === props.discussion.content) {
     isEditing.value = false;
     return;
@@ -63,20 +68,30 @@ const handleedit = async () => {
   }
 };
 
-const canceledit = () => {
+const cancelEdit = () => {
   editContent.value = props.discussion.content;
   isEditing.value = false;
 };
 
-const togglereplyform = () => {
+const toggleReplyForm = () => {
   showReplyForm.value = !showReplyForm.value;
   if (showReplyForm.value) {
     showReplies.value = true;
   }
 };
 
-const togglereplies = () => {
+const toggleReplies = () => {
   showReplies.value = !showReplies.value;
+};
+
+const handleLike = () => {
+  // TODO: Implement like functionality
+  console.log("Like discussion:", props.discussion._id);
+};
+
+const handleDelete = () => {
+  // TODO: Implement delete functionality
+  console.log("Delete discussion:", props.discussion._id);
 };
 </script>
 
@@ -102,7 +117,7 @@ const togglereplies = () => {
         <div
           class="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 font-bold text-white"
         >
-          {{ discussion.userId.name.charAt(0).toUpperCase() }}
+          {{ discussion.userId.name?.charAt(0).toUpperCase() }}
         </div>
       </div>
 
@@ -111,7 +126,7 @@ const togglereplies = () => {
         <!-- User Info -->
         <div class="mb-2 flex items-center gap-2">
           <span class="font-semibold text-gray-900 dark:text-white">
-            {{ discussion.userId.name }}
+            {{ discussion.userId?.name ?? "" }}
           </span>
           <span :class="['text-sm', levelColor]"> {{ levelBadge }} level {{ userLevel }} </span>
           <span class="text-sm text-gray-500 dark:text-gray-400">•</span>
@@ -175,12 +190,17 @@ const togglereplies = () => {
         <!-- Actions -->
         <DiscussionActions
           v-if="!isEditing"
+          :discussion-id="discussion._id"
           :discussion="discussion"
           :question-creator-id="questionCreatorId"
+          :likes="discussion.likes?.length ?? 0"
+          :liked-by-user="discussion.likedByCurrentUser ?? false"
           :can-edit="canEditDiscussion"
           :can-delete="canDeleteDiscussion"
+          @like="handleLike"
           @reply="toggleReplyForm"
           @edit="isEditing = true"
+          @delete="handleDelete"
         />
       </div>
     </div>
@@ -188,6 +208,7 @@ const togglereplies = () => {
     <!-- Reply Form -->
     <div v-if="showReplyForm" class="ml-14 mt-4">
       <ReplyForm
+        :discussion-id="discussion._id"
         @submit="handleReply"
         @cancel="showReplyForm = false"
         :placeholder="`Reply to ${discussion.userId.name}...`"

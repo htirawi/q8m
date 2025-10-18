@@ -6,17 +6,17 @@
       <!-- Header -->
       <div class="mb-12 text-center">
         <h1 class="mb-4 text-4xl font-bold text-gray-900 dark:text-white md:text-5xl">
-          {{ t("study.selection.title") }}
+          {{ t("study.selection?.title") }}
         </h1>
         <p class="text-lg text-gray-600 dark:text-gray-400 md:text-xl">
-          {{ t("study.selection.subtitle") }}
+          {{ t("study.selection?.subtitle") }}
         </p>
       </div>
 
       <!-- Difficulty Selection -->
       <div ref="difficultySelectionRef" class="mb-12">
         <h2 class="mb-8 text-center text-2xl font-bold text-gray-900 dark:text-white">
-          {{ t("study.selection.chooseDifficulty") }}
+          {{ t("study.selection?.chooseDifficulty") }}
         </h2>
         <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
           <!-- Easy -->
@@ -62,8 +62,8 @@
       <!-- Start Button (Visible when auto-start is disabled or no selection) -->
       <StartStudyingCta
         v-if="!isAutoStartEnabled || selectedDifficulty !== 'easy'"
-        :selected-difficulty="selectedDifficulty"
-        :disabled="selectedDifficulty !== null && !canUserAccessDifficulty(selectedDifficulty)"
+        :selected-difficulty="selectedDifficulty ?? undefined"
+        :disabled="!!selectedDifficulty && !canUserAccessDifficulty(selectedDifficulty)"
         scroll-target-selector="#difficulty-selection"
         @click="startStudy"
       />
@@ -75,10 +75,10 @@
         >
           <div class="mb-3 text-3xl">📚</div>
           <h3 class="mb-2 font-semibold text-gray-900 dark:text-white">
-            {{ t("study.features.selfPaced.title") }}
+            {{ t("study.features.selfPaced?.title") }}
           </h3>
           <p class="text-sm text-gray-600 dark:text-gray-400">
-            {{ t("study.features.selfPaced.description") }}
+            {{ t("study.features.selfPaced?.description") }}
           </p>
         </div>
 
@@ -87,10 +87,10 @@
         >
           <div class="mb-3 text-3xl">💡</div>
           <h3 class="mb-2 font-semibold text-gray-900 dark:text-white">
-            {{ t("study.features.detailedExplanations.title") }}
+            {{ t("study.features.detailedExplanations?.title") }}
           </h3>
           <p class="text-sm text-gray-600 dark:text-gray-400">
-            {{ t("study.features.detailedExplanations.description") }}
+            {{ t("study.features.detailedExplanations?.description") }}
           </p>
         </div>
 
@@ -99,10 +99,10 @@
         >
           <div class="mb-3 text-3xl">🔖</div>
           <h3 class="mb-2 font-semibold text-gray-900 dark:text-white">
-            {{ t("study.features.bookmarks.title") }}
+            {{ t("study.features.bookmarks?.title") }}
           </h3>
           <p class="text-sm text-gray-600 dark:text-gray-400">
-            {{ t("study.features.bookmarks.description") }}
+            {{ t("study.features.bookmarks?.description") }}
           </p>
         </div>
       </div>
@@ -111,9 +111,9 @@
     <!-- Sticky Start Bar (secondary affordance when auto-start is off) -->
     <StickyStartBar
       :is-visible="!isAutoStartEnabled && selectedDifficulty === 'easy'"
-      :selected-difficulty="selectedDifficulty"
+      :selected-difficulty="selectedDifficulty ?? undefined"
       :state="loadingState"
-      :error-message="errorMessage"
+      :error-message="errorMessage ?? undefined"
       :has-last-session="hasLastSession"
       @start="handleStickyStart"
       @retry="handleStickyRetry"
@@ -122,8 +122,8 @@
     <!-- Convert Modal -->
     <PlanConversionModal
       v-if="upsellModalContext"
-      :is-visible="isUpsellModalVisible"
-      :difficulty="upsellModalContext.difficulty"
+      :open="isUpsellModalVisible"
+      :difficulty="upsellModalContext.difficulty ?? undefined"
       :required-plan="upsellModalContext.requiredPlan"
       @dismiss="handleUpsellDismiss"
     />
@@ -134,18 +134,18 @@
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
-import { usePlanStore } from "@/stores/plan";
-import { useAuthStore } from "@/stores/auth";
-import { useUpsell } from "@/composables/useUpsell";
-import { useStudy } from "@/composables/useStudy";
-import { useAnalytics } from "@/composables/useAnalytics";
-import { canAccessDifficulty } from "@/types/plan/access";
-import { usePlanEntry } from "@/composables/usePlanEntry";
-import LevelCard from "@/components/study/LevelCard.vue";
-import StartStudyingCta from "@/components/study/StartStudyingCta.vue";
-import StickyStartBar from "@/components/study/StickyStartBar.vue";
-import PlanConversionModal from "@/components/marketing/PlanConversionModal.vue";
-import type { DifficultyLevel } from "@/types/plan/access";
+import { usePlanStore } from "../../../stores/plan";
+import { useAuthStore } from "../../../stores/auth";
+import { useUpsell } from "../../../composables/useUpsell";
+import { useStudy } from "../../../composables/useStudy";
+import { useAnalytics } from "../../../composables/useAnalytics";
+import { canAccessDifficulty } from "../../../types/plan/access";
+import { usePlanEntry } from "../../../composables/usePlanEntry";
+import LevelCard from "../../../components/study/LevelCard.vue";
+import StartStudyingCta from "../../../components/study/StartStudyingCta.vue";
+import StickyStartBar from "../../../components/study/StickyStartBar.vue";
+import PlanConversionModal from "../../../components/marketing/PlanConversionModal.vue";
+import type { DifficultyLevel } from "../../../types/plan/access";
 import type { PlanTier } from "@shared/types/plan";
 
 const { t } = useI18n();
@@ -226,8 +226,8 @@ const hardFeatures = computed(() => [
 /**
  * Handle auto-start for Easy difficulty (one-click flow)
  */
-const handleAutoStart = async (difficulty: DifficultyLevel) => {
-  if (difficulty !== "easy") {
+const handleAutoStart = async (difficulty?: DifficultyLevel) => {
+  if (!difficulty || difficulty !== "easy") {
     // Only Easy supports auto-start
     return;
   }
@@ -247,7 +247,8 @@ const handleAutoStart = async (difficulty: DifficultyLevel) => {
 /**
  * Handle traditional selection (Medium/Hard or Easy with auto-start disabled)
  */
-const handleDifficultySelect = (difficulty: DifficultyLevel) => {
+const handleDifficultySelect = (difficulty?: DifficultyLevel) => {
+  if (!difficulty) return;
   if (canUserAccessDifficulty(difficulty) || !authStore.isAuthenticated) {
     selectedDifficulty.value = difficulty;
   }
@@ -256,7 +257,8 @@ const handleDifficultySelect = (difficulty: DifficultyLevel) => {
 /**
  * Handle unlock click for locked difficulties (Medium/Hard)
  */
-const handleUnlockClick = (difficulty: DifficultyLevel, requiredPlan: PlanTier) => {
+const handleUnlockClick = (difficulty?: DifficultyLevel, requiredPlan?: PlanTier) => {
+  if (!difficulty || !requiredPlan) return;
   // Open upsell modal
   openUpsellModal(difficulty, requiredPlan, "level_card");
 };
@@ -271,7 +273,7 @@ const handleUpsellDismiss = () => {
 /**
  * Start study session (from CTA or sticky bar)
  */
-const startStudy = async (difficulty: DifficultyLevel | null) => {
+const startStudy = async (difficulty?: DifficultyLevel) => {
   if (!difficulty) {
     return;
   }
@@ -312,13 +314,6 @@ const handleKeyboardShortcut = (event: KeyboardEvent) => {
   ) {
     // Don't trigger if user is typing in an input/textarea
     const target = event.target as HTMLElement;
-    Determineifadifficultylevelrepresentstheuserpromediumhardproeasymediumhardstudy.levelCard
-      .features.easy.feature1study.levelCard.features.easy.feature2study.levelCard.features.easy
-      .feature3study.levelCard.features.medium.feature1study.levelCard.features.medium.feature2study
-      .levelCard.features.medium.feature3study.levelCard.features.medium.feature4study.levelCard
-      .features.hard.feature1study.levelCard.features.hard.feature2study.levelCard.features.hard
-      .feature3study.levelCard.features.hard.feature4study.levelCard.features.hard
-      .feature5easyAuto - startfailed;
     if (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable) {
       return;
     }

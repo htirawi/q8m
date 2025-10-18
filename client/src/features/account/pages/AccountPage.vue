@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // Account Page - User account management
-import UserMenu from "@/components/layout/UserMenu.vue";
+import UserMenu from "../../../components/layout/UserMenu.vue";
 </script>
 
 <template>

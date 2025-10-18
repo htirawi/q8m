@@ -40,7 +40,7 @@
             class="truncate text-sm font-semibold"
             :class="earned ? 'text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-400'"
           >
-            {{ badge.name }}
+            {{ badge.name ?? "" }}
           </div>
           <div
             v-if="showProgress && !earned"
@@ -89,7 +89,7 @@
           class="mb-1 text-center font-bold"
           :class="earned ? 'text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-400'"
         >
-          {{ badge.name }}
+          {{ badge.name ?? "" }}
         </h4>
 
         <!-- Rarity IBadge -->
@@ -98,7 +98,7 @@
             class="rounded-full px-2 py-0.5 text-xs font-semibold"
             :class="getRarityClass(badge.rarity)"
           >
-            {{ badge.rarity.toUpperCase() }}
+            {{ badge.rarity?.toUpperCase() }}
           </span>
         </div>
 
@@ -107,7 +107,7 @@
           class="mb-3 text-center text-xs"
           :class="earned ? 'text-gray-600 dark:text-gray-400' : 'text-gray-500 dark:text-gray-500'"
         >
-          {{ badge.description }}
+          {{ badge.description ?? "" }}
         </p>
 
         <!-- Progress Bar (for unearned badges) -->
@@ -144,7 +144,7 @@
           v-if="earned && earnedAt"
           class="mt-2 text-center text-xs text-gray-500 dark:text-gray-400"
         >
-          Earned {{ formatDate(earnedAt) }}
+          Earned {{ formatDate(earnedAt as Date | string) }}
         </div>
       </div>
     </div>
@@ -152,7 +152,7 @@
 </template>
 
 <script setup lang="ts">
-import type { IBadge, IBadgeCardProps as Props } from "@/types/components/gamification";
+import type { IBadge, IBadgeCardProps as Props } from "../../../types/components/gamification";
 import type { BadgeTier } from "@shared/types/gamification";
 
 const props = withDefaults(defineProps<Props>(), {
@@ -175,23 +175,23 @@ function handleClick() {
 }
 
 function getTierClass(tier: BadgeTier): string {
-  const classes = {
-    bronze: "bg-amber-700 text-white",
-    silver: "bg-gray-400 text-gray-900",
-    gold: "bg-yellow-400 text-yellow-900",
-    platinum: "bg-cyan-400 text-cyan-900",
+  const classes: Record<BadgeTier, string> = {
+    common: "bg-gray-400 text-gray-900",
+    rare: "bg-blue-400 text-blue-900",
+    epic: "bg-purple-500 text-white",
+    legendary: "bg-orange-500 text-white",
   };
-  return classes[tier] || classes.bronze;
+  return classes[tier] || classes.common;
 }
 
 function getTierIcon(tier: BadgeTier): string {
-  const icons = {
-    bronze: "🥉",
-    silver: "🥈",
-    gold: "🥇",
-    platinum: "💎",
+  const icons: Record<BadgeTier, string> = {
+    common: "⚪",
+    rare: "🔵",
+    epic: "🟣",
+    legendary: "🟠",
   };
-  return icons[tier] || icons.bronze;
+  return icons[tier] || icons.common;
 }
 
 function getRarityClass(rarity: "common" | "rare" | "epic" | "legendary"): string {
@@ -204,7 +204,7 @@ function getRarityClass(rarity: "common" | "rare" | "epic" | "legendary"): strin
   return classes[rarity] || classes.common;
 }
 
-function formatDate(date: Date): string {
+function formatDate(date: Date | string): string {
   const now = new Date();
   const diff = now.getTime() - new Date(date).getTime();
   const days = Math.floor(diff / (1000 * 60 * 60 * 24));

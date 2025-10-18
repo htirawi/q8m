@@ -2,7 +2,7 @@
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { CheckCircleIcon } from "@heroicons/vue/24/outline";
-import type { PaymentMethodSelectorProps, PaymentMethod } from "@/types/ui/component-props";
+import type { PaymentMethodSelectorProps, PaymentMethod } from "../../types/ui/component-props";
 
 const props = defineProps<PaymentMethodSelectorProps>();
 
@@ -45,7 +45,7 @@ const availableMethods = computed((): PaymentMethod[] => {
   return methods.filter((method) => method.available);
 });
 
-const selectmethod = (methodId: string) => {
+const selectMethod = (methodId: string) => {
   selectedMethod.value = methodId;
 };
 </script>
@@ -67,8 +67,8 @@ const selectmethod = (methodId: string) => {
             <component :is="method.icon" class="h-8 w-8" />
           </div>
           <div class="payment-method-info">
-            <h4 class="payment-method-name">{{ method.name }}</h4>
-            <p class="payment-method-description">{{ method.description }}</p>
+            <h4 class="payment-method-name">{{ method.name ?? "" }}</h4>
+            <p class="payment-method-description">{{ method.description ?? "" }}</p>
           </div>
           <div class="payment-method-radio">
             <input

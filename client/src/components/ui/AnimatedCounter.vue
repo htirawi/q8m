@@ -6,7 +6,15 @@
 
 <script setup lang="ts">
 import { ref, watch, onMounted } from "vue";
-import type { IAnimatedCounterProps } from "@/types/components/shared";
+import type { IAnimatedCounterProps as Props } from "../../types/components/ui";
+
+const props = withDefaults(defineProps<Props>(), {
+  duration: 1000,
+  decimals: 0,
+});
+
+const displayValue = ref(0);
+const isAnimating = ref(false);
 
 let startTime: number | null = null;
 let animationFrame: number | null = null;
@@ -37,7 +45,7 @@ const animate = () => {
   }
 };
 
-const startanimation = () => {
+const startAnimation = () => {
   if (animationFrame) {
     cancelAnimationFrame(animationFrame);
   }

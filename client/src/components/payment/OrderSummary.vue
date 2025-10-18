@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
-import type { OrderSummaryProps } from "@/types/ui/component-props";
+import type { OrderSummaryProps } from "../../types/ui/component-props";
 
 const props = defineProps<OrderSummaryProps>();
 
@@ -25,8 +25,8 @@ const pricePeriod = computed(() => {
 
     <div class="plan-details">
       <div class="plan-info">
-        <h4 class="plan-name">{{ selectedPlan.name }}</h4>
-        <p class="plan-description">{{ selectedPlan.description }}</p>
+        <h4 class="plan-name">{{ selectedPlan.name ?? "" }}</h4>
+        <p class="plan-description">{{ selectedPlan.description ?? "" }}</p>
       </div>
 
       <div class="plan-pricing">

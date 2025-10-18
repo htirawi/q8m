@@ -50,8 +50,8 @@
         <div class="recommendation-card__visual">
           <img
             v-if="item.thumbnail"
-            :src="item.thumbnail"
-            :alt="item.title"
+            :src="item.thumbnail as string"
+            :alt="item.title as string"
             class="recommendation-card__thumbnail"
           />
           <div
@@ -79,8 +79,8 @@
 
         <!-- Content -->
         <div class="recommendation-card__content">
-          <h4 class="recommendation-card__title">{{ item.title }}</h4>
-          <p class="recommendation-card__description">{{ item.description }}</p>
+          <h4 class="recommendation-card__title">{{ item.title ?? "" }}</h4>
+          <p class="recommendation-card__description">{{ item.description ?? "" }}</p>
 
           <!-- Metadata -->
           <div class="recommendation-card__meta">
@@ -150,8 +150,8 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
+import type { IRecommendation } from "../../types/components/recommendations";
 
 export interface recommendation {
   id: string;
@@ -168,33 +168,52 @@ export interface recommendation {
   metadata?: Record<string, any>;
 }
 
-interface props {
+interface Recommendation {
+  id: string;
+  type: string;
+  title: string;
+  description?: string;
+  priority?: "high" | "medium" | "low";
+  category?: string;
+  difficulty?: string;
+  estimatedTime?: number;
+  thumbnail?: string;
+  isNew?: boolean;
+  isFeatured?: boolean;
+  duration?: string;
+  progress?: number;
+  actionUrl?: string;
+  metadata?: Record<string, any>;
+}
+
+interface Props {
   items: Recommendation[];
   showRefresh?: boolean;
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   showRefresh: true,
 });
 
 const emit = defineEmits<{
-  "item-click": [item: Recommendation];
+  explore: [];
+  refresh: [];
+  "item-click": [item: IRecommendation];
 }>();
 
-const { t } = useI18n();
 const router = useRouter();
 
 const isRefreshing = ref(false);
 
-const handleitemclick = (item: Recommendation) => {
-  emit("item-click", item);
+const handleItemClick = (item: Recommendation) => {
+  emit("item-click", item as IRecommendation);
 
   if (item.actionUrl) {
     router.push(item.actionUrl);
   }
 };
 
-const handlerefresh = async () => {
+const handleRefresh = async () => {
   isRefreshing.value = true;
   emit("refresh");
 

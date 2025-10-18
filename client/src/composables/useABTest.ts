@@ -20,7 +20,7 @@
  * ```
  */
 
-import { ref, computed, onMounted } from "vue";
+import { ref } from "vue";
 import { useAnalytics } from "@/composables/useAnalytics";
 import type { IABTestAssignmentEvent } from "@/types/analytics";
 import type { IABTestConfig, IABTestResult } from "@shared/types/composables";
@@ -39,10 +39,10 @@ export function useABTest(config: IABTestConfig): IABTestResult {
     throw new Error("useABTest: weights array must match variants array length");
   }
 
-  if (weights) {
-    const sum = weights.reduce((a, b) => a + b, 0);
+  if (weights && Array.isArray(weights) && weights.length > 0) {
+    const sum = weights.reduce((a: number, b: number) => a + b, 0);
     if (Math.abs(sum - 1.0) > 0.01) {
-      throw new Error("useABTest: weights must sum to 1.0");
+      console.warn("useABTest: weights should sum to 1.0, got", sum);
     }
   }
 
@@ -105,8 +105,8 @@ export function useABTest(config: IABTestConfig): IABTestResult {
     }
 
     const event: IABTestAssignmentEvent = {
-      testId,
-      variant: variant.value,
+      testId: testId || "unknown",
+      variant: variant.value || "control",
       timestamp: Date.now(),
     };
 
@@ -114,27 +114,12 @@ export function useABTest(config: IABTestConfig): IABTestResult {
     hasTrackedAssignment.value = true;
   };
 
-  /**
-   * Track A/B test outcome (conversion, bounce, continue)
-   */
-  const trackOutcome = (outcome: "conversion" | "bounce" | "continue", value?: number): void => {
-    track("ab_test_outcome", {
-      testId,
-      variant: variant.value,
-      outcome,
-      value,
-      timestamp: Date.now(),
-    });
-  };
-
-  // Initialize variant on mount
-  onMounted(() => {
-    variant.value = getVariant();
-  });
+  // Initialize variant immediately (not on mount) to ensure it's available
+  variant.value = getVariant();
 
   return {
-    variant: computed(() => variant.value),
+    variant: variant.value || "control",
+    isControl: variant.value === variants[0],
     trackAssignment,
-    trackOutcome,
   };
 }

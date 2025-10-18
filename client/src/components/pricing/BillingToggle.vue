@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import type { BillingCycle } from "@/types/domain/billing";
-import type { BillingToggleEmits, BillingToggleProps } from "@/types/ui/component-props";
+import type { BillingCycle } from "../../types/domain/billing";
+import type { BillingToggleEmits, BillingToggleProps } from "../../types/ui/component-props";
 
 defineProps<BillingToggleProps>();
 const emit = defineEmits<BillingToggleEmits>();
 
-const setbillingcycle = (cycle: BillingCycle) => {
+const setBillingCycle = (cycle: BillingCycle) => {
   emit("update:modelValue", cycle);
 };
 
@@ -18,7 +18,7 @@ defineOptions({
   <div class="billing-toggle" role="group" aria-labelledby="billing-toggle-label">
     <div class="billing-toggle-container">
       <span id="billing-toggle-label" class="billing-toggle-label">
-        {{ $t("pricing.billing.label") }}
+        {{ $t("pricing.billing?.label") }}
       </span>
 
       <div class="billing-toggle-switch">
@@ -29,7 +29,7 @@ defineOptions({
           :aria-pressed="modelValue === 'monthly'"
           type="button"
         >
-          {{ $t("pricing.billing.monthly") }}
+          {{ $t("pricing.billing?.monthly") }}
         </button>
 
         <button
@@ -39,10 +39,10 @@ defineOptions({
           :aria-pressed="modelValue === 'annual'"
           type="button"
         >
-          {{ $t("pricing.billing.yearly") }}
+          {{ $t("pricing.billing?.yearly") }}
 
           <span v-if="modelValue === 'annual'" class="billing-toggle-save-badge">
-            {{ $t("pricing.billing.savePercent", { percent: 17 }) }}
+            {{ $t("pricing.billing?.savePercent", { percent: 17 }) }}
           </span>
         </button>
       </div>

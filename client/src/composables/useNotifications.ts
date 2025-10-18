@@ -1,5 +1,7 @@
 import { ref, onMounted } from "vue";
+// @ts-ignore - Firebase packages may not be installed
 import { initializeApp } from "firebase/app";
+// @ts-ignore - Firebase packages may not be installed
 import { getMessaging, getToken, onMessage, type Messaging } from "firebase/messaging";
 import type {
   NotificationPermissionState,
@@ -200,7 +202,7 @@ export function useNotifications() {
     const messagingInstance = initializeFirebase();
     if (!messagingInstance) return;
 
-    onMessage(messagingInstance, (payload) => {
+    onMessage(messagingInstance, (payload: any) => {
       console.error("Foreground message received:", payload);
 
       const notification: ForegroundNotification = {
@@ -219,7 +221,7 @@ export function useNotifications() {
           icon: notification.icon || "/logo.png",
           badge: "/badge-icon.png",
           data: notification.data,
-          tag: notification.data?.tag || "default",
+          tag: (notification.data?.tag as string) || "default",
         });
       }
     });
@@ -236,8 +238,13 @@ export function useNotifications() {
       body: "This is a test notification from Q8M",
       icon: "/logo.png",
       badge: "/badge-icon.png",
-      vibrate: [200, 100, 200],
+      // vibrate is not standard in NotificationOptions
     });
+
+    // Trigger vibration separately if supported
+    if (navigator.vibrate) {
+      navigator.vibrate([200, 100, 200]);
+    }
   };
 
   // Initialize on mount

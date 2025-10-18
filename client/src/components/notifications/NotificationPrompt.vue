@@ -115,13 +115,13 @@
 </template>
 
 <script setup lang="ts">
-import type { INotificationPromptProps as Props } from "@/types/components/notifications";
+import type { INotificationPromptProps as Props } from "../../types/components/notifications";
 import { ref, computed, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
-import { useNotifications } from "@/composables/useNotifications";
+import { useNotifications } from "../../composables/useNotifications";
 
 const props = withDefaults(defineProps<Props>(), {
-  variant: "banner",
+  variant: "card",
   dismissible: true,
   showBenefits: false,
   autoDismissDelay: 0,
@@ -165,7 +165,7 @@ const variantClass = computed(() => {
   return `${base} ${base}--${props.variant}`;
 });
 
-const handleenable = async () => {
+const handleEnable = async () => {
   const granted = await requestPermission();
   if (granted) {
     emit("enabled");
@@ -174,7 +174,7 @@ const handleenable = async () => {
   }
 };
 
-const handledismiss = () => {
+const handleDismiss = () => {
   isDismissed.value = true;
   localStorage.setItem(STORAGE_KEY, Date.now().toString());
   emit("dismissed");

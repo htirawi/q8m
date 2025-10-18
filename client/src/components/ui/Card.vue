@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
-import type { CardProps } from "@/types/ui/component-props";
+import type { CardProps } from "../../types/ui/component-props";
 
 const props = withDefaults(defineProps<CardProps>(), {
   variant: "default",

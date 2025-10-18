@@ -89,7 +89,7 @@
           <!-- Icon Circle -->
           <div
             class="relative z-10 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full shadow-lg"
-            :class="getIconClass(achievement.type)"
+            :class="getIconClass(achievement.type ?? 'badge')"
           >
             <span class="text-2xl">{{ achievement.icon }} </span>
 
@@ -97,14 +97,14 @@
             <div
               v-if="isRecent(achievement.date)"
               class="absolute inset-0 animate-ping rounded-full"
-              :class="getPulseClass(achievement.type)"
+              :class="getPulseClass(achievement.type ?? 'badge')"
             ></div>
           </div>
 
           <!-- Content Card -->
           <div
             class="group flex-1 cursor-pointer overflow-hidden rounded-xl border-2 transition-all hover:shadow-lg"
-            :class="getCardClass(achievement.type)"
+            :class="getCardClass(achievement.type ?? 'badge')"
             @click="$emit('achievement-click', achievement)"
           >
             <div class="p-4">
@@ -112,17 +112,17 @@
               <div class="mb-2 flex items-start justify-between">
                 <div>
                   <h4 class="font-bold text-gray-900 dark:text-white">
-                    {{ achievement.title }}
+                    {{ achievement.title ?? "" }}
                   </h4>
                   <p class="text-sm text-gray-600 dark:text-gray-400">
-                    {{ achievement.description }}
+                    {{ achievement.description ?? "" }}
                   </p>
                 </div>
                 <span
                   v-if="achievement.xp"
                   class="ml-2 flex-shrink-0 rounded-full bg-purple-100 px-2 py-1 text-xs font-bold text-purple-700 dark:bg-purple-900/40 dark:text-purple-300"
                 >
-                  +{{ achievement.xp }}
+                  +{{ achievement.xp ?? 0 }}
 
                   XP
                 </span>
@@ -141,7 +141,7 @@
                       d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
                     />
                   </svg>
-                  {{ formatDate(achievement.date) }}
+                  {{ formatDate(achievement.date as Date | string) }}
                 </span>
 
                 <span
@@ -191,7 +191,7 @@
 import type {
   IAchievement,
   IAchievementTimelineProps as Props,
-} from "@/types/components/gamification";
+} from "../../../types/components/gamification";
 import { ref, computed } from "vue";
 
 const props = withDefaults(defineProps<Props>(), {
@@ -203,6 +203,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<{
   "achievement-click": [achievement: IAchievement];
+  "load-more": [];
 }>();
 
 const selectedFilter = ref<"all" | "badges" | "levels" | "milestones">("all");
@@ -275,7 +276,7 @@ function getRarityClass(rarity: string): string {
   return classes[rarity as keyof typeof classes] || classes.common;
 }
 
-function formatDate(date: Date): string {
+function formatDate(date: Date | string): string {
   const now = new Date();
   const diff = now.getTime() - new Date(date).getTime();
   const minutes = Math.floor(diff / 60000);

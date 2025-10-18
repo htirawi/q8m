@@ -5,6 +5,15 @@
 
 import { ref, onMounted } from "vue";
 
+// Extend Window interface for Vue Router
+import type { Router } from "vue-router";
+
+declare global {
+  interface Window {
+    __VUE_ROUTER__?: Router;
+  }
+}
+
 export interface PerformanceMetrics {
   loadTime: number;
   routeChanges: number;

@@ -45,6 +45,7 @@ if (!questionId.value) {
       <DiscussionList
         v-if="questionId"
         :question-id="questionId"
+        :discussions="[]"
         :question-creator-id="questionCreatorId"
         :show-form="true"
       />

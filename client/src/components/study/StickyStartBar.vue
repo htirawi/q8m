@@ -1,7 +1,7 @@
 <template>
   <Transition name="slide-up" @before-enter="handleBeforeEnter" @after-enter="handleAfterEnter">
     <div
-      v-if="isVisible"
+      v-if="visible"
       class="fixed bottom-0 left-0 right-0 z-50 border-t border-gray-200 bg-white/95 shadow-2xl backdrop-blur-sm dark:border-gray-700 dark:bg-gray-900/95"
       role="region"
       aria-label="Study session start control"
@@ -20,7 +20,7 @@
                 class="h-5 w-5 animate-spin rounded-full border-2 border-blue-600 border-t-transparent"
                 aria-hidden="true"
               />
-              <span class="text-sm font-medium">{{ t("study.sticky.loading") }} </span>
+              <span class="text-sm font-medium">{{ t("study.sticky?.loading") }} </span>
             </div>
 
             <!-- Error state -->
@@ -41,7 +41,7 @@
                 />
               </svg>
               <span class="text-sm font-medium"
-                >{{ errorMessage || t("study.sticky.error") }}
+                >{{ errorMessage || t("study.sticky?.error") }}
               </span>
             </div>
 
@@ -76,7 +76,7 @@
               data-testid="sticky-retry-button"
               @click="handleRetry"
             >
-              {{ t("study.sticky.retry") }}
+              {{ t("study.sticky?.retry") }}
             </button>
 
             <!-- Start button -->
@@ -121,7 +121,7 @@
           class="mt-2 text-center text-xs text-gray-500 dark:text-gray-400"
           data-testid="keyboard-hint"
         >
-          {{ t("study.sticky.keyboardHint") }}
+          {{ t("study.sticky?.keyboardHint") }}
         </div>
       </div>
     </div>
@@ -132,15 +132,13 @@
 import type {
   IStickyStartBarProps as Props,
   IStickyStartBarEmits as Emits,
-} from "@/types/components/study";
+} from "../../types/components/study";
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useI18n } from "vue-i18n";
-import { useAnalytics } from "@/composables/useAnalytics";
-import type { StudyLoadingState } from "@/composables/useStudy";
-import type { DifficultyLevel } from "@/types/plan/access";
+import { useAnalytics } from "../../composables/useAnalytics";
 
 const props = withDefaults(defineProps<Props>(), {
-  errorMessage: null,
+  errorMessage: "",
   hasLastSession: false,
 });
 
@@ -189,22 +187,22 @@ const handleStart = () => {
     difficulty: props.selectedDifficulty ?? "easy",
   });
 
-  emit("start", props.selectedDifficulty);
+  emit("start", props.selectedDifficulty ?? undefined);
 };
 
-const handleretry = () => {
+const handleRetry = () => {
   track("sticky_start_retry", {
     difficulty: props.selectedDifficulty ?? "easy",
   });
 
-  emit("retry");
+  emit("start");
 };
 
-const handlebeforeenter = () => {
+const handleBeforeEnter = () => {
   // Animation hook
 };
 
-const handleafterenter = () => {
+const handleAfterEnter = () => {
   // Track view once after animation completes
   if (!hasTrackedView.value) {
     track("sticky_start_shown", {

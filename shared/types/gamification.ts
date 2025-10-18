@@ -6,7 +6,7 @@
 /**
  * Badge tiers for multi-level achievements
  */
-export type BadgeTier = 'bronze' | 'silver' | 'gold' | 'platinum';
+export type BadgeTier = 'common' | 'rare' | 'epic' | 'legendary';
 
 /**
  * Badge criteria types

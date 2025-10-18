@@ -4,8 +4,8 @@ import { computed, ref } from "vue";
 import { CheckIcon, ChevronDownIcon } from "@heroicons/vue/24/outline";
 import { useI18n } from "vue-i18n";
 
-import { useDropdown } from "@/composables/useDropdown";
-import { usePaymentStore } from "@/stores/payment";
+import { useDropdown } from "../../composables/useDropdown";
+import { usePaymentStore } from "../../stores/payment";
 
 const { t } = useI18n();
 const paymentStore = usePaymentStore();
@@ -33,7 +33,7 @@ const currencies = computed(() => [
   },
 ]);
 
-const getcurrencyflag = (currency: string) => {
+const getCurrencyFlag = (currency: string) => {
   const currencyMap: Record<string, string> = {
     USD: "🇺🇸",
     JOD: "🇯🇴",
@@ -42,7 +42,7 @@ const getcurrencyflag = (currency: string) => {
   return currencyMap[currency] || "💱";
 };
 
-const selectcurrency = async (currency: "USD" | "JOD" | "SAR") => {
+const selectCurrency = async (currency: "USD" | "JOD" | "SAR") => {
   if (currency === currentCurrency.value) {
     close();
     return;
@@ -86,7 +86,7 @@ const selectcurrency = async (currency: "USD" | "JOD" | "SAR") => {
           >
             <span class="currency-flag">{{ currency.flag }} </span>
             <div class="currency-info">
-              <span class="currency-name">{{ currency.name }} </span>
+              <span class="currency-name">{{ currency.name ?? "" }} </span>
               <span class="currency-code">{{ currency.code }} </span>
             </div>
             <CheckIcon v-if="currency.code === currentCurrency" class="currency-check" />

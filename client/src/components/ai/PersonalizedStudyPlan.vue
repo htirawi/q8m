@@ -3,8 +3,8 @@
     <!-- Header with Progress Overview -->
     <div class="study-plan__header">
       <div class="study-plan__header-content">
-        <h2 class="study-plan__title">{{ plan.title }}</h2>
-        <p class="study-plan__description">{{ plan.description }}</p>
+        <h2 class="study-plan__title">{{ plan.title ?? "" }}</h2>
+        <p class="study-plan__description">{{ plan.description ?? "" }}</p>
 
         <div class="study-plan__meta">
           <div class="study-plan__meta-item">
@@ -14,8 +14,8 @@
               />
             </svg>
             <span
-              >{{ formatDate(plan.duration.startDate) }} -
-              {{ formatDate(plan.duration.targetEndDate) }}
+              >{{ formatDate(plan.duration?.startDate as Date | string) }} -
+              {{ formatDate(plan.duration?.targetEndDate as Date | string) }}
             </span>
           </div>
           <div class="study-plan__meta-item">
@@ -24,7 +24,7 @@
               <path d="M12 6v6l4 2" />
             </svg>
             <span
-              >{{ plan.duration.hoursPerWeek }}h/week • {{ plan.duration.weeks }}
+              >{{ plan.duration?.hoursPerWeek }}h/week • {{ plan.duration?.weeks }}
 
               weeks</span
             >
@@ -80,7 +80,7 @@
           </svg>
         </div>
         <div class="stat-card__content">
-          <span class="stat-card__value">{{ plan.progress.currentStreak }} </span>
+          <span class="stat-card__value">{{ plan.progress?.currentStreak }} </span>
           <span class="stat-card__label">{{ $t("stats.dayStreak") }} </span>
         </div>
       </div>
@@ -93,7 +93,7 @@
           </svg>
         </div>
         <div class="stat-card__content">
-          <span class="stat-card__value">{{ plan.progress.totalHoursStudied }} </span>
+          <span class="stat-card__value">{{ plan.progress?.totalHoursStudied }} </span>
           <span class="stat-card__label">{{ $t("stats.hoursStudied") }} </span>
         </div>
       </div>
@@ -105,7 +105,7 @@
           </svg>
         </div>
         <div class="stat-card__content">
-          <span class="stat-card__value">{{ Math.round(plan.progress.averageScore) }}%</span>
+          <span class="stat-card__value">{{ Math.round(plan.progress?.averageScore) }}%</span>
           <span class="stat-card__label">{{ $t("stats.avgScore") }} </span>
         </div>
       </div>
@@ -117,7 +117,7 @@
           </svg>
         </div>
         <div class="stat-card__content">
-          <span class="stat-card__value">{{ plan.progress.velocity }} </span>
+          <span class="stat-card__value">{{ plan.progress?.velocity }} </span>
           <span class="stat-card__label">{{ $t("stats.topicsPerWeek") }} </span>
         </div>
       </div>
@@ -199,13 +199,13 @@
             <div class="timeline-module__dot"></div>
             <span class="timeline-module__week"
               >{{ $t("ai.week") }}
-              {{ Math.ceil(((index + 1) * plan.duration.weeks) / plan.curriculum.length) }}
+              {{ Math.ceil(((index + 1) * plan.duration.weeks) / plan.curriculum?.length) }}
             </span>
           </div>
 
           <div class="timeline-module__card" @click="expandModule(module.id)">
             <div class="timeline-module__header">
-              <h4 class="timeline-module__title">{{ module.title }}</h4>
+              <h4 class="timeline-module__title">{{ module.title ?? "" }}</h4>
               <span class="timeline-module__duration">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                   <circle cx="12" cy="12" r="10" />
@@ -217,7 +217,7 @@
               </span>
             </div>
 
-            <p class="timeline-module__description">{{ module.description }}</p>
+            <p class="timeline-module__description">{{ module.description ?? "" }}</p>
 
             <!-- Module progress -->
             <div class="timeline-module__progress">
@@ -228,7 +228,7 @@
                 ></div>
               </div>
               <span class="timeline-module__progress-text">
-                {{ getCompletedTopics(module) }}/{{ module.topics.length }}
+                {{ getCompletedTopics(module) }}/{{ module.topics?.length ?? 0 }}
                 {{ $t("ai.topicsCompleted") }}
               </span>
             </div>
@@ -278,7 +278,7 @@
                   </svg>
                 </div>
                 <div class="topic-item__content">
-                  <h5 class="topic-item__title">{{ topic.title }}</h5>
+                  <h5 class="topic-item__title">{{ topic.title ?? "" }}</h5>
                   <div class="topic-item__meta">
                     <span class="topic-item__duration">{{ topic.estimatedMinutes }} min</span>
                     <span
@@ -315,10 +315,10 @@
                   />
                 </svg>
                 <span
-                  >{{ $t("ai.moduleQuiz") }}: {{ module.quiz.passingScore }}% {{ $t("ai.toPass") }}
+                  >{{ $t("ai.moduleQuiz") }}: {{ module.quiz?.passingScore }}% {{ $t("ai.toPass") }}
                 </span>
                 <span v-if="module.quiz.bestScore" class="quiz-info__score">
-                  {{ $t("ai.bestScore") }}: {{ module.quiz.bestScore }}%
+                  {{ $t("ai.bestScore") }}: {{ module.quiz?.bestScore }}%
                 </span>
               </div>
             </div>
@@ -350,15 +350,15 @@
               <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <h4 class="milestone-card__title">{{ milestone.title }}</h4>
-          <p class="milestone-card__description">{{ milestone.description }}</p>
+          <h4 class="milestone-card__title">{{ milestone.title ?? "" }}</h4>
+          <p class="milestone-card__description">{{ milestone.description ?? "" }}</p>
           <div class="milestone-card__target">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <path
                 d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
               />
             </svg>
-            <span>{{ formatDate(milestone.targetDate) }} </span>
+            <span>{{ formatDate(milestone.targetDate as Date | string) }} </span>
           </div>
           <div v-if="milestone.reward" class="milestone-card__reward">
             <span class="milestone-card__reward-label"
@@ -366,7 +366,7 @@
 
               :</span
             >
-            <span class="milestone-card__reward-value">{{ milestone.reward.value }} </span>
+            <span class="milestone-card__reward-value">{{ milestone.reward?.value ?? 0 }} </span>
           </div>
         </div>
       </div>
@@ -409,8 +409,8 @@
 import { ref, computed, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
-import type { IStudyPlan, ICurriculumModule } from "@/types/ai";
-import { analytics } from "@/services/analytics";
+import type { IStudyPlan, ICurriculumModule } from "../../types/ai";
+import { analytics } from "../../services/analytics";
 
 // Props
 interface Props {
@@ -421,6 +421,7 @@ const props = defineProps<Props>();
 
 // Emits
 const emit = defineEmits<{
+  "plan-adjust": [];
   "topic-start": [topic: any];
   "module-expand": [moduleId: string];
 }>();
@@ -474,16 +475,15 @@ const filteredModules = computed(() => {
 
 // Methods
 const formatDate = (date: Date | string): string => {
-  const d = typeof date === "string" ? new Date(date) : date;
-  dtypeofdatenewDate;
-  return d.toLocaleDateString(locale.value, {
+  const dateObj = typeof date === "string" ? new Date(date) : date;
+  return dateObj.toLocaleDateString(locale.value, {
     month: "short",
     day: "numeric",
     year: "numeric",
   });
 };
 
-const togglefilter = (filterId: string) => {
+const toggleFilter = (filterId: string) => {
   const index = activeFilters.value.indexOf(filterId);
   if (index > -1) {
     activeFilters.value.splice(index, 1);
@@ -492,7 +492,7 @@ const togglefilter = (filterId: string) => {
   }
 };
 
-const expandmodule = (moduleId: string) => {
+const expandModule = (moduleId: string) => {
   const index = expandedModules.value.indexOf(moduleId);
   if (index > -1) {
     expandedModules.value.splice(index, 1);
@@ -516,7 +516,7 @@ const getCompletedTopics = (module: ICurriculumModule): number => {
   return module.topics.filter((t) => t.completed).length;
 };
 
-const starttopic = (topic: any) => {
+const startTopic = (topic: any) => {
   emit("topic-start", topic);
 
   analytics.track("study_plan_topic_started", {
@@ -535,7 +535,7 @@ const starttopic = (topic: any) => {
   }
 };
 
-const continuestudying = () => {
+const continueStudying = () => {
   // Find next incomplete topic
   for (const module of props.plan.curriculum) {
     if (module.status === "in-progress" || module.status === "available") {
@@ -549,12 +549,12 @@ const continuestudying = () => {
   }
 };
 
-const adjustplan = () => {
+const adjustPlan = () => {
   emit("plan-adjust");
   showAdaptiveSettings.value = true;
 };
 
-const exportplan = () => {
+const exportPlan = () => {
   // Export plan as PDF or JSON
   const data = JSON.stringify(props.plan, null, 2);
   const blob = new Blob([data], { type: "application/json" });

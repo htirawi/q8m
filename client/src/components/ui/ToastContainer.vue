@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-import Toast from "@/components/ui/Toast.vue";
+import Toast from "../../components/ui/Toast.vue";
 
-import type { ToastItem } from "@/types/ui/internal";
+import type { ToastItem } from "../../types/ui/internal";
 
 // State
 const toasts = ref<ToastItem[]>([]);
@@ -14,14 +14,14 @@ const addToast = (toast: Omit<ToastItem, "id">) => {
   toasts.value.push({ ...toast, id });
 };
 
-const removetoast = (id: string) => {
+const removeToast = (id: string) => {
   const index = toasts.value.findIndex((toast) => toast.id === id);
   if (index > -1) {
     toasts.value.splice(index, 1);
   }
 };
 
-const cleartoasts = () => {
+const clearToasts = () => {
   toasts.value = [];
 };
 

@@ -4,10 +4,10 @@
       <!-- Header -->
       <div class="mb-8">
         <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
-          {{ t("plans.free.landingTitle") }}
+          {{ t("plans.free?.landingTitle") }}
         </h1>
         <p class="mt-2 text-lg text-gray-600 dark:text-gray-300">
-          {{ t("plans.free.landingSubtitle") }}
+          {{ t("plans.free?.landingSubtitle") }}
         </p>
       </div>
 
@@ -16,7 +16,7 @@
         <div class="flex items-center justify-between">
           <div>
             <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
-              {{ t("plans.free.startQuizzes") }}
+              {{ t("plans.free?.startQuizzes") }}
             </h2>
             <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
               Practice with easy-level questions to build your foundation
@@ -27,7 +27,7 @@
             class="rounded-lg bg-primary-600 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
             @click="goToEasyQuizzes"
           >
-            {{ t("plans.free.startQuizzes") }}
+            {{ t("plans.free?.startQuizzes") }}
           </button>
         </div>
       </div>
@@ -99,12 +99,12 @@
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
-import InlineUpsellCard from "@/components/paywall/InlineUpsellCard.vue";
+import InlineUpsellCard from "../../../components/paywall/InlineUpsellCard.vue";
 
 const { t } = useI18n();
 const router = useRouter();
 
-const gotoeasyquizzes = () => {
+const goToEasyQuizzes = () => {
   const locale = router.currentRoute.value.params.locale || "en";
   router.push(`/${locale}/quizzes/easy`);
 };

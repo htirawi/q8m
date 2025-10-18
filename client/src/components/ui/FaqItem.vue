@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { IFaqItemProps as Props, IFaqItemEmits as Emits } from "@/types/components/home";
+import type { IFaqItemProps as Props, IFaqItemEmits as Emits } from "../../types/components/home";
 import { useI18n } from "vue-i18n";
 import { ref, computed } from "vue";
 

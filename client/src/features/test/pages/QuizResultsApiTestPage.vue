@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import { useQuizResults } from "@/composables/useQuizResults";
+import { useQuizResults } from "../../../composables/useQuizResults";
 
 const { isLoading, error, quizHistory, quizStats, weakAreas, getHistory, getStats, getWeakAreas } =
   useQuizResults();
@@ -95,9 +95,9 @@ function getScoreColor(score: number): string {
             <div v-for="quiz in quizHistory" :key="quiz.id" class="quiz-card">
               <div class="quiz-header">
                 <div class="quiz-type-badge">{{ quiz.quizType }}</div>
-                <div class="quiz-level-badge">{{ quiz.level }}</div>
+                <div class="quiz-level-badge">{{ quiz.level ?? 0 }}</div>
                 <div class="quiz-score" :style="{ color: getScoreColor(quiz.score) }">
-                  {{ quiz.score }}%
+                  {{ quiz.score ?? 0 }}%
                 </div>
               </div>
 
@@ -112,7 +112,9 @@ function getScoreColor(score: number): string {
                 </div>
                 <div class="detail-row">
                   <span class="detail-label">Duration:</span>
-                  <span class="detail-value">{{ formatDuration(quiz.totalTimeSeconds) }} </span>
+                  <span class="detail-value"
+                    >{{ formatDuration(quiz.totalTimeSeconds ?? 0) }}
+                  </span>
                 </div>
                 <div class="detail-row">
                   <span class="detail-label">XP Earned:</span>
@@ -122,17 +124,22 @@ function getScoreColor(score: number): string {
                     XP</span
                   >
                 </div>
-                <div v-if="quiz.badgesEarned.length > 0" class="detail-row">
+                <div v-if="quiz.badgesEarned && quiz.badgesEarned.length > 0" class="detail-row">
                   <span class="detail-label">Badges:</span>
                   <span class="detail-value"
-                    >{{ quiz.badgesEarned.length }}
+                    >{{ quiz.badgesEarned?.length ?? 0 }}
 
                     earned 🏆</span
                   >
                 </div>
-                <div v-if="quiz.weakCategories.length > 0" class="detail-row">
+                <div
+                  v-if="quiz.weakCategories && quiz.weakCategories.length > 0"
+                  class="detail-row"
+                >
                   <span class="detail-label">Weak Categories:</span>
-                  <span class="detail-value weak">{{ quiz.weakCategories.join(", ") }} </span>
+                  <span class="detail-value weak"
+                    >{{ quiz.weakCategories?.join(", ") ?? "" }}
+                  </span>
                 </div>
               </div>
 
@@ -241,9 +248,9 @@ function getScoreColor(score: number): string {
                 <h3>{{ area.category }}</h3>
                 <div
                   class="accuracy-badge"
-                  :style="{ backgroundColor: getScoreColor(area.accuracy) }"
+                  :style="{ backgroundColor: getScoreColor(area.accuracy ?? 0) }"
                 >
-                  {{ Math.round(area.accuracy) }}%
+                  {{ Math.round(area.accuracy ?? 0) }}%
                 </div>
               </div>
 
@@ -259,7 +266,11 @@ function getScoreColor(score: number): string {
                 <div class="detail-row">
                   <span class="detail-label">Last Attempt:</span>
                   <span class="detail-value">
-                    {{ new Date(area.lastAttemptDate).toLocaleDateString() }}
+                    {{
+                      area.lastAttemptDate
+                        ? new Date(area.lastAttemptDate).toLocaleDateString()
+                        : "N/A"
+                    }}
                   </span>
                 </div>
               </div>
@@ -268,8 +279,8 @@ function getScoreColor(score: number): string {
                 <div
                   class="progress-fill"
                   :style="{
-                    width: `${area.accuracy}%`,
-                    backgroundColor: getScoreColor(area.accuracy),
+                    width: `${area.accuracy ?? 0}%`,
+                    backgroundColor: getScoreColor(area.accuracy ?? 0),
                   }"
                 ></div>
               </div>

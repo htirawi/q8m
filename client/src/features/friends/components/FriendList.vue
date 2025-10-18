@@ -2,9 +2,9 @@
 import type {
   IFriendListProps as Props,
   IFriendListEmits as Emits,
-} from "@/types/components/friends";
+} from "../../../types/components/friends";
 import { ref, computed, onMounted } from "vue";
-import { useFriends } from "@/composables/useFriends";
+import { useFriends } from "../../../composables/useFriends";
 import FriendCard from "./FriendCard.vue";
 
 const props = withDefaults(defineProps<Props>(), {
@@ -81,7 +81,7 @@ const handleUnfriend = async (userId: string) => {
   }
 };
 
-const handleblock = async (userId: string) => {
+const handleBlock = async (userId: string) => {
   if (showBlockConfirm.value !== userId) {
     showBlockConfirm.value = userId;
     return;
@@ -93,15 +93,15 @@ const handleblock = async (userId: string) => {
   }
 };
 
-const handleview = (userId: string) => {
+const handleView = (userId: string) => {
   emit("view-friend", userId);
 };
 
-const handleloadmore = async () => {
+const handleLoadMore = async () => {
   await loadMore();
 };
 
-const clearfilters = () => {
+const clearFilters = () => {
   searchQuery.value = "";
   filterLevel.value = "all";
   sortBy.value = props.initialSort;

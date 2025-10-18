@@ -18,18 +18,27 @@ export interface IFrameworkCardProps {
 }
 
 export interface ILevelCardProps {
-  level: DifficultyLevel;
-  title: string;
-  description: string;
-  questionCount: number;
-  estimatedTime: string;
+  level?: DifficultyLevel; // Either level or difficulty must be provided
+  difficulty?: DifficultyLevel; // Alias for level
+  title?: string;
+  description?: string;
+  questionCount?: number;
+  estimatedTime?: string;
   requiredPlan?: PlanTier;
   locked?: boolean;
+  isLocked?: boolean; // Alias for locked
+  isSelected?: boolean;
   recommended?: boolean;
+  features?: string[];
+  canClickLocked?: boolean;
+  isCurrentPlan?: boolean;
+  autoStartEnabled?: boolean;
 }
 
 export interface ILevelCardEmits {
-  (e: "select", level: DifficultyLevel): void;
+  (e: "select", level?: DifficultyLevel): void;
+  (e: "auto-start", level?: DifficultyLevel): void;
+  (e: "unlock-click", difficulty?: DifficultyLevel, requiredPlan?: PlanTier): void;
 }
 
 export interface IModeCardProps {
@@ -48,21 +57,28 @@ export interface IModeCardProps {
 export interface IStartStudyingCtaProps {
   framework?: string;
   level?: DifficultyLevel;
+  selectedDifficulty?: DifficultyLevel;
   showAnimation?: boolean;
+  disabled?: boolean;
+  scrollTargetSelector?: string;
 }
 
 export interface IStartStudyingCtaEmits {
-  (e: "start"): void;
+  (e: "click", difficulty?: DifficultyLevel): void;
 }
 
 export interface IStickyStartBarProps {
   framework?: string;
   level?: DifficultyLevel;
   visible?: boolean;
+  state?: string;
+  hasLastSession?: boolean;
+  selectedDifficulty?: string;
+  errorMessage?: string;
 }
 
 export interface IStickyStartBarEmits {
-  (e: "start"): void;
+  (e: "start", difficulty?: string): void;
   (e: "close"): void;
 }
 

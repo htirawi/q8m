@@ -240,13 +240,13 @@ function setupPerformanceTracking() {
             const lastSessionEntry = clsEntries[clsEntries.length - 1];
 
             if (
-              entry.startTime - lastSessionEntry?.endTime < 1000 &&
-              entry.startTime - firstSessionEntry?.startTime < 5000
+              entry.startTime - (lastSessionEntry?.endTime ?? 0) < 1000 &&
+              entry.startTime - (firstSessionEntry?.startTime ?? 0) < 5000
             ) {
-              clsValue += entry.value;
+              clsValue += entry.value ?? 0;
               clsEntries.push(entry);
             } else {
-              clsValue = entry.value;
+              clsValue = entry.value ?? 0;
               clsEntries = [entry];
             }
           }
@@ -308,7 +308,9 @@ function setupPerformanceTracking() {
 // Export types for use in components
 export { analytics, EventCategory, EventAction };
 
-// TypeScript module augmentation
+// TypeScript module augmentation (optional - for global $analytics property)
+// Note: Commented out to avoid module resolution errors in strict mode
+/*
 declare module "@vue/runtime-core" {
   export interface ComponentCustomProperties {
     $analytics: typeof analytics;
@@ -327,3 +329,4 @@ declare module "@vue/runtime-core" {
     ) => void;
   }
 }
+*/

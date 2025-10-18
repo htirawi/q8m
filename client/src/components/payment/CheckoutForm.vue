@@ -2,15 +2,15 @@
 import { computed, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { useI18n } from "vue-i18n";
-import { usePaymentStore } from "@/stores/payment";
-import { useCheckoutForm } from "@/composables/useCheckoutForm";
-import CheckoutHeader from "@/components/payment/CheckoutHeader.vue";
-import OrderSummary from "@/components/payment/OrderSummary.vue";
-import BillingForm from "@/components/payment/BillingForm.vue";
-import PaymentMethodSelector from "@/components/payment/PaymentMethodSelector.vue";
-import CheckoutSummary from "@/components/payment/CheckoutSummary.vue";
-import LoadingSpinner from "@/components/ui/LoadingSpinner.vue";
-import type { PlanPricing } from "@/types/domain/payment";
+import { usePaymentStore } from "../../stores/payment";
+import { useCheckoutForm } from "../../composables/useCheckoutForm";
+import CheckoutHeader from "../../components/payment/CheckoutHeader.vue";
+import OrderSummary from "../../components/payment/OrderSummary.vue";
+import BillingForm from "../../components/payment/BillingForm.vue";
+import PaymentMethodSelector from "../../components/payment/PaymentMethodSelector.vue";
+import CheckoutSummary from "../../components/payment/CheckoutSummary.vue";
+import LoadingSpinner from "../../components/ui/LoadingSpinner.vue";
+import type { PlanPricing } from "../../types/domain/payment";
 
 const route = useRoute();
 useI18n();
@@ -93,7 +93,7 @@ onMounted(async () => {
             :class="{ 'submit-button--loading': isProcessing }"
           >
             <LoadingSpinner v-if="isProcessing" size="sm" color="white" class="mr-2" />
-            {{ isProcessing ? $t("checkout.processing") : $t("checkout.completeOrder")$t }}
+            {{ isProcessing ? $t("checkout.processing") : $t("checkout.completeOrder") }}
           </button>
         </div>
       </form>

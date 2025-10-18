@@ -3,7 +3,7 @@ import { computed } from "vue";
 
 import { useI18n } from "vue-i18n";
 
-import type { PasswordStrengthIndicatorProps } from "@/types/ui/component-props";
+import type { PasswordStrengthIndicatorProps } from "../../../types/ui/component-props";
 
 const props = defineProps<PasswordStrengthIndicatorProps>();
 const { t } = useI18n();

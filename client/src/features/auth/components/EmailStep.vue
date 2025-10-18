@@ -3,9 +3,9 @@ import { ref, computed } from "vue";
 
 import { useI18n } from "vue-i18n";
 
-import LoadingSpinner from "@/components/ui/LoadingSpinner.vue";
-import { useFormValidation } from "@/composables/useFormValidation";
-import type { EmailStepProps } from "@/types/ui/component-props";
+import LoadingSpinner from "../../../components/ui/LoadingSpinner.vue";
+import { useFormValidation } from "../../../composables/useFormValidation";
+import type { EmailStepProps } from "../../../types/ui/component-props";
 
 const props = defineProps<EmailStepProps>();
 
@@ -23,20 +23,20 @@ const isValid = computed(() => {
   return props.email && /\S+@\S+\.\S+/.test(props.email);
 });
 
-const handleinput = (event: Event) => {
+const handleInput = (event: Event) => {
   const target = event.target as HTMLInputElement;
   emit("update:email", target.value);
   error.value = undefined;
 };
 
-const handleblur = () => {
+const handleBlur = () => {
   const emailError = validateEmail(props.email);
   if (emailError) {
     error.value = emailError;
   }
 };
 
-const handlecontinue = () => {
+const handleContinue = () => {
   if (isValid.value) {
     emit("continue");
   }
@@ -47,7 +47,7 @@ const handlecontinue = () => {
   <div class="form-step">
     <div class="form-group">
       <label for="email" class="form-label">
-        {{ $t("auth.fields.email") }}
+        {{ $t("auth.fields?.email") }}
       </label>
       <input
         id="email"
@@ -72,10 +72,10 @@ const handlecontinue = () => {
     >
       <span v-if="isLoading" class="button-content">
         <LoadingSpinner size="sm" color="white" />
-        {{ $t("auth.register.processing") }}
+        {{ $t("auth.register?.processing") }}
       </span>
       <span v-else class="button-content">
-        {{ $t("auth.register.continue") }}
+        {{ $t("auth.register?.continue") }}
       </span>
     </button>
   </div>

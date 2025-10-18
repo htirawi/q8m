@@ -45,12 +45,12 @@
 
             <!-- Title -->
             <h2 class="mb-4 text-center text-4xl font-black text-white drop-shadow-lg">
-              {{ milestone.title }}
+              {{ milestone.title ?? "" }}
             </h2>
 
             <!-- Description -->
             <p class="mb-6 text-center text-xl font-medium text-white/90">
-              {{ milestone.description }}
+              {{ milestone.description ?? "" }}
             </p>
 
             <!-- Stats -->
@@ -60,7 +60,7 @@
                 :key="index"
                 class="rounded-xl bg-white/20 p-4 text-center backdrop-blur-sm"
               >
-                <div class="text-3xl font-bold text-white">{{ stat.value }}</div>
+                <div class="text-3xl font-bold text-white">{{ stat.value ?? 0 }}</div>
                 <div class="text-sm text-white/80">{{ stat.label }}</div>
               </div>
             </div>
@@ -78,7 +78,7 @@
                     <span class="text-2xl">{{ reward.icon }} </span>
                     <span class="font-medium text-white">{{ reward.label }} </span>
                   </div>
-                  <span class="font-bold text-white">{{ reward.value }} </span>
+                  <span class="font-bold text-white">{{ reward.value ?? 0 }} </span>
                 </div>
               </div>
             </div>
@@ -128,14 +128,9 @@
 </template>
 
 <script setup lang="ts">
-import type {
-  IMilestoneReward,
-  IMilestoneStat,
-  IMilestone,
-  IMilestoneCelebrationProps as Props,
-} from "@/types/components/gamification";
+import type { IMilestoneCelebrationProps as Props } from "../../../types/components/gamification";
 import { ref, watch, onMounted } from "vue";
-import { useConfetti } from "@/composables/useConfetti";
+import { useConfetti } from "../../../composables/useConfetti";
 
 const props = withDefaults(defineProps<Props>(), {
   show: false,

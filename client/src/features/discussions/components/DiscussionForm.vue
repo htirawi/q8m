@@ -2,11 +2,11 @@
 import type {
   IDiscussionFormProps as Props,
   IDiscussionFormEmits as Emits,
-} from "@/types/components/discussions";
+} from "../../../types/components/discussions";
 import { ref, computed } from "vue";
-import { useDiscussions } from "@/composables/useDiscussions";
+import { useDiscussions } from "../../../composables/useDiscussions";
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   placeholder: "Start a discussion...",
   minRows: 3,
   maxRows: 10,
@@ -57,17 +57,17 @@ const handleSubmit = async () => {
   }
 };
 
-const handlecancel = () => {
+const handleCancel = () => {
   content.value = "";
   isFocused.value = false;
   emit("cancel");
 };
 
-const handlefocus = () => {
+const handleFocus = () => {
   isFocused.value = true;
 };
 
-const handlekeydown = (event: KeyboardEvent) => {
+const handleKeydown = (event: KeyboardEvent) => {
   // Submit on Ctrl/Cmd + Enter
   if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
     event.preventDefault();

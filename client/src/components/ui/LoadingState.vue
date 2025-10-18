@@ -2,9 +2,9 @@
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 
-import LoadingSpinner from "@/components/ui/LoadingSpinner.vue";
+import LoadingSpinner from "../../components/ui/LoadingSpinner.vue";
 
-import type { LoadingStateProps } from "@/types/ui/component-props";
+import type { LoadingStateProps } from "../../types/ui/component-props";
 
 const props = withDefaults(defineProps<LoadingStateProps>(), {
   type: "section",

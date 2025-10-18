@@ -87,19 +87,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { trackEvent } from "@/utils/telemetry";
-import type { PlanTier } from "@shared/types/plan";
-import type { IInlineUpsellCardProps as Props } from "@/types/components/paywall";
+import { trackEvent } from "../../utils/telemetry";
+import type { IInlineUpsellCardProps as Props } from "../../types/components/paywall";
 
 const props = defineProps<Props>();
 
 const router = useRouter();
 const isExpanded = ref(false);
-const contentid = `upsell-${Math.random().toString(36).substring(7)}`;
+const contentId = `upsell-${Math.random().toString(36).substring(7)}`;
 
-const toggleexpanded = () => {
+const toggleExpanded = () => {
   isExpanded.value = !isExpanded.value;
 
   if (isExpanded.value) {
@@ -110,7 +109,7 @@ const toggleexpanded = () => {
   }
 };
 
-const handleupgrade = () => {
+const handleUpgrade = () => {
   trackEvent("upsell_card_cta_clicked", {
     targetPlan: props.targetPlan,
     title: props.title,

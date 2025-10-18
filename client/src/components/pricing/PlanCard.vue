@@ -2,11 +2,9 @@
 import type {
   IPlanCardProps as IProps,
   IPlanCardEmits as IEmits,
-} from "@/types/components/pricing";
+} from "../../types/components/pricing";
 import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
-import type { IPlanConfig } from "@/config/plans";
-import type { BillingCycle, PlanId } from "@/types/pricing";
 
 const props = withDefaults(defineProps<IProps>(), {
   featured: false,
@@ -34,7 +32,7 @@ const savingsPercent = computed(() => {
   return Math.round((savings / monthlyCost) * 100);
 });
 
-const handleselect = () => {
+const handleSelect = () => {
   emit("select", props.plan?.id, props.billing);
 };
 
@@ -66,7 +64,7 @@ defineOptions({
     <!-- Header -->
     <div class="plan-card-header">
       <div class="plan-card-icon" :aria-hidden="true">
-        {{ plan?.visual.icon }}
+        {{ plan?.visual?.icon ?? "" }}
       </div>
       <h3 class="plan-card-title">
         {{ plan?.labelKey ? t(plan.labelKey) : "" }}
@@ -87,10 +85,10 @@ defineOptions({
         <span class="plan-card-amount">{{ currentPrice }} </span>
       </div>
       <p class="plan-card-period">
-        {{ billing === "monthly" ? t("pricing.billing.perMonth") : t("pricing.billing.perYear") }}
+        {{ billing === "monthly" ? t("pricing.billing.perMonth") : t("pricing.billing?.perYear") }}
       </p>
       <p v-if="savingsPercent > 0" class="plan-card-savings">
-        {{ t("pricing.billing.savePercent", { percent: savingsPercent }) }}
+        {{ t("pricing.billing?.savePercent", { percent: savingsPercent }) }}
       </p>
 
       <!-- ROI Calculator for paid plans -->
@@ -113,7 +111,7 @@ defineOptions({
               d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
             />
           </svg>
-          <span>{{ t("pricing.roi.calculator") }}</span>
+          <span>{{ t("pricing.roi?.calculator") }}</span>
         </button>
       </div>
 
@@ -122,7 +120,7 @@ defineOptions({
         <div class="plan-card-social-proof-stats">
           <div class="plan-card-social-proof-stat">
             <span class="plan-card-social-proof-label">{{
-              t("pricing.socialProof.recentPurchases", { count: "2,500" })
+              t("pricing.socialProof?.recentPurchases", { count: "2,500" })
             }}</span>
           </div>
         </div>
@@ -135,7 +133,13 @@ defineOptions({
       :class="{ 'plan-card-features--rtl': $i18n.locale === 'ar' }"
       role="list"
     >
-      <li v-for="(benefitKey, idx) in plan?.features.benefits" :key="idx" class="plan-card-feature">
+      <li
+        v-for="(benefitKey, idx) in Array.isArray(plan?.features)
+          ? []
+          : (plan?.features?.benefits ?? [])"
+        :key="idx"
+        class="plan-card-feature"
+      >
         <!-- LTR: icon first, then text -->
         <template v-if="$i18n.locale !== 'ar'">
           <svg
@@ -232,7 +236,7 @@ defineOptions({
               d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
             />
           </svg>
-          <span>{{ t("pricing.urgency.limitedTime") }}</span>
+          <span>{{ t("pricing.urgency?.limitedTime") }}</span>
         </div>
       </div>
     </div>

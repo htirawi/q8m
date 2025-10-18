@@ -4,10 +4,10 @@
       <thead class="bg-gray-50 dark:bg-gray-900">
         <tr>
           <th class="px-4 py-3 text-left font-medium text-gray-900 dark:text-white">
-            {{ t("convert.comparison.feature") }}
+            {{ t("convert.comparison?.feature") }}
           </th>
           <th class="px-4 py-3 text-center font-medium text-gray-500 dark:text-gray-400">
-            {{ t("plans.names.free") }}
+            {{ t("plans.names?.free") }}
           </th>
           <th
             class="bg-gradient-to-r from-primary-500 to-purple-500 px-4 py-3 text-center font-medium text-white dark:text-white"
@@ -75,7 +75,7 @@
 import type {
   IPlanComparisonCardProps as Props,
   IComparisonFeature,
-} from "@/types/components/marketing";
+} from "../../types/components/marketing";
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import type { PlanTier } from "@shared/types/plan";
@@ -91,7 +91,7 @@ const targetPlanName = computed(() => {
     advanced: t("plans.names.advanced"),
     pro: t("plans.names.pro"),
   };
-  return names[props.targetPlan];
+  return props.targetPlan ? names[props.targetPlan as PlanTier] : t("plans.names.free");
 });
 
 const comparisonFeatures = computed((): IComparisonFeature[] => {

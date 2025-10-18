@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import { useGamification } from "@/composables/useGamification";
+import { useGamification } from "../../../composables/useGamification";
 
 const {
   isLoading,
@@ -41,7 +41,7 @@ async function refreshData() {
   await loadData();
 }
 
-async function changeleaderboardtype(type: "weekly" | "monthly" | "all_time") {
+async function changeLeaderboardType(type: "weekly" | "monthly" | "all_time") {
   leaderboardType.value = type;
   await getLeaderboard(type);
   await getUserRank(type);
@@ -113,17 +113,17 @@ function getRarityColor(rarity?: string): string {
           <div class="stats-grid">
             <div class="stat-card">
               <div class="stat-label">XP</div>
-              <div class="stat-value">{{ summary.xp }}</div>
+              <div class="stat-value">{{ summary.xp ?? 0 }}</div>
             </div>
             <div class="stat-card">
               <div class="stat-label">Level</div>
-              <div class="stat-value">{{ summary.level }}</div>
+              <div class="stat-value">{{ summary.level ?? 0 }}</div>
               <div class="stat-sublabel">{{ summary.levelTitle }}</div>
             </div>
             <div class="stat-card">
               <div class="stat-label">XP to Next Level</div>
-              <div class="stat-value">{{ summary.xpToNextLevel }}</div>
-              <div class="stat-sublabel">{{ Math.round(summary.xpProgress) }}% Complete</div>
+              <div class="stat-value">{{ summary.xpToNextLevel ?? 0 }}</div>
+              <div class="stat-sublabel">{{ Math.round(summary.xpProgress ?? 0) }}% Complete</div>
             </div>
           </div>
 
@@ -170,8 +170,10 @@ function getRarityColor(rarity?: string): string {
       <!-- Badges Tab -->
       <div v-if="activeTab === 'badges'" class="tab-content">
         <section class="section">
-          <h2>All Badges ({{ badges.length }})</h2>
-          <p class="section-subtitle">Earned: {{ earnedBadges.length }} / {{ badges.length }}</p>
+          <h2>All Badges ({{ badges.length ?? 0 }})</h2>
+          <p class="section-subtitle">
+            Earned: {{ earnedBadges.length ?? 0 }} / {{ badges.length ?? 0 }}
+          </p>
 
           <div class="badges-grid">
             <div
@@ -185,8 +187,8 @@ function getRarityColor(rarity?: string): string {
                 <span v-else>🔒</span>
               </div>
               <div class="badge-info">
-                <h3>{{ badge.name }}</h3>
-                <p class="badge-description">{{ badge.description }}</p>
+                <h3>{{ badge.name ?? "" }}</h3>
+                <p class="badge-description">{{ badge.description ?? "" }}</p>
                 <div class="badge-meta">
                   <span class="badge-rarity" :style="{ color: getRarityColor(badge.rarity) }">
                     {{ badge.rarity }}
@@ -242,7 +244,7 @@ function getRarityColor(rarity?: string): string {
             <strong>Your Rank:</strong> #{{ userRank.rank }} out of {{ userRank.totalEntries }} (Top
             {{ userRank.percentile }}%)
             <br />
-            <strong>Your Score:</strong> {{ userRank.score }}
+            <strong>Your Score:</strong> {{ userRank.score ?? 0 }}
 
             XP
           </div>
@@ -265,9 +267,9 @@ function getRarityColor(rarity?: string): string {
                     <strong>#{{ entry.rank }} </strong>
                   </td>
                   <td>{{ entry.displayName }}</td>
-                  <td>{{ entry.level }}</td>
+                  <td>{{ entry.level ?? 0 }}</td>
                   <td>
-                    {{ entry.score }}
+                    {{ entry.score ?? 0 }}
 
                     XP
                   </td>
@@ -276,7 +278,7 @@ function getRarityColor(rarity?: string): string {
 
                     days
                   </td>
-                  <td>{{ entry.badges.length }}</td>
+                  <td>{{ entry.badges?.length ?? 0 }}</td>
                 </tr>
               </tbody>
             </table>

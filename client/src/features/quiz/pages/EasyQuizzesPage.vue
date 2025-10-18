@@ -105,5 +105,5 @@
 </template>
 
 <script setup lang="ts">
-import LockedBadge from "@/components/paywall/LockedBadge.vue";
+import LockedBadge from "../../../components/paywall/LockedBadge.vue";
 </script>

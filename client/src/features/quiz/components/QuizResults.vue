@@ -27,7 +27,7 @@
           <h2
             class="mb-3 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-4xl font-extrabold text-transparent dark:from-blue-400 dark:via-purple-400 dark:to-pink-400 sm:text-5xl"
           >
-            {{ t("quiz.results.title") }}
+            {{ t("quiz.results?.title") }}
           </h2>
 
           <!-- Subtitle with IBadge -->
@@ -37,7 +37,7 @@
               :class="levelBadgeClass"
             >
               <span class="text-base">{{ levelIcon }} </span>
-              <span>{{ t(`level.${level}.label`) }} {{ t("quiz.results.levelQuiz") }} </span>
+              <span>{{ t(`level.${level}.label`) }} {{ t("quiz.results?.levelQuiz") }} </span>
             </span>
           </div>
 
@@ -73,13 +73,15 @@
             </div>
           </div>
           <div class="mb-2 text-4xl font-extrabold text-blue-900 dark:text-blue-200">
-            {{ score.correct
-            }}<span class="text-2xl text-blue-600 dark:text-blue-400">/{{ score.total }} </span>
+            {{ score.correct ?? 0
+            }}<span class="text-2xl text-blue-600 dark:text-blue-400"
+              >/{{ score.total ?? 0 }}
+            </span>
           </div>
           <div
             class="text-xs font-semibold uppercase tracking-wide text-blue-700 dark:text-blue-300"
           >
-            {{ t("quiz.results.correctAnswers") }}
+            {{ t("quiz.results?.correctAnswers") }}
           </div>
         </div>
 
@@ -113,7 +115,7 @@
           <div
             class="text-xs font-semibold uppercase tracking-wide text-green-700 dark:text-green-300"
           >
-            {{ t("quiz.results.accuracy") }}
+            {{ t("quiz.results?.accuracy") }}
           </div>
         </div>
 
@@ -147,7 +149,7 @@
           <div
             class="text-xs font-semibold uppercase tracking-wide text-purple-700 dark:text-purple-300"
           >
-            {{ t("quiz.results.timeSpent") }}
+            {{ t("quiz.results?.timeSpent") }}
           </div>
         </div>
       </div>
@@ -158,7 +160,7 @@
         class="border-t border-gray-200 px-6 py-6 dark:border-gray-700 sm:px-8"
       >
         <h3 class="mb-4 text-center text-lg font-bold text-gray-900 dark:text-white">
-          🎉 {{ t("quiz.results.rewards") || "Rewards Earned" }}
+          🎉 {{ t("quiz.results?.rewards") || "Rewards Earned" }}
         </h3>
 
         <div class="space-y-3">
@@ -173,10 +175,10 @@
                 </div>
                 <div>
                   <div class="text-sm font-medium text-purple-900 dark:text-purple-100">
-                    {{ t("quiz.results.xpEarned") || "Experience Points" }}
+                    {{ t("quiz.results?.xpEarned") || "Experience Points" }}
                   </div>
                   <div class="text-xs text-purple-700 dark:text-purple-300">
-                    {{ t("quiz.results.keepLearning") || "Keep learning to level up!" }}
+                    {{ t("quiz.results?.keepLearning") || "Keep learning to level up!" }}
                   </div>
                 </div>
               </div>
@@ -184,7 +186,7 @@
                 <div class="text-2xl font-black text-purple-600 dark:text-purple-400">
                   +
                   <AnimatedCounter
-                    :value="quizResultData?.xpEarned || 0"
+                    :value="(quizResultData?.xpEarned as number | undefined) ?? 0"
                     :duration="1500"
                     :delay="300"
                     :format="(value) => Math.round(value).toString()"
@@ -202,11 +204,13 @@
 
             <!-- Compact XP Breakdown (if available) -->
             <div
-              v-if="hasXPBreakdown && !showXPBreakdown"
+              v-if="hasXPBreakdown && !showXPBreakdown && quizResultData?.xpBreakdown"
               class="border-t border-purple-200 px-4 py-3 dark:border-purple-800"
             >
               <XPBreakdown
-                :breakdown="quizResultData!.xpBreakdown!"
+                :sources="[]"
+                :total-x-p="(quizResultData?.xpEarned as number | undefined) ?? 0"
+                :breakdown="(quizResultData.xpBreakdown ?? {}) as Record<string, number>"
                 variant="compact"
                 :show-tips="false"
               />
@@ -215,13 +219,17 @@
 
           <!-- Badges Earned -->
           <div
-            v-if="quizResultData?.badgesEarned && quizResultData.badgesEarned.length > 0"
+            v-if="
+              quizResultData?.badgesEarned &&
+              Array.isArray(quizResultData.badgesEarned) &&
+              quizResultData.badgesEarned.length > 0
+            "
             class="rounded-xl border-2 border-yellow-200 bg-yellow-50/80 p-4 backdrop-blur-sm dark:border-yellow-800 dark:bg-yellow-900/20"
           >
             <div class="mb-2 flex items-center gap-2">
               <span class="text-2xl">🏆</span>
               <div class="text-sm font-semibold text-yellow-900 dark:text-yellow-100">
-                {{ t("quiz.results.newBadges") || "New Badges Unlocked!" }}
+                {{ t("quiz.results?.newBadges") || "New Badges Unlocked!" }}
               </div>
             </div>
             <div class="flex flex-wrap gap-2">
@@ -241,19 +249,23 @@
           >
             <span class="text-2xl">🔥</span>
             <div class="text-sm font-medium text-orange-900 dark:text-orange-100">
-              {{ t("quiz.results.streakMaintained") || "Daily streak maintained!" }}
+              {{ t("quiz.results?.streakMaintained") || "Daily streak maintained!" }}
             </div>
           </div>
 
           <!-- Strong Categories -->
           <div
-            v-if="quizResultData?.strongCategories && quizResultData.strongCategories.length > 0"
+            v-if="
+              quizResultData?.strongCategories &&
+              Array.isArray(quizResultData.strongCategories) &&
+              quizResultData.strongCategories.length > 0
+            "
             class="rounded-xl border-2 border-green-200 bg-green-50/80 p-4 backdrop-blur-sm dark:border-green-800 dark:bg-green-900/20"
           >
             <div class="mb-2 flex items-center gap-2">
               <span class="text-xl">💪</span>
               <div class="text-sm font-semibold text-green-900 dark:text-green-100">
-                {{ t("quiz.results.strongCategories") || "Strong Categories" }}
+                {{ t("quiz.results?.strongCategories") || "Strong Categories" }}
               </div>
             </div>
             <div class="flex flex-wrap gap-2">
@@ -269,13 +281,17 @@
 
           <!-- Weak Categories -->
           <div
-            v-if="quizResultData?.weakCategories && quizResultData.weakCategories.length > 0"
+            v-if="
+              quizResultData?.weakCategories &&
+              Array.isArray(quizResultData.weakCategories) &&
+              quizResultData.weakCategories.length > 0
+            "
             class="rounded-xl border-2 border-blue-200 bg-blue-50/80 p-4 backdrop-blur-sm dark:border-blue-800 dark:bg-blue-900/20"
           >
             <div class="mb-2 flex items-center gap-2">
               <span class="text-xl">📚</span>
               <div class="text-sm font-semibold text-blue-900 dark:text-blue-100">
-                {{ t("quiz.results.needsPractice") || "Areas for Improvement" }}
+                {{ t("quiz.results?.needsPractice") || "Areas for Improvement" }}
               </div>
             </div>
             <div class="flex flex-wrap gap-2">
@@ -315,7 +331,7 @@
                 d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
               />
             </svg>
-            {{ t("quiz.results.tryAgain") }}
+            {{ t("quiz.results?.tryAgain") }}
           </button>
           <button
             type="button"
@@ -336,7 +352,7 @@
                 d="M10 19l-7-7m0 0l7-7m-7 7h18"
               />
             </svg>
-            {{ t("quiz.results.backToSelection") }}
+            {{ t("quiz.results?.backToSelection") }}
           </button>
         </div>
       </div>
@@ -371,9 +387,11 @@
               </svg>
             </button>
           </div>
-          <div class="p-6">
+          <div class="p-6" v-if="quizResultData?.xpBreakdown">
             <XPBreakdown
-              :breakdown="quizResultData!.xpBreakdown!"
+              :sources="[]"
+              :total-x-p="(quizResultData?.xpEarned as number | undefined) ?? 0"
+              :breakdown="(quizResultData.xpBreakdown ?? {}) as Record<string, number>"
               variant="card"
               :show-tips="true"
             />
@@ -387,9 +405,9 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import { useI18n } from "vue-i18n";
-import XPBreakdown from "@/features/gamification/components/XPBreakdown.vue";
-import AnimatedCounter from "@/components/AnimatedCounter.vue";
-import type { IQuizResultsProps as Props } from "@/types/components/quiz";
+import XPBreakdown from "../../../features/gamification/components/XPBreakdown.vue";
+import AnimatedCounter from "../../../components/AnimatedCounter.vue";
+import type { IQuizResultsProps as Props } from "../../../types/components/quiz";
 
 const props = defineProps<Props>();
 
@@ -415,12 +433,12 @@ const hasXPBreakdown = computed(() => {
 });
 
 const levelIcon = computed(() => {
-  const icons = { junior: "🟢", intermediate: "🟡", senior: "🔴" };
-  return icons[props.level] || "⚪";
+  const icons: Record<string, string> = { junior: "🟢", intermediate: "🟡", senior: "🔴" };
+  return icons[props.level as string] || "⚪";
 });
 
 const levelBadgeClass = computed(() => {
-  const classes = {
+  const classes: Record<string, string> = {
     junior:
       "bg-green-100 text-green-800 border-green-200 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800",
     intermediate:
@@ -428,7 +446,7 @@ const levelBadgeClass = computed(() => {
     senior:
       "bg-red-100 text-red-800 border-red-200 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800",
   };
-  return classes[props.level] || "bg-gray-100 text-gray-800 border-gray-200";
+  return classes[props.level as string] || "bg-gray-100 text-gray-800 border-gray-200";
 });
 
 const resultEmoji = computed(() => {

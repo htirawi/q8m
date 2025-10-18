@@ -29,8 +29,21 @@ export interface IEmptyStateProps {
 /**
  * Enhanced Skeleton Loader Props
  */
+export type SkeletonVariant =
+  | "text"
+  | "heading"
+  | "paragraph"
+  | "avatar"
+  | "card"
+  | "button"
+  | "image"
+  | "custom"
+  | "circle"
+  | "rectangular"
+  | "rounded";
+
 export interface ISkeletonLoaderProps {
-  variant?: "text" | "heading" | "paragraph" | "avatar" | "card" | "button" | "image" | "custom";
+  variant?: SkeletonVariant;
   width?: string | number;
   height?: string | number;
   rounded?: boolean;

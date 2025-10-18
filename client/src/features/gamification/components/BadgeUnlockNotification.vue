@@ -37,10 +37,10 @@
             </span>
           </div>
           <h4 class="mb-1 font-bold text-gray-900 dark:text-white">
-            {{ badge.name }}
+            {{ badge.name ?? "" }}
           </h4>
           <p class="mb-2 text-sm text-gray-600 dark:text-gray-400">
-            {{ badge.description }}
+            {{ badge.description ?? "" }}
           </p>
           <div class="flex items-center gap-3 text-sm">
             <div class="flex items-center gap-1 font-semibold text-purple-600 dark:text-purple-400">
@@ -93,9 +93,8 @@
 </template>
 
 <script setup lang="ts">
-import type { IBadgeUnlockNotificationBadge as IBadge } from "@/types/components/gamification";
-import { ref, computed, onMounted, onUnmounted } from "vue";
-import type { BadgeTier } from "@shared/types/gamification";
+import type { IBadgeUnlockNotificationBadge as IBadge } from "../../../types/components/gamification";
+import { ref, computed, onUnmounted } from "vue";
 
 const props = withDefaults(
   defineProps<{
@@ -170,7 +169,7 @@ function getRarityClass(rarity: string): string {
   return classes[rarity as keyof typeof classes] || classes.common;
 }
 
-function getsparklestyle(index: number) {
+function getSparkleStyle(index: number) {
   const angle = index * 60 - 30; // Distribute around circle
   const distance = 25;
   const x = Math.cos((angle * Math.PI) / 180) * distance;
@@ -183,7 +182,7 @@ function getsparklestyle(index: number) {
   };
 }
 
-function sharebadge(badge: ibadge) {
+function shareBadge(badge: IBadge) {
   emit("share", badge);
 
   const shareText = `I just unlocked the "${badge.name}" badge! ${badge.description}`;
@@ -205,7 +204,7 @@ function sharebadge(badge: ibadge) {
   }
 }
 
-function dismissbadge(badgeid: string) {
+function dismissBadge(badgeId: string) {
   const timer = timers.value.get(badgeId);
   if (timer) {
     clearTimeout(timer);
@@ -220,7 +219,7 @@ function dismissbadge(badgeid: string) {
   emit("dismiss", badgeId);
 }
 
-function showbadge(badge: ibadge) {
+function showBadge(badge: IBadge) {
   // Add progress tracking
   const badgeWithProgress = {
     ...badge,
@@ -233,8 +232,8 @@ function showbadge(badge: ibadge) {
   // Animate progress bar
   setTimeout(() => {
     const badgeIndex = badges.value.findIndex((b) => b.id === badge.id);
-    if (badgeIndex !== -1) {
-      badges.value[badgeIndex].progress = 0;
+    if (badgeIndex !== -1 && badges.value[badgeIndex]) {
+      badges.value[badgeIndex]!.progress = 0;
     }
   }, 100);
 
@@ -246,7 +245,7 @@ function showbadge(badge: ibadge) {
   timers.value.set(badge.id, timer);
 }
 
-function showbadges(newbadges: ibadge[]) {
+function showBadges(newBadges: IBadge[]) {
   newBadges.forEach((badge, index) => {
     setTimeout(() => {
       showBadge(badge);

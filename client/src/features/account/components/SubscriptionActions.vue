@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
-import type { SubscriptionActionsProps } from "@/types/ui/component-props";
+import type { SubscriptionActionsProps } from "../../../types/ui/component-props";
 
 defineProps<SubscriptionActionsProps>();
 
@@ -17,11 +17,11 @@ const handleUpgrade = () => {
   emit("upgrade");
 };
 
-const handlecancel = () => {
+const handleCancel = () => {
   emit("cancel");
 };
 
-const handlestartquizzes = () => {
+const handleStartQuizzes = () => {
   emit("startQuizzes");
 };
 </script>

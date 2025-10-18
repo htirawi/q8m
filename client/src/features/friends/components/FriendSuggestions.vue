@@ -2,9 +2,10 @@
 import type {
   IFriendSuggestionsProps as Props,
   IFriendSuggestionsEmits as Emits,
-} from "@/types/components/friends";
+} from "../../../types/components/friends";
+import type { Friend } from "@shared/types/friends";
 import { ref, computed, onMounted } from "vue";
-import { useFriends } from "@/composables/useFriends";
+import { useFriends } from "../../../composables/useFriends";
 import FriendshipButton from "./FriendshipButton.vue";
 
 const props = withDefaults(defineProps<Props>(), {
@@ -49,11 +50,11 @@ const handleViewAll = () => {
   emit("view-all");
 };
 
-const handlesuggestionclick = (userId: string) => {
-  emit("suggestion-clicked", userId);
+const handleSuggestionClick = (suggestion: Friend) => {
+  emit("suggestion-clicked", suggestion);
 };
 
-const handlerefresh = async () => {
+const handleRefresh = async () => {
   isInitialLoad.value = false;
   await loadSuggestions();
 };
@@ -167,7 +168,7 @@ onMounted(async () => {
           <div class="flex flex-col items-center text-center">
             <!-- Avatar -->
             <button
-              @click="handleSuggestionClick(suggestion._id)"
+              @click="handleSuggestionClick(suggestion)"
               class="mb-3 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
             >
               <div
@@ -190,17 +191,19 @@ onMounted(async () => {
             <!-- Info -->
             <div class="mb-3 w-full">
               <button
-                @click="handleSuggestionClick(suggestion._id)"
+                @click="handleSuggestionClick(suggestion)"
                 class="mb-1 w-full truncate font-semibold text-gray-900 transition-colors hover:text-indigo-600 dark:text-white dark:hover:text-indigo-400"
               >
-                {{ suggestion.name }}
+                {{ suggestion.name ?? "" }}
               </button>
 
               <div class="mb-2 flex items-center justify-center gap-2 text-sm">
-                <span :class="getLevelColor(suggestion.level)">
-                  {{ getLevelBadge(suggestion.level) }}
+                <span :class="getLevelColor(suggestion.level ?? 0)">
+                  {{ getLevelBadge(suggestion.level ?? 0) }}
                 </span>
-                <span class="text-gray-600 dark:text-gray-400"> Level {{ suggestion.level }} </span>
+                <span class="text-gray-600 dark:text-gray-400">
+                  Level {{ suggestion.level ?? 0 }}
+                </span>
               </div>
 
               <!-- Mutual Friends -->

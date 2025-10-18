@@ -62,10 +62,10 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
-import { useI18n } from "vue-i18n";
-import { parseError, getUserFriendlyMessage, logError } from "@/utils/errorHandler";
+// import { useI18n } from "vue-i18n";
+import { parseError, logError } from "../utils/errorHandler";
 
-interface props {
+interface Props {
   error?: Error | unknown;
   title?: string;
   message?: string;
@@ -79,7 +79,7 @@ interface props {
   reloadText?: string;
 }
 
-interface emits {
+interface Emits {
   (e: "retry"): void;
   (e: "reset"): void;
 }
@@ -94,7 +94,6 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<Emits>();
 
 const router = useRouter();
-const { t } = useI18n();
 
 const isRetrying = ref(false);
 
@@ -106,17 +105,7 @@ const errorDetails = computed(() => {
   return JSON.stringify(parsed, null, 2);
 });
 
-const displayTitle = computed(() => {
-  return props.title || t("errors.somethingWentWrong");
-});
-
-const displayMessage = computed(() => {
-  if (props.message) return props.message;
-  if (props.error) return getUserFriendlyMessage(props.error, props.context);
-  return t("errors.defaultMessage");
-});
-
-const handleretry = async () => {
+const handleRetry = async () => {
   isRetrying.value = true;
   try {
     emit("retry");
@@ -127,12 +116,12 @@ const handleretry = async () => {
   }
 };
 
-const handlegoback = () => {
+const handleGoBack = () => {
   router.back();
   emit("reset");
 };
 
-const handlereload = () => {
+const handleReload = () => {
   window.location.reload();
 };
 

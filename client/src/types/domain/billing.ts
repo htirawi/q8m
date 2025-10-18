@@ -2,7 +2,7 @@
  * Billing Domain Types
  */
 
-export type BillingCycle = "monthly" | "annual";
+export type BillingCycle = "monthly" | "yearly" | "annual";
 
 export interface BillingFormData {
   name: string;

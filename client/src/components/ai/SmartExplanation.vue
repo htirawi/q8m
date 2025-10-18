@@ -107,7 +107,7 @@
                 class="code-example"
               >
                 <div class="code-example__header">
-                  <h5 class="code-example__title">{{ example.title }}</h5>
+                  <h5 class="code-example__title">{{ example.title ?? "" }}</h5>
                   <button
                     class="code-example__copy"
                     @click="copyCode(example.code)"
@@ -162,7 +162,7 @@
                   class="visual-aid__image"
                 />
                 <div v-if="visual.svg" class="visual-aid__svg" v-html="visual.svg"></div>
-                <p class="visual-aid__description">{{ visual.description }}</p>
+                <p class="visual-aid__description">{{ visual.description ?? "" }}</p>
               </div>
             </div>
           </div>
@@ -233,7 +233,7 @@
 
                 <div class="practice-problem__actions">
                   <button class="practice-problem__btn" @click="toggleSolution(problem.id)">
-                    {{ showSolution[problem.id] ? $t('ai.hideSolution') : $t('ai.showSolution')$t }}
+                    {{ showSolution[problem.id] ? $t("ai.hideSolution") : $t("ai.showSolution") }}
                   </button>
                   <button
                     v-if="problem.hints?.length"
@@ -327,8 +327,8 @@
                     </svg>
                   </div>
                   <div class="resource-item__content">
-                    <h5 class="resource-item__title">{{ resource.title }}</h5>
-                    <p class="resource-item__description">{{ resource.description }}</p>
+                    <h5 class="resource-item__title">{{ resource.title ?? "" }}</h5>
+                    <p class="resource-item__description">{{ resource.description ?? "" }}</p>
                     <div class="resource-item__meta">
                       <span v-if="resource.duration">{{ resource.duration }} </span>
                       <span v-if="resource.free" class="resource-item__badge"
@@ -410,12 +410,10 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
-import { useI18n } from "vue-i18n";
-import { aiService } from "@/services/ai/aiService";
-import type { ISmartExplanation, ICodeExample } from "@/types/ai";
+import type { ISmartExplanation } from "@/types/ai";
 import { analytics } from "@/services/analytics";
-import { marked } from "marked";
-import hljs from "highlight.js";
+// import { marked } from "marked"; // TODO: Install marked package
+// import hljs from "highlight.js"; // TODO: Install highlight.js package
 
 // Props
 interface Props {
@@ -436,9 +434,6 @@ const emit = defineEmits<{
   feedback: [type: string];
   "open-chat": [context: any];
 }>();
-
-// i18n
-const { t } = useI18n();
 
 // State
 const isExpanded = ref(props.autoExpand);
@@ -463,11 +458,13 @@ It works by creating a layer of abstraction that separates concerns and provides
 - It's frequently asked about in technical interviews`,
   examples: [
     {
+      title: "Basic Example",
       language: "javascript",
       code: '{ name: "Example", value: 42 }',
       output: '{ name: "Example", value: 42 }',
     },
     {
+      title: "Advanced TypeScript Example",
       language: "typescript",
       code: `// Advanced ${props.concept} with TypeScript
 interface ExampleInterface {
@@ -557,7 +554,7 @@ const toggleExpand = async () => {
   });
 };
 
-const loadexplanation = async () => {
+const loadExplanation = async () => {
   isLoading.value = true;
   try {
     // In production, call the AI service
@@ -585,12 +582,12 @@ const loadexplanation = async () => {
   }
 };
 
-const copycode = (code: string) => {
+const copyCode = (code: string) => {
   navigator.clipboard.writeText(code);
   analytics.track("explanation_code_copied", { concept: props.concept });
 };
 
-const togglesolution = (problemId: string) => {
+const toggleSolution = (problemId: string) => {
   showSolution.value[problemId] = !showSolution.value[problemId];
   analytics.track("practice_solution_viewed", {
     concept: props.concept,
@@ -598,23 +595,22 @@ const togglesolution = (problemId: string) => {
   });
 };
 
-const showhint = (problemId: string) => {
+const showHint = (problemId: string) => {
   const problem = explanation.value.practiceProblems?.find((p) => p.id === problemId);
   if (problem?.hints) {
     const currentHintIndex = hints.value[problemId]
       ? problem.hints.indexOf(hints.value[problemId])
       : -1;
-    currentHintIndexhints.valueproblemIdproblem.hints.indexOf;
     const nextHintIndex = Math.min(currentHintIndex + 1, problem.hints.length - 1);
-    hints.value[problemId] = problem.hints[nextHintIndex];
+    hints.value[problemId] = problem.hints[nextHintIndex] ?? "";
   }
 };
 
-const explainconcept = (concept: string) => {
+const explainConcept = (concept: string) => {
   emit("concept-clicked", concept);
 };
 
-const submitfeedback = (type: string) => {
+const submitFeedback = (type: string) => {
   feedback.value = type;
   emit("feedback", type);
 
@@ -634,7 +630,7 @@ const share = () => {
   analytics.track("explanation_shared", { concept: props.concept });
 };
 
-const openinchat = () => {
+const openInChat = () => {
   emit("open-chat", {
     concept: props.concept,
     explanation: explanation.value,
@@ -643,21 +639,24 @@ const openinchat = () => {
   analytics.track("explanation_opened_in_chat", { concept: props.concept });
 };
 
-const renderMarkdown = (content: string): string => {
+const renderMarkdown = (content: string | undefined): string => {
   if (!content) return "";
 
-  marked.setOptions({
-    highlight: (code, lang) => {
-      if (lang && hljs.getLanguage(lang)) {
-        return hljs.highlight(code, { language: lang }).value;
-      }
-      return hljs.highlightAuto(code).value;
-    },
-    breaks: true,
-    gfm: true,
-  });
+  // TODO: Install marked and highlight.js packages
+  // marked.setOptions({
+  //   highlight: (code: string, lang: string) => {
+  //     if (lang && hljs.getLanguage(lang)) {
+  //       return hljs.highlight(code, { language: lang }).value;
+  //     }
+  //     return hljs.highlightAuto(code).value;
+  //   },
+  //   breaks: true,
+  //   gfm: true,
+  // });
+  // return marked(content);
 
-  return marked(content);
+  // Temporary: Return content as-is
+  return content;
 };
 
 // Lifecycle

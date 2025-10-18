@@ -7,7 +7,7 @@
         class="recent-activity__toggle"
         @click="showAll = !showAll"
       >
-        {{ showAll ? $t('common.showLess') : $t('common.showAll')$t }}
+        {{ showAll ? $t("common.showLess") : $t("common.showAll") }}
       </button>
     </div>
 
@@ -27,11 +27,18 @@
         </div>
 
         <div class="activity-item__content">
-          <h4 class="activity-item__title">{{ activity.title }}</h4>
+          <h4 class="activity-item__title">{{ activity.title ?? "" }}</h4>
           <p v-if="activity.description" class="activity-item__description">
-            {{ activity.description }}
+            {{ activity.description ?? "" }}
           </p>
-          <time class="activity-item__time" :datetime="activity.timestamp">
+          <time
+            class="activity-item__time"
+            :datetime="
+              typeof activity.timestamp === 'string'
+                ? activity.timestamp
+                : activity.timestamp.toISOString()
+            "
+          >
             {{ formatTime(activity.timestamp) }}
           </time>
         </div>
@@ -73,22 +80,10 @@
 import { ref, computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
+import type { IActivity } from "../../types/components/common";
 
-export interface activity {
-  id: string;
-  type: "completion" | "achievement" | "progress" | "unlock" | "milestone";
-  title: string;
-  description?: string;
-  timestamp: Date | string;
-  icon?: string;
-  progress?: number;
-  actionable?: boolean;
-  actionUrl?: string;
-  metadata?: Record<string, any>;
-}
-
-interface props {
-  activities: Activity[];
+interface Props {
+  activities: IActivity[];
   displayLimit?: number;
 }
 
@@ -97,7 +92,7 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const emit = defineEmits<{
-  "action-click": [activity: Activity];
+  "action-click": [activity: IActivity];
 }>();
 
 const { t, locale } = useI18n();
@@ -114,7 +109,6 @@ const displayedActivities = computed(() => {
 
 const formatTime = (timestamp: Date | string): string => {
   const date = typeof timestamp === "string" ? new Date(timestamp) : timestamp;
-  datetypeoftimestampnewDate;
   const now = new Date();
   const diff = now.getTime() - date.getTime();
 
@@ -135,15 +129,15 @@ const formatTime = (timestamp: Date | string): string => {
   });
 };
 
-const handleactivityclick = (activity: Activity) => {
-  emit("activity-click", activity);
+const handleActivityClick = (activity: IActivity) => {
+  emit("action-click", activity);
 
   if (activity.actionUrl) {
     router.push(activity.actionUrl);
   }
 };
 
-const handleaction = (activity: Activity) => {
+const handleAction = (activity: IActivity) => {
   emit("action-click", activity);
 };
 </script>

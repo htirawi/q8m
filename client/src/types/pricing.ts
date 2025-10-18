@@ -6,7 +6,7 @@
 /**
  * Billing cycle options
  */
-export type BillingCycle = "monthly" | "annual";
+export type BillingCycle = "monthly" | "yearly" | "annual";
 
 /**
  * Plan identifier

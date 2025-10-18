@@ -55,8 +55,8 @@ export const PLANS: IPlanConfig[] = [
     tier: "free",
     labelKey: "plans.junior.name",
     descriptionKey: "plans.junior.description",
-    priceMonthly: PLAN_LIMITS.junior.price.monthly,
-    priceYearly: PLAN_LIMITS.junior.price.yearly,
+    priceMonthly: PLAN_LIMITS.junior?.price?.monthly ?? 0,
+    priceYearly: PLAN_LIMITS.junior?.price?.yearly ?? 0,
     currency: "USD",
     features: {
       studyItems: 30, // Max from React framework limits (most generous)
@@ -96,16 +96,16 @@ export const PLANS: IPlanConfig[] = [
     tier: "intermediate",
     labelKey: "plans.intermediate.name",
     descriptionKey: "plans.intermediate.description",
-    priceMonthly: PLAN_LIMITS.intermediate.price.monthly,
-    priceYearly: PLAN_LIMITS.intermediate.price.yearly,
+    priceMonthly: PLAN_LIMITS.intermediate?.price?.monthly ?? 0,
+    priceYearly: PLAN_LIMITS.intermediate?.price?.yearly ?? 0,
     currency: "USD",
     badge: {
       textKey: "plans.badges.mostPopular",
       color: "blue",
     },
     features: {
-      studyItems: PLAN_LIMITS.intermediate.global!.studyItems,
-      quizQuestions: PLAN_LIMITS.intermediate.global!.quizQuestions,
+      studyItems: PLAN_LIMITS.intermediate?.global?.studyItems ?? 100,
+      quizQuestions: PLAN_LIMITS.intermediate?.global?.quizQuestions ?? 100,
       aiSupport: false,
       priority: "medium",
       benefits: [
@@ -147,12 +147,12 @@ export const PLANS: IPlanConfig[] = [
     tier: "advanced",
     labelKey: "plans.senior.name",
     descriptionKey: "plans.senior.description",
-    priceMonthly: PLAN_LIMITS.senior.price.monthly,
-    priceYearly: PLAN_LIMITS.senior.price.yearly,
+    priceMonthly: PLAN_LIMITS.senior?.price?.monthly ?? 0,
+    priceYearly: PLAN_LIMITS.senior?.price?.yearly ?? 0,
     currency: "USD",
     features: {
-      studyItems: PLAN_LIMITS.senior.global!.studyItems,
-      quizQuestions: PLAN_LIMITS.senior.global!.quizQuestions,
+      studyItems: PLAN_LIMITS.senior?.global?.studyItems ?? 200,
+      quizQuestions: PLAN_LIMITS.senior?.global?.quizQuestions ?? 200,
       aiSupport: true,
       priority: "high",
       benefits: [
@@ -194,8 +194,8 @@ export const PLANS: IPlanConfig[] = [
     tier: "pro",
     labelKey: "plans.bundle.name",
     descriptionKey: "plans.bundle.description",
-    priceMonthly: PLAN_LIMITS.allAccess.price.monthly,
-    priceYearly: PLAN_LIMITS.allAccess.price.yearly,
+    priceMonthly: PLAN_LIMITS.allAccess?.price?.monthly ?? 0,
+    priceYearly: PLAN_LIMITS.allAccess?.price?.yearly ?? 0,
     currency: "USD",
     badge: {
       textKey: "plans.badges.bestValue",

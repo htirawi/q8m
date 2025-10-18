@@ -23,7 +23,7 @@
               :format="(value) => Math.round(value).toString()"
             />
           </div>
-          <div class="countdown-label">{{ $t("pricing.countdown.days") }}</div>
+          <div class="countdown-label">{{ $t("pricing.countdown?.days") }}</div>
         </div>
 
         <!-- Hours -->
@@ -31,7 +31,7 @@
           <div class="countdown-value">
             {{ formatTime(timeLeft.hours) }}
           </div>
-          <div class="countdown-label">{{ $t("pricing.countdown.hours") }}</div>
+          <div class="countdown-label">{{ $t("pricing.countdown?.hours") }}</div>
         </div>
 
         <!-- Separator -->
@@ -42,7 +42,7 @@
           <div class="countdown-value">
             {{ formatTime(timeLeft.minutes) }}
           </div>
-          <div class="countdown-label">{{ $t("pricing.countdown.minutes") }}</div>
+          <div class="countdown-label">{{ $t("pricing.countdown?.minutes") }}</div>
         </div>
 
         <!-- Separator -->
@@ -53,7 +53,7 @@
           <div class="countdown-value">
             {{ formatTime(timeLeft.seconds) }}
           </div>
-          <div class="countdown-label">{{ $t("pricing.countdown.seconds") }}</div>
+          <div class="countdown-label">{{ $t("pricing.countdown?.seconds") }}</div>
         </div>
       </div>
 
@@ -75,7 +75,7 @@
 
       <!-- Expired Message -->
       <div v-if="isExpired" class="countdown-expired">
-        {{ expiredMessage || $t("pricing.countdown.expired") }}
+        {{ expiredMessage || $t("pricing.countdown?.expired") }}
       </div>
     </div>
   </div>
@@ -85,9 +85,9 @@
 import type {
   ICountdownTimerTimeLeft as TimeLeft,
   ICountdownTimerProps as Props,
-} from "@/types/components/pricing";
+} from "../../types/components/pricing";
 import { ref, onMounted, onUnmounted } from "vue";
-import AnimatedCounter from "@/components/AnimatedCounter.vue";
+import AnimatedCounter from "../../components/AnimatedCounter.vue";
 
 const props = withDefaults(defineProps<Props>(), {
   showDays: true,
@@ -103,6 +103,8 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<{
   tick: [timeLeft: TimeLeft];
+  expired: [];
+  "cta-click": [];
 }>();
 
 const timeLeft = ref<TimeLeft>({
@@ -118,13 +120,11 @@ let intervalId: ReturnType<typeof setInterval> | null = null;
 intervalId;
 
 function calculateTimeLeft(): TimeLeft {
-  let endTime: number;
-  endTime;
+  let endTime: number = Date.now();
 
   if (props.targetDate) {
     const target =
       typeof props.targetDate === "string" ? new Date(props.targetDate) : props.targetDate;
-    targettypeofprops.targetDatenewDate;
     endTime = target.getTime();
   } else if (props.duration) {
     // If duration is provided, calculate end time from now
@@ -133,7 +133,6 @@ function calculateTimeLeft(): TimeLeft {
   } else {
     // Default: 24 hours from now
     const now = Date.now();
-    Default;
     endTime = now + 86400 * 1000;
   }
 
@@ -171,7 +170,7 @@ function updateTimer() {
 
   emit("tick", newTimeLeft);
 
-  if (newTimeLeft.total <= 0) {
+  if (newTimeLeft.total !== undefined && newTimeLeft.total <= 0) {
     isExpired.value = true;
     stopTimer();
     emit("expired");
@@ -418,7 +417,7 @@ defineExpose({
 }
 
 /* Responsive */
-@media (width <= 640px) {
+@media (width <=640px) {
   .countdown-display {
     @apply gap-2;
   }

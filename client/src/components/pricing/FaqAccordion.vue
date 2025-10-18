@@ -2,11 +2,11 @@
 import { ref } from "vue";
 import { ChevronDownIcon } from "@heroicons/vue/24/outline";
 
-import { faqs } from "@/components/pricing/pricing.config";
+import { faqs } from "../../components/pricing/pricing.config";
 
 const openFaqs = ref<number[]>([]);
 
-const togglefaq = (index: number) => {
+const toggleFaq = (index: number) => {
   const currentIndex = openFaqs.value.indexOf(index);
   if (currentIndex > -1) {
     openFaqs.value.splice(currentIndex, 1);
@@ -25,10 +25,10 @@ defineOptions({
     <div class="faq-accordion-container">
       <div class="faq-accordion-header">
         <h2 id="faq-title" class="faq-accordion-title">
-          {{ $t("pricing.faq.title") }}
+          {{ $t("pricing.faq?.title") }}
         </h2>
         <p class="faq-accordion-description">
-          {{ $t("pricing.faq.subtitle") }}
+          {{ $t("pricing.faq?.subtitle") }}
         </p>
       </div>
 

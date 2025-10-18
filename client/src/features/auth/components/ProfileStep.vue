@@ -4,13 +4,14 @@ import { computed, ref } from "vue";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/vue/24/outline";
 import { useI18n } from "vue-i18n";
 
-import LoadingSpinner from "@/components/ui/LoadingSpinner.vue";
-import PasswordStrengthIndicator from "@/features/auth/components/PasswordStrengthIndicator.vue";
-import type { ProfileStepProps } from "@/types/ui/component-props";
+import LoadingSpinner from "../../../components/ui/LoadingSpinner.vue";
+import PasswordStrengthIndicator from "../../../features/auth/components/PasswordStrengthIndicator.vue";
+import type { ProfileStepProps } from "../../../types/ui/component-props";
 
 const props = defineProps<ProfileStepProps>();
 
 defineEmits<{
+  "update:name": [value: string];
   "update:password": [value: string];
   "update:acceptTerms": [value: boolean];
   back: [];
@@ -29,12 +30,12 @@ const isValid = computed(() => {
   <div class="form-step">
     <div class="step-indicator">
       <div class="step-number">2</div>
-      <span class="step-text">{{ $t("auth.register.completeProfile") }} </span>
+      <span class="step-text">{{ $t("auth.register?.completeProfile") }} </span>
     </div>
 
     <div class="form-group">
       <label for="name" class="form-label">
-        {{ $t("auth.fields.name") }}
+        {{ $t("auth.fields?.name") }}
       </label>
       <input
         id="name"
@@ -52,7 +53,7 @@ const isValid = computed(() => {
 
     <div class="form-group">
       <label for="password" class="form-label">
-        {{ $t("auth.fields.password") }}
+        {{ $t("auth.fields?.password") }}
       </label>
       <div class="password-input-container">
         <input
@@ -95,15 +96,15 @@ const isValid = computed(() => {
         />
         <span class="checkbox-custom"></span>
         <span class="terms-text">
-          {{ $t("auth.register.agreeToTerms") }}
+          {{ $t("auth.register?.agreeToTerms") }}
 
           <a href="/terms" target="_blank" class="terms-link">
-            {{ $t("auth.register.termsOfService") }}
+            {{ $t("auth.register?.termsOfService") }}
           </a>
-          {{ $t("auth.register.and") }}
+          {{ $t("auth.register?.and") }}
 
           <a href="/privacy" target="_blank" class="terms-link">
-            {{ $t("auth.register.privacyPolicy") }}
+            {{ $t("auth.register?.privacyPolicy") }}
           </a>
         </span>
       </label>
@@ -112,15 +113,15 @@ const isValid = computed(() => {
 
     <div class="form-actions">
       <button type="button" @click="$emit('back')" class="form-button-secondary">
-        {{ $t("auth.register.back") }}
+        {{ $t("auth.register?.back") }}
       </button>
       <button type="submit" :disabled="!isValid || isLoading" class="form-button">
         <span v-if="isLoading" class="button-content">
           <LoadingSpinner size="sm" color="white" />
-          {{ $t("auth.register.creating") }}
+          {{ $t("auth.register?.creating") }}
         </span>
         <span v-else class="button-content">
-          {{ $t("auth.register.createAccount") }}
+          {{ $t("auth.register?.createAccount") }}
         </span>
       </button>
     </div>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
 
-import type { OAuthButtonsProps } from "@/types/ui/component-props";
+import type { OAuthButtonsProps } from "../../../types/ui/component-props";
 
 defineProps<OAuthButtonsProps>();
 
@@ -11,7 +11,7 @@ const emit = defineEmits<{
 
 useI18n();
 
-const handleoauthlogin = (provider: "google") => {
+const handleOAuthLogin = (provider: "google") => {
   emit("oauth-login", provider);
 };
 </script>
@@ -43,7 +43,7 @@ const handleoauthlogin = (provider: "google") => {
           d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
         />
       </svg>
-      {{ $t("auth.register.continueWithGoogle") }}
+      {{ $t("auth.register?.continueWithGoogle") }}
     </button>
   </div>
 </template>

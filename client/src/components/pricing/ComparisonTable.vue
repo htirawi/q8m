@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { CheckIcon } from "@heroicons/vue/24/outline";
 
-import type { ComparisonRow } from "@/components/pricing/pricing.config";
-import { comparisonRows, plans } from "@/components/pricing/pricing.config";
+import type { ComparisonRow } from "../../components/pricing/pricing.config";
+import { comparisonRows, plans } from "../../components/pricing/pricing.config";
 
 const getCellValue = (row: ComparisonRow, planId: string): boolean | string => {
   switch (planId) {
@@ -29,10 +29,10 @@ defineOptions({
     <div class="comparison-table-container">
       <div class="comparison-table-header">
         <h2 id="comparison-title" class="comparison-table-title">
-          {{ $t("pricing.comparison.title") }}
+          {{ $t("pricing.comparison?.title") }}
         </h2>
         <p class="comparison-table-description">
-          {{ $t("pricing.comparison.description") }}
+          {{ $t("pricing.comparison?.description") }}
         </p>
       </div>
 
@@ -43,7 +43,7 @@ defineOptions({
             <thead>
               <tr class="comparison-table-header-row">
                 <th class="comparison-table-feature-header">
-                  {{ $t("pricing.comparison.features") }}
+                  {{ $t("pricing.comparison?.features") }}
                 </th>
                 <th
                   v-for="plan in plans"

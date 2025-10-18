@@ -30,7 +30,7 @@
               activeTab === tab.id ? 'bg-blue-100 text-blue-600' : 'bg-gray-100 text-gray-600',
             ]"
           >
-            {{ tab.count }}
+            {{ tab.count ?? 0 }}
           </span>
         </button>
       </nav>
@@ -71,7 +71,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
 
-import { useFriendsStore } from "@/stores/friends";
+import { useFriendsStore } from "../../../stores/friends";
 
 import FriendList from "../components/FriendList.vue";
 import FriendRequests from "../components/FriendRequests.vue";
@@ -103,7 +103,7 @@ onMounted(async () => {
   await Promise.all([
     friendsStore.getFriends(),
     friendsStore.getReceivedRequests(),
-    friendsStore.getSuggestions(),
+    friendsStore.getFriendSuggestions(),
   ]);
 });
 </script>

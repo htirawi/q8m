@@ -4,10 +4,10 @@
       <!-- Section header -->
       <div class="pricing-teaser__header">
         <h2 id="pricing-title" class="pricing-teaser__title">
-          {{ t("home.pricing.title") }}
+          {{ t("home.pricing?.title") }}
         </h2>
         <p class="pricing-teaser__subtitle">
-          {{ t("home.pricing.subtitle") }}
+          {{ t("home.pricing?.subtitle") }}
         </p>
       </div>
 
@@ -20,7 +20,7 @@
           @click="handleToggle('monthly')"
           data-testid="toggle-monthly"
         >
-          {{ t("home.pricing.monthly") }}
+          {{ t("home.pricing?.monthly") }}
         </button>
 
         <button
@@ -30,13 +30,13 @@
           @click="handleToggle('annual')"
           data-testid="toggle-annual"
         >
-          {{ t("home.pricing.yearly") }}
+          {{ t("home.pricing?.yearly") }}
         </button>
       </div>
 
       <!-- Savings message for annual -->
       <p v-if="billingCycle === 'annual'" class="pricing-teaser__savings-message">
-        {{ t("home.pricing.savingsMessage") }}
+        {{ t("home.pricing?.savingsMessage") }}
       </p>
 
       <!-- Pricing cards -->
@@ -61,7 +61,7 @@
           class="pricing-teaser__view-all"
           @click="handleViewAllPlans"
         >
-          {{ t("home.pricing.viewAllPlans") }}
+          {{ t("home.pricing?.viewAllPlans") }}
 
           <svg
             class="pricing-teaser__arrow"
@@ -87,11 +87,11 @@
 import { ref, computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter, useRoute } from "vue-router";
-import { useHomepageAnalytics } from "@/composables/useHomepageAnalytics";
-import { getHomepagePlans } from "@/config/plans";
-import type { IPlanConfig } from "@/config/plans";
-import type { BillingCycle } from "@/types/pricing";
-import PlanCard from "@/components/pricing/PlanCard.vue";
+import { useHomepageAnalytics } from "../../../composables/useHomepageAnalytics";
+import { getHomepagePlans } from "../../../config/plans";
+import type { IPlanConfig } from "../../../config/plans";
+import type { BillingCycle } from "../../../types/pricing";
+import PlanCard from "../../../components/pricing/PlanCard.vue";
 
 const { t, locale } = useI18n();
 const router = useRouter();
@@ -110,29 +110,30 @@ const plans = computed(() => canonicalPlans);
 // Computed
 const currentPrice = (plan: IPlanConfig): number => {
   return billingCycle.value === "monthly" ? plan.priceMonthly : plan.priceYearly;
-  billingCycle.valueplan.priceMonthly;
 };
 
 // Methods
 const handleToggle = (cycle: BillingCycle): void => {
   billingCycle.value = cycle;
 
-  trackPricingInteraction({
+  trackPricingInteraction?.({
     action: "toggle_cycle",
     billingCycle: cycle,
   });
 };
 
-const handlePlanSelect = (plan: IPlanConfig): void => {
-  trackPricingInteraction({
+const handlePlanSelect = (planId: string, billing: BillingCycle): void => {
+  const plan = plans.value.find((p) => p.id === planId);
+
+  trackPricingInteraction?.({
     action: "select_plan",
-    planId: plan.id,
-    billingCycle: billingCycle.value,
-    priceDisplayed: currentPrice(plan),
+    planId: planId,
+    billingCycle: billing,
+    priceDisplayed: plan ? currentPrice(plan) : 0,
   });
 
   // Navigate to signup/checkout
-  if (plan.id === "junior") {
+  if (planId === "junior") {
     router.push({
       name: "register",
       params: { locale: currentLocale.value },
@@ -142,15 +143,15 @@ const handlePlanSelect = (plan: IPlanConfig): void => {
       name: "pricing",
       params: { locale: currentLocale.value },
       query: {
-        plan: plan.id,
-        billing: billingCycle.value,
+        plan: planId,
+        billing: billing,
       },
     });
   }
 };
 
 const handleViewAllPlans = (): void => {
-  trackPricingInteraction({
+  trackPricingInteraction?.({
     action: "view_details",
     billingCycle: billingCycle.value,
   });

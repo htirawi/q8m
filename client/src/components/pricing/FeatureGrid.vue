@@ -8,7 +8,7 @@ import {
   UsersIcon,
 } from "@heroicons/vue/24/outline";
 
-import { features } from "@/components/pricing/pricing.config";
+import { features } from "../../components/pricing/pricing.config";
 
 type IconComponent = typeof AcademicCapIcon;
 
@@ -35,10 +35,10 @@ defineOptions({
     <div class="feature-grid-container">
       <div class="feature-grid-header">
         <h2 id="feature-grid-title" class="feature-grid-title">
-          {{ $t("pricing.features.title") }}
+          {{ $t("pricing.features?.title") }}
         </h2>
         <p class="feature-grid-description">
-          {{ $t("pricing.features.description") }}
+          {{ $t("pricing.features?.description") }}
         </p>
       </div>
 

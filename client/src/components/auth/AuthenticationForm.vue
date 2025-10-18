@@ -5,7 +5,7 @@ import { useI18n } from "vue-i18n";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/vue/24/outline";
 import { ZodError } from "zod";
 
-import { useAuthStore } from "@/stores/auth";
+import { useAuthStore } from "../../stores/auth";
 import {
   emailStepSchema,
   loginFormSchema,
@@ -19,7 +19,7 @@ import type {
   AuthenticationFormEmits,
   PasswordRequirements,
   PasswordStrength,
-} from "@/types/ui/component-props";
+} from "../../types/ui/component-props";
 
 const emit = defineEmits<AuthenticationFormEmits>();
 const { t } = useI18n();
@@ -427,14 +427,14 @@ async function handleSubmit(): Promise<void> {
             d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
           />
         </svg>
-        <span>{{ $t("auth.unified.continueWithGoogle") }}</span>
+        <span>{{ $t("auth.unified?.continueWithGoogle") }}</span>
       </button>
     </div>
 
     <!-- Divider -->
     <div class="form-divider">
       <div class="divider-line"></div>
-      <span class="divider-text">{{ $t("auth.unified.or") }}</span>
+      <span class="divider-text">{{ $t("auth.unified?.or") }}</span>
       <div class="divider-line"></div>
     </div>
 
@@ -459,7 +459,7 @@ async function handleSubmit(): Promise<void> {
           @input="handleEmailInput"
         />
         <label for="email" class="floating-label">
-          {{ $t("auth.fields.email") }}
+          {{ $t("auth.fields?.email") }}
         </label>
         <button
           v-if="emailConfirmed"
@@ -476,7 +476,7 @@ async function handleSubmit(): Promise<void> {
               d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
             />
           </svg>
-          <span>{{ $t("auth.unified.change") }}</span>
+          <span>{{ $t("auth.unified?.change") }}</span>
         </button>
         <transition name="fade">
           <p v-if="errors.email" class="form-error">{{ errors.email }}</p>
@@ -501,7 +501,7 @@ async function handleSubmit(): Promise<void> {
                 @input="handlePasswordInput"
               />
               <label for="password" class="floating-label">
-                {{ $t("auth.fields.password") }}
+                {{ $t("auth.fields?.password") }}
               </label>
               <button
                 type="button"
@@ -527,7 +527,7 @@ async function handleSubmit(): Promise<void> {
                       clip-rule="evenodd"
                     />
                   </svg>
-                  <span>{{ $t("auth.validation.passwordRequirements.minLength") }}</span>
+                  <span>{{ $t("auth.validation.passwordRequirements?.minLength") }}</span>
                 </div>
                 <div class="requirement-item" :class="{ met: passwordRequirements.hasUppercase }">
                   <svg class="requirement-icon" viewBox="0 0 20 20" fill="currentColor">
@@ -537,7 +537,7 @@ async function handleSubmit(): Promise<void> {
                       clip-rule="evenodd"
                     />
                   </svg>
-                  <span>{{ $t("auth.validation.passwordRequirements.uppercase") }}</span>
+                  <span>{{ $t("auth.validation.passwordRequirements?.uppercase") }}</span>
                 </div>
                 <div class="requirement-item" :class="{ met: passwordRequirements.hasLowercase }">
                   <svg class="requirement-icon" viewBox="0 0 20 20" fill="currentColor">
@@ -547,7 +547,7 @@ async function handleSubmit(): Promise<void> {
                       clip-rule="evenodd"
                     />
                   </svg>
-                  <span>{{ $t("auth.validation.passwordRequirements.lowercase") }}</span>
+                  <span>{{ $t("auth.validation.passwordRequirements?.lowercase") }}</span>
                 </div>
                 <div class="requirement-item" :class="{ met: passwordRequirements.hasNumber }">
                   <svg class="requirement-icon" viewBox="0 0 20 20" fill="currentColor">
@@ -557,7 +557,7 @@ async function handleSubmit(): Promise<void> {
                       clip-rule="evenodd"
                     />
                   </svg>
-                  <span>{{ $t("auth.validation.passwordRequirements.number") }}</span>
+                  <span>{{ $t("auth.validation.passwordRequirements?.number") }}</span>
                 </div>
               </div>
             </transition>
@@ -570,7 +570,7 @@ async function handleSubmit(): Promise<void> {
               @click="emit('show-forgot-password')"
               class="forgot-password-link"
             >
-              {{ $t("auth.unified.forgotPassword") }}
+              {{ $t("auth.unified?.forgotPassword") }}
             </button>
           </div>
         </div>
@@ -593,10 +593,10 @@ async function handleSubmit(): Promise<void> {
               @input="handleNameInput"
             />
             <label for="name" class="floating-label">
-              {{ $t("auth.fields.name") }}
+              {{ $t("auth.fields?.name") }}
             </label>
             <transition name="fade">
-              <p v-if="errors.name" class="form-error">{{ errors.name }}</p>
+              <p v-if="errors.name" class="form-error">{{ errors.name ?? "" }}</p>
             </transition>
           </div>
 
@@ -614,7 +614,7 @@ async function handleSubmit(): Promise<void> {
                 @input="handlePasswordInput"
               />
               <label for="register-password" class="floating-label">
-                {{ $t("auth.fields.password") }}
+                {{ $t("auth.fields?.password") }}
               </label>
               <button
                 type="button"
@@ -643,7 +643,7 @@ async function handleSubmit(): Promise<void> {
                       clip-rule="evenodd"
                     />
                   </svg>
-                  <span>{{ $t("auth.validation.passwordRequirements.minLength") }}</span>
+                  <span>{{ $t("auth.validation.passwordRequirements?.minLength") }}</span>
                 </div>
                 <div class="requirement-item" :class="{ met: passwordRequirements.hasUppercase }">
                   <svg class="requirement-icon" viewBox="0 0 20 20" fill="currentColor">
@@ -653,7 +653,7 @@ async function handleSubmit(): Promise<void> {
                       clip-rule="evenodd"
                     />
                   </svg>
-                  <span>{{ $t("auth.validation.passwordRequirements.uppercase") }}</span>
+                  <span>{{ $t("auth.validation.passwordRequirements?.uppercase") }}</span>
                 </div>
                 <div class="requirement-item" :class="{ met: passwordRequirements.hasLowercase }">
                   <svg class="requirement-icon" viewBox="0 0 20 20" fill="currentColor">
@@ -663,7 +663,7 @@ async function handleSubmit(): Promise<void> {
                       clip-rule="evenodd"
                     />
                   </svg>
-                  <span>{{ $t("auth.validation.passwordRequirements.lowercase") }}</span>
+                  <span>{{ $t("auth.validation.passwordRequirements?.lowercase") }}</span>
                 </div>
                 <div class="requirement-item" :class="{ met: passwordRequirements.hasNumber }">
                   <svg class="requirement-icon" viewBox="0 0 20 20" fill="currentColor">
@@ -673,7 +673,7 @@ async function handleSubmit(): Promise<void> {
                       clip-rule="evenodd"
                     />
                   </svg>
-                  <span>{{ $t("auth.validation.passwordRequirements.number") }}</span>
+                  <span>{{ $t("auth.validation.passwordRequirements?.number") }}</span>
                 </div>
               </div>
             </transition>
@@ -705,15 +705,15 @@ async function handleSubmit(): Promise<void> {
                 </svg>
               </span>
               <span class="checkbox-text">
-                {{ $t("auth.register.agreeToTerms") }}
+                {{ $t("auth.register?.agreeToTerms") }}
 
                 <a href="/terms" target="_blank" class="link" @click.stop>
-                  {{ $t("auth.register.termsOfService") }}
+                  {{ $t("auth.register?.termsOfService") }}
                 </a>
-                {{ $t("auth.register.and") }}
+                {{ $t("auth.register?.and") }}
 
                 <a href="/privacy" target="_blank" class="link" @click.stop>
-                  {{ $t("auth.register.privacyPolicy") }}
+                  {{ $t("auth.register?.privacyPolicy") }}
                 </a>
               </span>
             </label>
@@ -785,7 +785,7 @@ async function handleSubmit(): Promise<void> {
         >
           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
         </svg>
-        <span>{{ $t("auth.unified.secureEncrypted") }} </span>
+        <span>{{ $t("auth.unified?.secureEncrypted") }} </span>
       </div>
       <div class="trust-item">
         <svg
@@ -799,7 +799,7 @@ async function handleSubmit(): Promise<void> {
           <circle cx="9" cy="7" r="4" />
           <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
         </svg>
-        <span>{{ $t("auth.unified.joinThousands") }} </span>
+        <span>{{ $t("auth.unified?.joinThousands") }} </span>
       </div>
     </div>
   </div>

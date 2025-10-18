@@ -2,17 +2,17 @@
 import { onMounted, computed } from "vue";
 
 // Components
-import PricingHero from "@/components/pricing/PricingHero.vue";
-import CountdownTimer from "@/components/pricing/CountdownTimer.vue";
-import PricingCards from "@/components/pricing/PricingCards.vue";
-import FeatureGrid from "@/components/pricing/FeatureGrid.vue";
-import ComparisonTable from "@/components/pricing/ComparisonTable.vue";
-import TestimonialCarousel from "@/components/pricing/TestimonialCarousel.vue";
-import FaqAccordion from "@/components/pricing/FaqAccordion.vue";
-import GuaranteePanel from "@/components/pricing/GuaranteePanel.vue";
-import FinalCta from "@/components/pricing/FinalCta.vue";
+import PricingHero from "../../../components/pricing/PricingHero.vue";
+import CountdownTimer from "../../../components/pricing/CountdownTimer.vue";
+import PricingCards from "../../../components/pricing/PricingCards.vue";
+import FeatureGrid from "../../../components/pricing/FeatureGrid.vue";
+import ComparisonTable from "../../../components/pricing/ComparisonTable.vue";
+import TestimonialCarousel from "../../../components/pricing/TestimonialCarousel.vue";
+import FaqAccordion from "../../../components/pricing/FaqAccordion.vue";
+import GuaranteePanel from "../../../components/pricing/GuaranteePanel.vue";
+import FinalCta from "../../../components/pricing/FinalCta.vue";
 
-const trackanalytics = (event: string, properties: Record<string, unknown>) => {
+const trackAnalytics = (event: string, properties: Record<string, unknown>) => {
   // Track with your analytics service
   console.log("Analytics:", event, properties);
 };
@@ -23,6 +23,30 @@ const saleEndDate = computed(() => {
   const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
   return endOfMonth;
 });
+
+// Sample testimonials
+const testimonials = [
+  {
+    id: "1",
+    name: "John Doe",
+    role: "Software Engineer",
+    company: "Tech Corp",
+    avatar: "",
+    rating: 5,
+    quote: "This platform helped me ace my technical interviews!",
+    date: new Date("2024-01-15"),
+  },
+  {
+    id: "2",
+    name: "Jane Smith",
+    role: "Frontend Developer",
+    company: "Startup Inc",
+    avatar: "",
+    rating: 5,
+    quote: "The best resource for mastering coding interviews.",
+    date: new Date("2024-02-20"),
+  },
+];
 
 // Methods
 const handleCountdownCTA = () => {
@@ -65,6 +89,7 @@ defineOptions({
     <!-- Countdown Timer Banner (Limited Time Offer) -->
     <CountdownTimer
       variant="banner"
+      :end-date="saleEndDate"
       :target-date="saleEndDate"
       title="Limited Time Offer!"
       message="Get 30% off all annual plans"
@@ -80,7 +105,7 @@ defineOptions({
     <section id="main-content" class="pricing-page-cards" aria-labelledby="plans-title">
       <div class="pricing-page-cards-container">
         <h2 id="plans-title" class="sr-only">
-          {{ $t("pricing.plans.title") }}
+          {{ $t("pricing.plans?.title") }}
         </h2>
         <PricingCards />
       </div>
@@ -93,7 +118,7 @@ defineOptions({
     <ComparisonTable />
 
     <!-- Testimonials -->
-    <TestimonialCarousel :autoplay="true" :autoplay-interval="6000" />
+    <TestimonialCarousel :testimonials="testimonials" :autoplay="true" :autoplay-interval="6000" />
 
     <!-- FAQ Section -->
     <FaqAccordion />

@@ -16,7 +16,7 @@
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 
-export interface skeletonloaderprops {
+export interface SkeletonLoaderProps {
   variant?: "text" | "heading" | "paragraph" | "avatar" | "card" | "button" | "image" | "custom";
   width?: string | number;
   height?: string | number;
@@ -25,8 +25,7 @@ export interface skeletonloaderprops {
   customClass?: string;
   ariaLabel?: string;
   lines?: number; // For paragraph variant
-  delay?: number;
-  Forparagraphvariantdelay?; // Animation delay in ms
+  delay?: number; // Animation delay in ms
 }
 
 const props = withDefaults(defineProps<SkeletonLoaderProps>(), {

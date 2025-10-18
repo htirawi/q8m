@@ -5,7 +5,7 @@ export type OnboardingGoal =
   | 'skill-improvement'
   | 'certification';
 
-export type ExperienceLevel = 'junior' | 'mid' | 'senior';
+export type ExperienceLevel = 'junior' | 'intermediate' | 'senior';
 
 export type Framework =
   | 'react'

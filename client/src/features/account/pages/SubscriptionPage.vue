@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { usePaymentStore } from "@/stores/payment";
+import { usePaymentStore } from "../../../stores/payment";
 import { useI18n } from "vue-i18n";
-import CurrentPlanCard from "@/features/account/components/CurrentPlanCard.vue";
-import SubscriptionActions from "@/features/account/components/SubscriptionActions.vue";
-import BillingHistorySection from "@/features/account/components/BillingHistorySection.vue";
-import CancelSubscriptionModal from "@/features/account/components/CancelSubscriptionModal.vue";
+import CurrentPlanCard from "../../../features/account/components/CurrentPlanCard.vue";
+import SubscriptionActions from "../../../features/account/components/SubscriptionActions.vue";
+import BillingHistorySection from "../../../features/account/components/BillingHistorySection.vue";
+import CancelSubscriptionModal from "../../../features/account/components/CancelSubscriptionModal.vue";
 
 const router = useRouter();
 const { t } = useI18n();
@@ -71,11 +71,11 @@ const goToPricing = () => {
   router.push("/subscribe");
 };
 
-const gotoquizzes = () => {
+const goToQuizzes = () => {
   router.push("/quiz");
 };
 
-const refreshbillinghistory = async () => {
+const refreshBillingHistory = async () => {
   try {
     await paymentStore.fetchPurchaseHistory();
   } catch (error) {
@@ -83,7 +83,7 @@ const refreshbillinghistory = async () => {
   }
 };
 
-const handlecancelconfirm = async (reason: string) => {
+const handleCancelConfirm = async (reason: string) => {
   try {
     await paymentStore.cancelSubscription(reason);
     showCancelModal.value = false;
@@ -144,10 +144,10 @@ onMounted(async () => {
               />
             </svg>
           </div>
-          <h2 class="no-subscription-title">{{ $t("subscription.noSubscription.title") }}</h2>
-          <p class="no-subscription-message">{{ $t("subscription.noSubscription.message") }}</p>
+          <h2 class="no-subscription-title">{{ $t("subscription.noSubscription?.title") }}</h2>
+          <p class="no-subscription-message">{{ $t("subscription.noSubscription?.message") }}</p>
           <button @click="goToPricing" class="btn-primary">
-            {{ $t("subscription.noSubscription.choosePlan") }}
+            {{ $t("subscription.noSubscription?.choosePlan") }}
           </button>
         </div>
       </div>

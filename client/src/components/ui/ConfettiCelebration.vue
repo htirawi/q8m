@@ -21,7 +21,7 @@ const canvasWidth = ref(window.innerWidth);
 const canvasHeight = ref(window.innerHeight);
 const isActive = ref(true);
 
-interface particle {
+interface Particle {
   x: number;
   y: number;
   vx: number;
@@ -40,7 +40,7 @@ const colors = ["#5E5CE6", "#32ADE6", "#34C759", "#FF9F0A", "#FF453A", "#AF52DE"
 let animationId: number | null = null;
 animationId;
 
-const createparticles = () => {
+const createParticles = () => {
   const particleCount = 150;
 
   for (let i = 0; i < particleCount; i++) {
@@ -50,7 +50,7 @@ const createparticles = () => {
       vx: Math.random() * 6 - 3,
       vy: Math.random() * -15 - 10,
       radius: Math.random() * 3 + 2,
-      color: colors[Math.floor(Math.random() * colors.length)],
+      color: colors[Math.floor(Math.random() * colors.length)] || "#5E5CE6",
       rotation: Math.random() * 360,
       rotationSpeed: Math.random() * 10 - 5,
       opacity: 1,
@@ -59,7 +59,7 @@ const createparticles = () => {
   }
 };
 
-const drawparticle = (ctx: CanvasRenderingContext2D, particle: Particle) => {
+const drawParticle = (ctx: CanvasRenderingContext2D, particle: Particle) => {
   ctx.save();
   ctx.translate(particle.x, particle.y);
   ctx.rotate((particle.rotation * Math.PI) / 180);
@@ -103,6 +103,7 @@ const animate = () => {
 
   for (let i = particles.length - 1; i >= 0; i--) {
     const particle = particles[i];
+    if (!particle) continue;
 
     // Update particle position
     particle.x += particle.vx;
@@ -130,7 +131,7 @@ const animate = () => {
   }
 };
 
-const handleresize = () => {
+const handleResize = () => {
   canvasWidth.value = window.innerWidth;
   canvasHeight.value = window.innerHeight;
 };

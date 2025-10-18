@@ -95,7 +95,7 @@
                 class="w-full rounded-lg bg-primary-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
                 @click="handleSeePlans"
               >
-                {{ t("paywall.cta.seePlans") }}
+                {{ t("paywall.cta?.seePlans") }}
               </button>
 
               <!-- Secondary CTA -->
@@ -104,7 +104,7 @@
                 class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 dark:focus:ring-offset-gray-800"
                 @click="handleContinueFree"
               >
-                {{ t("paywall.cta.continueFree") }}
+                {{ t("paywall.cta?.continueFree") }}
               </button>
             </div>
           </div>
@@ -118,11 +118,11 @@
 import type {
   ISoftPaywallModalProps as Props,
   ISoftPaywallModalEmits as Emits,
-} from "@/types/components/paywall";
+} from "../../types/components/paywall";
 import { ref, computed, watch, onMounted, onUnmounted, nextTick } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
-import { trackEvent } from "@/utils/telemetry";
+import { trackEvent } from "../../utils/telemetry";
 import type { PlanTier } from "@shared/types/plan";
 
 const props = defineProps<Props>();
@@ -141,7 +141,7 @@ const suggestedPlanName = computed(() => {
     advanced: t("plans.names.advanced"),
     pro: t("plans.names.pro"),
   };
-  return names[props.suggestedPlan];
+  return props.suggestedPlan ? names[props.suggestedPlan] : names.intermediate;
 });
 
 const features = computed(() => {
@@ -152,7 +152,7 @@ const features = computed(() => {
   ];
 });
 
-const handleseeplans = () => {
+const handleSeePlans = () => {
   trackEvent("free_soft_paywall_cta_clicked", {
     cta: "see_plans",
     targetPlan: props.suggestedPlan,
@@ -171,7 +171,7 @@ const handleseeplans = () => {
   emit("dismiss");
 };
 
-const handlecontinuefree = () => {
+const handleContinueFree = () => {
   trackEvent("free_soft_paywall_cta_clicked", {
     cta: "continue_free",
     targetPlan: props.suggestedPlan,
@@ -184,7 +184,7 @@ const handlecontinuefree = () => {
   emit("dismiss");
 };
 
-const handledismiss = () => {
+const handleDismiss = () => {
   trackEvent("free_soft_paywall_dismissed", {
     targetRoute: props.targetRoute,
   });

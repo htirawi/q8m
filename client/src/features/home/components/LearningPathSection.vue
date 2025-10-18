@@ -42,10 +42,10 @@ const learningSteps = computed(() => [
     <div class="learning-path-container">
       <div class="learning-path-header">
         <h2 id="learning-path-title" class="learning-path-title">
-          {{ $t("home.learningPath.title") }}
+          {{ $t("home.learningPath?.title") }}
         </h2>
         <p class="learning-path-description">
-          {{ $t("home.learningPath.description") }}
+          {{ $t("home.learningPath?.description") }}
         </p>
       </div>
 
@@ -79,21 +79,21 @@ const learningSteps = computed(() => [
               <div class="progress-fill"></div>
               <div class="progress-text">
                 <span class="progress-number">95%</span>
-                <span class="progress-label">{{ $t("home.learningPath.successRate") }} </span>
+                <span class="progress-label">{{ $t("home.learningPath?.successRate") }} </span>
               </div>
             </div>
             <div class="progress-stats">
               <div class="stat-item">
                 <span class="stat-number">500+</span>
-                <span class="stat-label">{{ $t("home.learningPath.stats.questions") }} </span>
+                <span class="stat-label">{{ $t("home.learningPath.stats?.questions") }} </span>
               </div>
               <div class="stat-item">
                 <span class="stat-number">10+</span>
-                <span class="stat-label">{{ $t("home.learningPath.stats.frameworks") }} </span>
+                <span class="stat-label">{{ $t("home.learningPath.stats?.frameworks") }} </span>
               </div>
               <div class="stat-item">
                 <span class="stat-number">50+</span>
-                <span class="stat-label">{{ $t("home.learningPath.stats.companies") }} </span>
+                <span class="stat-label">{{ $t("home.learningPath.stats?.companies") }} </span>
               </div>
             </div>
           </div>

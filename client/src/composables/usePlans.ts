@@ -61,6 +61,7 @@ export function usePlans() {
 
     return {
       monthly: plan.priceMonthly,
+      yearly: plan.priceYearly,
       annual: plan.priceYearly,
       currency: plan.currency,
       annualSavings: savings,
@@ -137,7 +138,7 @@ export function usePlans() {
     if (plan.priceMonthly === 0) return null;
 
     const priceInfo = getPlanPrice(plan);
-    const monthsSaved = Math.round(priceInfo.annualSavings / plan.priceMonthly);
+    const monthsSaved = Math.round((priceInfo.annualSavings ?? 0) / plan.priceMonthly);
 
     if (monthsSaved < 1) return null;
 

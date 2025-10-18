@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ITierCardProps as Props } from "@/types/components/home";
+import type { ITierCardProps as Props } from "../../types/components/home";
 import { useI18n } from "vue-i18n";
 import { useRouter, useRoute } from "vue-router";
 import { computed } from "vue";
@@ -35,7 +35,7 @@ const handleCTAClick = (): void => {
     :data-tier-id="tier.id"
   >
     <div v-if="tier.popular" class="tier-card__badge">
-      {{ t("home.pricing.popular") }}
+      {{ t("home.pricing?.popular") }}
     </div>
 
     <div class="tier-card__header">

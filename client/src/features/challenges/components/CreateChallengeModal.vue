@@ -45,8 +45,8 @@
                 class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 focus:border-transparent focus:ring-2 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
               >
                 <option value="">Select a friend...</option>
-                <option v-for="friend in friends" :key="friend._id" :value="friend._id">
-                  {{ friend.name }} (Level {{ friend.level }})
+                <option v-for="friend in friends" :key="friend.id" :value="friend.id">
+                  {{ friend.name ?? "" }}
                 </option>
               </select>
             </div>
@@ -71,7 +71,7 @@
                 >
                   <div class="mb-1 text-2xl">{{ diff.emoji }}</div>
                   <div class="font-medium capitalize text-gray-900 dark:text-white">
-                    {{ diff.value }}
+                    {{ diff.value ?? 0 }}
                   </div>
                 </button>
               </div>
@@ -87,9 +87,7 @@
                   v-for="fw in frameworks"
                   :key="fw.value"
                   type="button"
-                  @click="
-                    formData.framework = formData.framework === fw.value ? undefined : fw.value
-                  "
+                  @click="formData.framework = formData.framework === fw.value ? '' : fw.value"
                   :class="[
                     'rounded-lg border-2 p-4 transition-all',
                     formData.framework === fw.value
@@ -129,7 +127,7 @@
             <!-- Time Limit -->
             <div>
               <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                Time Limit: {{ formatTimeLimit(formData.timeLimit) }}
+                Time Limit: {{ formatTimeLimit(formData.timeLimit ?? 900) }}
               </label>
               <input
                 v-model.number="formData.timeLimit"
@@ -202,11 +200,10 @@
 </template>
 
 <script setup lang="ts">
-import type { ICreateChallengeModalProps as Props } from "@/types/components/challenges";
+import type { ICreateChallengeModalProps as Props } from "../../../types/components/challenges";
 import { ref, computed, watch } from "vue";
-import type { Friend } from "@/stores/friends";
-import type { CreateChallengeData } from "@/stores/challenges";
-import { useChallenges } from "@/composables/useChallenges";
+import type { CreateChallengeData } from "../../../stores/challenges";
+import { useChallenges } from "../../../composables/useChallenges";
 
 const props = withDefaults(defineProps<Props>(), {
   loading: false,
@@ -222,7 +219,10 @@ const { validateChallengeData } = useChallenges();
 const formData = ref<CreateChallengeData>({
   challengedUserId: "",
   difficulty: "medium",
-  framework: undefined,
+  framework: "",
+  level: "medium",
+  opponentId: "",
+  numberOfQuestions: 10,
   questionCount: 10,
   timeLimit: 600,
   message: "",
@@ -260,11 +260,14 @@ const close = () => {
   }
 };
 
-const resetform = () => {
-  formdata.value = {
+const resetForm = () => {
+  formData.value = {
     challengedUserId: "",
     difficulty: "medium",
-    framework: undefined,
+    framework: "",
+    level: "medium",
+    opponentId: "",
+    numberOfQuestions: 10,
     questionCount: 10,
     timeLimit: 600,
     message: "",
@@ -272,7 +275,7 @@ const resetform = () => {
   errorMessage.value = "";
 };
 
-const handlesubmit = () => {
+const handleSubmit = () => {
   errorMessage.value = "";
 
   const validation = validateChallengeData(formData.value);

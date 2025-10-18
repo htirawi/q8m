@@ -5,8 +5,8 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { useAuthStore } from "@/stores/auth";
-import { useOnboarding } from "@/composables/useOnboarding";
+import { useAuthStore } from "../../../stores/auth";
+import { useOnboarding } from "../../../composables/useOnboarding";
 import OnboardingWizard from "../components/OnboardingWizard.vue";
 
 const router = useRouter();

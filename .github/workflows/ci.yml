@@ -135,10 +135,9 @@ jobs:
           if-no-files-found: ignore
           retention-days: 30
 
-      # Build temporarily disabled - Phase 2 features cause type resolution errors
-      # Will be re-enabled after Phase 2 type fixes
-      # - name: Run Build
-      #   run: pnpm build
+      # ✅ Build re-enabled after comprehensive type error fixes
+      - name: Run Build
+        run: pnpm build
 
       - name: Prepare artifacts for upload
         if: failure()

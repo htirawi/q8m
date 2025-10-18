@@ -1,19 +1,19 @@
 <script setup lang="ts">
 import { useRouter, useRoute } from "vue-router";
 
-import AuthenticationForm from "@/components/auth/AuthenticationForm.vue";
-import { useAuthRedirect } from "@/composables/useAuthRedirect";
-import { usePostLoginRouter } from "@/composables/usePostLoginRouter";
+import AuthenticationForm from "../../../components/auth/AuthenticationForm.vue";
+import { useAuthRedirect } from "../../../composables/useAuthRedirect";
+import { usePostLoginRouter } from "../../../composables/usePostLoginRouter";
 
 const router = useRouter();
 const route = useRoute();
 const { getCurrentLocale } = useAuthRedirect();
 const { routeAfterLogin } = usePostLoginRouter();
 
-function handleoauthlogin(provider: "google") {
+function handleOAuthLogin(provider: "google") {
   // Redirect to OAuth endpoint on the backend
   const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
-  const oauthurl = `${apiBaseUrl}/api/v1/auth/${provider}`;
+  const oauthUrl = `${apiBaseUrl}/api/v1/auth/${provider}`;
 
   // Store the intended redirect URL (from signInSuccessUrl query param) or default to study
   const signInSuccessUrl = route.query.signInSuccessUrl as string | undefined;
@@ -30,7 +30,7 @@ async function handleLoginSuccess() {
   await routeAfterLogin();
 }
 
-function handleregistrationsuccess(_email: string) {
+function handleRegistrationSuccess(_email: string) {
   // After successful registration, redirect to login page with success message
   // No sensitive data stored or exposed in URL
   const locale = getCurrentLocale();
@@ -68,10 +68,10 @@ function handleregistrationsuccess(_email: string) {
       <!-- Welcome Section -->
       <div class="welcome-section">
         <h2 class="welcome-title">
-          {{ $t("auth.unified.title") }}
+          {{ $t("auth.unified?.title") }}
         </h2>
         <p class="welcome-subtitle">
-          {{ $t("auth.unified.subtitle") }}
+          {{ $t("auth.unified?.subtitle") }}
         </p>
       </div>
 

@@ -60,7 +60,7 @@
           v-if="!isLocked && isCurrentPlan"
           class="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800 dark:bg-green-900 dark:text-green-200"
         >
-          {{ t("study.levelCard.currentPlan") }}
+          {{ t("study.levelCard?.currentPlan") }}
         </span>
         <!-- Available IBadge -->
         <span
@@ -68,7 +68,7 @@
           class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium"
           :class="availableBadgeClass"
         >
-          {{ t("plans.access.available") }}
+          {{ t("plans.access?.available") }}
         </span>
         <!-- Locked IBadge -->
         <LockedBadge v-else :required-plan="requiredPlan" />
@@ -111,7 +111,7 @@
                 d="M13 10V3L4 14h7v7l9-11h-7z"
               />
             </svg>
-            {{ t("study.levelCard.clickToUnlock") }}
+            {{ t("study.levelCard?.clickToUnlock") }}
           </span>
         </div>
       </div>
@@ -120,14 +120,16 @@
 </template>
 
 <script setup lang="ts">
-import type { ILevelCardProps as Props, ILevelCardEmits as Emits } from "@/types/components/study";
+import type {
+  ILevelCardProps as Props,
+  ILevelCardEmits as Emits,
+} from "../../types/components/study";
+import type { DifficultyLevel } from "@shared/types/plan";
 import { computed, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
-import { useAnalytics } from "@/composables/useAnalytics";
-import LockedBadge from "@/components/paywall/LockedBadge.vue";
-import { DIFFICULTY_TO_PLAN_ID, getPlanById } from "@/config/plans";
-import type { DifficultyLevel } from "@/types/plan/access";
-import type { PlanTier } from "@shared/types/plan";
+import { useAnalytics } from "../../composables/useAnalytics";
+import LockedBadge from "../../components/paywall/LockedBadge.vue";
+import { DIFFICULTY_TO_PLAN_ID, getPlanById } from "../../config/plans";
 
 const props = withDefaults(defineProps<Props>(), {
   features: () => [],
@@ -143,8 +145,8 @@ const { t } = useI18n();
 const { track } = useAnalytics();
 
 // Map difficulty to plan ID, then get display label from canonical registry
-const planId = computed(() => DIFFICULTY_TO_PLAN_ID[props.difficulty]);
-const planConfig = computed(() => getPlanById(planId.value));
+const planId = computed(() => (props.difficulty ? DIFFICULTY_TO_PLAN_ID[props.difficulty] : null));
+const planConfig = computed(() => (planId.value ? getPlanById(planId.value) : null));
 
 const icon = computed(() => planConfig.value?.visual.icon || "🟢");
 
@@ -214,7 +216,7 @@ const availableBadgeClass = computed(() => {
     medium: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200",
     hard: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
   };
-  return colorMap[props.difficulty];
+  return props.difficulty ? colorMap[props.difficulty] : colorMap.easy;
 });
 
 const featureTextClass = computed(() => {
@@ -245,18 +247,20 @@ const handleClick = () => {
     // Check if auto-start is enabled for Easy difficulty
     const shouldAutoStart = props.autoStartEnabled && props.difficulty === "easy";
 
-    if (shouldAutoStart) {
-      // One-click start: emit auto-start event
-      track("level_card_selected", {
-        difficulty: props.difficulty,
-      });
-      emit("auto-start", props.difficulty);
-    } else {
-      // Traditional flow: emit select event
-      track("level_card_selected", {
-        difficulty: props.difficulty,
-      });
-      emit("select", props.difficulty);
+    if (props.difficulty) {
+      if (shouldAutoStart) {
+        // One-click start: emit auto-start event
+        track("level_card_selected", {
+          difficulty: props.difficulty,
+        });
+        emit("auto-start", props.difficulty);
+      } else {
+        // Traditional flow: emit select event
+        track("level_card_selected", {
+          difficulty: props.difficulty,
+        });
+        emit("select", props.difficulty);
+      }
     }
   }
 };

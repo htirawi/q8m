@@ -3,8 +3,8 @@ import { computed, ref } from "vue";
 
 import { useRouter } from "vue-router";
 
-import { useDropdown } from "@/composables/useDropdown";
-import { useAuthStore } from "@/stores/auth";
+import { useDropdown } from "../../composables/useDropdown";
+import { useAuthStore } from "../../stores/auth";
 
 /**
  * UserMenu Component

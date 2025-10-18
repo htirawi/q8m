@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
-import type { BillingHistorySectionProps } from "@/types/ui/component-props";
+import type { BillingHistorySectionProps } from "../../../types/ui/component-props";
 
 defineProps<BillingHistorySectionProps>();
 
@@ -15,11 +15,11 @@ const handleRefresh = () => {
   emit("refresh");
 };
 
-const formatdate = (dateString: string) => {
+const formatDate = (dateString: string) => {
   return new Date(dateString).toLocaleDateString();
 };
 
-const getstatusclass = (status: string) => {
+const getStatusClass = (status: string) => {
   switch (status) {
     case "pending":
       return "text-yellow-600 dark:text-yellow-400";
@@ -54,11 +54,11 @@ const getstatusclass = (status: string) => {
       <div v-for="purchase in purchases" :key="purchase._id" class="history-item">
         <div class="history-info">
           <h4 class="history-plan">{{ purchase.productId }}</h4>
-          <p class="history-date">{{ formatDate(purchase.createdAt.toString()) }}</p>
+          <p class="history-date">{{ formatDate(purchase.createdAt?.toString() ?? "") }}</p>
         </div>
         <div class="history-details">
           <span class="history-amount"
-            >{{ purchase.amount.displayAmount }} {{ purchase.amount.displayCurrency }}
+            >{{ purchase.amount?.displayAmount }} {{ purchase.amount?.displayCurrency }}
           </span>
           <span class="history-status" :class="getStatusClass(purchase.status)">
             {{ $t(`subscription.purchaseStatus.${purchase.status}`) }}

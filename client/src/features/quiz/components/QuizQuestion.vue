@@ -115,7 +115,7 @@
           @selectstart.prevent
         >
           <input
-            :checked="multipleAnswers.includes(option.id)"
+            :checked="(multipleAnswers ?? []).includes(option.id)"
             type="checkbox"
             :value="option.id"
             :disabled="hasAnswered"
@@ -191,10 +191,10 @@
 </template>
 
 <script setup lang="ts">
-import type { IQuizQuestionProps as Props } from "@/types/components/quiz";
+import type { IQuizQuestionProps as Props } from "../../../types/components/quiz";
 import { computed, onMounted, onUnmounted } from "vue";
 import { useI18n } from "vue-i18n";
-import type { Question, QuizOption } from "@shared/types/quiz";
+import type { QuizOption } from "@shared/types/quiz";
 
 const props = defineProps<Props>();
 
@@ -209,11 +209,13 @@ const emit = defineEmits<{
 const { t } = useI18n();
 
 const questionText = computed(() => {
-  return props.question.content?.[props.locale as "en" | "ar"]?.question ?? "";
+  const content = props.question.content as any;
+  return content?.[props.locale]?.question ?? "";
 });
 
 const options = computed((): QuizOption[] => {
-  return props.question.content?.[props.locale as "en" | "ar"]?.options ?? [];
+  const content = props.question.content as any;
+  return content?.[props.locale]?.options ?? [];
 });
 
 const explanation = computed(() => {
@@ -221,7 +223,8 @@ const explanation = computed(() => {
   if (userAnswer?.explanation) {
     return userAnswer.explanation;
   }
-  return props.question.content?.[props.locale as "en" | "ar"]?.explanation ?? "";
+  const content = props.question.content as any;
+  return content?.[props.locale]?.explanation ?? "";
 });
 
 const questionTypeBadge = computed(() => {
@@ -231,7 +234,7 @@ const questionTypeBadge = computed(() => {
     "fill-blank": "Fill in the Blank",
     "multiple-checkbox": "Select All That Apply",
   };
-  return types[props.question.type] || props.question.type;
+  return types[props.question.type as string] || props.question.type;
 });
 
 const getPrimaryCategory = computed(() => {
@@ -239,45 +242,46 @@ const getPrimaryCategory = computed(() => {
   if (props.question.category) {
     return props.question.category;
   }
-  if (props.question.tags && props.question.tags.length > 0) {
-    return props.question.tags[0];
+  const tags = Array.isArray(props.question.tags) ? props.question.tags : [];
+  if (tags.length > 0) {
+    return tags[0];
   }
   return null;
 });
 
 const levelDotClass = computed(() => {
-  const classes = {
+  const classes: Record<string, string> = {
     junior: "bg-green-500",
     intermediate: "bg-yellow-500",
     senior: "bg-red-500",
   };
-  return classes[props.level] || "bg-gray-500";
+  return classes[props.level as string] || "bg-gray-500";
 });
 
 const canSubmit = computed(() => {
   if (props.question.type === "multiple-choice" || props.question.type === "true-false") {
     return props.selectedAnswer !== null;
   } else if (props.question.type === "fill-blank") {
-    return props.textAnswer?.trim().length > 0;
+    return (props.textAnswer?.trim().length ?? 0) > 0;
   } else if (props.question.type === "multiple-checkbox") {
-    return props.multipleAnswers.length > 0;
+    return (props.multipleAnswers ?? []).length > 0;
   }
   return false;
 });
 
-const selectoption = (optionId: string) => {
+const selectOption = (optionId: string) => {
   if (props.hasAnswered) return;
   emit("update:selectedAnswer", optionId);
 };
 
-const updatetextanswer = (event: Event) => {
+const updateTextAnswer = (event: Event) => {
   const target = event.target as HTMLInputElement;
   emit("update:textAnswer", target.value);
 };
 
-const togglemultipleanswer = (optionId: string) => {
+const toggleMultipleAnswer = (optionId: string) => {
   if (props.hasAnswered) return;
-  const current = [...props.multipleAnswers];
+  const current = [...(props.multipleAnswers ?? [])];
   const index = current.indexOf(optionId);
   if (index > -1) {
     current.splice(index, 1);
@@ -287,7 +291,7 @@ const togglemultipleanswer = (optionId: string) => {
   emit("update:multipleAnswers", current);
 };
 
-const getoptionclass = (optionId: string) => {
+const getOptionClass = (optionId: string) => {
   const baseClass = "w-full rounded-xl border-2 px-6 py-4 text-left transition-all duration-200";
 
   if (!props.hasAnswered) {
@@ -318,7 +322,7 @@ const getoptionclass = (optionId: string) => {
  border-gray-200 bg-gray-50 text-gray-700 dark:border-gray-700; dark:bg-gray-800; dark:text-gray-300`;
 };
 
-const getcheckboxoptionclass = (optionId: string) => {
+const getCheckboxOptionClass = (optionId: string) => {
   const baseClass =
     "flex w-full items-center rounded-xl border-2 px-6 py-4 transition-all duration-200";
 
@@ -339,7 +343,7 @@ const getcheckboxoptionclass = (optionId: string) => {
  border-gray-200 bg-gray-50 text-gray-700 dark:border-gray-700; dark:bg-gray-800; dark:text-gray-300`;
 };
 
-const isanswerrevealed = (optionId: string) => {
+const isAnswerRevealed = (optionId: string) => {
   const userAnswer = props.userAnswerResult;
 
   if (!props.hasAnswered || !userAnswer) {
@@ -353,7 +357,7 @@ const isanswerrevealed = (optionId: string) => {
   }
 };
 
-const iscorrectoption = (optionId: string) => {
+const isCorrectOption = (optionId: string): boolean => {
   const userAnswer = props.userAnswerResult;
   if (!userAnswer) return false;
 
@@ -365,7 +369,7 @@ const iscorrectoption = (optionId: string) => {
 };
 
 // Anti-copy protection: Disable keyboard shortcuts
-const handleKeyDown = (event: KeyboardEvent) => {
+const handleKeyDown = (event: KeyboardEvent): boolean => {
   const isCtrlOrCmd = event.ctrlKey || event.metaKey;
 
   if (
@@ -388,9 +392,11 @@ const handleKeyDown = (event: KeyboardEvent) => {
     event.stopPropagation();
     return false;
   }
+
+  return true;
 };
 
-const handledragstart = (event: DragEvent) => {
+const handleDragStart = (event: DragEvent) => {
   event.preventDefault();
   return false;
 };
@@ -400,8 +406,9 @@ onMounted(() => {
   document.addEventListener("dragstart", handleDragStart, true);
   document.body.style.userSelect = "none";
   document.body.style.webkitUserSelect = "none";
-  document.body.style.mozUserSelect = "none";
-  document.body.style.msUserSelect = "none";
+  // Legacy vendor prefixes for older browsers
+  (document.body.style as any).mozUserSelect = "none";
+  (document.body.style as any).msUserSelect = "none";
 });
 
 onUnmounted(() => {
@@ -409,7 +416,8 @@ onUnmounted(() => {
   document.removeEventListener("dragstart", handleDragStart, true);
   document.body.style.userSelect = "";
   document.body.style.webkitUserSelect = "";
-  document.body.style.mozUserSelect = "";
-  document.body.style.msUserSelect = "";
+  // Legacy vendor prefixes for older browsers
+  (document.body.style as any).mozUserSelect = "";
+  (document.body.style as any).msUserSelect = "";
 });
 </script>

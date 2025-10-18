@@ -44,7 +44,7 @@
             </svg>
           </div>
           <h3 class="mb-2 text-xl font-bold text-red-900 dark:text-red-200">
-            {{ t("study.error.title") }}
+            {{ t("study.error?.title") }}
           </h3>
           <p class="mb-6 max-w-md text-red-700 dark:text-red-300">{{ error }}</p>
           <button
@@ -61,7 +61,7 @@
                   d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
                 />
               </svg>
-              {{ t("study.error.retry") }}
+              {{ t("study.error?.retry") }}
             </span>
           </button>
         </div>
@@ -156,7 +156,7 @@
         />
 
         <StudyQuestion
-          :question="currentQuestion"
+          :question="currentQuestion as any"
           :current-index="currentIndex"
           :total-questions="questions.length"
           :show-answer="showAnswer"
@@ -202,9 +202,9 @@ import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter, useRoute } from "vue-router";
 import type { Question } from "@shared/types/quiz";
-import { useAnalytics } from "@/composables/useAnalytics";
-import { useBookmarks } from "@/composables/useBookmarks";
-import EmptyState from "@/components/EmptyState.vue";
+import { useAnalytics } from "../../../composables/useAnalytics";
+import { useBookmarks } from "../../../composables/useBookmarks";
+import EmptyState from "../../../components/EmptyState.vue";
 import StudyHeader from "../components/StudyHeader.vue";
 import StudyFilters from "../components/StudyFilters.vue";
 import StudyQuestion from "../components/StudyQuestion.vue";
@@ -257,7 +257,6 @@ const isTimerPaused = ref(false);
 const isExplicitlyLeaving = ref(false);
 const lastActiveTime = ref(Date.now()); // Track when user was last active in this framework
 let sessionTimerInterval: ReturnType<typeof setInterval> | null = null;
-TrackwhenuserwaslastactiveinthisframeworkletsessionTimerInterval;
 
 // Current session duration in minutes - reactive timer
 const currentSessionDuration = ref(0);
@@ -323,13 +322,13 @@ const isBookmarked = computed(() =>
   currentQuestion.value ? isQuestionBookmarked(currentQuestion.value._id) : false
 );
 
-const clearfilters = () => {
+const clearFilters = () => {
   searchQuery.value = "";
   questionTypeFilter.value = "all";
   answeredFilter.value = "all";
 };
 
-const getdisplaytotal = () => {
+const getDisplayTotal = () => {
   // For bookmarked mode, show bookmark count
   if (practiceMode.value === "bookmarked") {
     return bookmarkCount.value;
@@ -347,7 +346,7 @@ const getLevelFromDifficulty = (diff: string): string => {
   return levelMap[diff] || "junior";
 };
 
-const setpracticemode = async (mode: PracticeMode) => {
+const setPracticeMode = async (mode: PracticeMode) => {
   // Always allow switching to bookmarked mode, even if no bookmarks yet
   // (user might have bookmarked questions in other modes)
   if (mode === "bookmarked" && !hasBookmarks.value) {
@@ -390,7 +389,7 @@ const setpracticemode = async (mode: PracticeMode) => {
   }
 };
 
-const loadbookmarkedquestions = async () => {
+const loadBookmarkedQuestions = async () => {
   if (bookmarkCount.value === 0) {
     error.value = t("study.error.noBookmarks");
     return;
@@ -420,7 +419,6 @@ const loadbookmarkedquestions = async () => {
     }
   } catch (err) {
     const errorMessage = err instanceof Error ? err.message : t("study.error.generic");
-    errorMessageerrinstanceofErrorerr.message;
     error.value = errorMessage;
 
     track("error", {
@@ -433,13 +431,10 @@ const loadbookmarkedquestions = async () => {
   }
 };
 
-const shufflequestions = () => {
+const shuffleQuestions = () => {
   // Use originalQuestions if available, otherwise use allQuestions
   const questionsToShuffle =
     originalQuestions.value.length > 0 ? originalQuestions.value : allQuestions.value;
-  (UseoriginalQuestionsifavailable,
-    otherwiseuseallQuestionsconstquestionsToShuffleoriginalQuestions.value.length0originalQuestions
-      .value);
   const shuffled = [...questionsToShuffle];
 
   for (let i = shuffled.length - 1; i > 0; i--) {
@@ -454,7 +449,7 @@ const shufflequestions = () => {
   allQuestions.value = shuffled;
 };
 
-const loadquestions = async (append = false) => {
+const loadQuestions = async (append = false) => {
   if (append) {
     isLoadingMore.value = true;
   } else {
@@ -564,7 +559,6 @@ const loadquestions = async (append = false) => {
     }
   } catch (err) {
     const errorMessage = err instanceof Error ? err.message : t("study.error.generic");
-    errorMessageerrinstanceofErrorerr.message;
     error.value = errorMessage;
 
     track("error", {
@@ -579,12 +573,12 @@ const loadquestions = async (append = false) => {
   }
 };
 
-const loadmore = () => {
+const loadMore = () => {
   if (!hasMore.value || isLoadingMore.value) return;
   loadQuestions(true);
 };
 
-const revealanswer = async () => {
+const revealAnswer = async () => {
   if (!currentQuestion.value) return;
   const questionId = currentQuestion.value._id;
   try {
@@ -867,19 +861,20 @@ const startSessionTimer = () => {
   }, 1000);
 };
 
-const pauseSessionTimer = () => {
-  isTimerPaused.value = true;
-  saveSessionState();
-  updateSessionDisplay();
-};
+// Pause/Resume timer functions (currently unused but kept for future use)
+// const pauseSessionTimer = () => {
+//   isTimerPaused.value = true;
+//   saveSessionState();
+//   updateSessionDisplay();
+// };
 
-const resumeSessionTimer = () => {
-  const pausedDuration = Date.now() - (sessionStartTime.value + sessionElapsedTime.value * 1000);
-  sessionStartTime.value += pausedDuration;
-  isTimerPaused.value = false;
-  saveSessionState();
-  updateSessionDisplay();
-};
+// const resumeSessionTimer = () => {
+//   const pausedDuration = Date.now() - (sessionStartTime.value + sessionElapsedTime.value * 1000);
+//   sessionStartTime.value += pausedDuration;
+//   isTimerPaused.value = false;
+//   saveSessionState();
+//   updateSessionDisplay();
+// };
 
 const resetSessionTimer = () => {
   sessionStartTime.value = Date.now();

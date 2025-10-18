@@ -39,7 +39,7 @@
         >
           <div class="mb-1 text-sm text-gray-600 dark:text-gray-400">Best Score</div>
           <div class="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
-            {{ stats.bestScore.toFixed(1) }}%
+            {{ stats.bestScore?.toFixed(1) }}%
           </div>
         </div>
         <div
@@ -84,7 +84,7 @@
                       : 'bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-300',
                 ]"
               >
-                {{ tab.count }}
+                {{ tab.count ?? 0 }}
               </span>
             </span>
             <div
@@ -103,7 +103,7 @@
         <ChallengeList
           :challenges="challenges"
           :loading="loading"
-          :pagination="pagination"
+          :pagination="paginationFormatted"
           empty-state-title="No challenges yet"
           empty-state-message="Create a challenge to get started!"
           @accept="handleAccept"
@@ -120,7 +120,7 @@
         <ChallengeList
           :challenges="receivedChallenges"
           :loading="loading"
-          :pagination="pagination"
+          :pagination="paginationFormatted"
           empty-state-title="No received challenges"
           empty-state-message="You haven't received any challenges yet"
           :show-create-button="false"
@@ -137,7 +137,7 @@
         <ChallengeList
           :challenges="sentChallenges"
           :loading="loading"
-          :pagination="pagination"
+          :pagination="paginationFormatted"
           empty-state-title="No sent challenges"
           empty-state-message="Challenge your friends to a quiz battle!"
           @start="handleStart"
@@ -152,7 +152,7 @@
         <ChallengeList
           :challenges="activeChallenges"
           :loading="loading"
-          :pagination="pagination"
+          :pagination="paginationFormatted"
           empty-state-title="No active challenges"
           empty-state-message="Accept a challenge to get started!"
           :show-create-button="false"
@@ -167,7 +167,7 @@
         <ChallengeList
           :challenges="completedChallenges"
           :loading="loading"
-          :pagination="pagination"
+          :pagination="paginationFormatted"
           empty-state-title="No completed challenges"
           empty-state-message="Complete a challenge to see results here"
           :show-create-button="false"
@@ -179,8 +179,9 @@
 
     <!-- Create Challenge Modal -->
     <CreateChallengeModal
+      :open="showCreateModal"
       :is-open="showCreateModal"
-      :friends="friends"
+      :friends="friendsForModal"
       :loading="createLoading"
       @close="showCreateModal = false"
       @submit="handleCreateChallenge"
@@ -191,11 +192,11 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import { useChallenges } from "@/composables/useChallenges";
-import { useFriends } from "@/composables/useFriends";
+import { useChallenges } from "../../../composables/useChallenges";
+import { useFriends } from "../../../composables/useFriends";
 import ChallengeList from "../components/ChallengeList.vue";
 import CreateChallengeModal from "../components/CreateChallengeModal.vue";
-import type { CreateChallengeData } from "@/stores/challenges";
+import type { CreateChallengeData } from "../../../stores/challenges";
 
 type TabType = "all" | "received" | "sent" | "active" | "completed";
 
@@ -227,6 +228,23 @@ const { friends, loadFriends } = useFriends();
 const activeTab = ref<TabType>("all");
 const showCreateModal = ref(false);
 const createLoading = ref(false);
+
+// Transform friends to have id property
+const friendsForModal = computed(() =>
+  friends.value.map((f) => ({
+    id: f._id,
+    name: f.name,
+    avatar: f.avatar,
+  }))
+);
+
+// Transform pagination to match expected format
+const paginationFormatted = computed(() => ({
+  currentPage: pagination.value.page || 1,
+  totalPages: Math.ceil((pagination.value.total || 0) / (pagination.value.limit || 20)),
+  pageSize: pagination.value.limit || 20,
+  hasMore: pagination.value.hasMore || false,
+}));
 
 const tabs = computed(() => [
   {
@@ -266,33 +284,33 @@ const tabs = computed(() => [
   },
 ]);
 
-const handleaccept = async (challengeId: string) => {
+const handleAccept = async (challengeId: string) => {
   const success = await acceptChallenge(challengeId);
   if (success) {
     await loadChallenges();
   }
 };
 
-const handlereject = async (challengeId: string) => {
+const handleReject = async (challengeId: string) => {
   const success = await rejectChallenge(challengeId);
   if (success) {
     await loadChallenges();
   }
 };
 
-const handlestart = (challengeId: string) => {
+const handleStart = (challengeId: string) => {
   router.push(`/challenges/${challengeId}/take`);
 };
 
-const handleviewdetails = (challengeId: string) => {
+const handleViewDetails = (challengeId: string) => {
   router.push(`/challenges/${challengeId}`);
 };
 
-const handleloadmore = async () => {
+const handleLoadMore = async () => {
   await loadMore();
 };
 
-const handlecreatechallenge = async (data: CreateChallengeData) => {
+const handleCreateChallenge = async (data: CreateChallengeData) => {
   createLoading.value = true;
   const success = await createChallenge(data);
   createLoading.value = false;

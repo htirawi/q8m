@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import PricingCards from "@/components/pricing/PricingCards.vue";
-import PricingTestimonials from "@/components/pricing/PricingTestimonials.vue";
-import RoiSection from "@/components/pricing/RoiSection.vue";
-import CompetitorComparison from "@/components/pricing/CompetitorComparison.vue";
-import ComparisonTable from "@/components/pricing/ComparisonTable.vue";
-import FaqAccordion from "@/components/pricing/FaqAccordion.vue";
-import GuaranteePanel from "@/components/pricing/GuaranteePanel.vue";
-import FinalCta from "@/components/pricing/FinalCta.vue";
+import PricingCards from "../../../components/pricing/PricingCards.vue";
+import PricingTestimonials from "../../../components/pricing/PricingTestimonials.vue";
+import RoiSection from "../../../components/pricing/RoiSection.vue";
+import CompetitorComparison from "../../../components/pricing/CompetitorComparison.vue";
+import ComparisonTable from "../../../components/pricing/ComparisonTable.vue";
+import FaqAccordion from "../../../components/pricing/FaqAccordion.vue";
+import GuaranteePanel from "../../../components/pricing/GuaranteePanel.vue";
+import FinalCta from "../../../components/pricing/FinalCta.vue";
 import { onMounted } from "vue";
-import { useAnalytics } from "@/composables/useAnalytics";
+import { useAnalytics } from "../../../composables/useAnalytics";
 import { useRoute } from "vue-router";
 
 const route = useRoute();
@@ -43,14 +43,14 @@ defineOptions({
     <div class="modern-pricing-page__header">
       <div class="modern-pricing-page__container">
         <h1 id="pricing-page-title" class="modern-pricing-page__title">
-          {{ $t("pricing.hero.title") }}
+          {{ $t("pricing.hero?.title") }}
         </h1>
         <p class="modern-pricing-page__subtitle">
-          {{ $t("pricing.hero.subtitle") }}
+          {{ $t("pricing.hero?.subtitle") }}
         </p>
         <!-- Trust badge -->
         <p class="modern-pricing-page__trust">
-          {{ $t("pricing.hero.trustedBy") }}
+          {{ $t("pricing.hero?.trustedBy") }}
         </p>
       </div>
     </div>
@@ -63,7 +63,7 @@ defineOptions({
     >
       <div class="modern-pricing-page__container">
         <h2 id="plans-title" class="sr-only">
-          {{ $t("pricing.plans.title") }}
+          {{ $t("pricing.plans?.title") }}
         </h2>
         <PricingCards />
       </div>

@@ -18,7 +18,7 @@ function generateSessionId(): string {
   // Use crypto.getRandomValues for cryptographically secure randomness
   const array = new Uint32Array(2);
   crypto.getRandomValues(array);
-  return `${Date.now()}-${array[0].toString(36)}${array[1].toString(36)}`;
+  return `${Date.now()}-${array[0]?.toString(36) ?? "0"}${array[1]?.toString(36) ?? "0"}`;
 }
 
 export function useAnalytics() {

@@ -6,10 +6,10 @@
       <!-- Header -->
       <div class="mb-12 text-center">
         <h1 class="mb-4 text-4xl font-bold text-gray-900 dark:text-white md:text-5xl">
-          {{ t("quiz.selection.title") }}
+          {{ t("quiz.selection?.title") }}
         </h1>
         <p class="text-lg text-gray-600 dark:text-gray-400 md:text-xl">
-          {{ t("quiz.selection.subtitle") }}
+          {{ t("quiz.selection?.subtitle") }}
         </p>
       </div>
 
@@ -45,10 +45,10 @@
           v-model="difficultyFilter"
           class="rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
         >
-          <option value="all">{{ t("quiz.selection.allDifficulties") }}</option>
-          <option value="junior">{{ t("level.junior.label") }}</option>
-          <option value="intermediate">{{ t("level.intermediate.label") }}</option>
-          <option value="senior">{{ t("level.senior.label") }}</option>
+          <option value="all">{{ t("quiz.selection?.allDifficulties") }}</option>
+          <option value="junior">{{ t("level.junior?.label") }}</option>
+          <option value="intermediate">{{ t("level.intermediate?.label") }}</option>
+          <option value="senior">{{ t("level.senior?.label") }}</option>
         </select>
 
         <!-- Sort Options -->
@@ -56,16 +56,16 @@
           v-model="sortBy"
           class="rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
         >
-          <option value="default">{{ t("quiz.selection.sortDefault") }}</option>
-          <option value="duration">{{ t("quiz.selection.sortDuration") }}</option>
-          <option value="questions">{{ t("quiz.selection.sortQuestions") }}</option>
+          <option value="default">{{ t("quiz.selection?.sortDefault") }}</option>
+          <option value="duration">{{ t("quiz.selection?.sortDuration") }}</option>
+          <option value="questions">{{ t("quiz.selection?.sortQuestions") }}</option>
         </select>
       </div>
 
       <!-- Level Selection - Professional Cards -->
       <div class="mb-12">
         <h2 class="mb-8 text-center text-2xl font-bold text-gray-900 dark:text-white">
-          {{ t("quiz.selection.chooseLevel") }}
+          {{ t("quiz.selection?.chooseLevel") }}
         </h2>
 
         <!-- No Results Message -->
@@ -84,7 +84,7 @@
             />
           </svg>
           <p class="mt-4 text-lg text-gray-600 dark:text-gray-400">
-            {{ t("quiz.selection.noResults") }}
+            {{ t("quiz.selection?.noResults") }}
           </p>
         </div>
 
@@ -176,7 +176,7 @@
                 <h4
                   class="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400"
                 >
-                  {{ t("quiz.metadata.testedSkills") }}
+                  {{ t("quiz.metadata?.testedSkills") }}
                 </h4>
                 <div class="flex flex-wrap gap-2">
                   <span
@@ -200,7 +200,7 @@
                       d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
                     />
                   </svg>
-                  <span>{{ t("quiz.metadata.duration", { minutes: quiz.duration }) }} </span>
+                  <span>{{ t("quiz.metadata?.duration", { minutes: quiz.duration }) }} </span>
                 </div>
                 <div class="flex items-center gap-1">
                   <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -211,7 +211,7 @@
                       d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
                     />
                   </svg>
-                  <span>{{ t("quiz.metadata.questions", { count: quiz.questions }) }} </span>
+                  <span>{{ t("quiz.metadata?.questions", { count: quiz.questions }) }} </span>
                 </div>
               </div>
 
@@ -230,7 +230,7 @@
                 ]"
                 @click.stop="selectLevel(quiz.level)"
               >
-                {{ t("quiz.metadata.startQuiz") }}
+                {{ t("quiz.metadata?.startQuiz") }}
               </button>
             </div>
           </div>
@@ -246,7 +246,7 @@
           @click="startQuiz"
         >
           <span class="relative z-10 flex items-center gap-3">
-            <span>{{ t("quiz.selection.startQuiz") }} </span>
+            <span>{{ t("quiz.selection?.startQuiz") }} </span>
             <svg
               class="h-5 w-5 transition-transform group-hover:translate-x-1"
               fill="none"
@@ -274,10 +274,10 @@
         >
           <div class="mb-3 text-3xl">🔘</div>
           <h3 class="mb-2 font-semibold text-gray-900 dark:text-white">
-            {{ t("quiz.features.multipleChoice.title") }}
+            {{ t("quiz.features.multipleChoice?.title") }}
           </h3>
           <p class="text-sm text-gray-600 dark:text-gray-400">
-            {{ t("quiz.features.multipleChoice.description") }}
+            {{ t("quiz.features.multipleChoice?.description") }}
           </p>
         </div>
 
@@ -286,10 +286,10 @@
         >
           <div class="mb-3 text-3xl">✏️</div>
           <h3 class="mb-2 font-semibold text-gray-900 dark:text-white">
-            {{ t("quiz.features.fillBlank.title") }}
+            {{ t("quiz.features.fillBlank?.title") }}
           </h3>
           <p class="text-sm text-gray-600 dark:text-gray-400">
-            {{ t("quiz.features.fillBlank.description") }}
+            {{ t("quiz.features.fillBlank?.description") }}
           </p>
         </div>
 
@@ -298,10 +298,10 @@
         >
           <div class="mb-3 text-3xl">☑️</div>
           <h3 class="mb-2 font-semibold text-gray-900 dark:text-white">
-            {{ t("quiz.features.multipleCheckbox.title") }}
+            {{ t("quiz.features.multipleCheckbox?.title") }}
           </h3>
           <p class="text-sm text-gray-600 dark:text-gray-400">
-            {{ t("quiz.features.multipleCheckbox.description") }}
+            {{ t("quiz.features.multipleCheckbox?.description") }}
           </p>
         </div>
 
@@ -310,10 +310,10 @@
         >
           <div class="mb-3 text-3xl">✅</div>
           <h3 class="mb-2 font-semibold text-gray-900 dark:text-white">
-            {{ t("quiz.features.trueFalse.title") }}
+            {{ t("quiz.features.trueFalse?.title") }}
           </h3>
           <p class="text-sm text-gray-600 dark:text-gray-400">
-            {{ t("quiz.features.trueFalse.description") }}
+            {{ t("quiz.features.trueFalse?.description") }}
           </p>
         </div>
       </div>
@@ -325,12 +325,12 @@
 import { ref, computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
-import { usePlanStore } from "@/stores/plan";
-import { useAuthStore } from "@/stores/auth";
-import LockedBadge from "@/components/paywall/LockedBadge.vue";
-import { canAccessLevel } from "@/types/plan/access";
-import { usePlanEntry } from "@/composables/usePlanEntry";
-import type { ExperienceLevel } from "@/types/plan/access";
+import { usePlanStore } from "../../../stores/plan";
+import { useAuthStore } from "../../../stores/auth";
+import LockedBadge from "../../../components/paywall/LockedBadge.vue";
+import { canAccessLevel } from "../../../types/plan/access";
+import { usePlanEntry } from "../../../composables/usePlanEntry";
+import type { ExperienceLevel } from "../../../types/plan/access";
 
 const { t } = useI18n();
 const router = useRouter();
@@ -402,7 +402,7 @@ const canUserAccessLevel = (level: ExperienceLevel): boolean => {
   return canAccessLevel(planStore.planTier, level);
 };
 
-const selectlevel = (level: ExperienceLevel) => {
+const selectLevel = (level: ExperienceLevel) => {
   if (canUserAccessLevel(level) || !authStore.isAuthenticated) {
     selectedLevel.value = level;
   }
@@ -417,7 +417,7 @@ const getLevelColor = (level: ExperienceLevel): string => {
   return colors[level];
 };
 
-const startquiz = async () => {
+const startQuiz = async () => {
   if (!selectedLevel.value) {
     return;
   }

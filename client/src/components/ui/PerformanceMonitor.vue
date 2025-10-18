@@ -9,7 +9,7 @@ import {
   XMarkIcon,
 } from "@heroicons/vue/24/outline";
 
-import { usePerformance } from "@/composables/usePerformance";
+import { usePerformance } from "../../composables/usePerformance";
 
 const showMonitor = ref(false);
 const performance = usePerformance();
@@ -37,7 +37,7 @@ const memoryPercentage = computed(() => {
   return (memoryUsage.value.usedJSHeapSize / memoryUsage.value.jsHeapSizeLimit) * 100;
 });
 
-const getmetricclass = (metric: string) => {
+const getMetricClass = (metric: string) => {
   const value = metrics.value[metric as keyof typeof metrics.value];
   if (value === null) return "metric-unknown";
   const thresholds: Record<string, number> = {
@@ -79,16 +79,16 @@ const formatBytes = (bytes: number): string => {
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`;
 };
 
-const togglemonitor = () => {
+const toggleMonitor = () => {
   showMonitor.value = !showMonitor.value;
 };
 
-const refreshmetrics = () => {
+const refreshMetrics = () => {
   performance.analyzeResourceTimings();
 };
 
-const exportmetrics = () => {
-  const exportdata = {
+const exportMetrics = () => {
+  const exportData = {
     timestamp: new Date().toISOString(),
     metrics: metrics.value,
     resourceTimings: resourceTimings.value,
@@ -189,7 +189,7 @@ onUnmounted(() => {
         <div class="resource-stats">
           <div class="stat-item">
             <span class="stat-label">Total Resources:</span>
-            <span class="stat-value">{{ resourceTimings.length }} </span>
+            <span class="stat-value">{{ resourceTimings.length ?? 0 }} </span>
           </div>
           <div class="stat-item">
             <span class="stat-label">Total Size:</span>
@@ -197,11 +197,11 @@ onUnmounted(() => {
           </div>
           <div class="stat-item">
             <span class="stat-label">Slow Resources:</span>
-            <span class="stat-value">{{ slowResources.length }} </span>
+            <span class="stat-value">{{ slowResources.length ?? 0 }} </span>
           </div>
           <div class="stat-item">
             <span class="stat-label">Large Resources:</span>
-            <span class="stat-value">{{ largeResources.length }} </span>
+            <span class="stat-value">{{ largeResources.length ?? 0 }} </span>
           </div>
         </div>
       </div>

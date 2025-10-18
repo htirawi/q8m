@@ -73,12 +73,12 @@
         <!-- Quick Stats -->
         <div class="faq-section__stats">
           <div class="faq-section__stat">
-            <span class="faq-section__stat-number">{{ filteredFaqs.length }} </span>
-            <span class="faq-section__stat-label">{{ t("home.faq.stats.questions") }} </span>
+            <span class="faq-section__stat-number">{{ filteredFaqs.length ?? 0 }} </span>
+            <span class="faq-section__stat-label">{{ t("home.faq.stats?.questions") }} </span>
           </div>
           <div class="faq-section__stat">
             <span class="faq-section__stat-number">{{ openFaqIds.size }} </span>
-            <span class="faq-section__stat-label">{{ t("home.faq.stats.open") }}</span>
+            <span class="faq-section__stat-label">{{ t("home.faq.stats?.open") }}</span>
           </div>
         </div>
       </div>
@@ -109,12 +109,12 @@
               d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.47-.881-6.08-2.33M15 12a3 3 0 11-6 0 3 3 0 016 0z"
             />
           </svg>
-          <h3 class="faq-section__no-results-title">{{ t("home.faq.noResults.title") }}</h3>
+          <h3 class="faq-section__no-results-title">{{ t("home.faq.noResults?.title") }}</h3>
           <p class="faq-section__no-results-description">
-            {{ t("home.faq.noResults.description") }}
+            {{ t("home.faq.noResults?.description") }}
           </p>
           <button type="button" class="faq-section__no-results-cta" @click="clearSearch">
-            {{ t("home.faq.noResults.cta") }}
+            {{ t("home.faq.noResults?.cta") }}
           </button>
         </div>
       </div>
@@ -122,8 +122,8 @@
       <!-- Support CTA -->
       <div class="faq-section__support">
         <div class="faq-section__support-content">
-          <h3 class="faq-section__support-title">{{ t("home.faq.support.title") }}</h3>
-          <p class="faq-section__support-description">{{ t("home.faq.support.description") }}</p>
+          <h3 class="faq-section__support-title">{{ t("home.faq.support?.title") }}</h3>
+          <p class="faq-section__support-description">{{ t("home.faq.support?.description") }}</p>
           <div class="faq-section__support-actions">
             <button
               type="button"
@@ -142,7 +142,7 @@
                   d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
                 />
               </svg>
-              {{ t("home.faq.support.chat") }}
+              {{ t("home.faq.support?.chat") }}
             </button>
             <button
               type="button"
@@ -161,7 +161,7 @@
                   d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
                 />
               </svg>
-              {{ t("home.faq.support.email") }}
+              {{ t("home.faq.support?.email") }}
             </button>
           </div>
         </div>
@@ -171,13 +171,13 @@
 </template>
 
 <script setup lang="ts">
-import type { IFaqSectionProps as Props } from "@/types/components/home";
+import type { IFaqSectionProps as Props } from "../../../types/components/home";
 import { ref, computed, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { HOMEPAGE_FAQS } from "@/data/home";
-import { useHomepageAnalytics } from "@/composables/useHomepageAnalytics";
-import SectionHeader from "@/components/ui/SectionHeader.vue";
-import FaqItem from "@/components/ui/FaqItem.vue";
+import { useHomepageAnalytics } from "../../../composables/useHomepageAnalytics";
+import SectionHeader from "../../../components/ui/SectionHeader.vue";
+import FaqItem from "../../../components/ui/FaqItem.vue";
 
 const props = withDefaults(defineProps<Props>(), {
   faqs: () => HOMEPAGE_FAQS,
@@ -228,7 +228,7 @@ const filteredFaqs = computed(() => {
   return filtered;
 });
 
-const getFaqCategory = (faqId: string, index: number): string => {
+const getFaqCategory = (faqId: string, _index: number): string => {
   // Map FAQ IDs to categories
   const categoryMap: Record<string, string> = {
     "faq-3": "features",
@@ -252,7 +252,7 @@ const handleToggle = (faqId: string): void => {
 
   const faq = props.faqs.find((f) => f.id === faqId);
   if (faq) {
-    trackFaqInteraction({
+    trackFaqInteraction?.({
       action: isOpen ? "collapse" : "expand",
       questionId: faqId,
       question: t(faq.qKey),
@@ -263,7 +263,10 @@ const handleToggle = (faqId: string): void => {
 const handleSearch = (): void => {
   // Auto-open first result if searching
   if (searchQuery.value.trim() && filteredFaqs.value.length > 0) {
-    openFaqIds.value.add(filteredFaqs.value[0].id);
+    const firstFaq = filteredFaqs.value[0];
+    if (firstFaq) {
+      openFaqIds.value.add(firstFaq.id);
+    }
   }
 };
 
@@ -276,14 +279,17 @@ const selectCategory = (categoryId: string): void => {
   selectedCategory.value = categoryId;
   // Auto-open first result when filtering
   if (filteredFaqs.value.length > 0) {
-    openFaqIds.value.add(filteredFaqs.value[0].id);
+    const firstFaq = filteredFaqs.value[0];
+    if (firstFaq) {
+      openFaqIds.value.add(firstFaq.id);
+    }
   }
 };
 
 // Watch for search changes to track analytics
 watch(searchQuery, (newQuery) => {
   if (newQuery.trim()) {
-    trackFaqInteraction({
+    trackFaqInteraction?.({
       action: "search",
       questionId: "search",
       question: newQuery,

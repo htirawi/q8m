@@ -100,12 +100,12 @@ const settings = ref({
   saveHistory: true,
 });
 
-const savesettings = () => {
+const saveSettings = () => {
   emit("update", settings.value);
   emit("close");
 };
 
-const resetdefaults = () => {
+const resetDefaults = () => {
   settings.value = {
     voiceEnabled: true,
     autoSpeak: false,
@@ -115,7 +115,7 @@ const resetdefaults = () => {
   };
 };
 
-const clearhistory = () => {
+const clearHistory = () => {
   if (confirm("Are you sure you want to clear all chat history?")) {
     // Clear history logic
     localStorage.removeItem("ai_chat_sessions");

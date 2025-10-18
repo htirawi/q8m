@@ -22,7 +22,7 @@
       <div class="user-menu__info">
         <span class="user-menu__name">{{ userName }} </span>
         <span v-if="!planStore.isPaid" class="user-menu__badge">
-          {{ $t("plans.names.free") }}
+          {{ $t("plans.names?.free") }}
         </span>
         <span v-else class="user-menu__badge user-menu__badge--premium">
           {{ planStore.planDisplayName }}
@@ -83,7 +83,7 @@
               class="user-menu__header-plan"
               :class="{ 'user-menu__header-plan--premium': planStore.isPaid }"
             >
-              {{ planStore.isPaid ? planStore.planDisplayName : $t("plans.names.free") }}
+              {{ planStore.isPaid ? planStore.planDisplayName : $t("plans.names?.free") }}
             </span>
           </div>
         </div>
@@ -127,7 +127,7 @@
                 {{ $t("common.new") }}
               </template>
               <template v-else-if="item.badge.type === 'count'">
-                {{ item.badge.value }}
+                {{ item.badge?.value ?? 0 }}
               </template>
               <!-- Dot badge renders as just a dot with no text -->
             </span>
@@ -255,7 +255,7 @@
             <div class="user-menu__shortcut">
               <kbd class="user-menu__kbd">1</kbd>
               <kbd class="user-menu__kbd">-</kbd>
-              <kbd class="user-menu__kbd">{{ menuItems.length }} </kbd>
+              <kbd class="user-menu__kbd">{{ menuItems.length ?? 0 }} </kbd>
               <span>{{ $t("keyboard.quickSelect") }} </span>
             </div>
             <div class="user-menu__shortcut">
@@ -277,9 +277,10 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, h, nextTick, watch } from "vue";
 import { useRouter } from "vue-router";
-import { useAuthStore } from "@/stores/auth";
-import { usePlanStore } from "@/stores/plan";
+import { useAuthStore } from "../../stores/auth";
+import { usePlanStore } from "../../stores/plan";
 import { useI18n } from "vue-i18n";
+import type { IMenuItem } from "../../types/components/layout";
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -314,14 +315,14 @@ const userEmail = computed(() => authStore.user?.email || "");
 const userInitials = computed(() => {
   const name = authStore.user?.name || authStore.user?.email || "U";
   const parts = name.split(/[\s@]/);
-  if (parts.length >= 2) {
+  if (parts.length >= 2 && parts[0]?.[0] && parts[1]?.[0]) {
     return (parts[0][0] + parts[1][0]).toUpperCase();
   }
   return name.substring(0, 2).toUpperCase();
 });
 
 // Menu Items Configuration
-const menuItems = computed(() => [
+const menuItems = computed<IMenuItem[]>(() => [
   {
     path: "/dashboard",
     label: "navigation.dashboard",
@@ -372,7 +373,7 @@ const checkMobile = () => {
   isMobile.value = window.innerWidth < 768;
 };
 
-const togglemenu = () => {
+const toggleMenu = () => {
   if (isOpen.value) {
     closeMenu();
   } else {
@@ -380,7 +381,7 @@ const togglemenu = () => {
   }
 };
 
-const openmenu = async () => {
+const openMenu = async () => {
   lastFocusedElement.value = document.activeElement as HTMLElement;
   isOpen.value = true;
 
@@ -409,7 +410,7 @@ const openmenu = async () => {
   }
 };
 
-const closemenu = () => {
+const closeMenu = () => {
   isOpen.value = false;
   screenReaderAnnouncement.value = t("a11y.menuClosed");
 
@@ -424,7 +425,7 @@ const closemenu = () => {
   }
 };
 
-const handleitemclick = (event: Event) => {
+const handleItemClick = (event: Event) => {
   // Track navigation
   const target = event.currentTarget as HTMLAnchorElement;
   const path = target.getAttribute("href") || "";
@@ -438,7 +439,7 @@ const handleitemclick = (event: Event) => {
   closeMenu();
 };
 
-const handleupgradeclick = (event: Event) => {
+const handleUpgradeClick = (event: Event) => {
   // Track analytics with enhanced details
   trackEvent("upgrade_clicked", {
     event_category: "monetization",
@@ -458,7 +459,7 @@ const handleupgradeclick = (event: Event) => {
   closeMenu();
 };
 
-const handlelogout = async () => {
+const handleLogout = async () => {
   if (isLoggingOut.value) return;
   try {
     isLoggingOut.value = true;
@@ -488,8 +489,12 @@ const handlelogout = async () => {
     });
 
     // Show error toast (assuming toast composable exists)
-    if (window.showToast) {
-      window.showToast({
+    if (
+      typeof window !== "undefined" &&
+      "showToast" in window &&
+      typeof (window as any).showToast === "function"
+    ) {
+      (window as any).showToast({
         type: "error",
         message: t("errors.logoutFailed"),
         action: {
@@ -501,7 +506,7 @@ const handlelogout = async () => {
   }
 };
 
-const handleclickoutside = (event: MouseEvent) => {
+const handleClickOutside = (event: MouseEvent) => {
   if (
     isOpen.value &&
     triggerRef.value &&
@@ -513,7 +518,7 @@ const handleclickoutside = (event: MouseEvent) => {
   }
 };
 
-const handletabkey = (event: KeyboardEvent) => {
+const handleTabKey = (event: KeyboardEvent) => {
   if (!menuRef.value) return;
 
   const focusableElements = menuRef.value.querySelectorAll<HTMLElement>(
@@ -609,14 +614,16 @@ const handleQuickAction = (event: KeyboardEvent) => {
   if (index < items.length) {
     const targetItem = items[index];
 
-    // Track quick action usage
-    trackEvent("quick_action_used", {
-      item_index: index,
-      item_label: targetItem.textContent?.trim() || "unknown",
-    });
+    if (targetItem) {
+      // Track quick action usage
+      trackEvent("quick_action_used", {
+        item_index: index,
+        item_label: targetItem.textContent?.trim() || "unknown",
+      });
 
-    // Trigger click on the item
-    targetItem.click();
+      // Trigger click on the item
+      targetItem.click();
+    }
   }
 };
 
@@ -630,7 +637,7 @@ const clearTypeAhead = () => {
   }
 };
 
-const handletypeahead = (event: KeyboardEvent) => {
+const handleTypeAhead = (event: KeyboardEvent) => {
   // Handle quick actions first (number keys 1-9)
   if (/^[1-9]$/.test(event.key)) {
     handleQuickAction(event);
@@ -696,7 +703,7 @@ const triggerHaptic = (style: "light" | "medium" | "heavy" = "light") => {
 
 // Mobile swipe gesture handlers
 const handleTouchStart = (event: TouchEvent) => {
-  if (!isMobile.value) return;
+  if (!isMobile.value || !event.touches[0]) return;
   touchStartY.value = event.touches[0].clientY;
   isDragging.value = true;
 
@@ -704,8 +711,8 @@ const handleTouchStart = (event: TouchEvent) => {
   triggerHaptic("light");
 };
 
-const handletouchmove = (event: TouchEvent) => {
-  if (!isMobile.value || !isDragging.value) return;
+const handleTouchMove = (event: TouchEvent) => {
+  if (!isMobile.value || !isDragging.value || !event.touches[0]) return;
   touchCurrentY.value = event.touches[0].clientY;
 
   // Only allow dragging down
@@ -720,7 +727,7 @@ const handletouchmove = (event: TouchEvent) => {
   }
 };
 
-const handletouchend = () => {
+const handleTouchEnd = () => {
   if (!isMobile.value || !isDragging.value) return;
 
   const deltaY = touchCurrentY.value - touchStartY.value;
@@ -746,13 +753,13 @@ const preloadMenu = () => {
 
   // Prefetch user data if needed
   if (!authStore.user) {
-    authStore.fetchUser();
+    authStore.initializeAuth();
   }
 
-  // Prefetch plan data if needed
-  if (!planStore.planTier) {
-    planStore.fetchPlan();
-  }
+  // Prefetch plan data if needed (plan store doesn't have fetchPlan method)
+  // if (!planStore.planTier) {
+  //   planStore.fetchPlan();
+  // }
 
   menuPreloaded.value = true;
 };

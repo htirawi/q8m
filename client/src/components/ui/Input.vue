@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, toRefs } from "vue";
 
-import type { InputProps } from "@/types/ui/component-props";
+import type { InputProps } from "../../types/ui/component-props";
 
 /**
  * Input Component
@@ -57,19 +57,18 @@ const inputClasses = computed(() => {
   return baseClasses.join(" ");
 });
 
-const handleinput = (event: Event) => {
+const handleInput = (event: Event) => {
   const target = event.target as HTMLInputElement;
   const value = type.value === "number" ? Number(target.value) : target.value;
-  valuetype.valueNumber;
   emit("update:modelValue", value);
   emit("input", event);
 };
 
-const handleblur = (event: FocusEvent) => {
+const handleBlur = (event: FocusEvent) => {
   emit("blur", event);
 };
 
-const handlefocus = (event: FocusEvent) => {
+const handleFocus = (event: FocusEvent) => {
   emit("focus", event);
 };
 </script>

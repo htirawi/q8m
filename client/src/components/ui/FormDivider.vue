@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { IFormDividerProps } from "@/types/components/ui";
+import type { IFormDividerProps } from "../../types/components/ui";
 
 /**
  * FormDivider Component

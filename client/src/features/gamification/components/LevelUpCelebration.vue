@@ -157,9 +157,11 @@
 </template>
 
 <script setup lang="ts">
-import type { IReward, ILevelUpCelebrationProps as Props } from "@/types/components/gamification";
+import type {
+  /* IReward, */ ILevelUpCelebrationProps as Props,
+} from "../../../types/components/gamification";
 import { ref, watch, onMounted } from "vue";
-import { useConfetti } from "@/composables/useConfetti";
+import { useConfetti } from "../../../composables/useConfetti";
 
 const props = withDefaults(defineProps<Props>(), {
   show: false,
@@ -238,7 +240,7 @@ function share(platform: string) {
   }
 }
 
-function getsparklestyle(index: number) {
+function getSparkleStyle(_index: number) {
   const randomX = Math.random() * 100;
   const randomY = Math.random() * 100;
   const randomDelay = Math.random() * 2;

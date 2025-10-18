@@ -14,7 +14,7 @@ export function useStreak() {
 
   const progressToNextMilestone = computed(() => {
     const current = streakStore.streak.currentStreak;
-    const next = nextMilestone.value;
+    const next = nextMilestone.value ?? 0;
     const previous = STREAK_MILESTONES.find((m) => m <= current) || 0;
     const range = next - previous;
     const progress = current - previous;
@@ -22,7 +22,7 @@ export function useStreak() {
   });
 
   const daysUntilNextMilestone = computed(() => {
-    return nextMilestone.value - streakStore.streak.currentStreak;
+    return (nextMilestone.value ?? 0) - streakStore.streak.currentStreak;
   });
 
   const achievedMilestones = computed(() => {
@@ -88,7 +88,7 @@ export function useStreak() {
   });
 
   const canBuyFreezeWithCoins = computed(() => {
-    return streakStore.coins.total >= freezeCostInCoins;
+    return streakStore.coins.total ?? 0 >= freezeCostInCoins;
   });
 
   const freezesRemaining = computed(() => {

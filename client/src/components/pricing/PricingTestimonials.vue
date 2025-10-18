@@ -11,10 +11,10 @@ defineOptions({
     <div class="pricing-testimonials__container">
       <div class="pricing-testimonials__header">
         <h2 id="testimonials-title" class="pricing-testimonials__title">
-          {{ $t("pricing.testimonials.title") }}
+          {{ $t("pricing.testimonials?.title") }}
         </h2>
         <p class="pricing-testimonials__subtitle">
-          {{ $t("pricing.testimonials.subtitle") }}
+          {{ $t("pricing.testimonials?.subtitle") }}
         </p>
       </div>
 
@@ -25,7 +25,7 @@ defineOptions({
             <StarIcon v-for="i in 5" :key="i" class="testimonial-card__star" aria-hidden="true" />
           </div>
           <blockquote class="testimonial-card__quote">
-            {{ $t("pricing.testimonials.items.sarah.quote") }}
+            {{ $t("pricing.testimonials.items.sarah?.quote") }}
           </blockquote>
           <div class="testimonial-card__author">
             <div class="testimonial-card__avatar">
@@ -33,11 +33,11 @@ defineOptions({
             </div>
             <div class="testimonial-card__author-info">
               <cite class="testimonial-card__name">{{
-                $t("pricing.testimonials.items.sarah.name")
+                $t("pricing.testimonials.items.sarah?.name")
               }}</cite>
               <p class="testimonial-card__role">
-                {{ $t("pricing.testimonials.items.sarah.role") }} at
-                {{ $t("pricing.testimonials.items.sarah.company") }}
+                {{ $t("pricing.testimonials.items.sarah?.role") }} at
+                {{ $t("pricing.testimonials.items.sarah?.company") }}
               </p>
             </div>
           </div>
@@ -50,7 +50,7 @@ defineOptions({
             <StarIcon v-for="i in 5" :key="i" class="testimonial-card__star" aria-hidden="true" />
           </div>
           <blockquote class="testimonial-card__quote">
-            {{ $t("pricing.testimonials.items.michael.quote") }}
+            {{ $t("pricing.testimonials.items.michael?.quote") }}
           </blockquote>
           <div class="testimonial-card__author">
             <div class="testimonial-card__avatar">
@@ -58,13 +58,13 @@ defineOptions({
             </div>
             <div class="testimonial-card__author-info">
               <cite class="testimonial-card__name"
-                >{{ $t("pricing.testimonials.items.michael.name") }}
+                >{{ $t("pricing.testimonials.items.michael?.name") }}
               </cite>
               <p class="testimonial-card__role">
-                {{ $t("pricing.testimonials.items.michael.role") }}
+                {{ $t("pricing.testimonials.items.michael?.role") }}
 
                 at
-                {{ $t("pricing.testimonials.items.michael.company") }}
+                {{ $t("pricing.testimonials.items.michael?.company") }}
               </p>
             </div>
           </div>
@@ -76,7 +76,7 @@ defineOptions({
             <StarIcon v-for="i in 5" :key="i" class="testimonial-card__star" aria-hidden="true" />
           </div>
           <blockquote class="testimonial-card__quote">
-            {{ $t("pricing.testimonials.items.emma.quote") }}
+            {{ $t("pricing.testimonials.items.emma?.quote") }}
           </blockquote>
           <div class="testimonial-card__author">
             <div class="testimonial-card__avatar">
@@ -84,11 +84,11 @@ defineOptions({
             </div>
             <div class="testimonial-card__author-info">
               <cite class="testimonial-card__name">{{
-                $t("pricing.testimonials.items.emma.name")
+                $t("pricing.testimonials.items.emma?.name")
               }}</cite>
               <p class="testimonial-card__role">
-                {{ $t("pricing.testimonials.items.emma.role") }} at
-                {{ $t("pricing.testimonials.items.emma.company") }}
+                {{ $t("pricing.testimonials.items.emma?.role") }} at
+                {{ $t("pricing.testimonials.items.emma?.company") }}
               </p>
             </div>
           </div>

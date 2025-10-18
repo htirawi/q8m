@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
-import type { HelperTextProps } from "@/types/ui/component-props";
+import type { HelperTextProps } from "../../types/ui/component-props";
 
 const props = withDefaults(defineProps<HelperTextProps>(), {
   ariaLive: "polite",

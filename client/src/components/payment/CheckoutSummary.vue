@@ -2,8 +2,8 @@
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { ShieldCheckIcon } from "@heroicons/vue/24/outline";
-import LoadingSpinner from "@/components/ui/LoadingSpinner.vue";
-import type { CheckoutSummaryProps } from "@/types/ui/component-props";
+import LoadingSpinner from "../../components/ui/LoadingSpinner.vue";
+import type { CheckoutSummaryProps } from "../../types/ui/component-props";
 
 const props = defineProps<CheckoutSummaryProps>();
 
@@ -26,7 +26,7 @@ const billingCycleText = computed(() => {
 
       <div class="summary-items">
         <div class="summary-item">
-          <span class="item-label">{{ selectedPlan.name }} </span>
+          <span class="item-label">{{ selectedPlan.name ?? "" }} </span>
           <span class="item-value">{{ displayPrice }} </span>
         </div>
 
@@ -59,7 +59,7 @@ const billingCycleText = computed(() => {
         :class="{ 'checkout-button--loading': isProcessing }"
       >
         <LoadingSpinner v-if="isProcessing" size="sm" color="white" class="mr-2" />
-        {{ isProcessing ? $t("checkout.processing") : $t("checkout.completeOrder")$t }}
+        {{ isProcessing ? $t("checkout.processing") : $t("checkout.completeOrder") }}
       </button>
 
       <p class="security-note">

@@ -38,10 +38,10 @@
         </svg>
         <div>
           <h3 class="font-semibold text-blue-900 dark:text-blue-200">
-            {{ personalizedMessage.title }}
+            {{ personalizedMessage.title ?? "" }}
           </h3>
           <p class="mt-1 text-sm text-blue-700 dark:text-blue-300">
-            {{ personalizedMessage.message }}
+            {{ personalizedMessage.message ?? "" }}
           </p>
         </div>
       </div>
@@ -61,7 +61,7 @@
           <div class="mb-2 flex items-center justify-between">
             <span
               class="inline-flex items-center rounded px-2 py-1 text-xs font-semibold"
-              :class="getLevelBadgeClass(quiz.level)"
+              :class="getLevelBadgeClass(quiz.level ?? 0)"
             >
               {{ t(`level.${quiz.level}.label`) }}
             </span>
@@ -73,15 +73,15 @@
             </span>
           </div>
           <h4 class="mb-2 font-semibold text-gray-900 dark:text-white">
-            {{ quiz.title }}
+            {{ quiz.title ?? "" }}
           </h4>
           <p class="mb-3 text-sm text-gray-600 dark:text-gray-400">
-            {{ quiz.description }}
+            {{ quiz.description ?? "" }}
           </p>
           <button
             type="button"
             class="w-full rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
-            @click="startQuiz(quiz.level)"
+            @click="startQuiz(quiz.level ?? 0)"
           >
             {{ t("recommendations.startQuiz") }}
           </button>
@@ -105,7 +105,7 @@
             <div class="flex-1">
               <div class="flex items-center gap-2">
                 <h4 class="font-semibold text-gray-900 dark:text-white">
-                  {{ topic.title }}
+                  {{ topic.title ?? "" }}
                 </h4>
                 <span
                   class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold"
@@ -165,7 +165,7 @@
             <div class="flex-1 pb-6">
               <div class="flex items-center justify-between">
                 <h4 class="font-semibold text-gray-900 dark:text-white">
-                  {{ step.title }}
+                  {{ step.title ?? "" }}
                 </h4>
                 <span
                   v-if="step.current"
@@ -175,7 +175,7 @@
                 </span>
               </div>
               <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                {{ step.description }}
+                {{ step.description ?? "" }}
               </p>
               <button
                 v-if="step.current"
@@ -214,7 +214,7 @@
             </svg>
             <div>
               <h4 class="text-sm font-semibold text-yellow-900 dark:text-yellow-200">
-                {{ tip.title }}
+                {{ tip.title ?? "" }}
               </h4>
               <p class="mt-1 text-xs text-yellow-700 dark:text-yellow-300">
                 {{ tip.tip }}
@@ -228,7 +228,11 @@
 </template>
 
 <script setup lang="ts">
-import type { ILearningStep, ILearningPath, IQuickTip } from "@/types/components/recommendations";
+import type {
+  ILearningStep,
+  ILearningPath,
+  IQuickTip,
+} from "../../types/components/recommendations";
 import { ref, computed, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
@@ -237,7 +241,7 @@ import type {
   RecommendedQuiz,
   StudyTopic,
   LevelStatsMap,
-} from "@/types/quiz-analytics";
+} from "../../types/quiz-analytics";
 
 const { t } = useI18n();
 const router = useRouter();
@@ -277,7 +281,7 @@ const personalizedMessage = computed(() => {
   }
 });
 
-const getlevelbadgeclass = (level: string) => {
+const getLevelBadgeClass = (level: string) => {
   const classes = {
     junior: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
     intermediate: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200",
@@ -286,7 +290,7 @@ const getlevelbadgeclass = (level: string) => {
   return classes[level as keyof typeof classes] || "bg-gray-100 text-gray-800";
 };
 
-const getrecommendationbadgeclass = (reason: string) => {
+const getRecommendationBadgeClass = (reason: string) => {
   const classes = {
     weak_area: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300",
     next_level: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",
@@ -296,7 +300,7 @@ const getrecommendationbadgeclass = (reason: string) => {
   return classes[reason as keyof typeof classes] || "bg-gray-100 text-gray-700";
 };
 
-const getprioritybadgeclass = (priority: string) => {
+const getPriorityBadgeClass = (priority: string) => {
   const classes = {
     high: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300",
     medium: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300",
@@ -305,7 +309,7 @@ const getprioritybadgeclass = (priority: string) => {
   return classes[priority as keyof typeof classes] || "bg-gray-100 text-gray-700";
 };
 
-const getpriorityborderclass = (priority: string) => {
+const getPriorityBorderClass = (priority: string) => {
   const classes = {
     high: "border-red-500",
     medium: "border-yellow-500",
@@ -314,7 +318,7 @@ const getpriorityborderclass = (priority: string) => {
   return classes[priority as keyof typeof classes] || "border-gray-500";
 };
 
-const generaterecommendations = () => {
+const generateRecommendations = () => {
   if (history.value.length === 0) {
     // New user recommendations
     recommendedQuizzes.value = [
@@ -343,11 +347,13 @@ const generaterecommendations = () => {
       {
         id: "1",
         title: t("recommendations.tips.startEasy"),
+        description: t("recommendations.tips.startEasyDesc"),
         tip: t("recommendations.tips.startEasyDesc"),
       },
       {
         id: "2",
         title: t("recommendations.tips.consistency"),
+        description: t("recommendations.tips.consistencyDesc"),
         tip: t("recommendations.tips.consistencyDesc"),
       },
     ];
@@ -380,7 +386,6 @@ const generaterecommendations = () => {
 
   // Generate quiz recommendations
   const quizRecs: RecommendedQuiz[] = [];
-  GeneratequizrecommendationsconstquizRecs;
 
   // If struggling with a level, recommend practice
   Object.entries(levelStats).forEach(([level, stats]) => {
@@ -434,7 +439,6 @@ const generaterecommendations = () => {
 
   // Generate study topic recommendations
   const topics: StudyTopic[] = [];
-  Generatestudytopicrecommendationsconsttopics;
 
   if (juniorStats && juniorStats.avgScore < 60 && juniorStats.attempts > 0) {
     topics.push({
@@ -464,8 +468,10 @@ const generaterecommendations = () => {
 
   // Generate learning path
   learningPath.value = {
+    name: t("recommendations.path.name") || "Your Learning Path",
     steps: [
       {
+        id: "step1",
         title: t("recommendations.path.step1"),
         description: t("recommendations.path.step1Desc"),
         completed: juniorStats ? juniorStats.avgScore >= 70 : false,
@@ -473,6 +479,7 @@ const generaterecommendations = () => {
         action: "junior_quiz",
       },
       {
+        id: "step2",
         title: t("recommendations.path.step2"),
         description: t("recommendations.path.step2Desc"),
         completed: intermediateStats ? intermediateStats.avgScore >= 70 : false,
@@ -483,6 +490,7 @@ const generaterecommendations = () => {
         action: "intermediate_quiz",
       },
       {
+        id: "step3",
         title: t("recommendations.path.step3"),
         description: t("recommendations.path.step3Desc"),
         completed: seniorStats ? seniorStats.avgScore >= 70 : false,
@@ -505,6 +513,7 @@ const generaterecommendations = () => {
     tips.push({
       id: "tip1",
       title: t("recommendations.tips.reviewWrong"),
+      description: t("recommendations.tips.reviewWrongDesc"),
       tip: t("recommendations.tips.reviewWrongDesc"),
     });
   }
@@ -513,6 +522,7 @@ const generaterecommendations = () => {
     tips.push({
       id: "tip2",
       title: t("recommendations.tips.takeMore"),
+      description: t("recommendations.tips.takeMoreDesc"),
       tip: t("recommendations.tips.takeMoreDesc"),
     });
   }
@@ -520,12 +530,12 @@ const generaterecommendations = () => {
   quickTips.value = tips;
 };
 
-const refreshrecommendations = () => {
+const refreshRecommendations = () => {
   loadHistory();
   generateRecommendations();
 };
 
-const loadhistory = () => {
+const loadHistory = () => {
   try {
     const historyData = localStorage.getItem("quiz_history");
     if (historyData) {
@@ -536,16 +546,16 @@ const loadhistory = () => {
   }
 };
 
-const startquiz = (level: string) => {
+const startQuiz = (level: string) => {
   router.push(`/en/quiz/${level}`);
 };
 
-const startstudying = (difficulty: string) => {
+const startStudying = (difficulty: string) => {
   router.push(`/en/study/${difficulty}`);
 };
 
-const startlearningstep = (step: ILearningStep) => {
-  if (step.action.includes("quiz")) {
+const startLearningStep = (step: ILearningStep) => {
+  if (step.action && step.action.includes("quiz")) {
     const level = step.action.replace("_quiz", "");
     startQuiz(level);
   }

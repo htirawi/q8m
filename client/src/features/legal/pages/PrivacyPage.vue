@@ -27,14 +27,14 @@ const sections = [
         <div class="header-content">
           <div class="breadcrumb">
             <router-link :to="{ name: 'home' }" class="breadcrumb-link">
-              {{ $t("legal.breadcrumb.home") }}
+              {{ $t("legal.breadcrumb?.home") }}
             </router-link>
             <span class="breadcrumb-separator">/</span>
-            <span class="breadcrumb-current">{{ $t("legal.breadcrumb.privacy") }} </span>
+            <span class="breadcrumb-current">{{ $t("legal.breadcrumb?.privacy") }} </span>
           </div>
 
-          <h1 class="privacy-title">{{ $t("legal.privacy.title") }}</h1>
-          <p class="privacy-subtitle">{{ $t("legal.privacy.subtitle") }}</p>
+          <h1 class="privacy-title">{{ $t("legal.privacy?.title") }}</h1>
+          <p class="privacy-subtitle">{{ $t("legal.privacy?.subtitle") }}</p>
 
           <div class="last-updated">
             <svg
@@ -47,7 +47,7 @@ const sections = [
               <circle cx="12" cy="12" r="10" />
               <polyline points="12,6 12,12 16,14" />
             </svg>
-            {{ $t("legal.privacy.lastUpdated") }}: {{ lastUpdated }}
+            {{ $t("legal.privacy?.lastUpdated") }}: {{ lastUpdated }}
           </div>
         </div>
       </div>
@@ -60,7 +60,7 @@ const sections = [
           <!-- Table of Contents -->
           <div class="toc-sidebar">
             <div class="toc-card">
-              <h3 class="toc-title">{{ $t("legal.privacy.toc.title") }}</h3>
+              <h3 class="toc-title">{{ $t("legal.privacy.toc?.title") }}</h3>
               <nav class="toc-nav">
                 <a
                   v-for="section in sections"
@@ -79,57 +79,59 @@ const sections = [
             <div class="privacy-card">
               <!-- Introduction -->
               <section id="introduction" class="privacy-section">
-                <h2 class="section-title">{{ $t("legal.privacy.introduction.title") }}</h2>
+                <h2 class="section-title">{{ $t("legal.privacy.introduction?.title") }}</h2>
                 <div class="section-content">
-                  <p>{{ $t("legal.privacy.introduction.content") }}</p>
+                  <p>{{ $t("legal.privacy.introduction?.content") }}</p>
                 </div>
               </section>
 
               <!-- Information We Collect -->
               <section id="information-collection" class="privacy-section">
-                <h2 class="section-title">{{ $t("legal.privacy.informationCollection.title") }}</h2>
+                <h2 class="section-title">
+                  {{ $t("legal.privacy.informationCollection?.title") }}
+                </h2>
                 <div class="section-content">
                   <h3 class="subsection-title">
-                    {{ $t("legal.privacy.informationCollection.personal.title") }}
+                    {{ $t("legal.privacy.informationCollection.personal?.title") }}
                   </h3>
-                  <p>{{ $t("legal.privacy.informationCollection.personal.content") }}</p>
+                  <p>{{ $t("legal.privacy.informationCollection.personal?.content") }}</p>
                   <ul class="privacy-list">
-                    <li>{{ $t("legal.privacy.informationCollection.personal.name") }}</li>
-                    <li>{{ $t("legal.privacy.informationCollection.personal.email") }}</li>
-                    <li>{{ $t("legal.privacy.informationCollection.personal.profile") }}</li>
+                    <li>{{ $t("legal.privacy.informationCollection.personal?.name") }}</li>
+                    <li>{{ $t("legal.privacy.informationCollection.personal?.email") }}</li>
+                    <li>{{ $t("legal.privacy.informationCollection.personal?.profile") }}</li>
                   </ul>
 
                   <h3 class="subsection-title">
-                    {{ $t("legal.privacy.informationCollection.usage.title") }}
+                    {{ $t("legal.privacy.informationCollection.usage?.title") }}
                   </h3>
-                  <p>{{ $t("legal.privacy.informationCollection.usage.content") }}</p>
+                  <p>{{ $t("legal.privacy.informationCollection.usage?.content") }}</p>
                   <ul class="privacy-list">
-                    <li>{{ $t("legal.privacy.informationCollection.usage.logs") }}</li>
-                    <li>{{ $t("legal.privacy.informationCollection.usage.device") }}</li>
-                    <li>{{ $t("legal.privacy.informationCollection.usage.cookies") }}</li>
+                    <li>{{ $t("legal.privacy.informationCollection.usage?.logs") }}</li>
+                    <li>{{ $t("legal.privacy.informationCollection.usage?.device") }}</li>
+                    <li>{{ $t("legal.privacy.informationCollection.usage?.cookies") }}</li>
                   </ul>
                 </div>
               </section>
 
               <!-- How We Use Information -->
               <section id="information-usage" class="privacy-section">
-                <h2 class="section-title">{{ $t("legal.privacy.informationUsage.title") }}</h2>
+                <h2 class="section-title">{{ $t("legal.privacy.informationUsage?.title") }}</h2>
                 <div class="section-content">
-                  <p>{{ $t("legal.privacy.informationUsage.content") }}</p>
+                  <p>{{ $t("legal.privacy.informationUsage?.content") }}</p>
                   <ul class="privacy-list">
-                    <li>{{ $t("legal.privacy.informationUsage.service") }}</li>
-                    <li>{{ $t("legal.privacy.informationUsage.communication") }}</li>
-                    <li>{{ $t("legal.privacy.informationUsage.improvement") }}</li>
-                    <li>{{ $t("legal.privacy.informationUsage.security") }}</li>
+                    <li>{{ $t("legal.privacy.informationUsage?.service") }}</li>
+                    <li>{{ $t("legal.privacy.informationUsage?.communication") }}</li>
+                    <li>{{ $t("legal.privacy.informationUsage?.improvement") }}</li>
+                    <li>{{ $t("legal.privacy.informationUsage?.security") }}</li>
                   </ul>
                 </div>
               </section>
 
               <!-- Information Sharing -->
               <section id="information-sharing" class="privacy-section">
-                <h2 class="section-title">{{ $t("legal.privacy.informationSharing.title") }}</h2>
+                <h2 class="section-title">{{ $t("legal.privacy.informationSharing?.title") }}</h2>
                 <div class="section-content">
-                  <p>{{ $t("legal.privacy.informationSharing.content") }}</p>
+                  <p>{{ $t("legal.privacy.informationSharing?.content") }}</p>
                   <div class="highlight-box">
                     <svg
                       class="highlight-icon"
@@ -142,7 +144,7 @@ const sections = [
                       <circle cx="12" cy="12" r="10" />
                     </svg>
                     <p class="highlight-text">
-                      {{ $t("legal.privacy.informationSharing.noSell") }}
+                      {{ $t("legal.privacy.informationSharing?.noSell") }}
                     </p>
                   </div>
                 </div>
@@ -150,49 +152,49 @@ const sections = [
 
               <!-- Data Security -->
               <section id="data-security" class="privacy-section">
-                <h2 class="section-title">{{ $t("legal.privacy.dataSecurity.title") }}</h2>
+                <h2 class="section-title">{{ $t("legal.privacy.dataSecurity?.title") }}</h2>
                 <div class="section-content">
-                  <p>{{ $t("legal.privacy.dataSecurity.content") }}</p>
+                  <p>{{ $t("legal.privacy.dataSecurity?.content") }}</p>
                   <ul class="privacy-list">
-                    <li>{{ $t("legal.privacy.dataSecurity.encryption") }}</li>
-                    <li>{{ $t("legal.privacy.dataSecurity.access") }}</li>
-                    <li>{{ $t("legal.privacy.dataSecurity.monitoring") }}</li>
+                    <li>{{ $t("legal.privacy.dataSecurity?.encryption") }}</li>
+                    <li>{{ $t("legal.privacy.dataSecurity?.access") }}</li>
+                    <li>{{ $t("legal.privacy.dataSecurity?.monitoring") }}</li>
                   </ul>
                 </div>
               </section>
 
               <!-- Your Rights -->
               <section id="your-rights" class="privacy-section">
-                <h2 class="section-title">{{ $t("legal.privacy.yourRights.title") }}</h2>
+                <h2 class="section-title">{{ $t("legal.privacy.yourRights?.title") }}</h2>
                 <div class="section-content">
-                  <p>{{ $t("legal.privacy.yourRights.content") }}</p>
+                  <p>{{ $t("legal.privacy.yourRights?.content") }}</p>
                   <ul class="privacy-list">
-                    <li>{{ $t("legal.privacy.yourRights.access") }}</li>
-                    <li>{{ $t("legal.privacy.yourRights.correction") }}</li>
-                    <li>{{ $t("legal.privacy.yourRights.deletion") }}</li>
-                    <li>{{ $t("legal.privacy.yourRights.portability") }}</li>
+                    <li>{{ $t("legal.privacy.yourRights?.access") }}</li>
+                    <li>{{ $t("legal.privacy.yourRights?.correction") }}</li>
+                    <li>{{ $t("legal.privacy.yourRights?.deletion") }}</li>
+                    <li>{{ $t("legal.privacy.yourRights?.portability") }}</li>
                   </ul>
                 </div>
               </section>
 
               <!-- Cookies -->
               <section id="cookies" class="privacy-section">
-                <h2 class="section-title">{{ $t("legal.privacy.cookies.title") }}</h2>
+                <h2 class="section-title">{{ $t("legal.privacy.cookies?.title") }}</h2>
                 <div class="section-content">
-                  <p>{{ $t("legal.privacy.cookies.content") }}</p>
+                  <p>{{ $t("legal.privacy.cookies?.content") }}</p>
                   <ul class="privacy-list">
-                    <li>{{ $t("legal.privacy.cookies.essential") }}</li>
-                    <li>{{ $t("legal.privacy.cookies.analytics") }}</li>
-                    <li>{{ $t("legal.privacy.cookies.preferences") }}</li>
+                    <li>{{ $t("legal.privacy.cookies?.essential") }}</li>
+                    <li>{{ $t("legal.privacy.cookies?.analytics") }}</li>
+                    <li>{{ $t("legal.privacy.cookies?.preferences") }}</li>
                   </ul>
                 </div>
               </section>
 
               <!-- Contact -->
               <section id="contact" class="privacy-section">
-                <h2 class="section-title">{{ $t("legal.privacy.contact.title") }}</h2>
+                <h2 class="section-title">{{ $t("legal.privacy.contact?.title") }}</h2>
                 <div class="section-content">
-                  <p>{{ $t("legal.privacy.contact.content") }}</p>
+                  <p>{{ $t("legal.privacy.contact?.content") }}</p>
                   <div class="contact-info">
                     <div class="contact-item">
                       <svg
@@ -208,7 +210,7 @@ const sections = [
                         <polyline points="22,6 12,13 2,6" />
                       </svg>
                       <span
-                        >{{ $t("legal.privacy.contact.email") }}
+                        >{{ $t("legal.privacy.contact?.email") }}
 
                         : privacy@q8m.com</span
                       >
@@ -226,14 +228,14 @@ const sections = [
     <div class="privacy-footer">
       <div class="container">
         <div class="footer-cta">
-          <h3 class="cta-title">{{ $t("legal.privacy.cta.title") }}</h3>
-          <p class="cta-subtitle">{{ $t("legal.privacy.cta.subtitle") }}</p>
+          <h3 class="cta-title">{{ $t("legal.privacy.cta?.title") }}</h3>
+          <p class="cta-subtitle">{{ $t("legal.privacy.cta?.subtitle") }}</p>
           <div class="cta-actions">
             <router-link :to="{ name: 'register' }" class="cta-button primary">
-              {{ $t("legal.privacy.cta.getStarted") }}
+              {{ $t("legal.privacy.cta?.getStarted") }}
             </router-link>
             <a href="mailto:privacy@q8m.com" class="cta-button secondary">
-              {{ $t("legal.privacy.cta.contact") }}
+              {{ $t("legal.privacy.cta?.contact") }}
             </a>
           </div>
         </div>

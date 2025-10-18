@@ -3,7 +3,7 @@
     <!-- Header -->
     <div class="mb-6 flex items-center justify-between">
       <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
-        {{ t("dashboard.progress.title") }}
+        {{ t("dashboard.progress?.title") }}
       </h2>
       <button
         type="button"
@@ -18,7 +18,7 @@
             d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
           />
         </svg>
-        {{ t("dashboard.progress.refresh") }}
+        {{ t("dashboard.progress?.refresh") }}
       </button>
     </div>
 
@@ -30,7 +30,7 @@
       >
         <div class="mb-2 flex items-center justify-between">
           <span class="text-sm font-medium text-blue-600 dark:text-blue-400">
-            {{ t("dashboard.progress.overallCompletion") }}
+            {{ t("dashboard.progress?.overallCompletion") }}
           </span>
           <svg
             class="h-5 w-5 text-blue-600 dark:text-blue-400"
@@ -61,7 +61,7 @@
       >
         <div class="mb-2 flex items-center justify-between">
           <span class="text-sm font-medium text-green-600 dark:text-green-400">
-            {{ t("dashboard.progress.questionsAnswered") }}
+            {{ t("dashboard.progress?.questionsAnswered") }}
           </span>
           <svg
             class="h-5 w-5 text-green-600 dark:text-green-400"
@@ -80,7 +80,7 @@
           {{ stats.questionsAnswered }}
         </div>
         <div class="text-xs text-green-600 dark:text-green-400">
-          {{ t("dashboard.progress.outOf", { total: stats.totalQuestions }) }}
+          {{ t("dashboard.progress?.outOf", { total: stats.totalQuestions }) }}
         </div>
       </div>
 
@@ -90,7 +90,7 @@
       >
         <div class="mb-2 flex items-center justify-between">
           <span class="text-sm font-medium text-purple-600 dark:text-purple-400">
-            {{ t("dashboard.progress.timeSpent") }}
+            {{ t("dashboard.progress?.timeSpent") }}
           </span>
           <svg
             class="h-5 w-5 text-purple-600 dark:text-purple-400"
@@ -108,7 +108,7 @@
           {{ formatTime(stats.totalTimeSpent) }}
         </div>
         <div class="text-xs text-purple-600 dark:text-purple-400">
-          {{ t("dashboard.progress.thisWeek") }}
+          {{ t("dashboard.progress?.thisWeek") }}
         </div>
       </div>
 
@@ -118,7 +118,7 @@
       >
         <div class="mb-2 flex items-center justify-between">
           <span class="text-sm font-medium text-orange-600 dark:text-orange-400">
-            {{ t("dashboard.progress.currentStreak") }}
+            {{ t("dashboard.progress?.currentStreak") }}
           </span>
           <svg
             class="h-5 w-5 text-orange-600 dark:text-orange-400"
@@ -133,10 +133,10 @@
           </svg>
         </div>
         <div class="text-3xl font-bold text-orange-900 dark:text-orange-100">
-          {{ stats.currentStreak }} {{ t("dashboard.progress.days") }}
+          {{ stats.currentStreak }} {{ t("dashboard.progress?.days") }}
         </div>
         <div class="text-xs text-orange-600 dark:text-orange-400">
-          {{ t("dashboard.progress.bestStreak", { days: stats.bestStreak }) }}
+          {{ t("dashboard.progress?.bestStreak", { days: stats.bestStreak }) }}
         </div>
       </div>
     </div>
@@ -144,7 +144,7 @@
     <!-- Progress by Difficulty -->
     <div class="mb-6">
       <h3 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
-        {{ t("dashboard.progress.byDifficulty") }}
+        {{ t("dashboard.progress?.byDifficulty") }}
       </h3>
       <div class="space-y-4">
         <div v-for="difficulty in difficulties" :key="difficulty.level">
@@ -158,7 +158,7 @@
               </span>
             </div>
             <span class="text-sm text-gray-600 dark:text-gray-400">
-              {{ difficulty.answered }} / {{ difficulty.total }}
+              {{ difficulty.answered }} / {{ difficulty.total ?? 0 }}
             </span>
           </div>
           <div class="h-2 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
@@ -175,7 +175,7 @@
     <!-- Recent Activity -->
     <div>
       <h3 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
-        {{ t("dashboard.progress.recentActivity") }}
+        {{ t("dashboard.progress?.recentActivity") }}
       </h3>
       <div class="space-y-3">
         <div
@@ -205,14 +205,16 @@
           </div>
           <div class="flex-1">
             <p class="text-sm font-medium text-gray-900 dark:text-white">
-              {{ activity.title }}
+              {{ activity.title ?? "" }}
             </p>
             <p class="text-xs text-gray-500 dark:text-gray-400">
               {{ formatRelativeTime(activity.timestamp) }}
             </p>
           </div>
           <div v-if="activity.score !== undefined" class="text-right">
-            <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ activity.score }}%</p>
+            <p class="text-sm font-semibold text-gray-900 dark:text-white">
+              {{ activity.score ?? 0 }}%
+            </p>
           </div>
         </div>
       </div>
@@ -223,7 +225,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
-import type { ProgressStats, DifficultyProgress, RecentActivity } from "@/types/quiz-analytics";
+import type { ProgressStats, DifficultyProgress, RecentActivity } from "../../types/quiz-analytics";
 
 const { t } = useI18n();
 
@@ -244,12 +246,12 @@ const difficulties = ref<DifficultyProgress[]>([
 
 const recentActivities = ref<RecentActivity[]>([]);
 
-const getdifficultyicon = (level: string) => {
+const getDifficultyIcon = (level: string) => {
   const icons = { easy: "🟢", medium: "🟡", hard: "🔴" };
   return icons[level as keyof typeof icons] || "⚪";
 };
 
-const getdifficultyclass = (level: string) => {
+const getDifficultyClass = (level: string) => {
   const classes = {
     easy: "text-green-600 dark:text-green-400",
     medium: "text-yellow-600 dark:text-yellow-400",
@@ -258,7 +260,7 @@ const getdifficultyclass = (level: string) => {
   return classes[level as keyof typeof classes] || "text-gray-600";
 };
 
-const getdifficultyprogressclass = (level: string) => {
+const getDifficultyProgressClass = (level: string) => {
   const classes = {
     easy: "bg-green-600 dark:bg-green-400",
     medium: "bg-yellow-600 dark:bg-yellow-400",
@@ -267,7 +269,7 @@ const getdifficultyprogressclass = (level: string) => {
   return classes[level as keyof typeof classes] || "bg-gray-600";
 };
 
-const getactivityiconclass = (type: string) => {
+const getActivityIconClass = (type: string) => {
   const baseClass = "flex h-10 w-10 items-center justify-center rounded-full";
   if (type === "quiz") {
     return `${baseClass}
@@ -279,7 +281,7 @@ const getactivityiconclass = (type: string) => {
  bg-purple-100 text-purple-600 dark:bg-purple-900/30; dark:text-purple-400`;
 };
 
-const formattime = (seconds: number) => {
+const formatTime = (seconds: number) => {
   const hours = Math.floor(seconds / 3600);
   const minutes = Math.floor((seconds % 3600) / 60);
 
@@ -289,7 +291,7 @@ const formattime = (seconds: number) => {
   return `${minutes}m`;
 };
 
-const formatrelativetime = (timestamp: number) => {
+const formatRelativeTime = (timestamp: number) => {
   const now = Date.now();
   const diff = now - timestamp;
   const hours = Math.floor(diff / (1000 * 60 * 60));
@@ -304,7 +306,7 @@ const formatrelativetime = (timestamp: number) => {
   return t("dashboard.progress.justNow");
 };
 
-const loadprogressstats = () => {
+const loadProgressStats = () => {
   // Load from localStorage
   const savedStats = localStorage.getItem("progress_stats");
   if (savedStats) {
@@ -340,8 +342,6 @@ const loadprogressstats = () => {
   stats.value.totalQuestions = totalQuestions || 100; // Default to 100 if no data
   stats.value.completionPercentage =
     totalQuestions > 0 ? Math.round((totalAnswered / totalQuestions) * 100) : 0;
-  Defaultto100ifnodatastats.value.completionPercentagetotalQuestions0Math
-    .roundtotalAnsweredtotalQuestions100;
 
   // Load recent activities
   const activities = localStorage.getItem("recent_activities");
@@ -367,7 +367,7 @@ const loadprogressstats = () => {
   });
 };
 
-const refreshstats = () => {
+const refreshStats = () => {
   loadProgressStats();
 };
 

@@ -145,7 +145,7 @@
               >
                 <span class="ai-chatbot__quick-action-icon">{{ action.icon }} </span>
                 <span class="ai-chatbot__quick-action-label">{{ action.label }} </span>
-                <span class="ai-chatbot__quick-action-desc">{{ action.description }}</span>
+                <span class="ai-chatbot__quick-action-desc">{{ action.description ?? "" }}</span>
               </button>
             </div>
           </div>
@@ -333,7 +333,7 @@
 
             <!-- Character count -->
             <span v-if="showCharCount" class="ai-chatbot__char-count">
-              {{ inputText.length }} / {{ maxChars }}
+              {{ inputText.length ?? 0 }} / {{ maxChars }}
             </span>
           </div>
 
@@ -436,6 +436,8 @@ const props = withDefaults(defineProps<Props>(), {
 
 // Emits
 const emit = defineEmits<{
+  open: [];
+  close: [];
   "message-sent": [message: IChatMessage];
   "context-changed": [context: IChatContext | null];
 }>();
@@ -552,7 +554,7 @@ const openChat = () => {
   });
 };
 
-const closechat = () => {
+const closeChat = () => {
   isOpen.value = false;
   emit("close");
 
@@ -562,7 +564,7 @@ const closechat = () => {
   });
 };
 
-const togglefullscreen = () => {
+const toggleFullscreen = () => {
   isFullscreen.value = !isFullscreen.value;
 
   analytics.track("ai_chat_fullscreen", {
@@ -570,7 +572,7 @@ const togglefullscreen = () => {
   });
 };
 
-const togglevoice = () => {
+const toggleVoice = () => {
   voiceActive.value = !voiceActive.value;
 
   if (voiceActive.value) {
@@ -580,7 +582,7 @@ const togglevoice = () => {
   }
 };
 
-const sendmessage = async () => {
+const sendMessage = async () => {
   if (!canSend.value) return;
   const messageText = inputText.value.trim();
   inputText.value = "";
@@ -623,7 +625,6 @@ const sendmessage = async () => {
     console.error("Error sending message:", error);
     // Add user-friendly error message
     const errorMessage = error instanceof Error ? error.message : "Unknown error";
-    Adduser - friendlyerrormessageconsterrorMessageerrorinstanceofErrorerror.message;
     let userFriendlyMessage = t("ai.errorSending");
 
     if (errorMessage.includes("401")) {
@@ -649,17 +650,17 @@ const sendmessage = async () => {
   }
 };
 
-const handlequickaction = (action: any) => {
+const handleQuickAction = (action: any) => {
   inputText.value = action.prompt;
   sendMessage();
 };
 
-const selectsuggestion = (suggestion: any) => {
+const selectSuggestion = (suggestion: any) => {
   inputText.value = suggestion.text;
   sendMessage();
 };
 
-const regeneratemessage = async (message: IChatMessage) => {
+const regenerateMessage = async (message: IChatMessage) => {
   const index = messages.value.findIndex((m) => m.id === message.id);
   if (index === -1) return;
 
@@ -674,26 +675,26 @@ const regeneratemessage = async (message: IChatMessage) => {
   }
 };
 
-const copymessage = (content: string) => {
+const copyMessage = (content: string) => {
   navigator.clipboard.writeText(content);
 
   // Show toast notification
   analytics.track("ai_message_copied");
 };
 
-const copycode = (code: string) => {
+const copyCode = (code: string) => {
   navigator.clipboard.writeText(code);
   analytics.track("ai_code_copied");
 };
 
-const speakmessage = (content: string) => {
+const speakMessage = (content: string) => {
   if ("speechSynthesis" in window) {
     const utterance = new SpeechSynthesisUtterance(content);
     speechSynthesis.speak(utterance);
   }
 };
 
-const togglereaction = (message: IChatMessage, type: string) => {
+const toggleReaction = (_message: IChatMessage, type: string) => {
   // Implementation for reactions
   analytics.track("ai_message_reaction", { type });
 };
@@ -702,19 +703,19 @@ const hasReaction = (message: IChatMessage, type: string): boolean => {
   return message.reactions?.some((r) => r.type === type && r.userReacted) || false;
 };
 
-const handleinput = () => {
+const handleInput = () => {
   // Auto-resize textarea
   if (inputField.value) {
     inputField.value.style.height = "auto";
-    inputfield.value.style.height = `${Math.min(inputField.value.scrollHeight, 120)}px`;
+    inputField.value.style.height = `${Math.min(inputField.value.scrollHeight, 120)}px`;
   }
 };
 
-const selectfile = () => {
+const selectFile = () => {
   fileInput.value?.click();
 };
 
-const handlefileselect = async (event: Event) => {
+const handleFileSelect = async (event: Event) => {
   const target = event.target as HTMLInputElement;
   const file = target.files?.[0];
 
@@ -767,12 +768,12 @@ const getFileLanguage = (filename: string): string => {
   return langMap[ext || ""] || "text";
 };
 
-const viewattachment = (attachment: IChatAttachment) => {
+const viewAttachment = (attachment: IChatAttachment) => {
   // Implementation for viewing attachments
   console.log("View attachment:", attachment);
 };
 
-const togglerecording = () => {
+const toggleRecording = () => {
   if (isRecording.value) {
     stopRecording();
   } else {
@@ -780,39 +781,39 @@ const togglerecording = () => {
   }
 };
 
-const startrecording = () => {
+const startRecording = () => {
   // Implementation for voice recording
   isRecording.value = true;
   analytics.track("ai_voice_recording_started");
 };
 
-const stoprecording = () => {
+const stopRecording = () => {
   // Implementation for voice recording
   isRecording.value = false;
   analytics.track("ai_voice_recording_stopped");
 };
 
-const startvoicerecognition = () => {
+const startVoiceRecognition = () => {
   // Implementation for voice recognition
   analytics.track("ai_voice_recognition_started");
 };
 
-const stopvoicerecognition = () => {
+const stopVoiceRecognition = () => {
   // Implementation for voice recognition
   analytics.track("ai_voice_recognition_stopped");
 };
 
-const clearcontext = () => {
+const clearContext = () => {
   currentContext.value = null;
   emit("context-changed", null);
 };
 
-const updatesettings = (settings: any) => {
+const updateSettings = (settings: any) => {
   // Update AI service settings
   console.log("Update settings:", settings);
 };
 
-const scrolltobottom = () => {
+const scrollToBottom = () => {
   nextTick(() => {
     if (messagesContainer.value) {
       messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight;
@@ -867,8 +868,10 @@ onMounted(() => {
   const sessions = aiService.getSessions();
   if (sessions.length > 0) {
     const latestSession = sessions[sessions.length - 1];
-    sessionId.value = latestSession.id;
-    messages.value = latestSession.messages;
+    if (latestSession) {
+      sessionId.value = latestSession.id;
+      messages.value = latestSession.messages;
+    }
   }
 
   // Set up keyboard shortcut
@@ -1464,7 +1467,7 @@ watch(
 }
 
 /* Mobile responsiveness */
-@media (width <= 640px) {
+@media (width <=640px) {
   .ai-chatbot__window {
     @apply fixed inset-0;
     @apply h-full w-full;

@@ -34,7 +34,7 @@
             <div class="flex items-center gap-1">
               <span>📚</span>
               <span
-                >{{ store.currentPath.totalQuestions }}
+                >{{ store.currentPath?.totalQuestions }}
 
                 Questions</span
               >
@@ -42,19 +42,19 @@
             <div class="flex items-center gap-1">
               <span>⏱️</span>
               <span
-                >{{ store.currentPath.estimatedHours }}
+                >{{ store.currentPath?.estimatedHours }}
 
                 Hours</span
               >
             </div>
             <div class="flex items-center gap-1">
               <span>📊</span>
-              <span class="capitalize">{{ store.currentPath.difficulty }} </span>
+              <span class="capitalize">{{ store.currentPath?.difficulty }} </span>
             </div>
             <div class="flex items-center gap-1">
               <span>👥</span>
               <span
-                >{{ store.currentPath.enrollmentCount }}
+                >{{ store.currentPath?.enrollmentCount }}
 
                 Enrolled</span
               >
@@ -110,8 +110,8 @@
 <script setup lang="ts">
 import { computed, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import { useLearningPathsStore } from "@/stores/learning-paths";
-import { useAuthStore } from "@/stores/auth";
+import { useLearningPathsStore } from "../../../stores/learning-paths";
+import { useAuthStore } from "../../../stores/auth";
 import ModuleList from "../components/ModuleList.vue";
 
 const router = useRouter();
@@ -129,7 +129,7 @@ const currentDescription = computed(() => {
   return store.currentPath?.description[locale === "ar" ? "ar" : "en"] || "";
 });
 
-const enrollinpath = async () => {
+const enrollInPath = async () => {
   if (!authStore.isAuthenticated) {
     const locale = route.params.locale || "en";
     router.push(`/${locale}/login`);
@@ -145,7 +145,7 @@ const enrollinpath = async () => {
   }
 };
 
-const continuelearning = () => {
+const continueLearning = () => {
   const locale = route.params.locale || "en";
   router.push(`/${locale}/paths/${route.params.slug}/learn`);
 };

@@ -2,10 +2,9 @@
 import type {
   IFriendCardProps as Props,
   IFriendCardEmits as Emits,
-} from "@/types/components/friends";
+} from "../../../types/components/friends";
 import { computed } from "vue";
-import { useFriends } from "@/composables/useFriends";
-import type { Friend } from "@/stores/friends";
+import { useFriends } from "../../../composables/useFriends";
 
 const props = withDefaults(defineProps<Props>(), {
   showActions: true,
@@ -19,24 +18,29 @@ const { getLevelColor, getLevelBadge, getLevelTitle, formatDate, getUserAvatar, 
 
 // Computed
 const avatar = computed(() => getUserAvatar(props.friend));
-const levelColor = computed(() => getLevelColor(props.friend.level));
-const levelBadge = computed(() => getLevelBadge(props.friend.level));
-const levelTitle = computed(() => getLevelTitle(props.friend.level));
+const levelColor = computed(() => getLevelColor(props.friend.level ?? 0));
+const levelBadge = computed(() => getLevelBadge(props.friend.level ?? 0));
+const levelTitle = computed(() => getLevelTitle(props.friend.level ?? 0));
 const avatarColor = computed(() => getAvatarColor(props.friend.name));
-const friendSinceText = computed(() =>
-  props.friend.friendSince ? formatDate(props.friend.friendSince) : "Recently"
-);
+const friendSinceText = computed(() => {
+  if (!props.friend.friendSince) return "Recently";
+  const date =
+    typeof props.friend.friendSince === "string"
+      ? new Date(props.friend.friendSince)
+      : props.friend.friendSince;
+  return formatDate(date);
+});
 
 // Methods
 const handleUnfriend = () => {
   emit("unfriend", props.friend._id);
 };
 
-const handleblock = () => {
+const handleBlock = () => {
   emit("block", props.friend._id);
 };
 
-const handleview = () => {
+const handleView = () => {
   emit("view", props.friend._id);
 };
 </script>
@@ -57,7 +61,7 @@ const handleview = () => {
             compact ? 'h-10 w-10 text-sm' : 'h-12 w-12 text-base',
           ]"
         >
-          {{ avatar.value }}
+          {{ avatar.value ?? 0 }}
         </div>
         <img
           v-else
@@ -74,7 +78,7 @@ const handleview = () => {
             class="truncate font-semibold text-gray-900 dark:text-white"
             :class="compact ? 'text-sm' : 'text-base'"
           >
-            {{ friend.name }}
+            {{ friend.name ?? "" }}
           </h3>
           <span :class="['text-sm', levelColor]" :title="levelTitle">
             {{ levelBadge }}
@@ -85,10 +89,10 @@ const handleview = () => {
           class="flex items-center gap-2 text-gray-600 dark:text-gray-400"
           :class="compact ? 'text-xs' : 'text-sm'"
         >
-          <span>Level {{ friend.level }} </span>
+          <span>Level {{ friend.level ?? 0 }} </span>
           <span>•</span>
           <span
-            >{{ friend.xp.toLocaleString() }}
+            >{{ friend.xp?.toLocaleString() }}
 
             XP</span
           >

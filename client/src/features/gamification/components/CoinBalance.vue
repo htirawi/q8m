@@ -241,8 +241,8 @@
 </template>
 
 <script setup lang="ts">
-import type { ICoinBalanceProps as Props } from "@/types/components/gamification";
-import { useStreak } from "@/composables/useStreak";
+import type { ICoinBalanceProps as Props } from "../../../types/components/gamification";
+import { useStreak } from "../../../composables/useStreak";
 
 const props = withDefaults(defineProps<Props>(), {
   variant: "card",

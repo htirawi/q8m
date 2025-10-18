@@ -3,9 +3,9 @@ import { ref, onMounted } from "vue";
 
 import { useRouter, useRoute } from "vue-router";
 
-import { useAuthStore } from "@/stores/auth";
-import { usePostLoginRouter } from "@/composables/usePostLoginRouter";
-import { useAuthRedirect } from "@/composables/useAuthRedirect";
+import { useAuthStore } from "../../../stores/auth";
+import { usePostLoginRouter } from "../../../composables/usePostLoginRouter";
+import { useAuthRedirect } from "../../../composables/useAuthRedirect";
 
 const router = useRouter();
 const route = useRoute();
@@ -69,8 +69,8 @@ function handleRetry() {
     <div class="callback-container">
       <div v-if="isLoading" class="loading-state">
         <div class="spinner"></div>
-        <h2 class="loading-title">{{ $t("auth.oauth.processing") }}</h2>
-        <p class="loading-subtitle">{{ $t("auth.oauth.pleaseWait") }}</p>
+        <h2 class="loading-title">{{ $t("auth.oauth?.processing") }}</h2>
+        <p class="loading-subtitle">{{ $t("auth.oauth?.pleaseWait") }}</p>
       </div>
 
       <div v-else-if="error" class="error-state">
@@ -81,10 +81,10 @@ function handleRetry() {
             <line x1="9" y1="9" x2="15" y2="15" />
           </svg>
         </div>
-        <h2 class="error-title">{{ $t("auth.oauth.error") }}</h2>
+        <h2 class="error-title">{{ $t("auth.oauth?.error") }}</h2>
         <p class="error-message">{{ error }}</p>
         <button @click="handleRetry" class="retry-button">
-          {{ $t("auth.oauth.tryAgain") }}
+          {{ $t("auth.oauth?.tryAgain") }}
         </button>
       </div>
 
@@ -95,8 +95,8 @@ function handleRetry() {
             <path d="M9 12l2 2 4-4" />
           </svg>
         </div>
-        <h2 class="success-title">{{ $t("auth.oauth.success") }}</h2>
-        <p class="success-message">{{ $t("auth.oauth.redirecting") }}</p>
+        <h2 class="success-title">{{ $t("auth.oauth?.success") }}</h2>
+        <p class="success-message">{{ $t("auth.oauth?.redirecting") }}</p>
       </div>
     </div>
   </div>

@@ -64,6 +64,7 @@ export class AIService {
   public isLoading = ref(false);
   public error = ref<string | null>(null);
   public streamingMessage = ref<string>("");
+  public isInitialized = ref(false);
 
   constructor(config?: Partial<IAIConfig>) {
     this.config = { ...DEFAULT_CONFIG, ...config };
@@ -86,12 +87,14 @@ export class AIService {
     // Test connection
     try {
       await this.testConnection();
+      this.isInitialized.value = true;
       analytics.track("ai_service_initialized", {
         provider: this.config.provider,
         model: this.config.model,
       });
     } catch (error) {
       console.error("AI service initialization failed:", error);
+      this.isInitialized.value = false;
       throw error;
     }
   }
@@ -135,7 +138,9 @@ export class AIService {
       }
     } catch (error: unknown) {
       this.error.value = error instanceof Error ? error.message : String(error);
-      analytics.trackError(error, { context: "ai_send_message" });
+      analytics.trackError(error instanceof Error ? error : String(error), {
+        context: "ai_send_message",
+      });
       throw error;
     } finally {
       this.isLoading.value = false;
@@ -295,10 +300,10 @@ Please provide detailed feedback on the user's answer including:
 
       return {
         id: this.generateId(),
-        userId: context?.userId || "",
+        userId: String(context?.userId || ""),
         type: "answer_analysis",
         context: { question, userAnswer, correctAnswer },
-        feedback: response.content,
+        feedback: String(response.content),
         timestamp: new Date(),
       };
     } catch (error: unknown) {
@@ -422,11 +427,11 @@ Please provide detailed feedback on the user's answer including:
     const assistantMessage: IChatMessage = {
       id: this.generateId(),
       role: "assistant",
-      content: response.content,
+      content: String(response.content),
       timestamp: new Date(),
       metadata: {
         model: this.config.model,
-        tokens: response.usage?.total_tokens,
+        tokens: (response.usage as { total_tokens?: number } | undefined)?.total_tokens,
       },
     };
 
@@ -558,23 +563,24 @@ Be specific with line numbers and provide actionable feedback.
   ): ISmartExplanation {
     // Parse the AI response into structured explanation
     // This is a simplified version - in production, use proper parsing
+    const content = String(response.content);
     return {
       id: this.generateId(),
       questionId,
       concept,
-      explanation: response.content,
+      explanation: content,
       difficulty,
       metadata: {
         generatedAt: new Date(),
         model: this.config.model!,
         confidence: 0.95,
-        readingTime: Math.ceil(response.content.split(" ").length / 200),
+        readingTime: Math.ceil(content.split(" ").length / 200),
       },
     };
   }
 
   private parseStudyPlanResponse(
-    response: Record<string, unknown>,
+    _response: Record<string, unknown>,
     userId: string,
     goal: string,
     timeCommitment: { weeks: number; hoursPerWeek: number }
@@ -636,7 +642,7 @@ Be specific with line numbers and provide actionable feedback.
   }
 
   private parseCodeAnalysisResponse(
-    response: Record<string, unknown>,
+    _response: Record<string, unknown>,
     code: string,
     language: string
   ): ICodeAnalysis {

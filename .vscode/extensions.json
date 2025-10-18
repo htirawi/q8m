@@ -1,14 +1,29 @@
 {
   "recommendations": [
+    // Essential for Vue 3
+    "vue.volar",
+
+    // Code Quality
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode",
+
+    // TailwindCSS
     "bradlc.vscode-tailwindcss",
+
+    // Testing
     "vitest.explorer",
+
+    // Error Visualization (CRITICAL for preventing type errors)
     "yoavbls.pretty-ts-errors",
     "usernamehw.errorlens",
+
+    // Developer Experience
     "christian-kohler.path-intellisense",
     "formulahendry.auto-rename-tag",
-    "streetsidesoftware.code-spell-checker"
+    "streetsidesoftware.code-spell-checker",
+    "lokalise.i18n-ally"
   ],
-  "unwantedRecommendations": []
+  "unwantedRecommendations": [
+    "octref.vetur"
+  ]
 }

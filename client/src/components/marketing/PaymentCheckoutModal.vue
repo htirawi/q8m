@@ -2,12 +2,12 @@
 import type {
   IPaymentCheckoutModalProps as IProps,
   IPaymentCheckoutModalEmits as IEmits,
-} from "@/types/components/marketing";
+} from "../../types/components/marketing";
 import { ref, computed, watch } from "vue";
 import { useI18n } from "vue-i18n";
-import { useCheckout } from "@/composables/useCheckout";
-import { useAnalytics } from "@/composables/useAnalytics";
-import type { PlanId, BillingCycle } from "@/types/pricing";
+import { useCheckout } from "../../composables/useCheckout";
+import { useAnalytics } from "../../composables/useAnalytics";
+import type { BillingCycle } from "../../types/pricing";
 
 const props = withDefaults(defineProps<IProps>(), {
   billing: "annual",
@@ -78,7 +78,7 @@ const handleClose = () => {
   emit("close");
 };
 
-const handlecheckout = async () => {
+const handleCheckout = async () => {
   if (!selectedPlan.value) return;
 
   if (hasSavedPayment.value && !useNewPaymentMethod.value) {
@@ -97,7 +97,7 @@ watch(
   () => [props.planId, props.billing],
   ([planId, billing]) => {
     if (planId && billing) {
-      selectPlan(planId as any, billing as BillingCycle);
+      selectPlan(planId as any, billing as BillingCycle as any);
     }
   },
   { immediate: true }
@@ -209,7 +209,7 @@ defineOptions({
                   />
                   <div class="checkout-modal__payment-details">
                     <span class="checkout-modal__payment-label">
-                      {{ t("pricing.payment.savedCard") }}
+                      {{ t("pricing.payment?.savedCard") }}
                     </span>
                     <span class="checkout-modal__payment-info">
                       •••• {{ savedPaymentMethods[0]?.last4 }}
@@ -229,7 +229,7 @@ defineOptions({
                     class="checkout-modal__radio"
                   />
                   <span class="checkout-modal__payment-label">
-                    {{ t("pricing.payment.newCard") }}
+                    {{ t("pricing.payment?.newCard") }}
                   </span>
                 </label>
               </div>
@@ -237,7 +237,7 @@ defineOptions({
               <!-- Payment provider placeholder (Stripe/PayPal/etc.) -->
               <div v-if="useNewPaymentMethod || !hasSavedPayment" class="checkout-modal__provider">
                 <p class="checkout-modal__provider-note">
-                  {{ t("pricing.payment.providerNote") }}
+                  {{ t("pricing.payment?.providerNote") }}
                 </p>
                 <!-- Placeholder for payment provider SDK integration -->
                 <div class="checkout-modal__provider-iframe">
@@ -272,7 +272,7 @@ defineOptions({
                 </svg>
               </div>
               <p class="checkout-modal__processing-text">
-                {{ t("pricing.payment.processing") }}
+                {{ t("pricing.payment?.processing") }}
               </p>
             </div>
           </div>
@@ -290,7 +290,7 @@ defineOptions({
               {{
                 isProcessing
                   ? t("pricing.payment.processing")
-                  : t("pricing.payment.confirmSubscribe", {
+                  : t("pricing.payment?.confirmSubscribe", {
                       amount: formattedPrice,
                     })
               }}
@@ -299,15 +299,15 @@ defineOptions({
             <!-- Reassurance -->
             <div class="checkout-modal__reassurance">
               <span class="checkout-modal__reassurance-item">
-                {{ t("pricing.reassurance.cancelAnytime") }}
+                {{ t("pricing.reassurance?.cancelAnytime") }}
               </span>
               <span class="checkout-modal__reassurance-separator">•</span>
               <span class="checkout-modal__reassurance-item">
-                {{ t("pricing.reassurance.securePayments") }}
+                {{ t("pricing.reassurance?.securePayments") }}
               </span>
               <span class="checkout-modal__reassurance-separator">•</span>
               <span class="checkout-modal__reassurance-item">
-                {{ t("pricing.reassurance.noHiddenFees") }}
+                {{ t("pricing.reassurance?.noHiddenFees") }}
               </span>
             </div>
           </div>

@@ -50,6 +50,10 @@
     "test:coverage": "pnpm -r test:coverage",
     "test:watch": "cd client && pnpm test:watch",
     "typecheck": "pnpm -r typecheck",
+    "typecheck:quick": "./scripts/quick-typecheck.sh",
+    "typecheck:watch": "./scripts/quick-typecheck.sh --watch",
+    "typecheck:client": "./scripts/quick-typecheck.sh --client",
+    "typecheck:server": "./scripts/quick-typecheck.sh --server",
     "type-check": "pnpm -r type-check",
     "prepare": "husky install",
     "validate": "pnpm format:check && pnpm typecheck && pnpm lint && pnpm test:unit",
@@ -79,15 +83,13 @@
       "prettier --write"
     ],
     "client/**/*.{ts,vue}": [
-      "cd client && eslint --fix --max-warnings 0",
-      "cd client && pnpm typecheck --noEmit"
+      "cd client && eslint --fix --max-warnings 0"
     ],
     "client/**/*.js": [
       "cd client && eslint --fix --max-warnings 0"
     ],
     "server/**/*.ts": [
-      "cd server && eslint --fix --max-warnings 0",
-      "cd server && pnpm typecheck --noEmit"
+      "cd server && eslint --fix --max-warnings 0"
     ],
     "server/**/*.js": [
       "cd server && eslint --fix --max-warnings 0"

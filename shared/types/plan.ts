@@ -7,6 +7,8 @@ export type PlanTier = "free" | "intermediate" | "advanced" | "pro";
 
 export type ExperienceLevel = "junior" | "intermediate" | "senior";
 
+export type DifficultyLevel = "easy" | "medium" | "hard";
+
 export interface Plan {
   id: string;
   tier: PlanTier;

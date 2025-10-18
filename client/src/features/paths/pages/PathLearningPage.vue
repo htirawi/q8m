@@ -17,7 +17,7 @@
               {{ currentTitle }}
             </h1>
             <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-              Module {{ currentModuleNumber }} of {{ store.currentPath.modules.length }}
+              Module {{ currentModuleNumber }} of {{ store.currentPath.modules?.length ?? 0 }}
             </p>
           </div>
 
@@ -25,7 +25,7 @@
           <div class="space-y-2">
             <div class="flex justify-between text-sm text-gray-600 dark:text-gray-400">
               <span>Overall Progress</span>
-              <span>{{ store.currentEnrollment.progress }}%</span>
+              <span>{{ store.currentEnrollment?.progress }}%</span>
             </div>
             <div class="h-2 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
               <div
@@ -129,7 +129,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import { useLearningPathsStore } from "@/stores/learning-paths";
+import { useLearningPathsStore } from "../../../stores/learning-paths";
 import ModuleList from "../components/ModuleList.vue";
 import type { IModule } from "@shared/types/learning-paths";
 
@@ -177,7 +177,7 @@ const nextModule = () => {
     (m) => m.moduleId === currentModule.value!.moduleId
   );
   if (currentIndex < store.currentPath.modules.length - 1) {
-    currentModule.value = store.currentPath.modules[currentIndex + 1];
+    currentModule.value = store.currentPath.modules[currentIndex + 1] || null;
   }
 };
 
@@ -210,9 +210,11 @@ onMounted(async () => {
       currentModule.value =
         store.currentPath.modules.find(
           (m) => m.moduleId === store.currentEnrollment!.currentModuleId
-        ) || store.currentPath.modules[0];
+        ) ||
+        store.currentPath.modules[0] ||
+        null;
     } else {
-      currentModule.value = store.currentPath.modules[0];
+      currentModule.value = store.currentPath.modules[0] || null;
     }
   }
 });

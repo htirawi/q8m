@@ -4,7 +4,7 @@
       <!-- User count -->
       <div class="social-proof-bar__message">
         <span class="social-proof-bar__text">
-          {{ t("home.socialProof.trustedBy", { count: userCount }) }}
+          {{ t("home.socialProof?.trustedBy", { count: userCount }) }}
         </span>
       </div>
 
@@ -38,14 +38,13 @@
 </template>
 
 <script setup lang="ts">
-import type { ISocialProofBarProps as Props } from "@/types/components/home";
+import type { ISocialProofBarProps as Props } from "../../../types/components/home";
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
-import { useHomepageAnalytics } from "@/composables/useHomepageAnalytics";
-import type { ISocialProofCompany } from "@/types/homepage";
+import { useHomepageAnalytics } from "../../../composables/useHomepageAnalytics";
+import type { ISocialProofCompany } from "../../../types/homepage";
 
 withDefaults(defineProps<Props>(), {
-  userCount: "12,000+",
   showLogos: true,
   logoWidth: 80,
   logoHeight: 32,
@@ -90,7 +89,7 @@ const companyLogos = computed<ISocialProofCompany[]>(() => [
 
 // Analytics
 const handleLogoHover = (company: ISocialProofCompany): void => {
-  trackSocialProofInteraction({
+  trackSocialProofInteraction?.({
     action: "logo_hover",
     companyId: company.id,
     companyName: company.name,

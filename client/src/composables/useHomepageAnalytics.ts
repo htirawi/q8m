@@ -169,9 +169,20 @@ export function useHomepageAnalytics(): IHomepageAnalyticsResult {
     cleanupObserver();
   });
 
+  /**
+   * Track feature view
+   */
+  const trackFeatureView = (featureName: string): void => {
+    track("feature_view", {
+      feature: featureName,
+      timestamp: Date.now(),
+    });
+  };
+
   return {
     trackSectionView,
     trackCTAClick,
+    trackFeatureView,
     trackPricingInteraction,
     trackFaqInteraction,
     trackSocialProofInteraction,
