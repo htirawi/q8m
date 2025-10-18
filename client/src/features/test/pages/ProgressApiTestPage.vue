@@ -71,7 +71,7 @@ function formatDate(date: Date | string): string {
             </div>
             <div class="stat-card">
               <div class="stat-label">Total Badges</div>
-              <div class="stat-value">{{ progress.badges?.length ?? 0 }}</div>
+              <div class="stat-value">{{ Array.isArray(progress.badges) ? progress.badges.length : 0 }}</div>
             </div>
           </div>
         </section>
@@ -209,7 +209,7 @@ function formatDate(date: Date | string): string {
                 <td>Total Study Time</td>
                 <td>
                   <strong
-                    >{{ Math.round(stats.totalStudyTimeMinutes) }}
+                    >{{ Math.round(stats.totalStudyTimeMinutes ?? 0) }}
 
                     minutes</strong
                   >
@@ -218,14 +218,14 @@ function formatDate(date: Date | string): string {
               <tr>
                 <td>Total Study Sessions</td>
                 <td>
-                  <strong>{{ stats.totalStudySessions }} </strong>
+                  <strong>{{ stats.totalSessions ?? 0 }} </strong>
                 </td>
               </tr>
               <tr>
                 <td>Average Session Duration</td>
                 <td>
                   <strong
-                    >{{ Math.round(stats.averageSessionDurationMinutes) }}
+                    >{{ Math.round(stats.averageSessionDurationMinutes ?? 0) }}
 
                     minutes</strong
                   >
@@ -240,13 +240,13 @@ function formatDate(date: Date | string): string {
               <tr>
                 <td>Questions Correct</td>
                 <td>
-                  <strong>{{ stats.totalQuestionsCorrect }} </strong>
+                  <strong>{{ stats.correctAnswers ?? 0 }} </strong>
                 </td>
               </tr>
               <tr>
                 <td>Overall Accuracy</td>
                 <td>
-                  <strong>{{ stats.overallAccuracy }}%</strong>
+                  <strong>{{ stats.averageAccuracy ?? 0 }}%</strong>
                 </td>
               </tr>
             </table>

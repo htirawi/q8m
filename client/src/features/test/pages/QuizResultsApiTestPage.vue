@@ -112,7 +112,7 @@ function getScoreColor(score: number): string {
                 </div>
                 <div class="detail-row">
                   <span class="detail-label">Duration:</span>
-                  <span class="detail-value">{{ formatDuration(quiz.totalTimeSeconds) }} </span>
+                  <span class="detail-value">{{ formatDuration(quiz.totalTimeSeconds ?? 0) }} </span>
                 </div>
                 <div class="detail-row">
                   <span class="detail-label">XP Earned:</span>
@@ -122,7 +122,7 @@ function getScoreColor(score: number): string {
                     XP</span
                   >
                 </div>
-                <div v-if="quiz.badgesEarned.length > 0" class="detail-row">
+                <div v-if="quiz.badgesEarned && quiz.badgesEarned.length > 0" class="detail-row">
                   <span class="detail-label">Badges:</span>
                   <span class="detail-value"
                     >{{ quiz.badgesEarned?.length ?? 0 }}
@@ -130,9 +130,9 @@ function getScoreColor(score: number): string {
                     earned 🏆</span
                   >
                 </div>
-                <div v-if="quiz.weakCategories.length > 0" class="detail-row">
+                <div v-if="quiz.weakCategories && quiz.weakCategories.length > 0" class="detail-row">
                   <span class="detail-label">Weak Categories:</span>
-                  <span class="detail-value weak">{{ quiz.weakCategories?.join(", ") }} </span>
+                  <span class="detail-value weak">{{ quiz.weakCategories?.join(", ") ?? "" }} </span>
                 </div>
               </div>
 
@@ -241,9 +241,9 @@ function getScoreColor(score: number): string {
                 <h3>{{ area.category }}</h3>
                 <div
                   class="accuracy-badge"
-                  :style="{ backgroundColor: getScoreColor(area.accuracy) }"
+                  :style="{ backgroundColor: getScoreColor(area.accuracy ?? 0) }"
                 >
-                  {{ Math.round(area.accuracy) }}%
+                  {{ Math.round(area.accuracy ?? 0) }}%
                 </div>
               </div>
 
@@ -268,8 +268,8 @@ function getScoreColor(score: number): string {
                 <div
                   class="progress-fill"
                   :style="{
-                    width: `${area.accuracy}%`,
-                    backgroundColor: getScoreColor(area.accuracy),
+                    width: `${area.accuracy ?? 0}%`,
+                    backgroundColor: getScoreColor(area.accuracy ?? 0),
                   }"
                 ></div>
               </div>
