@@ -228,7 +228,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ILearningStep, ILearningPath, IQuickTip } from "@/types/components/recommendations";
+import type { ILearningStep, ILearningPath, IQuickTip } from "../../types/components/recommendations";
 import { ref, computed, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
@@ -237,7 +237,7 @@ import type {
   RecommendedQuiz,
   StudyTopic,
   LevelStatsMap,
-} from "@/types/quiz-analytics";
+} from "../../types/quiz-analytics";
 
 const { t } = useI18n();
 const router = useRouter();
@@ -343,11 +343,13 @@ const generateRecommendations = () => {
       {
         id: "1",
         title: t("recommendations.tips.startEasy"),
+        description: t("recommendations.tips.startEasyDesc"),
         tip: t("recommendations.tips.startEasyDesc"),
       },
       {
         id: "2",
         title: t("recommendations.tips.consistency"),
+        description: t("recommendations.tips.consistencyDesc"),
         tip: t("recommendations.tips.consistencyDesc"),
       },
     ];
@@ -462,8 +464,10 @@ const generateRecommendations = () => {
 
   // Generate learning path
   learningPath.value = {
+    name: t("recommendations.path.name") || "Your Learning Path",
     steps: [
       {
+        id: "step1",
         title: t("recommendations.path.step1"),
         description: t("recommendations.path.step1Desc"),
         completed: juniorStats ? juniorStats.avgScore >= 70 : false,
@@ -471,6 +475,7 @@ const generateRecommendations = () => {
         action: "junior_quiz",
       },
       {
+        id: "step2",
         title: t("recommendations.path.step2"),
         description: t("recommendations.path.step2Desc"),
         completed: intermediateStats ? intermediateStats.avgScore >= 70 : false,
@@ -481,6 +486,7 @@ const generateRecommendations = () => {
         action: "intermediate_quiz",
       },
       {
+        id: "step3",
         title: t("recommendations.path.step3"),
         description: t("recommendations.path.step3Desc"),
         completed: seniorStats ? seniorStats.avgScore >= 70 : false,
@@ -503,6 +509,7 @@ const generateRecommendations = () => {
     tips.push({
       id: "tip1",
       title: t("recommendations.tips.reviewWrong"),
+      description: t("recommendations.tips.reviewWrongDesc"),
       tip: t("recommendations.tips.reviewWrongDesc"),
     });
   }
@@ -511,6 +518,7 @@ const generateRecommendations = () => {
     tips.push({
       id: "tip2",
       title: t("recommendations.tips.takeMore"),
+      description: t("recommendations.tips.takeMoreDesc"),
       tip: t("recommendations.tips.takeMoreDesc"),
     });
   }
@@ -543,7 +551,7 @@ const startStudying = (difficulty: string) => {
 };
 
 const startLearningStep = (step: ILearningStep) => {
-  if (step.action.includes("quiz")) {
+  if (step.action && step.action.includes("quiz")) {
     const level = step.action.replace("_quiz", "");
     startQuiz(level);
   }

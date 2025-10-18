@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { IFriendshipButtonProps as Props } from "@/types/components/friends";
+import type { IFriendshipButtonProps as Props } from "../../../types/components/friends";
 import { ref, computed, onMounted } from "vue";
-import { useFriends } from "@/composables/useFriends";
-import type { FriendStatus } from "@/stores/friends";
+import { useFriends } from "../../../composables/useFriends";
+import type { FriendStatus } from "../../../stores/friends";
 
 const props = withDefaults(defineProps<Props>(), {
   size: "md",

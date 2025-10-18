@@ -75,10 +75,10 @@
 import type {
   IStartStudyingCtaProps as Props,
   IStartStudyingCtaEmits as Emits,
-} from "@/types/components/study";
+} from "../../types/components/study";
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useI18n } from "vue-i18n";
-import { useAnalytics } from "@/composables/useAnalytics";
+import { useAnalytics } from "../../composables/useAnalytics";
 
 const props = withDefaults(defineProps<Props>(), {
   disabled: false,

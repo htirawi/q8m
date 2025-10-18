@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from "vue";
 
-import type { ToastInternalProps } from "@/types/ui/internal";
+import type { ToastInternalProps } from "../../types/ui/internal";
 
 const props = withDefaults(defineProps<ToastInternalProps>(), {
   type: "info",

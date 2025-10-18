@@ -149,9 +149,9 @@
 <script setup lang="ts">
 import type {
   IBadge,
-  IBadgeData,
+  // IBadgeData,
   IBadgesGridProps as Props,
-} from "@/types/components/gamification";
+} from "../../../types/components/gamification";
 import { ref, computed } from "vue";
 import BadgeCard from "./BadgeCard.vue";
 
@@ -209,7 +209,7 @@ function getRaritySelectedClass(rarity: string): string {
   return classes[rarity as keyof typeof classes] || classes.common;
 }
 
-function handleBadgeClick(badge: ibadge) {
+function handleBadgeClick(badge: IBadge) {
   emit("badgeClick", badge);
 }
 

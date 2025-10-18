@@ -31,7 +31,7 @@ export interface INotificationPromptProps {
   title?: string;
   description?: string;
   showBenefits?: boolean;
-  variant?: "default" | "minimal" | "feature";
+  variant?: "card" | "modal" | "banner";
   dismissible?: boolean;
   autoDismissDelay?: number;
 }

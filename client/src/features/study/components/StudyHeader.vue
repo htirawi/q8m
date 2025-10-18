@@ -45,10 +45,10 @@
 </template>
 
 <script setup lang="ts">
-import type { IStudyHeaderProps as Props } from "@/types/components/study";
+import type { IStudyHeaderProps as Props } from "../../../types/components/study";
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
-import UserMenu from "@/components/layout/UserMenu.vue";
+import UserMenu from "../../../components/layout/UserMenu.vue";
 
 const props = defineProps<Props>();
 

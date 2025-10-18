@@ -305,16 +305,17 @@
 <script setup lang="ts">
 import type {
   IXPSource,
-  IMultiplier,
   IXPBreakdownProps as Props,
-} from "@/types/components/gamification";
+} from "../../../types/components/gamification";
 import { computed } from "vue";
-import AnimatedCounter from "@/components/AnimatedCounter.vue";
+import AnimatedCounter from "../../../components/AnimatedCounter.vue";
 
 const props = withDefaults(defineProps<Props>(), {
+  sources: () => [],
   multipliers: () => [],
   variant: "card",
   showTips: true,
+  breakdown: () => ({}),
 });
 
 const sourceLabels: Record<string, { label: string; icon: string; description?: string }> = {
@@ -330,25 +331,29 @@ const sourceLabels: Record<string, { label: string; icon: string; description?: 
 };
 
 const breakdownItems = computed<(IXPSource & { percentage?: number })[]>(() => {
+  if (!props.breakdown) return [];
   return Object.entries(props.breakdown)
     .map(([key, xp]) => {
       const sourceInfo = sourceLabels[key] || { label: key, icon: "⭐" };
+      const total = totalXP.value;
       const percentage =
-        props.variant === "detailed" ? Math.round((xp / totalXP.value) * 100) : undefined;
+        props.variant === "detailed" && total > 0 ? Math.round((xp / total) * 100) : undefined;
 
       return {
         label: sourceInfo.label,
-        icon: sourceInfo.icon,
+        amount: xp,
         xp,
+        icon: sourceInfo.icon,
         description: sourceInfo.description,
         percentage,
       };
     })
-    .sort((a, b) => b.xp - a.xp); // Sort by XP descending
+    .sort((a, b) => b.amount - a.amount); // Sort by XP descending
 });
 
-const totalXP = computed(() => {
-  return Object.values(props.breakdown).reduce((sum, xp) => sum + xp, 0);
+const totalXP = computed<number>(() => {
+  if (!props.breakdown) return props.totalXP ?? 0;
+  return Object.values(props.breakdown).reduce((sum, xp) => (sum as number) + (xp as number), 0) as number;
 });
 
 const averageXP = computed(() => {

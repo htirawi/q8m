@@ -2,9 +2,9 @@
 import type {
   IFriendRequestsProps as Props,
   IFriendRequestsEmits as Emits,
-} from "@/types/components/friends";
+} from "../../../types/components/friends";
 import { ref, computed, onMounted } from "vue";
-import { useFriends } from "@/composables/useFriends";
+import { useFriends } from "../../../composables/useFriends";
 
 const props = withDefaults(defineProps<Props>(), {
   initialTab: "received",
@@ -219,15 +219,15 @@ onMounted(async () => {
                 <h3 class="truncate font-semibold text-gray-900 dark:text-white">
                   {{ request.name ?? "" }}
                 </h3>
-                <span :class="['text-sm', getLevelColor(request.level)]">
-                  {{ getLevelBadge(request.level) }}
+                <span :class="['text-sm', getLevelColor(request.level ?? 0)]">
+                  {{ getLevelBadge(request.level ?? 0) }}
                 </span>
               </div>
               <div class="text-sm text-gray-600 dark:text-gray-400">
                 Level {{ request.level ?? 0 }}
               </div>
               <div v-if="request.requestedAt" class="mt-1 text-xs text-gray-500 dark:text-gray-500">
-                {{ formatDate(request.requestedAt as Date | string) }}
+                {{ formatDate(typeof request.requestedAt === 'string' ? new Date(request.requestedAt) : request.requestedAt) }}
               </div>
             </div>
 
@@ -297,8 +297,8 @@ onMounted(async () => {
                 <h3 class="truncate font-semibold text-gray-900 dark:text-white">
                   {{ request.name ?? "" }}
                 </h3>
-                <span :class="['text-sm', getLevelColor(request.level)]">
-                  {{ getLevelBadge(request.level) }}
+                <span :class="['text-sm', getLevelColor(request.level ?? 0)]">
+                  {{ getLevelBadge(request.level ?? 0) }}
                 </span>
               </div>
               <div class="text-sm text-gray-600 dark:text-gray-400">
@@ -306,7 +306,7 @@ onMounted(async () => {
               </div>
               <div class="mt-1 flex items-center gap-2">
                 <span class="text-xs text-gray-500 dark:text-gray-500">
-                  Sent {{ formatDate(request.sentAt! as Date | string) }}
+                  Sent {{ formatDate(typeof request.sentAt === 'string' ? new Date(request.sentAt) : request.sentAt!) }}
                 </span>
                 <span class="text-xs text-yellow-600 dark:text-yellow-400">• Pending</span>
               </div>

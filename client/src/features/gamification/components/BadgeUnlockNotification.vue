@@ -69,7 +69,7 @@
 </template>
 
 <script setup lang="ts">
-import type { IBadgeUnlockNotificationBadge as IBadge } from "@/types/components/gamification";
+import type { IBadgeUnlockNotificationBadge as IBadge } from "../../../types/components/gamification";
 import { ref, computed, onUnmounted } from "vue";
 
 const props = withDefaults(
@@ -208,8 +208,8 @@ function showBadge(badge: IBadge) {
   // Animate progress bar
   setTimeout(() => {
     const badgeIndex = badges.value.findIndex((b) => b.id === badge.id);
-    if (badgeIndex !== -1) {
-      badges.value[badgeIndex].progress = 0;
+    if (badgeIndex !== -1 && badges.value[badgeIndex]) {
+      badges.value[badgeIndex]!.progress = 0;
     }
   }, 100);
 

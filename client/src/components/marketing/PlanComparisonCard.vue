@@ -75,7 +75,7 @@
 import type {
   IPlanComparisonCardProps as Props,
   IComparisonFeature,
-} from "@/types/components/marketing";
+} from "../../types/components/marketing";
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import type { PlanTier } from "@shared/types/plan";
@@ -91,7 +91,7 @@ const targetPlanName = computed(() => {
     advanced: t("plans.names.advanced"),
     pro: t("plans.names.pro"),
   };
-  return names[props.targetPlan];
+  return props.targetPlan ? names[props.targetPlan as PlanTier] : t("plans.names.free");
 });
 
 const comparisonFeatures = computed((): IComparisonFeature[] => {

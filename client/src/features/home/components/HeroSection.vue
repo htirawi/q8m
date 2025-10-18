@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { IHeroSectionProps as Props } from "@/types/components/home";
+import type { IHeroSectionProps as Props } from "../../../types/components/home";
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter, useRoute } from "vue-router";
-import { useHomepageAnalytics } from "@/composables/useHomepageAnalytics";
+import { useHomepageAnalytics } from "../../../composables/useHomepageAnalytics";
 import { BoltIcon, FlagIcon, CheckCircleIcon, RocketLaunchIcon } from "@heroicons/vue/24/solid";
 
 const props = withDefaults(defineProps<Props>(), {

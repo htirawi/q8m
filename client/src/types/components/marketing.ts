@@ -12,27 +12,19 @@ export interface IPaymentCheckoutModalProps {
 
 export interface IPaymentCheckoutModalEmits {
   (e: "close"): void;
-  (e: "success"): void;
+  (e: "success", subscriptionId: string): void;
 }
 
 export interface IPlanComparisonCardProps {
-  planId: PlanId;
-  title: string;
-  description: string;
-  price: number;
-  currency: string;
-  features: string[];
-  popular?: boolean;
-  recommended?: boolean;
   targetPlan?: string;
 }
 
 export interface IComparisonFeature {
-  name: string;
-  label?: string; // Alias for name
+  name?: string;
+  label?: string; // Alias for name (one of name or label is required)
   included?: boolean; // Deprecated, use plan-specific properties
   tooltip?: string;
-  target?: string;
+  target?: boolean | string;
   // Plan-specific availability
   free?: boolean | string;
   junior?: boolean | string;

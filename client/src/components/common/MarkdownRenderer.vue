@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import type { IMarkdownRendererProps as Props, IParsedBlock } from "@/types/components/common";
+import type { IMarkdownRendererProps as Props, IParsedBlock } from "../../types/components/common";
 import { computed, ref, h } from "vue";
 
 const props = defineProps<Props>();

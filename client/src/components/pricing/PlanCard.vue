@@ -2,10 +2,9 @@
 import type {
   IPlanCardProps as IProps,
   IPlanCardEmits as IEmits,
-} from "@/types/components/pricing";
+} from "../../types/components/pricing";
 import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
-import type { BillingCycle, PlanId } from "@/types/pricing";
 
 const props = withDefaults(defineProps<IProps>(), {
   featured: false,
@@ -65,7 +64,7 @@ defineOptions({
     <!-- Header -->
     <div class="plan-card-header">
       <div class="plan-card-icon" :aria-hidden="true">
-        {{ plan?.visual.icon }}
+        {{ plan?.visual?.icon ?? "" }}
       </div>
       <h3 class="plan-card-title">
         {{ plan?.labelKey ? t(plan.labelKey) : "" }}
@@ -134,7 +133,7 @@ defineOptions({
       :class="{ 'plan-card-features--rtl': $i18n.locale === 'ar' }"
       role="list"
     >
-      <li v-for="(benefitKey, idx) in plan?.features.benefits" :key="idx" class="plan-card-feature">
+      <li v-for="(benefitKey, idx) in (Array.isArray(plan?.features) ? [] : plan?.features?.benefits ?? [])" :key="idx" class="plan-card-feature">
         <!-- LTR: icon first, then text -->
         <template v-if="$i18n.locale !== 'ar'">
           <svg

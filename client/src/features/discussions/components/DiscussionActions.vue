@@ -2,10 +2,10 @@
 import type {
   IDiscussionActionsProps as Props,
   IDiscussionActionsEmits as Emits,
-} from "@/types/components/discussions";
+} from "../../../types/components/discussions";
 import { ref, computed } from "vue";
-import { useDiscussions } from "@/composables/useDiscussions";
-import { useAuthStore } from "@/stores/auth";
+import { useDiscussions } from "../../../composables/useDiscussions";
+import { useAuthStore } from "../../../stores/auth";
 
 const props = withDefaults(defineProps<Props>(), {
   canEdit: false,

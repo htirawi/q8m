@@ -1,7 +1,7 @@
 <template>
   <Transition name="slide-up" @before-enter="handleBeforeEnter" @after-enter="handleAfterEnter">
     <div
-      v-if="isVisible"
+      v-if="visible"
       class="fixed bottom-0 left-0 right-0 z-50 border-t border-gray-200 bg-white/95 shadow-2xl backdrop-blur-sm dark:border-gray-700 dark:bg-gray-900/95"
       role="region"
       aria-label="Study session start control"
@@ -132,13 +132,13 @@
 import type {
   IStickyStartBarProps as Props,
   IStickyStartBarEmits as Emits,
-} from "@/types/components/study";
+} from "../../types/components/study";
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useI18n } from "vue-i18n";
-import { useAnalytics } from "@/composables/useAnalytics";
+import { useAnalytics } from "../../composables/useAnalytics";
 
 const props = withDefaults(defineProps<Props>(), {
-  errorMessage: null,
+  errorMessage: "",
   hasLastSession: false,
 });
 
@@ -187,7 +187,7 @@ const handleStart = () => {
     difficulty: props.selectedDifficulty ?? "easy",
   });
 
-  emit("start", props.selectedDifficulty);
+  emit("start", props.selectedDifficulty ?? undefined);
 };
 
 const handleRetry = () => {
@@ -195,7 +195,7 @@ const handleRetry = () => {
     difficulty: props.selectedDifficulty ?? "easy",
   });
 
-  emit("retry");
+  emit("start");
 };
 
 const handleBeforeEnter = () => {

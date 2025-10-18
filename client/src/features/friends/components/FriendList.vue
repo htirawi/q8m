@@ -2,9 +2,9 @@
 import type {
   IFriendListProps as Props,
   IFriendListEmits as Emits,
-} from "@/types/components/friends";
+} from "../../../types/components/friends";
 import { ref, computed, onMounted } from "vue";
-import { useFriends } from "@/composables/useFriends";
+import { useFriends } from "../../../composables/useFriends";
 import FriendCard from "./FriendCard.vue";
 
 const props = withDefaults(defineProps<Props>(), {

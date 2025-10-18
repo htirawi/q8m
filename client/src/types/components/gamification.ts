@@ -36,12 +36,14 @@ export interface IBadge {
   earned: boolean;
   earnedAt?: Date;
   xpReward?: number;
+  shareable?: boolean;
   category?: string;
 }
 
 export interface IBadgeCardProps {
   badge: IBadge;
   earned?: boolean; // Flattened from badge.earned for convenience
+  earnedAt?: Date | string; // Flattened from badge.earnedAt for convenience
   size?: "sm" | "md" | "lg";
   variant?: "default" | "compact" | "detailed";
   clickable?: boolean;
@@ -71,6 +73,10 @@ export interface IBadgeUnlockNotificationBadge {
   description: string;
   icon: string;
   rarity: "common" | "rare" | "epic" | "legendary";
+  xpReward?: number;
+  shareable?: boolean;
+  progress?: number;
+  timestamp?: number;
 }
 
 export interface ICoinBalanceProps {
@@ -166,6 +172,8 @@ export interface IMilestoneCelebrationProps {
   title?: string;
   description?: string;
   icon?: string;
+  autoHide?: boolean;
+  autoHideDelay?: number;
 }
 
 export interface IStreakDisplayProps {
@@ -188,12 +196,12 @@ export interface IMultiplier {
 }
 
 export interface IXPBreakdownProps {
-  sources: IXPSource[];
+  sources?: IXPSource[];
   multipliers?: IMultiplier[];
-  totalXP: number;
+  totalXP?: number;
   variant?: "compact" | "detailed" | "card";
   showTips?: boolean;
-  breakdown?: Record<string, unknown>; // For detailed breakdown data
+  breakdown?: Record<string, number>; // For detailed breakdown data
 }
 
 export interface IXPDisplayProps {
@@ -204,6 +212,6 @@ export interface IXPDisplayProps {
   levelProgress?: number;
   showProgress?: boolean;
   xpToNextLevel?: number;
-  variant?: "compact" | "full" | "detailed";
+  variant?: "compact" | "full" | "detailed" | "card";
   xp?: number; // Alias for currentXP
 }

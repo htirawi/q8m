@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ClockIcon, ShieldCheckIcon, UserGroupIcon } from "@heroicons/vue/24/outline";
 
-import Button from "@/components/ui/Button.vue";
+import Button from "../../../components/ui/Button.vue";
 </script>
 
 <template>

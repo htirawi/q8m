@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, toRefs } from "vue";
 
-import type { InputProps } from "@/types/ui/component-props";
+import type { InputProps } from "../../types/ui/component-props";
 
 /**
  * Input Component

@@ -120,17 +120,17 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from "vue";
 
-import type { SharePlatform, SharePreviewData, ShareType } from "@/stores/shares";
-import { useSharesStore } from "@/stores/shares";
+import type { SharePlatform, SharePreviewData, ShareType } from "../../../stores/shares";
+import { useSharesStore } from "../../../stores/shares";
 
-interface shareoption {
+interface ShareOption {
   platform: SharePlatform;
   label: string;
   color: string;
   icon: string;
 }
 
-interface props {
+interface Props {
   isOpen: boolean;
   shareType: ShareType;
   entityId: string;
@@ -205,7 +205,7 @@ const handleShare = async (platform: SharePlatform) => {
   }
 };
 
-const _loadpreview = async () => {
+const loadPreview = async () => {
   preview.value = await sharesStore.getSharePreview(props.shareType, props.entityId);
 };
 

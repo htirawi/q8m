@@ -66,21 +66,21 @@
 import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
-import { useAuthStore } from "@/stores/auth";
-import { useSelection } from "@/composables/useSelection";
-import { useSelectData } from "@/composables/useSelectData";
-import { analytics, EventCategory, EventAction } from "@/services/analytics";
+import { useAuthStore } from "../../../stores/auth";
+import { useSelection } from "../../../composables/useSelection";
+import { useSelectData } from "../../../composables/useSelectData";
+import { analytics, EventCategory, EventAction } from "../../../services/analytics";
 
 // Components
-import HeroSection from "@/components/level-selection/HeroSection.vue";
-import SelectHeader from "@/components/select/SelectHeader.vue";
-import SelectGrid from "@/components/select/SelectGrid.vue";
-import SelectCard from "@/components/select/SelectCard.vue";
-import SelectFooter from "@/components/select/SelectFooter.vue";
-import SelectEmpty from "@/components/select/SelectEmpty.vue";
-import SelectError from "@/components/select/SelectError.vue";
-import SelectSkeleton from "@/components/select/SelectSkeleton.vue";
-import SelectHelpModal from "@/components/select/SelectHelpModal.vue";
+import HeroSection from "../../../components/level-selection/HeroSection.vue";
+import SelectHeader from "../../../components/select/SelectHeader.vue";
+import SelectGrid from "../../../components/select/SelectGrid.vue";
+import SelectCard from "../../../components/select/SelectCard.vue";
+import SelectFooter from "../../../components/select/SelectFooter.vue";
+import SelectEmpty from "../../../components/select/SelectEmpty.vue";
+import SelectError from "../../../components/select/SelectError.vue";
+import SelectSkeleton from "../../../components/select/SelectSkeleton.vue";
+import SelectHelpModal from "../../../components/select/SelectHelpModal.vue";
 
 const router = useRouter();
 const { t, locale } = useI18n();

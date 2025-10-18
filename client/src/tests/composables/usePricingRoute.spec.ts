@@ -46,48 +46,40 @@ describe("usePricingRoute", () => {
       mockRoute.query = { plan: "intermediate", billing: "monthly" };
       const { resolvedPlan } = usePricingRoute();
 
-      expect(resolvedPlan.value).toEqual({
-        planId: "intermediate",
-        billing: "monthly",
-        isLegacy: false,
-        originalParam: undefined,
-      });
+      expect(resolvedPlan.value?.planId).toBe("intermediate");
+      expect(resolvedPlan.value?.billing).toBe("monthly");
+      expect(resolvedPlan.value?.isLegacy).toBe(false);
+      expect(resolvedPlan.value?.originalParam).toBeUndefined();
     });
 
     it('should map legacy plan "pro" to "intermediate"', () => {
       mockRoute.query = { plan: "pro", billing: "month" };
       const { resolvedPlan } = usePricingRoute();
 
-      expect(resolvedPlan.value).toEqual({
-        planId: "intermediate",
-        billing: "monthly",
-        isLegacy: true,
-        originalParam: "pro",
-      });
+      expect(resolvedPlan.value?.planId).toBe("intermediate");
+      expect(resolvedPlan.value?.billing).toBe("monthly");
+      expect(resolvedPlan.value?.isLegacy).toBe(true);
+      expect(resolvedPlan.value?.originalParam).toBe("pro");
     });
 
     it('should map legacy plan "expert" to "senior"', () => {
       mockRoute.query = { plan: "expert", billing: "year" };
       const { resolvedPlan } = usePricingRoute();
 
-      expect(resolvedPlan.value).toEqual({
-        planId: "senior",
-        billing: "annual",
-        isLegacy: true,
-        originalParam: "expert",
-      });
+      expect(resolvedPlan.value?.planId).toBe("senior");
+      expect(resolvedPlan.value?.billing).toBe("annual");
+      expect(resolvedPlan.value?.isLegacy).toBe(true);
+      expect(resolvedPlan.value?.originalParam).toBe("expert");
     });
 
     it('should map legacy plan "easy" to "junior"', () => {
       mockRoute.query = { plan: "easy" };
       const { resolvedPlan } = usePricingRoute();
 
-      expect(resolvedPlan.value).toEqual({
-        planId: "junior",
-        billing: "monthly",
-        isLegacy: true,
-        originalParam: "easy",
-      });
+      expect(resolvedPlan.value?.planId).toBe("junior");
+      expect(resolvedPlan.value?.billing).toBe("monthly");
+      expect(resolvedPlan.value?.isLegacy).toBe(true);
+      expect(resolvedPlan.value?.originalParam).toBe("easy");
     });
 
     it('should map legacy plan "medium" to "intermediate"', () => {

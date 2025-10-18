@@ -4,8 +4,8 @@ import { computed, ref } from "vue";
 import { CheckIcon, ChevronDownIcon } from "@heroicons/vue/24/outline";
 import { useI18n } from "vue-i18n";
 
-import { useDropdown } from "@/composables/useDropdown";
-import { usePaymentStore } from "@/stores/payment";
+import { useDropdown } from "../../composables/useDropdown";
+import { usePaymentStore } from "../../stores/payment";
 
 const { t } = useI18n();
 const paymentStore = usePaymentStore();

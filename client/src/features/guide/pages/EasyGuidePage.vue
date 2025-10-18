@@ -99,7 +99,7 @@
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
-import InlineUpsellCard from "@/components/paywall/InlineUpsellCard.vue";
+import InlineUpsellCard from "../../../components/paywall/InlineUpsellCard.vue";
 
 const { t } = useI18n();
 const router = useRouter();

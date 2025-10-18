@@ -3,9 +3,9 @@ import { ref, onMounted } from "vue";
 
 import { useRouter, useRoute } from "vue-router";
 
-import { useAuthStore } from "@/stores/auth";
-import { usePostLoginRouter } from "@/composables/usePostLoginRouter";
-import { useAuthRedirect } from "@/composables/useAuthRedirect";
+import { useAuthStore } from "../../../stores/auth";
+import { usePostLoginRouter } from "../../../composables/usePostLoginRouter";
+import { useAuthRedirect } from "../../../composables/useAuthRedirect";
 
 const router = useRouter();
 const route = useRoute();

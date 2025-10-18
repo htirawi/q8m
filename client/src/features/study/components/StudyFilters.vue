@@ -132,7 +132,7 @@
 </template>
 
 <script setup lang="ts">
-import type { IStudyFiltersProps as Props } from "@/types/components/study";
+import type { IStudyFiltersProps as Props } from "../../../types/components/study";
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 
@@ -140,6 +140,8 @@ const props = defineProps<Props>();
 
 const emit = defineEmits<{
   "update:answeredFilter": [value: string];
+  "update:searchQuery": [value: string];
+  "update:questionTypeFilter": [value: string];
   "mode-change": [mode: "sequential" | "random" | "bookmarked"];
   clear: [];
 }>();

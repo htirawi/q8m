@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import type { IHomeHowItWorksProps as Props } from "@/types/components/home";
+import type { IHomeHowItWorksProps as Props } from "../../../types/components/home";
 import { useI18n } from "vue-i18n";
 import { HOMEPAGE_STEPS } from "@/data/home";
-import SectionHeader from "@/components/ui/SectionHeader.vue";
+import SectionHeader from "../../../components/ui/SectionHeader.vue";
 
-const _props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   steps: () => HOMEPAGE_STEPS,
 });
 

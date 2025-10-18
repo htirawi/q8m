@@ -12,7 +12,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ISkeletonLoaderProps as Props } from "@/types/components/ui";
+import type { ISkeletonLoaderProps as Props } from "../types/components/ui";
 import { computed } from "vue";
 
 const props = withDefaults(defineProps<Props>(), {

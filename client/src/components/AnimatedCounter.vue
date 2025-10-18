@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import type { IAnimatedCounterProps as Props } from "@/types/components/ui";
+import type { IAnimatedCounterProps as Props } from "../types/components/ui";
 import { ref, watch, onMounted, toRef } from "vue";
 
 const props = withDefaults(defineProps<Props>(), {

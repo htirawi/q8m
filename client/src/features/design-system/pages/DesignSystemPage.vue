@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from "vue";
-import Input from "@/components/ui/Input.vue";
-import FormField from "@/components/ui/FormField.vue";
+import Input from "../../../components/ui/Input.vue";
+import FormField from "../../../components/ui/FormField.vue";
 import { useI18n } from "vue-i18n";
 
 // Form state

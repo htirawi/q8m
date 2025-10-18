@@ -129,13 +129,10 @@
 
 <script setup lang="ts">
 import type {
-  IMilestoneReward,
-  IMilestoneStat,
-  IMilestone,
   IMilestoneCelebrationProps as Props,
-} from "@/types/components/gamification";
+} from "../../../types/components/gamification";
 import { ref, watch, onMounted } from "vue";
-import { useConfetti } from "@/composables/useConfetti";
+import { useConfetti } from "../../../composables/useConfetti";
 
 const props = withDefaults(defineProps<Props>(), {
   show: false,

@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import PricingCards from "@/components/pricing/PricingCards.vue";
-import PricingTestimonials from "@/components/pricing/PricingTestimonials.vue";
-import RoiSection from "@/components/pricing/RoiSection.vue";
-import CompetitorComparison from "@/components/pricing/CompetitorComparison.vue";
-import ComparisonTable from "@/components/pricing/ComparisonTable.vue";
-import FaqAccordion from "@/components/pricing/FaqAccordion.vue";
-import GuaranteePanel from "@/components/pricing/GuaranteePanel.vue";
-import FinalCta from "@/components/pricing/FinalCta.vue";
+import PricingCards from "../../../components/pricing/PricingCards.vue";
+import PricingTestimonials from "../../../components/pricing/PricingTestimonials.vue";
+import RoiSection from "../../../components/pricing/RoiSection.vue";
+import CompetitorComparison from "../../../components/pricing/CompetitorComparison.vue";
+import ComparisonTable from "../../../components/pricing/ComparisonTable.vue";
+import FaqAccordion from "../../../components/pricing/FaqAccordion.vue";
+import GuaranteePanel from "../../../components/pricing/GuaranteePanel.vue";
+import FinalCta from "../../../components/pricing/FinalCta.vue";
 import { onMounted } from "vue";
-import { useAnalytics } from "@/composables/useAnalytics";
+import { useAnalytics } from "../../../composables/useAnalytics";
 import { useRoute } from "vue-router";
 
 const route = useRoute();

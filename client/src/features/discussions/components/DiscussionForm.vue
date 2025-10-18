@@ -2,11 +2,11 @@
 import type {
   IDiscussionFormProps as Props,
   IDiscussionFormEmits as Emits,
-} from "@/types/components/discussions";
+} from "../../../types/components/discussions";
 import { ref, computed } from "vue";
-import { useDiscussions } from "@/composables/useDiscussions";
+import { useDiscussions } from "../../../composables/useDiscussions";
 
-const _props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   placeholder: "Start a discussion...",
   minRows: 3,
   maxRows: 10,

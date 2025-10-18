@@ -360,13 +360,13 @@ import type {
   IPlanConversionModalProps as Props,
   IPlanConversionModalEmits as Emits,
   IFaq,
-} from "@/types/components/marketing";
+} from "../../types/components/marketing";
 import { ref, computed, watch, onMounted, onUnmounted, nextTick } from "vue";
 import { useI18n } from "vue-i18n";
-import { useCheckout } from "@/composables/useCheckout";
-import { useAnalytics } from "@/composables/useAnalytics";
+import { useCheckout } from "../../composables/useCheckout";
+import { useAnalytics } from "../../composables/useAnalytics";
 import PlanComparisonCard from "./PlanComparisonCard.vue";
-import type { BillingCycle } from "@/composables/useCheckout";
+import type { BillingCycle } from "../../composables/useCheckout";
 
 const props = withDefaults(defineProps<Props>(), {
   variant: "a",
@@ -427,7 +427,7 @@ const formatPrice = (price: number, currency: string): string => {
 };
 
 const handleCycleChange = (cycle: BillingCycle) => {
-  selectPlan(props.requiredPlan, cycle);
+  selectPlan(props.requiredPlan as any, cycle as any);
 };
 
 const toggleCoupon = () => {
@@ -485,7 +485,7 @@ const handleDismiss = () => {
     plan: props.requiredPlan,
     hadInteraction: showComparison.value || showFaq.value || showCoupon.value,
   });
-  emit("dismiss");
+  emit("close");
 };
 
 // Focus trap
@@ -517,7 +517,7 @@ watch(
   async (visible) => {
     if (visible) {
       // Pre-select annual plan (default)
-      selectPlan(props.requiredPlan, "annual");
+      selectPlan(props.requiredPlan as any, "annual" as any);
 
       // Track view
       track("convert_modal_opened", {

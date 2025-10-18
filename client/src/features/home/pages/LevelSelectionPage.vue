@@ -515,17 +515,17 @@
 import { ref, computed, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
-import { usePlanStore } from "@/stores/plan";
-import { useAuthStore } from "@/stores/auth";
-import { usePreferencesStore } from "@/stores/preferences";
-import { useStreak } from "@/composables/useStreak";
-import LockedBadge from "@/components/paywall/LockedBadge.vue";
-import StreakDisplay from "@/features/gamification/components/StreakDisplay.vue";
-import CoinBalance from "@/features/gamification/components/CoinBalance.vue";
-import StreakSaver from "@/features/gamification/components/StreakSaver.vue";
-import UserMenu from "@/components/layout/UserMenu.vue";
-import { canAccessLevel } from "@/types/plan/access";
-import type { ExperienceLevel } from "@/types/plan/access";
+import { usePlanStore } from "../../../stores/plan";
+import { useAuthStore } from "../../../stores/auth";
+import { usePreferencesStore } from "../../../stores/preferences";
+import { useStreak } from "../../../composables/useStreak";
+import LockedBadge from "../../../components/paywall/LockedBadge.vue";
+import StreakDisplay from "../../../features/gamification/components/StreakDisplay.vue";
+import CoinBalance from "../../../features/gamification/components/CoinBalance.vue";
+import StreakSaver from "../../../features/gamification/components/StreakSaver.vue";
+import UserMenu from "../../../components/layout/UserMenu.vue";
+import { canAccessLevel } from "../../../types/plan/access";
+import type { ExperienceLevel } from "../../../types/plan/access";
 
 const { t } = useI18n();
 const router = useRouter();
@@ -615,42 +615,42 @@ const getLevelCardClass = (level: ExperienceLevel) => {
   return `${baseClass}
 
  border-gray-200 bg-white/80 backdrop-blur-sm hover:border-purple-400; hover:shadow-2xl; hover:scale-[1.02]; hover:-translate-y-1; dark:border-gray-700; dark:bg-gray-800/80; dark:hover:border-purple-500`;
+};
 
-  const getLevelDescriptionClass = (level: ExperienceLevel) => {
-    const isSelected = selectedLevel.value === level;
-    const canAccess = canUserAccessLevel(level);
+const getLevelDescriptionClass = (level: ExperienceLevel) => {
+  const isSelected = selectedLevel.value === level;
+  const canAccess = canUserAccessLevel(level);
 
-    if (isSelected && canAccess) {
-      return "text-base text-white/90 leading-relaxed";
-    }
+  if (isSelected && canAccess) {
+    return "text-base text-white/90 leading-relaxed";
+  }
 
-    return "text-base text-gray-600 dark:text-gray-400 leading-relaxed";
+  return "text-base text-gray-600 dark:text-gray-400 leading-relaxed";
+};
+
+const getLevelIconClass = (level: ExperienceLevel) => {
+  const isSelected = selectedLevel.value === level;
+  const canAccess = canUserAccessLevel(level);
+
+  const baseClass =
+    "flex h-16 w-16 items-center justify-center rounded-2xl transition-all duration-300";
+
+  if (isSelected && canAccess) {
+    return `${baseClass} bg-white/20 text-white shadow-lg backdrop-blur-sm`;
+  }
+
+  const colorMap: Record<ExperienceLevel, string> = {
+    junior: "bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400",
+    intermediate: "bg-yellow-100 text-yellow-600 dark:bg-yellow-900/30 dark:text-yellow-400",
+    senior: "bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400",
   };
 
-  const _getLevelIconClass = (level: ExperienceLevel) => {
-    const isSelected = selectedLevel.value === level;
-    const canAccess = canUserAccessLevel(level);
-
-    const baseClass =
-      "flex h-16 w-16 items-center justify-center rounded-2xl transition-all duration-300";
-
-    if (isSelected && canAccess) {
-      return `${baseClass} bg-white/20 text-white shadow-lg backdrop-blur-sm`;
-    }
-
-    const colorMap: Record<ExperienceLevel, string> = {
-      junior: "bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400",
-      intermediate: "bg-yellow-100 text-yellow-600 dark:bg-yellow-900/30 dark:text-yellow-400",
-      senior: "bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400",
-    };
-
-    return `${baseClass} ${colorMap[level]}
+  return `${baseClass} ${colorMap[level]}
 
  group-hover:scale-110; group-hover:shadow-lg`;
-  };
+};
 
-  const goToLearningPaths = () => {
-    router.push(`/${locale.value}/paths`);
-  };
+const goToLearningPaths = () => {
+  router.push(`/${locale.value}/paths`);
 };
 </script>

@@ -89,14 +89,14 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { trackEvent } from "@/utils/telemetry";
-import type { IInlineUpsellCardProps as Props } from "@/types/components/paywall";
+import { trackEvent } from "../../utils/telemetry";
+import type { IInlineUpsellCardProps as Props } from "../../types/components/paywall";
 
 const props = defineProps<Props>();
 
 const router = useRouter();
 const isExpanded = ref(false);
-const _contentid = `upsell-${Math.random().toString(36).substring(7)}`;
+const contentId = `upsell-${Math.random().toString(36).substring(7)}`;
 
 const toggleExpanded = () => {
   isExpanded.value = !isExpanded.value;

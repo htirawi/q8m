@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { reactive, watch, toRefs } from "vue";
 import { useI18n } from "vue-i18n";
-import type { BillingFormProps, BillingFormData } from "@/types/ui/component-props";
+import type { BillingFormProps, BillingFormData } from "../../types/ui/component-props";
 
 const props = defineProps<BillingFormProps>();
 

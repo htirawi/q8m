@@ -95,10 +95,10 @@
 </template>
 
 <script setup lang="ts">
-import type { IQuizHeaderProps as Props } from "@/types/components/quiz";
+import type { IQuizHeaderProps as Props } from "../../../types/components/quiz";
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
-import UserMenu from "@/components/layout/UserMenu.vue";
+import UserMenu from "../../../components/layout/UserMenu.vue";
 
 const props = withDefaults(defineProps<Props>(), {
   isSticky: false,
@@ -111,15 +111,6 @@ defineEmits<{
 const { t, locale } = useI18n();
 
 const progress = computed(() => ((props.currentIndex + 1) / props.totalQuestions) * 100);
-
-const _levelDotClass = computed(() => {
-  const classes = {
-    junior: "bg-green-500",
-    intermediate: "bg-yellow-500",
-    senior: "bg-red-500",
-  };
-  return classes[props.level] || "bg-gray-500";
-});
 
 const timerTextClass = computed(() => {
   // For testing with 10-second timer: red when 10 seconds or less remaining

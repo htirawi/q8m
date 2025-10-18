@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import type { ITestimonialsSectionProps as Props } from "@/types/components/home";
+import type { ITestimonialsSectionProps as Props } from "../../../types/components/home";
 import { HOMEPAGE_TESTIMONIALS } from "@/data/home";
-import SectionHeader from "@/components/ui/SectionHeader.vue";
-import TestimonialCard from "@/components/ui/TestimonialCard.vue";
+import SectionHeader from "../../../components/ui/SectionHeader.vue";
+import TestimonialCard from "../../../components/ui/TestimonialCard.vue";
 
-const _props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   testimonials: () => HOMEPAGE_TESTIMONIALS,
 });
 </script>

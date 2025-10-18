@@ -18,21 +18,33 @@ import type { Friend, FriendRequest, FriendStatus } from './friends';
 export interface IQuizAnswer {
   questionId: string;
   answer: string | string[];
-  correct: boolean;
-  timeSpent: number;
+  userAnswer?: string | string[];
+  selectedAnswer?: string | string[];
+  correctAnswer?: string | string[];
+  correct?: boolean;
+  isCorrect?: boolean;
+  timeSpent?: number;
+  timeSpentSeconds?: number;
   difficulty?: string;
+  difficultyLevel?: "easy" | "medium" | "hard";
   category?: string;
+  tags?: string[];
+  points?: number;
+  pointsEarned?: number;
 }
 
 /**
  * Payload for quiz submission
  */
 export interface ISubmitQuizPayload {
-  framework: string;
-  level: string;
-  mode: 'quiz' | 'study';
+  quizType?: "practice" | "exam";
+  framework?: string;
+  level: string | "junior" | "intermediate" | "senior";
+  mode?: 'quiz' | 'study';
   answers: IQuizAnswer[];
-  totalTime: number;
+  totalTime?: number;
+  startTime?: string;
+  endTime?: string;
 }
 
 /**
@@ -54,6 +66,24 @@ export interface ISubmitQuizResponse {
   previousLevel?: number;
   weakCategories?: string[];
   strongCategories?: string[];
+  // Gamification properties
+  level?: number;
+  xp?: number;
+  totalXP?: number;
+  currentXP?: number;
+  xpToNextLevel?: number;
+  xpBreakdown?: Record<string, unknown>;
+  streak?: number;
+  coins?: number;
+  badges?: Array<{
+    id: string;
+    name: string;
+    description: string;
+    icon: string;
+    rarity: string;
+    earned: boolean;
+    earnedAt?: Date;
+  }>;
 }
 
 /**
@@ -120,10 +150,11 @@ export interface IHomepageAnalyticsResult {
   trackFeatureView: (featureName: string) => void;
   trackCTAClick: (ctaName: string | any) => void; // Accept string or object
   trackSectionView: (sectionName: string | any, viewDuration?: number) => void; // Accept string or object
-  trackFaqInteraction?: (question: string, action: string) => void;
-  trackPricingInteraction?: (action: string, planId?: string) => void;
-  trackSocialProofInteraction?: (type: string) => void;
-  setupSectionObserver?: (sectionId: string) => void;
+  trackFaqInteraction?: (event: any) => void; // Accept event object
+  trackPricingInteraction?: (event: any) => void; // Accept event object
+  trackSocialProofInteraction?: (event: any) => void; // Accept event object
+  setupSectionObserver?: () => void;
+  cleanupObserver?: () => void;
 }
 
 /**
@@ -244,9 +275,9 @@ export interface IResolvedPlan {
   name: string;
   price: IPlanPrice;
   features: string[];
-  planId?: string;
-  billing?: 'monthly' | 'yearly';
-  isLegacy?: boolean;
+  planId: string;
+  billing: 'monthly' | 'yearly';
+  isLegacy: boolean;
   originalParam?: string;
 }
 
@@ -360,11 +391,11 @@ export interface IProgressStats {
  * A/B test configuration
  */
 export interface IABTestConfig {
-  name: string;
+  name?: string;
   variants: string[];
-  defaultVariant: string;
+  defaultVariant?: string;
   testId?: string;
-  weights?: Record<string, number>;
+  weights?: number[];
   storageKey?: string;
 }
 
@@ -374,7 +405,7 @@ export interface IABTestConfig {
 export interface IABTestResult {
   variant: string;
   isControl: boolean;
-  trackAssignment?: (testName: string, variant: string) => void;
+  trackAssignment?: () => void;
 }
 
 /**

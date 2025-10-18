@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
 import { ref, watch, onMounted } from "vue";
-import type { IAnimatedCounterProps as Props } from "@/types/components/ui";
+import type { IAnimatedCounterProps as Props } from "../../types/components/ui";
 
 const props = withDefaults(defineProps<Props>(), {
   duration: 1000,

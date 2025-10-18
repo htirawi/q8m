@@ -3,20 +3,20 @@ import { onMounted } from "vue";
 import { useHead } from "@unhead/vue";
 import { useRoute } from "vue-router";
 import { useI18n } from "vue-i18n";
-import { useABTest } from "@/composables/useABTest";
-import { useScrollTracking } from "@/composables/useScrollTracking";
-import { useHomepageAnalytics } from "@/composables/useHomepageAnalytics";
-import { useSEO } from "@/composables/useSEO";
+import { useABTest } from "../../../composables/useABTest";
+import { useScrollTracking } from "../../../composables/useScrollTracking";
+import { useHomepageAnalytics } from "../../../composables/useHomepageAnalytics";
+import { useSEO } from "../../../composables/useSEO";
 import { HOMEPAGE_FAQS } from "@/data/home";
-import HeroSection from "@/features/home/components/HeroSection.vue";
-import HomeCredibility from "@/features/home/components/HomeCredibility.vue";
-import FeaturesGrid from "@/features/home/components/FeaturesGrid.vue";
-import HomeHowItWorks from "@/features/home/components/HomeHowItWorks.vue";
-import HomepagePricingTeaser from "@/features/home/components/HomepagePricingTeaser.vue";
-import TestimonialsSection from "@/features/home/components/TestimonialsSection.vue";
-import FaqSection from "@/features/home/components/FaqSection.vue";
-import FooterCta from "@/features/home/components/FooterCta.vue";
-import MobileStickyBar from "@/features/home/components/MobileStickyBar.vue";
+import HeroSection from "../../../features/home/components/HeroSection.vue";
+import HomeCredibility from "../../../features/home/components/HomeCredibility.vue";
+import FeaturesGrid from "../../../features/home/components/FeaturesGrid.vue";
+import HomeHowItWorks from "../../../features/home/components/HomeHowItWorks.vue";
+import HomepagePricingTeaser from "../../../features/home/components/HomepagePricingTeaser.vue";
+import TestimonialsSection from "../../../features/home/components/TestimonialsSection.vue";
+import FaqSection from "../../../features/home/components/FaqSection.vue";
+import FooterCta from "../../../features/home/components/FooterCta.vue";
+import MobileStickyBar from "../../../features/home/components/MobileStickyBar.vue";
 
 const route = useRoute();
 const { t, locale } = useI18n();
@@ -47,10 +47,10 @@ const {
 // Lifecycle
 onMounted(() => {
   // Track A/B test assignment
-  trackHeadlineAssignment();
+  trackHeadlineAssignment?.();
 
   // Setup section view tracking
-  setupSectionObserver();
+  setupSectionObserver?.();
 
   // Add structured data
   if (typeof document !== "undefined") {
@@ -182,7 +182,7 @@ useHead({
 
   <main id="main-content" class="home-page">
     <!-- Hero Section with A/B test variant -->
-    <HeroSection data-section="hero" :headline-variant="headlineVariant" />
+    <HeroSection data-section="hero" :headline-variant="headlineVariant as 'control' | 'variant_a' | 'variant_b'" />
 
     <!-- Credibility / Trust Badges -->
     <HomeCredibility data-section="credibility" />

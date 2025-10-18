@@ -299,12 +299,13 @@ import type {
   IPlanUpsellModalEmits as Emits,
   IComparisonFeature,
   IFaq,
-} from "@/types/components/marketing";
+} from "../../types/components/marketing";
+import type { PlanTier, DifficultyLevel } from "@shared/types/plan";
 import { ref, computed, watch, onMounted, onUnmounted, nextTick } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
-import { useAnalytics } from "@/composables/useAnalytics";
-import { getPlanByTier, DIFFICULTY_TO_PLAN_ID, getPlanById } from "@/config/plans";
+import { useAnalytics } from "../../composables/useAnalytics";
+import { getPlanByTier, DIFFICULTY_TO_PLAN_ID, getPlanById } from "../../config/plans";
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
@@ -317,9 +318,9 @@ const modalRef = ref<HTMLElement>();
 const headingId = "upsell-modal-title";
 
 // Use plan registry for consistent labeling
-const planConfig = computed(() => getPlanByTier(props.requiredPlan));
-const difficultyPlanId = computed(() => DIFFICULTY_TO_PLAN_ID[props.difficulty]);
-const difficultyPlanConfig = computed(() => getPlanById(difficultyPlanId.value));
+const planConfig = computed(() => props.requiredPlan ? getPlanByTier(props.requiredPlan as PlanTier) : null);
+const difficultyPlanId = computed(() => props.difficulty ? DIFFICULTY_TO_PLAN_ID[props.difficulty as DifficultyLevel] : null);
+const difficultyPlanConfig = computed(() => difficultyPlanId.value ? getPlanById(difficultyPlanId.value) : null);
 
 const difficultyLabel = computed(() =>
   difficultyPlanConfig.value
@@ -404,7 +405,7 @@ const handleUpgrade = () => {
     },
   });
 
-  emit("dismiss", "close_button");
+  emit("close");
 };
 
 const handleViewAllPlans = () => {
@@ -417,16 +418,16 @@ const handleViewAllPlans = () => {
   const locale = router.currentRoute.value.params.locale || "en";
   router.push(`/${locale}/pricing`);
 
-  emit("dismiss", "close_button");
+  emit("close");
 };
 
-const handleDismiss = (method: "esc" | "backdrop" | "close_button" | "maybe_later_button") => {
+const handleDismiss = (_method: "esc" | "backdrop" | "close_button" | "maybe_later_button") => {
   track("upsell_cta_clicked", {
     action: "maybe_later",
     difficulty: props.difficulty,
     requiredPlan: props.requiredPlan,
   });
-  emit("dismiss", method);
+  emit("close");
 };
 
 // Focus trap

@@ -369,20 +369,15 @@
 </template>
 
 <script setup lang="ts">
-import type { INotificationPreferences } from "@/types/components/notifications";
+import type { INotificationPreferences } from "../../types/components/notifications";
 import { ref, reactive, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
-import { useNotifications } from "@/composables/useNotifications";
+import { useNotifications } from "../../composables/useNotifications";
 
 const { t } = useI18n();
 
 const {
   isSupported,
-  permissionGranted,
-  permissionDenied,
-  isLoading,
-  requestPermission,
-  showTestNotification: testNotification,
   permissionGranted,
   permissionDenied,
   isLoading,
@@ -393,6 +388,9 @@ const {
 const showSuccess = ref(false);
 
 const preferences = reactive<INotificationPreferences>({
+  enabled: true,
+  email: false,
+  push: true,
   streak: true,
   content: true,
   challenges: true,
@@ -449,10 +447,6 @@ const savePreferences = async () => {
   } catch (error) {
     console.error("Failed to save notification preferences:", error);
   }
-};
-
-const showTestNotification = () => {
-  testNotification();
 };
 
 onMounted(() => {

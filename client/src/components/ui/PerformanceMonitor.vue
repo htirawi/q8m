@@ -9,7 +9,7 @@ import {
   XMarkIcon,
 } from "@heroicons/vue/24/outline";
 
-import { usePerformance } from "@/composables/usePerformance";
+import { usePerformance } from "../../composables/usePerformance";
 
 const showMonitor = ref(false);
 const performance = usePerformance();

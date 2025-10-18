@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import { useQuizResults } from "@/composables/useQuizResults";
+import { useQuizResults } from "../../../composables/useQuizResults";
 
 const { isLoading, error, quizHistory, quizStats, weakAreas, getHistory, getStats, getWeakAreas } =
   useQuizResults();
@@ -259,7 +259,7 @@ function getScoreColor(score: number): string {
                 <div class="detail-row">
                   <span class="detail-label">Last Attempt:</span>
                   <span class="detail-value">
-                    {{ new Date(area.lastAttemptDate).toLocaleDateString() }}
+                    {{ area.lastAttemptDate ? new Date(area.lastAttemptDate).toLocaleDateString() : 'N/A' }}
                   </span>
                 </div>
               </div>

@@ -409,8 +409,8 @@
 import { ref, computed, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
-import type { IStudyPlan, ICurriculumModule } from "@/types/ai";
-import { analytics } from "@/services/analytics";
+import type { IStudyPlan, ICurriculumModule } from "../../types/ai";
+import { analytics } from "../../services/analytics";
 
 // Props
 interface Props {
@@ -421,6 +421,7 @@ const props = defineProps<Props>();
 
 // Emits
 const emit = defineEmits<{
+  "plan-adjust": [];
   "topic-start": [topic: any];
   "module-expand": [moduleId: string];
 }>();
@@ -473,8 +474,9 @@ const filteredModules = computed(() => {
 });
 
 // Methods
-const formatDate = (date: Date): string => {
-  return date.toLocaleDateString(locale.value, {
+const formatDate = (date: Date | string): string => {
+  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  return dateObj.toLocaleDateString(locale.value, {
     month: "short",
     day: "numeric",
     year: "numeric",

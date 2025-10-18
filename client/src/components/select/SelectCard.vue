@@ -104,8 +104,8 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
-import type { ISelectOption } from "@/types/select";
-import { analytics, EventCategory, EventAction } from "@/services/analytics";
+import type { ISelectOption } from "../../types/select";
+import { analytics, EventCategory, EventAction } from "../../services/analytics";
 
 interface ISelectCardProps {
   /** The option data to display */
@@ -154,7 +154,7 @@ const handleUpgrade = (): void => {
       difficulty: props.option.difficulty,
     },
     {
-      category: EventCategory.Conversion,
+      category: EventCategory.Monetization,
       action: EventAction.Click,
     }
   );

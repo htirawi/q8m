@@ -173,6 +173,8 @@ export interface IFooterCtaProps {
 // ============================================================================
 export interface IMobileStickyBarEmits {
   (e: "start"): void;
+  (e: "cta-click"): void;
+  (e: "dismiss"): void;
 }
 
 // ============================================================================

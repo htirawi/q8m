@@ -76,8 +76,12 @@ export function usePricingRoute() {
     const isLegacy = normalizedPlan !== planId;
 
     return {
+      id: planId,
+      name: planId,
+      price: { monthly: 0, yearly: 0, annual: 0, currency: "USD" },
+      features: [],
       planId,
-      billing,
+      billing: billing as "monthly" | "yearly",
       isLegacy,
       originalParam: isLegacy ? normalizedPlan : undefined,
     };

@@ -225,7 +225,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
-import type { ProgressStats, DifficultyProgress, RecentActivity } from "@/types/quiz-analytics";
+import type { ProgressStats, DifficultyProgress, RecentActivity } from "../../types/quiz-analytics";
 
 const { t } = useI18n();
 

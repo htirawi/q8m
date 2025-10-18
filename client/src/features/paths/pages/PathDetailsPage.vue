@@ -110,8 +110,8 @@
 <script setup lang="ts">
 import { computed, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import { useLearningPathsStore } from "@/stores/learning-paths";
-import { useAuthStore } from "@/stores/auth";
+import { useLearningPathsStore } from "../../../stores/learning-paths";
+import { useAuthStore } from "../../../stores/auth";
 import ModuleList from "../components/ModuleList.vue";
 
 const router = useRouter();

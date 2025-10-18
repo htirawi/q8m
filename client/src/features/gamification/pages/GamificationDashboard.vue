@@ -141,7 +141,8 @@
             >
               <XPDisplay
                 v-if="userProgress"
-                :xp="userProgress.xp"
+                :current-x-p="userProgress.xp"
+                :required-x-p="xpToNextLevel"
                 :level="userProgress.level"
                 :level-title="levelTitle"
                 :xp-to-next-level="xpToNextLevel"
@@ -394,8 +395,8 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
-import { useAuthStore } from "@/stores/auth";
-import { useStreakStore } from "@/stores/streak";
+import { useAuthStore } from "../../../stores/auth";
+import { useStreakStore } from "../../../stores/streak";
 import XPDisplay from "../components/XPDisplay.vue";
 import BadgesGrid from "../components/BadgesGrid.vue";
 import BadgeCard from "../components/BadgeCard.vue";
@@ -510,7 +511,7 @@ async function loadDashboardData() {
   try {
     // Load user progress from auth store
     if (authStore.user?.gamification) {
-      userprogress.value = {
+      userProgress.value = {
         xp: authStore.user.gamification.xp || 0,
         level: authStore.user.gamification.level || 1,
       };
@@ -617,7 +618,9 @@ async function loadAchievements() {
   }
 }
 
-function generateMockBadges() {
+// Mock data generators for development/testing
+// @ts-ignore - Unused but kept for testing
+function _generateMockBadges() {
   const badges = [
     {
       id: "1",
@@ -712,7 +715,8 @@ function generateMockBadges() {
   }));
 }
 
-function generateMockLeaderboard() {
+// @ts-ignore - Unused but kept for testing
+function _generateMockLeaderboard() {
   const names = [
     "Alice Johnson",
     "Bob Smith",
@@ -737,7 +741,8 @@ function generateMockLeaderboard() {
   }));
 }
 
-function generateMockAchievements() {
+// @ts-ignore - Unused but kept for testing
+function _generateMockAchievements() {
   const achievements = [
     {
       id: "1",

@@ -325,12 +325,12 @@
 import { ref, computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
-import { usePlanStore } from "@/stores/plan";
-import { useAuthStore } from "@/stores/auth";
-import LockedBadge from "@/components/paywall/LockedBadge.vue";
-import { canAccessLevel } from "@/types/plan/access";
-import { usePlanEntry } from "@/composables/usePlanEntry";
-import type { ExperienceLevel } from "@/types/plan/access";
+import { usePlanStore } from "../../../stores/plan";
+import { useAuthStore } from "../../../stores/auth";
+import LockedBadge from "../../../components/paywall/LockedBadge.vue";
+import { canAccessLevel } from "../../../types/plan/access";
+import { usePlanEntry } from "../../../composables/usePlanEntry";
+import type { ExperienceLevel } from "../../../types/plan/access";
 
 const { t } = useI18n();
 const router = useRouter();

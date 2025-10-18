@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
-import type { CancelSubscriptionModalProps } from "@/types/ui/component-props";
+import type { CancelSubscriptionModalProps } from "../../../types/ui/component-props";
 
 const props = defineProps<CancelSubscriptionModalProps>();
 

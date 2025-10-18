@@ -125,12 +125,13 @@
 
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import { useChallenges } from "@/composables/useChallenges";
+import { useChallenges } from "../../../composables/useChallenges";
 import ChallengeCard from "./ChallengeCard.vue";
+import type { IChallengeListProps as Props } from "../../../types/components/challenges";
 
 const props = withDefaults(defineProps<Props>(), {
   loading: false,
-  pagination: () => ({ page: 1, limit: 20, total: 0, hasMore: false }),
+  pagination: () => ({ currentPage: 1, totalPages: 1, pageSize: 20, hasMore: false }),
   emptyStateTitle: "No challenges yet",
   emptyStateMessage: "Challenge your friends to a quiz battle!",
   showCreateButton: true,
@@ -141,6 +142,8 @@ const emit = defineEmits<{
   reject: [challengeId: string];
   start: [challengeId: string];
   "view-details": [challengeId: string];
+  "load-more": [];
+  "create-challenge": [];
 }>();
 
 const { sortChallenges, filterChallenges } = useChallenges();

@@ -197,7 +197,7 @@ export function useOnboarding() {
       description: pathDescription,
       framework: primaryFramework,
       level: experienceLevel,
-      estimatedWeeks: experienceLevel === "junior" ? 12 : experienceLevel === "mid" ? 8 : 6,
+      estimatedWeeks: experienceLevel === "junior" ? 12 : experienceLevel === "intermediate" ? 8 : 6,
       questionsCount: 150,
     };
   }

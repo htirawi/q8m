@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ITierCardProps as Props } from "@/types/components/home";
+import type { ITierCardProps as Props } from "../../types/components/home";
 import { useI18n } from "vue-i18n";
 import { useRouter, useRoute } from "vue-router";
 import { computed } from "vue";

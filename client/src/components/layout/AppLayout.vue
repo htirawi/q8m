@@ -1,21 +1,20 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import { useRouter } from "vue-router";
 
-import PerformanceMonitor from "@/components/ui/PerformanceMonitor.vue";
-import ToastContainer from "@/components/ui/ToastContainer.vue";
-import UserMenu from "@/components/layout/UserMenu.vue";
-import { usePWA } from "@/composables/usePWA";
-import { useSEO } from "@/composables/useSEO";
-import { useAuthStore } from "@/stores/auth";
-import { useThemeStore } from "@/stores/theme";
+import PerformanceMonitor from "../../components/ui/PerformanceMonitor.vue";
+import ToastContainer from "../../components/ui/ToastContainer.vue";
+import UserMenu from "../../components/layout/UserMenu.vue";
+import { usePWA } from "../../composables/usePWA";
+import { useSEO } from "../../composables/useSEO";
+import { useAuthStore } from "../../stores/auth";
+import { useThemeStore } from "../../stores/theme";
 
 // Stores
 const authStore = useAuthStore();
 const themeStore = useThemeStore();
 
-// Router
-const _router = useRouter();
+// Router available if needed
+// const router = useRouter();
 
 // Composables
 const seo = useSEO();

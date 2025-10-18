@@ -374,16 +374,15 @@
 import { ref, onMounted, onUnmounted, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
-import { usePlanStore } from "@/stores/plan";
-import { useStreakStore } from "@/stores/streak";
-import { useAuthStore } from "@/stores/auth";
-import UserMenu from "@/components/layout/UserMenu.vue";
+import { usePlanStore } from "../../../stores/plan";
+import { useStreakStore } from "../../../stores/streak";
+// import { useAuthStore } from "../../../stores/auth";
+import UserMenu from "../../../components/layout/UserMenu.vue";
 
 const { t } = useI18n();
 const router = useRouter();
 const planStore = usePlanStore();
 const streakStore = useStreakStore();
-const _authStore = useAuthStore();
 
 // Dashboard data
 const dashboardStats = ref({
@@ -549,7 +548,7 @@ const getMotivationalMessage = (): string => {
     "Learning never stops",
     "You're doing great!",
   ];
-  return messages[Math.floor(Math.random() * messages.length)];
+  return messages[Math.floor(Math.random() * messages.length)] ?? "Keep learning!";
 };
 
 const getQuizTrend = (): string => {
@@ -604,7 +603,7 @@ const formatStudyTime = (minutes: number): string => {
   if (minutes < 60) return `${minutes}m`;
   const hours = Math.floor(minutes / 60);
   const remainingMinutes = minutes % 60;
-  return remainingminutes > 0 ? `${hours}h ${remainingMinutes}m` : `${hours}h`;
+  return remainingMinutes > 0 ? `${hours}h ${remainingMinutes}m` : `${hours}h`;
 };
 
 const formatTimeAgo = (date: Date): string => {
@@ -648,10 +647,6 @@ const goToStudy = () => {
 
 const goToBilling = () => {
   router.push("/en/pricing");
-};
-
-const _goToProgress = () => {
-  router.push("/en/progress");
 };
 
 // Watch for route changes to refresh data when returning from study/quiz

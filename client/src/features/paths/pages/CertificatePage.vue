@@ -74,7 +74,7 @@
             <!-- Date & ID -->
             <div class="border-t border-gray-200 pt-6 dark:border-gray-700">
               <p class="text-sm text-gray-600 dark:text-gray-400">
-                Completed on {{ formatDate(certificate.completedAt as Date | string) }}
+                Completed on {{ formatDate(typeof certificate.completedAt === 'string' ? certificate.completedAt : certificate.completedAt.toISOString()) }}
               </p>
               <p class="mt-1 text-xs text-gray-500 dark:text-gray-500">
                 Certificate ID: {{ certificate.certificateId }}
@@ -113,7 +113,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import { useLearningPathsStore } from "@/stores/learning-paths";
+import { useLearningPathsStore } from "../../../stores/learning-paths";
 import type { ICertificate } from "@shared/types/learning-paths";
 
 const router = useRouter();

@@ -115,13 +115,13 @@
 </template>
 
 <script setup lang="ts">
-import type { INotificationPromptProps as Props } from "@/types/components/notifications";
+import type { INotificationPromptProps as Props } from "../../types/components/notifications";
 import { ref, computed, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
-import { useNotifications } from "@/composables/useNotifications";
+import { useNotifications } from "../../composables/useNotifications";
 
 const props = withDefaults(defineProps<Props>(), {
-  variant: "banner",
+  variant: "card",
   dismissible: true,
   showBenefits: false,
   autoDismissDelay: 0,

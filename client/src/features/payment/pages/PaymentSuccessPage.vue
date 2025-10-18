@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { usePaymentStore } from "@/stores/payment";
-import { useAuthStore } from "@/stores/auth";
+import { usePaymentStore } from "../../../stores/payment";
+import { useAuthStore } from "../../../stores/auth";
 import { useI18n } from "vue-i18n";
 
 const route = useRoute();

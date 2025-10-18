@@ -64,6 +64,7 @@ export class AIService {
   public isLoading = ref(false);
   public error = ref<string | null>(null);
   public streamingMessage = ref<string>("");
+  public isInitialized = ref(false);
 
   constructor(config?: Partial<IAIConfig>) {
     this.config = { ...DEFAULT_CONFIG, ...config };
@@ -86,12 +87,14 @@ export class AIService {
     // Test connection
     try {
       await this.testConnection();
+      this.isInitialized.value = true;
       analytics.track("ai_service_initialized", {
         provider: this.config.provider,
         model: this.config.model,
       });
     } catch (error) {
       console.error("AI service initialization failed:", error);
+      this.isInitialized.value = false;
       throw error;
     }
   }

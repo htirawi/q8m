@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ILockedBadgeProps as Props } from "@/types/components/paywall";
+import type { ILockedBadgeProps as Props } from "../../types/components/paywall";
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import type { PlanTier } from "@shared/types/plan";

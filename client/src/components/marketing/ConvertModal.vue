@@ -217,8 +217,8 @@
 import { ref, computed, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
-import { useSoftPaywall } from "@/composables/useSoftPaywall";
-import { useAnalytics } from "@/composables/useAnalytics";
+import { useSoftPaywall } from "../../composables/useSoftPaywall";
+import { useAnalytics } from "../../composables/useAnalytics";
 import type { PlanTier } from "@shared/types/plan";
 
 const { t } = useI18n();

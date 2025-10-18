@@ -235,11 +235,12 @@
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter, useRoute } from "vue-router";
-import { useAnalytics } from "@/composables/useAnalytics";
-import { useAuthStore } from "@/stores/auth";
-import { usePreferencesStore } from "@/stores/preferences";
-import ModeCard from "@/components/study/ModeCard.vue";
-import UserMenu from "@/components/layout/UserMenu.vue";
+import { useAnalytics } from "../../../composables/useAnalytics";
+import { useAuthStore } from "../../../stores/auth";
+import { usePreferencesStore } from "../../../stores/preferences";
+import type { DifficultyLevel } from "@shared/types/plan";
+import ModeCard from "../../../components/study/ModeCard.vue";
+import UserMenu from "../../../components/layout/UserMenu.vue";
 
 const { t } = useI18n();
 const router = useRouter();
@@ -248,7 +249,7 @@ const { track } = useAnalytics();
 const authStore = useAuthStore();
 const preferencesStore = usePreferencesStore();
 
-const difficulty = computed(() => route.params.difficulty as string);
+const difficulty = computed(() => route.params.difficulty as DifficultyLevel);
 const locale = computed(() => (route.params.locale as string) || "en");
 
 // Helper to get the translation key for difficulty
@@ -359,12 +360,10 @@ const handleModeSelect = async (mode: "study" | "quiz") => {
     // Study mode: Navigate to framework selection page
     // Map new difficulty values to old ones for study routes
     const mappedDifficulty = mapToOldDifficulty(difficulty.value);
-    Studymode;
     router.push(`/${locale.value}/study/${mappedDifficulty}`);
   } else {
     // Quiz mode: Map difficulty to quiz level and navigate directly
     const level = difficultyToLevelMap[difficulty.value];
-    Quizmode;
     router.push(`/${locale.value}/quiz/${level}`);
   }
 };

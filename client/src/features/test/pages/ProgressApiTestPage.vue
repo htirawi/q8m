@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import { useProgress } from "@/composables/useProgress";
+import { useProgress } from "../../../composables/useProgress";
 
 const { isLoading, error, progress, stats, getProgress, getStats } = useProgress();
 

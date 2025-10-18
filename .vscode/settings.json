@@ -1,12 +1,39 @@
 {
+  // TypeScript Configuration
   "typescript.tsdk": "node_modules/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
+  "typescript.validate.enable": true,
+  "typescript.suggestionActions.enabled": true,
+  "typescript.preferences.includePackageJsonAutoImports": "on",
+  "typescript.tsserver.experimental.enableProjectDiagnostics": true,
+  "typescript.tsserver.maxTsServerMemory": 4096,
+
+  // Vue/Volar Configuration
+  "volar.autoCompleteRefs": true,
+  "volar.codeLens.scriptSetupTools": true,
+  "volar.completion.autoImportComponent": true,
+  "volar.takeOverMode.enabled": true,
+
+  // Editor Configuration
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit",
     "source.organizeImports": "never"
   },
+
+  // Auto-save for immediate feedback
+  "files.autoSave": "onFocusChange",
+
+  // Problem Display
+  "problems.decorations.enabled": true,
+  "problems.showCurrentInStatus": true,
+
+  // ESLint Configuration
+  "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact", "vue"],
+  "eslint.workingDirectories": ["./client", "./server"],
+
+  // File Exclusions
   "files.exclude": {
     "**/.git": true,
     "**/node_modules": true,
@@ -14,18 +41,33 @@
     "**/.DS_Store": true,
     "**/tsconfig.tsbuildinfo": true
   },
+
+  // Search Exclusions
   "search.exclude": {
     "**/node_modules": true,
     "**/dist": true,
     "**/coverage": true,
-    "pnpm-lock.yaml": true
+    "pnpm-lock.yaml": true,
+    "**/.vite": true
   },
+
+  // File Watcher Exclusions (performance)
+  "files.watcherExclude": {
+    "**/node_modules/**": true,
+    "**/dist/**": true,
+    "**/coverage/**": true,
+    "**/.vite/**": true
+  },
+
+  // File Associations
   "files.associations": {
-    "*.css": "tailwindcss"
+    "*.css": "tailwindcss",
+    "*.vue": "vue"
   },
+
+  // TailwindCSS Configuration
   "tailwindCSS.experimental.classRegex": [
     ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
     ["cx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
-  ],
-  "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"]
+  ]
 }

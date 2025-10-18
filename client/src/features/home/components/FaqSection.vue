@@ -171,13 +171,13 @@
 </template>
 
 <script setup lang="ts">
-import type { IFaqSectionProps as Props } from "@/types/components/home";
+import type { IFaqSectionProps as Props } from "../../../types/components/home";
 import { ref, computed, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { HOMEPAGE_FAQS } from "@/data/home";
-import { useHomepageAnalytics } from "@/composables/useHomepageAnalytics";
-import SectionHeader from "@/components/ui/SectionHeader.vue";
-import FaqItem from "@/components/ui/FaqItem.vue";
+import { useHomepageAnalytics } from "../../../composables/useHomepageAnalytics";
+import SectionHeader from "../../../components/ui/SectionHeader.vue";
+import FaqItem from "../../../components/ui/FaqItem.vue";
 
 const props = withDefaults(defineProps<Props>(), {
   faqs: () => HOMEPAGE_FAQS,
@@ -252,7 +252,7 @@ const handleToggle = (faqId: string): void => {
 
   const faq = props.faqs.find((f) => f.id === faqId);
   if (faq) {
-    trackFaqInteraction({
+    trackFaqInteraction?.({
       action: isOpen ? "collapse" : "expand",
       questionId: faqId,
       question: t(faq.qKey),
@@ -263,7 +263,10 @@ const handleToggle = (faqId: string): void => {
 const handleSearch = (): void => {
   // Auto-open first result if searching
   if (searchQuery.value.trim() && filteredFaqs.value.length > 0) {
-    openFaqIds.value.add(filteredFaqs.value[0].id);
+    const firstFaq = filteredFaqs.value[0];
+    if (firstFaq) {
+      openFaqIds.value.add(firstFaq.id);
+    }
   }
 };
 
@@ -276,14 +279,17 @@ const selectCategory = (categoryId: string): void => {
   selectedCategory.value = categoryId;
   // Auto-open first result when filtering
   if (filteredFaqs.value.length > 0) {
-    openFaqIds.value.add(filteredFaqs.value[0].id);
+    const firstFaq = filteredFaqs.value[0];
+    if (firstFaq) {
+      openFaqIds.value.add(firstFaq.id);
+    }
   }
 };
 
 // Watch for search changes to track analytics
 watch(searchQuery, (newQuery) => {
   if (newQuery.trim()) {
-    trackFaqInteraction({
+    trackFaqInteraction?.({
       action: "search",
       questionId: "search",
       question: newQuery,

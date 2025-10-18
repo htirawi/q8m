@@ -62,8 +62,8 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
-import { useI18n } from "vue-i18n";
-import { parseError, getUserFriendlyMessage, logError } from "@/utils/errorHandler";
+// import { useI18n } from "vue-i18n";
+import { parseError, logError } from "../utils/errorHandler";
 
 interface Props {
   error?: Error | unknown;
@@ -94,7 +94,6 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<Emits>();
 
 const router = useRouter();
-const { t } = useI18n();
 
 const isRetrying = ref(false);
 
@@ -104,16 +103,6 @@ const errorDetails = computed(() => {
   if (!props.error) return null;
   const parsed = parseError(props.error);
   return JSON.stringify(parsed, null, 2);
-});
-
-const _displayTitle = computed(() => {
-  return props.title || t("errors.somethingWentWrong");
-});
-
-const _displayMessage = computed(() => {
-  if (props.message) return props.message;
-  if (props.error) return getUserFriendlyMessage(props.error, props.context);
-  return t("errors.defaultMessage");
 });
 
 const handleRetry = async () => {

@@ -287,9 +287,10 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
-import { useOnboarding } from "@/composables/useOnboarding";
-import { useConfetti } from "@/composables/useConfetti";
-import type { OnboardingGoal, ExperienceLevel, Framework } from "@shared/types/onboarding";
+import { useOnboarding } from "../../../composables/useOnboarding";
+import { useConfetti } from "../../../composables/useConfetti";
+import type { OnboardingGoal, Framework } from "@shared/types/onboarding";
+import type { ExperienceLevel } from "@shared/types/plan";
 
 const router = useRouter();
 const { celebrate } = useConfetti();
@@ -329,7 +330,7 @@ const studyPrefs = ref<{
 
 // Computed properties
 const stepTitle = computed(() => {
-  switch (currentStep.value) {
+  switch (currentStep) {
     case 1:
       return "What's your goal?";
     case 2:
@@ -344,7 +345,7 @@ const stepTitle = computed(() => {
 });
 
 const stepDescription = computed(() => {
-  switch (currentStep.value) {
+  switch (currentStep) {
     case 1:
       return "Help us understand what you want to achieve";
     case 2:
@@ -363,16 +364,16 @@ function selectGoal(goal: OnboardingGoal) {
   setGoal(goal);
 }
 
-function selectExperienceLevel(level: experiencelevel) {
+function selectExperienceLevel(level: ExperienceLevel) {
   setExperienceLevel(level);
 }
 
-function toggleFramework(framework: framework) {
+function toggleFramework(framework: Framework) {
   toggleFrameworkInStore(framework);
 }
 
 function isFrameworkSelected(framework: Framework): boolean {
-  return preferences.value.frameworks?.includes(framework) || false;
+  return preferences.frameworks?.includes(framework) || false;
 }
 
 async function complete() {

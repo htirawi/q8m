@@ -105,7 +105,7 @@
 </template>
 
 <script setup lang="ts">
-import type { IModeCardProps as Props } from "@/types/components/study";
+import type { IModeCardProps as Props } from "../../types/components/study";
 import { computed } from "vue";
 
 const props = defineProps<Props>();

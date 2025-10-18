@@ -3,9 +3,9 @@ import { ref, computed } from "vue";
 
 import { useI18n } from "vue-i18n";
 
-import LoadingSpinner from "@/components/ui/LoadingSpinner.vue";
-import { useFormValidation } from "@/composables/useFormValidation";
-import type { EmailStepProps } from "@/types/ui/component-props";
+import LoadingSpinner from "../../../components/ui/LoadingSpinner.vue";
+import { useFormValidation } from "../../../composables/useFormValidation";
+import type { EmailStepProps } from "../../../types/ui/component-props";
 
 const props = defineProps<EmailStepProps>();
 

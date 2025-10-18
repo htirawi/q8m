@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { BillingCycle } from "@/types/domain/billing";
-import type { BillingToggleEmits, BillingToggleProps } from "@/types/ui/component-props";
+import type { BillingCycle } from "../../types/domain/billing";
+import type { BillingToggleEmits, BillingToggleProps } from "../../types/ui/component-props";
 
 defineProps<BillingToggleProps>();
 const emit = defineEmits<BillingToggleEmits>();

@@ -2,8 +2,8 @@
 import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
-import { useAuthRedirect } from "@/composables/useAuthRedirect";
-import { API_ENDPOINTS } from "@/config/api";
+import { useAuthRedirect } from "../../../composables/useAuthRedirect";
+import { API_ENDPOINTS } from "../../../config/api";
 
 const route = useRoute();
 const router = useRouter();

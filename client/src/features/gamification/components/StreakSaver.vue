@@ -144,8 +144,8 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { useStreak } from "@/composables/useStreak";
-import { useConfetti } from "@/composables/useConfetti";
+import { useStreak } from "../../../composables/useStreak";
+import { useConfetti } from "../../../composables/useConfetti";
 
 const {
   streak,

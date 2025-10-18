@@ -89,7 +89,7 @@
           <!-- Icon Circle -->
           <div
             class="relative z-10 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full shadow-lg"
-            :class="getIconClass(achievement.type)"
+            :class="getIconClass(achievement.type ?? 'badge')"
           >
             <span class="text-2xl">{{ achievement.icon }} </span>
 
@@ -97,14 +97,14 @@
             <div
               v-if="isRecent(achievement.date)"
               class="absolute inset-0 animate-ping rounded-full"
-              :class="getPulseClass(achievement.type)"
+              :class="getPulseClass(achievement.type ?? 'badge')"
             ></div>
           </div>
 
           <!-- Content Card -->
           <div
             class="group flex-1 cursor-pointer overflow-hidden rounded-xl border-2 transition-all hover:shadow-lg"
-            :class="getCardClass(achievement.type)"
+            :class="getCardClass(achievement.type ?? 'badge')"
             @click="$emit('achievement-click', achievement)"
           >
             <div class="p-4">
@@ -191,7 +191,7 @@
 import type {
   IAchievement,
   IAchievementTimelineProps as Props,
-} from "@/types/components/gamification";
+} from "../../../types/components/gamification";
 import { ref, computed } from "vue";
 
 const props = withDefaults(defineProps<Props>(), {
@@ -203,6 +203,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<{
   "achievement-click": [achievement: IAchievement];
+  "load-more": [];
 }>();
 
 const selectedFilter = ref<"all" | "badges" | "levels" | "milestones">("all");

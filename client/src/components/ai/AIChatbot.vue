@@ -1,16 +1,8 @@
 <template>
-  <div
-    class="ai-chatbot"
-    :class="{ 'ai-chatbot--open': isOpen, 'ai-chatbot--fullscreen': isFullscreen }"
-  >
+  <div class="ai-chatbot" :class="{ 'ai-chatbot--open': isOpen, 'ai-chatbot--fullscreen': isFullscreen }">
     <!-- Floating action button -->
     <Transition name="scale">
-      <button
-        v-if="!isOpen"
-        class="ai-chatbot__fab"
-        @click="openChat"
-        :aria-label="$t('ai.openChat')"
-      >
+      <button v-if="!isOpen" class="ai-chatbot__fab" @click="openChat" :aria-label="$t('ai.openChat')">
         <div class="ai-chatbot__fab-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" />
@@ -46,13 +38,8 @@
           </div>
 
           <div class="ai-chatbot__header-actions">
-            <button
-              class="ai-chatbot__action"
-              @click="toggleVoice"
-              :aria-label="$t('ai.toggleVoice')"
-              :title="$t('ai.toggleVoice')"
-              v-if="voiceEnabled"
-            >
+            <button class="ai-chatbot__action" @click="toggleVoice" :aria-label="$t('ai.toggleVoice')"
+              :title="$t('ai.toggleVoice')" v-if="voiceEnabled">
               <svg v-if="voiceActive" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
                 <path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8" />
@@ -66,44 +53,27 @@
               </svg>
             </button>
 
-            <button
-              class="ai-chatbot__action"
-              @click="toggleFullscreen"
-              :aria-label="$t('ai.toggleFullscreen')"
-              :title="$t('ai.toggleFullscreen')"
-            >
+            <button class="ai-chatbot__action" @click="toggleFullscreen" :aria-label="$t('ai.toggleFullscreen')"
+              :title="$t('ai.toggleFullscreen')">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path
-                  v-if="!isFullscreen"
-                  d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"
-                />
-                <path
-                  v-else
-                  d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"
-                />
+                <path v-if="!isFullscreen"
+                  d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
+                <path v-else
+                  d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3" />
               </svg>
             </button>
 
-            <button
-              class="ai-chatbot__action"
-              @click="showSettings = true"
-              :aria-label="$t('ai.settings')"
-              :title="$t('ai.settings')"
-            >
+            <button class="ai-chatbot__action" @click="showSettings = true" :aria-label="$t('ai.settings')"
+              :title="$t('ai.settings')">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <circle cx="12" cy="12" r="3" />
                 <path
-                  d="M12 1v6m0 6v6m4.22-13.22l4.24 4.24M1.54 1.54l4.24 4.24M20.46 20.46l-4.24-4.24M1.54 20.46l4.24-4.24"
-                />
+                  d="M12 1v6m0 6v6m4.22-13.22l4.24 4.24M1.54 1.54l4.24 4.24M20.46 20.46l-4.24-4.24M1.54 20.46l4.24-4.24" />
               </svg>
             </button>
 
-            <button
-              class="ai-chatbot__action ai-chatbot__close"
-              @click="closeChat"
-              :aria-label="$t('ai.closeChat')"
-              :title="$t('ai.closeChat')"
-            >
+            <button class="ai-chatbot__action ai-chatbot__close" @click="closeChat" :aria-label="$t('ai.closeChat')"
+              :title="$t('ai.closeChat')">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path d="M18 6L6 18M6 6l12 12" />
               </svg>
@@ -112,18 +82,9 @@
         </div>
 
         <!-- Suggestions bar -->
-        <TransitionGroup
-          name="fade"
-          tag="div"
-          class="ai-chatbot__suggestions"
-          v-if="showSuggestions"
-        >
-          <button
-            v-for="suggestion in suggestions"
-            :key="suggestion.id"
-            class="ai-chatbot__suggestion"
-            @click="selectSuggestion(suggestion)"
-          >
+        <TransitionGroup name="fade" tag="div" class="ai-chatbot__suggestions" v-if="showSuggestions">
+          <button v-for="suggestion in suggestions" :key="suggestion.id" class="ai-chatbot__suggestion"
+            @click="selectSuggestion(suggestion)">
             <span class="ai-chatbot__suggestion-icon">{{ suggestion.icon }} </span>
             <span class="ai-chatbot__suggestion-text">{{ suggestion.text }} </span>
           </button>
@@ -137,12 +98,8 @@
             <p class="ai-chatbot__welcome-text">{{ $t("ai.welcomeText") }}</p>
 
             <div class="ai-chatbot__quick-actions">
-              <button
-                v-for="action in quickActions"
-                :key="action.id"
-                class="ai-chatbot__quick-action"
-                @click="handleQuickAction(action)"
-              >
+              <button v-for="action in quickActions" :key="action.id" class="ai-chatbot__quick-action"
+                @click="handleQuickAction(action)">
                 <span class="ai-chatbot__quick-action-icon">{{ action.icon }} </span>
                 <span class="ai-chatbot__quick-action-label">{{ action.label }} </span>
                 <span class="ai-chatbot__quick-action-desc">{{ action.description ?? "" }}</span>
@@ -152,29 +109,15 @@
 
           <!-- Message list -->
           <TransitionGroup name="message" tag="div" class="ai-chatbot__message-list">
-            <div
-              v-for="message in messages"
-              :key="message.id"
-              class="ai-chatbot__message"
-              :class="`ai-chatbot__message--${message.role}`"
-            >
+            <div v-for="message in messages" :key="message.id" class="ai-chatbot__message"
+              :class="`ai-chatbot__message--${message.role}`">
               <!-- Avatar -->
               <div class="ai-chatbot__message-avatar">
-                <svg
-                  v-if="message.role === 'assistant'"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                >
+                <svg v-if="message.role === 'assistant'" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                   <path d="M12 2L2 7l10 5 10-5-10-5z" />
                   <path d="M2 17l10 5 10-5" />
                 </svg>
-                <svg
-                  v-else-if="message.role === 'user'"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                >
+                <svg v-else-if="message.role === 'user'" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                   <circle cx="12" cy="7" r="4" />
                   <path d="M5.5 21v-2a7 7 0 0 1 13 0v2" />
                 </svg>
@@ -190,19 +133,12 @@
                 </div>
 
                 <!-- Message text with markdown support -->
-                <div
-                  v-else
-                  class="ai-chatbot__message-text"
-                  v-html="renderMarkdown(message.content)"
-                ></div>
+                <div v-else class="ai-chatbot__message-text" v-html="renderMarkdown(message.content)"></div>
 
                 <!-- Code blocks -->
                 <div v-if="message.metadata?.codeBlocks" class="ai-chatbot__code-blocks">
-                  <div
-                    v-for="(block, index) in message.metadata.codeBlocks"
-                    :key="index"
-                    class="ai-chatbot__code-block"
-                  >
+                  <div v-for="(block, index) in message.metadata.codeBlocks" :key="index"
+                    class="ai-chatbot__code-block">
                     <div class="ai-chatbot__code-header">
                       <span class="ai-chatbot__code-lang">{{ block.language }}</span>
                       <button class="ai-chatbot__code-copy" @click="copyCode(block.code)">
@@ -220,16 +156,11 @@
 
                 <!-- Attachments -->
                 <div v-if="message.attachments?.length" class="ai-chatbot__attachments">
-                  <div
-                    v-for="attachment in message.attachments"
-                    :key="attachment.id"
-                    class="ai-chatbot__attachment"
-                    @click="viewAttachment(attachment)"
-                  >
+                  <div v-for="attachment in message.attachments" :key="attachment.id" class="ai-chatbot__attachment"
+                    @click="viewAttachment(attachment)">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                       <path
-                        d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"
-                      />
+                        d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" />
                     </svg>
                     <span>{{ attachment.filename }} </span>
                   </div>
@@ -240,52 +171,35 @@
                   <span class="ai-chatbot__message-time">{{ formatTime(message.timestamp) }}</span>
 
                   <div class="ai-chatbot__message-buttons">
-                    <button
-                      class="ai-chatbot__message-btn"
-                      @click="copyMessage(message.content)"
-                      :aria-label="$t('ai.copy')"
-                    >
+                    <button class="ai-chatbot__message-btn" @click="copyMessage(message.content)"
+                      :aria-label="$t('ai.copy')">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                         <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
                         <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
                       </svg>
                     </button>
 
-                    <button
-                      v-if="message.role === 'assistant'"
-                      class="ai-chatbot__message-btn"
-                      @click="regenerateMessage(message)"
-                      :aria-label="$t('ai.regenerate')"
-                    >
+                    <button v-if="message.role === 'assistant'" class="ai-chatbot__message-btn"
+                      @click="regenerateMessage(message)" :aria-label="$t('ai.regenerate')">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                         <path
-                          d="M1 4v6h6M23 20v-6h-6M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"
-                        />
+                          d="M1 4v6h6M23 20v-6h-6M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15" />
                       </svg>
                     </button>
 
-                    <button
-                      v-if="message.role === 'assistant'"
-                      class="ai-chatbot__message-btn"
-                      @click="speakMessage(message.content)"
-                      :aria-label="$t('ai.speak')"
-                    >
+                    <button v-if="message.role === 'assistant'" class="ai-chatbot__message-btn"
+                      @click="speakMessage(message.content)" :aria-label="$t('ai.speak')">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                         <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
                         <path d="M15.54 8.46a5 5 0 0 1 0 7.07M19.07 4.93a10 10 0 0 1 0 14.14" />
                       </svg>
                     </button>
 
-                    <button
-                      class="ai-chatbot__message-btn"
-                      @click="toggleReaction(message, 'helpful')"
-                      :class="{ active: hasReaction(message, 'helpful') }"
-                      :aria-label="$t('ai.helpful')"
-                    >
+                    <button class="ai-chatbot__message-btn" @click="toggleReaction(message, 'helpful')"
+                      :class="{ active: hasReaction(message, 'helpful') }" :aria-label="$t('ai.helpful')">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                         <path
-                          d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"
-                        />
+                          d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3" />
                       </svg>
                     </button>
                   </div>
@@ -304,32 +218,18 @@
         <!-- Input area -->
         <div class="ai-chatbot__input-area">
           <!-- File attachment -->
-          <button
-            class="ai-chatbot__attach"
-            @click="selectFile"
-            :aria-label="$t('ai.attach')"
-            :title="$t('ai.attach')"
-          >
+          <button class="ai-chatbot__attach" @click="selectFile" :aria-label="$t('ai.attach')" :title="$t('ai.attach')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <path
-                d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"
-              />
+                d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" />
             </svg>
           </button>
 
           <!-- Text input -->
           <div class="ai-chatbot__input-wrapper">
-            <textarea
-              ref="inputField"
-              v-model="inputText"
-              class="ai-chatbot__input"
-              :placeholder="inputPlaceholder"
-              @keydown.enter.exact.prevent="sendMessage"
-              @keydown.enter.shift.prevent="inputText += '\n'"
-              @input="handleInput"
-              :disabled="isLoading"
-              rows="1"
-            ></textarea>
+            <textarea ref="inputField" v-model="inputText" class="ai-chatbot__input" :placeholder="inputPlaceholder"
+              @keydown.enter.exact.prevent="sendMessage" @keydown.enter.shift.prevent="inputText += '\n'"
+              @input="handleInput" :disabled="isLoading" rows="1"></textarea>
 
             <!-- Character count -->
             <span v-if="showCharCount" class="ai-chatbot__char-count">
@@ -338,14 +238,9 @@
           </div>
 
           <!-- Voice input -->
-          <button
-            v-if="voiceEnabled"
-            class="ai-chatbot__voice-btn"
-            :class="{ 'ai-chatbot__voice-btn--recording': isRecording }"
-            @click="toggleRecording"
-            :aria-label="$t('ai.voiceInput')"
-            :title="$t('ai.voiceInput')"
-          >
+          <button v-if="voiceEnabled" class="ai-chatbot__voice-btn"
+            :class="{ 'ai-chatbot__voice-btn--recording': isRecording }" @click="toggleRecording"
+            :aria-label="$t('ai.voiceInput')" :title="$t('ai.voiceInput')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
               <path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8" />
@@ -353,24 +248,13 @@
           </button>
 
           <!-- Send button -->
-          <button
-            class="ai-chatbot__send"
-            :disabled="!canSend"
-            @click="sendMessage"
-            :aria-label="$t('ai.send')"
-            :title="$t('ai.send')"
-          >
+          <button class="ai-chatbot__send" :disabled="!canSend" @click="sendMessage" :aria-label="$t('ai.send')"
+            :title="$t('ai.send')">
             <svg v-if="!isLoading" viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <line x1="22" y1="2" x2="11" y2="13" />
               <polygon points="22 2 15 22 11 13 2 9 22 2" />
             </svg>
-            <svg
-              v-else
-              class="ai-chatbot__send-loading"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-            >
+            <svg v-else class="ai-chatbot__send-loading" viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <path d="M21 12a9 9 0 1 1-6.219-8.56" />
             </svg>
           </button>
@@ -400,13 +284,8 @@
     </Teleport>
 
     <!-- File input (hidden) -->
-    <input
-      ref="fileInput"
-      type="file"
-      class="hidden"
-      @change="handleFileSelect"
-      accept=".txt,.js,.ts,.vue,.jsx,.tsx,.json,.md,.html,.css,.scss,.py,.java,.cpp,.c,.go,.rs,.php,.rb,.swift"
-    />
+    <input ref="fileInput" type="file" class="hidden" @change="handleFileSelect"
+      accept=".txt,.js,.ts,.vue,.jsx,.tsx,.json,.md,.html,.css,.scss,.py,.java,.cpp,.c,.go,.rs,.php,.rb,.swift" />
   </div>
 </template>
 
@@ -436,6 +315,8 @@ const props = withDefaults(defineProps<Props>(), {
 
 // Emits
 const emit = defineEmits<{
+  open: [];
+  close: [];
   "message-sent": [message: IChatMessage];
   "context-changed": [context: IChatContext | null];
 }>();
@@ -1253,6 +1134,7 @@ watch(
 }
 
 @keyframes typing {
+
   0%,
   60%,
   100% {
@@ -1465,7 +1347,7 @@ watch(
 }
 
 /* Mobile responsiveness */
-@media (width <= 640px) {
+@media (width <=640px) {
   .ai-chatbot__window {
     @apply fixed inset-0;
     @apply h-full w-full;
@@ -1480,6 +1362,7 @@ watch(
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
+
   .ai-chatbot__fab-pulse,
   .ai-chatbot__typing span,
   .ai-chatbot__loading-spinner,

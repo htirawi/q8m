@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { FinalCtaEmits } from "@/types/ui/component-props";
-import { finalCtaData } from "@/components/pricing/pricing.config";
+import type { FinalCtaEmits } from "../../types/ui/component-props";
+import { finalCtaData } from "../../components/pricing/pricing.config";
 
 const emit = defineEmits<FinalCtaEmits>();
 

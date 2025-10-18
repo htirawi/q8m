@@ -32,10 +32,13 @@ export function useScrollTracking(config: IScrollTrackingConfig = {}): IScrollTr
 
   const scrollDepth = ref<number>(0);
   const scrollY = ref<number>(0);
+  const scrollPercentage = ref<number>(0);
+  const isScrollingDown = ref<boolean>(false);
   const reachedMilestones = ref<Set<number>>(new Set());
   const startTime = ref<number>(Date.now());
 
   let debounceTimeout: ReturnType<typeof setTimeout> | null = null;
+  let lastScrollY = 0;
 
   /**
    * Calculate scroll depth as percentage (0-100)
@@ -85,8 +88,12 @@ export function useScrollTracking(config: IScrollTrackingConfig = {}): IScrollTr
     }
 
     debounceTimeout = setTimeout(() => {
-      scrollY.value = window.scrollY;
+      const currentScrollY = window.scrollY;
+      scrollY.value = currentScrollY;
       scrollDepth.value = calculateScrollDepth();
+      scrollPercentage.value = scrollDepth.value;
+      isScrollingDown.value = currentScrollY > lastScrollY;
+      lastScrollY = currentScrollY;
 
       if (trackingEnabled) {
         // Check each milestone
@@ -137,6 +144,8 @@ export function useScrollTracking(config: IScrollTrackingConfig = {}): IScrollTr
   return {
     scrollDepth,
     scrollY,
+    scrollPercentage,
+    isScrollingDown,
     hasReachedMilestone,
   };
 }

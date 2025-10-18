@@ -129,7 +129,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import { useLearningPathsStore } from "@/stores/learning-paths";
+import { useLearningPathsStore } from "../../../stores/learning-paths";
 import ModuleList from "../components/ModuleList.vue";
 import type { IModule } from "@shared/types/learning-paths";
 
@@ -177,7 +177,7 @@ const nextModule = () => {
     (m) => m.moduleId === currentModule.value!.moduleId
   );
   if (currentIndex < store.currentPath.modules.length - 1) {
-    currentModule.value = store.currentPath.modules[currentIndex + 1];
+    currentModule.value = store.currentPath.modules[currentIndex + 1] || null;
   }
 };
 
@@ -210,9 +210,9 @@ onMounted(async () => {
       currentModule.value =
         store.currentPath.modules.find(
           (m) => m.moduleId === store.currentEnrollment!.currentModuleId
-        ) || store.currentPath.modules[0];
+        ) || store.currentPath.modules[0] || null;
     } else {
-      currentModule.value = store.currentPath.modules[0];
+      currentModule.value = store.currentPath.modules[0] || null;
     }
   }
 });

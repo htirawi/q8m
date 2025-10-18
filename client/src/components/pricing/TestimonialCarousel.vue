@@ -104,52 +104,67 @@
 </template>
 
 <script setup lang="ts">
-import type { ITestimonial, ITestimonialCarouselProps as Props } from "@/types/components/pricing";
+import type { ITestimonialCarouselProps as Props } from "../../types/components/pricing";
 import { ref, computed, onMounted, onUnmounted } from "vue";
 
 const props = withDefaults(defineProps<Props>(), {
   testimonials: () => [
     {
       id: "1",
+      quote: "Q8M helped me land my dream job at Google! The questions are incredibly well-crafted and mirror real interview scenarios. The spaced repetition system ensured I retained everything.",
       text: "Q8M helped me land my dream job at Google! The questions are incredibly well-crafted and mirror real interview scenarios. The spaced repetition system ensured I retained everything.",
       name: "Sarah Johnson",
+      role: "Senior Frontend Developer",
       title: "Senior Frontend Developer",
       company: "Google",
+      rating: 5,
       badge: "Got hired at FAANG",
     },
     {
       id: "2",
+      quote: "I've tried many platforms, but Q8M stands out with its AI-powered explanations and gamification. Learning feels like playing a game, and I've mastered React in just 3 months!",
       text: "I've tried many platforms, but Q8M stands out with its AI-powered explanations and gamification. Learning feels like playing a game, and I've mastered React in just 3 months!",
       name: "Mohammed Al-Rashid",
+      role: "Full Stack Developer",
       title: "Full Stack Developer",
       company: "Amazon",
+      rating: 5,
     },
     {
       id: "3",
+      quote: "The learning paths are phenomenal! Instead of randomly studying, I followed the React Mastery path and it structured my learning perfectly. Got my certificate and immediately got promoted.",
       text: "The learning paths are phenomenal! Instead of randomly studying, I followed the React Mastery path and it structured my learning perfectly. Got my certificate and immediately got promoted.",
       name: "Emily Chen",
+      role: "Tech Lead",
       title: "Tech Lead",
       company: "Microsoft",
+      rating: 5,
       badge: "Promoted after completion",
     },
     {
       id: "4",
+      quote: "As someone new to coding, Q8M's onboarding and experience-based recommendations were a game changer. The community discussions helped me understand concepts I was struggling with.",
       text: "As someone new to coding, Q8M's onboarding and experience-based recommendations were a game changer. The community discussions helped me understand concepts I was struggling with.",
       name: "David Martinez",
+      role: "Junior Developer",
       title: "Junior Developer",
       company: "Startup Inc",
+      rating: 5,
     },
     {
       id: "5",
+      quote: "The streak system kept me accountable. 90 days straight of learning, and I went from knowing basic JavaScript to confidently building full-stack applications. Worth every penny!",
       text: "The streak system kept me accountable. 90 days straight of learning, and I went from knowing basic JavaScript to confidently building full-stack applications. Worth every penny!",
       name: "Aisha Khan",
+      role: "Software Engineer",
       title: "Software Engineer",
       company: "Meta",
+      rating: 5,
       badge: "90-day streak master",
     },
   ],
-  autoplay: true,
-  autoplayInterval: 5000,
+  autoPlay: true,
+  interval: 5000,
 });
 
 const currentIndex = ref(0);
@@ -200,11 +215,11 @@ function goTo(index: number) {
 }
 
 function startAutoplay() {
-  if (!props.autoplay || props.testimonials.length <= 1) return;
+  if (!props.autoPlay || props.testimonials.length <= 1) return;
   autoplayTimer = setTimeout(() => {
     next();
     startAutoplay();
-  }, props.autoplayInterval);
+  }, props.interval);
 }
 
 function stopAutoplay() {

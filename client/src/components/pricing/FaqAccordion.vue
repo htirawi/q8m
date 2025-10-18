@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import { ChevronDownIcon } from "@heroicons/vue/24/outline";
 
-import { faqs } from "@/components/pricing/pricing.config";
+import { faqs } from "../../components/pricing/pricing.config";
 
 const openFaqs = ref<number[]>([]);
 

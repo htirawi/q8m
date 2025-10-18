@@ -43,10 +43,10 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
-import type { SharePlatform, ShareType } from "@/stores/shares";
-import { useSharesStore } from "@/stores/shares";
+import type { SharePlatform, ShareType } from "../../../stores/shares";
+import { useSharesStore } from "../../../stores/shares";
 
-interface props {
+interface Props {
   shareType: ShareType;
   entityId: string;
   platform?: SharePlatform;

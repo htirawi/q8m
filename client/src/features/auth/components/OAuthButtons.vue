@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
 
-import type { OAuthButtonsProps } from "@/types/ui/component-props";
+import type { OAuthButtonsProps } from "../../../types/ui/component-props";
 
 defineProps<OAuthButtonsProps>();
 

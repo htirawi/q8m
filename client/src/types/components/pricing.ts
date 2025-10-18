@@ -59,7 +59,14 @@ export interface IPlanCardProps {
     descriptionKey: string;
     priceMonthly: number;
     priceYearly: number;
-    features?: Array<{ labelKey: string; included: boolean }>;
+    features?: Array<{ labelKey: string; included: boolean }> | {
+      studyItems: number;
+      quizQuestions: number;
+      aiSupport: boolean;
+      priority: "low" | "medium" | "high";
+      benefits: string[];
+      showDeltas?: boolean;
+    };
     badge?: {
       textKey: string;
       color: string;
@@ -67,9 +74,14 @@ export interface IPlanCardProps {
     cta: {
       labelKey: string;
     };
+    reassurance?: {
+      items: string[];
+    };
     visual?: {
       icon: string;
-      color: string;
+      color?: string;
+      gradient?: string;
+      accentColor?: string;
     };
     metadata?: {
       featured?: boolean;
@@ -88,11 +100,15 @@ export interface IPlanCardEmits {
 export interface ITestimonial {
   id: string;
   name: string;
-  role: string;
+  role: string; // Job title/role
+  title?: string; // Alternative to role (for backward compatibility)
   company: string;
-  image: string;
-  quote: string;
+  image?: string;
+  avatar?: string; // Alternative to image
+  quote: string; // Main testimonial text
+  text?: string; // Alternative to quote (for backward compatibility)
   rating: number;
+  badge?: string; // Achievement badge text
 }
 
 export interface ITestimonialCarouselProps {

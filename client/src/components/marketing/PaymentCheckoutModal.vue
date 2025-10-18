@@ -2,12 +2,12 @@
 import type {
   IPaymentCheckoutModalProps as IProps,
   IPaymentCheckoutModalEmits as IEmits,
-} from "@/types/components/marketing";
+} from "../../types/components/marketing";
 import { ref, computed, watch } from "vue";
 import { useI18n } from "vue-i18n";
-import { useCheckout } from "@/composables/useCheckout";
-import { useAnalytics } from "@/composables/useAnalytics";
-import type { PlanId, BillingCycle } from "@/types/pricing";
+import { useCheckout } from "../../composables/useCheckout";
+import { useAnalytics } from "../../composables/useAnalytics";
+import type { BillingCycle } from "../../types/pricing";
 
 const props = withDefaults(defineProps<IProps>(), {
   billing: "annual",
@@ -97,7 +97,7 @@ watch(
   () => [props.planId, props.billing],
   ([planId, billing]) => {
     if (planId && billing) {
-      selectPlan(planId as any, billing as BillingCycle);
+      selectPlan(planId as any, billing as BillingCycle as any);
     }
   },
   { immediate: true }

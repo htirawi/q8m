@@ -3,7 +3,7 @@
     <div class="recent-activity__header">
       <h3 class="recent-activity__title">{{ $t("dashboard.recentActivity") }}</h3>
       <button v-if="activities.length > displayLimit" class="recent-activity__toggle" @click="showAll = !showAll">
-        {{ showAll ? $t('common.showLess') : $t('common.showAll')$t }}
+        {{ showAll ? $t('common.showLess') : $t('common.showAll') }}
       </button>
     </div>
 
@@ -23,7 +23,7 @@
           <p v-if="activity.description" class="activity-item__description">
             {{ activity.description ?? "" }}
           </p>
-          <time class="activity-item__time" :datetime="activity.timestamp">
+          <time class="activity-item__time" :datetime="typeof activity.timestamp === 'string' ? activity.timestamp : activity.timestamp.toISOString()">
             {{ formatTime(activity.timestamp) }}
           </time>
         </div>
@@ -58,7 +58,7 @@
 import { ref, computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
-import type { IActivity } from "@/types/components/common";
+import type { IActivity } from "../../types/components/common";
 
 interface Props {
   activities: IActivity[];
@@ -108,7 +108,7 @@ const formatTime = (timestamp: Date | string): string => {
 };
 
 const handleActivityClick = (activity: IActivity) => {
-  emit("activity-click", activity);
+  emit("action-click", activity);
 
   if (activity.actionUrl) {
     router.push(activity.actionUrl);

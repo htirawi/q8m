@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-import Toast from "@/components/ui/Toast.vue";
+import Toast from "../../components/ui/Toast.vue";
 
-import type { ToastItem } from "@/types/ui/internal";
+import type { ToastItem } from "../../types/ui/internal";
 
 // State
 const toasts = ref<ToastItem[]>([]);

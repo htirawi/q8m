@@ -165,7 +165,7 @@
       <!-- Accept Button (for received pending challenges) -->
       <button
         v-if="challenge.status === 'pending' && !isChallenger(challenge)"
-        @click="$emit('accept', String(challenge._id || challenge.id || ''))"
+        @click="$emit('accept', String(challenge._id || ''))"
         :disabled="loading"
         class="flex-1 rounded-lg bg-green-600 px-4 py-2 font-medium text-white transition-colors hover:bg-green-700 disabled:bg-gray-400"
       >
@@ -175,7 +175,7 @@
       <!-- Reject Button (for received pending challenges) -->
       <button
         v-if="challenge.status === 'pending' && !isChallenger(challenge)"
-        @click="$emit('reject', String(challenge._id || challenge.id || ''))"
+        @click="$emit('reject', String(challenge._id || ''))"
         :disabled="loading"
         class="flex-1 rounded-lg bg-red-600 px-4 py-2 font-medium text-white transition-colors hover:bg-red-700 disabled:bg-gray-400"
       >
@@ -185,7 +185,7 @@
       <!-- Start Button (for in-progress challenges) -->
       <button
         v-if="challenge.status === 'in-progress' && !hasUserSubmitted(challenge)"
-        @click="$emit('start', String(challenge._id || challenge.id || ''))"
+        @click="$emit('start', String(challenge._id || ''))"
         :disabled="loading"
         class="flex-1 rounded-lg bg-indigo-600 px-4 py-2 font-medium text-white transition-colors hover:bg-indigo-700 disabled:bg-gray-400"
       >
@@ -202,7 +202,7 @@
 
       <!-- View Details Button -->
       <button
-        @click="$emit('view-details', String(challenge._id || challenge.id || ''))"
+        @click="$emit('view-details', String(challenge._id || ''))"
         class="rounded-lg bg-gray-200 px-4 py-2 font-medium text-gray-900 transition-colors hover:bg-gray-300 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
       >
         View Details
@@ -212,10 +212,10 @@
 </template>
 
 <script setup lang="ts">
-import type { IChallengeCardProps as Props } from "@/types/components/challenges";
+import type { IChallengeCardProps as Props } from "../../../types/components/challenges";
 import { computed } from "vue";
-import type { Challenge } from "@/stores/challenges";
-import { useChallenges } from "@/composables/useChallenges";
+import type { Challenge } from "../../../stores/challenges";
+import { useChallenges } from "../../../composables/useChallenges";
 
 const props = withDefaults(defineProps<Props>(), {
   loading: false,
@@ -280,6 +280,6 @@ const getAvatarColor = (name: string): string => {
   }
 
   const index = Math.abs(hash) % colors.length;
-  return colors[index];
+  return colors[index] ?? "bg-gray-500";
 };
 </script>

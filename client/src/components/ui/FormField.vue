@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
-import HelperText from "@/components/ui/HelperText.vue";
+import HelperText from "../../components/ui/HelperText.vue";
 
-import type { FormFieldProps } from "@/types/ui/component-props";
+import type { FormFieldProps } from "../../types/ui/component-props";
 
 const props = withDefaults(defineProps<FormFieldProps>(), {
   required: false,

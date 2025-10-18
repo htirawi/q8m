@@ -2,9 +2,9 @@
 import type {
   IFriendCardProps as Props,
   IFriendCardEmits as Emits,
-} from "@/types/components/friends";
+} from "../../../types/components/friends";
 import { computed } from "vue";
-import { useFriends } from "@/composables/useFriends";
+import { useFriends } from "../../../composables/useFriends";
 
 const props = withDefaults(defineProps<Props>(), {
   showActions: true,
@@ -18,13 +18,17 @@ const { getLevelColor, getLevelBadge, getLevelTitle, formatDate, getUserAvatar, 
 
 // Computed
 const avatar = computed(() => getUserAvatar(props.friend));
-const levelColor = computed(() => getLevelColor(props.friend.level));
-const levelBadge = computed(() => getLevelBadge(props.friend.level));
-const levelTitle = computed(() => getLevelTitle(props.friend.level));
+const levelColor = computed(() => getLevelColor(props.friend.level ?? 0));
+const levelBadge = computed(() => getLevelBadge(props.friend.level ?? 0));
+const levelTitle = computed(() => getLevelTitle(props.friend.level ?? 0));
 const avatarColor = computed(() => getAvatarColor(props.friend.name));
-const friendSinceText = computed(() =>
-  props.friend.friendSince ? formatDate(props.friend.friendSince as Date | string) : "Recently"
-);
+const friendSinceText = computed(() => {
+  if (!props.friend.friendSince) return "Recently";
+  const date = typeof props.friend.friendSince === 'string'
+    ? new Date(props.friend.friendSince)
+    : props.friend.friendSince;
+  return formatDate(date);
+});
 
 // Methods
 const handleUnfriend = () => {

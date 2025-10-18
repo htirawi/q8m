@@ -118,11 +118,11 @@
 import type {
   ISoftPaywallModalProps as Props,
   ISoftPaywallModalEmits as Emits,
-} from "@/types/components/paywall";
+} from "../../types/components/paywall";
 import { ref, computed, watch, onMounted, onUnmounted, nextTick } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
-import { trackEvent } from "@/utils/telemetry";
+import { trackEvent } from "../../utils/telemetry";
 import type { PlanTier } from "@shared/types/plan";
 
 const props = defineProps<Props>();
@@ -141,7 +141,7 @@ const suggestedPlanName = computed(() => {
     advanced: t("plans.names.advanced"),
     pro: t("plans.names.pro"),
   };
-  return names[props.suggestedPlan];
+  return props.suggestedPlan ? names[props.suggestedPlan] : names.intermediate;
 });
 
 const features = computed(() => {

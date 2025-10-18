@@ -64,7 +64,7 @@
 
       <!-- Results Screen -->
       <QuizResults v-else-if="showResults" :level="level" :score="score" :total-questions="score.total"
-        :correct-answers="score.correct" :time-spent="score.timeSpent" :quiz-result-data="quizResultData"
+        :correct-answers="score.correct" :time-spent="score.timeSpent" :quiz-result-data="quizResultData ?? undefined"
         @retry="retryQuiz" @exit="goBack" />
 
       <!-- Quiz Content -->
@@ -74,9 +74,14 @@
           @exit="confirmExit" />
 
         <QuizQuestion :question="currentQuestion" :level="level" :locale="locale"
-          v-model:selected-answer="selectedAnswer" v-model:text-answer="textAnswer"
+          v-model:selected-answer="selectedAnswer ?? undefined" v-model:text-answer="textAnswer"
           v-model:multiple-answers="multipleAnswers" :has-answered="hasAnswered"
-          :is-last-question="currentIndex >= totalQuestions - 1" :user-answer-result="userAnswers[currentIndex]"
+          :is-last-question="currentIndex >= totalQuestions - 1" :user-answer-result="userAnswers[currentIndex] ? {
+            isCorrect: userAnswers[currentIndex]!.isCorrect,
+            correctAnswer: userAnswers[currentIndex]!.correctAnswer ?? '',
+            explanation: userAnswers[currentIndex]!.explanation ?? '',
+            points: userAnswers[currentIndex]!.points ?? 0
+          } : undefined"
           @submit="submitAnswer" @next="nextQuestion" />
       </div>
     </div>
@@ -126,7 +131,7 @@
               <span class="text-gray-600 dark:text-gray-400">{{ t("quiz.resume?.progress", "Progress:") }}
               </span>
               <span class="font-semibold text-gray-900 dark:text-white">
-                {{ preferencesStore.incompleteQuiz?.currentQuestionIndex + 1 }}
+                {{ (preferencesStore.incompleteQuiz?.currentQuestionIndex ?? 0) + 1 }}
 
                 / {{ preferencesStore.incompleteQuiz?.totalQuestions }}
               </span>
@@ -167,40 +172,30 @@ import { useRouter, useRoute } from "vue-router";
 import type { Question } from "@shared/types/quiz";
 import type {
   IQuizAnswer,
-  ISubmitQuizPayload,
   ISubmitQuizResponse,
-} from "@/types/components/quiz";
-import { useAuthStore } from "@/stores/auth";
-import { usePreferencesStore } from "@/stores/preferences";
-import { useQuizResults } from "@/composables/useQuizResults";
-import { useStreakStore } from "@/stores/streak";
+} from "../../../types/components/quiz";
+import { useAuthStore } from "../../../stores/auth";
+import { usePreferencesStore } from "../../../stores/preferences";
+import { useQuizResults } from "../../../composables/useQuizResults";
+import { useStreakStore } from "../../../stores/streak";
 import QuizResults from "../components/QuizResults.vue";
 import QuizHeader from "../components/QuizHeader.vue";
 import QuizQuestion from "../components/QuizQuestion.vue";
-import LevelUpCelebration from "@/features/gamification/components/LevelUpCelebration.vue";
-import BadgeUnlockNotification from "@/features/gamification/components/BadgeUnlockNotification.vue";
+import LevelUpCelebration from "../../../features/gamification/components/LevelUpCelebration.vue";
+import BadgeUnlockNotification from "../../../features/gamification/components/BadgeUnlockNotification.vue";
 
 const { t, locale } = useI18n();
 const router = useRouter();
 const route = useRoute();
 const authStore = useAuthStore();
 const preferencesStore = usePreferencesStore();
-const { submitQuiz, isLoading: isSubmitting } = useQuizResults();
+const { submitQuiz } = useQuizResults();
 const streakStore = useStreakStore();
 
 const level = computed(() => route.params.level as "junior" | "intermediate" | "senior");
 
 // Gamification state
-const quizResultData = ref<ISubmitQuizResponse | Record<string, unknown> | null>(null);
-const _gamificationData = ref<{
-  xpEarned: number;
-  badgesEarned: string[];
-  leveledUp?: boolean;
-  newLevel?: number;
-  previousLevel?: number;
-  weakCategories: string[];
-  strongCategories?: string[];
-} | null>(null);
+const quizResultData = ref<ISubmitQuizResponse | null>(null);
 
 const showLevelUpModal = ref(false);
 const levelUpData = ref<{
@@ -340,15 +335,18 @@ const saveQuizProgress = () => {
 
   const answers = Object.entries(userAnswers.value).map(([index, answer]) => ({
     questionId: questions.value[parseInt(index)]?._id || `temp_${index}`,
+    answer: answer.answer,
     selectedAnswer: Array.isArray(answer.answer) ? answer.answer.join(",") : String(answer.answer),
     isCorrect: answer.isCorrect,
   }));
 
   preferencesStore.saveIncompleteQuiz({
-    quizId: `quiz_${level.value}_${startTime.value}`,
     framework: "general", // Could be enhanced to track specific framework
+    level: level.value,
     difficulty: level.value,
     mode: "quiz",
+    questions: questions.value.map(q => q._id || ''),
+    currentIndex: currentIndex.value,
     currentQuestionIndex: currentIndex.value,
     totalQuestions: totalQuestions.value,
     answers,
@@ -373,7 +371,7 @@ const resumeQuiz = () => {
   if (!incomplete) return;
 
   // Restore quiz state
-  currentIndex.value = incomplete.currentQuestionIndex;
+  currentIndex.value = incomplete.currentQuestionIndex ?? 0;
 
   // Restore answers
   const restoredAnswers: Record<
@@ -381,10 +379,11 @@ const resumeQuiz = () => {
     { answer: string | string[]; isCorrect: boolean; timeSpent: number }
   > = {};
   incomplete.answers.forEach((answer, index) => {
+    const selectedAnswer = answer.selectedAnswer ?? '';
     restoredAnswers[index] = {
-      answer: answer.selectedAnswer.includes(",")
-        ? answer.selectedAnswer.split(",")
-        : answer.selectedAnswer,
+      answer: selectedAnswer.includes(",")
+        ? selectedAnswer.split(",")
+        : selectedAnswer,
       isCorrect: answer.isCorrect ?? false,
       timeSpent: 0, // We don't track individual time in saved state
     };
@@ -524,7 +523,7 @@ const finishQuiz = async () => {
 
         // Get correct answer
         let correctAnswer: string | string[];
-        if (qType === "select-multiple") {
+        if (qType === "multiple-checkbox") {
           correctAnswer = options.filter((o) => o.isCorrect).map((o) => o.id);
         } else {
           const correctOption = options.find((o) => o.isCorrect);
@@ -538,11 +537,15 @@ const finishQuiz = async () => {
           senior: "hard",
         };
 
+        const answerValue = userAnswer?.answer || "";
+
         return {
           questionId: question._id || `temp_${index}`,
-          userAnswer: userAnswer?.answer || "",
+          answer: answerValue,
+          userAnswer: answerValue,
           correctAnswer,
           isCorrect: userAnswer?.isCorrect || false,
+          timeSpent: userAnswer?.timeSpent || 0,
           timeSpentSeconds: userAnswer?.timeSpent || 0,
           difficultyLevel: difficultyMap[level.value] || "medium",
           category: question.category || "general",
@@ -570,15 +573,18 @@ const finishQuiz = async () => {
 
         // Show badge notifications if badges were earned
         if (result.badgesEarned && result.badgesEarned.length > 0 && badgeNotificationRef.value) {
-          const badgeObjects = result.badgesEarned.map((badgeName) => ({
-            id: `badge_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-            name: badgeName,
-            description: getBadgeDescription(badgeName),
-            icon: getBadgeIcon(badgeName),
-            rarity: getBadgeRarity(badgeName),
-            xpReward: getBadgeXP(badgeName),
-            shareable: true,
-          }));
+          const badgeObjects = result.badgesEarned.map((badge) => {
+            const badgeName = typeof badge === "string" ? badge : badge.name;
+            return {
+              id: `badge_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+              name: badgeName,
+              description: getBadgeDescription(badgeName),
+              icon: getBadgeIcon(badgeName),
+              rarity: getBadgeRarity(badgeName),
+              xpReward: getBadgeXP(badgeName),
+              shareable: true,
+            };
+          });
 
           // Show badges with slight delay after quiz results
           setTimeout(() => {
@@ -592,7 +598,7 @@ const finishQuiz = async () => {
           levelUpData.value = {
             newLevel: result.newLevel,
             previousLevel: currentLevel,
-            xpEarned: result.xpEarned,
+            xpEarned: result.xpEarned ?? 0,
           };
           // Delay level-up modal to show after badge notifications
           setTimeout(
@@ -603,11 +609,16 @@ const finishQuiz = async () => {
           );
 
           // Update auth store with new level
-          if (authStore.user) {
+          if (authStore.user && authStore.user.gamification) {
             authStore.user.gamification = {
               ...authStore.user.gamification,
               level: result.newLevel,
-              xp: (authStore.user.gamification?.xp || 0) + result.xpEarned,
+              totalXP: result.totalXP ?? authStore.user.gamification.totalXP,
+              currentXP: result.currentXP ?? authStore.user.gamification.currentXP,
+              xpToNextLevel: result.xpToNextLevel ?? authStore.user.gamification.xpToNextLevel,
+              streak: result.streak ?? authStore.user.gamification.streak,
+              coins: result.coins ?? authStore.user.gamification.coins,
+              badges: result.badges ?? authStore.user.gamification.badges,
             };
           }
         }
@@ -670,7 +681,7 @@ const handleTimeUp = () => {
   }
 
   // Mark all unanswered questions as incorrect when timer expires
-  questions.value.forEach((question, index) => {
+  questions.value.forEach((_question, index) => {
     if (!userAnswers.value[index]) {
       userAnswers.value[index] = {
         answer: "",

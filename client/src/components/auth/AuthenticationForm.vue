@@ -5,7 +5,7 @@ import { useI18n } from "vue-i18n";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/vue/24/outline";
 import { ZodError } from "zod";
 
-import { useAuthStore } from "@/stores/auth";
+import { useAuthStore } from "../../stores/auth";
 import {
   emailStepSchema,
   loginFormSchema,
@@ -19,7 +19,7 @@ import type {
   AuthenticationFormEmits,
   PasswordRequirements,
   PasswordStrength,
-} from "@/types/ui/component-props";
+} from "../../types/ui/component-props";
 
 const emit = defineEmits<AuthenticationFormEmits>();
 const { t } = useI18n();

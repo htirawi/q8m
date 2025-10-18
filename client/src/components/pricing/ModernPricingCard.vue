@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { IModernPricingCardProps } from "@/types/components/pricing";
+import type { IModernPricingCardProps } from "../../types/components/pricing";
 import { ref, computed } from "vue";
 import { CheckIcon } from "@heroicons/vue/24/solid";
-import type { BillingCycle } from "@/components/pricing/pricing.config";
+import type { BillingCycle } from "../../components/pricing/pricing.config";
 
 const props = withDefaults(defineProps<IModernPricingCardProps>(), {
   currency: "USD",
@@ -11,6 +11,7 @@ const props = withDefaults(defineProps<IModernPricingCardProps>(), {
 
 const emit = defineEmits<{
   "select-paypal": [planId: string, billingCycle: BillingCycle];
+  "select-credit-card": [planId: string, billingCycle: BillingCycle];
 }>();
 
 // State
@@ -26,11 +27,11 @@ const billingText = computed(() => {
 });
 
 const savingsText = computed(() => {
-  if (props.billingCycle === "annual" && props.priceMonthly > 0) {
+  if (props.billingCycle === "annual" && props.priceMonthly && props.priceMonthly > 0 && props.priceYearly) {
     const monthlyTotal = props.priceMonthly * 12;
     const yearlyTotal = props.priceYearly;
     const savings = monthlyTotal - yearlyTotal;
-    const monthsSaved = Math.round(savings / props.priceMonthly ?? 0);
+    const monthsSaved = Math.round(savings / props.priceMonthly);
     return `Save ${monthsSaved}+ months`;
   }
   return null;

@@ -181,9 +181,9 @@
 </template>
 
 <script setup lang="ts">
-import type { IFrameworkCardProps as Props } from "@/types/components/study";
+import type { IFrameworkCardProps as Props } from "../../types/components/study";
 import { computed } from "vue";
-import { getFrameworkIcon } from "@/utils/frameworkIcons";
+import { getFrameworkIcon } from "../../utils/frameworkIcons";
 
 const props = withDefaults(defineProps<Props>(), {
   progressPercent: 0,

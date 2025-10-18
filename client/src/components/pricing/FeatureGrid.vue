@@ -8,7 +8,7 @@ import {
   UsersIcon,
 } from "@heroicons/vue/24/outline";
 
-import { features } from "@/components/pricing/pricing.config";
+import { features } from "../../components/pricing/pricing.config";
 
 type IconComponent = typeof AcademicCapIcon;
 

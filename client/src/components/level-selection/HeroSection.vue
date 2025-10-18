@@ -92,21 +92,21 @@
               :format="(value) => Math.round(value).toString()"
             />
           </div>
-          <div class="stat-card__trend" v-if="coinTrend > 0">
+          <div class="stat-card__trend" v-if="coinTrend && coinTrend > 0">
             <svg
               class="stat-card__trend-icon"
-              :class="{ 'stat-card__trend-icon--up': coinTrend > 0 }"
+              :class="{ 'stat-card__trend-icon--up': coinTrend && coinTrend > 0 }"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
             >
               <polyline
                 :points="
-                  coinTrend > 0 ? '22 17 13.5 8.5 8.5 13.5 2 7' : '22 7 13.5 15.5 8.5 10.5 2 17'
+                  (coinTrend ?? 0) > 0 ? '22 17 13.5 8.5 8.5 13.5 2 7' : '22 7 13.5 15.5 8.5 10.5 2 17'
                 "
               />
             </svg>
-            <span class="stat-card__trend-value">{{ Math.abs(coinTrend) }}%</span>
+            <span class="stat-card__trend-value">{{ Math.abs(coinTrend ?? 0) }}%</span>
           </div>
         </div>
 
@@ -160,8 +160,8 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
-import type { IHeroSection } from "@/types/design-system";
-import AnimatedCounter from "@/components/ui/AnimatedCounter.vue";
+import type { IHeroSection } from "../../types/design-system";
+import AnimatedCounter from "../../components/ui/AnimatedCounter.vue";
 
 interface Props extends IHeroSection {
   coinTrend?: number;
@@ -183,7 +183,8 @@ const props = withDefaults(defineProps<Props>(), {
   recentBadges: () => [],
 });
 
-const _emit = defineEmits<{}>();
+// Emits available if needed
+// defineEmits<{}>();
 
 const { t } = useI18n();
 
@@ -199,9 +200,10 @@ const motivationalMessages = [
 const currentMessageIndex = ref(0);
 
 const motivationalMessage = computed(() => {
+  const fallback = motivationalMessages[currentMessageIndex.value] || "";
   return t(
     `motivation.message${currentMessageIndex.value}`,
-    motivationalMessages[currentMessageIndex.value]
+    fallback
   );
 });
 
@@ -215,7 +217,8 @@ const getTimeBasedEmoji = () => {
   return "🌙"; // Night
 };
 
-const formatNumber = (num: number): string => {
+const formatNumber = (num: number | undefined): string => {
+  if (num === undefined) return "0";
   if (num >= 1000000) {
     return (num / 1000000).toFixed(1) + "M";
   }

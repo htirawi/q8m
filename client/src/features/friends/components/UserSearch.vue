@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type { IUserSearchProps as Props } from "@/types/components/friends";
+import type { IUserSearchProps as Props } from "../../../types/components/friends";
 import { ref, computed, watch } from "vue";
-import { useFriends } from "@/composables/useFriends";
+import { useFriends } from "../../../composables/useFriends";
 import { useDebounceFn } from "@vueuse/core";
 import FriendshipButton from "./FriendshipButton.vue";
 
@@ -235,8 +235,8 @@ if (props.showSuggestions) {
                 <h3 class="truncate font-semibold text-gray-900 dark:text-white">
                   {{ user.name ?? "" }}
                 </h3>
-                <span :class="['text-sm', getLevelColor(user.level)]">
-                  {{ getLevelBadge(user.level) }}
+                <span :class="['text-sm', getLevelColor(user.level ?? 0)]">
+                  {{ getLevelBadge(user.level ?? 0) }}
                 </span>
               </div>
               <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
@@ -320,8 +320,8 @@ if (props.showSuggestions) {
                 <h3 class="truncate font-semibold text-gray-900 dark:text-white">
                   {{ suggestion.name ?? "" }}
                 </h3>
-                <span :class="['text-sm', getLevelColor(suggestion.level)]">
-                  {{ getLevelBadge(suggestion.level) }}
+                <span :class="['text-sm', getLevelColor(suggestion.level ?? 0)]">
+                  {{ getLevelBadge(suggestion.level ?? 0) }}
                 </span>
               </div>
               <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">

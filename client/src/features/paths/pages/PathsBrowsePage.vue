@@ -66,9 +66,9 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { useLearningPathsStore } from "@/stores/learning-paths";
+import { useLearningPathsStore } from "../../../stores/learning-paths";
 import PathCard from "../components/PathCard.vue";
-import UserMenu from "@/components/layout/UserMenu.vue";
+import UserMenu from "../../../components/layout/UserMenu.vue";
 import type { PathCategory, PathDifficulty } from "@shared/types/learning-paths";
 
 const router = useRouter();

@@ -293,7 +293,7 @@
 </template>
 
 <script setup lang="ts">
-import type { IXPDisplayProps as Props } from "@/types/components/gamification";
+import type { IXPDisplayProps as Props } from "../../../types/components/gamification";
 
 const props = withDefaults(defineProps<Props>(), {
   variant: "card",
@@ -324,7 +324,8 @@ function getLevelTitleForLevel(level: number): string {
   return titleObj ? titleObj.title : "Legend";
 }
 
-function formatNumber(num: number): string {
+function formatNumber(num: number | undefined): string {
+  if (num === undefined) return '0';
   if (num >= 1000000) {
     return `${(num / 1000000).toFixed(1)}M`;
   }

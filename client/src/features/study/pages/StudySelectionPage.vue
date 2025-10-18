@@ -40,8 +40,8 @@
 
       <!-- Start Button (Visible when auto-start is disabled or no selection) -->
       <StartStudyingCta v-if="!isAutoStartEnabled || selectedDifficulty !== 'easy'"
-        :selected-difficulty="selectedDifficulty"
-        :disabled="selectedDifficulty !== null && !canUserAccessDifficulty(selectedDifficulty)"
+        :selected-difficulty="selectedDifficulty ?? undefined"
+        :disabled="!!selectedDifficulty && !canUserAccessDifficulty(selectedDifficulty)"
         scroll-target-selector="#difficulty-selection" @click="startStudy" />
 
       <!-- Features -->
@@ -83,12 +83,12 @@
 
     <!-- Sticky Start Bar (secondary affordance when auto-start is off) -->
     <StickyStartBar :is-visible="!isAutoStartEnabled && selectedDifficulty === 'easy'"
-      :selected-difficulty="selectedDifficulty" :state="loadingState" :error-message="errorMessage"
+      :selected-difficulty="selectedDifficulty ?? undefined" :state="loadingState" :error-message="errorMessage ?? undefined"
       :has-last-session="hasLastSession" @start="handleStickyStart" @retry="handleStickyRetry" />
 
     <!-- Convert Modal -->
-    <PlanConversionModal v-if="upsellModalContext" :is-visible="isUpsellModalVisible"
-      :difficulty="upsellModalContext.difficulty" :required-plan="upsellModalContext.requiredPlan"
+    <PlanConversionModal v-if="upsellModalContext" :open="isUpsellModalVisible"
+      :difficulty="upsellModalContext.difficulty ?? undefined" :required-plan="upsellModalContext.requiredPlan"
       @dismiss="handleUpsellDismiss" />
   </div>
 </template>
@@ -97,18 +97,18 @@
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
-import { usePlanStore } from "@/stores/plan";
-import { useAuthStore } from "@/stores/auth";
-import { useUpsell } from "@/composables/useUpsell";
-import { useStudy } from "@/composables/useStudy";
-import { useAnalytics } from "@/composables/useAnalytics";
-import { canAccessDifficulty } from "@/types/plan/access";
-import { usePlanEntry } from "@/composables/usePlanEntry";
-import LevelCard from "@/components/study/LevelCard.vue";
-import StartStudyingCta from "@/components/study/StartStudyingCta.vue";
-import StickyStartBar from "@/components/study/StickyStartBar.vue";
-import PlanConversionModal from "@/components/marketing/PlanConversionModal.vue";
-import type { DifficultyLevel } from "@/types/plan/access";
+import { usePlanStore } from "../../../stores/plan";
+import { useAuthStore } from "../../../stores/auth";
+import { useUpsell } from "../../../composables/useUpsell";
+import { useStudy } from "../../../composables/useStudy";
+import { useAnalytics } from "../../../composables/useAnalytics";
+import { canAccessDifficulty } from "../../../types/plan/access";
+import { usePlanEntry } from "../../../composables/usePlanEntry";
+import LevelCard from "../../../components/study/LevelCard.vue";
+import StartStudyingCta from "../../../components/study/StartStudyingCta.vue";
+import StickyStartBar from "../../../components/study/StickyStartBar.vue";
+import PlanConversionModal from "../../../components/marketing/PlanConversionModal.vue";
+import type { DifficultyLevel } from "../../../types/plan/access";
 import type { PlanTier } from "@shared/types/plan";
 
 const { t } = useI18n();
@@ -189,8 +189,8 @@ const hardFeatures = computed(() => [
 /**
  * Handle auto-start for Easy difficulty (one-click flow)
  */
-const handleAutoStart = async (difficulty: DifficultyLevel) => {
-  if (difficulty !== "easy") {
+const handleAutoStart = async (difficulty?: DifficultyLevel) => {
+  if (!difficulty || difficulty !== "easy") {
     // Only Easy supports auto-start
     return;
   }
@@ -210,7 +210,8 @@ const handleAutoStart = async (difficulty: DifficultyLevel) => {
 /**
  * Handle traditional selection (Medium/Hard or Easy with auto-start disabled)
  */
-const handleDifficultySelect = (difficulty: DifficultyLevel) => {
+const handleDifficultySelect = (difficulty?: DifficultyLevel) => {
+  if (!difficulty) return;
   if (canUserAccessDifficulty(difficulty) || !authStore.isAuthenticated) {
     selectedDifficulty.value = difficulty;
   }
@@ -219,7 +220,8 @@ const handleDifficultySelect = (difficulty: DifficultyLevel) => {
 /**
  * Handle unlock click for locked difficulties (Medium/Hard)
  */
-const handleUnlockClick = (difficulty: DifficultyLevel, requiredPlan: PlanTier) => {
+const handleUnlockClick = (difficulty?: DifficultyLevel, requiredPlan?: PlanTier) => {
+  if (!difficulty || !requiredPlan) return;
   // Open upsell modal
   openUpsellModal(difficulty, requiredPlan, "level_card");
 };
@@ -234,7 +236,7 @@ const handleUpsellDismiss = () => {
 /**
  * Start study session (from CTA or sticky bar)
  */
-const startStudy = async (difficulty: DifficultyLevel | null) => {
+const startStudy = async (difficulty?: DifficultyLevel) => {
   if (!difficulty) {
     return;
   }

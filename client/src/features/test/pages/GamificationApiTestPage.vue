@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import { useGamification } from "@/composables/useGamification";
+import { useGamification } from "../../../composables/useGamification";
 
 const {
   isLoading,
@@ -122,8 +122,8 @@ function getRarityColor(rarity?: string): string {
             </div>
             <div class="stat-card">
               <div class="stat-label">XP to Next Level</div>
-              <div class="stat-value">{{ summary.xpToNextLevel }}</div>
-              <div class="stat-sublabel">{{ Math.round(summary.xpProgress) }}% Complete</div>
+              <div class="stat-value">{{ summary.xpToNextLevel ?? 0 }}</div>
+              <div class="stat-sublabel">{{ Math.round(summary.xpProgress ?? 0) }}% Complete</div>
             </div>
           </div>
 

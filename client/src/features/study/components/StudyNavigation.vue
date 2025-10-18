@@ -111,7 +111,7 @@
 </template>
 
 <script setup lang="ts">
-import type { IStudyNavigationProps as Props } from "@/types/components/study";
+import type { IStudyNavigationProps as Props } from "../../../types/components/study";
 import { useI18n } from "vue-i18n";
 
 const props = defineProps<Props>();
@@ -120,6 +120,7 @@ defineEmits<{
   jump: [index: number];
   previous: [];
   next: [];
+  "load-more": [];
 }>();
 
 const { t } = useI18n();

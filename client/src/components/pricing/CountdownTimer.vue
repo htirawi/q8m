@@ -76,9 +76,9 @@
 import type {
   ICountdownTimerTimeLeft as TimeLeft,
   ICountdownTimerProps as Props,
-} from "@/types/components/pricing";
+} from "../../types/components/pricing";
 import { ref, onMounted, onUnmounted } from "vue";
-import AnimatedCounter from "@/components/AnimatedCounter.vue";
+import AnimatedCounter from "../../components/AnimatedCounter.vue";
 
 const props = withDefaults(defineProps<Props>(), {
   showDays: true,
@@ -94,6 +94,8 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<{
   tick: [timeLeft: TimeLeft];
+  expired: [];
+  "cta-click": [];
 }>();
 
 const timeLeft = ref<TimeLeft>({
@@ -109,8 +111,7 @@ let intervalId: ReturnType<typeof setInterval> | null = null;
 intervalId;
 
 function calculateTimeLeft(): TimeLeft {
-  let endTime: number;
-  endTime;
+  let endTime: number = Date.now();
 
   if (props.targetDate) {
     const target =
@@ -160,7 +161,7 @@ function updateTimer() {
 
   emit("tick", newTimeLeft);
 
-  if (newTimeLeft.total <= 0) {
+  if (newTimeLeft.total !== undefined && newTimeLeft.total <= 0) {
     isExpired.value = true;
     stopTimer();
     emit("expired");

@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import { useDiscussions } from "@/composables/useDiscussions";
-import { useAuthStore } from "@/stores/auth";
+import type { IDiscussionItemProps as Props } from "@/types/components/discussions";
+import { useDiscussions } from "../../../composables/useDiscussions";
+import { useAuthStore } from "../../../stores/auth";
 import DiscussionActions from "./DiscussionActions.vue";
 import ReplyForm from "./ReplyForm.vue";
 
@@ -32,7 +33,12 @@ const replyCount = computed(() => getReplyCount(props.discussion));
 const userLevel = computed(() => props.discussion.userId.gamification?.level || 0);
 const levelColor = computed(() => getLevelColor(userLevel.value));
 const levelBadge = computed(() => getLevelBadge(userLevel.value));
-const timeAgo = computed(() => formatDate(props.discussion.createdAt as Date | string));
+const timeAgo = computed(() =>
+  formatDate(typeof props.discussion.createdAt === 'string'
+    ? new Date(props.discussion.createdAt)
+    : props.discussion.createdAt
+  )
+);
 
 const canEditDiscussion = computed(() =>
   canEdit(props.discussion, authStore.user?.userId, authStore.user?.role)
@@ -75,6 +81,16 @@ const toggleReplyForm = () => {
 
 const toggleReplies = () => {
   showReplies.value = !showReplies.value;
+};
+
+const handleLike = () => {
+  // TODO: Implement like functionality
+  console.log("Like discussion:", props.discussion._id);
+};
+
+const handleDelete = () => {
+  // TODO: Implement delete functionality
+  console.log("Delete discussion:", props.discussion._id);
 };
 </script>
 
@@ -173,12 +189,17 @@ const toggleReplies = () => {
         <!-- Actions -->
         <DiscussionActions
           v-if="!isEditing"
+          :discussion-id="discussion._id"
           :discussion="discussion"
           :question-creator-id="questionCreatorId"
+          :likes="discussion.likes?.length ?? 0"
+          :liked-by-user="discussion.likedByCurrentUser ?? false"
           :can-edit="canEditDiscussion"
           :can-delete="canDeleteDiscussion"
+          @like="handleLike"
           @reply="toggleReplyForm"
           @edit="isEditing = true"
+          @delete="handleDelete"
         />
       </div>
     </div>
@@ -186,6 +207,7 @@ const toggleReplies = () => {
     <!-- Reply Form -->
     <div v-if="showReplyForm" class="ml-14 mt-4">
       <ReplyForm
+        :discussion-id="discussion._id"
         @submit="handleReply"
         @cancel="showReplyForm = false"
         :placeholder="`Reply to ${discussion.userId.name}...`"

@@ -2,8 +2,10 @@
  * Friends Component Props & Types
  */
 
+import type { Friend, FriendRequest } from '@shared/types/friends';
+
 export interface IFriendCardProps {
-  friend: Record<string, unknown>;
+  friend: Friend;
   showActions?: boolean;
   compact?: boolean;
   badge?: string | boolean;
@@ -12,14 +14,17 @@ export interface IFriendCardProps {
 export interface IFriendCardEmits {
   (e: "remove", friendId: string): void;
   (e: "challenge", friendId: string): void;
+  (e: "unfriend", friendId: string): void;
+  (e: "block", friendId: string): void;
+  (e: "view", friendId: string): void;
 }
 
 export interface IFriendListProps {
-  friends: Record<string, unknown>[];
+  friends?: Friend[];
   loading?: boolean;
   showSearch?: boolean;
   showFilters?: boolean;
-  initialSort?: string;
+  initialSort?: "name" | "level" | "recent";
 }
 
 export interface IFriendListEmits {
@@ -29,7 +34,7 @@ export interface IFriendListEmits {
 }
 
 export interface IFriendRequestsProps {
-  requests: Record<string, unknown>[];
+  requests?: FriendRequest[];
   initialTab?: "received" | "sent";
   showCounts?: boolean;
 }
@@ -37,10 +42,13 @@ export interface IFriendRequestsProps {
 export interface IFriendRequestsEmits {
   (e: "accept", requestId: string): void;
   (e: "reject", requestId: string): void;
+  (e: "request-accepted", requestId: string): void;
+  (e: "request-rejected", requestId: string): void;
+  (e: "request-cancelled", requestId: string): void;
 }
 
 export interface IFriendSuggestionsProps {
-  suggestions: Record<string, unknown>[];
+  suggestions?: Friend[];
   loading?: boolean;
   limit?: number;
   layout?: "grid" | "list";
@@ -51,7 +59,7 @@ export interface IFriendSuggestionsProps {
 export interface IFriendSuggestionsEmits {
   (e: "sendRequest", userId: string): void;
   (e: "loadMore"): void;
-  (e: "suggestion-clicked", suggestion: unknown): void;
+  (e: "suggestion-clicked", suggestion: Friend): void;
   (e: "view-all"): void;
 }
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
-import type { BillingHistorySectionProps } from "@/types/ui/component-props";
+import type { BillingHistorySectionProps } from "../../../types/ui/component-props";
 
 defineProps<BillingHistorySectionProps>();
 

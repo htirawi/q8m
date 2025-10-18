@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { IDiscussionListProps as Props } from "@/types/components/discussions";
+import type { IDiscussionListProps as Props } from "../../../types/components/discussions";
 import { ref, computed, onMounted, watch } from "vue";
-import { useDiscussions } from "@/composables/useDiscussions";
-import { useAuthStore } from "@/stores/auth";
+import { useDiscussions } from "../../../composables/useDiscussions";
+import { useAuthStore } from "../../../stores/auth";
 import DiscussionItem from "./DiscussionItem.vue";
 import DiscussionForm from "./DiscussionForm.vue";
 
@@ -99,6 +99,7 @@ watch(
       <!-- Create Discussion Form -->
       <DiscussionForm
         v-if="showForm && authStore.isAuthenticated"
+        :question-id="questionId"
         @submit="handleCreateDiscussion"
         placeholder="Start a discussion about this question..."
       />

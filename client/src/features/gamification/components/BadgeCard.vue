@@ -152,7 +152,7 @@
 </template>
 
 <script setup lang="ts">
-import type { IBadge, IBadgeCardProps as Props } from "@/types/components/gamification";
+import type { IBadge, IBadgeCardProps as Props } from "../../../types/components/gamification";
 import type { BadgeTier } from "@shared/types/gamification";
 
 const props = withDefaults(defineProps<Props>(), {
@@ -175,23 +175,23 @@ function handleClick() {
 }
 
 function getTierClass(tier: BadgeTier): string {
-  const classes = {
-    bronze: "bg-amber-700 text-white",
-    silver: "bg-gray-400 text-gray-900",
-    gold: "bg-yellow-400 text-yellow-900",
-    platinum: "bg-cyan-400 text-cyan-900",
+  const classes: Record<BadgeTier, string> = {
+    common: "bg-gray-400 text-gray-900",
+    rare: "bg-blue-400 text-blue-900",
+    epic: "bg-purple-500 text-white",
+    legendary: "bg-orange-500 text-white",
   };
-  return classes[tier] || classes.bronze;
+  return classes[tier] || classes.common;
 }
 
 function getTierIcon(tier: BadgeTier): string {
-  const icons = {
-    bronze: "🥉",
-    silver: "🥈",
-    gold: "🥇",
-    platinum: "💎",
+  const icons: Record<BadgeTier, string> = {
+    common: "⚪",
+    rare: "🔵",
+    epic: "🟣",
+    legendary: "🟠",
   };
-  return icons[tier] || icons.bronze;
+  return icons[tier] || icons.common;
 }
 
 function getRarityClass(rarity: "common" | "rare" | "epic" | "legendary"): string {

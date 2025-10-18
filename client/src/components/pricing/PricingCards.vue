@@ -2,13 +2,13 @@
 import { ref, computed, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useI18n } from "vue-i18n";
-import { usePlans } from "@/composables/usePlans";
-import { usePricingRoute } from "@/composables/usePricingRoute";
-import { useAnalytics } from "@/composables/useAnalytics";
-import { useCheckout } from "@/composables/useCheckout";
-import PlanCard from "@/components/pricing/PlanCard.vue";
-import PaymentCheckoutModal from "@/components/marketing/PaymentCheckoutModal.vue";
-import type { BillingCycle, PlanId } from "@/types/pricing";
+import { usePlans } from "../../composables/usePlans";
+import { usePricingRoute } from "../../composables/usePricingRoute";
+import { useAnalytics } from "../../composables/useAnalytics";
+import { useCheckout } from "../../composables/useCheckout";
+import PlanCard from "../../components/pricing/PlanCard.vue";
+import PaymentCheckoutModal from "../../components/marketing/PaymentCheckoutModal.vue";
+import type { BillingCycle, PlanId } from "../../types/pricing";
 
 const router = useRouter();
 const route = useRoute();
@@ -77,7 +77,7 @@ const handlePlanSelect = (planId: PlanId, billing: BillingCycle) => {
     const plan = pricingPlans.value.find((p) => p.id === planId);
     if (plan) {
       // Pre-select plan in checkout composable using the backend tier
-      selectCheckoutPlan(plan.tier, billing);
+      selectCheckoutPlan(plan.tier as any, billing as any);
 
       // Show modal
       showCheckoutModal.value = true;
@@ -116,9 +116,9 @@ onMounted(() => {
   redirectToCanonical();
 
   // Pre-select from query params
-  if (resolvedPlan.value) {
-    selectedPlan.value = resolvedPlan.value.planId;
-    billingCycle.value = resolvedPlan.value.billing;
+  if (resolvedPlan.value?.planId && resolvedPlan.value?.billing) {
+    selectedPlan.value = resolvedPlan.value.planId as PlanId;
+    billingCycle.value = resolvedPlan.value.billing as BillingCycle;
   }
 });
 

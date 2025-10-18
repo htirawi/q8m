@@ -4,13 +4,14 @@ import { computed, ref } from "vue";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/vue/24/outline";
 import { useI18n } from "vue-i18n";
 
-import LoadingSpinner from "@/components/ui/LoadingSpinner.vue";
-import PasswordStrengthIndicator from "@/features/auth/components/PasswordStrengthIndicator.vue";
-import type { ProfileStepProps } from "@/types/ui/component-props";
+import LoadingSpinner from "../../../components/ui/LoadingSpinner.vue";
+import PasswordStrengthIndicator from "../../../features/auth/components/PasswordStrengthIndicator.vue";
+import type { ProfileStepProps } from "../../../types/ui/component-props";
 
 const props = defineProps<ProfileStepProps>();
 
 defineEmits<{
+  "update:name": [value: string];
   "update:password": [value: string];
   "update:acceptTerms": [value: boolean];
   back: [];

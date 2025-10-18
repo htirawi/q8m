@@ -28,8 +28,10 @@ export function useUpsell() {
     source: IUpsellModalContext["source"] = "level_card"
   ): void => {
     modalContext.value = {
-      difficulty,
+      feature: `${difficulty} level access`,
+      currentPlan: "free",
       requiredPlan,
+      difficulty,
       source,
     };
 

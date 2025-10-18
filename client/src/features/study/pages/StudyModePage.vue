@@ -106,7 +106,7 @@
           :filtered-count="filteredQuestions.length" :total-count="getDisplayTotal()" :progress="progress"
           @mode-change="setPracticeMode" @clear="clearFilters" />
 
-        <StudyQuestion :question="currentQuestion" :current-index="currentIndex" :total-questions="questions.length"
+        <StudyQuestion :question="currentQuestion as any" :current-index="currentIndex" :total-questions="questions.length"
           :show-answer="showAnswer" :locale="locale" :selected-answer="selectedStudyAnswer"
           :text-answer="studyTextAnswer" :multiple-answers="studyMultipleAnswers" :is-bookmarked="isBookmarked"
           :can-go-previous="currentIndex > 0" :is-loading-more="isLoadingMore"
@@ -130,9 +130,9 @@ import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter, useRoute } from "vue-router";
 import type { Question } from "@shared/types/quiz";
-import { useAnalytics } from "@/composables/useAnalytics";
-import { useBookmarks } from "@/composables/useBookmarks";
-import EmptyState from "@/components/EmptyState.vue";
+import { useAnalytics } from "../../../composables/useAnalytics";
+import { useBookmarks } from "../../../composables/useBookmarks";
+import EmptyState from "../../../components/EmptyState.vue";
 import StudyHeader from "../components/StudyHeader.vue";
 import StudyFilters from "../components/StudyFilters.vue";
 import StudyQuestion from "../components/StudyQuestion.vue";
@@ -185,7 +185,6 @@ const isTimerPaused = ref(false);
 const isExplicitlyLeaving = ref(false);
 const lastActiveTime = ref(Date.now()); // Track when user was last active in this framework
 let sessionTimerInterval: ReturnType<typeof setInterval> | null = null;
-TrackwhenuserwaslastactiveinthisframeworkletsessionTimerInterval;
 
 // Current session duration in minutes - reactive timer
 const currentSessionDuration = ref(0);
@@ -790,19 +789,20 @@ const startSessionTimer = () => {
   }, 1000);
 };
 
-const _pauseSessionTimer = () => {
-  isTimerPaused.value = true;
-  saveSessionState();
-  updateSessionDisplay();
-};
+// Pause/Resume timer functions (currently unused but kept for future use)
+// const pauseSessionTimer = () => {
+//   isTimerPaused.value = true;
+//   saveSessionState();
+//   updateSessionDisplay();
+// };
 
-const _resumeSessionTimer = () => {
-  const pausedDuration = Date.now() - (sessionStartTime.value + sessionElapsedTime.value * 1000);
-  sessionStartTime.value += pausedDuration;
-  isTimerPaused.value = false;
-  saveSessionState();
-  updateSessionDisplay();
-};
+// const resumeSessionTimer = () => {
+//   const pausedDuration = Date.now() - (sessionStartTime.value + sessionElapsedTime.value * 1000);
+//   sessionStartTime.value += pausedDuration;
+//   isTimerPaused.value = false;
+//   saveSessionState();
+//   updateSessionDisplay();
+// };
 
 const resetSessionTimer = () => {
   sessionStartTime.value = Date.now();

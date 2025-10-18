@@ -21,7 +21,7 @@ const canvasWidth = ref(window.innerWidth);
 const canvasHeight = ref(window.innerHeight);
 const isActive = ref(true);
 
-interface particle {
+interface Particle {
   x: number;
   y: number;
   vx: number;
@@ -50,7 +50,7 @@ const createParticles = () => {
       vx: Math.random() * 6 - 3,
       vy: Math.random() * -15 - 10,
       radius: Math.random() * 3 + 2,
-      color: colors[Math.floor(Math.random() * colors.length)],
+      color: colors[Math.floor(Math.random() * colors.length)] || "#5E5CE6",
       rotation: Math.random() * 360,
       rotationSpeed: Math.random() * 10 - 5,
       opacity: 1,
@@ -103,6 +103,7 @@ const animate = () => {
 
   for (let i = particles.length - 1; i >= 0; i--) {
     const particle = particles[i];
+    if (!particle) continue;
 
     // Update particle position
     particle.x += particle.vx;

@@ -81,7 +81,7 @@
       <div class="space-y-2">
         <div v-for="attempt in recentAttempts" :key="attempt.id" class="flex items-center gap-4">
           <div class="flex-shrink-0 text-sm text-gray-500 dark:text-gray-400">
-            {{ formatDate(attempt.timestamp as Date | string) }}
+            {{ formatDate(new Date(attempt.timestamp as number)) }}
           </div>
           <div class="flex-shrink-0">
             <span
@@ -211,7 +211,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
-import type { QuizAttempt, LevelStats, CategoryStats } from "@/types/quiz-analytics";
+import type { QuizAttempt, LevelStats, CategoryStats } from "../../types/quiz-analytics";
 
 const { t } = useI18n();
 
@@ -355,8 +355,8 @@ const getScoreBarClass = (score: number) => {
   return "bg-red-600";
 };
 
-const formatDate = (timestamp: number) => {
-  const date = new Date(timestamp);
+const formatDate = (timestamp: number | string | Date) => {
+  const date = typeof timestamp === 'number' || typeof timestamp === 'string' ? new Date(timestamp) : timestamp;
   const now = new Date();
   const diffDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
 

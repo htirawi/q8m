@@ -71,7 +71,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
 
-import { useFriendsStore } from "@/stores/friends";
+import { useFriendsStore } from "../../../stores/friends";
 
 import FriendList from "../components/FriendList.vue";
 import FriendRequests from "../components/FriendRequests.vue";
@@ -103,7 +103,7 @@ onMounted(async () => {
   await Promise.all([
     friendsStore.getFriends(),
     friendsStore.getReceivedRequests(),
-    friendsStore.getSuggestions(),
+    friendsStore.getFriendSuggestions(),
   ]);
 });
 </script>

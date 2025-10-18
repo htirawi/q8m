@@ -243,9 +243,9 @@
 </template>
 
 <script setup lang="ts">
-import type { IStreakDisplayProps as Props } from "@/types/components/gamification";
+import type { IStreakDisplayProps as Props } from "../../../types/components/gamification";
 import { computed } from "vue";
-import { useStreak } from "@/composables/useStreak";
+import { useStreak } from "../../../composables/useStreak";
 
 const props = withDefaults(defineProps<Props>(), {
   variant: "card",

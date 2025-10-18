@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { usePaymentStore } from "@/stores/payment";
+import { usePaymentStore } from "../../../stores/payment";
 import { useI18n } from "vue-i18n";
 
 const route = useRoute();
@@ -58,14 +58,11 @@ const parseErrorDetails = () => {
   const plan = route.query.plan as string;
 
   if (errorCode) {
-    errordetails.value = {
+    errorDetails.value = {
       errorCode,
       orderId,
       plan,
       timestamp: new Date().toISOString(),
-      orderId,
-      plan,
-      timestamp,
     };
   }
 };

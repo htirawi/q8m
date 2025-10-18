@@ -2,6 +2,8 @@
  * Common Component Props & Types
  */
 
+import type { Component } from "vue";
+
 export interface IActivity {
   id: string;
   type: string;
@@ -25,9 +27,9 @@ export interface IMarkdownRendererProps {
 }
 
 export interface IParsedBlock {
-  type: "text" | "code" | "math";
-  content: string;
+  type?: "text" | "code" | "math";
+  content?: string;
   language?: string;
-  component?: any; // Vue component or string
+  component?: Component | string;
   props?: Record<string, unknown>;
 }

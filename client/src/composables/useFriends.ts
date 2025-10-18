@@ -27,6 +27,7 @@ export const useFriends = () => {
   const hasReceivedRequests = computed(() => store.receivedRequestsCount > 0);
   const hasSentRequests = computed(() => store.sentRequestsCount > 0);
   const hasFriends = computed(() => store.friendCount > 0);
+  const hasSuggestions = computed(() => store.suggestions.length > 0);
 
   /**
    * Load friends list
@@ -249,7 +250,7 @@ export const useFriends = () => {
       case "name":
         return sorted.sort((a, b) => a.name.localeCompare(b.name));
       case "level":
-        return sorted.sort((a, b) => b.level - a.level ?? 0);
+        return sorted.sort((a, b) => (b.level ?? 0) - (a.level ?? 0));
       case "recent":
         return sorted.sort((a, b) => {
           const dateA = a.friendSince ? new Date(a.friendSince).getTime() : 0;
@@ -273,10 +274,10 @@ export const useFriends = () => {
     }
   ): Friend[] => {
     return friendsList.filter((friend) => {
-      if (filter.minLevel !== undefined && friend.level < filter.minLevel) {
+      if (filter.minLevel !== undefined && (friend.level ?? 0) < filter.minLevel) {
         return false;
       }
-      if (filter.maxLevel !== undefined && friend.level > filter.maxLevel) {
+      if (filter.maxLevel !== undefined && (friend.level ?? 0) > filter.maxLevel) {
         return false;
       }
       if (filter.searchTerm) {
@@ -386,7 +387,7 @@ export const useFriends = () => {
     }
 
     const index = Math.abs(hash) % colors.length;
-    return colors[index];
+    return colors[index] ?? "bg-gray-500";
   };
 
   return {
@@ -408,6 +409,7 @@ export const useFriends = () => {
     hasReceivedRequests,
     hasSentRequests,
     hasFriends,
+    hasSuggestions,
 
     // Actions
     loadFriends,

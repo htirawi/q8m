@@ -26,7 +26,7 @@
 
         <!-- Icon/Thumbnail -->
         <div class="recommendation-card__visual">
-          <img v-if="item.thumbnail" :src="item.thumbnail" :alt="item.title" class="recommendation-card__thumbnail" />
+          <img v-if="item.thumbnail" :src="item.thumbnail as string" :alt="(item.title as string)" class="recommendation-card__thumbnail" />
           <div v-else class="recommendation-card__icon" :class="`recommendation-card__icon--${item.type}`">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <path v-if="item.type === 'course'"
@@ -104,7 +104,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import type { IRecommendation } from "@/types/components/recommendations";
+import type { IRecommendation } from "../../types/components/recommendations";
 
 export interface recommendation {
   id: string;
@@ -130,7 +130,13 @@ interface Recommendation {
   category?: string;
   difficulty?: string;
   estimatedTime?: number;
-  [key: string]: unknown;
+  thumbnail?: string;
+  isNew?: boolean;
+  isFeatured?: boolean;
+  duration?: string;
+  progress?: number;
+  actionUrl?: string;
+  metadata?: Record<string, any>;
 }
 
 interface Props {
@@ -138,11 +144,13 @@ interface Props {
   showRefresh?: boolean;
 }
 
-const _props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   showRefresh: true,
 });
 
 const emit = defineEmits<{
+  explore: [];
+  refresh: [];
   "item-click": [item: IRecommendation];
 }>();
 
@@ -150,8 +158,8 @@ const router = useRouter();
 
 const isRefreshing = ref(false);
 
-const handleItemClick = (item: IRecommendation) => {
-  emit("item-click", item);
+const handleItemClick = (item: Recommendation) => {
+  emit("item-click", item as IRecommendation);
 
   if (item.actionUrl) {
     router.push(item.actionUrl);

@@ -37,8 +37,8 @@
 </template>
 
 <script setup lang="ts">
-import type { IQuestionCardSkeletonProps as Props } from "@/types/components/skeletons";
-import SkeletonLoader from "@/components/SkeletonLoader.vue";
+import type { IQuestionCardSkeletonProps as Props } from "../../types/components/skeletons";
+import SkeletonLoader from "../../components/SkeletonLoader.vue";
 
 withDefaults(defineProps<Props>(), {
   showCode: false,

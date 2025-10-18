@@ -108,7 +108,7 @@
 <script setup lang="ts">
 import { ref, computed, h, onUnmounted } from "vue";
 import { useI18n } from "vue-i18n";
-import type { ILevelCard } from "@/types/design-system";
+import type { ILevelCard } from "../../types/design-system";
 
 interface Props extends Partial<ILevelCard> {
   modelValue?: boolean; // For v-model support

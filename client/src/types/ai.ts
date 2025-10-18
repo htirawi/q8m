@@ -19,6 +19,8 @@ export interface IChatMessage {
     codeBlocks?: ICodeBlock[];
     suggestions?: string[];
     relatedTopics?: string[];
+    originalError?: string;
+    retryable?: boolean;
   };
   streaming?: boolean;
   edited?: boolean;

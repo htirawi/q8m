@@ -277,10 +277,10 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, h, nextTick, watch } from "vue";
 import { useRouter } from "vue-router";
-import { useAuthStore } from "@/stores/auth";
-import { usePlanStore } from "@/stores/plan";
+import { useAuthStore } from "../../stores/auth";
+import { usePlanStore } from "../../stores/plan";
 import { useI18n } from "vue-i18n";
-import type { IMenuItem } from "@/types/components/layout";
+import type { IMenuItem } from "../../types/components/layout";
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -315,7 +315,7 @@ const userEmail = computed(() => authStore.user?.email || "");
 const userInitials = computed(() => {
   const name = authStore.user?.name || authStore.user?.email || "U";
   const parts = name.split(/[\s@]/);
-  if (parts.length >= 2) {
+  if (parts.length >= 2 && parts[0]?.[0] && parts[1]?.[0]) {
     return (parts[0][0] + parts[1][0]).toUpperCase();
   }
   return name.substring(0, 2).toUpperCase();
@@ -489,8 +489,8 @@ const handleLogout = async () => {
     });
 
     // Show error toast (assuming toast composable exists)
-    if (window.showToast) {
-      window.showToast({
+    if (typeof window !== 'undefined' && 'showToast' in window && typeof (window as any).showToast === 'function') {
+      (window as any).showToast({
         type: "error",
         message: t("errors.logoutFailed"),
         action: {
@@ -610,14 +610,16 @@ const handleQuickAction = (event: KeyboardEvent) => {
   if (index < items.length) {
     const targetItem = items[index];
 
-    // Track quick action usage
-    trackEvent("quick_action_used", {
-      item_index: index,
-      item_label: targetItem.textContent?.trim() || "unknown",
-    });
+    if (targetItem) {
+      // Track quick action usage
+      trackEvent("quick_action_used", {
+        item_index: index,
+        item_label: targetItem.textContent?.trim() || "unknown",
+      });
 
-    // Trigger click on the item
-    targetItem.click();
+      // Trigger click on the item
+      targetItem.click();
+    }
   }
 };
 
@@ -697,7 +699,7 @@ const triggerHaptic = (style: "light" | "medium" | "heavy" = "light") => {
 
 // Mobile swipe gesture handlers
 const handleTouchStart = (event: TouchEvent) => {
-  if (!isMobile.value) return;
+  if (!isMobile.value || !event.touches[0]) return;
   touchStartY.value = event.touches[0].clientY;
   isDragging.value = true;
 
@@ -706,7 +708,7 @@ const handleTouchStart = (event: TouchEvent) => {
 };
 
 const handleTouchMove = (event: TouchEvent) => {
-  if (!isMobile.value || !isDragging.value) return;
+  if (!isMobile.value || !isDragging.value || !event.touches[0]) return;
   touchCurrentY.value = event.touches[0].clientY;
 
   // Only allow dragging down
@@ -747,13 +749,13 @@ const preloadMenu = () => {
 
   // Prefetch user data if needed
   if (!authStore.user) {
-    authStore.fetchUser();
+    authStore.initializeAuth();
   }
 
-  // Prefetch plan data if needed
-  if (!planStore.planTier) {
-    planStore.fetchPlan();
-  }
+  // Prefetch plan data if needed (plan store doesn't have fetchPlan method)
+  // if (!planStore.planTier) {
+  //   planStore.fetchPlan();
+  // }
 
   menuPreloaded.value = true;
 };

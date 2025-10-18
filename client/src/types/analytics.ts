@@ -129,6 +129,7 @@ export enum EventCategory {
   LevelSelection = "level_selection",
   Gamification = "gamification",
   Monetization = "monetization",
+  Conversion = "conversion",
   Performance = "performance",
   Accessibility = "accessibility",
   Error = "error",

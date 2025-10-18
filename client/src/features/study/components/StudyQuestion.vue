@@ -167,7 +167,7 @@
       <div v-else-if="question.type === 'multiple-checkbox'" class="space-y-3">
         <label v-for="option in options" :key="option.id" :class="getCheckboxClass(option.id)">
           <input
-            :checked="multipleAnswers.includes(option.id)"
+            :checked="(multipleAnswers ?? []).includes(option.id)"
             type="checkbox"
             :value="option.id"
             class="h-5 w-5 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
@@ -244,9 +244,10 @@
 </template>
 
 <script setup lang="ts">
+import type { IStudyQuestionProps as Props } from "../../../types/components/study";
 import { computed, ref, watch, nextTick, onMounted, onUnmounted } from "vue";
 import { useI18n } from "vue-i18n";
-import MarkdownRenderer from "@/components/common/MarkdownRenderer.vue";
+import MarkdownRenderer from "../../../components/common/MarkdownRenderer.vue";
 
 const answerSection = ref<HTMLDivElement | null>(null);
 
@@ -256,6 +257,7 @@ const emit = defineEmits<{
   "update:selectedAnswer": [value: string | null];
   "update:textAnswer": [value: string];
   "update:multipleAnswers": [value: string[]];
+  "toggle-bookmark": [];
   reveal: [];
   previous: [];
   next: [];
@@ -264,15 +266,21 @@ const emit = defineEmits<{
 const { t } = useI18n();
 
 const questionText = computed(() => {
-  return props.question.content?.[props.locale as "en" | "ar"]?.question ?? "";
+  const content = props.question.content?.[props.locale as "en" | "ar"];
+  if (typeof content === 'string') return content;
+  return (content as any)?.question ?? "";
 });
 
 const explanation = computed(() => {
-  return props.question.content?.[props.locale as "en" | "ar"]?.explanation ?? "";
+  const content = props.question.content?.[props.locale as "en" | "ar"];
+  if (typeof content === 'string') return content;
+  return (content as any)?.explanation ?? "";
 });
 
 const options = computed(() => {
-  const opts = props.question.content?.[props.locale as "en" | "ar"]?.options;
+  const content = props.question.content?.[props.locale as "en" | "ar"];
+  if (typeof content === 'string') return [];
+  const opts = (content as any)?.options;
   if (!opts || !Array.isArray(opts)) return [];
 
   return opts.map((option: any) => ({
@@ -308,9 +316,9 @@ const updateTextAnswer = (event: Event) => {
 };
 
 const toggleCheckbox = (optionId: string) => {
-  const newAnswers = props.multipleAnswers.includes(optionId)
-    ? props.multipleAnswers.filter((id) => id !== optionId)
-    : [...props.multipleAnswers, optionId];
+  const newAnswers = (props.multipleAnswers ?? []).includes(optionId)
+    ? (props.multipleAnswers ?? []).filter((id: string) => id !== optionId)
+    : [...(props.multipleAnswers ?? []), optionId];
   emit("update:multipleAnswers", newAnswers);
 };
 
@@ -332,7 +340,7 @@ const getOptionClass = (optionId: string) => {
 const getCheckboxClass = (optionId: string) => {
   const baseClass =
     "flex cursor-pointer items-center rounded-lg border p-4 transition-all hover:shadow-md";
-  const isSelected = props.multipleAnswers.includes(optionId);
+  const isSelected = (props.multipleAnswers ?? []).includes(optionId);
 
   if (isSelected) {
     return `${baseClass} border-primary-500 bg-primary-50 dark:bg-primary-900/20`;
@@ -401,7 +409,7 @@ watch(
 );
 
 // Anti-copy protection: Disable keyboard shortcuts
-const handleKeyDown = (event: KeyboardEvent) => {
+const handleKeyDown = (event: KeyboardEvent): boolean => {
   // Disable common copy shortcuts
   const isCtrlOrCmd = event.ctrlKey || event.metaKey;
 
@@ -433,6 +441,8 @@ const handleKeyDown = (event: KeyboardEvent) => {
     event.stopPropagation();
     return false;
   }
+
+  return true;
 };
 
 // Disable drag and drop
@@ -449,8 +459,9 @@ onMounted(() => {
   // Disable text selection on the entire document during study
   document.body.style.userSelect = "none";
   document.body.style.webkitUserSelect = "none";
-  document.body.style.mozUserSelect = "none";
-  document.body.style.msUserSelect = "none";
+  // Legacy vendor prefixes for older browsers
+  (document.body.style as any).mozUserSelect = "none";
+  (document.body.style as any).msUserSelect = "none";
 });
 
 onUnmounted(() => {
@@ -461,7 +472,8 @@ onUnmounted(() => {
   // Re-enable text selection
   document.body.style.userSelect = "";
   document.body.style.webkitUserSelect = "";
-  document.body.style.mozUserSelect = "";
-  document.body.style.msUserSelect = "";
+  // Legacy vendor prefixes for older browsers
+  (document.body.style as any).mozUserSelect = "";
+  (document.body.style as any).msUserSelect = "";
 });
 </script>
