@@ -1,12 +1,6 @@
 <template>
-  <div
-    class="skeleton-loader"
-    :class="[`skeleton-loader--${variant}`, customClass]"
-    :style="customStyle"
-    role="status"
-    aria-live="polite"
-    :aria-label="ariaLabel || $t('a11y.loading')"
-  >
+  <div class="skeleton-loader" :class="[`skeleton-loader--${variant}`, customClass]" :style="customStyle" role="status"
+    aria-live="polite" :aria-label="ariaLabel || $t('a11y.loading')">
     <span class="sr-only">{{ loadingText }} </span>
     <div class="skeleton-loader__shimmer"></div>
   </div>
@@ -77,23 +71,19 @@ const customStyle = computed(() => {
   @apply relative overflow-hidden bg-gray-200 dark:bg-gray-700;
   @apply rounded-md;
 
-  background: linear-gradient(
-    90deg,
-    var(--color-gray-200) 0%,
-    var(--color-gray-100) 50%,
-    var(--color-gray-200) 100%
-  );
+  background: linear-gradient(90deg,
+      var(--color-gray-200) 0%,
+      var(--color-gray-100) 50%,
+      var(--color-gray-200) 100%);
   background-size: 200% 100%;
 }
 
 /* Dark mode gradient */
 .dark .skeleton-loader {
-  background: linear-gradient(
-    90deg,
-    var(--color-gray-700) 0%,
-    var(--color-gray-600) 50%,
-    var(--color-gray-700) 100%
-  );
+  background: linear-gradient(90deg,
+      var(--color-gray-700) 0%,
+      var(--color-gray-600) 50%,
+      var(--color-gray-700) 100%);
 }
 
 /* Shimmer animation */

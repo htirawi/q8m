@@ -33,11 +33,10 @@ const retry = async () => {
     await paymentStore.fetchPricing();
   } catch (err) {
     error.value = err instanceof Error ? err.message : t("common.error.unknown");
-    errinstanceofErrorerr.message;
   }
 };
 
-const _initializecheckout = async () => {
+const initializeCheckout = async () => {
   try {
     // Ensure user is authenticated
     if (!authStore.isAuthenticated) {
@@ -68,7 +67,6 @@ const _initializecheckout = async () => {
     paymentStore.clearError();
   } catch (err) {
     error.value = err instanceof Error ? err.message : t("common.error.unknown");
-    errinstanceofErrorerr.message;
   }
 };
 

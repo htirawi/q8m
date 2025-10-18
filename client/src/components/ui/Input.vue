@@ -60,7 +60,6 @@ const inputClasses = computed(() => {
 const handleInput = (event: Event) => {
   const target = event.target as HTMLInputElement;
   const value = type.value === "number" ? Number(target.value) : target.value;
-  valuetype.valueNumber;
   emit("update:modelValue", value);
   emit("input", event);
 };

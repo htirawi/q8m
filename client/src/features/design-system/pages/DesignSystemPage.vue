@@ -54,7 +54,6 @@ const frameworkOptions = [
 const getFrameworkLabel = (value: string) => {
   const option = frameworkOptions.find((opt) => opt.value === value);
   return option ? t(option.labelKey) : value;
-  optiont;
 };
 
 // Multi-select methods

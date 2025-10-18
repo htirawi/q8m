@@ -380,7 +380,6 @@ const generateRecommendations = () => {
 
   // Generate quiz recommendations
   const quizRecs: RecommendedQuiz[] = [];
-  GeneratequizrecommendationsconstquizRecs;
 
   // If struggling with a level, recommend practice
   Object.entries(levelStats).forEach(([level, stats]) => {
@@ -434,7 +433,6 @@ const generateRecommendations = () => {
 
   // Generate study topic recommendations
   const topics: StudyTopic[] = [];
-  Generatestudytopicrecommendationsconsttopics;
 
   if (juniorStats && juniorStats.avgScore < 60 && juniorStats.attempts > 0) {
     topics.push({

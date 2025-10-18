@@ -10,38 +10,23 @@
       <!-- Carousel -->
       <div class="testimonial-slider">
         <!-- Navigation Buttons -->
-        <button
-          v-if="testimonials.length > 1"
-          @click="prev"
-          class="testimonial-nav testimonial-nav-prev"
-          :aria-label="$t('pricing.testimonials.previous')"
-          :disabled="isTransitioning"
-        >
+        <button v-if="testimonials.length > 1" @click="prev" class="testimonial-nav testimonial-nav-prev"
+          :aria-label="$t('pricing.testimonials.previous')" :disabled="isTransitioning">
           <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M15 19l-7-7 7-7"
-            />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
           </svg>
         </button>
 
         <!-- ITestimonial Cards -->
         <div class="testimonial-track">
           <TransitionGroup name="testimonial-slide" tag="div" class="testimonial-wrapper">
-            <div
-              v-for="(testimonial, index) in visibleTestimonials"
-              :key="testimonial.id"
-              v-show="index === currentIndex"
-              class="testimonial-card"
-            >
+            <div v-for="(testimonial, index) in visibleTestimonials" :key="testimonial.id"
+              v-show="index === currentIndex" class="testimonial-card">
               <!-- Quote Icon -->
               <div class="testimonial-quote-icon">
                 <svg class="h-8 w-8" fill="currentColor" viewBox="0 0 24 24">
                   <path
-                    d="M4.583 17.321C3.553 16.227 3 15 3 13.011c0-3.5 2.457-6.637 6.03-8.188l.893 1.378c-3.335 1.804-3.987 4.145-4.247 5.621.537-.278 1.24-.375 1.929-.311 1.804.167 3.226 1.648 3.226 3.489a3.5 3.5 0 01-3.5 3.5c-1.073 0-2.099-.49-2.748-1.179zm10 0C13.553 16.227 13 15 13 13.011c0-3.5 2.457-6.637 6.03-8.188l.893 1.378c-3.335 1.804-3.987 4.145-4.247 5.621.537-.278 1.24-.375 1.929-.311 1.804.167 3.226 1.648 3.226 3.489a3.5 3.5 0 01-3.5 3.5c-1.073 0-2.099-.49-2.748-1.179z"
-                  />
+                    d="M4.583 17.321C3.553 16.227 3 15 3 13.011c0-3.5 2.457-6.637 6.03-8.188l.893 1.378c-3.335 1.804-3.987 4.145-4.247 5.621.537-.278 1.24-.375 1.929-.311 1.804.167 3.226 1.648 3.226 3.489a3.5 3.5 0 01-3.5 3.5c-1.073 0-2.099-.49-2.748-1.179zm10 0C13.553 16.227 13 15 13 13.011c0-3.5 2.457-6.637 6.03-8.188l.893 1.378c-3.335 1.804-3.987 4.145-4.247 5.621.537-.278 1.24-.375 1.929-.311 1.804.167 3.226 1.648 3.226 3.489a3.5 3.5 0 01-3.5 3.5c-1.073 0-2.099-.49-2.748-1.179z" />
                 </svg>
               </div>
 
@@ -53,12 +38,8 @@
               <!-- Author Info -->
               <div class="testimonial-author">
                 <div class="testimonial-author-avatar">
-                  <img
-                    v-if="testimonial.avatar"
-                    :src="testimonial.avatar"
-                    :alt="testimonial.name"
-                    class="h-full w-full object-cover"
-                  />
+                  <img v-if="testimonial.avatar" :src="testimonial.avatar" :alt="testimonial.name"
+                    class="h-full w-full object-cover" />
                   <div v-else class="testimonial-author-initials">
                     {{ getInitials(testimonial.name) }}
                   </div>
@@ -74,16 +55,9 @@
 
               <!-- Rating Stars -->
               <div class="testimonial-rating">
-                <svg
-                  v-for="i in 5"
-                  :key="i"
-                  class="testimonial-star"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
+                <svg v-for="i in 5" :key="i" class="testimonial-star" fill="currentColor" viewBox="0 0 20 20">
                   <path
-                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                  />
+                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                 </svg>
               </div>
 
@@ -95,35 +69,19 @@
           </TransitionGroup>
         </div>
 
-        <button
-          v-if="testimonials.length > 1"
-          @click="next"
-          class="testimonial-nav testimonial-nav-next"
-          :aria-label="$t('pricing.testimonials.next')"
-          :disabled="isTransitioning"
-        >
+        <button v-if="testimonials.length > 1" @click="next" class="testimonial-nav testimonial-nav-next"
+          :aria-label="$t('pricing.testimonials.next')" :disabled="isTransitioning">
           <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M9 5l7 7-7 7"
-            />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
           </svg>
         </button>
       </div>
 
       <!-- Dots Indicator -->
       <div v-if="testimonials.length > 1" class="testimonial-dots">
-        <button
-          v-for="(_, index) in testimonials"
-          :key="index"
-          @click="goTo(index)"
-          class="testimonial-dot"
-          :class="{ 'testimonial-dot-active': index === currentIndex }"
-          :aria-label="`Go to testimonial ${index + 1}`"
-          :aria-current="index === currentIndex"
-        />
+        <button v-for="(_, index) in testimonials" :key="index" @click="goTo(index)" class="testimonial-dot"
+          :class="{ 'testimonial-dot-active': index === currentIndex }" :aria-label="`Go to testimonial ${index + 1}`"
+          :aria-current="index === currentIndex" />
       </div>
 
       <!-- Statistics -->
@@ -466,7 +424,7 @@ onUnmounted(() => {
 }
 
 /* Responsive */
-@media (width <= 640px) {
+@media (width <=640px) {
   .testimonial-card {
     @apply p-6;
   }
@@ -482,6 +440,7 @@ onUnmounted(() => {
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
+
   .testimonial-slide-enter-active,
   .testimonial-slide-leave-active,
   .testimonial-nav {
