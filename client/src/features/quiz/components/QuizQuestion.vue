@@ -275,7 +275,7 @@ const updateTextAnswer = (event: Event) => {
   emit("update:textAnswer", target.value);
 };
 
-const togglemultipleanswer = (optionId: string) => {
+const toggleMultipleAnswer = (optionId: string) => {
   if (props.hasAnswered) return;
   const current = [...props.multipleAnswers];
   const index = current.indexOf(optionId);
@@ -339,7 +339,7 @@ const getCheckboxOptionClass = (optionId: string) => {
  border-gray-200 bg-gray-50 text-gray-700 dark:border-gray-700; dark:bg-gray-800; dark:text-gray-300`;
 };
 
-const isanswerrevealed = (optionId: string) => {
+const isAnswerRevealed = (optionId: string) => {
   const userAnswer = props.userAnswerResult;
 
   if (!props.hasAnswered || !userAnswer) {
@@ -353,7 +353,7 @@ const isanswerrevealed = (optionId: string) => {
   }
 };
 
-const iscorrectoption = (optionId: string) => {
+const isCorrectOption = (optionId: string) => {
   const userAnswer = props.userAnswerResult;
   if (!userAnswer) return false;
 
@@ -390,7 +390,7 @@ const handleKeyDown = (event: KeyboardEvent) => {
   }
 };
 
-const handledragstart = (event: DragEvent) => {
+const handleDragStart = (event: DragEvent) => {
   event.preventDefault();
   return false;
 };
