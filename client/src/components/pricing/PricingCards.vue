@@ -52,7 +52,7 @@ const toggleBilling = (cycle: BillingCycle) => {
   });
 };
 
-const handleplanselect = (planId: PlanId, billing: BillingCycle) => {
+const handlePlanSelect = (planId: PlanId, billing: BillingCycle) => {
   selectedPlan.value = planId;
 
   track("plan_card_clicked", {
@@ -85,7 +85,7 @@ const handleplanselect = (planId: PlanId, billing: BillingCycle) => {
   }
 };
 
-const handlecheckoutclose = () => {
+const handleCheckoutClose = () => {
   showCheckoutModal.value = false;
 
   track("checkout_modal_closed", {
@@ -94,7 +94,7 @@ const handlecheckoutclose = () => {
   });
 };
 
-const handlecheckoutsuccess = (subscriptionId: string) => {
+const handleCheckoutSuccess = (subscriptionId: string) => {
   showCheckoutModal.value = false;
 
   track("checkout_completed_modal", {

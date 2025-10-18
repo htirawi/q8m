@@ -170,7 +170,7 @@ function getRarityClass(rarity: string): string {
   return classes[rarity as keyof typeof classes] || classes.common;
 }
 
-function getsparklestyle(index: number) {
+function getSparkleStyle(index: number) {
   const angle = index * 60 - 30; // Distribute around circle
   const distance = 25;
   const x = Math.cos((angle * Math.PI) / 180) * distance;
@@ -183,7 +183,7 @@ function getsparklestyle(index: number) {
   };
 }
 
-function sharebadge(badge: ibadge) {
+function shareBadge(badge: ibadge) {
   emit("share", badge);
 
   const shareText = `I just unlocked the "${badge.name}" badge! ${badge.description}`;
@@ -205,7 +205,7 @@ function sharebadge(badge: ibadge) {
   }
 }
 
-function dismissbadge(badgeid: string) {
+function dismissBadge(badgeid: string) {
   const timer = timers.value.get(badgeId);
   if (timer) {
     clearTimeout(timer);
@@ -220,7 +220,7 @@ function dismissbadge(badgeid: string) {
   emit("dismiss", badgeId);
 }
 
-function showbadge(badge: ibadge) {
+function showBadge(badge: ibadge) {
   // Add progress tracking
   const badgeWithProgress = {
     ...badge,
@@ -246,7 +246,7 @@ function showbadge(badge: ibadge) {
   timers.value.set(badge.id, timer);
 }
 
-function showbadges(newbadges: ibadge[]) {
+function showBadges(newbadges: ibadge[]) {
   newBadges.forEach((badge, index) => {
     setTimeout(() => {
       showBadge(badge);

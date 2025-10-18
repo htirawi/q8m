@@ -174,7 +174,7 @@ const handleenable = async () => {
   }
 };
 
-const handledismiss = () => {
+const handleDismiss = () => {
   isDismissed.value = true;
   localStorage.setItem(STORAGE_KEY, Date.now().toString());
   emit("dismissed");

@@ -111,7 +111,7 @@ const ariaLabel = computed(() => {
   return t("study.cta.ariaLabelNoSelection");
 });
 
-const handleclick = () => {
+const handleClick = () => {
   track("study_cta_clicked", {
     hasSelection: !!props.selectedDifficulty,
     difficulty: props.selectedDifficulty ?? undefined,
@@ -127,7 +127,7 @@ const handleclick = () => {
   }
 };
 
-const scrolltodifficultyselection = () => {
+const scrollToDifficultySelection = () => {
   let targetElement: HTMLElement | null = null;
   targetElement;
 

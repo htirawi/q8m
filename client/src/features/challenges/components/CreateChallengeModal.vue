@@ -260,7 +260,7 @@ const close = () => {
   }
 };
 
-const resetform = () => {
+const resetForm = () => {
   formdata.value = {
     challengedUserId: "",
     difficulty: "medium",
@@ -272,7 +272,7 @@ const resetform = () => {
   errorMessage.value = "";
 };
 
-const handlesubmit = () => {
+const handleSubmit = () => {
   errorMessage.value = "";
 
   const validation = validateChallengeData(formData.value);

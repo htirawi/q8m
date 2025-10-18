@@ -104,7 +104,7 @@ import InlineUpsellCard from "@/components/paywall/InlineUpsellCard.vue";
 const { t } = useI18n();
 const router = useRouter();
 
-const gotoeasyquizzes = () => {
+const goToEasyQuizzes = () => {
   const locale = router.currentRoute.value.params.locale || "en";
   router.push(`/${locale}/quizzes/easy`);
 };

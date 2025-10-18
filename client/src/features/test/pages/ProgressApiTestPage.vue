@@ -71,7 +71,7 @@ function formatDate(date: Date | string): string {
             </div>
             <div class="stat-card">
               <div class="stat-label">Total Badges</div>
-              <div class="stat-value">{{ progress.badges.length }}</div>
+              <div class="stat-value">{{ progress.badges?.length ?? 0 }}</div>
             </div>
           </div>
         </section>
@@ -124,7 +124,7 @@ function formatDate(date: Date | string): string {
             <div class="stat-card">
               <div class="stat-label">Current Streak</div>
               <div class="stat-value streak">
-                {{ progress.streaks.currentStreak }}
+                {{ progress.streaks?.currentStreak ?? 0 }}
 
                 days
               </div>
@@ -132,14 +132,14 @@ function formatDate(date: Date | string): string {
             <div class="stat-card">
               <div class="stat-label">Longest Streak</div>
               <div class="stat-value">
-                {{ progress.streaks.longestStreak }}
+                {{ progress.streaks?.longestStreak ?? 0 }}
 
                 days
               </div>
             </div>
             <div class="stat-card">
               <div class="stat-label">Last Activity</div>
-              <div class="stat-value">{{ formatDate(progress.streaks.lastActivityDate) }}</div>
+              <div class="stat-value">{{ formatDate(progress.streaks?.lastActivityDate ?? new Date()) }}</div>
             </div>
           </div>
         </section>
@@ -151,46 +151,46 @@ function formatDate(date: Date | string): string {
             <div class="difficulty-card">
               <h3>Easy</h3>
               <p>
-                Mastered: <strong>{{ progress.difficultyProgress.easy.mastered }} </strong>
+                Mastered: <strong>{{ progress.difficultyProgress?.easy?.mastered ?? 0 }} </strong>
               </p>
               <p>
-                Familiar: <strong>{{ progress.difficultyProgress.easy.familiar }} </strong>
+                Familiar: <strong>{{ progress.difficultyProgress?.easy?.familiar ?? 0 }} </strong>
               </p>
               <p>
-                Learning: <strong>{{ progress.difficultyProgress.easy.learning }} </strong>
+                Learning: <strong>{{ progress.difficultyProgress?.easy?.learning ?? 0 }} </strong>
               </p>
               <p>
-                New: <strong>{{ progress.difficultyProgress.easy.new }} </strong>
+                New: <strong>{{ progress.difficultyProgress?.easy?.new ?? 0 }} </strong>
               </p>
             </div>
             <div class="difficulty-card">
               <h3>Medium</h3>
               <p>
-                Mastered: <strong>{{ progress.difficultyProgress.medium.mastered }} </strong>
+                Mastered: <strong>{{ progress.difficultyProgress?.medium?.mastered ?? 0 }} </strong>
               </p>
               <p>
-                Familiar: <strong>{{ progress.difficultyProgress.medium.familiar }} </strong>
+                Familiar: <strong>{{ progress.difficultyProgress?.medium?.familiar ?? 0 }} </strong>
               </p>
               <p>
-                Learning: <strong>{{ progress.difficultyProgress.medium.learning }} </strong>
+                Learning: <strong>{{ progress.difficultyProgress?.medium?.learning ?? 0 }} </strong>
               </p>
               <p>
-                New: <strong>{{ progress.difficultyProgress.medium.new }} </strong>
+                New: <strong>{{ progress.difficultyProgress?.medium?.new ?? 0 }} </strong>
               </p>
             </div>
             <div class="difficulty-card">
               <h3>Hard</h3>
               <p>
-                Mastered: <strong>{{ progress.difficultyProgress.hard.mastered }} </strong>
+                Mastered: <strong>{{ progress.difficultyProgress?.hard?.mastered ?? 0 }} </strong>
               </p>
               <p>
-                Familiar: <strong>{{ progress.difficultyProgress.hard.familiar }} </strong>
+                Familiar: <strong>{{ progress.difficultyProgress?.hard?.familiar ?? 0 }} </strong>
               </p>
               <p>
-                Learning: <strong>{{ progress.difficultyProgress.hard.learning }} </strong>
+                Learning: <strong>{{ progress.difficultyProgress?.hard?.learning ?? 0 }} </strong>
               </p>
               <p>
-                New: <strong>{{ progress.difficultyProgress.hard.new }} </strong>
+                New: <strong>{{ progress.difficultyProgress?.hard?.new ?? 0 }} </strong>
               </p>
             </div>
           </div>

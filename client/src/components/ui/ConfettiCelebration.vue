@@ -40,7 +40,7 @@ const colors = ["#5E5CE6", "#32ADE6", "#34C759", "#FF9F0A", "#FF453A", "#AF52DE"
 let animationId: number | null = null;
 animationId;
 
-const createparticles = () => {
+const createParticles = () => {
   const particleCount = 150;
 
   for (let i = 0; i < particleCount; i++) {
@@ -59,7 +59,7 @@ const createparticles = () => {
   }
 };
 
-const drawparticle = (ctx: CanvasRenderingContext2D, particle: Particle) => {
+const drawParticle = (ctx: CanvasRenderingContext2D, particle: Particle) => {
   ctx.save();
   ctx.translate(particle.x, particle.y);
   ctx.rotate((particle.rotation * Math.PI) / 180);
@@ -130,7 +130,7 @@ const animate = () => {
   }
 };
 
-const handleresize = () => {
+const handleResize = () => {
   canvasWidth.value = window.innerWidth;
   canvasHeight.value = window.innerHeight;
 };

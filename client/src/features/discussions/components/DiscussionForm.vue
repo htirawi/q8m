@@ -57,17 +57,17 @@ const handleSubmit = async () => {
   }
 };
 
-const handlecancel = () => {
+const handleCancel = () => {
   content.value = "";
   isFocused.value = false;
   emit("cancel");
 };
 
-const handlefocus = () => {
+const handleFocus = () => {
   isFocused.value = true;
 };
 
-const handlekeydown = (event: KeyboardEvent) => {
+const handleKeydown = (event: KeyboardEvent) => {
   // Submit on Ctrl/Cmd + Enter
   if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
     event.preventDefault();

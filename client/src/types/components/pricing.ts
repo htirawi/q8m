@@ -14,6 +14,17 @@ export interface ICountdownTimerTimeLeft {
 export interface ICountdownTimerProps {
   endDate: Date;
   showLabels?: boolean;
+  variant?: string;
+  showIcon?: boolean;
+  icon?: string;
+  title?: string;
+  message?: string;
+  showDays?: boolean;
+  showHours?: boolean;
+  showMinutes?: boolean;
+  showSeconds?: boolean;
+  ctaText?: string;
+  expiredMessage?: string;
 }
 
 export interface IModernPricingCardProps {

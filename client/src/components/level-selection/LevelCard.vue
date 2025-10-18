@@ -182,7 +182,7 @@ const handleMouseEnter = () => {
   animateGradient();
 };
 
-const handlemouseleave = () => {
+const handleMouseLeave = () => {
   isHovering.value = false;
   if (animationFrame) {
     cancelAnimationFrame(animationFrame);
@@ -191,14 +191,14 @@ const handlemouseleave = () => {
   gradientAngle.value = 45;
 };
 
-const animategradient = () => {
+const animateGradient = () => {
   if (!isHovering.value) return;
 
   gradientAngle.value = (gradientAngle.value + 2) % 360;
   animationFrame = requestAnimationFrame(animateGradient);
 };
 
-const handleclick = (event: MouseEvent | KeyboardEvent) => {
+const handleClick = (event: MouseEvent | KeyboardEvent) => {
   if (props.isLocked) {
     // Trigger shake animation
     const target = event.currentTarget as HTMLElement;

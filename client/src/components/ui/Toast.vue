@@ -45,7 +45,7 @@ const handleDismiss = () => {
   emit("update:isVisible", false);
 };
 
-const handleenter = () => {
+const handleEnter = () => {
   if (!props.persistent && props.duration > 0) {
     timeoutId = window.setTimeout(() => {
       handleDismiss();
@@ -53,7 +53,7 @@ const handleenter = () => {
   }
 };
 
-const handleleave = () => {
+const handleLeave = () => {
   if (timeoutId) {
     clearTimeout(timeoutId);
     timeoutId = null;

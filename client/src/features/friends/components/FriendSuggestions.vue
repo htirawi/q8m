@@ -53,7 +53,7 @@ const handlesuggestionclick = (userId: string) => {
   emit("suggestion-clicked", userId);
 };
 
-const handlerefresh = async () => {
+const handleRefresh = async () => {
   isInitialLoad.value = false;
   await loadSuggestions();
 };

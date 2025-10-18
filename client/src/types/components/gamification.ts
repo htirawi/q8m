@@ -8,6 +8,7 @@ export interface IAchievement {
   description: string;
   icon: string;
   date: Date;
+  type?: string;
   xpEarned?: number;
 }
 
@@ -28,6 +29,7 @@ export interface IBadge {
 
 export interface IBadgeCardProps {
   badge: IBadge;
+  earned?: boolean; // Flattened from badge.earned for convenience
   size?: "sm" | "md" | "lg";
 }
 
@@ -57,6 +59,7 @@ export interface ILeaderboardEntry {
   rank: number;
   userId: string;
   name: string;
+  displayName?: string; // Alias for name
   avatar?: string;
   score: number;
   change?: number;

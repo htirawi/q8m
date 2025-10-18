@@ -62,7 +62,7 @@ const toggleDropdown = () => {
   isDropdownOpen.value = !isDropdownOpen.value;
 };
 
-const toggleframework = (value: string) => {
+const toggleFramework = (value: string) => {
   const index = framework.value.indexOf(value);
   if (index > -1) {
     framework.value.splice(index, 1);
@@ -71,14 +71,14 @@ const toggleframework = (value: string) => {
   }
 };
 
-const removeframework = (value: string) => {
+const removeFramework = (value: string) => {
   const index = framework.value.indexOf(value);
   if (index > -1) {
     framework.value.splice(index, 1);
   }
 };
 
-const clearall = () => {
+const clearAll = () => {
   framework.value = [];
 };
 
@@ -96,7 +96,7 @@ const handleSubmit = () => {
   framework.value = [];
 };
 
-const handlecancel = () => {
+const handleCancel = () => {
   // Reset form
   email.value = "";
   framework.value = [];

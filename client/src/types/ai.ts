@@ -438,18 +438,3 @@ export interface IBestPracticeViolation {
   line?: number;
   suggestion: string;
 }
-
-// Export all types
-export type {
-  AIProvider,
-  IChatMessage,
-  IChatSession,
-  IChatContext,
-  IAIConfig,
-  ISmartExplanation,
-  IStudyPlan,
-  IAIFeedback,
-  ILearningAnalytics,
-  IVoiceSettings,
-  ICodeAnalysis,
-};

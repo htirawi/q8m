@@ -363,11 +363,11 @@ function selectGoal(goal: OnboardingGoal) {
   setGoal(goal);
 }
 
-function selectexperiencelevel(level: experiencelevel) {
+function selectExperienceLevel(level: experiencelevel) {
   setExperienceLevel(level);
 }
 
-function toggleframework(framework: framework) {
+function toggleFramework(framework: framework) {
   toggleFrameworkInStore(framework);
 }
 

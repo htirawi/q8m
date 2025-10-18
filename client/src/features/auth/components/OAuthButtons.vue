@@ -11,7 +11,7 @@ const emit = defineEmits<{
 
 useI18n();
 
-const handleoauthlogin = (provider: "google") => {
+const handleOAuthLogin = (provider: "google") => {
   emit("oauth-login", provider);
 };
 </script>

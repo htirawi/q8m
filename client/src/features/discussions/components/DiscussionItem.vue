@@ -51,7 +51,7 @@ const handleReply = async (content: string) => {
   showReplies.value = true;
 };
 
-const handleedit = async () => {
+const handleEdit = async () => {
   if (editContent.value.trim() === props.discussion.content) {
     isEditing.value = false;
     return;
@@ -63,19 +63,19 @@ const handleedit = async () => {
   }
 };
 
-const canceledit = () => {
+const cancelEdit = () => {
   editContent.value = props.discussion.content;
   isEditing.value = false;
 };
 
-const togglereplyform = () => {
+const toggleReplyForm = () => {
   showReplyForm.value = !showReplyForm.value;
   if (showReplyForm.value) {
     showReplies.value = true;
   }
 };
 
-const togglereplies = () => {
+const toggleReplies = () => {
   showReplies.value = !showReplies.value;
 };
 </script>

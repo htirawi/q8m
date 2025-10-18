@@ -244,12 +244,12 @@ const difficulties = ref<DifficultyProgress[]>([
 
 const recentActivities = ref<RecentActivity[]>([]);
 
-const getdifficultyicon = (level: string) => {
+const getDifficultyIcon = (level: string) => {
   const icons = { easy: "🟢", medium: "🟡", hard: "🔴" };
   return icons[level as keyof typeof icons] || "⚪";
 };
 
-const getdifficultyclass = (level: string) => {
+const getDifficultyClass = (level: string) => {
   const classes = {
     easy: "text-green-600 dark:text-green-400",
     medium: "text-yellow-600 dark:text-yellow-400",
@@ -258,7 +258,7 @@ const getdifficultyclass = (level: string) => {
   return classes[level as keyof typeof classes] || "text-gray-600";
 };
 
-const getdifficultyprogressclass = (level: string) => {
+const getDifficultyProgressClass = (level: string) => {
   const classes = {
     easy: "bg-green-600 dark:bg-green-400",
     medium: "bg-yellow-600 dark:bg-yellow-400",
@@ -267,7 +267,7 @@ const getdifficultyprogressclass = (level: string) => {
   return classes[level as keyof typeof classes] || "bg-gray-600";
 };
 
-const getactivityiconclass = (type: string) => {
+const getActivityIconClass = (type: string) => {
   const baseClass = "flex h-10 w-10 items-center justify-center rounded-full";
   if (type === "quiz") {
     return `${baseClass}
@@ -279,7 +279,7 @@ const getactivityiconclass = (type: string) => {
  bg-purple-100 text-purple-600 dark:bg-purple-900/30; dark:text-purple-400`;
 };
 
-const formattime = (seconds: number) => {
+const formatTime = (seconds: number) => {
   const hours = Math.floor(seconds / 3600);
   const minutes = Math.floor((seconds % 3600) / 60);
 
@@ -289,7 +289,7 @@ const formattime = (seconds: number) => {
   return `${minutes}m`;
 };
 
-const formatrelativetime = (timestamp: number) => {
+const formatRelativeTime = (timestamp: number) => {
   const now = Date.now();
   const diff = now - timestamp;
   const hours = Math.floor(diff / (1000 * 60 * 60));
@@ -304,7 +304,7 @@ const formatrelativetime = (timestamp: number) => {
   return t("dashboard.progress.justNow");
 };
 
-const loadprogressstats = () => {
+const loadProgressStats = () => {
   // Load from localStorage
   const savedStats = localStorage.getItem("progress_stats");
   if (savedStats) {
@@ -340,8 +340,6 @@ const loadprogressstats = () => {
   stats.value.totalQuestions = totalQuestions || 100; // Default to 100 if no data
   stats.value.completionPercentage =
     totalQuestions > 0 ? Math.round((totalAnswered / totalQuestions) * 100) : 0;
-  Defaultto100ifnodatastats.value.completionPercentagetotalQuestions0Math
-    .roundtotalAnsweredtotalQuestions100;
 
   // Load recent activities
   const activities = localStorage.getItem("recent_activities");
@@ -367,7 +365,7 @@ const loadprogressstats = () => {
   });
 };
 
-const refreshstats = () => {
+const refreshStats = () => {
   loadProgressStats();
 };
 

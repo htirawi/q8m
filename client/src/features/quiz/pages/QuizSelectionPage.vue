@@ -402,7 +402,7 @@ const canUserAccessLevel = (level: ExperienceLevel): boolean => {
   return canAccessLevel(planStore.planTier, level);
 };
 
-const selectlevel = (level: ExperienceLevel) => {
+const selectLevel = (level: ExperienceLevel) => {
   if (canUserAccessLevel(level) || !authStore.isAuthenticated) {
     selectedLevel.value = level;
   }
@@ -417,7 +417,7 @@ const getLevelColor = (level: ExperienceLevel): string => {
   return colors[level];
 };
 
-const startquiz = async () => {
+const startQuiz = async () => {
   if (!selectedLevel.value) {
     return;
   }

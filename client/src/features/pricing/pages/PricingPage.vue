@@ -12,7 +12,7 @@ import FaqAccordion from "@/components/pricing/FaqAccordion.vue";
 import GuaranteePanel from "@/components/pricing/GuaranteePanel.vue";
 import FinalCta from "@/components/pricing/FinalCta.vue";
 
-const trackanalytics = (event: string, properties: Record<string, unknown>) => {
+const trackAnalytics = (event: string, properties: Record<string, unknown>) => {
   // Track with your analytics service
   console.log("Analytics:", event, properties);
 };

@@ -71,11 +71,11 @@ const goToPricing = () => {
   router.push("/subscribe");
 };
 
-const gotoquizzes = () => {
+const goToQuizzes = () => {
   router.push("/quiz");
 };
 
-const refreshbillinghistory = async () => {
+const refreshBillingHistory = async () => {
   try {
     await paymentStore.fetchPurchaseHistory();
   } catch (error) {
@@ -83,7 +83,7 @@ const refreshbillinghistory = async () => {
   }
 };
 
-const handlecancelconfirm = async (reason: string) => {
+const handleCancelConfirm = async (reason: string) => {
   try {
     await paymentStore.cancelSubscription(reason);
     showCancelModal.value = false;

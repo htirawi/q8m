@@ -170,13 +170,13 @@ const filteredAndSortedChallenges = computed(() => {
   return result;
 });
 
-const clearfilters = () => {
+const clearFilters = () => {
   sortBy.value = "date";
   filterDifficulty.value = "";
   filterFramework.value = "";
 };
 
-const handleaccept = async (challengeId: string) => {
+const handleAccept = async (challengeId: string) => {
   loadingChallengeId.value = challengeId;
   emit("accept", challengeId);
   setTimeout(() => {
@@ -184,7 +184,7 @@ const handleaccept = async (challengeId: string) => {
   }, 2000);
 };
 
-const handlereject = async (challengeId: string) => {
+const handleReject = async (challengeId: string) => {
   loadingChallengeId.value = challengeId;
   emit("reject", challengeId);
   setTimeout(() => {
@@ -192,11 +192,11 @@ const handlereject = async (challengeId: string) => {
   }, 2000);
 };
 
-const handlestart = (challengeId: string) => {
+const handleStart = (challengeId: string) => {
   emit("start", challengeId);
 };
 
-const handleviewdetails = (challengeId: string) => {
+const handleViewDetails = (challengeId: string) => {
   emit("view-details", challengeId);
 };
 </script>

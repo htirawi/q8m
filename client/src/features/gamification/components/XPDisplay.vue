@@ -322,7 +322,6 @@ const levelTitles = [
 function getLevelTitleForLevel(level: number): string {
   const titleObj = levelTitles.find((t) => level >= t.min && level <= t.max);
   return titleObj ? titleObj.title : "Legend";
-  titleObjtitleObj.title;
 }
 
 function formatNumber(num: number): string {

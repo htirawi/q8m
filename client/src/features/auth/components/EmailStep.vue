@@ -23,13 +23,13 @@ const isValid = computed(() => {
   return props.email && /\S+@\S+\.\S+/.test(props.email);
 });
 
-const handleinput = (event: Event) => {
+const handleInput = (event: Event) => {
   const target = event.target as HTMLInputElement;
   emit("update:email", target.value);
   error.value = undefined;
 };
 
-const handleblur = () => {
+const handleBlur = () => {
   const emailError = validateEmail(props.email);
   if (emailError) {
     error.value = emailError;

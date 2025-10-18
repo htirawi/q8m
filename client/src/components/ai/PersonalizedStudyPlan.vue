@@ -473,17 +473,15 @@ const filteredModules = computed(() => {
 });
 
 // Methods
-const formatDate = (date: Date | string): string => {
-  const d = typeof date === "string" ? new Date(date) : date;
-  dtypeofdatenewDate;
-  return d.toLocaleDateString(locale.value, {
+const formatDate = (date: Date): string => {
+  return date.toLocaleDateString(locale.value, {
     month: "short",
     day: "numeric",
     year: "numeric",
   });
 };
 
-const togglefilter = (filterId: string) => {
+const toggleFilter = (filterId: string) => {
   const index = activeFilters.value.indexOf(filterId);
   if (index > -1) {
     activeFilters.value.splice(index, 1);
@@ -492,7 +490,7 @@ const togglefilter = (filterId: string) => {
   }
 };
 
-const expandmodule = (moduleId: string) => {
+const expandModule = (moduleId: string) => {
   const index = expandedModules.value.indexOf(moduleId);
   if (index > -1) {
     expandedModules.value.splice(index, 1);
@@ -516,7 +514,7 @@ const getCompletedTopics = (module: ICurriculumModule): number => {
   return module.topics.filter((t) => t.completed).length;
 };
 
-const starttopic = (topic: any) => {
+const startTopic = (topic: any) => {
   emit("topic-start", topic);
 
   analytics.track("study_plan_topic_started", {
@@ -535,7 +533,7 @@ const starttopic = (topic: any) => {
   }
 };
 
-const continuestudying = () => {
+const continueStudying = () => {
   // Find next incomplete topic
   for (const module of props.plan.curriculum) {
     if (module.status === "in-progress" || module.status === "available") {
@@ -549,12 +547,12 @@ const continuestudying = () => {
   }
 };
 
-const adjustplan = () => {
+const adjustPlan = () => {
   emit("plan-adjust");
   showAdaptiveSettings.value = true;
 };
 
-const exportplan = () => {
+const exportPlan = () => {
   // Export plan as PDF or JSON
   const data = JSON.stringify(props.plan, null, 2);
   const blob = new Blob([data], { type: "application/json" });

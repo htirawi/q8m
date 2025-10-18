@@ -37,7 +37,7 @@ const memoryPercentage = computed(() => {
   return (memoryUsage.value.usedJSHeapSize / memoryUsage.value.jsHeapSizeLimit) * 100;
 });
 
-const getmetricclass = (metric: string) => {
+const getMetricClass = (metric: string) => {
   const value = metrics.value[metric as keyof typeof metrics.value];
   if (value === null) return "metric-unknown";
   const thresholds: Record<string, number> = {
@@ -79,11 +79,11 @@ const formatBytes = (bytes: number): string => {
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`;
 };
 
-const togglemonitor = () => {
+const toggleMonitor = () => {
   showMonitor.value = !showMonitor.value;
 };
 
-const refreshmetrics = () => {
+const refreshMetrics = () => {
   performance.analyzeResourceTimings();
 };
 

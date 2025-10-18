@@ -277,7 +277,7 @@ const personalizedMessage = computed(() => {
   }
 });
 
-const getlevelbadgeclass = (level: string) => {
+const getLevelBadgeClass = (level: string) => {
   const classes = {
     junior: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
     intermediate: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200",
@@ -286,7 +286,7 @@ const getlevelbadgeclass = (level: string) => {
   return classes[level as keyof typeof classes] || "bg-gray-100 text-gray-800";
 };
 
-const getrecommendationbadgeclass = (reason: string) => {
+const getRecommendationBadgeClass = (reason: string) => {
   const classes = {
     weak_area: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300",
     next_level: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",
@@ -296,7 +296,7 @@ const getrecommendationbadgeclass = (reason: string) => {
   return classes[reason as keyof typeof classes] || "bg-gray-100 text-gray-700";
 };
 
-const getprioritybadgeclass = (priority: string) => {
+const getPriorityBadgeClass = (priority: string) => {
   const classes = {
     high: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300",
     medium: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300",
@@ -305,7 +305,7 @@ const getprioritybadgeclass = (priority: string) => {
   return classes[priority as keyof typeof classes] || "bg-gray-100 text-gray-700";
 };
 
-const getpriorityborderclass = (priority: string) => {
+const getPriorityBorderClass = (priority: string) => {
   const classes = {
     high: "border-red-500",
     medium: "border-yellow-500",
@@ -314,7 +314,7 @@ const getpriorityborderclass = (priority: string) => {
   return classes[priority as keyof typeof classes] || "border-gray-500";
 };
 
-const generaterecommendations = () => {
+const generateRecommendations = () => {
   if (history.value.length === 0) {
     // New user recommendations
     recommendedQuizzes.value = [
@@ -520,12 +520,12 @@ const generaterecommendations = () => {
   quickTips.value = tips;
 };
 
-const refreshrecommendations = () => {
+const refreshRecommendations = () => {
   loadHistory();
   generateRecommendations();
 };
 
-const loadhistory = () => {
+const loadHistory = () => {
   try {
     const historyData = localStorage.getItem("quiz_history");
     if (historyData) {
@@ -536,15 +536,15 @@ const loadhistory = () => {
   }
 };
 
-const startquiz = (level: string) => {
+const startQuiz = (level: string) => {
   router.push(`/en/quiz/${level}`);
 };
 
-const startstudying = (difficulty: string) => {
+const startStudying = (difficulty: string) => {
   router.push(`/en/study/${difficulty}`);
 };
 
-const startlearningstep = (step: ILearningStep) => {
+const startLearningStep = (step: ILearningStep) => {
   if (step.action.includes("quiz")) {
     const level = step.action.replace("_quiz", "");
     startQuiz(level);

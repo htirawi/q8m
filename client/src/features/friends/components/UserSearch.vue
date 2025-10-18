@@ -79,7 +79,7 @@ const handleClear = () => {
   validationError.value = null;
 };
 
-const handleloadmore = async () => {
+const handleLoadMore = async () => {
   if (searchQuery.value) {
     await loadMoreSearch(searchQuery.value);
   }

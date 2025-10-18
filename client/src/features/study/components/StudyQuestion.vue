@@ -300,11 +300,11 @@ const nextButtonText = computed(() => {
   return t("study.next");
 });
 
-const selectoption = (optionId: string) => {
+const selectOption = (optionId: string) => {
   emit("update:selectedAnswer", optionId);
 };
 
-const updatetextanswer = (event: Event) => {
+const updateTextAnswer = (event: Event) => {
   const target = event.target as HTMLInputElement;
   emit("update:textAnswer", target.value);
 };
@@ -317,7 +317,7 @@ const togglecheckbox = (optionId: string) => {
   emit("update:multipleAnswers", newAnswers);
 };
 
-const getoptionclass = (optionId: string) => {
+const getOptionClass = (optionId: string) => {
   const baseClass = "w-full rounded-lg border p-4 text-left transition-all hover:shadow-md";
   const isSelected = props.selectedAnswer === optionId;
 
@@ -332,7 +332,7 @@ const getoptionclass = (optionId: string) => {
  border-gray-200 bg-white text-gray-900 hover:border-gray-300; dark:border-gray-600; dark:bg-gray-700; dark:text-white`;
 };
 
-const getcheckboxclass = (optionId: string) => {
+const getCheckboxClass = (optionId: string) => {
   const baseClass =
     "flex cursor-pointer items-center rounded-lg border p-4 transition-all hover:shadow-md";
   const isSelected = props.multipleAnswers.includes(optionId);

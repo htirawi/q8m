@@ -4,7 +4,7 @@ import { finalCtaData } from "@/components/pricing/pricing.config";
 
 const emit = defineEmits<FinalCtaEmits>();
 
-const handlectaclick = () => {
+const handleCtaClick = () => {
   emit("cta-click");
 };
 

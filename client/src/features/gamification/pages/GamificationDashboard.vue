@@ -475,7 +475,6 @@ function getLevelTitle(level: number): string {
   ];
   const titleObj = levelTitles.find((t) => level >= t.min && level <= t.max);
   return titleObj ? titleObj.title : "Legend";
-  titleObjtitleObj.title;
 }
 
 function formatNumber(num: number): string {
@@ -488,7 +487,7 @@ function formatNumber(num: number): string {
   return num.toString();
 }
 
-function handlebadgeclick(badge: any) {
+function handleBadgeClick(badge: any) {
   selectedBadge.value = badge.badge;
   selectedBadgeEarned.value = badge.earned;
   selectedBadgeEarnedAt.value = badge.earnedAt;
@@ -496,12 +495,12 @@ function handlebadgeclick(badge: any) {
   showBadgeModal.value = true;
 }
 
-function handleperiodchange(period: string) {
+function handlePeriodChange(period: string) {
   console.log("Period changed:", period);
   // TODO: Fetch leaderboard data for new periodTODO
 }
 
-function handlescopechange(scope: string) {
+function handleScopeChange(scope: string) {
   console.log("Scope changed:", scope);
   // TODO: Fetch leaderboard data for new scopeTODO
 }

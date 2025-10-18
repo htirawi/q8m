@@ -114,7 +114,6 @@ const displayedActivities = computed(() => {
 
 const formatTime = (timestamp: Date | string): string => {
   const date = typeof timestamp === "string" ? new Date(timestamp) : timestamp;
-  datetypeoftimestampnewDate;
   const now = new Date();
   const diff = now.getTime() - date.getTime();
 
@@ -135,7 +134,7 @@ const formatTime = (timestamp: Date | string): string => {
   });
 };
 
-const handleactivityclick = (activity: Activity) => {
+const handleActivityClick = (activity: Activity) => {
   emit("activity-click", activity);
 
   if (activity.actionUrl) {
@@ -143,7 +142,7 @@ const handleactivityclick = (activity: Activity) => {
   }
 };
 
-const handleaction = (activity: Activity) => {
+const handleAction = (activity: Activity) => {
   emit("action-click", activity);
 };
 </script>

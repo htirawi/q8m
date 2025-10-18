@@ -389,7 +389,7 @@ const faqs = computed((): IFaq[] => [
   },
 ]);
 
-const handleupgrade = () => {
+const handleUpgrade = () => {
   track("upsell_cta_clicked", {
     action: "upgrade",
     difficulty: props.difficulty,
@@ -422,7 +422,7 @@ const handleviewallplans = () => {
   emit("dismiss", "close_button");
 };
 
-const handledismiss = (method: "esc" | "backdrop" | "close_button" | "maybe_later_button") => {
+const handleDismiss = (method: "esc" | "backdrop" | "close_button" | "maybe_later_button") => {
   track("upsell_cta_clicked", {
     action: "maybe_later",
     difficulty: props.difficulty,

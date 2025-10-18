@@ -152,7 +152,7 @@ const features = computed(() => {
   ];
 });
 
-const handleseeplans = () => {
+const handleSeePlans = () => {
   trackEvent("free_soft_paywall_cta_clicked", {
     cta: "see_plans",
     targetPlan: props.suggestedPlan,
@@ -171,7 +171,7 @@ const handleseeplans = () => {
   emit("dismiss");
 };
 
-const handlecontinuefree = () => {
+const handleContinueFree = () => {
   trackEvent("free_soft_paywall_cta_clicked", {
     cta: "continue_free",
     targetPlan: props.suggestedPlan,
@@ -184,7 +184,7 @@ const handlecontinuefree = () => {
   emit("dismiss");
 };
 
-const handledismiss = () => {
+const handleDismiss = () => {
   trackEvent("free_soft_paywall_dismissed", {
     targetRoute: props.targetRoute,
   });

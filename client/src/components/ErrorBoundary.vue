@@ -116,7 +116,7 @@ const displayMessage = computed(() => {
   return t("errors.defaultMessage");
 });
 
-const handleretry = async () => {
+const handleRetry = async () => {
   isRetrying.value = true;
   try {
     emit("retry");

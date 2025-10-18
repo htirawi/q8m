@@ -19,13 +19,19 @@ export interface IFrameworkCardProps {
 
 export interface ILevelCardProps {
   level: DifficultyLevel;
+  difficulty?: DifficultyLevel; // Alias for level
   title: string;
   description: string;
   questionCount: number;
   estimatedTime: string;
   requiredPlan?: PlanTier;
   locked?: boolean;
+  isLocked?: boolean; // Alias for locked
   recommended?: boolean;
+  features?: string[];
+  canClickLocked?: boolean;
+  isCurrentPlan?: boolean;
+  autoStartEnabled?: boolean;
 }
 
 export interface ILevelCardEmits {
@@ -48,6 +54,7 @@ export interface IModeCardProps {
 export interface IStartStudyingCtaProps {
   framework?: string;
   level?: DifficultyLevel;
+  selectedDifficulty?: DifficultyLevel;
   showAnimation?: boolean;
 }
 
@@ -59,6 +66,7 @@ export interface IStickyStartBarProps {
   framework?: string;
   level?: DifficultyLevel;
   visible?: boolean;
+  state?: string;
 }
 
 export interface IStickyStartBarEmits {

@@ -45,7 +45,7 @@ const availableMethods = computed((): PaymentMethod[] => {
   return methods.filter((method) => method.available);
 });
 
-const selectmethod = (methodId: string) => {
+const selectMethod = (methodId: string) => {
   selectedMethod.value = methodId;
 };
 </script>

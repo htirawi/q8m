@@ -28,14 +28,23 @@ export interface IPlanComparisonCardProps {
 
 export interface IComparisonFeature {
   name: string;
-  included: boolean;
+  label?: string; // Alias for name
+  included?: boolean; // Deprecated, use plan-specific properties
   tooltip?: string;
+  // Plan-specific availability
+  free?: boolean | string;
+  junior?: boolean | string;
+  intermediate?: boolean | string;
+  senior?: boolean | string;
+  bundle?: boolean | string;
 }
 
 export interface IPlanConversionModalProps {
   open: boolean;
   targetPlan?: PlanId;
   currentPlan?: PlanId;
+  requiredPlan?: PlanId | string;
+  difficulty?: string;
 }
 
 export interface IPlanConversionModalEmits {
@@ -46,6 +55,8 @@ export interface IPlanConversionModalEmits {
 export interface IPlanUpsellModalProps {
   open: boolean;
   feature?: string;
+  requiredPlan?: PlanId | string;
+  difficulty?: string;
 }
 
 export interface IPlanUpsellModalEmits {

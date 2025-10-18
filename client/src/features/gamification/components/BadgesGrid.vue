@@ -210,7 +210,7 @@ function getRaritySelectedClass(rarity: string): string {
   return classes[rarity as keyof typeof classes] || classes.common;
 }
 
-function handlebadgeclick(badge: ibadge) {
+function handleBadgeClick(badge: ibadge) {
   emit("badgeClick", badge);
 }
 

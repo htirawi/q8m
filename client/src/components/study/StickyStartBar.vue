@@ -192,7 +192,7 @@ const handleStart = () => {
   emit("start", props.selectedDifficulty);
 };
 
-const handleretry = () => {
+const handleRetry = () => {
   track("sticky_start_retry", {
     difficulty: props.selectedDifficulty ?? "easy",
   });
@@ -200,11 +200,11 @@ const handleretry = () => {
   emit("retry");
 };
 
-const handlebeforeenter = () => {
+const handleBeforeEnter = () => {
   // Animation hook
 };
 
-const handleafterenter = () => {
+const handleAfterEnter = () => {
   // Track view once after animation completes
   if (!hasTrackedView.value) {
     track("sticky_start_shown", {

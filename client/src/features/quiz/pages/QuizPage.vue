@@ -396,7 +396,7 @@ const submitanswer = async () => {
   }
 };
 
-const savequizprogress = () => {
+const saveQuizProgress = () => {
   // Don't save if quiz is finished or no questions loaded
   if (showResults.value || questions.value.length === 0) return;
 
@@ -457,7 +457,7 @@ const resumeQuiz = () => {
   startTimer();
 };
 
-const dismissresume = () => {
+const dismissResume = () => {
   preferencesStore.clearIncompleteQuiz();
   showResumeModal.value = false;
 
@@ -465,7 +465,7 @@ const dismissresume = () => {
   startTimer();
 };
 
-const nextquestion = () => {
+const nextQuestion = () => {
   if (currentIndex.value < totalQuestions.value - 1) {
     currentIndex.value++;
     resetQuestionState();
@@ -474,7 +474,7 @@ const nextquestion = () => {
   }
 };
 
-const resetquestionstate = () => {
+const resetQuestionState = () => {
   selectedAnswer.value = null;
   textAnswer.value = "";
   multipleAnswers.value = [];
@@ -482,7 +482,7 @@ const resetquestionstate = () => {
   questionStartTime.value = Date.now();
 };
 
-const savequizhistory = () => {
+const saveQuizHistory = () => {
   try {
     const quizresult = {
       id: `quiz_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
@@ -520,7 +520,7 @@ const savequizhistory = () => {
   }
 };
 
-const updatestreak = () => {
+const updateStreak = () => {
   try {
     const streakKey = "learning_streak";
     const streakData = localStorage.getItem(streakKey);
@@ -563,7 +563,7 @@ const updatestreak = () => {
   }
 };
 
-const finishquiz = async () => {
+const finishQuiz = async () => {
   if (timerInterval) {
     clearInterval(timerInterval);
     timerInterval = null;

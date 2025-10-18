@@ -21,7 +21,7 @@ const handleClose = () => {
   emit("close");
 };
 
-const handleconfirm = () => {
+const handleConfirm = () => {
   if (!selectedReason.value) return;
   emit("confirm", selectedReason.value);
 };

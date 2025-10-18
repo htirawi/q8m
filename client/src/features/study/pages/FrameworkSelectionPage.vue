@@ -356,7 +356,7 @@ const totalQuestions = computed(() => {
   return Object.values(frameworkCounts.value).reduce((sum, count) => sum + count, 0);
 });
 
-const getdifficultylabel = (diff: DifficultyLevel) => {
+const getDifficultyLabel = (diff: DifficultyLevel) => {
   const labels = {
     easy: "Junior",
     medium: "Intermediate",
@@ -365,12 +365,12 @@ const getdifficultylabel = (diff: DifficultyLevel) => {
   return labels[diff] || "Junior";
 };
 
-const getdifficultyicon = (diff: DifficultyLevel) => {
+const getDifficultyIcon = (diff: DifficultyLevel) => {
   const icons = { easy: "🟢", medium: "🟡", hard: "🔴" };
   return icons[diff] || "🟢";
 };
 
-const getdifficultybadgeclass = (diff: DifficultyLevel) => {
+const getDifficultyBadgeClass = (diff: DifficultyLevel) => {
   const classes = {
     easy: "bg-green-100 text-green-800 border border-green-200 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800",
     medium:
@@ -380,7 +380,7 @@ const getdifficultybadgeclass = (diff: DifficultyLevel) => {
   return classes[diff] || classes.easy;
 };
 
-const selectframework = (framework: string) => {
+const selectFramework = (framework: string) => {
   track("framework_selected", {
     framework,
     difficulty: difficulty.value,
@@ -392,7 +392,7 @@ const selectframework = (framework: string) => {
   router.push(`/${locale.value}/study/${difficulty.value}/${framework}`);
 };
 
-const goback = () => {
+const goBack = () => {
   track("back_to_mode_chooser", {
     from: "framework_selection",
     difficulty: difficulty.value,

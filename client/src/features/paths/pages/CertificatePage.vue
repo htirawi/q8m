@@ -130,7 +130,7 @@ const pathTitle = computed(() => {
   return certificate.value.pathTitle[locale.value === "ar" ? "ar" : "en"];
 });
 
-const formatdate = (dateString: string) => {
+const formatDate = (dateString: string) => {
   const date = new Date(dateString);
   return date.toLocaleDateString("en-US", {
     year: "numeric",
@@ -139,7 +139,7 @@ const formatdate = (dateString: string) => {
   });
 };
 
-const goback = () => {
+const goBack = () => {
   router.push(`/${locale.value}/paths/${route.params.slug}`);
 };
 

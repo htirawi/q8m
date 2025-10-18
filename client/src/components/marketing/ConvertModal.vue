@@ -256,7 +256,7 @@ const formatPrice = (price: number): string => {
   return `$${price}${billingCycle.value === "monthly" ? "/mo" : "/yr"}`;
 };
 
-const setbillingcycle = (cycle: "monthly" | "annual") => {
+const setBillingCycle = (cycle: "monthly" | "annual") => {
   billingCycle.value = cycle;
   track("convert_plan_changed", {
     fromPlan: selectedPlan.value,
@@ -265,7 +265,7 @@ const setbillingcycle = (cycle: "monthly" | "annual") => {
   });
 };
 
-const selectplan = (plan: PlanTier) => {
+const selectPlan = (plan: PlanTier) => {
   const oldPlan = selectedPlan.value;
   selectedPlan.value = plan;
   track("convert_plan_changed", {
@@ -275,7 +275,7 @@ const selectplan = (plan: PlanTier) => {
   });
 };
 
-const applycoupon = () => {
+const applyCoupon = () => {
   if (couponCode.value.trim()) {
     // Validate coupon (placeholder logic)
     couponApplied.value = true;
@@ -287,7 +287,7 @@ const applycoupon = () => {
   }
 };
 
-const handlepaypalcheckout = () => {
+const handlePayPalCheckout = () => {
   isProcessing.value = true;
 
   track("checkout_opened", {
@@ -311,7 +311,7 @@ const handlepaypalcheckout = () => {
   isProcessing.value = false;
 };
 
-const handleclose = () => {
+const handleClose = () => {
   track("convert_dismissed", {
     source: "close_button",
     timeSpentSeconds: Math.floor((Date.now() - openedAt.value) / 1000),
@@ -319,7 +319,7 @@ const handleclose = () => {
   hide();
 };
 
-const handlebackdropclick = () => {
+const handleBackdropClick = () => {
   track("convert_dismissed", {
     source: "backdrop_click",
     timeSpentSeconds: Math.floor((Date.now() - openedAt.value) / 1000),
@@ -327,7 +327,7 @@ const handlebackdropclick = () => {
   hide();
 };
 
-const handlemaybelater = () => {
+const handleMaybeLater = () => {
   track("convert_dismissed", {
     source: "maybe_later",
     timeSpentSeconds: Math.floor((Date.now() - openedAt.value) / 1000),

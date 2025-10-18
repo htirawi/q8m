@@ -199,7 +199,7 @@ defineEmits<{
 // Get professional icon path for the framework
 const frameworkIconPath = computed(() => getFrameworkIcon(props.framework));
 
-const getdifficultylabel = () => {
+const getDifficultyLabel = () => {
   const labels: Record<string, string> = {
     easy: "Junior-Level",
     medium: "Intermediate",
@@ -208,7 +208,7 @@ const getdifficultylabel = () => {
   return labels[props.difficulty] || "Junior-Level";
 };
 
-const getgradientclass = (color: string) => {
+const getGradientClass = (color: string) => {
   const classes: Record<string, string> = {
     red: "bg-gradient-to-br from-red-500 to-pink-600",
     black: "bg-gradient-to-br from-gray-700 to-gray-900",
@@ -221,7 +221,7 @@ const getgradientclass = (color: string) => {
   return classes[color] || "bg-gradient-to-br from-blue-500 to-cyan-600";
 };
 
-const geticonbgclass = (color: string) => {
+const getIconBgClass = (color: string) => {
   const classes: Record<string, string> = {
     red: "bg-transparent", // Angular - no background, let the SVG show through;
     black: "bg-gradient-to-br from-gray-700 to-gray-900 text-white",
@@ -234,7 +234,7 @@ const geticonbgclass = (color: string) => {
   return classes[color] || "bg-gradient-to-br from-blue-500 to-cyan-600 text-white";
 };
 
-const gettitleclass = (color: string) => {
+const getTitleClass = (color: string) => {
   const classes: Record<string, string> = {
     red: "text-gray-900 dark:text-white group-hover:text-red-600 dark:group-hover:text-red-400",
     black: "text-gray-900 dark:text-white group-hover:text-gray-800 dark:group-hover:text-gray-300",
@@ -253,7 +253,7 @@ const gettitleclass = (color: string) => {
   );
 };
 
-const getborderclass = (color: string) => {
+const getBorderClass = (color: string) => {
   const classes: Record<string, string> = {
     red: "border-gray-200 dark:border-gray-700 hover:border-red-400 dark:hover:border-red-500",
     black: "border-gray-200 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500",
@@ -272,7 +272,7 @@ const getborderclass = (color: string) => {
   );
 };
 
-const getfocusringclass = (color: string) => {
+const getFocusRingClass = (color: string) => {
   const classes: Record<string, string> = {
     red: "focus:ring-red-500",
     black: "focus:ring-gray-700",
@@ -285,7 +285,7 @@ const getfocusringclass = (color: string) => {
   return classes[color] || "focus:ring-blue-500";
 };
 
-const getbuttonclass = (color: string) => {
+const getButtonClass = (color: string) => {
   const classes: Record<string, string> = {
     red: "bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700",
     black: "bg-gradient-to-r from-gray-700 to-gray-900 hover:from-gray-800 hover:to-black",
@@ -303,7 +303,7 @@ const getbuttonclass = (color: string) => {
   );
 };
 
-const getprogressbarclass = (color: string) => {
+const getProgressBarClass = (color: string) => {
   const classes: Record<string, string> = {
     red: "bg-gradient-to-r from-red-500 to-pink-600",
     black: "bg-gradient-to-r from-gray-700 to-gray-900",
@@ -316,7 +316,7 @@ const getprogressbarclass = (color: string) => {
   return classes[color] || "bg-gradient-to-r from-blue-500 to-cyan-600";
 };
 
-const getprogresstextclass = (color: string) => {
+const getProgressTextClass = (color: string) => {
   const classes: Record<string, string> = {
     red: "text-red-600 dark:text-red-400",
     black: "text-gray-800 dark:text-gray-300",

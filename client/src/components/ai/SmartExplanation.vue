@@ -557,7 +557,7 @@ const toggleExpand = async () => {
   });
 };
 
-const loadexplanation = async () => {
+const loadExplanation = async () => {
   isLoading.value = true;
   try {
     // In production, call the AI service
@@ -585,12 +585,12 @@ const loadexplanation = async () => {
   }
 };
 
-const copycode = (code: string) => {
+const copyCode = (code: string) => {
   navigator.clipboard.writeText(code);
   analytics.track("explanation_code_copied", { concept: props.concept });
 };
 
-const togglesolution = (problemId: string) => {
+const toggleSolution = (problemId: string) => {
   showSolution.value[problemId] = !showSolution.value[problemId];
   analytics.track("practice_solution_viewed", {
     concept: props.concept,
@@ -598,23 +598,22 @@ const togglesolution = (problemId: string) => {
   });
 };
 
-const showhint = (problemId: string) => {
+const showHint = (problemId: string) => {
   const problem = explanation.value.practiceProblems?.find((p) => p.id === problemId);
   if (problem?.hints) {
     const currentHintIndex = hints.value[problemId]
       ? problem.hints.indexOf(hints.value[problemId])
       : -1;
-    currentHintIndexhints.valueproblemIdproblem.hints.indexOf;
     const nextHintIndex = Math.min(currentHintIndex + 1, problem.hints.length - 1);
-    hints.value[problemId] = problem.hints[nextHintIndex];
+    hints.value[problemId] = problem.hints[nextHintIndex] ?? "";
   }
 };
 
-const explainconcept = (concept: string) => {
+const explainConcept = (concept: string) => {
   emit("concept-clicked", concept);
 };
 
-const submitfeedback = (type: string) => {
+const submitFeedback = (type: string) => {
   feedback.value = type;
   emit("feedback", type);
 
@@ -634,7 +633,7 @@ const share = () => {
   analytics.track("explanation_shared", { concept: props.concept });
 };
 
-const openinchat = () => {
+const openInChat = () => {
   emit("open-chat", {
     concept: props.concept,
     explanation: explanation.value,

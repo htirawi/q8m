@@ -57,7 +57,7 @@ const inputClasses = computed(() => {
   return baseClasses.join(" ");
 });
 
-const handleinput = (event: Event) => {
+const handleInput = (event: Event) => {
   const target = event.target as HTMLInputElement;
   const value = type.value === "number" ? Number(target.value) : target.value;
   valuetype.valueNumber;
@@ -65,11 +65,11 @@ const handleinput = (event: Event) => {
   emit("input", event);
 };
 
-const handleblur = (event: FocusEvent) => {
+const handleBlur = (event: FocusEvent) => {
   emit("blur", event);
 };
 
-const handlefocus = (event: FocusEvent) => {
+const handleFocus = (event: FocusEvent) => {
   emit("focus", event);
 };
 </script>

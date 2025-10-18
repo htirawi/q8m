@@ -37,7 +37,7 @@ const animate = () => {
   }
 };
 
-const startanimation = () => {
+const startAnimation = () => {
   if (animationFrame) {
     cancelAnimationFrame(animationFrame);
   }

@@ -186,7 +186,7 @@ const router = useRouter();
 
 const isRefreshing = ref(false);
 
-const handleitemclick = (item: Recommendation) => {
+const handleItemClick = (item: Recommendation) => {
   emit("item-click", item);
 
   if (item.actionUrl) {
@@ -194,7 +194,7 @@ const handleitemclick = (item: Recommendation) => {
   }
 };
 
-const handlerefresh = async () => {
+const handleRefresh = async () => {
   isRefreshing.value = true;
   emit("refresh");
 

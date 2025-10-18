@@ -32,11 +32,11 @@ const handleUnfriend = () => {
   emit("unfriend", props.friend._id);
 };
 
-const handleblock = () => {
+const handleBlock = () => {
   emit("block", props.friend._id);
 };
 
-const handleview = () => {
+const handleView = () => {
   emit("view", props.friend._id);
 };
 </script>

@@ -323,7 +323,7 @@ const isBookmarked = computed(() =>
   currentQuestion.value ? isQuestionBookmarked(currentQuestion.value._id) : false
 );
 
-const clearfilters = () => {
+const clearFilters = () => {
   searchQuery.value = "";
   questionTypeFilter.value = "all";
   answeredFilter.value = "all";
@@ -347,7 +347,7 @@ const getLevelFromDifficulty = (diff: string): string => {
   return levelMap[diff] || "junior";
 };
 
-const setpracticemode = async (mode: PracticeMode) => {
+const setPracticeMode = async (mode: PracticeMode) => {
   // Always allow switching to bookmarked mode, even if no bookmarks yet
   // (user might have bookmarked questions in other modes)
   if (mode === "bookmarked" && !hasBookmarks.value) {
@@ -390,7 +390,7 @@ const setpracticemode = async (mode: PracticeMode) => {
   }
 };
 
-const loadbookmarkedquestions = async () => {
+const loadBookmarkedQuestions = async () => {
   if (bookmarkCount.value === 0) {
     error.value = t("study.error.noBookmarks");
     return;
@@ -420,7 +420,6 @@ const loadbookmarkedquestions = async () => {
     }
   } catch (err) {
     const errorMessage = err instanceof Error ? err.message : t("study.error.generic");
-    errorMessageerrinstanceofErrorerr.message;
     error.value = errorMessage;
 
     track("error", {
@@ -433,7 +432,7 @@ const loadbookmarkedquestions = async () => {
   }
 };
 
-const shufflequestions = () => {
+const shuffleQuestions = () => {
   // Use originalQuestions if available, otherwise use allQuestions
   const questionsToShuffle =
     originalQuestions.value.length > 0 ? originalQuestions.value : allQuestions.value;
@@ -454,7 +453,7 @@ const shufflequestions = () => {
   allQuestions.value = shuffled;
 };
 
-const loadquestions = async (append = false) => {
+const loadQuestions = async (append = false) => {
   if (append) {
     isLoadingMore.value = true;
   } else {
@@ -564,7 +563,6 @@ const loadquestions = async (append = false) => {
     }
   } catch (err) {
     const errorMessage = err instanceof Error ? err.message : t("study.error.generic");
-    errorMessageerrinstanceofErrorerr.message;
     error.value = errorMessage;
 
     track("error", {
@@ -579,12 +577,12 @@ const loadquestions = async (append = false) => {
   }
 };
 
-const loadmore = () => {
+const loadMore = () => {
   if (!hasMore.value || isLoadingMore.value) return;
   loadQuestions(true);
 };
 
-const revealanswer = async () => {
+const revealAnswer = async () => {
   if (!currentQuestion.value) return;
   const questionId = currentQuestion.value._id;
   try {

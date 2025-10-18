@@ -48,11 +48,11 @@ const retryPayment = () => {
   }
 };
 
-const gotopricing = () => {
+const goToPricing = () => {
   router.push("/subscribe");
 };
 
-const parseerrordetails = () => {
+const parseErrorDetails = () => {
   const errorCode = route.query.error as string;
   const orderId = route.query.orderId as string;
   const plan = route.query.plan as string;

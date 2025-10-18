@@ -60,7 +60,7 @@ const handleAccept = async (userId: string) => {
   }
 };
 
-const handlereject = async (userId: string) => {
+const handleReject = async (userId: string) => {
   processingRequest.value = userId;
   try {
     const success = await rejectRequest(userId);
@@ -72,7 +72,7 @@ const handlereject = async (userId: string) => {
   }
 };
 
-const handlecancel = async (userId: string) => {
+const handleCancel = async (userId: string) => {
   processingRequest.value = userId;
   try {
     const success = await cancelRequest(userId);
@@ -84,7 +84,7 @@ const handlecancel = async (userId: string) => {
   }
 };
 
-const switchtab = async (tab: "received" | "sent") => {
+const switchTab = async (tab: "received" | "sent") => {
   activeTab.value = tab;
   if (tab === "received" && receivedRequests.value.length === 0) {
     await loadReceivedRequests();

@@ -95,38 +95,38 @@ const emit = defineEmits<{
 const route = useRoute();
 const locale = computed(() => (route.params.locale as string) || "en");
 
-const getmoduletitle = (module: IModule) => {
+const getModuleTitle = (module: IModule) => {
   return module.title[locale.value === "ar" ? "ar" : "en"];
 };
 
-const getmoduledescription = (module: IModule) => {
+const getModuleDescription = (module: IModule) => {
   return module.description[locale.value === "ar" ? "ar" : "en"];
 };
 
-const getmodulequestionscount = (module: IModule) => {
+const getModuleQuestionsCount = (module: IModule) => {
   return module.questionIds?.length || 0;
 };
 
-const ismodulecompleted = (moduleId: string) => {
+const isModuleCompleted = (moduleId: string) => {
   const progress = props.moduleProgress.find((mp) => mp.moduleId === moduleId);
   return progress?.isCompleted || false;
 };
 
-const iscurrentmodule = (moduleId: string) => {
+const isCurrentModule = (moduleId: string) => {
   return props.currentModuleId === moduleId;
 };
 
-const getmoduleprogressdata = (moduleId: string) => {
+const getModuleProgressData = (moduleId: string) => {
   return props.moduleProgress.find((mp) => mp.moduleId === moduleId);
 };
 
-const getmoduleprogresspercentage = (moduleId: string) => {
+const getModuleProgressPercentage = (moduleId: string) => {
   const progress = getModuleProgressData(moduleId);
   if (!progress || progress.totalQuestions === 0) return 0;
   return Math.round((progress.questionsCompleted / progress.totalQuestions) * 100);
 };
 
-const getmoduleclasses = (module: IModule) => {
+const getModuleClasses = (module: IModule) => {
   if (module.isLocked) {
     return "border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800/50 cursor-not-allowed opacity-60";
   }
@@ -139,7 +139,7 @@ const getmoduleclasses = (module: IModule) => {
   return "border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800 cursor-pointer hover:border-gray-300";
 };
 
-const geticonclasses = (module: IModule) => {
+const getIconClasses = (module: IModule) => {
   if (isModuleCompleted(module.moduleId)) {
     return "bg-green-600 text-white";
   }
@@ -152,7 +152,7 @@ const geticonclasses = (module: IModule) => {
   return "bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300";
 };
 
-const handlemoduleclick = (moduleId: string) => {
+const handleModuleClick = (moduleId: string) => {
   const module = props.modules.find((m) => m.moduleId === moduleId);
   if (module && !module.isLocked && props.isEnrolled) {
     emit("moduleClick", moduleId);

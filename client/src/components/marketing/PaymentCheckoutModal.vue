@@ -78,7 +78,7 @@ const handleClose = () => {
   emit("close");
 };
 
-const handlecheckout = async () => {
+const handleCheckout = async () => {
   if (!selectedPlan.value) return;
 
   if (hasSavedPayment.value && !useNewPaymentMethod.value) {

@@ -6,7 +6,7 @@ import { faqs } from "@/components/pricing/pricing.config";
 
 const openFaqs = ref<number[]>([]);
 
-const togglefaq = (index: number) => {
+const toggleFaq = (index: number) => {
   const currentIndex = openFaqs.value.indexOf(index);
   if (currentIndex > -1) {
     openFaqs.value.splice(currentIndex, 1);

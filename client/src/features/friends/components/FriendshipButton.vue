@@ -60,7 +60,7 @@ const loadStatus = async () => {
   status.value = await getFriendshipStatus(props.userId);
 };
 
-const handleclick = async () => {
+const handleClick = async () => {
   if (!status.value || isProcessing.value) return;
   isProcessing.value = true;
   try {

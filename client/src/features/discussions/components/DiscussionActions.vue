@@ -44,7 +44,7 @@ const handleLike = async () => {
   await likeDiscussion(props.discussion._id);
 };
 
-const handlereply = () => {
+const handleReply = () => {
   if (!isAuthenticated.value) {
     // Redirect to login or show message
     return;
@@ -52,11 +52,11 @@ const handlereply = () => {
   emit("reply");
 };
 
-const handleedit = () => {
+const handleEdit = () => {
   emit("edit");
 };
 
-const handledelete = async () => {
+const handleDelete = async () => {
   if (!showDeleteConfirm.value) {
     showDeleteConfirm.value = true;
     return;
@@ -71,11 +71,11 @@ const handledelete = async () => {
   }
 };
 
-const canceldelete = () => {
+const cancelDelete = () => {
   showDeleteConfirm.value = false;
 };
 
-const handlepin = async () => {
+const handlePin = async () => {
   isProcessing.value = true;
   try {
     await pin(props.discussion._id);
@@ -84,7 +84,7 @@ const handlepin = async () => {
   }
 };
 
-const handlebestanswer = async () => {
+const handleBestAnswer = async () => {
   isProcessing.value = true;
   try {
     await setBestAnswer(props.discussion._id);
@@ -93,7 +93,7 @@ const handlebestanswer = async () => {
   }
 };
 
-const handlereport = async () => {
+const handleReport = async () => {
   if (!reportReason.value.trim()) {
     return;
   }
@@ -108,7 +108,7 @@ const handlereport = async () => {
   }
 };
 
-const cancelreport = () => {
+const cancelReport = () => {
   showReportModal.value = false;
   reportReason.value = "";
 };

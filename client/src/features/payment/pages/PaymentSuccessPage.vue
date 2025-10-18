@@ -19,11 +19,11 @@ const goToDashboard = () => {
   router.push("/dashboard");
 };
 
-const gotoquizzes = () => {
+const goToQuizzes = () => {
   router.push("/quizzes");
 };
 
-const parseorderdetails = () => {
+const parseOrderDetails = () => {
   // Parse order details from URL parameters or state
   const orderId = route.query.orderId as string;
   const planName = route.query.plan as string;

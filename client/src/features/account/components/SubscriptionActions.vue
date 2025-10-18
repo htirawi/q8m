@@ -17,11 +17,11 @@ const handleUpgrade = () => {
   emit("upgrade");
 };
 
-const handlecancel = () => {
+const handleCancel = () => {
   emit("cancel");
 };
 
-const handlestartquizzes = () => {
+const handleStartQuizzes = () => {
   emit("startQuizzes");
 };
 </script>

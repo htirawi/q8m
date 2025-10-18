@@ -33,7 +33,7 @@ const currencies = computed(() => [
   },
 ]);
 
-const getcurrencyflag = (currency: string) => {
+const getCurrencyFlag = (currency: string) => {
   const currencyMap: Record<string, string> = {
     USD: "🇺🇸",
     JOD: "🇯🇴",
@@ -42,7 +42,7 @@ const getcurrencyflag = (currency: string) => {
   return currencyMap[currency] || "💱";
 };
 
-const selectcurrency = async (currency: "USD" | "JOD" | "SAR") => {
+const selectCurrency = async (currency: "USD" | "JOD" | "SAR") => {
   if (currency === currentCurrency.value) {
     close();
     return;

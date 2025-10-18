@@ -124,7 +124,7 @@ defineEmits<{
 
 const { t } = useI18n();
 
-const getnavbuttonclass = (idx: number) => {
+const getNavButtonClass = (idx: number) => {
   const baseClass = "h-10 w-10 rounded text-sm font-medium transition-colors";
 
   if (idx === props.currentIndex) {

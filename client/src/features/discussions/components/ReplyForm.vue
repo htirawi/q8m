@@ -50,12 +50,12 @@ const handleSubmit = async () => {
   }
 };
 
-const handlecancel = () => {
+const handleCancel = () => {
   content.value = "";
   emit("cancel");
 };
 
-const handlekeydown = (event: KeyboardEvent) => {
+const handleKeydown = (event: KeyboardEvent) => {
   // Submit on Ctrl/Cmd + Enter
   if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
     event.preventDefault();

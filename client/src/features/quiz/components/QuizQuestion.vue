@@ -265,12 +265,12 @@ const canSubmit = computed(() => {
   return false;
 });
 
-const selectoption = (optionId: string) => {
+const selectOption = (optionId: string) => {
   if (props.hasAnswered) return;
   emit("update:selectedAnswer", optionId);
 };
 
-const updatetextanswer = (event: Event) => {
+const updateTextAnswer = (event: Event) => {
   const target = event.target as HTMLInputElement;
   emit("update:textAnswer", target.value);
 };
@@ -287,7 +287,7 @@ const togglemultipleanswer = (optionId: string) => {
   emit("update:multipleAnswers", current);
 };
 
-const getoptionclass = (optionId: string) => {
+const getOptionClass = (optionId: string) => {
   const baseClass = "w-full rounded-xl border-2 px-6 py-4 text-left transition-all duration-200";
 
   if (!props.hasAnswered) {
@@ -318,7 +318,7 @@ const getoptionclass = (optionId: string) => {
  border-gray-200 bg-gray-50 text-gray-700 dark:border-gray-700; dark:bg-gray-800; dark:text-gray-300`;
 };
 
-const getcheckboxoptionclass = (optionId: string) => {
+const getCheckboxOptionClass = (optionId: string) => {
   const baseClass =
     "flex w-full items-center rounded-xl border-2 px-6 py-4 transition-all duration-200";
 

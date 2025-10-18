@@ -562,7 +562,7 @@ const canUserAccessLevel = (level: ExperienceLevel): boolean => {
   return canAccessLevel(planStore.planTier, level);
 };
 
-const handlelevelclick = async (level: ExperienceLevel) => {
+const handleLevelClick = async (level: ExperienceLevel) => {
   const canAccess = canUserAccessLevel(level);
 
   // If user can't access, redirect to pricing page
@@ -616,7 +616,7 @@ const getLevelCardClass = (level: ExperienceLevel) => {
 
  border-gray-200 bg-white/80 backdrop-blur-sm hover:border-purple-400; hover:shadow-2xl; hover:scale-[1.02]; hover:-translate-y-1; dark:border-gray-700; dark:bg-gray-800/80; dark:hover:border-purple-500`;
 
-  const getleveldescriptionclass = (level: ExperienceLevel) => {
+  const getLevelDescriptionClass = (level: ExperienceLevel) => {
     const isSelected = selectedLevel.value === level;
     const canAccess = canUserAccessLevel(level);
 
@@ -627,7 +627,7 @@ const getLevelCardClass = (level: ExperienceLevel) => {
     return "text-base text-gray-600 dark:text-gray-400 leading-relaxed";
   };
 
-  const getleveliconclass = (level: ExperienceLevel) => {
+  const getLevelIconClass = (level: ExperienceLevel) => {
     const isSelected = selectedLevel.value === level;
     const canAccess = canUserAccessLevel(level);
 
@@ -649,7 +649,7 @@ const getLevelCardClass = (level: ExperienceLevel) => {
  group-hover:scale-110; group-hover:shadow-lg`;
   };
 
-  const gotolearningpaths = () => {
+  const goToLearningPaths = () => {
     router.push(`/${locale.value}/paths`);
   };
 };

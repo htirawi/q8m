@@ -404,7 +404,7 @@ const preferences = reactive<INotificationPreferences>({
   quietHoursEnd: "08:00",
 });
 
-const handleenablenotifications = async () => {
+const handleEnableNotifications = async () => {
   const granted = await requestPermission();
   if (granted) {
     // Load preferences after enabling
@@ -412,7 +412,7 @@ const handleenablenotifications = async () => {
   }
 };
 
-const loadpreferences = async () => {
+const loadPreferences = async () => {
   try {
     const response = await fetch("/api/v1/notifications/preferences", {
       credentials: "include",
@@ -429,7 +429,7 @@ const loadpreferences = async () => {
   }
 };
 
-const savepreferences = async () => {
+const savePreferences = async () => {
   try {
     const response = await fetch("/api/v1/notifications/preferences", {
       method: "PUT",
@@ -451,7 +451,7 @@ const savepreferences = async () => {
   }
 };
 
-const showtestnotification = () => {
+const showTestNotification = () => {
   testNotification();
 };
 

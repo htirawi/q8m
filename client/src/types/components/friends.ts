@@ -5,6 +5,8 @@
 export interface IFriendCardProps {
   friend: Record<string, unknown>;
   showActions?: boolean;
+  compact?: boolean;
+  badge?: string | boolean;
 }
 
 export interface IFriendCardEmits {

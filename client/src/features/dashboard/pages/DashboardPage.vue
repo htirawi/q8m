@@ -642,15 +642,15 @@ const goToQuiz = () => {
   router.push("/en/select");
 };
 
-const gotostudy = () => {
+const goToStudy = () => {
   router.push("/en/study/junior");
 };
 
-const gotobilling = () => {
+const goToBilling = () => {
   router.push("/en/pricing");
 };
 
-const gotoprogress = () => {
+const goToProgress = () => {
   router.push("/en/progress");
 };
 

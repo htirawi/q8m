@@ -99,7 +99,7 @@ const router = useRouter();
 const isExpanded = ref(false);
 const contentid = `upsell-${Math.random().toString(36).substring(7)}`;
 
-const toggleexpanded = () => {
+const toggleExpanded = () => {
   isExpanded.value = !isExpanded.value;
 
   if (isExpanded.value) {
@@ -110,7 +110,7 @@ const toggleexpanded = () => {
   }
 };
 
-const handleupgrade = () => {
+const handleUpgrade = () => {
   trackEvent("upsell_card_cta_clicked", {
     targetPlan: props.targetPlan,
     title: props.title,

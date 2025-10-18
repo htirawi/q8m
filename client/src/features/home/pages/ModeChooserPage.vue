@@ -294,7 +294,7 @@ const comparisonFeatures = [
   { key: "analytics", study: true, quiz: true },
 ];
 
-const getdifficultyicon = (diff: string) => {
+const getDifficultyIcon = (diff: string) => {
   const icons: Record<string, string> = {
     easy: "🟢",
     medium: "🟡",
@@ -307,7 +307,7 @@ const getdifficultyicon = (diff: string) => {
   return icons[diff] || "⚪";
 };
 
-const getdifficultybadgeclass = (diff: string) => {
+const getDifficultyBadgeClass = (diff: string) => {
   const classes: Record<string, string> = {
     easy: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
     medium: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200",
@@ -320,7 +320,7 @@ const getdifficultybadgeclass = (diff: string) => {
   return classes[diff] || "bg-gray-100 text-gray-800";
 };
 
-const handlemodeselect = async (mode: "study" | "quiz") => {
+const handleModeSelect = async (mode: "study" | "quiz") => {
   // Check if user is authenticated
   if (!authStore.isAuthenticated) {
     // Redirect to login with return URL
@@ -396,7 +396,7 @@ const difficultyToLevelMap: Record<string, "junior" | "intermediate" | "senior">
   custom: "intermediate", // Default custom to intermediate
 };
 
-const goback = () => {
+const goBack = () => {
   router.push(`/${locale.value}/select`);
 };
 </script>

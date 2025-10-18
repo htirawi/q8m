@@ -266,33 +266,33 @@ const tabs = computed(() => [
   },
 ]);
 
-const handleaccept = async (challengeId: string) => {
+const handleAccept = async (challengeId: string) => {
   const success = await acceptChallenge(challengeId);
   if (success) {
     await loadChallenges();
   }
 };
 
-const handlereject = async (challengeId: string) => {
+const handleReject = async (challengeId: string) => {
   const success = await rejectChallenge(challengeId);
   if (success) {
     await loadChallenges();
   }
 };
 
-const handlestart = (challengeId: string) => {
+const handleStart = (challengeId: string) => {
   router.push(`/challenges/${challengeId}/take`);
 };
 
-const handleviewdetails = (challengeId: string) => {
+const handleViewDetails = (challengeId: string) => {
   router.push(`/challenges/${challengeId}`);
 };
 
-const handleloadmore = async () => {
+const handleLoadMore = async () => {
   await loadMore();
 };
 
-const handlecreatechallenge = async (data: CreateChallengeData) => {
+const handleCreateChallenge = async (data: CreateChallengeData) => {
   createLoading.value = true;
   const success = await createChallenge(data);
   createLoading.value = false;

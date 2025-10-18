@@ -154,17 +154,17 @@ const hasActiveFilters = computed(() => {
   );
 });
 
-const updatesearch = (event: Event) => {
+const updateSearch = (event: Event) => {
   const target = event.target as HTMLInputElement;
   emit("update:searchQuery", target.value);
 };
 
-const updatequestiontype = (event: Event) => {
+const updateQuestionType = (event: Event) => {
   const target = event.target as HTMLSelectElement;
   emit("update:questionTypeFilter", target.value);
 };
 
-const updateansweredfilter = (event: Event) => {
+const updateAnsweredFilter = (event: Event) => {
   const target = event.target as HTMLSelectElement;
   emit("update:answeredFilter", target.value);
 };

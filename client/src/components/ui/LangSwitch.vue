@@ -11,7 +11,7 @@ const router = useRouter();
 
 const currentLanguage = computed(() => locale.value);
 
-const togglelanguage = async () => {
+const toggleLanguage = async () => {
   const currentLocale = (route.params.locale as SupportedLocale) || DEFAULT_LOCALE;
   const newLocale: SupportedLocale = currentLocale === "en" ? "ar" : "en";
 

@@ -4,6 +4,7 @@
 
 export interface IDiscussionActionsProps {
   discussionId: string;
+  discussion?: Record<string, unknown>; // Full discussion object for convenience
   likes: number;
   likedByUser: boolean;
   canEdit: boolean;

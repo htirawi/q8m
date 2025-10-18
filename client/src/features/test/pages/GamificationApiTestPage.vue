@@ -41,7 +41,7 @@ async function refreshData() {
   await loadData();
 }
 
-async function changeleaderboardtype(type: "weekly" | "monthly" | "all_time") {
+async function changeLeaderboardType(type: "weekly" | "monthly" | "all_time") {
   leaderboardType.value = type;
   await getLeaderboard(type);
   await getUserRank(type);

@@ -81,7 +81,7 @@ const handleUnfriend = async (userId: string) => {
   }
 };
 
-const handleblock = async (userId: string) => {
+const handleBlock = async (userId: string) => {
   if (showBlockConfirm.value !== userId) {
     showBlockConfirm.value = userId;
     return;
@@ -93,15 +93,15 @@ const handleblock = async (userId: string) => {
   }
 };
 
-const handleview = (userId: string) => {
+const handleView = (userId: string) => {
   emit("view-friend", userId);
 };
 
-const handleloadmore = async () => {
+const handleLoadMore = async () => {
   await loadMore();
 };
 
-const clearfilters = () => {
+const clearFilters = () => {
   searchQuery.value = "";
   filterLevel.value = "all";
   sortBy.value = props.initialSort;

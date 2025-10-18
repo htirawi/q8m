@@ -10,7 +10,7 @@ const route = useRoute();
 const { getCurrentLocale } = useAuthRedirect();
 const { routeAfterLogin } = usePostLoginRouter();
 
-function handleoauthlogin(provider: "google") {
+function handleOAuthLogin(provider: "google") {
   // Redirect to OAuth endpoint on the backend
   const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
   const oauthurl = `${apiBaseUrl}/api/v1/auth/${provider}`;
@@ -30,7 +30,7 @@ async function handleLoginSuccess() {
   await routeAfterLogin();
 }
 
-function handleregistrationsuccess(_email: string) {
+function handleRegistrationSuccess(_email: string) {
   // After successful registration, redirect to login page with success message
   // No sensitive data stored or exposed in URL
   const locale = getCurrentLocale();

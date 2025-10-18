@@ -41,7 +41,7 @@ const handleCreditCardClick = () => {
   emit("select-credit-card", props.planId, props.billingCycle);
 };
 
-const handlepaypalclick = async () => {
+const handlePayPalClick = async () => {
   isPayPalLoading.value = true;
   try {
     emit("select-paypal", props.planId, props.billingCycle);

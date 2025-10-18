@@ -372,7 +372,7 @@ const checkMobile = () => {
   isMobile.value = window.innerWidth < 768;
 };
 
-const togglemenu = () => {
+const toggleMenu = () => {
   if (isOpen.value) {
     closeMenu();
   } else {
@@ -380,7 +380,7 @@ const togglemenu = () => {
   }
 };
 
-const openmenu = async () => {
+const openMenu = async () => {
   lastFocusedElement.value = document.activeElement as HTMLElement;
   isOpen.value = true;
 
@@ -409,7 +409,7 @@ const openmenu = async () => {
   }
 };
 
-const closemenu = () => {
+const closeMenu = () => {
   isOpen.value = false;
   screenReaderAnnouncement.value = t("a11y.menuClosed");
 
@@ -424,7 +424,7 @@ const closemenu = () => {
   }
 };
 
-const handleitemclick = (event: Event) => {
+const handleItemClick = (event: Event) => {
   // Track navigation
   const target = event.currentTarget as HTMLAnchorElement;
   const path = target.getAttribute("href") || "";
@@ -438,7 +438,7 @@ const handleitemclick = (event: Event) => {
   closeMenu();
 };
 
-const handleupgradeclick = (event: Event) => {
+const handleUpgradeClick = (event: Event) => {
   // Track analytics with enhanced details
   trackEvent("upgrade_clicked", {
     event_category: "monetization",
@@ -458,7 +458,7 @@ const handleupgradeclick = (event: Event) => {
   closeMenu();
 };
 
-const handlelogout = async () => {
+const handleLogout = async () => {
   if (isLoggingOut.value) return;
   try {
     isLoggingOut.value = true;
@@ -501,7 +501,7 @@ const handlelogout = async () => {
   }
 };
 
-const handleclickoutside = (event: MouseEvent) => {
+const handleClickOutside = (event: MouseEvent) => {
   if (
     isOpen.value &&
     triggerRef.value &&
@@ -513,7 +513,7 @@ const handleclickoutside = (event: MouseEvent) => {
   }
 };
 
-const handletabkey = (event: KeyboardEvent) => {
+const handleTabKey = (event: KeyboardEvent) => {
   if (!menuRef.value) return;
 
   const focusableElements = menuRef.value.querySelectorAll<HTMLElement>(
@@ -630,7 +630,7 @@ const clearTypeAhead = () => {
   }
 };
 
-const handletypeahead = (event: KeyboardEvent) => {
+const handleTypeAhead = (event: KeyboardEvent) => {
   // Handle quick actions first (number keys 1-9)
   if (/^[1-9]$/.test(event.key)) {
     handleQuickAction(event);
@@ -704,7 +704,7 @@ const handleTouchStart = (event: TouchEvent) => {
   triggerHaptic("light");
 };
 
-const handletouchmove = (event: TouchEvent) => {
+const handleTouchMove = (event: TouchEvent) => {
   if (!isMobile.value || !isDragging.value) return;
   touchCurrentY.value = event.touches[0].clientY;
 
@@ -720,7 +720,7 @@ const handletouchmove = (event: TouchEvent) => {
   }
 };
 
-const handletouchend = () => {
+const handleTouchEnd = () => {
   if (!isMobile.value || !isDragging.value) return;
 
   const deltaY = touchCurrentY.value - touchStartY.value;

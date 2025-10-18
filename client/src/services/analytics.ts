@@ -688,9 +688,6 @@ class ConsoleProvider implements AnalyticsProvider {
 // Export singleton instance
 export const analytics = new AnalyticsService();
 
-// Export types
-export type { AnalyticsEvent, AnalyticsProvider, UserProperties, PerformanceMetrics };
-
 // Declare global types
 declare global {
   interface Window {

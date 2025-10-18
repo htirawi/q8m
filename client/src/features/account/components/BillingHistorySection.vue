@@ -15,11 +15,11 @@ const handleRefresh = () => {
   emit("refresh");
 };
 
-const formatdate = (dateString: string) => {
+const formatDate = (dateString: string) => {
   return new Date(dateString).toLocaleDateString();
 };
 
-const getstatusclass = (status: string) => {
+const getStatusClass = (status: string) => {
   switch (status) {
     case "pending":
       return "text-yellow-600 dark:text-yellow-400";

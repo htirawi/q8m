@@ -432,7 +432,7 @@ const handlecyclechange = (cycle: BillingCycle) => {
   selectPlan(props.requiredPlan, cycle);
 };
 
-const togglecoupon = () => {
+const toggleCoupon = () => {
   showCoupon.value = !showCoupon.value;
 };
 
@@ -460,7 +460,7 @@ const handlesubscribe = async () => {
   await startCheckout("convert_modal");
 };
 
-const togglecomparison = () => {
+const toggleComparison = () => {
   showComparison.value = !showComparison.value;
 
   if (showComparison.value) {
@@ -471,7 +471,7 @@ const togglecomparison = () => {
   }
 };
 
-const togglefaq = () => {
+const toggleFaq = () => {
   showFaq.value = !showFaq.value;
 
   if (showFaq.value) {
@@ -482,7 +482,7 @@ const togglefaq = () => {
   }
 };
 
-const handledismiss = () => {
+const handleDismiss = () => {
   track("convert_modal_dismissed", {
     difficulty: props.difficulty,
     plan: props.requiredPlan,

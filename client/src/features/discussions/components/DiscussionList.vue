@@ -67,7 +67,7 @@ const handleCreateDiscussion = async (content: string) => {
   await createDiscussion(props.questionId, content);
 };
 
-const handleloadmore = async () => {
+const handleLoadMore = async () => {
   await loadMore(props.questionId);
 };
 

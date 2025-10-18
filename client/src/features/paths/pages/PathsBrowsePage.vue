@@ -77,7 +77,7 @@ const store = useLearningPathsStore();
 const selectedCategory = ref<PathCategory | "">("");
 const selectedDifficulty = ref<PathDifficulty | "">("");
 
-const applyfilters = async () => {
+const applyFilters = async () => {
   const filters: {
     category?: PathCategory;
     difficulty?: PathDifficulty;
@@ -89,7 +89,7 @@ const applyfilters = async () => {
   await store.fetchPaths(filters);
 };
 
-const gotopath = (slug: string) => {
+const goToPath = (slug: string) => {
   const locale = router.currentRoute.value.params.locale || "en";
   router.push(`/${locale}/paths/${slug}`);
 };

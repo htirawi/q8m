@@ -5,7 +5,7 @@ import type { BillingToggleEmits, BillingToggleProps } from "@/types/ui/componen
 defineProps<BillingToggleProps>();
 const emit = defineEmits<BillingToggleEmits>();
 
-const setbillingcycle = (cycle: BillingCycle) => {
+const setBillingCycle = (cycle: BillingCycle) => {
   emit("update:modelValue", cycle);
 };
 

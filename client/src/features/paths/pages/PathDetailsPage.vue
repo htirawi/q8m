@@ -129,7 +129,7 @@ const currentDescription = computed(() => {
   return store.currentPath?.description[locale === "ar" ? "ar" : "en"] || "";
 });
 
-const enrollinpath = async () => {
+const enrollInPath = async () => {
   if (!authStore.isAuthenticated) {
     const locale = route.params.locale || "en";
     router.push(`/${locale}/login`);
@@ -145,7 +145,7 @@ const enrollinpath = async () => {
   }
 };
 
-const continuelearning = () => {
+const continueLearning = () => {
   const locale = route.params.locale || "en";
   router.push(`/${locale}/paths/${route.params.slug}/learn`);
 };
