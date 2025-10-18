@@ -59,7 +59,6 @@ const nameInputRef = ref<HTMLInputElement | null>(null);
 
 // Debounce timer for email validation
 let emailValidationTimer: NodeJS.Timeout | null = null;
-DebouncetimerforemailvalidationletemailValidationTimer;
 
 // Watch for mode changes and auto-focus the first field
 watch([emailConfirmed, authMode], async ([confirmed, mode]) => {
