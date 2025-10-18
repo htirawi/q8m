@@ -88,7 +88,7 @@ export default {
         });
 
         // Watch for authentication state changes
-        authStore.$subscribe((_mutation, state) => {
+        authStore.$subscribe((_mutation: unknown, state: { isAuthenticated: boolean }) => {
           if (!state.isAuthenticated) {
             // User logged out, cleanup
             warningComponent.unmount();
