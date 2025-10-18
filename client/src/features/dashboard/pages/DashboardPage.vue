@@ -411,7 +411,7 @@ const loadDashboardData = async () => {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
 
-    const [progressResponse, streakResponse, coinsResponse, quizResultsResponse] =
+    const [progressResponse, _streakResponse, _coinsResponse, quizResultsResponse] =
       await Promise.allSettled([
         fetch("/api/v1/progress", {
           credentials: "include",

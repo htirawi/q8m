@@ -15,7 +15,7 @@ const {
   discussions,
   loading,
   error,
-  discussionCount,
+  discussionCount: _discussionCount,
   totalDiscussions,
   hasMore,
   loadDiscussions,

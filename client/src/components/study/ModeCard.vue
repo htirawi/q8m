@@ -107,7 +107,6 @@
 <script setup lang="ts">
 import type { IModeCardProps as Props } from "@/types/components/study";
 import { computed } from "vue";
-import type { DifficultyLevel } from "@/types/plan/access";
 
 const props = defineProps<Props>();
 

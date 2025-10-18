@@ -136,8 +136,6 @@ import type {
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useAnalytics } from "@/composables/useAnalytics";
-import type { StudyLoadingState } from "@/composables/useStudy";
-import type { DifficultyLevel } from "@/types/plan/access";
 
 const props = withDefaults(defineProps<Props>(), {
   errorMessage: null,

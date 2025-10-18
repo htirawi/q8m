@@ -204,7 +204,6 @@
 <script setup lang="ts">
 import type { ICreateChallengeModalProps as Props } from "@/types/components/challenges";
 import { ref, computed, watch } from "vue";
-import type { Friend } from "@/stores/friends";
 import type { CreateChallengeData } from "@/stores/challenges";
 import { useChallenges } from "@/composables/useChallenges";
 

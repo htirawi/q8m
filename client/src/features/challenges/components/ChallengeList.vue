@@ -124,9 +124,7 @@
 </template>
 
 <script setup lang="ts">
-import type { IChallengeListProps as Props } from "@/types/components/challenges";
 import { ref, computed } from "vue";
-import type { Challenge } from "@/stores/challenges";
 import { useChallenges } from "@/composables/useChallenges";
 import ChallengeCard from "./ChallengeCard.vue";
 

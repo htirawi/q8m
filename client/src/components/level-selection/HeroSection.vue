@@ -185,7 +185,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const _emit = defineEmits<{}>();
 
-const { t, locale } = useI18n();
+const { t } = useI18n();
 
 // Motivational messages that rotate
 const motivationalMessages = [

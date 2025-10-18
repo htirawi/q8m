@@ -126,8 +126,6 @@ import { useI18n } from "vue-i18n";
 import { useAnalytics } from "@/composables/useAnalytics";
 import LockedBadge from "@/components/paywall/LockedBadge.vue";
 import { DIFFICULTY_TO_PLAN_ID, getPlanById } from "@/config/plans";
-import type { DifficultyLevel } from "@/types/plan/access";
-import type { PlanTier } from "@shared/types/plan";
 
 const props = withDefaults(defineProps<Props>(), {
   features: () => [],

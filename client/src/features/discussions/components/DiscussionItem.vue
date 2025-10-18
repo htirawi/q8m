@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import type { IDiscussionItemProps as Props } from "@/types/components/discussions";
 import { ref, computed } from "vue";
 import { useDiscussions } from "@/composables/useDiscussions";
 import { useAuthStore } from "@/stores/auth";
-import type { Discussion } from "@/stores/discussions";
 import DiscussionActions from "./DiscussionActions.vue";
 import ReplyForm from "./ReplyForm.vue";
 

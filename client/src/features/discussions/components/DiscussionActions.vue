@@ -6,7 +6,6 @@ import type {
 import { ref, computed } from "vue";
 import { useDiscussions } from "@/composables/useDiscussions";
 import { useAuthStore } from "@/stores/auth";
-import type { Discussion } from "@/stores/discussions";
 
 const props = withDefaults(defineProps<Props>(), {
   canEdit: false,

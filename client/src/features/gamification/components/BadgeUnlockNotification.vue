@@ -94,7 +94,7 @@
 
 <script setup lang="ts">
 import type { IBadgeUnlockNotificationBadge as IBadge } from "@/types/components/gamification";
-import { ref, computed, onMounted, onUnmounted } from "vue";
+import { ref, computed, onUnmounted } from "vue";
 import type { BadgeTier } from "@shared/types/gamification";
 
 const props = withDefaults(

@@ -5,7 +5,6 @@ import type {
 } from "@/types/components/friends";
 import { computed } from "vue";
 import { useFriends } from "@/composables/useFriends";
-import type { Friend } from "@/stores/friends";
 
 const props = withDefaults(defineProps<Props>(), {
   showActions: true,

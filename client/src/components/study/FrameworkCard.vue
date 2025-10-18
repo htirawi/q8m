@@ -183,7 +183,6 @@
 <script setup lang="ts">
 import type { IFrameworkCardProps as Props } from "@/types/components/study";
 import { computed } from "vue";
-import type { DifficultyLevel } from "@/types/plan/access";
 import { getFrameworkIcon } from "@/utils/frameworkIcons";
 
 const props = withDefaults(defineProps<Props>(), {

@@ -154,7 +154,6 @@ import type {
 } from "@/types/components/gamification";
 import { ref, computed } from "vue";
 import BadgeCard from "./BadgeCard.vue";
-import type { BadgeTier } from "@shared/types/gamification";
 
 const props = withDefaults(defineProps<Props>(), {
   loading: false,
