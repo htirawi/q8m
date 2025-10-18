@@ -260,20 +260,14 @@ export const useSharesStore = defineStore("shares", () => {
   const mostSharedType = computed(() => {
     const types = Object.entries(stats.value.sharesByType);
     if (types.length === 0) return null;
-    const max = types.reduce(
-      (max, [type, count]) => (count > (max?.[1] ?? 0) ? [type, count] : max),
-      types[0] as [string, number] | undefined
-    );
-    return max?.[0] ?? null;
+    const sorted = [...types].sort((a, b) => (b[1] as number) - (a[1] as number));
+    return sorted[0]?.[0] ?? null;
   });
   const mostUsedPlatform = computed(() => {
     const platforms = Object.entries(stats.value.sharesByPlatform);
     if (platforms.length === 0) return null;
-    const max = platforms.reduce(
-      (max, [platform, count]) => (count > (max?.[1] ?? 0) ? [platform, count] : max),
-      platforms[0] as [string, number] | undefined
-    );
-    return max?.[0] ?? null;
+    const sorted = [...platforms].sort((a, b) => (b[1] as number) - (a[1] as number));
+    return sorted[0]?.[0] ?? null;
   });
 
   return {
