@@ -866,8 +866,10 @@ onMounted(() => {
   const sessions = aiService.getSessions();
   if (sessions.length > 0) {
     const latestSession = sessions[sessions.length - 1];
-    sessionId.value = latestSession.id;
-    messages.value = latestSession.messages;
+    if (latestSession) {
+      sessionId.value = latestSession.id;
+      messages.value = latestSession.messages;
+    }
   }
 
   // Set up keyboard shortcut

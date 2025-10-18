@@ -88,7 +88,7 @@ export function useStreak() {
   });
 
   const canBuyFreezeWithCoins = computed(() => {
-    return streakStore.coins.total >= freezeCostInCoins;
+    return streakStore.coins.total ?? 0 >= freezeCostInCoins;
   });
 
   const freezesRemaining = computed(() => {

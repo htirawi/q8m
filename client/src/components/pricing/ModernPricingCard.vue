@@ -30,7 +30,7 @@ const savingsText = computed(() => {
     const monthlyTotal = props.priceMonthly * 12;
     const yearlyTotal = props.priceYearly;
     const savings = monthlyTotal - yearlyTotal;
-    const monthsSaved = Math.round(savings / props.priceMonthly);
+    const monthsSaved = Math.round(savings / props.priceMonthly ?? 0);
     return `Save ${monthsSaved}+ months`;
   }
   return null;

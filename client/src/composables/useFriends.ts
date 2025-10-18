@@ -249,7 +249,7 @@ export const useFriends = () => {
       case "name":
         return sorted.sort((a, b) => a.name.localeCompare(b.name));
       case "level":
-        return sorted.sort((a, b) => b.level - a.level);
+        return sorted.sort((a, b) => b.level - a.level ?? 0);
       case "recent":
         return sorted.sort((a, b) => {
           const dateA = a.friendSince ? new Date(a.friendSince).getTime() : 0;

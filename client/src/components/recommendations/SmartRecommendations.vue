@@ -61,7 +61,7 @@
           <div class="mb-2 flex items-center justify-between">
             <span
               class="inline-flex items-center rounded px-2 py-1 text-xs font-semibold"
-              :class="getLevelBadgeClass(quiz.level)"
+              :class="getLevelBadgeClass(quiz.level ?? 0)"
             >
               {{ t(`level.${quiz.level}.label`) }}
             </span>
@@ -81,7 +81,7 @@
           <button
             type="button"
             class="w-full rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
-            @click="startQuiz(quiz.level)"
+            @click="startQuiz(quiz.level ?? 0)"
           >
             {{ t("recommendations.startQuiz") }}
           </button>
