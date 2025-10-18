@@ -52,8 +52,10 @@ function animateValue(start: number, end: number) {
 
 watch(
   () => props.value,
-  (newValue) => {
-    animateValue(currentValue.value, newValue);
+  (newValue, oldValue) => {
+    if (oldValue !== undefined) {
+      animateValue(currentValue.value, newValue);
+    }
   }
 );
 
