@@ -89,7 +89,7 @@ import { useI18n } from 'vue-i18n';
 import type { ISelectOption } from '@/types/select';
 import { analytics, EventCategory, EventAction } from '@/services/analytics';
 
-interface iselectcardprops {
+interface ISelectCardProps {
     /** The option data to display */
     option: ISelectOption;
 
