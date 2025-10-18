@@ -221,7 +221,7 @@ const formatNumber = (num: number): string => {
   return num.toString();
 };
 
-const getstreakprogress = () => {
+const getStreakProgress = () => {
   if (!props.stats?.streak) return 0;
   // Progress towards next milestone (7, 14, 30, 60, 100, 365 days)
   const milestones = [7, 14, 30, 60, 100, 365];
@@ -234,7 +234,7 @@ const getstreakprogress = () => {
   );
 };
 
-const getstreakmessage = () => {
+const getStreakMessage = () => {
   if (!props.stats?.streak) return "";
 
   const streak = props.stats.streak;
