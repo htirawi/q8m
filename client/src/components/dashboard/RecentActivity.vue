@@ -58,32 +58,10 @@
 import { ref, computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
-
-export interface activity {
-  id: string;
-  type: "completion" | "achievement" | "progress" | "unlock" | "milestone";
-  title: string;
-  description?: string;
-  timestamp: Date | string;
-  icon?: string;
-  progress?: number;
-  actionable?: boolean;
-  actionUrl?: string;
-  metadata?: Record<string, any>;
-}
-
-interface Activity {
-  id: string;
-  type: string;
-  title?: string;
-  description?: string;
-  timestamp: Date | string;
-  icon?: string;
-  [key: string]: unknown;
-}
+import type { IActivity } from "@/types/components/common";
 
 interface Props {
-  activities: Activity[];
+  activities: IActivity[];
   displayLimit?: number;
 }
 

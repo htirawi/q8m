@@ -5,10 +5,18 @@
 export interface IQuizAnswer {
   questionId: string;
   answer: string | string[];
-  selectedAnswer?: string;
+  userAnswer?: string | string[];
+  selectedAnswer?: string | string[];
+  correctAnswer?: string | string[];
   correct?: boolean;
   isCorrect?: boolean;
   timeSpent?: number;
+  timeSpentSeconds?: number;
+  difficultyLevel?: "easy" | "medium" | "hard";
+  category?: string;
+  tags?: string[];
+  points?: number;
+  pointsEarned?: number;
 }
 
 export interface ISubmitQuizPayload {
@@ -20,13 +28,29 @@ export interface ISubmitQuizPayload {
 }
 
 export interface ISubmitQuizResponse {
-  xpEarned: number;
-  badgesEarned: string[];
+  xpEarned?: number;
+  badgesEarned?: string[] | Array<{ id: string; name: string; description: string; icon: string }>;
   leveledUp?: boolean;
   newLevel?: number;
   previousLevel?: number;
-  weakCategories: string[];
+  weakCategories?: string[];
   strongCategories?: string[];
+  level?: number;
+  xp?: number;
+  totalXP?: number;
+  currentXP?: number;
+  xpToNextLevel?: number;
+  streak?: number;
+  coins?: number;
+  badges?: Array<{
+    id: string;
+    name: string;
+    description: string;
+    icon: string;
+    rarity: string;
+    earned: boolean;
+    earnedAt?: Date;
+  }>;
 }
 
 export interface IQuizHeaderProps {
@@ -68,5 +92,5 @@ export interface IQuizResultsProps {
   timeSpent: number;
   xpEarned?: number;
   badgesEarned?: Record<string, unknown>[];
-  quizResultData?: Record<string, unknown>;
+  quizResultData?: ISubmitQuizResponse | Record<string, unknown>;
 }

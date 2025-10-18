@@ -28,4 +28,6 @@ export interface IParsedBlock {
   type: "text" | "code" | "math";
   content: string;
   language?: string;
+  component?: any; // Vue component or string
+  props?: Record<string, unknown>;
 }
