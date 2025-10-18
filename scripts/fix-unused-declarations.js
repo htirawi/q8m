@@ -61,10 +61,7 @@ for (const [file, fileFixes] of fileGroups) {
 
         // Pattern: const varName =
         if (line.includes(`const ${fix.varName} =`)) {
-          lines[lineIdx] = line.replace(
-            `const ${fix.varName} =`,
-            `const _${fix.varName} =`
-          );
+          lines[lineIdx] = line.replace(`const ${fix.varName} =`, `const _${fix.varName} =`);
           totalFixed++;
         }
         // Pattern: import { ..., varName, ... }
@@ -86,4 +83,3 @@ for (const [file, fileFixes] of fileGroups) {
 
 console.log(`\n✅ Fixed ${totalFixed} unused declarations`);
 console.log("💡 Variables prefixed with _ to indicate intentionally unused");
-

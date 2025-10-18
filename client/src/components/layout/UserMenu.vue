@@ -1,18 +1,9 @@
 <template>
   <div class="user-menu" :dir="locale === 'ar' ? 'rtl' : 'ltr'">
     <!-- Trigger Button -->
-    <button
-      ref="triggerRef"
-      type="button"
-      class="user-menu__trigger"
-      :class="{ 'user-menu__trigger--active': isOpen }"
-      :aria-expanded="isOpen"
-      :aria-haspopup="true"
-      :aria-label="$t('a11y.userMenu')"
-      @click="toggleMenu"
-      @keydown.escape="closeMenu"
-      @mouseenter="preloadMenu"
-    >
+    <button ref="triggerRef" type="button" class="user-menu__trigger" :class="{ 'user-menu__trigger--active': isOpen }"
+      :aria-expanded="isOpen" :aria-haspopup="true" :aria-label="$t('a11y.userMenu')" @click="toggleMenu"
+      @keydown.escape="closeMenu" @mouseenter="preloadMenu">
       <!-- User Avatar -->
       <div class="user-menu__avatar">
         <span class="user-menu__avatar-text">{{ userInitials }} </span>
@@ -30,14 +21,8 @@
       </div>
 
       <!-- Chevron Icon -->
-      <svg
-        class="user-menu__chevron"
-        :class="{ 'user-menu__chevron--open': isOpen }"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-        aria-hidden="true"
-      >
+      <svg class="user-menu__chevron" :class="{ 'user-menu__chevron--open': isOpen }" fill="none" stroke="currentColor"
+        viewBox="0 0 24 24" aria-hidden="true">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
       </svg>
     </button>
@@ -49,24 +34,11 @@
 
     <!-- Dropdown Menu -->
     <Transition :name="isMobile ? 'slide-up' : 'dropdown'">
-      <div
-        v-if="isOpen"
-        ref="menuRef"
-        class="user-menu__dropdown"
-        :class="{ 'user-menu__dropdown--mobile': isMobile }"
-        role="menu"
-        :aria-orientation="'vertical'"
-        @keydown.escape="closeMenu"
-        @keydown.tab="handleTabKey"
-        @keydown.up.prevent="handleArrowUp"
-        @keydown.down.prevent="handleArrowDown"
-        @keydown.home.prevent="handleHomeKey"
-        @keydown.end.prevent="handleEndKey"
-        @keydown="handleTypeAhead"
-        @touchstart="handleTouchStart"
-        @touchmove="handleTouchMove"
-        @touchend="handleTouchEnd"
-      >
+      <div v-if="isOpen" ref="menuRef" class="user-menu__dropdown" :class="{ 'user-menu__dropdown--mobile': isMobile }"
+        role="menu" :aria-orientation="'vertical'" @keydown.escape="closeMenu" @keydown.tab="handleTabKey"
+        @keydown.up.prevent="handleArrowUp" @keydown.down.prevent="handleArrowDown"
+        @keydown.home.prevent="handleHomeKey" @keydown.end.prevent="handleEndKey" @keydown="handleTypeAhead"
+        @touchstart="handleTouchStart" @touchmove="handleTouchMove" @touchend="handleTouchEnd">
         <!-- Swipe Handle (Mobile Only) -->
         <div v-if="isMobile" class="user-menu__handle" aria-hidden="true"></div>
 
@@ -78,11 +50,8 @@
           <div class="user-menu__header-info">
             <p class="user-menu__header-name">{{ userName }}</p>
             <p class="user-menu__header-email">{{ userEmail }}</p>
-            <span
-              v-if="planStore.planTier"
-              class="user-menu__header-plan"
-              :class="{ 'user-menu__header-plan--premium': planStore.isPaid }"
-            >
+            <span v-if="planStore.planTier" class="user-menu__header-plan"
+              :class="{ 'user-menu__header-plan--premium': planStore.isPaid }">
               {{ planStore.isPaid ? planStore.planDisplayName : $t("plans.names.free") }}
             </span>
           </div>
@@ -92,16 +61,9 @@
 
         <!-- Menu Items -->
         <div class="user-menu__section" role="none">
-          <RouterLink
-            v-for="(item, index) in menuItems"
-            :key="item.path"
-            :to="`/${locale}${item.path}`"
-            class="user-menu__item user-menu__item--animated"
-            :style="{ '--item-index': index }"
-            role="menuitem"
-            :tabindex="isOpen ? 0 : -1"
-            @click="handleItemClick"
-          >
+          <RouterLink v-for="(item, index) in menuItems" :key="item.path" :to="`/${locale}${item.path}`"
+            class="user-menu__item user-menu__item--animated" :style="{ '--item-index': index }" role="menuitem"
+            :tabindex="isOpen ? 0 : -1" @click="handleItemClick">
             <!-- Quick Action Number (Desktop Only) -->
             <span v-if="!isMobile && index < 9" class="user-menu__quick-number" aria-hidden="true">
               {{ index + 1 }}
@@ -111,18 +73,12 @@
             <span>{{ $t(item.label) }}</span>
 
             <!-- Badge -->
-            <span
-              v-if="item.badge"
-              class="user-menu__notification-badge"
-              :class="{
-                'user-menu__notification-badge--new': item.badge.type === 'new',
-                'user-menu__notification-badge--count': item.badge.type === 'count',
-                'user-menu__notification-badge--dot': item.badge.type === 'dot',
-              }"
-              :aria-label="
-                item.badge.type === 'new' ? $t('common.new') : item.badge.value?.toString()
-              "
-            >
+            <span v-if="item.badge" class="user-menu__notification-badge" :class="{
+              'user-menu__notification-badge--new': item.badge.type === 'new',
+              'user-menu__notification-badge--count': item.badge.type === 'count',
+              'user-menu__notification-badge--dot': item.badge.type === 'dot',
+            }" :aria-label="item.badge.type === 'new' ? $t('common.new') : item.badge.value?.toString()
+                ">
               <template v-if="item.badge.type === 'new'">
                 {{ $t("common.new") }}
               </template>
@@ -138,26 +94,12 @@
         <template v-if="!planStore.isPaid">
           <div class="user-menu__divider" role="separator"></div>
           <div class="user-menu__section" role="none">
-            <RouterLink
-              :to="`/${locale}/pricing`"
-              class="user-menu__item user-menu__item--cta"
-              role="menuitem"
-              :tabindex="isOpen ? 0 : -1"
-              @click="handleUpgradeClick"
-            >
-              <svg
-                class="user-menu__item-icon"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
-                />
+            <RouterLink :to="`/${locale}/pricing`" class="user-menu__item user-menu__item--cta" role="menuitem"
+              :tabindex="isOpen ? 0 : -1" @click="handleUpgradeClick">
+              <svg class="user-menu__item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
               </svg>
               <span>{{ $t("navigation.upgrade") }} </span>
               <span class="user-menu__item-badge">{{ $t("common.new") }} </span>
@@ -169,49 +111,18 @@
 
         <!-- Logout -->
         <div class="user-menu__section" role="none">
-          <button
-            type="button"
-            class="user-menu__item user-menu__item--logout"
-            role="menuitem"
-            :tabindex="isOpen ? 0 : -1"
-            :disabled="isLoggingOut"
-            @click="handleLogout"
-          >
-            <svg
-              v-if="!isLoggingOut"
-              class="user-menu__item-icon"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-              />
+          <button type="button" class="user-menu__item user-menu__item--logout" role="menuitem"
+            :tabindex="isOpen ? 0 : -1" :disabled="isLoggingOut" @click="handleLogout">
+            <svg v-if="!isLoggingOut" class="user-menu__item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
             </svg>
-            <svg
-              v-else
-              class="user-menu__item-icon animate-spin"
-              fill="none"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-            >
-              <circle
-                class="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                stroke-width="4"
-              ></circle>
-              <path
-                class="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
+            <svg v-else class="user-menu__item-icon animate-spin" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+              </path>
             </svg>
             <span>{{ isLoggingOut ? $t("navigation.loggingOut") : $t("navigation.logout") }} </span>
           </button>
@@ -219,25 +130,11 @@
 
         <!-- Type-ahead Search Indicator -->
         <Transition name="fade">
-          <div
-            v-if="typeAheadSearch"
-            class="user-menu__type-ahead"
-            role="status"
-            aria-live="polite"
-          >
-            <svg
-              class="user-menu__type-ahead-icon"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
+          <div v-if="typeAheadSearch" class="user-menu__type-ahead" role="status" aria-live="polite">
+            <svg class="user-menu__type-ahead-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
             <span class="user-menu__type-ahead-text">{{ typeAheadSearch }} </span>
           </div>
@@ -280,6 +177,7 @@ import { useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 import { usePlanStore } from "@/stores/plan";
 import { useI18n } from "vue-i18n";
+import type { IMenuItem } from "@/types/components/layout";
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -321,17 +219,7 @@ const userInitials = computed(() => {
 });
 
 // Menu Items Configuration
-interface MenuItem {
-  path: string;
-  label: string;
-  icon: ReturnType<typeof h>;
-  badge?: {
-    type: "new" | "count" | "dot";
-    value?: number | string;
-  };
-}
-
-const menuItems = computed<MenuItem[]>(() => [
+const menuItems = computed<IMenuItem[]>(() => [
   {
     path: "/dashboard",
     label: "navigation.dashboard",
@@ -1080,6 +968,7 @@ onUnmounted(() => {
 
 /* Pulse animations */
 @keyframes pulse-subtle {
+
   0%,
   100% {
     opacity: 1;
@@ -1093,6 +982,7 @@ onUnmounted(() => {
 }
 
 @keyframes pulse-dot {
+
   0%,
   100% {
     opacity: 1;
@@ -1140,6 +1030,7 @@ onUnmounted(() => {
 }
 
 @keyframes pulse-glow {
+
   0%,
   100% {
     opacity: 1;
@@ -1287,6 +1178,7 @@ onUnmounted(() => {
 
 /* Reduced Motion Support */
 @media (prefers-reduced-motion: reduce) {
+
   .user-menu__trigger,
   .user-menu__chevron,
   .user-menu__dropdown,

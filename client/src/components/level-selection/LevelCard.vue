@@ -1,26 +1,15 @@
 <template>
-  <div
-    class="level-card"
-    :class="{
-      'level-card--selected': isSelected,
-      'level-card--locked': isLocked,
-      'level-card--hovering': isHovering,
-      'level-card--junior': difficulty === 'junior',
-      'level-card--intermediate': difficulty === 'intermediate',
-      'level-card--senior': difficulty === 'senior',
-      'level-card--custom': difficulty === 'custom',
-    }"
-    @mouseenter="handleMouseEnter"
-    @mouseleave="handleMouseLeave"
-    @click="handleClick"
-    @keydown.enter="handleClick"
-    @keydown.space.prevent="handleClick"
-    :tabindex="isLocked ? -1 : 0"
-    role="button"
-    :aria-pressed="isSelected"
-    :aria-disabled="isLocked"
-    :aria-label="ariaLabel"
-  >
+  <div class="level-card" :class="{
+    'level-card--selected': isSelected,
+    'level-card--locked': isLocked,
+    'level-card--hovering': isHovering,
+    'level-card--junior': difficulty === 'junior',
+    'level-card--intermediate': difficulty === 'intermediate',
+    'level-card--senior': difficulty === 'senior',
+    'level-card--custom': difficulty === 'custom',
+  }" @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave" @click="handleClick" @keydown.enter="handleClick"
+    @keydown.space.prevent="handleClick" :tabindex="isLocked ? -1 : 0" role="button" :aria-pressed="isSelected"
+    :aria-disabled="isLocked" :aria-label="ariaLabel">
     <!-- Animated background gradient -->
     <div class="level-card__gradient" :style="{ '--gradient-angle': gradientAngle + 'deg' }"></div>
 
@@ -33,7 +22,7 @@
         </svg>
         <span class="level-card__lock-text">{{
           $t("levels.requiresPlan", { plan: requiredPlan })
-        }}</span>
+          }}</span>
       </div>
     </Transition>
 
@@ -61,12 +50,7 @@
       <!-- Footer -->
       <div class="level-card__footer">
         <div class="level-card__duration">
-          <svg
-            class="level-card__duration-icon"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-          >
+          <svg class="level-card__duration-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <circle cx="12" cy="12" r="10" />
             <polyline points="12 6 12 12 16 14" />
           </svg>
@@ -94,12 +78,7 @@
     <div class="level-card__hover-effects">
       <div class="level-card__hover-glow"></div>
       <div class="level-card__hover-particles">
-        <span
-          v-for="i in 6"
-          :key="i"
-          class="level-card__particle"
-          :style="{ '--particle-index': i }"
-        ></span>
+        <span v-for="i in 6" :key="i" class="level-card__particle" :style="{ '--particle-index': i }"></span>
       </div>
     </div>
   </div>
@@ -110,7 +89,7 @@ import { ref, computed, h, onUnmounted } from "vue";
 import { useI18n } from "vue-i18n";
 import type { ILevelCard } from "@/types/design-system";
 
-interface props extends partial<ilevelcard> {
+interface Props extends Partial<ILevelCard> {
   modelValue?: boolean; // For v-model support
 }
 
@@ -248,13 +227,10 @@ onUnmounted(() => {
 
   /* Sophisticated border with gradient */
   border: 2px solid;
-  border-image: linear-gradient(
-      135deg,
+  border-image: linear-gradient(135deg,
       rgb(255, 255, 255, 0.6) 0%,
       rgb(255, 255, 255, 0.2) 50%,
-      rgb(255, 255, 255, 0.6) 100%
-    )
-    1;
+      rgb(255, 255, 255, 0.6) 100%) 1;
   min-height: 380px;
   transform-style: preserve-3d;
   transform: translateZ(0);
@@ -263,8 +239,10 @@ onUnmounted(() => {
   box-shadow:
     /* Primary shadow */
     0 20px 60px -15px rgb(0, 0, 0, 0.25),
-    /* Rim light effect */ 0 0 0 1px rgb(255, 255, 255, 0.15),
-    /* Inner glow for depth */ inset 0 1px 0 0 rgb(255, 255, 255, 0.5),
+    /* Rim light effect */
+    0 0 0 1px rgb(255, 255, 255, 0.15),
+    /* Inner glow for depth */
+    inset 0 1px 0 0 rgb(255, 255, 255, 0.5),
     inset 0 -1px 0 0 rgb(0, 0, 0, 0.05);
 }
 
@@ -283,7 +261,8 @@ onUnmounted(() => {
     0 0 0 2px rgb(255, 255, 255, 0.25),
     inset 0 2px 0 0 rgb(255, 255, 255, 0.7),
     inset 0 -2px 0 0 rgb(0, 0, 0, 0.08),
-    /* Colored glow based on difficulty */ 0 0 60px -15px rgb(var(--card-color-rgb), 0.4);
+    /* Colored glow based on difficulty */
+    0 0 60px -15px rgb(var(--card-color-rgb), 0.4);
 }
 
 .level-card:active:not(.level-card--locked) {
@@ -304,16 +283,14 @@ onUnmounted(() => {
     0 0 0 5px rgb(255, 255, 255, 0.4),
     inset 0 2px 0 0 rgb(255, 255, 255, 0.8),
     inset 0 0 40px 0 rgb(var(--card-color-rgb), 0.05),
-    /* Prominent glow */ 0 0 80px -10px rgb(var(--card-color-rgb), 0.6);
+    /* Prominent glow */
+    0 0 80px -10px rgb(var(--card-color-rgb), 0.6);
 
   /* Animated border gradient */
-  border-image: linear-gradient(
-      135deg,
+  border-image: linear-gradient(135deg,
       rgb(var(--card-color-rgb), 0.8) 0%,
       rgb(255, 255, 255, 0.4) 50%,
-      rgb(var(--card-color-rgb), 0.8) 100%
-    )
-    1;
+      rgb(var(--card-color-rgb), 0.8) 100%) 1;
 }
 
 /* Locked state with frosted glass effect */
@@ -355,12 +332,10 @@ onUnmounted(() => {
 .level-card__gradient {
   @apply absolute inset-0 opacity-0 transition-opacity duration-moderate;
 
-  background: linear-gradient(
-    var(--gradient-angle),
-    transparent 0%,
-    rgb(var(--color-primary-rgb), 0.05) 50%,
-    transparent 100%
-  );
+  background: linear-gradient(var(--gradient-angle),
+      transparent 0%,
+      rgb(var(--color-primary-rgb), 0.05) 50%,
+      transparent 100%);
   pointer-events: none;
 }
 
@@ -395,6 +370,7 @@ onUnmounted(() => {
 }
 
 @keyframes lock-shake {
+
   0%,
   100% {
     transform: rotate(0deg);
@@ -504,11 +480,9 @@ onUnmounted(() => {
   transform: rotate(45deg);
 
   /* Sophisticated gradient background */
-  background: linear-gradient(
-    135deg,
-    rgb(var(--card-color-rgb), 0.15) 0%,
-    rgb(var(--card-color-rgb), 0.05) 100%
-  );
+  background: linear-gradient(135deg,
+      rgb(var(--card-color-rgb), 0.15) 0%,
+      rgb(var(--card-color-rgb), 0.05) 100%);
 
   /* Multi-layer shadow for depth */
   box-shadow:
@@ -527,11 +501,9 @@ onUnmounted(() => {
 
 .level-card--selected .level-card__icon-bg {
   transform: rotate(45deg) scale(1.1);
-  background: linear-gradient(
-    135deg,
-    rgb(var(--card-color-rgb), 0.25) 0%,
-    rgb(var(--card-color-rgb), 0.1) 100%
-  );
+  background: linear-gradient(135deg,
+      rgb(var(--card-color-rgb), 0.25) 0%,
+      rgb(var(--card-color-rgb), 0.1) 100%);
 }
 
 .level-card__icon {
@@ -651,11 +623,9 @@ onUnmounted(() => {
   @apply transition-all duration-300;
 
   /* Dynamic background based on card color */
-  background: linear-gradient(
-    135deg,
-    rgb(var(--card-color-rgb), 1) 0%,
-    rgb(var(--card-color-rgb), 0.85) 100%
-  );
+  background: linear-gradient(135deg,
+      rgb(var(--card-color-rgb), 1) 0%,
+      rgb(var(--card-color-rgb), 0.85) 100%);
 
   /* Premium shadow with colored glow */
   box-shadow:
@@ -681,12 +651,10 @@ onUnmounted(() => {
   @apply transition-all duration-500 ease-out;
 
   /* Radial glow that matches card color */
-  background: radial-gradient(
-    circle at center,
-    rgb(var(--card-color-rgb), 0.15) 0%,
-    rgb(var(--card-color-rgb), 0.08) 40%,
-    transparent 70%
-  );
+  background: radial-gradient(circle at center,
+      rgb(var(--card-color-rgb), 0.15) 0%,
+      rgb(var(--card-color-rgb), 0.08) 40%,
+      transparent 70%);
 
   /* Animated pulse */
   animation: glow-pulse 3s ease-in-out infinite;
@@ -697,6 +665,7 @@ onUnmounted(() => {
 }
 
 @keyframes glow-pulse {
+
   0%,
   100% {
     opacity: 0.8;
@@ -741,6 +710,7 @@ onUnmounted(() => {
 
 /* Shake animation for locked cards */
 @keyframes shake {
+
   0%,
   100% {
     transform: translateX(0);
@@ -789,6 +759,7 @@ onUnmounted(() => {
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
+
   .level-card,
   .level-card__icon,
   .level-card__particle,
@@ -807,13 +778,10 @@ onUnmounted(() => {
   background: linear-gradient(135deg, rgb(24, 24, 27, 0.95) 0%, rgb(24, 24, 27, 0.85) 100%);
   backdrop-filter: blur(24px) saturate(180%);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
-  border-image: linear-gradient(
-      135deg,
+  border-image: linear-gradient(135deg,
       rgb(255, 255, 255, 0.2) 0%,
       rgb(255, 255, 255, 0.05) 50%,
-      rgb(255, 255, 255, 0.2) 100%
-    )
-    1;
+      rgb(255, 255, 255, 0.2) 100%) 1;
   box-shadow:
     0 20px 60px -15px rgb(0, 0, 0, 0.6),
     0 0 0 1px rgb(255, 255, 255, 0.08),
@@ -841,12 +809,10 @@ onUnmounted(() => {
 }
 
 .dark .level-card__hover-glow {
-  background: radial-gradient(
-    circle at center,
-    rgb(var(--card-color-rgb), 0.12) 0%,
-    rgb(var(--card-color-rgb), 0.06) 40%,
-    transparent 70%
-  );
+  background: radial-gradient(circle at center,
+      rgb(var(--card-color-rgb), 0.12) 0%,
+      rgb(var(--card-color-rgb), 0.06) 40%,
+      transparent 70%);
 }
 
 .dark .level-card__title {

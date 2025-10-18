@@ -1,16 +1,11 @@
 <template>
   <div class="mx-auto max-w-4xl">
     <!-- Clean Question Card -->
-    <div
-      class="rounded-2xl border border-gray-100 bg-white p-8 shadow-sm dark:border-gray-800 dark:bg-gray-900"
-    >
+    <div class="rounded-2xl border border-gray-100 bg-white p-8 shadow-sm dark:border-gray-800 dark:bg-gray-900">
       <!-- Question Text - Focus Point -->
       <div class="mb-8">
-        <h1
-          class="select-none text-2xl font-semibold leading-relaxed text-gray-900 dark:text-white"
-          @contextmenu.prevent
-          @selectstart.prevent
-        >
+        <h1 class="select-none text-2xl font-semibold leading-relaxed text-gray-900 dark:text-white"
+          @contextmenu.prevent @selectstart.prevent>
           {{ questionText }}
         </h1>
       </div>
@@ -26,8 +21,7 @@
           <span class="text-gray-300 dark:text-gray-600">•</span>
           <span class="font-medium">{{ questionTypeBadge }} </span>
           <span class="text-gray-300 dark:text-gray-600">•</span>
-          <span class="font-semibold text-gray-700 dark:text-gray-300"
-            >{{ question.points }}
+          <span class="font-semibold text-gray-700 dark:text-gray-300">{{ question.points }}
 
             point{{ question.points !== 1 ? "s" : "" }}
           </span>
@@ -36,54 +30,30 @@
         <!-- Single Category Tag (Clean) -->
         <div v-if="getPrimaryCategory" class="mt-3">
           <span
-            class="inline-flex select-none items-center rounded-full bg-blue-50 px-3 py-1.5 text-sm font-medium text-blue-700 dark:bg-blue-900/30 dark:text-blue-300"
-          >
+            class="inline-flex select-none items-center rounded-full bg-blue-50 px-3 py-1.5 text-sm font-medium text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
             {{ getPrimaryCategory }}
           </span>
         </div>
       </div>
 
       <!-- Answer Options - Clean Design -->
-      <div
-        v-if="question.type === 'multiple-choice' || question.type === 'true-false'"
-        class="space-y-3"
-      >
-        <button
-          v-for="option in options"
-          :key="option.id"
-          type="button"
-          :class="getOptionClass(option.id)"
-          :disabled="hasAnswered"
-          @click="selectOption(option.id)"
-          @contextmenu.prevent
-          @selectstart.prevent
-        >
+      <div v-if="question.type === 'multiple-choice' || question.type === 'true-false'" class="space-y-3">
+        <button v-for="option in options" :key="option.id" type="button" :class="getOptionClass(option.id)"
+          :disabled="hasAnswered" @click="selectOption(option.id)" @contextmenu.prevent @selectstart.prevent>
           <div class="flex items-center justify-between">
             <span class="select-none text-lg">{{ option.text }}</span>
             <div v-if="hasAnswered && isAnswerRevealed(option.id)" class="ml-4">
-              <svg
-                v-if="isCorrectOption(option.id)"
-                class="h-5 w-5 text-green-600"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fill-rule="evenodd"
+              <svg v-if="isCorrectOption(option.id)" class="h-5 w-5 text-green-600" fill="currentColor"
+                viewBox="0 0 20 20">
+                <path fill-rule="evenodd"
                   d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                  clip-rule="evenodd"
-                />
+                  clip-rule="evenodd" />
               </svg>
-              <svg
-                v-else-if="selectedAnswer === option.id"
-                class="h-5 w-5 text-red-600"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fill-rule="evenodd"
+              <svg v-else-if="selectedAnswer === option.id" class="h-5 w-5 text-red-600" fill="currentColor"
+                viewBox="0 0 20 20">
+                <path fill-rule="evenodd"
                   d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                  clip-rule="evenodd"
-                />
+                  clip-rule="evenodd" />
               </svg>
             </div>
           </div>
@@ -92,97 +62,55 @@
 
       <!-- Fill in the Blank -->
       <div v-else-if="question.type === 'fill-blank'" class="space-y-4">
-        <input
-          :value="textAnswer"
-          type="text"
-          :disabled="hasAnswered"
+        <input :value="textAnswer" type="text" :disabled="hasAnswered"
           class="w-full rounded-xl border border-gray-200 bg-white px-6 py-4 text-lg text-gray-900 placeholder-gray-500 transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-400"
-          :placeholder="t('quiz.fillBlankPlaceholder')"
-          @input="updateTextAnswer"
-          @keyup.enter="$emit('submit')"
-          @contextmenu.prevent
-          @selectstart.prevent
-        />
+          :placeholder="t('quiz.fillBlankPlaceholder')" @input="updateTextAnswer" @keyup.enter="$emit('submit')"
+          @contextmenu.prevent @selectstart.prevent />
       </div>
 
       <!-- Multiple Checkbox -->
       <div v-else-if="question.type === 'multiple-checkbox'" class="space-y-3">
-        <label
-          v-for="option in options"
-          :key="option.id"
-          :class="getCheckboxOptionClass(option.id)"
-          @contextmenu.prevent
-          @selectstart.prevent
-        >
-          <input
-            :checked="multipleAnswers.includes(option.id)"
-            type="checkbox"
-            :value="option.id"
-            :disabled="hasAnswered"
-            class="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-            @change="toggleMultipleAnswer(option.id)"
-          />
+        <label v-for="option in options" :key="option.id" :class="getCheckboxOptionClass(option.id)"
+          @contextmenu.prevent @selectstart.prevent>
+          <input :checked="multipleAnswers.includes(option.id)" type="checkbox" :value="option.id"
+            :disabled="hasAnswered" class="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+            @change="toggleMultipleAnswer(option.id)" />
           <span class="ml-4 select-none text-lg">{{ option.text }} </span>
           <div v-if="hasAnswered && isAnswerRevealed(option.id)" class="ml-auto">
-            <svg
-              v-if="isCorrectOption(option.id)"
-              class="h-5 w-5 text-green-600"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path
-                fill-rule="evenodd"
+            <svg v-if="isCorrectOption(option.id)" class="h-5 w-5 text-green-600" fill="currentColor"
+              viewBox="0 0 20 20">
+              <path fill-rule="evenodd"
                 d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                clip-rule="evenodd"
-              />
+                clip-rule="evenodd" />
             </svg>
           </div>
         </label>
       </div>
 
       <!-- Explanation (Clean Design) -->
-      <div
-        v-if="hasAnswered"
-        class="mt-8 select-none rounded-xl bg-blue-50 p-6 dark:bg-blue-900/20"
-        @contextmenu.prevent
-        @selectstart.prevent
-      >
+      <div v-if="hasAnswered" class="mt-8 select-none rounded-xl bg-blue-50 p-6 dark:bg-blue-900/20"
+        @contextmenu.prevent @selectstart.prevent>
         <h3 class="mb-3 select-none text-lg font-semibold text-blue-900 dark:text-blue-200">
           {{ t("quiz.explanation") }}
         </h3>
-        <div
-          class="select-none leading-relaxed text-blue-800 dark:text-blue-300"
-          v-html="explanation"
-        ></div>
+        <div class="select-none leading-relaxed text-blue-800 dark:text-blue-300" v-html="explanation"></div>
       </div>
 
       <!-- Action Button -->
       <div class="mt-8 flex justify-center">
-        <button
-          v-if="!hasAnswered"
-          type="button"
+        <button v-if="!hasAnswered" type="button"
           class="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-8 py-4 text-lg font-medium text-white shadow-sm transition-all hover:bg-blue-700 hover:shadow-md focus:outline-none focus:ring-4 focus:ring-blue-500/20 disabled:cursor-not-allowed disabled:opacity-50"
-          :disabled="!canSubmit"
-          @click="$emit('submit')"
-        >
+          :disabled="!canSubmit" @click="$emit('submit')">
           {{ t("quiz.submit") }}
         </button>
 
-        <button
-          v-else
-          type="button"
+        <button v-else type="button"
           class="inline-flex items-center gap-2 rounded-xl bg-gray-900 px-8 py-4 text-lg font-medium text-white shadow-sm transition-all hover:bg-gray-800 hover:shadow-md focus:outline-none focus:ring-4 focus:ring-gray-500/20 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-100"
-          @click="$emit('next')"
-        >
+          @click="$emit('next')">
           {{ isLastQuestion ? t("quiz.finish") : t("quiz.next") }}
 
           <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M9 5l7 7-7 7"
-            />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
           </svg>
         </button>
       </div>
