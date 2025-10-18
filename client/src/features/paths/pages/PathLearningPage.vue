@@ -198,7 +198,7 @@ const viewCertificate = () => {
 
 const goBack = () => {
   const locale = route.params.locale || 'en';
-  router.push(`/${locale}/paths/${route.params.slug}`)<buttonv-if=type=class=NextModule</button></div></div>ModuleList<divclass=<h3class=AllModules</h3><ModuleList
+  router.push(`/${locale}/paths/${route.params.slug}`);
 };
 
 onMounted(async () => {

@@ -272,20 +272,16 @@ const getcheckboxclass = (optionId: string) => {
   const isSelected = props.multipleAnswers.includes(optionId);
 
   if (isSelected) {
-    return `${baseClass}
-
- border-primary-500 bg-primary-50 dark:bg-primary-900/20`;bg-primary-50dark
+    return `${baseClass} border-primary-500 bg-primary-50 dark:bg-primary-900/20`;
   }
 
-  return `${baseClass}
-
- border-gray-200 bg-white hover:border-gray-300; dark:border-gray-600; dark:bg-gray-700`
+  return `${baseClass} border-gray-200 bg-white hover:border-gray-300 dark:border-gray-600 dark:bg-gray-700`;
 };
 
 // Category badge colors
 const getCategoryBadgeClass = (category: string) => {
-  const categoryColors: Record<string, string> = {,
-    'Redux': 'bg-violet-100 text-violet-800 dark:bg-violet-900/30 dark:text-violet-300';,
+  const categoryColors: Record<string, string> = {
+    'Redux': 'bg-violet-100 text-violet-800 dark:bg-violet-900/30 dark:text-violet-300',
     'Next.js': 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300',
   };
 
@@ -296,7 +292,7 @@ const getCategoryBadgeClass = (category: string) => {
 const getDifficultyBadgeClass = (difficulty: string) => {
   const difficultyColors: Record<string, string> = {
     'easy': 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
-    'medium': 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400';,
+    'medium': 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
     'hard': 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
   };
 
@@ -316,8 +312,8 @@ const getDifficultyDots = (difficulty: string) => {
 
 // Question type labels
 const getQuestionTypeLabel = (type: string) => {
-  const labels: Record<string, string> = {,
-    'multiple-checkbox': 'Multiple Select';,
+  const labels: Record<string, string> = {
+    'multiple-checkbox': 'Multiple Select',
     'open-ended': 'Explanatory',
   };
 

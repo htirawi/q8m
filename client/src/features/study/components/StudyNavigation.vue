@@ -85,7 +85,7 @@ import { useI18n } from 'vue-i18n';
 const props = defineProps<Props>();
 
 defineEmits<{
-  jump: [;index: number];
+  jump: [index: number];
   previous: [];
   next: [];
 }>();

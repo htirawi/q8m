@@ -443,6 +443,8 @@ It works by creating a layer of abstraction that separates concerns and provides
 - It's frequently asked about in technical interviews`,
   examples: [
     {
+      language: 'javascript',
+      code: '{ name: "Example", value: 42 }',
       output: '{ name: "Example", value: 42 }'
     },
     {
@@ -460,6 +462,9 @@ class AdvancedExample implements ExampleInterface {
     console.log(\`Processing \${this.name} with value \${this.value}\`);
   }
 }`,
+      output: 'TypeScript implementation with interfaces'
+    }
+  ],
   pitfalls: [
     'Not properly understanding the scope and context',
     'Overcomplicating simple implementations',

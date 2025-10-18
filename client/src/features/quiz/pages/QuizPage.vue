@@ -683,7 +683,7 @@ const loadQuiz = async () => {
       }
       if (response.status === 403) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Access; denied: Upgrade your plan to access this level');
+        throw new Error(errorData.message || 'Access denied: Upgrade your plan to access this level');
       }
       throw new Error('Failed to load quiz');
     }
@@ -896,19 +896,6 @@ onUnmounted(() => {
   window.removeEventListener('keydown', handleKeyboard);
   window.removeEventListener('touchstart', handleTouchStart);
   window.removeEventListener('touchend', handleTouchEnd);
-  window.removeEventListener('scroll', handleScroll)
-}
-  });
-  userAnswers.value = restoredAnswers;
-
-  // Adjust remaining time
-  const savedTime = new Date(incomplete.lastUpdatedAt).getTime();
-  const timeElapsed = Math.floor((savedTime - new Date(incomplete.startedAt).getTime()) / 1000);
-  remainingTime.value = Math.max(0, quizDuration.value - timeElapsed);
-
-  showResumeModal.value = false;
-
-  // Start the timer after resuming
-  startTimer();
+  window.removeEventListener('scroll', handleScroll);
 });
 </script>

@@ -81,7 +81,7 @@ interface props {
 
 const props = defineProps<Props>();
 const emit = defineEmits<{
-  moduleClick: [;moduleId: string]
+  moduleClick: [moduleId: string]
 }>();
 
 const route = useRoute();
