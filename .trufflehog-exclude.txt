@@ -1,31 +1,38 @@
-# TruffleHog Exclusion Patterns
+# TruffleHog Exclusions
 # Files and patterns to exclude from secret scanning
 
-# Environment example files (contain placeholder credentials only)
-**/.env.example
-**/.env*.example
-**/config.example.*
-**/*.example
-
-# Test fixtures and mock data
-**/fixtures/**
-**/test-data/**
-**/__mocks__/**
-**/tests/**/*.mock.*
-
-# Documentation
-**/docs/**/*.md
-**/README.md
-**/CHANGELOG.md
+# Lock files
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
 
 # Build artifacts
-**/dist/**
-**/build/**
-**/coverage/**
-**/node_modules/**
+dist/
+build/
+.next/
+.vite/
+coverage/
 
-# Lock files
-**/package-lock.json
-**/pnpm-lock.yaml
-**/yarn.lock
+# Dependencies
+node_modules/
 
+# Test files with mock data
+**/*.test.ts
+**/*.spec.ts
+**/tests/**
+**/mocks/**
+
+# Environment examples (not actual secrets)
+.env.example
+.env.template
+
+# Documentation
+*.md
+docs/
+
+# Git
+.git/
+
+# IDE
+.vscode/
+.idea/
