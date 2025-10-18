@@ -54,6 +54,9 @@ export const STORAGE_KEYS = {
   PREFERRED_CURRENCY: "preferred_currency",
   THEME: "theme",
   LOCALE: "locale",
+  USER_LAST_MODE: "user_last_mode",
+  USER_INCOMPLETE_QUIZ: "user_incomplete_quiz",
+  USER_UI_PREFERENCES: "user_ui_preferences",
 } as const;
 
 // ============================================
