@@ -29,7 +29,6 @@ export function useSessionTimeout(options: SessionTimeoutOptions = {}) {
 
   const router = useRouter();
   const authStore = useAuthStore();
-  const { t } = useI18n();
 
   // State
   const isActive = ref(true);
@@ -78,7 +77,8 @@ export function useSessionTimeout(options: SessionTimeoutOptions = {}) {
   };
 
   // Add debounce timer property
-  (resetTimeout as any).debounceTimer = null;
+  type ResetTimeoutWithDebounce = typeof resetTimeout & { debounceTimer: ReturnType<typeof setTimeout> | null };
+  (resetTimeout as ResetTimeoutWithDebounce).debounceTimer = null;
 
   const setTimeouts = () => {
     // Set warning timeout
@@ -125,8 +125,10 @@ export function useSessionTimeout(options: SessionTimeoutOptions = {}) {
       // Redirect to login
       router.push("/login");
 
-      // Show notification
-      console.log("🔒 Session expired due to inactivity");
+      // Show notification (development only)
+      if (import.meta.env.DEV) {
+        console.warn("🔒 Session expired due to inactivity");
+      }
     } catch (error) {
       console.error("Failed to logout on session timeout:", error);
     }

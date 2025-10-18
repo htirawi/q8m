@@ -28,7 +28,7 @@ export function usePerformanceMonitor() {
 
     // Track memory usage
     if ("memory" in performance) {
-      const {memory} = (performance as any);
+      const {memory} = (performance as unknown as { memory: { usedJSHeapSize: number } });
       metrics.value.memoryUsage = memory.usedJSHeapSize / 1024 / 1024; // MB
     }
 
@@ -40,12 +40,14 @@ export function usePerformanceMonitor() {
       });
     }
 
-    // Log performance metrics
-    console.log("🚀 Performance Metrics:", {
-      loadTime: `${metrics.value.loadTime.toFixed(2)}ms`,
-      memoryUsage: `${metrics.value.memoryUsage.toFixed(2)}MB`,
-      routeChanges: metrics.value.routeChanges,
-    });
+    // Log performance metrics (development only)
+    if (import.meta.env.DEV) {
+      console.warn("🚀 Performance Metrics:", {
+        loadTime: `${metrics.value.loadTime.toFixed(2)}ms`,
+        memoryUsage: `${metrics.value.memoryUsage.toFixed(2)}MB`,
+        routeChanges: metrics.value.routeChanges,
+      });
+    }
   });
 
   return {

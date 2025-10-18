@@ -3,7 +3,8 @@
  * Global session timeout management for the application
  */
 
-import { createApp } from "vue";
+import { createApp, type App } from "vue";
+import type { RouteLocationNormalized } from "vue-router";
 import SessionTimeoutWarning from "@/components/SessionTimeoutWarning.vue";
 import { useSessionTimeout } from "@/composables/useSessionTimeout";
 
@@ -21,7 +22,7 @@ export interface SessionTimeoutPluginOptions {
 }
 
 export default {
-  install(app: any, options: SessionTimeoutPluginOptions = {}) {
+  install(app: App, options: SessionTimeoutPluginOptions = {}) {
     const {
       timeoutMs = 60 * 60 * 1000, // 1 hour
       warningMs = 5 * 60 * 1000, // 5 minutes
@@ -71,7 +72,7 @@ export default {
 
         // Watch for route changes to restart timeout (debounced)
         let routeChangeTimeout: number | null = null;
-        router.afterEach((to: any) => {
+        router.afterEach((to: RouteLocationNormalized) => {
           if (routeChangeTimeout) {
             clearTimeout(routeChangeTimeout);
           }
@@ -87,7 +88,7 @@ export default {
         });
 
         // Watch for authentication state changes
-        authStore.$subscribe((mutation: any, state: any) => {
+        authStore.$subscribe((_mutation, state) => {
           if (!state.isAuthenticated) {
             // User logged out, cleanup
             warningComponent.unmount();
