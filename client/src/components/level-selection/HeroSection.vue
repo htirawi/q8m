@@ -102,7 +102,9 @@
             >
               <polyline
                 :points="
-                  (coinTrend ?? 0) > 0 ? '22 17 13.5 8.5 8.5 13.5 2 7' : '22 7 13.5 15.5 8.5 10.5 2 17'
+                  (coinTrend ?? 0) > 0
+                    ? '22 17 13.5 8.5 8.5 13.5 2 7'
+                    : '22 7 13.5 15.5 8.5 10.5 2 17'
                 "
               />
             </svg>
@@ -201,10 +203,7 @@ const currentMessageIndex = ref(0);
 
 const motivationalMessage = computed(() => {
   const fallback = motivationalMessages[currentMessageIndex.value] || "";
-  return t(
-    `motivation.message${currentMessageIndex.value}`,
-    fallback
-  );
+  return t(`motivation.message${currentMessageIndex.value}`, fallback);
 });
 
 // Methods

@@ -105,7 +105,7 @@ export function useABTest(config: IABTestConfig): IABTestResult {
     }
 
     const event: IABTestAssignmentEvent = {
-      testId: testId || 'unknown',
+      testId: testId || "unknown",
       variant: variant.value || "control",
       timestamp: Date.now(),
     };
@@ -113,7 +113,6 @@ export function useABTest(config: IABTestConfig): IABTestResult {
     track("ab_test_assignment", event);
     hasTrackedAssignment.value = true;
   };
-
 
   // Initialize variant immediately (not on mount) to ensure it's available
   variant.value = getVariant();

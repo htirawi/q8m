@@ -69,7 +69,7 @@
             <div
               class="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-gray-300 to-gray-400 text-2xl font-bold text-white shadow-lg"
             >
-              {{ entries[1]?.displayName?.charAt(0).toUpperCase() ?? '?' }}
+              {{ entries[1]?.displayName?.charAt(0).toUpperCase() ?? "?" }}
             </div>
             <div
               class="absolute -bottom-2 left-1/2 -translate-x-1/2 transform rounded-full bg-gray-400 px-2 py-0.5 text-xs font-bold text-white"
@@ -92,7 +92,7 @@
             <div
               class="flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-yellow-300 to-yellow-500 text-3xl font-bold text-white shadow-xl ring-4 ring-yellow-200 dark:ring-yellow-700"
             >
-              {{ entries[0]?.displayName?.charAt(0).toUpperCase() ?? '?' }}
+              {{ entries[0]?.displayName?.charAt(0).toUpperCase() ?? "?" }}
             </div>
             <div
               class="animate-bounce-subtle absolute -top-8 left-1/2 -translate-x-1/2 transform text-4xl"
@@ -120,7 +120,7 @@
             <div
               class="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-amber-600 to-amber-700 text-xl font-bold text-white shadow-lg"
             >
-              {{ entries[2]?.displayName?.charAt(0).toUpperCase() ?? '?' }}
+              {{ entries[2]?.displayName?.charAt(0).toUpperCase() ?? "?" }}
             </div>
             <div
               class="absolute -bottom-2 left-1/2 -translate-x-1/2 transform rounded-full bg-amber-700 px-2 py-0.5 text-xs font-bold text-white"
@@ -229,9 +229,7 @@
 </template>
 
 <script setup lang="ts">
-import type {
-  ILeaderboardProps as Props,
-} from "../../../types/components/gamification";
+import type { ILeaderboardProps as Props } from "../../../types/components/gamification";
 import { ref, computed } from "vue";
 
 const props = withDefaults(defineProps<Props>(), {
@@ -263,7 +261,7 @@ const remainingEntries = computed(() => {
 });
 
 function formatNumber(num: number | undefined): string {
-  if (num === undefined) return '0';
+  if (num === undefined) return "0";
   if (num >= 1000000) {
     return `${(num / 1000000).toFixed(1)}M`;
   }
@@ -274,7 +272,7 @@ function formatNumber(num: number | undefined): string {
 }
 
 function formatRelativeTime(date: Date | string): string {
-  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  const dateObj = typeof date === "string" ? new Date(date) : date;
   const now = new Date();
   const diff = now.getTime() - dateObj.getTime();
   const minutes = Math.floor(diff / 60000);

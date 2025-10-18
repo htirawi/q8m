@@ -1,13 +1,17 @@
 <template>
   <Teleport to="body">
     <TransitionGroup name="badge-notification">
-      <div v-for="badge in visibleBadges" :key="badge.id"
+      <div
+        v-for="badge in visibleBadges"
+        :key="badge.id"
         class="fixed z-[9999] flex items-start gap-3 rounded-xl border-2 bg-white/95 p-4 shadow-2xl backdrop-blur-sm dark:bg-gray-800/95"
-        :style="getNotificationStyle(badge)">
+        :style="getNotificationStyle(badge)"
+      >
         <!-- IBadge Icon with Glow -->
         <div class="relative flex-shrink-0">
           <div
-            class="relative flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-yellow-400 via-orange-500 to-pink-500 shadow-lg">
+            class="relative flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-yellow-400 via-orange-500 to-pink-500 shadow-lg"
+          >
             <div class="absolute inset-0 animate-ping rounded-full bg-yellow-400 opacity-75"></div>
             <span class="relative z-10 text-4xl">{{ badge.icon }} </span>
           </div>
@@ -20,11 +24,15 @@
         <!-- IBadge Info -->
         <div class="min-w-0 flex-1">
           <div class="mb-1 flex items-center gap-2">
-            <span class="text-sm font-bold uppercase tracking-wide text-yellow-600 dark:text-yellow-400">
+            <span
+              class="text-sm font-bold uppercase tracking-wide text-yellow-600 dark:text-yellow-400"
+            >
               IBadge Unlocked!
             </span>
-            <span class="rounded-full px-2 py-0.5 text-xs font-semibold uppercase"
-              :class="getRarityClass(badge.rarity)">
+            <span
+              class="rounded-full px-2 py-0.5 text-xs font-semibold uppercase"
+              :class="getRarityClass(badge.rarity)"
+            >
               {{ badge.rarity }}
             </span>
           </div>
@@ -39,11 +47,18 @@
               <span>⭐</span>
               <span>+{{ badge.xpReward }} XP</span>
             </div>
-            <button v-if="badge.shareable" @click="shareBadge(badge)"
-              class="flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-medium text-blue-600 transition-colors hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-900/20">
+            <button
+              v-if="badge.shareable"
+              @click="shareBadge(badge)"
+              class="flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-medium text-blue-600 transition-colors hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-900/20"
+            >
               <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"
+                />
               </svg>
               <span>Share</span>
             </button>
@@ -51,17 +66,26 @@
         </div>
 
         <!-- Close Button -->
-        <button @click="dismissBadge(badge.id)"
-          class="flex-shrink-0 rounded-lg p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-700 dark:hover:text-gray-300">
+        <button
+          @click="dismissBadge(badge.id)"
+          class="flex-shrink-0 rounded-lg p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-700 dark:hover:text-gray-300"
+        >
           <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
           </svg>
         </button>
 
         <!-- Progress Bar -->
         <div class="absolute bottom-0 left-0 right-0 h-1 bg-gray-200 dark:bg-gray-700">
-          <div class="h-full bg-gradient-to-r from-yellow-400 via-orange-500 to-pink-500 transition-all"
-            :style="{ width: `${badge.progress}%` }"></div>
+          <div
+            class="h-full bg-gradient-to-r from-yellow-400 via-orange-500 to-pink-500 transition-all"
+            :style="{ width: `${badge.progress}%` }"
+          ></div>
         </div>
       </div>
     </TransitionGroup>
@@ -75,12 +99,12 @@ import { ref, computed, onUnmounted } from "vue";
 const props = withDefaults(
   defineProps<{
     position?:
-    | "top-right"
-    | "top-left"
-    | "bottom-right"
-    | "bottom-left"
-    | "top-center"
-    | "bottom-center";
+      | "top-right"
+      | "top-left"
+      | "bottom-right"
+      | "bottom-left"
+      | "top-center"
+      | "bottom-center";
     duration?: number;
     maxVisible?: number;
     stackSpacing?: number;
@@ -295,7 +319,6 @@ onUnmounted(() => {
 }
 
 @keyframes sparkle-shine {
-
   0%,
   100% {
     opacity: 0;

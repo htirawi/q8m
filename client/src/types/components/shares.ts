@@ -27,4 +27,3 @@ export interface IShareModalEmits {
   (e: "close"): void;
   (e: "share", platform: string): void;
 }
-

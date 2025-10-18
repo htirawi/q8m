@@ -133,7 +133,13 @@ defineOptions({
       :class="{ 'plan-card-features--rtl': $i18n.locale === 'ar' }"
       role="list"
     >
-      <li v-for="(benefitKey, idx) in (Array.isArray(plan?.features) ? [] : plan?.features?.benefits ?? [])" :key="idx" class="plan-card-feature">
+      <li
+        v-for="(benefitKey, idx) in Array.isArray(plan?.features)
+          ? []
+          : (plan?.features?.benefits ?? [])"
+        :key="idx"
+        class="plan-card-feature"
+      >
         <!-- LTR: icon first, then text -->
         <template v-if="$i18n.locale !== 'ar'">
           <svg

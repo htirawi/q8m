@@ -303,10 +303,7 @@
 </template>
 
 <script setup lang="ts">
-import type {
-  IXPSource,
-  IXPBreakdownProps as Props,
-} from "../../../types/components/gamification";
+import type { IXPSource, IXPBreakdownProps as Props } from "../../../types/components/gamification";
 import { computed } from "vue";
 import AnimatedCounter from "../../../components/AnimatedCounter.vue";
 
@@ -353,7 +350,10 @@ const breakdownItems = computed<(IXPSource & { percentage?: number })[]>(() => {
 
 const totalXP = computed<number>(() => {
   if (!props.breakdown) return props.totalXP ?? 0;
-  return Object.values(props.breakdown).reduce((sum, xp) => (sum as number) + (xp as number), 0) as number;
+  return Object.values(props.breakdown).reduce(
+    (sum, xp) => (sum as number) + (xp as number),
+    0
+  ) as number;
 });
 
 const averageXP = computed(() => {

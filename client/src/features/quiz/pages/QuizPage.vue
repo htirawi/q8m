@@ -1,17 +1,18 @@
 <template>
   <div
-    class="relative min-h-screen overflow-hidden bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+    class="relative min-h-screen overflow-hidden bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900"
+  >
     <!-- Animated Background Blobs -->
     <div class="pointer-events-none absolute inset-0 overflow-hidden">
       <div
-        class="absolute -left-4 top-20 h-72 w-72 animate-blob rounded-full bg-blue-300 opacity-20 mix-blend-multiply blur-xl filter dark:bg-blue-600 dark:opacity-10">
-      </div>
+        class="absolute -left-4 top-20 h-72 w-72 animate-blob rounded-full bg-blue-300 opacity-20 mix-blend-multiply blur-xl filter dark:bg-blue-600 dark:opacity-10"
+      ></div>
       <div
-        class="animation-delay-2000 absolute right-4 top-40 h-72 w-72 animate-blob rounded-full bg-purple-300 opacity-20 mix-blend-multiply blur-xl filter dark:bg-purple-600 dark:opacity-10">
-      </div>
+        class="animation-delay-2000 absolute right-4 top-40 h-72 w-72 animate-blob rounded-full bg-purple-300 opacity-20 mix-blend-multiply blur-xl filter dark:bg-purple-600 dark:opacity-10"
+      ></div>
       <div
-        class="animation-delay-4000 absolute -bottom-8 left-1/3 h-72 w-72 animate-blob rounded-full bg-pink-300 opacity-20 mix-blend-multiply blur-xl filter dark:bg-pink-600 dark:opacity-10">
-      </div>
+        class="animation-delay-4000 absolute -bottom-8 left-1/3 h-72 w-72 animate-blob rounded-full bg-pink-300 opacity-20 mix-blend-multiply blur-xl filter dark:bg-pink-600 dark:opacity-10"
+      ></div>
     </div>
 
     <div class="relative mx-auto max-w-5xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
@@ -19,8 +20,8 @@
       <div v-if="isLoading" class="flex min-h-[500px] items-center justify-center">
         <div class="text-center">
           <div
-            class="mb-6 inline-block h-16 w-16 animate-spin rounded-full border-4 border-purple-200 border-t-purple-600 dark:border-purple-800 dark:border-t-purple-400">
-          </div>
+            class="mb-6 inline-block h-16 w-16 animate-spin rounded-full border-4 border-purple-200 border-t-purple-600 dark:border-purple-800 dark:border-t-purple-400"
+          ></div>
           <p class="text-lg font-medium text-gray-700 dark:text-gray-300">
             {{ t("quiz.loading") }}
           </p>
@@ -33,14 +34,24 @@
       <!-- Error State -->
       <div v-else-if="error" class="flex min-h-[500px] items-center justify-center">
         <div
-          class="mx-auto max-w-md rounded-2xl border-2 border-red-200 bg-white/80 p-8 text-center backdrop-blur-sm dark:border-red-800 dark:bg-gray-800/80">
+          class="mx-auto max-w-md rounded-2xl border-2 border-red-200 bg-white/80 p-8 text-center backdrop-blur-sm dark:border-red-800 dark:bg-gray-800/80"
+        >
           <!-- Error Icon -->
           <div class="mb-4 flex justify-center">
             <div class="rounded-full bg-red-100 p-4 dark:bg-red-900/30">
-              <svg class="h-12 w-12 text-red-600 dark:text-red-400" fill="none" stroke="currentColor"
-                viewBox="0 0 24 24" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              <svg
+                class="h-12 w-12 text-red-600 dark:text-red-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                />
               </svg>
             </div>
           </div>
@@ -50,12 +61,24 @@
           </h3>
           <p class="mb-6 text-sm leading-relaxed text-gray-600 dark:text-gray-400">{{ error }}</p>
 
-          <button type="button"
+          <button
+            type="button"
             class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-red-500 to-pink-600 px-6 py-3 font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:from-red-600 hover:to-pink-700 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-red-500 focus:ring-offset-2"
-            @click="loadQuiz">
-            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            @click="loadQuiz"
+          >
+            <svg
+              class="h-5 w-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+              />
             </svg>
             {{ t("quiz.error?.retry") }}
           </button>
@@ -63,51 +86,101 @@
       </div>
 
       <!-- Results Screen -->
-      <QuizResults v-else-if="showResults" :level="level" :score="score" :total-questions="score.total"
-        :correct-answers="score.correct" :time-spent="score.timeSpent" :quiz-result-data="quizResultData ?? undefined"
-        @retry="retryQuiz" @exit="goBack" />
+      <QuizResults
+        v-else-if="showResults"
+        :level="level"
+        :score="score"
+        :total-questions="score.total"
+        :correct-answers="score.correct"
+        :time-spent="score.timeSpent"
+        :quiz-result-data="quizResultData ?? undefined"
+        @retry="retryQuiz"
+        @exit="goBack"
+      />
 
       <!-- Quiz Content -->
       <div v-else-if="currentQuestion">
-        <QuizHeader :level="level" :current-index="currentIndex" :total-questions="totalQuestions"
-          :remaining-time="remainingTime" :quiz-duration="quizDuration" :is-sticky="isMobileTimerSticky"
-          @exit="confirmExit" />
+        <QuizHeader
+          :level="level"
+          :current-index="currentIndex"
+          :total-questions="totalQuestions"
+          :remaining-time="remainingTime"
+          :quiz-duration="quizDuration"
+          :is-sticky="isMobileTimerSticky"
+          @exit="confirmExit"
+        />
 
-        <QuizQuestion :question="currentQuestion" :level="level" :locale="locale"
-          v-model:selected-answer="selectedAnswer ?? undefined" v-model:text-answer="textAnswer"
-          v-model:multiple-answers="multipleAnswers" :has-answered="hasAnswered"
-          :is-last-question="currentIndex >= totalQuestions - 1" :user-answer-result="userAnswers[currentIndex] ? {
-            isCorrect: userAnswers[currentIndex]!.isCorrect,
-            correctAnswer: userAnswers[currentIndex]!.correctAnswer ?? '',
-            explanation: userAnswers[currentIndex]!.explanation ?? '',
-            points: userAnswers[currentIndex]!.points ?? 0
-          } : undefined"
-          @submit="submitAnswer" @next="nextQuestion" />
+        <QuizQuestion
+          :question="currentQuestion"
+          :level="level"
+          :locale="locale"
+          v-model:selected-answer="selectedAnswer ?? undefined"
+          v-model:text-answer="textAnswer"
+          v-model:multiple-answers="multipleAnswers"
+          :has-answered="hasAnswered"
+          :is-last-question="currentIndex >= totalQuestions - 1"
+          :user-answer-result="
+            userAnswers[currentIndex]
+              ? {
+                  isCorrect: userAnswers[currentIndex]!.isCorrect,
+                  correctAnswer: userAnswers[currentIndex]!.correctAnswer ?? '',
+                  explanation: userAnswers[currentIndex]!.explanation ?? '',
+                  points: userAnswers[currentIndex]!.points ?? 0,
+                }
+              : undefined
+          "
+          @submit="submitAnswer"
+          @next="nextQuestion"
+        />
       </div>
     </div>
 
     <!-- Level Up Celebration Modal -->
-    <LevelUpCelebration v-if="showLevelUpModal && levelUpData" :show="showLevelUpModal"
-      :new-level="levelUpData.newLevel" :previous-level="levelUpData.previousLevel"
-      :level-title="getLevelTitle(levelUpData.newLevel)" :xp-earned="levelUpData.xpEarned" :rewards="[]"
-      :shareable="true" @close="showLevelUpModal = false" />
+    <LevelUpCelebration
+      v-if="showLevelUpModal && levelUpData"
+      :show="showLevelUpModal"
+      :new-level="levelUpData.newLevel"
+      :previous-level="levelUpData.previousLevel"
+      :level-title="getLevelTitle(levelUpData.newLevel)"
+      :xp-earned="levelUpData.xpEarned"
+      :rewards="[]"
+      :shareable="true"
+      @close="showLevelUpModal = false"
+    />
 
     <!-- IBadge Unlock Notifications -->
-    <BadgeUnlockNotification ref="badgeNotificationRef" position="top-right" :duration="5000" :max-visible="3" />
+    <BadgeUnlockNotification
+      ref="badgeNotificationRef"
+      position="top-right"
+      :duration="5000"
+      :max-visible="3"
+    />
 
     <!-- Resume Quiz Modal -->
     <Teleport to="body">
-      <div v-if="showResumeModal"
+      <div
+        v-if="showResumeModal"
         class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
-        @click.self="dismissResume">
-        <div class="mx-4 w-full max-w-md animate-fade-in-up rounded-2xl bg-white p-8 shadow-2xl dark:bg-gray-800">
+        @click.self="dismissResume"
+      >
+        <div
+          class="mx-4 w-full max-w-md animate-fade-in-up rounded-2xl bg-white p-8 shadow-2xl dark:bg-gray-800"
+        >
           <!-- Icon -->
           <div class="mb-6 flex justify-center">
             <div class="rounded-full bg-blue-100 p-4 dark:bg-blue-900/30">
-              <svg class="h-12 w-12 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor"
-                viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <svg
+                class="h-12 w-12 text-blue-600 dark:text-blue-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
               </svg>
             </div>
           </div>
@@ -126,9 +199,13 @@
           </p>
 
           <!-- Quiz Info -->
-          <div v-if="preferencesStore.incompleteQuiz" class="mb-6 rounded-lg bg-gray-50 p-4 dark:bg-gray-700/50">
+          <div
+            v-if="preferencesStore.incompleteQuiz"
+            class="mb-6 rounded-lg bg-gray-50 p-4 dark:bg-gray-700/50"
+          >
             <div class="flex items-center justify-between text-sm">
-              <span class="text-gray-600 dark:text-gray-400">{{ t("quiz.resume?.progress", "Progress:") }}
+              <span class="text-gray-600 dark:text-gray-400"
+                >{{ t("quiz.resume?.progress", "Progress:") }}
               </span>
               <span class="font-semibold text-gray-900 dark:text-white">
                 {{ (preferencesStore.incompleteQuiz?.currentQuestionIndex ?? 0) + 1 }}
@@ -137,7 +214,8 @@
               </span>
             </div>
             <div class="mt-2 flex items-center justify-between text-sm">
-              <span class="text-gray-600 dark:text-gray-400">{{ t("quiz.resume?.answered", "Answered:") }}
+              <span class="text-gray-600 dark:text-gray-400"
+                >{{ t("quiz.resume?.answered", "Answered:") }}
               </span>
               <span class="font-semibold text-gray-900 dark:text-white">
                 {{ preferencesStore.incompleteQuiz.answers?.length ?? 0 }}
@@ -148,14 +226,18 @@
 
           <!-- Actions -->
           <div class="flex flex-col gap-3 sm:flex-row">
-            <button type="button"
+            <button
+              type="button"
               class="flex-1 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-3 font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:from-blue-700 hover:to-purple-700 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-offset-2"
-              @click="resumeQuiz">
+              @click="resumeQuiz"
+            >
               {{ t("quiz.resume?.continue", "Continue Quiz") }}
             </button>
-            <button type="button"
+            <button
+              type="button"
               class="flex-1 rounded-xl border-2 border-gray-300 bg-white px-6 py-3 font-semibold text-gray-700 transition-all duration-300 hover:border-gray-400 hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-gray-500 focus:ring-offset-2 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:hover:border-gray-500 dark:hover:bg-gray-600"
-              @click="dismissResume">
+              @click="dismissResume"
+            >
               {{ t("quiz.resume?.startNew", "Start New") }}
             </button>
           </div>
@@ -170,10 +252,7 @@ import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter, useRoute } from "vue-router";
 import type { Question } from "@shared/types/quiz";
-import type {
-  IQuizAnswer,
-  ISubmitQuizResponse,
-} from "../../../types/components/quiz";
+import type { IQuizAnswer, ISubmitQuizResponse } from "../../../types/components/quiz";
 import { useAuthStore } from "../../../stores/auth";
 import { usePreferencesStore } from "../../../stores/preferences";
 import { useQuizResults } from "../../../composables/useQuizResults";
@@ -345,7 +424,7 @@ const saveQuizProgress = () => {
     level: level.value,
     difficulty: level.value,
     mode: "quiz",
-    questions: questions.value.map(q => q._id || ''),
+    questions: questions.value.map((q) => q._id || ""),
     currentIndex: currentIndex.value,
     currentQuestionIndex: currentIndex.value,
     totalQuestions: totalQuestions.value,
@@ -379,11 +458,9 @@ const resumeQuiz = () => {
     { answer: string | string[]; isCorrect: boolean; timeSpent: number }
   > = {};
   incomplete.answers.forEach((answer, index) => {
-    const selectedAnswer = answer.selectedAnswer ?? '';
+    const selectedAnswer = answer.selectedAnswer ?? "";
     restoredAnswers[index] = {
-      answer: selectedAnswer.includes(",")
-        ? selectedAnswer.split(",")
-        : selectedAnswer,
+      answer: selectedAnswer.includes(",") ? selectedAnswer.split(",") : selectedAnswer,
       isCorrect: answer.isCorrect ?? false,
       timeSpent: 0, // We don't track individual time in saved state
     };
@@ -464,10 +541,10 @@ const updateStreak = () => {
     const streak = streakData
       ? JSON.parse(streakData)
       : {
-        currentStreak: 0,
-        bestStreak: 0,
-        lastActivityDate: null,
-      };
+          currentStreak: 0,
+          bestStreak: 0,
+          lastActivityDate: null,
+        };
 
     const today = new Date().toDateString();
     const lastDate = streak.lastActivityDate

@@ -452,7 +452,9 @@ export const useChallenges = () => {
           (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         );
       case "difficulty":
-        return sorted.sort((a, b) => (difficultyOrder[b.difficulty] ?? 0) - (difficultyOrder[a.difficulty] ?? 0));
+        return sorted.sort(
+          (a, b) => (difficultyOrder[b.difficulty] ?? 0) - (difficultyOrder[a.difficulty] ?? 0)
+        );
       case "score":
         return sorted.sort((a, b) => {
           const scoreA = getUserScore(a) || 0;

@@ -210,7 +210,9 @@ onMounted(async () => {
       currentModule.value =
         store.currentPath.modules.find(
           (m) => m.moduleId === store.currentEnrollment!.currentModuleId
-        ) || store.currentPath.modules[0] || null;
+        ) ||
+        store.currentPath.modules[0] ||
+        null;
     } else {
       currentModule.value = store.currentPath.modules[0] || null;
     }

@@ -227,7 +227,13 @@ onMounted(async () => {
                 Level {{ request.level ?? 0 }}
               </div>
               <div v-if="request.requestedAt" class="mt-1 text-xs text-gray-500 dark:text-gray-500">
-                {{ formatDate(typeof request.requestedAt === 'string' ? new Date(request.requestedAt) : request.requestedAt) }}
+                {{
+                  formatDate(
+                    typeof request.requestedAt === "string"
+                      ? new Date(request.requestedAt)
+                      : request.requestedAt
+                  )
+                }}
               </div>
             </div>
 
@@ -306,7 +312,14 @@ onMounted(async () => {
               </div>
               <div class="mt-1 flex items-center gap-2">
                 <span class="text-xs text-gray-500 dark:text-gray-500">
-                  Sent {{ formatDate(typeof request.sentAt === 'string' ? new Date(request.sentAt) : request.sentAt!) }}
+                  Sent
+                  {{
+                    formatDate(
+                      typeof request.sentAt === "string"
+                        ? new Date(request.sentAt)
+                        : request.sentAt!
+                    )
+                  }}
                 </span>
                 <span class="text-xs text-yellow-600 dark:text-yellow-400">• Pending</span>
               </div>

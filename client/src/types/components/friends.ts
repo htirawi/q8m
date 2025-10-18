@@ -2,7 +2,7 @@
  * Friends Component Props & Types
  */
 
-import type { Friend, FriendRequest } from '@shared/types/friends';
+import type { Friend, FriendRequest } from "@shared/types/friends";
 
 export interface IFriendCardProps {
   friend: Friend;

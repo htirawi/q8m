@@ -267,19 +267,19 @@ const { t } = useI18n();
 
 const questionText = computed(() => {
   const content = props.question.content?.[props.locale as "en" | "ar"];
-  if (typeof content === 'string') return content;
+  if (typeof content === "string") return content;
   return (content as any)?.question ?? "";
 });
 
 const explanation = computed(() => {
   const content = props.question.content?.[props.locale as "en" | "ar"];
-  if (typeof content === 'string') return content;
+  if (typeof content === "string") return content;
   return (content as any)?.explanation ?? "";
 });
 
 const options = computed(() => {
   const content = props.question.content?.[props.locale as "en" | "ar"];
-  if (typeof content === 'string') return [];
+  if (typeof content === "string") return [];
   const opts = (content as any)?.options;
   if (!opts || !Array.isArray(opts)) return [];
 

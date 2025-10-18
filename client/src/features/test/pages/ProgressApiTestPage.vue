@@ -71,7 +71,9 @@ function formatDate(date: Date | string): string {
             </div>
             <div class="stat-card">
               <div class="stat-label">Total Badges</div>
-              <div class="stat-value">{{ Array.isArray(progress.badges) ? progress.badges.length : 0 }}</div>
+              <div class="stat-value">
+                {{ Array.isArray(progress.badges) ? progress.badges.length : 0 }}
+              </div>
             </div>
           </div>
         </section>

@@ -213,7 +213,8 @@
             :title="rule.displayName ?? rule.framework"
             :description="rule.description ?? ''"
             :color="
-              (rule.metadata?.color as 'red' | 'black' | 'blue' | 'purple' | 'gray' | 'gradient') ?? 'gray'
+              (rule.metadata?.color as 'red' | 'black' | 'blue' | 'purple' | 'gray' | 'gradient') ??
+              'gray'
             "
             :difficulty="difficulty"
             :is-locked="rule.isLocked ?? false"

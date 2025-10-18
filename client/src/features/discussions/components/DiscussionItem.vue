@@ -34,9 +34,10 @@ const userLevel = computed(() => props.discussion.userId.gamification?.level || 
 const levelColor = computed(() => getLevelColor(userLevel.value));
 const levelBadge = computed(() => getLevelBadge(userLevel.value));
 const timeAgo = computed(() =>
-  formatDate(typeof props.discussion.createdAt === 'string'
-    ? new Date(props.discussion.createdAt)
-    : props.discussion.createdAt
+  formatDate(
+    typeof props.discussion.createdAt === "string"
+      ? new Date(props.discussion.createdAt)
+      : props.discussion.createdAt
   )
 );
 

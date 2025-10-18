@@ -128,9 +128,7 @@
 </template>
 
 <script setup lang="ts">
-import type {
-  IMilestoneCelebrationProps as Props,
-} from "../../../types/components/gamification";
+import type { IMilestoneCelebrationProps as Props } from "../../../types/components/gamification";
 import { ref, watch, onMounted } from "vue";
 import { useConfetti } from "../../../composables/useConfetti";
 

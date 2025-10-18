@@ -123,7 +123,7 @@ const handleToggle = (cycle: BillingCycle): void => {
 };
 
 const handlePlanSelect = (planId: string, billing: BillingCycle): void => {
-  const plan = plans.value.find(p => p.id === planId);
+  const plan = plans.value.find((p) => p.id === planId);
 
   trackPricingInteraction?.({
     action: "select_plan",

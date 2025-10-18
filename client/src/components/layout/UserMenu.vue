@@ -489,7 +489,11 @@ const handleLogout = async () => {
     });
 
     // Show error toast (assuming toast composable exists)
-    if (typeof window !== 'undefined' && 'showToast' in window && typeof (window as any).showToast === 'function') {
+    if (
+      typeof window !== "undefined" &&
+      "showToast" in window &&
+      typeof (window as any).showToast === "function"
+    ) {
       (window as any).showToast({
         type: "error",
         message: t("errors.logoutFailed"),

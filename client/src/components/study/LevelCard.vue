@@ -120,7 +120,10 @@
 </template>
 
 <script setup lang="ts">
-import type { ILevelCardProps as Props, ILevelCardEmits as Emits } from "../../types/components/study";
+import type {
+  ILevelCardProps as Props,
+  ILevelCardEmits as Emits,
+} from "../../types/components/study";
 import type { DifficultyLevel } from "@shared/types/plan";
 import { computed, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
@@ -142,8 +145,8 @@ const { t } = useI18n();
 const { track } = useAnalytics();
 
 // Map difficulty to plan ID, then get display label from canonical registry
-const planId = computed(() => props.difficulty ? DIFFICULTY_TO_PLAN_ID[props.difficulty] : null);
-const planConfig = computed(() => planId.value ? getPlanById(planId.value) : null);
+const planId = computed(() => (props.difficulty ? DIFFICULTY_TO_PLAN_ID[props.difficulty] : null));
+const planConfig = computed(() => (planId.value ? getPlanById(planId.value) : null));
 
 const icon = computed(() => planConfig.value?.visual.icon || "🟢");
 

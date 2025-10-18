@@ -112,7 +112,9 @@ function getScoreColor(score: number): string {
                 </div>
                 <div class="detail-row">
                   <span class="detail-label">Duration:</span>
-                  <span class="detail-value">{{ formatDuration(quiz.totalTimeSeconds ?? 0) }} </span>
+                  <span class="detail-value"
+                    >{{ formatDuration(quiz.totalTimeSeconds ?? 0) }}
+                  </span>
                 </div>
                 <div class="detail-row">
                   <span class="detail-label">XP Earned:</span>
@@ -130,9 +132,14 @@ function getScoreColor(score: number): string {
                     earned 🏆</span
                   >
                 </div>
-                <div v-if="quiz.weakCategories && quiz.weakCategories.length > 0" class="detail-row">
+                <div
+                  v-if="quiz.weakCategories && quiz.weakCategories.length > 0"
+                  class="detail-row"
+                >
                   <span class="detail-label">Weak Categories:</span>
-                  <span class="detail-value weak">{{ quiz.weakCategories?.join(", ") ?? "" }} </span>
+                  <span class="detail-value weak"
+                    >{{ quiz.weakCategories?.join(", ") ?? "" }}
+                  </span>
                 </div>
               </div>
 
@@ -259,7 +266,11 @@ function getScoreColor(score: number): string {
                 <div class="detail-row">
                   <span class="detail-label">Last Attempt:</span>
                   <span class="detail-value">
-                    {{ area.lastAttemptDate ? new Date(area.lastAttemptDate).toLocaleDateString() : 'N/A' }}
+                    {{
+                      area.lastAttemptDate
+                        ? new Date(area.lastAttemptDate).toLocaleDateString()
+                        : "N/A"
+                    }}
                   </span>
                 </div>
               </div>

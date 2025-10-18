@@ -6,10 +6,12 @@
         <div class="text-center">
           <!-- Animated loader -->
           <div class="relative mb-6">
-            <div class="h-16 w-16 rounded-full border-4 border-primary-200 dark:border-primary-900"></div>
             <div
-              class="absolute left-0 top-0 h-16 w-16 animate-spin rounded-full border-4 border-transparent border-t-primary-600 dark:border-t-primary-400">
-            </div>
+              class="h-16 w-16 rounded-full border-4 border-primary-200 dark:border-primary-900"
+            ></div>
+            <div
+              class="absolute left-0 top-0 h-16 w-16 animate-spin rounded-full border-4 border-transparent border-t-primary-600 dark:border-t-primary-400"
+            ></div>
           </div>
           <!-- Loading text with pulse animation -->
           <p class="animate-pulse text-lg font-medium text-gray-700 dark:text-gray-300">
@@ -20,27 +22,44 @@
       </div>
 
       <!-- Error State -->
-      <div v-else-if="error"
-        class="rounded-xl border border-red-200 bg-red-50 p-8 shadow-lg dark:border-red-800 dark:bg-red-900/20">
+      <div
+        v-else-if="error"
+        class="rounded-xl border border-red-200 bg-red-50 p-8 shadow-lg dark:border-red-800 dark:bg-red-900/20"
+      >
         <div class="flex flex-col items-center text-center">
           <!-- Error icon -->
           <div class="mb-4 rounded-full bg-red-100 p-3 dark:bg-red-900/50">
-            <svg class="h-12 w-12 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            <svg
+              class="h-12 w-12 text-red-600 dark:text-red-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+              />
             </svg>
           </div>
           <h3 class="mb-2 text-xl font-bold text-red-900 dark:text-red-200">
             {{ t("study.error?.title") }}
           </h3>
           <p class="mb-6 max-w-md text-red-700 dark:text-red-300">{{ error }}</p>
-          <button type="button"
+          <button
+            type="button"
             class="rounded-lg bg-red-600 px-6 py-3 font-medium text-white shadow-sm transition-all duration-200 hover:bg-red-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-            @click="() => loadQuestions(false)">
+            @click="() => loadQuestions(false)"
+          >
             <span class="flex items-center gap-2">
               <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                />
               </svg>
               {{ t("study.error?.retry") }}
             </span>
@@ -50,31 +69,53 @@
 
       <!-- Empty State - No Questions Available -->
       <div v-else-if="!isLoading && !error && allQuestions.length === 0">
-        <EmptyState variant="default" icon="📚" :title="t('study.empty.title', 'No Questions Available')" :description="t(
-          'study.empty.description',
-          'There are no questions available for this difficulty and framework combination. Try selecting a different framework or difficulty level.'
-        )
-          " :primary-action="t('study.empty.changeFramework', 'Change Framework')"
-          :secondary-action="t('study.empty.goBack', 'Go Back')" @primary-action="changeFramework"
-          @secondary-action="goBack" />
+        <EmptyState
+          variant="default"
+          icon="📚"
+          :title="t('study.empty.title', 'No Questions Available')"
+          :description="
+            t(
+              'study.empty.description',
+              'There are no questions available for this difficulty and framework combination. Try selecting a different framework or difficulty level.'
+            )
+          "
+          :primary-action="t('study.empty.changeFramework', 'Change Framework')"
+          :secondary-action="t('study.empty.goBack', 'Go Back')"
+          @primary-action="changeFramework"
+          @secondary-action="goBack"
+        />
       </div>
 
       <!-- Empty State - No Results After Filtering -->
-      <div v-else-if="
-        !isLoading && !error && allQuestions.length > 0 && filteredQuestions.length === 0
-      ">
-        <EmptyState variant="compact" icon="🔍"
-          :title="t('study.emptyFiltered.title', 'No Questions Match Your Filters')" :description="t(
-            'study.emptyFiltered.description',
-            'Try adjusting your search query or filter settings to see more questions.'
-          )
-            " :primary-action="t('study.emptyFiltered.clearFilters', 'Clear Filters')" @primary-action="clearFilters" />
+      <div
+        v-else-if="
+          !isLoading && !error && allQuestions.length > 0 && filteredQuestions.length === 0
+        "
+      >
+        <EmptyState
+          variant="compact"
+          icon="🔍"
+          :title="t('study.emptyFiltered.title', 'No Questions Match Your Filters')"
+          :description="
+            t(
+              'study.emptyFiltered.description',
+              'Try adjusting your search query or filter settings to see more questions.'
+            )
+          "
+          :primary-action="t('study.emptyFiltered.clearFilters', 'Clear Filters')"
+          @primary-action="clearFilters"
+        />
       </div>
 
       <!-- Study Content -->
       <div v-else-if="currentQuestion">
-        <StudyHeader :difficulty="difficulty" :current-index="currentIndex" :total-questions="questions.length"
-          :loaded-count="questions.length" @back="goBack" />
+        <StudyHeader
+          :difficulty="difficulty"
+          :current-index="currentIndex"
+          :total-questions="questions.length"
+          :loaded-count="questions.length"
+          @back="goBack"
+        />
 
         <!-- Study Time Indicator -->
         <div class="mb-4 rounded-lg bg-blue-50 px-4 py-3 dark:bg-blue-900/20">
@@ -101,25 +142,56 @@
           </div>
         </div>
 
-        <StudyFilters v-model:search-query="searchQuery" v-model:question-type-filter="questionTypeFilter"
-          v-model:answered-filter="answeredFilter" :practice-mode="practiceMode" :bookmark-count="bookmarkCount"
-          :filtered-count="filteredQuestions.length" :total-count="getDisplayTotal()" :progress="progress"
-          @mode-change="setPracticeMode" @clear="clearFilters" />
+        <StudyFilters
+          v-model:search-query="searchQuery"
+          v-model:question-type-filter="questionTypeFilter"
+          v-model:answered-filter="answeredFilter"
+          :practice-mode="practiceMode"
+          :bookmark-count="bookmarkCount"
+          :filtered-count="filteredQuestions.length"
+          :total-count="getDisplayTotal()"
+          :progress="progress"
+          @mode-change="setPracticeMode"
+          @clear="clearFilters"
+        />
 
-        <StudyQuestion :question="currentQuestion as any" :current-index="currentIndex" :total-questions="questions.length"
-          :show-answer="showAnswer" :locale="locale" :selected-answer="selectedStudyAnswer"
-          :text-answer="studyTextAnswer" :multiple-answers="studyMultipleAnswers" :is-bookmarked="isBookmarked"
-          :can-go-previous="currentIndex > 0" :is-loading-more="isLoadingMore"
-          :is-last-question="currentIndex >= questions.length - 1" :has-more="hasMore" @reveal="revealAnswer"
-          @previous="previousQuestion" @next="nextQuestion" @toggle-bookmark="toggleBookmark"
-          @update:selected-answer="onAnswerSelected" @update:text-answer="onTextAnswerChanged"
-          @update:multiple-answers="onMultipleAnswersChanged" />
+        <StudyQuestion
+          :question="currentQuestion as any"
+          :current-index="currentIndex"
+          :total-questions="questions.length"
+          :show-answer="showAnswer"
+          :locale="locale"
+          :selected-answer="selectedStudyAnswer"
+          :text-answer="studyTextAnswer"
+          :multiple-answers="studyMultipleAnswers"
+          :is-bookmarked="isBookmarked"
+          :can-go-previous="currentIndex > 0"
+          :is-loading-more="isLoadingMore"
+          :is-last-question="currentIndex >= questions.length - 1"
+          :has-more="hasMore"
+          @reveal="revealAnswer"
+          @previous="previousQuestion"
+          @next="nextQuestion"
+          @toggle-bookmark="toggleBookmark"
+          @update:selected-answer="onAnswerSelected"
+          @update:text-answer="onTextAnswerChanged"
+          @update:multiple-answers="onMultipleAnswersChanged"
+        />
 
-        <StudyNavigation :current-index="currentIndex" :total-questions="questions.length"
-          :answered-questions="answeredQuestions" :marked-questions="new Set(bookmarkedQuestions)"
-          :loaded-count="allQuestions.length" :total-available="getDisplayTotal()" :has-more="hasMore"
-          :is-loading-more="isLoadingMore" @jump="jumpToQuestion" @load-more="loadMore" @previous="previousQuestion"
-          @next="nextQuestion" />
+        <StudyNavigation
+          :current-index="currentIndex"
+          :total-questions="questions.length"
+          :answered-questions="answeredQuestions"
+          :marked-questions="new Set(bookmarkedQuestions)"
+          :loaded-count="allQuestions.length"
+          :total-available="getDisplayTotal()"
+          :has-more="hasMore"
+          :is-loading-more="isLoadingMore"
+          @jump="jumpToQuestion"
+          @load-more="loadMore"
+          @previous="previousQuestion"
+          @next="nextQuestion"
+        />
       </div>
     </div>
   </div>

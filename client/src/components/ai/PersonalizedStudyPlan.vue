@@ -475,7 +475,7 @@ const filteredModules = computed(() => {
 
 // Methods
 const formatDate = (date: Date | string): string => {
-  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  const dateObj = typeof date === "string" ? new Date(date) : date;
   return dateObj.toLocaleDateString(locale.value, {
     month: "short",
     day: "numeric",

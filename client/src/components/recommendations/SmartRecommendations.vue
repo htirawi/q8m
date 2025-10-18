@@ -228,7 +228,11 @@
 </template>
 
 <script setup lang="ts">
-import type { ILearningStep, ILearningPath, IQuickTip } from "../../types/components/recommendations";
+import type {
+  ILearningStep,
+  ILearningPath,
+  IQuickTip,
+} from "../../types/components/recommendations";
 import { ref, computed, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";

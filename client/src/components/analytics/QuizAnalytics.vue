@@ -356,7 +356,10 @@ const getScoreBarClass = (score: number) => {
 };
 
 const formatDate = (timestamp: number | string | Date) => {
-  const date = typeof timestamp === 'number' || typeof timestamp === 'string' ? new Date(timestamp) : timestamp;
+  const date =
+    typeof timestamp === "number" || typeof timestamp === "string"
+      ? new Date(timestamp)
+      : timestamp;
   const now = new Date();
   const diffDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
 

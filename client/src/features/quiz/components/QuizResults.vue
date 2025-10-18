@@ -219,7 +219,11 @@
 
           <!-- Badges Earned -->
           <div
-            v-if="quizResultData?.badgesEarned && Array.isArray(quizResultData.badgesEarned) && quizResultData.badgesEarned.length > 0"
+            v-if="
+              quizResultData?.badgesEarned &&
+              Array.isArray(quizResultData.badgesEarned) &&
+              quizResultData.badgesEarned.length > 0
+            "
             class="rounded-xl border-2 border-yellow-200 bg-yellow-50/80 p-4 backdrop-blur-sm dark:border-yellow-800 dark:bg-yellow-900/20"
           >
             <div class="mb-2 flex items-center gap-2">
@@ -251,7 +255,11 @@
 
           <!-- Strong Categories -->
           <div
-            v-if="quizResultData?.strongCategories && Array.isArray(quizResultData.strongCategories) && quizResultData.strongCategories.length > 0"
+            v-if="
+              quizResultData?.strongCategories &&
+              Array.isArray(quizResultData.strongCategories) &&
+              quizResultData.strongCategories.length > 0
+            "
             class="rounded-xl border-2 border-green-200 bg-green-50/80 p-4 backdrop-blur-sm dark:border-green-800 dark:bg-green-900/20"
           >
             <div class="mb-2 flex items-center gap-2">
@@ -273,7 +281,11 @@
 
           <!-- Weak Categories -->
           <div
-            v-if="quizResultData?.weakCategories && Array.isArray(quizResultData.weakCategories) && quizResultData.weakCategories.length > 0"
+            v-if="
+              quizResultData?.weakCategories &&
+              Array.isArray(quizResultData.weakCategories) &&
+              quizResultData.weakCategories.length > 0
+            "
             class="rounded-xl border-2 border-blue-200 bg-blue-50/80 p-4 backdrop-blur-sm dark:border-blue-800 dark:bg-blue-900/20"
           >
             <div class="mb-2 flex items-center gap-2">

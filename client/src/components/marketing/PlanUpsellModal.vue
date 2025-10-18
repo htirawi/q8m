@@ -318,9 +318,15 @@ const modalRef = ref<HTMLElement>();
 const headingId = "upsell-modal-title";
 
 // Use plan registry for consistent labeling
-const planConfig = computed(() => props.requiredPlan ? getPlanByTier(props.requiredPlan as PlanTier) : null);
-const difficultyPlanId = computed(() => props.difficulty ? DIFFICULTY_TO_PLAN_ID[props.difficulty as DifficultyLevel] : null);
-const difficultyPlanConfig = computed(() => difficultyPlanId.value ? getPlanById(difficultyPlanId.value) : null);
+const planConfig = computed(() =>
+  props.requiredPlan ? getPlanByTier(props.requiredPlan as PlanTier) : null
+);
+const difficultyPlanId = computed(() =>
+  props.difficulty ? DIFFICULTY_TO_PLAN_ID[props.difficulty as DifficultyLevel] : null
+);
+const difficultyPlanConfig = computed(() =>
+  difficultyPlanId.value ? getPlanById(difficultyPlanId.value) : null
+);
 
 const difficultyLabel = computed(() =>
   difficultyPlanConfig.value

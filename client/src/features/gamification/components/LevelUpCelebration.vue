@@ -157,7 +157,9 @@
 </template>
 
 <script setup lang="ts">
-import type { /* IReward, */ ILevelUpCelebrationProps as Props } from "../../../types/components/gamification";
+import type {
+  /* IReward, */ ILevelUpCelebrationProps as Props,
+} from "../../../types/components/gamification";
 import { ref, watch, onMounted } from "vue";
 import { useConfetti } from "../../../composables/useConfetti";
 

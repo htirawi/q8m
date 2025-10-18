@@ -59,14 +59,16 @@ export interface IPlanCardProps {
     descriptionKey: string;
     priceMonthly: number;
     priceYearly: number;
-    features?: Array<{ labelKey: string; included: boolean }> | {
-      studyItems: number;
-      quizQuestions: number;
-      aiSupport: boolean;
-      priority: "low" | "medium" | "high";
-      benefits: string[];
-      showDeltas?: boolean;
-    };
+    features?:
+      | Array<{ labelKey: string; included: boolean }>
+      | {
+          studyItems: number;
+          quizQuestions: number;
+          aiSupport: boolean;
+          priority: "low" | "medium" | "high";
+          benefits: string[];
+          showDeltas?: boolean;
+        };
     badge?: {
       textKey: string;
       color: string;

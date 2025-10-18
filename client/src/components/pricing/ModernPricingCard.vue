@@ -27,7 +27,12 @@ const billingText = computed(() => {
 });
 
 const savingsText = computed(() => {
-  if (props.billingCycle === "annual" && props.priceMonthly && props.priceMonthly > 0 && props.priceYearly) {
+  if (
+    props.billingCycle === "annual" &&
+    props.priceMonthly &&
+    props.priceMonthly > 0 &&
+    props.priceYearly
+  ) {
     const monthlyTotal = props.priceMonthly * 12;
     const yearlyTotal = props.priceYearly;
     const savings = monthlyTotal - yearlyTotal;

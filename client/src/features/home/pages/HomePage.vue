@@ -182,7 +182,10 @@ useHead({
 
   <main id="main-content" class="home-page">
     <!-- Hero Section with A/B test variant -->
-    <HeroSection data-section="hero" :headline-variant="headlineVariant as 'control' | 'variant_a' | 'variant_b'" />
+    <HeroSection
+      data-section="hero"
+      :headline-variant="headlineVariant as 'control' | 'variant_a' | 'variant_b'"
+    />
 
     <!-- Credibility / Trust Badges -->
     <HomeCredibility data-section="credibility" />

@@ -24,9 +24,10 @@ const levelTitle = computed(() => getLevelTitle(props.friend.level ?? 0));
 const avatarColor = computed(() => getAvatarColor(props.friend.name));
 const friendSinceText = computed(() => {
   if (!props.friend.friendSince) return "Recently";
-  const date = typeof props.friend.friendSince === 'string'
-    ? new Date(props.friend.friendSince)
-    : props.friend.friendSince;
+  const date =
+    typeof props.friend.friendSince === "string"
+      ? new Date(props.friend.friendSince)
+      : props.friend.friendSince;
   return formatDate(date);
 });
 

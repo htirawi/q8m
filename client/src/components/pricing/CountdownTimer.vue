@@ -17,7 +17,11 @@
         <!-- Days -->
         <div v-if="showDays && timeLeft.days > 0" class="countdown-unit">
           <div class="countdown-value">
-            <AnimatedCounter :value="timeLeft.days" :duration="500" :format="(value) => Math.round(value).toString()" />
+            <AnimatedCounter
+              :value="timeLeft.days"
+              :duration="500"
+              :format="(value) => Math.round(value).toString()"
+            />
           </div>
           <div class="countdown-label">{{ $t("pricing.countdown?.days") }}</div>
         </div>
@@ -59,7 +63,12 @@
           {{ ctaText }}
 
           <svg class="ml-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 7l5 5m0 0l-5 5m5-5H6"
+            />
           </svg>
         </button>
       </slot>
@@ -386,7 +395,6 @@ defineExpose({
 
 /* Animations */
 @keyframes bounce {
-
   0%,
   100% {
     transform: translateY(0);
@@ -398,7 +406,6 @@ defineExpose({
 }
 
 @keyframes pulse {
-
   0%,
   100% {
     opacity: 1;
@@ -434,7 +441,6 @@ defineExpose({
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
-
   .countdown-icon,
   .countdown-separator,
   .countdown-cta {
